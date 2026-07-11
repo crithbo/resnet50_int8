@@ -60,3 +60,6 @@
 - NDP侧新增4项寻址回归，覆盖4-slice独立DRAM写读、slice AG读取、跨16-byte边界的strided RDAG和WRAG对称顺序；全部通过。测试运行禁止写 `.pyc`，避免污染该仓错误跟踪的缓存文件。
 - 根集成层新增显式 `NdpFunctionalAdapter`，通过独立子进程把同一W2 physical bundle载入NDP DRAM，并逐region读回校验SHA-256和slice坐标；根侧当前21项测试全部通过。
 - 当前闭环边界推进为“raw↔physical↔NDP DRAM bit-exact”；尚未经过Buffer/PEA/reduction/requant/writeback，G2仍未通过。
+- 在 `NDPFuncModel` 子仓库完成并提交 `deee41f`：INT8 PEA按uint8 activation A×int8 weight B执行，psum保持int32、乘加使用int64检查中间值；branch屏蔽lane先清零，越界暂显式报错，等待硬件溢出规则确认。
+- NDP侧新增4项INT8 PEA回归，连同寻址测试共8项通过。根adapter新增physical-address dot probe：从4个activation slice和所属K slice读取字节，以折叠输入zero-point后的有效bias启动累加，单输出坐标accumulator与独立QLinearConv golden逐值相同；根侧21项测试通过。
+- 当前闭环边界推进为“raw↔physical↔NDP DRAM↔单坐标整数PEA accumulator bit-exact”。尚未覆盖全部输出坐标、跨slice reduction结束、requant、INT8 packing和真实writeback，故G2仍未通过。

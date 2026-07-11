@@ -335,7 +335,7 @@ W1的模型子任务已完成，但G1尚未通过；architecture/quantization/ba
 
 目标：完全不依赖正式ResNet模型，让一个小Conv完成 raw→physical→functional model→logical D。
 
-当前状态（2026-07-11）：第1～4项和第7项的软件候选实现已完成。标量循环、im2col/einsum与ONNX Runtime在QLinearConv样例上bit-exact；1/4-slice候选layout通过round-trip。本地 `NDPFuncModel@789d121` 已修复slice跨度、slice AG基址和RDAG/WRAG跨transaction地址；根adapter能在独立NDP进程中写入同一physical bundle并逐region读回相同hash。NDP侧4项、根侧21项测试通过。当前闭环只到NDP DRAM ingress，尚未经过整数PEA、reduction、requant和真实writeback，故G2未通过、16-slice尚未扩展。
+当前状态（2026-07-11）：第1～4项、第5项操作数/整数psum部分和第7项的软件候选实现已完成。标量循环、im2col/einsum与ONNX Runtime在QLinearConv样例上bit-exact；1/4-slice候选layout通过round-trip。本地 `NDPFuncModel@deee41f` 已修复slice/transaction寻址，并将INT8 PEA固定为uint8 activation A×int8 weight B、int32 psum和int64检查中间值。根adapter可把同一physical bundle载入NDP DRAM，从4个activation slice及所属K slice按物理地址取数，得到与QLinearConv golden相同的单输出坐标accumulator。NDP侧8项、根侧21项测试通过。尚未覆盖全部输出坐标、跨slice reduction结束、requant、INT8 packing和真实writeback，故G2未通过、16-slice尚未扩展。
 
 细分：
 
@@ -651,7 +651,7 @@ W0实现前还需把以上补充转成可执行的schema字段、测试用例和
 - 单算子 golden=simulator；整数 bit-exact，浮点符合 tolerance。
 - emulator 不在仓库时，阻塞必须记录为外部依赖，不能用 bitstream 生成成功替代。
 
-当前状态：已定位 Conv 功能模型，但尚不能完成一次可信 Conv 输出：入口依赖未入库 `hex_data`；最后 reduction 判定错误；DRAM 写回被注释；INT8 输出仍按 FP16 packing；requant 未接入；A/B 符号与 ResNet 软件语义相反；固定 4 slice；当前 Windows NumPy 无 `np.float128`，而 PE 执行函数仍直接调用它。`write_emulator_bundle()` 仍只写输入包，不执行；非 Conv 的目标 emulator 源码/二进制和命令未找到。
+当前状态：本地候选已修复slice/transaction寻址、INT8 A/B语义和整数PEA，并以physical-address probe证明一个输出坐标的accumulator与golden一致；不再依赖旧 `hex_data` 才能推进这部分。仍不能完成一次可信完整Conv输出：主入口固定4 slice，最后reduction判定错误，DRAM写回被注释，INT8输出仍按FP16 packing，requant未接入，manifest/JSON尚未参数化，旧产物也未重建。`write_emulator_bundle()` 仍只写输入包，不执行；非Conv目标emulator源码/二进制和命令未找到。
 
 ## 阶段 G：生成 ResNet 网络级硬件 execplan
 
@@ -731,7 +731,7 @@ W0实现前还需把以上补充转成可执行的schema字段、测试用例和
 | 1 | 建立独立最小 Conv 真值 | 现有 `extracted_*.npy`、psum trace 不可信，缺少判错基准 | 自建 1 个小 UINT8×INT8 Conv，保存 activation/weight/int32 bias、逐 K psum、requant D；NumPy/QNN 双实现互验 | 中 |
 | 2 | 修复 slice/bank 物理寻址【已完成候选修复】 | 上游四个逻辑slice都读物理slice0，bias slice1~3为空 | `789d121`已使`per_slice`包含bank并将slice span加入AG base；4-slice逐byte provenance和bundle hash读回通过 | 中 |
 | 3 | 修复 RDAG/WRAG transaction 地址【已完成候选修复】 | 上游计算stride后丢弃，真实shape会触发 | `789d121`已分离逻辑counter和物理transaction offset；非连续、跨16-byte边界的RDAG/WRAG序列测试通过 | 中 |
-| 4 | 固化 INT8 数值语义 | signed A×unsigned B、float32 中转会使 psum 非 bit-exact | activation uint8、weight int8、bias/psum int32，全程整数；明确溢出/branch；删除 `np.float128` 依赖 | 中高 |
+| 4 | 固化 INT8 数值语义【软件候选已完成】 | signed A×unsigned B、float32 中转会使 psum 非 bit-exact | `deee41f`已实现activation uint8、weight int8、bias/psum int32和branch清零；physical-address单坐标accumulator与golden一致。溢出暂显式报错，硬件wrap/saturate/error规则待确认 | 中高 |
 | 5 | 修复 reduction 与输出坐标 | 最后 reduction 条件永假，当前没有真实 D | 使用各 LC 的 `last`/`last_index` 或词典序末状态，逐输出坐标只 flush 一次；小真值逐坐标核验 | 中 |
 | 6 | 实现 requant 与真实 writeback | 没有 UINT8 D 就无法和 ResNet golden 比较 | per-channel multiplier/shift 或批准公式、nearest-even、zero-point、saturation；INT8 packing；真实 DRAM write 并 inverse-relayout | 高 |
 | 7 | 恢复配置驱动 | 当前主程序完全绕过 `config/` 和 JSON | 先恢复 `graph` pyc 对应源码或取得 `conv_config`；把 `config_nse.py` 固定 Conv 逐字段映射到目标 JSON，明确架构版本，不复制整段位串 | 高 |

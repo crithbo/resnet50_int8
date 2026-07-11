@@ -6,7 +6,7 @@ from pathlib import Path
 
 import numpy as np
 
-from resnet50_pipeline.adapters import NdpFunctionalAdapter
+from resnet50_pipeline.adapters import NdpFunctionalAdapter, NdpInt8DotProbe
 from resnet50_pipeline.conv_layout import SmallConvPhysicalLayout
 from resnet50_pipeline.golden.qlinear_conv import qlinear_conv_scalar
 from resnet50_pipeline.memory import DramGeometry
@@ -69,7 +69,37 @@ class NdpFunctionalAdapterTests(unittest.TestCase):
             PROJECT_ROOT / "NDPFuncModel",
             python_executable=Path(sys.executable),
         )
-        result = adapter.probe_physical_bundle(bundle)
+        c_tile = int(bundle.metadata["c_tile"])
+        c_padded = int(bundle.metadata["c_padded"])
+        k_tile = int(bundle.metadata["k_tile"])
+        activation_addresses = []
+        for channel in range(c_padded):
+            slice_id = channel // c_tile
+            local_c = channel % c_tile
+            region = bundle.region("activation", slice_id)
+            activation_addresses.append(region.base_address + local_c)
+        output_channel = 0
+        owner_slice = output_channel // k_tile
+        local_k = output_channel % k_tile
+        weight_region = bundle.region("weight", owner_slice)
+        weight_addresses = tuple(
+            weight_region.base_address + local_k * c_padded + channel
+            for channel in range(c_padded)
+        )
+        corrected_bias = int(bias[output_channel]) - int(x_zero_point) * int(
+            np.sum(weight[output_channel, :, 0, 0].astype(np.int32), dtype=np.int64)
+        )
+        result = adapter.probe_physical_bundle(
+            bundle,
+            int8_dot_probes=(
+                NdpInt8DotProbe(
+                    name="output_n0_k0_h0_w0",
+                    activation_addresses=tuple(activation_addresses),
+                    weight_addresses=weight_addresses,
+                    bias=corrected_bias,
+                ),
+            ),
+        )
         self.assertEqual(result.per_slice, geometry.bytes_per_slice)
         self.assertEqual(result.total_bytes, geometry.total_bytes)
         self.assertEqual(len(result.regions), len(bundle.regions))
@@ -77,6 +107,11 @@ class NdpFunctionalAdapterTests(unittest.TestCase):
         self.assertEqual(
             {region["start_coordinate"][0] for region in result.regions},
             {0, 1, 2, 3},
+        )
+        self.assertEqual(len(result.int8_dot_probes), 1)
+        self.assertEqual(
+            result.int8_dot_probes[0]["accumulator"],
+            int(golden.accumulator[0, output_channel, 0, 0]),
         )
 
 

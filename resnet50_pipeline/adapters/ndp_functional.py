@@ -9,6 +9,8 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
+import numpy as np
+
 from ..conv_layout import ConvPhysicalBundle
 from ..errors import PipelineError
 
@@ -18,6 +20,15 @@ class NdpPhysicalProbeResult:
     per_slice: int
     total_bytes: int
     regions: tuple[dict[str, Any], ...]
+    int8_dot_probes: tuple[dict[str, Any], ...]
+
+
+@dataclass(frozen=True)
+class NdpInt8DotProbe:
+    name: str
+    activation_addresses: tuple[int, ...]
+    weight_addresses: tuple[int, ...]
+    bias: int
 
 
 class NdpFunctionalAdapter:
@@ -37,7 +48,12 @@ class NdpFunctionalAdapter:
         if timeout_seconds <= 0:
             raise ValueError("timeout_seconds must be positive")
 
-    def probe_physical_bundle(self, bundle: ConvPhysicalBundle) -> NdpPhysicalProbeResult:
+    def probe_physical_bundle(
+        self,
+        bundle: ConvPhysicalBundle,
+        *,
+        int8_dot_probes: tuple[NdpInt8DotProbe, ...] = (),
+    ) -> NdpPhysicalProbeResult:
         geometry = bundle.geometry
         request = {
             "schema_version": "0.1",
@@ -49,6 +65,7 @@ class NdpFunctionalAdapter:
                 "subword_bytes": geometry.subword_bytes,
             },
             "regions": [],
+            "int8_dot_probes": [],
         }
         expected: dict[tuple[str, int], str] = {}
         for region in bundle.regions:
@@ -64,6 +81,36 @@ class NdpFunctionalAdapter:
                 }
             )
             expected[(region.name, region.slice_id)] = digest
+        expected_dots: dict[str, int] = {}
+        for probe in int8_dot_probes:
+            if probe.name in expected_dots:
+                raise ValueError(f"duplicate int8 dot probe name: {probe.name}")
+            if len(probe.activation_addresses) != len(probe.weight_addresses):
+                raise ValueError("activation and weight address counts differ")
+            if not probe.activation_addresses or len(probe.activation_addresses) % 2:
+                raise ValueError("int8 dot probes require a positive even lane count")
+            activation = np.array(
+                [bundle.image.read(address, 1)[0] for address in probe.activation_addresses],
+                dtype=np.uint8,
+            )
+            weight = np.array(
+                [bundle.image.read(address, 1)[0] for address in probe.weight_addresses],
+                dtype=np.uint8,
+            ).view(np.int8)
+            expected_accumulator = int(probe.bias) + int(
+                np.sum(activation.astype(np.int32) * weight.astype(np.int32), dtype=np.int64)
+            )
+            if not np.iinfo(np.int32).min <= expected_accumulator <= np.iinfo(np.int32).max:
+                raise OverflowError(f"int8 dot probe {probe.name} exceeds int32")
+            expected_dots[probe.name] = expected_accumulator
+            request["int8_dot_probes"].append(
+                {
+                    "name": probe.name,
+                    "activation_addresses": list(probe.activation_addresses),
+                    "weight_addresses": list(probe.weight_addresses),
+                    "bias": int(probe.bias),
+                }
+            )
 
         with tempfile.TemporaryDirectory(prefix="ndp-physical-probe-") as directory:
             request_path = Path(directory) / "request.json"
@@ -120,8 +167,20 @@ class NdpFunctionalAdapter:
             raise PipelineError("NDP probe did not return every physical region")
         if int(response["per_slice"]) != geometry.bytes_per_slice:
             raise PipelineError("NDP DRAM per_slice disagrees with the W2 geometry")
+        dot_response = response.get("int8_dot_probes", [])
+        if len(dot_response) != len(expected_dots):
+            raise PipelineError("NDP probe returned the wrong int8 dot count")
+        seen_dots: set[str] = set()
+        for dot in dot_response:
+            name = dot["name"]
+            if name not in expected_dots or name in seen_dots:
+                raise PipelineError(f"NDP probe returned an unexpected int8 dot: {name}")
+            if int(dot["accumulator"]) != expected_dots[name]:
+                raise PipelineError(f"NDP PEA accumulator mismatch for int8 dot: {name}")
+            seen_dots.add(name)
         return NdpPhysicalProbeResult(
             per_slice=int(response["per_slice"]),
             total_bytes=int(response["total_bytes"]),
             regions=tuple(response["regions"]),
+            int8_dot_probes=tuple(dot_response),
         )

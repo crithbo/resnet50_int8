@@ -27,6 +27,14 @@
     "bias": "int32 with real scale x_scale * w_scale",
     "requantization": "must reproduce ONNX QLinear operator output"
   },
+  "ndp_functional_candidate": {
+    "status": "candidate",
+    "source": "NDPFuncModel commit deee41f and W2 physical-address dot probe",
+    "operand_order": "uint8 activation on buffer/port A times int8 weight on buffer/port B",
+    "accumulator": "int32 psum with int64 checked intermediate in the Python model",
+    "branch": "masked lanes are zeroed before the integer dot product",
+    "overflow": "raise explicitly; target hardware wrap/saturate/error behavior remains unresolved"
+  },
   "hardware_unresolved": [
     "PEA physical A/B port assignment",
     "derived fixed-point multiplier and shift encoding",
