@@ -9,7 +9,7 @@
 - 每个有效小步骤都要提交；`history.md` 必须记录仓库、完整40位commit、直接父commit、改动范围、验证结果和精确回退位置。短hash只用于正文易读，不能替代本节台账。
 - 回退默认使用 `git revert <commit>` 生成保留历史的新提交；不得自行使用reset、rebase、filter、强推或删除提交。任何改写历史仍须操作者单独确认。
 - 操作者最终澄清：真正需要永久保留的是提交，不是仓库目录副本。项目应尽量只保留一份必要工作树，不为备份目的额外创建clone、worktree、zip或目录复制；云端恢复以GitHub已推送提交为主。
-- 主仓和发生修改的子仓都必须先提交、在history登记，再推送到操作者控制的GitHub仓库或fork。不得把对上游仓库可能无权限的 `origin` 当成已经完成云端备份。
+- 主仓和发生修改的子仓都必须先做本地原子提交并在history登记；小进度不逐次推送。W1/W2等大步骤通过验收门、形成明确恢复检查点，或操作者明确要求时，再批量推送到操作者控制的GitHub仓库或fork并核对远端hash。不得把未推送的本地提交或对上游仓库可能无权限的 `origin` 当成已经完成云端备份。
 - 冗余本地副本只有在其中没有唯一未提交内容、所有需保留提交已经推送并核对远端hash、且操作者批准具体路径后才能删除。删除副本不等于删除提交；不得通过reset/rebase/filter/强推或裁剪历史来节省空间。
 - `.venv`、模型、golden、trace和运行artifact不是仓库副本，也不会由普通GitHub提交自动备份；它们按可重建性和大文件策略另行管理，不能混入普通Git历史。
 - Git commit hash由提交内容决定，提交无法在自身文件内容中稳定写入自己的hash。因此业务/代码提交在同一次或紧随其后的history同步提交中登记；最新一笔“只更新台账”的提交以当前 `HEAD` 和 `git log -1 --format=fuller` 精确定位，并在下一次台账同步时补入。不得借此漏记任何业务提交。
@@ -78,10 +78,14 @@
     - 范围：升级`repos.lock.json`到0.2，加入三仓upstream/private mirror/branch/commit；新增lock schema、安全的verify/sync工具、6项恢复测试并同步agent/history/plan。
     - 验证：根仓27项测试全部通过；三仓实际verify通过；lock/schema JSON解析和`git diff --check`通过；CGRA、ndp-sim-ref、NDP工作树均干净且HEAD/remote与lock一致。
     - 精确回退：revert本commit；改动前根状态为 `6a729fe…`。revert会恢复旧lock并删除恢复工具/schema/测试，但不会删除三个本地仓或修改其Git配置。
+16. `f4f71f1c8c6c109382d4127a24994dcfa9324279`，父提交 `d98d91f7ae61e82f885def7239cde593410a5477`，`chore: sync repository recovery ledger`。
+    - 范围：把仓库恢复工具业务提交 `d98d91f…` 的完整hash、父提交、验证和回退位置补入精确台账。
+    - 验证：提交已推送到 `origin/main`；本地HEAD与远端一致，仓库恢复工具对三仓verify通过。
+    - 精确回退：revert本commit；改动前根状态为 `d98d91f…`，只影响台账登记。
 
 ### 子仓库 `NDPFuncModel/conv_func`
 
-上游共同基线为 `89d1655ce6450477cdcc04965d8b4866f12066e5`。以下提交均为当前本机独有提交，尚未推送到 `origin/conv_func`：
+上游共同基线为 `89d1655ce6450477cdcc04965d8b4866f12066e5`。以下提交不在公开 `origin/conv_func`，均已推送到操作者Private镜像 `private/conv_func`：
 
 1. `789d121327d8e855d33f16c2103a6422a521fa25`，父提交 `89d1655ce6450477cdcc04965d8b4866f12066e5`，`fix: correct slice and strided AG addressing`。
    - 范围：修复DRAM `per_slice`漏bank、slice AG基址、RDAG/WRAG跨transaction物理地址；新增physical image probe和寻址测试。
@@ -95,6 +99,10 @@
    - 范围：用LC `last/last_index`替代错误乘积末态；将psum清零移到完整C/S/R与ring reduction之后；新增reduction调度测试。
    - 验证：NDP累计11项测试通过，覆盖词典序末态、非零start、非单位step和非法状态；完整D仍未跑通，G2未通过。
    - 精确回退：revert本commit；保留寻址和整数PEA的上一状态为 `deee41f…`。
+4. `d212225bb466bb1d46a6b5c9ba528e5d6c28e34d`，父提交 `86cd3e328b45c37a1c8a133c650eb1f756b0c233`，`feat: expose segmented INT8 dot reductions`。
+   - 范围：physical image probe接收branch mask与ring segment边界，把logical output coordinate、各段partial accumulator和最终accumulator返回根adapter。
+   - 验证：NDP 11项测试通过；根集成测试进一步以84个实际输出坐标验证4段ring结果。提交已成功推送到Private `conv_func`。
+   - 精确回退：revert本commit；上一NDP状态为 `86cd3e3…`，仍保留寻址、整数PEA及LC reduction控制，但根adapter的分段probe将不兼容。
 
 ## 当前本地副本与空间审计（2026-07-11）
 
@@ -116,6 +124,13 @@
 - 新增 `schemas/repositories_lock.schema.json` 和 `tools/sync_repositories.py`。`verify`只读核验HEAD、dirty paths和remote URL；`sync`对缺失仓使用partial clone并检出固定commit，优先Private镜像，拒绝路径越界、非Git目录和既有脏工作树。
 - 新增6项仓库恢复测试，覆盖lock/schema一致性、版本/路径越界、HEAD/dirty/remote验证、缺失仓固定commit恢复、Private镜像优先和脏仓拒绝；当前三个实际仓库均通过verify。
 - 根仓完整回归由21项增至27项并全部通过；lock与schema JSON解析、`git diff --check`及三仓clean/remote/HEAD复核均通过。
+
+## 2026-07-12：W2全输出坐标ring accumulator闭环
+
+- NDP `d212225…` 为physical-address probe加入branch mask、ring segment边界、逻辑输出坐标和分段partial sum回传，并已推送Private镜像。
+- 根adapter不从raw数组旁路取值：它通过provenance取得activation/weight/bias/qparams物理地址，按输出K-owner开始的4-slice ring顺序组织reduction；越界padding不伪造逻辑坐标，空段和奇数lane统一用branch mask补齐PE dot size。
+- 确定性小Conv覆盖非零activation zero point、3×3 kernel、padding、C/K tail和7个输出通道，共84个输出坐标；每坐标回传4个partial sum，最终int32 accumulator与独立QLinearConv golden逐元素bit-exact。
+- 根仓28项、NDP 11项测试全部通过。当前闭环边界是raw↔physical↔NDP DRAM↔全部坐标4-slice ring整数accumulator；probe仍未执行主入口完整LC/Buffer调度，requant、INT8 packing、真实D writeback和inverse D未完成，因此G2仍未通过。
 
 ## 2026-07-05～2026-07-09：确认原始ResNet参考链
 

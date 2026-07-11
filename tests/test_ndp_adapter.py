@@ -16,6 +16,12 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 
 
 class NdpFunctionalAdapterTests(unittest.TestCase):
+    def _adapter(self) -> NdpFunctionalAdapter:
+        return NdpFunctionalAdapter(
+            PROJECT_ROOT / "NDPFuncModel",
+            python_executable=Path(sys.executable),
+        )
+
     def test_ndp_dram_consumes_the_exact_w2_physical_bundle(self) -> None:
         activation = np.arange(12, dtype=np.uint8).reshape(1, 3, 2, 2)
         weight = np.array(
@@ -65,10 +71,7 @@ class NdpFunctionalAdapterTests(unittest.TestCase):
             y_zero_point=y_zero_point,
             output=golden.output,
         )
-        adapter = NdpFunctionalAdapter(
-            PROJECT_ROOT / "NDPFuncModel",
-            python_executable=Path(sys.executable),
-        )
+        adapter = self._adapter()
         c_tile = int(bundle.metadata["c_tile"])
         c_padded = int(bundle.metadata["c_padded"])
         k_tile = int(bundle.metadata["k_tile"])
@@ -112,6 +115,67 @@ class NdpFunctionalAdapterTests(unittest.TestCase):
         self.assertEqual(
             result.int8_dot_probes[0]["accumulator"],
             int(golden.accumulator[0, output_channel, 0, 0]),
+        )
+
+    def test_all_conv_coordinates_match_independent_golden_accumulators(self) -> None:
+        activation = (np.arange(36, dtype=np.uint8) + 3).reshape(1, 3, 3, 4)
+        weight = ((np.arange(189, dtype=np.int16) % 9) - 4).astype(np.int8).reshape(
+            7, 3, 3, 3
+        )
+        bias = np.array([17, -9, 3, 21, -16, 5, 11], dtype=np.int32)
+        w_scale = np.linspace(0.02, 0.05, 7, dtype=np.float32)
+        w_zero_point = np.zeros(7, dtype=np.int8)
+        x_scale = np.float32(0.025)
+        x_zero_point = np.uint8(7)
+        y_scale = np.float32(0.04)
+        y_zero_point = np.uint8(101)
+        pads = (1, 1, 1, 1)
+        golden = qlinear_conv_scalar(
+            activation,
+            weight,
+            x_scale=x_scale,
+            x_zero_point=x_zero_point,
+            w_scale=w_scale,
+            w_zero_point=w_zero_point,
+            y_scale=y_scale,
+            y_zero_point=y_zero_point,
+            bias=bias,
+            pads=pads,
+        )
+        geometry = DramGeometry(
+            slice_count=4,
+            bank_count=2,
+            row_count=8,
+            col_count=8,
+            subword_bytes=16,
+        )
+        bundle = SmallConvPhysicalLayout(geometry, slice_count=4).forward(
+            activation=activation,
+            weight=weight,
+            bias=bias,
+            w_scale=w_scale,
+            w_zero_point=w_zero_point,
+            x_scale=x_scale,
+            x_zero_point=x_zero_point,
+            y_scale=y_scale,
+            y_zero_point=y_zero_point,
+            output=golden.output,
+        )
+        adapter = self._adapter()
+        probes = adapter.build_qlinear_conv_accumulator_probes(bundle, pads=pads)
+        self.assertEqual(len(probes), golden.accumulator.size)
+        self.assertTrue(all(len(probe.ring_segment_ends) == 4 for probe in probes))
+        self.assertTrue(any(any(probe.branch_mask) for probe in probes))
+        result = adapter.run_qlinear_conv_accumulators(bundle, pads=pads)
+        np.testing.assert_array_equal(result.accumulator, golden.accumulator)
+        self.assertEqual(
+            len(result.physical_probe.int8_dot_probes), golden.accumulator.size
+        )
+        self.assertTrue(
+            all(
+                len(dot["partial_accumulators"]) == 4
+                for dot in result.physical_probe.int8_dot_probes
+            )
         )
 
 

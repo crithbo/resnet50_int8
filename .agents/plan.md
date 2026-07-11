@@ -43,7 +43,7 @@
 - 所有物理变换必须同时实现正向和逆向；不能 inverse-relayout 的输出不得宣布数值验证完成。
 - INT8/UINT8/INT32 默认 bit-exact；FP32 必须记录 `atol/rtol`。
 - 每完成一个阶段，更新本文件的状态，并在 `history.md` 追加记录；每个提交台账必须包含仓库、完整hash、父提交、范围、验证结果和精确回退位置。
-- 根仓库和子仓库每个经过测试确认有效的小步骤做原子Git提交；W1/W2等工作包通过验收门后形成GitHub里程碑。修改过的仓库必须推送到操作者控制的GitHub仓库或fork并核对远端hash，不能只依赖本地副本。
+- 根仓库和子仓库每个经过测试确认有效的小步骤做本地原子Git提交，小进度不逐次推送；W1/W2等工作包通过验收门、形成明确恢复检查点，或操作者明确要求时，再批量推送到操作者控制的GitHub仓库或fork并核对远端hash。
 - 尽量只保留必要工作树，不为备份额外创建clone/worktree/zip。冗余副本只有在无唯一未提交内容、全部需保留提交已推送、恢复路径验证通过且操作者批准具体绝对路径后才能删除；所有提交历史保留，不通过reset/rebase/filter/强推或裁剪历史释放空间。
 - 当前冗余 `artifacts/smoke/NDPFuncModel` worktree已按批准删除；主仓 `main` 与NDP `conv_func` 已推送到各自Private仓并通过GitHub完整commit页面核验。CGRA的4项状态已证明仅是Windows权限位噪声，现已干净并锁定正式upstream，无需Private镜像。
 
@@ -339,7 +339,7 @@ W1的模型子任务已完成，但G1尚未通过；architecture/quantization/ba
 
 目标：完全不依赖正式ResNet模型，让一个小Conv完成 raw→physical→functional model→logical D。
 
-当前状态（2026-07-11）：第1～4项、第5项操作数/整数psum部分、第6项reduction控制部分和第7项的软件候选实现已完成。标量循环、im2col/einsum与ONNX Runtime在QLinearConv样例上bit-exact；1/4-slice候选layout通过round-trip。本地 `NDPFuncModel@86cd3e3` 已修复slice/transaction寻址、INT8 PEA、LC末态判定和psum生命周期。根adapter可把同一physical bundle载入NDP DRAM，从4个activation slice及所属K slice按物理地址取数，得到与QLinearConv golden相同的单输出坐标accumulator。NDP侧11项、根侧21项测试通过。尚未实际跑通全部输出坐标、requant、INT8 packing和真实writeback，故G2未通过、16-slice尚未扩展。
+当前状态（2026-07-12）：第1～5项、第6项的reduction/全坐标整数累加部分和第7项的软件候选实现已完成。标量循环、im2col/einsum与ONNX Runtime在QLinearConv样例上bit-exact；1/4-slice候选layout通过round-trip。本地 `NDPFuncModel@d212225` 已修复slice/transaction寻址、INT8 PEA、LC末态判定和psum生命周期，并支持branch-masked ring分段probe。根adapter已按输出通道owner起点的4-slice ring顺序覆盖一个带padding、C/K tail的 `[1,3,3,4]×[7,3,3,3]` 小Conv全部84个输出坐标；每坐标4个分段partial sum均实际回传，最终int32 accumulator与独立QLinearConv golden逐元素bit-exact。NDP侧11项、根侧28项测试通过。该probe仍绕过主入口硬编码LC/Buffer调度和真实writeback；requant、INT8 packing、physical/logical D尚未闭环，故G2未通过、16-slice尚未扩展。
 
 细分：
 
@@ -655,7 +655,7 @@ W0实现前还需把以上补充转成可执行的schema字段、测试用例和
 - 单算子 golden=simulator；整数 bit-exact，浮点符合 tolerance。
 - emulator 不在仓库时，阻塞必须记录为外部依赖，不能用 bitstream 生成成功替代。
 
-当前状态：本地候选已修复slice/transaction寻址、INT8 A/B语义、整数PEA、LC reduction末态和psum生命周期，并以physical-address probe证明一个输出坐标的accumulator与golden一致；不再依赖旧 `hex_data` 才能推进这部分。仍不能完成一次可信完整Conv输出：主入口固定4 slice，完整坐标和flush次数尚未验证，DRAM写回被注释，INT8输出仍按FP16 packing，requant未接入，manifest/JSON尚未参数化，旧产物也未重建。`write_emulator_bundle()` 仍只写输入包，不执行；非Conv目标emulator源码/二进制和命令未找到。
+当前状态：本地候选已修复slice/transaction寻址、INT8 A/B语义、整数PEA、LC reduction末态和psum生命周期，并以physical-address ring probe证明带padding和tail的小Conv全部84个输出坐标accumulator与golden一致；不再依赖旧 `hex_data` 才能推进这部分。仍不能完成一次可信完整Conv输出D：probe没有执行主入口的硬编码LC/Buffer完整调度，也未验证唯一flush；DRAM写回被注释，INT8输出仍按FP16 packing，requant未接入，manifest/JSON尚未参数化，旧产物也未重建。`write_emulator_bundle()` 仍只写输入包，不执行；非Conv目标emulator源码/二进制和命令未找到。
 
 ## 阶段 G：生成 ResNet 网络级硬件 execplan
 
@@ -736,7 +736,7 @@ W0实现前还需把以上补充转成可执行的schema字段、测试用例和
 | 2 | 修复 slice/bank 物理寻址【已完成候选修复】 | 上游四个逻辑slice都读物理slice0，bias slice1~3为空 | `789d121`已使`per_slice`包含bank并将slice span加入AG base；4-slice逐byte provenance和bundle hash读回通过 | 中 |
 | 3 | 修复 RDAG/WRAG transaction 地址【已完成候选修复】 | 上游计算stride后丢弃，真实shape会触发 | `789d121`已分离逻辑counter和物理transaction offset；非连续、跨16-byte边界的RDAG/WRAG序列测试通过 | 中 |
 | 4 | 固化 INT8 数值语义【软件候选已完成】 | signed A×unsigned B、float32 中转会使 psum 非 bit-exact | `deee41f`已实现activation uint8、weight int8、bias/psum int32和branch清零；physical-address单坐标accumulator与golden一致。溢出暂显式报错，硬件wrap/saturate/error规则待确认 | 中高 |
-| 5 | 修复 reduction 与输出坐标【控制候选已修复】 | 上游最后reduction条件永假且每个R后清空psum | `86cd3e3`改用LC `last/last_index`并把清零移到完整C/S/R+ring之后；仍需以完整D证明每坐标只flush一次 | 中 |
+| 5 | 修复 reduction 与输出坐标【整数累加候选已验证】 | 上游最后reduction条件永假且每个R后清空psum | `86cd3e3`修复末态/生命周期；`d212225`与根adapter已验证全部坐标四段ring accumulator；仍需真实D证明每坐标只flush/writeback一次 | 中 |
 | 6 | 实现 requant 与真实 writeback | 没有 UINT8 D 就无法和 ResNet golden 比较 | per-channel multiplier/shift 或批准公式、nearest-even、zero-point、saturation；INT8 packing；真实 DRAM write 并 inverse-relayout | 高 |
 | 7 | 恢复配置驱动 | 当前主程序完全绕过 `config/` 和 JSON | 先恢复 `graph` pyc 对应源码或取得 `conv_config`；把 `config_nse.py` 固定 Conv 逐字段映射到目标 JSON，明确架构版本，不复制整段位串 | 高 |
 | 8 | 从 4 slice 扩到确认的 16 PE 阵列 | 只有前 7 步正确后，扩规模结果才可判定 | 参数化 slice 数、ring count、C/K partition、tail；1/4/16 slice 对同一逻辑 Conv 结果一致 | 高 |

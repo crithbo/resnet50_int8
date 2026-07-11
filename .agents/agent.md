@@ -1,6 +1,6 @@
 # ResNet50 INT8 项目入口与代码地图
 
-最后更新：2026-07-11
+最后更新：2026-07-12
 
 本文件是新会话进入本项目时的默认入口，记录最终目标、当前闭环状态、协作规则、仓库基线和代码地图。唯一权威执行计划见 `.agents/plan.md`，已经发生的事实见 `.agents/history.md`。
 
@@ -9,7 +9,7 @@
 - **最终验收**：正式 ResNet50 INT8 ONNX→逐节点/硬件原子算子 golden→16-slice relayout→JSON/bitstream→目标 simulator→execplan/Bank_data→RTL/硬件→三方逐算子和整网一致。
 - **实际进度**：代码和资料摸底基本完成，但端到端工程完成度仅约 15%~25%；当前没有一个目标 NDP ResNet 算子达到 `golden=simulator=hardware`。
 - **三个仓库分工**：`CGRA_SIM` 给软件/QNN语义和旧 ResNet 计划；`ndp-sim-ref` 给目标 JSON、bitstream、relayout/execplan 框架；`NDPFuncModel` 给 Conv 数据通路和旧固定配置。三者尚无共同 manifest 或可运行适配层。
-- **当前可直接推进**：W0/G0、小QLinearConv golden、1/4-slice候选layout、NDP DRAM ingress和单坐标整数PEA已经通过；当前继续W2完整输出坐标/reduction，再修复requant和真实writeback。
+- **当前可直接推进**：W0/G0、小QLinearConv golden、1/4-slice候选layout、NDP DRAM ingress和全部小Conv输出坐标的整数PEA/ring分段累加已经通过；当前继续W2 requant、INT8 packing和真实writeback。
 - **当前外部阻塞**：正式模型和固定输入基线已经自行取得；剩余外部阻塞为目标16-slice RTL/ISA版本、正式物理layout、INT8 SA/GA/qparams硬件约定、目标emulator关系、硬件加载与dump协议。
 - **禁止误用**：NDPFuncModel 当前 `extracted_*.npy` 和 `verify_pe` psum 不是可信 golden；42个 JSON也不等于 ResNet算子配置已完成；bitstream生成成功不等于数值正确。
 - **接手第一条命令**：先运行 `.venv\Scripts\python.exe tools\sync_repositories.py verify` 核验三仓commit/remote/dirty状态；始终使用根目录 `.venv\Scripts\python.exe`，不要调用系统 `python` 或重装Codex公共运行时。
@@ -35,9 +35,9 @@
 - 局部实现细节可以在不改变总体路线的前提下直接做更稳妥的调整，但完成后要说明调整内容。
 - 每完成一个明确子任务后，需要向操作者说明：完成了什么、如何验证、还剩什么风险，并同步更新 `plan.md` 和 `history.md`。
 - 不要回退或覆盖已有未提交修改，除非操作者明确要求。
-- 根仓库和子仓库每个经过验证的有效小步骤都做原子Git提交；W1/W2等完整工作包通过验收门后形成里程碑并推送GitHub。每次提交必须在 `.agents/history.md` 台账记录仓库、完整hash、父提交、范围、验证和精确回退点。大模型、运行产物、trace和其他可再生大文件不得进入普通Git历史。
+- 根仓库和子仓库每个经过验证的有效小步骤都做本地原子Git提交；小进度不逐次推送。W1/W2等完整工作包通过验收门、形成明确恢复检查点，或操作者明确要求时，再批量推送GitHub并核对远端hash。每次提交必须在 `.agents/history.md` 台账记录仓库、完整hash、父提交、范围、验证和精确回退点。大模型、运行产物、trace和其他可再生大文件不得进入普通Git历史。
 - 永久保留的是提交，不是副本：尽量只保留完成工作所需的一份工作树，不为备份额外创建clone/worktree/zip；主仓和修改过的子仓提交在history登记后推送到操作者控制的GitHub仓库/fork。冗余副本仅在无唯一未提交内容、远端hash已核对且操作者批准具体路径后删除；不得通过改写或裁剪提交历史节省空间。
-- GitHub owner为 `crithbo`。Private主仓 `crithbo/resnet50_int8` 的 `origin/main` 已包含根提交 `4b7d7e1…`；Private镜像 `crithbo/NDPFuncModel-private` 的 `private/conv_func` 已包含NDP提交 `86cd3e3…`，公开上游仍保留为 `origin`。两者均由登录后的GitHub完整commit页面核验。后续提交作者名和操作者确认的Gmail已写入四仓repository-local配置；既有提交不改写。
+- GitHub owner为 `crithbo`。Private主仓 `crithbo/resnet50_int8` 的 `origin/main` 保存根集成代码，Private镜像 `crithbo/NDPFuncModel-private` 的 `private/conv_func` 保存NDP独有提交，公开上游仍保留为 `origin`。本地源码即使全部丢失，也可按主仓 `repos.lock.json` 和 `tools/sync_repositories.py sync` 恢复四份代码工作树；`.venv`、ONNX、golden/trace/hardware dump和普通运行artifact不在GitHub普通提交中，需按lock/hash重新下载或生成。当前这种“代码云端提交、可再生产物不入库”的恢复范围已获操作者接受。后续提交作者名和操作者确认的Gmail已写入四仓repository-local配置；既有提交不改写。
 
 ## 最终目标
 
@@ -180,12 +180,12 @@ C:\Users\15383\Desktop\Codex\project\resnet50_int8\NDPFuncModel
 
 ```text
 conv_func
-86cd3e328b45c37a1c8a133c650eb1f756b0c233
+d212225bb466bb1d46a6b5c9ba528e5d6c28e34d
 ```
 
 状态说明：
 
-- 从 `runoobb/NDPFuncModel` 的 `conv_func` 分支单分支克隆；当前本地分支在上游 `89d1655` 基础上增加寻址修复 `789d121`、整数PEA修复 `deee41f` 和reduction修复 `86cd3e3`，工作树干净、相对origin ahead 3。
+- 从 `runoobb/NDPFuncModel` 的 `conv_func` 分支单分支克隆；当前本地分支在上游 `89d1655` 基础上增加寻址修复 `789d121`、整数PEA修复 `deee41f`、reduction修复 `86cd3e3` 和分段probe `d212225`，工作树干净；独有提交已推送Private镜像。
 - 它是以 Python 硬编码循环和数据通路的 Conv 功能模型，不是 `ndp-sim-ref/jsons` 或 bitstream 的解释器。
 - 仓库按 Git 记录了 `conv_config` gitlink，但没有 `.gitmodules` 和 URL；该目录无法还原。`graph/` 也只有 `.pyc`，没有对应 `.py` 源码。
 - `hex_data/` 被忽略且未随仓库提供，因此 `main_CONV_N2N.py` 当前不能从干净 clone 直接完整运行。
@@ -313,7 +313,7 @@ CGRA_SIM/testing/resnet-50-int8/
 
 该仓库补齐的是“Conv 数据通路怎样走”的重要参考：DRAM 几何、地址/掩码、Buffer 行列、8×8 PEA、4-slice ring 和 psum provenance 都能用于设计 ResNet Conv relayout 与配置适配。它尚未补齐目标数值闭环，已确认的直接阻塞包括：
 
-1. 上游 `reduc_state = r*s*cc_shared` 不可能正确表示多层循环末态，且在每个R后清空psum；本地 `86cd3e3` 已改用LC `last/last_index`并把清零移到完整C/S/R+ring之后。仍需用完整D验证每个输出坐标只flush一次。
+1. 上游 `reduc_state = r*s*cc_shared` 不可能正确表示多层循环末态，且在每个R后清空psum；本地 `86cd3e3` 已改用LC `last/last_index`并把清零移到完整C/S/R+ring之后。`d212225` 和根adapter已用全部输出坐标验证四段ring整数累加；真实主入口flush/writeback仍未恢复。
 2. `run_buffer_writeback_to_dram()` 只记录“将要写回”的日志，实际 `dram.stream_write()` 被注释。
 3. INT8 Conv 输出仍走 FP16 packing，未执行 per-channel requant/zero-point/saturation；主入口创建的 `ActivationUnit` 没有被使用。
 4. 上游PEA按signed A×unsigned B计算；本地 `deee41f` 已按主链实际端口修为uint8 activation A×int8 weight B，并由physical-address dot probe与QLinearConv accumulator对齐。目标硬件物理端口仍需外部确认。
@@ -332,7 +332,7 @@ CGRA_SIM/testing/resnet-50-int8/
 - **lowering 和统一 manifest——仓库中没有**：旧计划精确还原为 77 个模型级原语，但依赖 328 个有序字典项；没有 ONNX node→硬件原子 op→JSON→execplan→结果的一对多映射。
 - **数据变换——Conv候选已进入NDP验证/其余需完成**：W2已实现1/4-slice `w2_ndp_ring_candidate_v1`，覆盖DRAM五维地址、activation-C和weight/output-K分片、bias/qparams、C/K tail、16-byte对齐、逐字节provenance及正逆round-trip；NDP已逐region读回并由物理地址完成单坐标整数dot，但它仍不是硬件批准layout。ResNet 16-slice Conv以及Quantize、MaxPool、Add、AvgPool、MatMul/dense、Dequantize、Flatten/View仍需继续实现。
 - **单算子配置——部分已有**：42 个静态 JSON 中只有 MaxPool、sum 型 AvgPool、固定样例 quant、fp32 输出 add-dequant 可局部参考；6 个 SA JSON 全是 FP16、bias=0；没有核心 INT8 Conv/MatMul。
-- **目标数值模拟——DRAM ingress和单坐标整数PEA已通过/reduction控制已修复**：本地 `NDPFuncModel@86cd3e3` 可消费W2 physical bundle，逐region hash一致，并从跨slice activation地址与K-owner weight地址执行uint8×int8纯整数dot；目标坐标accumulator与QLinearConv golden一致。LC末态和psum生命周期已有回归，但完整坐标执行、requant、真实writeback、JSON驱动和16-slice尚未闭环。
+- **目标数值模拟——DRAM ingress和全部坐标整数PEA已通过**：本地 `NDPFuncModel@d212225` 可消费W2 physical bundle，逐region hash一致，并按K-owner起点的4-slice ring顺序从物理地址执行uint8×int8纯整数dot；padding/空段/奇数lane由branch mask补齐，全部84个输出坐标及每坐标4个分段partial sum均运行，最终accumulator与独立QLinearConv golden逐元素一致。该probe尚绕过硬编码主入口的LC/Buffer调度和真实D writeback；requant、JSON驱动和16-slice仍未闭环。
 - **execplan——框架已有/ResNet 适配没有**：可规划地址、重生成 bitstream、输出指令和 Bank_data，但 schema 无 numeric attributes，仍硬编码 28 slice，bitstream 失败后部分路径继续。
 - **RTL/硬件——外部阻塞**：没有完整 runner/testbench、加载/启动/完成/dump 协议或逐算子 checkpoint 入口。
 - **三方比较——仓库中没有通用实现**：旧 runner 只有 21 个硬编码 checkpoint，另一个工具只比较两个 128-bit 物理文件；没有 inverse-relayout 后的三方比较。
