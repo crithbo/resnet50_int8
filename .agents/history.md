@@ -38,6 +38,10 @@
    - 范围：把NDP reduction修复hash写入lock/quantization contract，并同步agent/history/plan/规则的完成边界。
    - 验证：根仓21项、NDP 11项测试通过；JSON解析与 `git diff --check` 通过。
    - 精确回退：revert本commit；改动前根状态为 `8e3f7db…`，配套NDP状态为 `deee41f…`。
+6. `d85a1576ba01d9caa5ae7784344b5e685af4da2f`，父提交 `7ca487b5da2be273dcef435c474c6d6ef45ec99d`，`docs: add precise Git recovery ledger`。
+   - 范围：建立完整提交台账和恢复规则；按操作者修正，规定子仓库提交及副本永久保留，仅可在大阶段验收和再次批准后清理主仓库额外冗余副本。
+   - 验证：三个文档差异通过 `git diff --check`；逐项对照根仓 `git log` 与NDP `origin/conv_func..HEAD` 的完整hash/父提交。
+   - 精确回退：revert本commit；改动前根状态为 `7ca487b…`。revert只撤销文档策略，不会删除任何代码或子仓库提交。
 
 ### 子仓库 `NDPFuncModel/conv_func`
 
