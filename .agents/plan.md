@@ -45,7 +45,7 @@
 - 每完成一个阶段，更新本文件的状态，并在 `history.md` 追加记录；每个提交台账必须包含仓库、完整hash、父提交、范围、验证结果和精确回退位置。
 - 根仓库和子仓库每个经过测试确认有效的小步骤做原子Git提交；W1/W2等工作包通过验收门后形成GitHub里程碑。修改过的仓库必须推送到操作者控制的GitHub仓库或fork并核对远端hash，不能只依赖本地副本。
 - 尽量只保留必要工作树，不为备份额外创建clone/worktree/zip。冗余副本只有在无唯一未提交内容、全部需保留提交已推送、恢复路径验证通过且操作者批准具体绝对路径后才能删除；所有提交历史保留，不通过reset/rebase/filter/强推或裁剪历史释放空间。
-- 当前冗余 `artifacts/smoke/NDPFuncModel` worktree已按批准删除；主仓和NDP空Private镜像已经创建并配置远端，下一步是推送两仓、核对远端完整commit hash，再审核CGRA的4个既有未提交修改。
+- 当前冗余 `artifacts/smoke/NDPFuncModel` worktree已按批准删除；主仓 `main` 与NDP `conv_func` 已推送到各自Private仓并通过GitHub完整commit页面核验。版本任务下一步只剩审核CGRA的4个既有未提交修改，并判断是否建立CGRA Private镜像。
 
 ## 当前总体状态
 

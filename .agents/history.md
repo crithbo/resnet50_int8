@@ -62,6 +62,10 @@
     - 范围：登记 `2f480cc…` 的完整hash、父提交、删除验证和重现方式。
     - 验证：`git diff --cached --check`通过，提交后主仓工作树干净。
     - 精确回退：revert本commit；改动前根状态为 `2f480cc…`，只影响台账内容。
+12. `4b7d7e1b4475c0763c936abc80489ab676711a86`，父提交 `38c6c0a2152f833a50d05cb00678a9d0b4c15679`，`docs: record private GitHub remotes`。
+    - 范围：记录GitHub owner、repository-local提交身份、两个Private空仓、主仓/NDP远端配置和CGRA剩余云端任务。
+    - 验证：主仓 `origin`、NDP `origin/private` URL正确；GitHub页面确认两仓均为Private且创建时为空；`git diff --cached --check`通过。
+    - 精确回退：revert本commit；改动前根状态为 `38c6c0a…`。远端和本地Git配置位于`.git/config`，不随文档revert改变。
 
 ### 子仓库 `NDPFuncModel/conv_func`
 
@@ -89,7 +93,7 @@
 - `CGRA_SIM/.git`另报告约113.98 MiB临时pack垃圾；这不是有效提交副本，可在确认仓库状态后用Git维护方式清理，但本轮未删除。
 - GitHub owner确认为 `crithbo`；后续提交作者名配置为 `crithbo`，提交邮箱使用操作者确认的Gmail。身份写入四个仓库的repository-local Git配置，不改写任何既有commit，也不在项目文档重复保存私人邮箱明文。
 - 已创建并由GitHub页面确认两个空Private仓库：主仓 `https://github.com/crithbo/resnet50_int8.git`，NDP独立私有镜像 `https://github.com/crithbo/NDPFuncModel-private.git`；均未初始化README、LICENSE或`.gitignore`。
-- 主仓已配置 `origin` 指向Private主仓；NDP保留公开上游 `origin`，新增 `private` 指向私有镜像。当前状态为“远端已建立、推送待完成”，只有推送并核对远端hash后才能标记云端备份完成。
+- 主仓 `main` 已推送到Private `origin/main`，NDP `conv_func` 已推送到Private `private/conv_func`；两次push均成功并建立tracking。已在登录后的GitHub提交页独立确认主仓 `4b7d7e1b4475c0763c936abc80489ab676711a86` 和NDP `86cd3e328b45c37a1c8a133c650eb1f756b0c233` 可访问，云端备份状态为完成。
 - `CGRA_SIM`仍没有可写remote且有4个进入任务前已有的未提交修改；`ndp-sim-ref`干净并跟踪上游 `origin/main`。CGRA需先审核既有修改，再按同一策略建立Private镜像。
 - NDP的3个独有提交不能跟随主仓一起推送，因为它是独立Git仓库；已为其建立独立Private镜像。`CGRA_SIM`需先审查4个既有未提交修改，再决定是否提交到单独Private镜像；干净的 `ndp-sim-ref` 暂可继续以固定上游hash恢复。
 
