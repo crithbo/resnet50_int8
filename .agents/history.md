@@ -39,13 +39,17 @@
    - 验证：根仓21项、NDP 11项测试通过；JSON解析与 `git diff --check` 通过。
    - 精确回退：revert本commit；改动前根状态为 `8e3f7db…`，配套NDP状态为 `deee41f…`。
 6. `d85a1576ba01d9caa5ae7784344b5e685af4da2f`，父提交 `7ca487b5da2be273dcef435c474c6d6ef45ec99d`，`docs: add precise Git recovery ledger`。
-   - 范围：建立完整提交台账和恢复规则；按操作者修正，规定子仓库提交及副本永久保留，仅可在大阶段验收和再次批准后清理主仓库额外冗余副本。
+   - 范围：建立完整提交台账和恢复规则；该提交当时记录的“保留子仓库副本”策略后来被操作者进一步澄清，现行规则已由 `f0cfd3b…` 改为“保留提交、减少副本、优先GitHub”。
    - 验证：三个文档差异通过 `git diff --check`；逐项对照根仓 `git log` 与NDP `origin/conv_func..HEAD` 的完整hash/父提交。
    - 精确回退：revert本commit；改动前根状态为 `7ca487b…`。revert只撤销文档策略，不会删除任何代码或子仓库提交。
 7. `8d21d736435b88ef98ea205b5d0236fbf8d56208`，父提交 `d85a1576ba01d9caa5ae7784344b5e685af4da2f`，`chore: sync Git recovery ledger`。
    - 范围：把 `d85a157…` 的完整hash、父提交、验证和回退位置同步到本台账。
    - 验证：`git diff --cached --check`通过，提交后工作树干净。
    - 精确回退：revert本commit；改动前根状态为 `d85a157…`，只影响台账登记。
+8. `f0cfd3bc08abf0acc1d0aa5f01c505745a93cc1a`，父提交 `8d21d736435b88ef98ea205b5d0236fbf8d56208`，`docs: prefer GitHub over local repository copies`。
+   - 范围：最终澄清“永久保留提交而非副本”，建立少副本/GitHub优先规则；审计主仓、三个参考仓、linked worktree、artifact和依赖环境的实际空间与远端状态。
+   - 验证：逐仓运行 `git worktree list`、`remote -v`、`branch -vv`、`status`、`count-objects -vH`并统计目录大小；三个文档通过 `git diff --check`。
+   - 精确回退：revert本commit；改动前根状态为 `8d21d73…`。该回退只撤销最终策略/审计文档，不删除提交、副本或artifact。
 
 ### 子仓库 `NDPFuncModel/conv_func`
 
