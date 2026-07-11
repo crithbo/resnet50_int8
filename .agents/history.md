@@ -82,6 +82,10 @@
     - 范围：把仓库恢复工具业务提交 `d98d91f…` 的完整hash、父提交、验证和回退位置补入精确台账。
     - 验证：提交已推送到 `origin/main`；本地HEAD与远端一致，仓库恢复工具对三仓verify通过。
     - 精确回退：revert本commit；改动前根状态为 `d98d91f…`，只影响台账登记。
+17. `758a7c5b5eed8415a184380f2fab227ecea58dfa`，父提交 `f4f71f1c8c6c109382d4127a24994dcfa9324279`，`feat: validate all Conv ring accumulators`。
+    - 范围：根adapter从physical provenance构造全部QLinearConv输出坐标的4-slice ring probe，处理padding/空段/奇数lane、activation zero point折叠和分段partial sum；新增全坐标差分测试，锁定NDP `d212225…`，同步W2状态及新的“小进度只做本地提交”规则，并禁止adapter子进程重写NDP `.pyc`。
+    - 验证：带3×3/padding/C-K tail的84个int32 accumulator与独立QLinearConv golden逐元素相同；根仓28项、NDP 11项测试通过；三参考仓verify和`git diff --check`通过，测试后NDP工作树保持干净。
+    - 精确回退：revert本commit；根仓回到 `f4f71f…` 的单坐标probe状态，配套NDP `d212225…` 可继续保留但不会被旧lock引用。本commit按新规则仅保留本地，尚未推送 `origin/main`。
 
 ### 子仓库 `NDPFuncModel/conv_func`
 
