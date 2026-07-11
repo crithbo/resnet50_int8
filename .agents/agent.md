@@ -169,12 +169,12 @@ C:\Users\15383\Desktop\Codex\project\resnet50_int8\NDPFuncModel
 
 ```text
 conv_func
-89d1655ce6450477cdcc04965d8b4866f12066e5
+789d121327d8e855d33f16c2103a6422a521fa25
 ```
 
 状态说明：
 
-- 从 `runoobb/NDPFuncModel` 的 `conv_func` 分支单分支克隆，工作树干净。
+- 从 `runoobb/NDPFuncModel` 的 `conv_func` 分支单分支克隆；当前本地分支在上游 `89d1655` 基础上增加寻址修复提交 `789d121`，工作树干净、相对origin ahead 1。
 - 它是以 Python 硬编码循环和数据通路的 Conv 功能模型，不是 `ndp-sim-ref/jsons` 或 bitstream 的解释器。
 - 仓库按 Git 记录了 `conv_config` gitlink，但没有 `.gitmodules` 和 URL；该目录无法还原。`graph/` 也只有 `.pyc`，没有对应 `.py` 源码。
 - `hex_data/` 被忽略且未随仓库提供，因此 `main_CONV_N2N.py` 当前不能从干净 clone 直接完整运行。
@@ -308,9 +308,9 @@ CGRA_SIM/testing/resnet-50-int8/
 4. PEA 当前按 signed A × unsigned B 计算，而 ResNet 软件参考是 uint8 activation × int8 weight；需要确认端口交换还是实现错误。
 5. 主示例固定 4 slice，不等于已确认的目标 16 slice，也没有 JSON/bitstream、qparams 或命令行参数化接口。
 6. `SpecialPEA.PE.execute()` 虽在模块顶部为无 `np.float128` 的平台定义了 `FLOAT_ACCUM` fallback，函数内部仍直接调用 `np.float128`；在当前 Windows NumPy 环境中，最小 INT8 PE 执行会立刻报错。
-7. `DRAM.per_slice` 少乘了 `bank_num`，bias 预装的 slice 基址落入 slice0 的其他 bank；当前 `extracted_bias.npy` 只有前 64 项非零，slice1~3 的 bias trace 为空。
-8. `run_dram_to_ag()` 没有把 `slice_id` 加入物理地址；跟踪日志虽轮流标出逻辑 slice0~3，但物理 provenance 全是 slice0，四个 activation C 分片的内容与 hash 完全相同。
-9. RDAG/WRAG 在多 transaction 情形计算了 transaction 地址，却在最终传输地址中漏掉 `transaction_idx * stride * size`；当前 128-byte 单 transaction 样例可能掩盖此问题。
+7. 上游 `89d1655` 的 `DRAM.per_slice` 少乘 `bank_num`；本地 `789d121` 已修复并用4-slice独立写读验证。旧 `extracted_bias.npy` 和旧trace仍由错误版本生成，继续禁止作为真值。
+8. 上游 `run_dram_to_ag()` 只把 `slice_id` 写进日志名；本地 `789d121` 已把完整slice byte span加入AG tensor base，slice0～3数据与物理provenance测试通过。
+9. 上游RDAG/WRAG多transaction路径丢弃strided transaction地址；本地 `789d121` 已分离逻辑counter与物理transaction offset，读写AG的跨16-byte边界地址序列对称通过。
 10. `verify_pe` 的 psum 文件在卷积 reduction 前写出，实际只是 bias preload 快照；`extracted_act/weight/bias.npy` 又由缺陷链路生成，均不得作为 Conv golden 或回归真值。
 
 因此它应标为【Conv 功能参考/待修复集成】，不能标为“目标 JSON emulator 已有”。推荐在统一 manifest 后增加一个 adapter，把目标 Conv JSON/bitstream 字段转换成该模型的 LC/AG/Buffer/PE 参数；先修复写回和量化，再用 conv0 做 golden=Conv functional model，随后才讨论其能否升级为目标 JSON/bitstream emulator。
@@ -321,7 +321,7 @@ CGRA_SIM/testing/resnet-50-int8/
 - **lowering 和统一 manifest——仓库中没有**：旧计划精确还原为 77 个模型级原语，但依赖 328 个有序字典项；没有 ONNX node→硬件原子 op→JSON→execplan→结果的一对多映射。
 - **数据变换——Conv候选已开始/其余需完成**：W2已实现1/4-slice `w2_ndp_ring_candidate_v1`，覆盖DRAM五维地址、activation-C和weight/output-K分片、bias/qparams、C/K tail、16-byte对齐、逐字节provenance及正逆round-trip；它尚未由NDP functional model验证，也不是硬件批准layout。ResNet 16-slice Conv以及Quantize、MaxPool、Add、AvgPool、MatMul/dense、Dequantize、Flatten/View仍需继续实现。
 - **单算子配置——部分已有**：42 个静态 JSON 中只有 MaxPool、sum 型 AvgPool、固定样例 quant、fp32 输出 add-dequant 可局部参考；6 个 SA JSON 全是 FP16、bias=0；没有核心 INT8 Conv/MatMul。
-- **目标数值模拟——Conv 通路骨架已有，可信数值链和目标解释器仍没有**：`NDPFuncModel/conv_func` 能产生硬编码的 Conv DRAM/AG/Buffer/PE/ring trace，但当前 slice 物理寻址和 bias 预载已经失真，不能称为可信 Conv 数值模拟；它也不消费 `ndp-sim-ref` JSON/bitstream，写回、requant、符号和 16-slice 尚未闭环。`model_execplan --export-emulator` 仍只导出 patched JSON 和 `dram_data.bin`。
+- **目标数值模拟——DRAM ingress已修复/PEA数值链仍没有闭环**：本地 `NDPFuncModel@789d121` 已能由独立adapter消费W2 physical bundle，并逐region读回相同hash；slice跨度、slice AG读取和RDAG/WRAG transaction已回归。它仍不消费 `ndp-sim-ref` JSON/bitstream，A/B符号、整数PEA、reduction、requant、真实writeback和16-slice尚未闭环，因此仍不能称为可信Conv数值模拟器。
 - **execplan——框架已有/ResNet 适配没有**：可规划地址、重生成 bitstream、输出指令和 Bank_data，但 schema 无 numeric attributes，仍硬编码 28 slice，bitstream 失败后部分路径继续。
 - **RTL/硬件——外部阻塞**：没有完整 runner/testbench、加载/启动/完成/dump 协议或逐算子 checkpoint 入口。
 - **三方比较——仓库中没有通用实现**：旧 runner 只有 21 个硬编码 checkpoint，另一个工具只比较两个 128-bit 物理文件；没有 inverse-relayout 后的三方比较。

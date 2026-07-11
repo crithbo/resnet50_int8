@@ -335,7 +335,7 @@ W1的模型子任务已完成，但G1尚未通过；architecture/quantization/ba
 
 目标：完全不依赖正式ResNet模型，让一个小Conv完成 raw→physical→functional model→logical D。
 
-当前状态（2026-07-11）：第1～3项和第7项的软件候选实现已完成。标量循环、im2col/einsum与ONNX Runtime在QLinearConv样例上bit-exact；NDP DRAM地址正逆公式、16-byte transfer拆分、显式byte-stride transaction、逐字节provenance，以及1/4-slice activation-C/weight-output-K候选layout均已通过round-trip。当前20项测试通过。该layout仍为 `w2_ndp_ring_candidate_v1` candidate，NDP functional model尚未消费physical image，因此G2未通过、16-slice尚未扩展。
+当前状态（2026-07-11）：第1～4项和第7项的软件候选实现已完成。标量循环、im2col/einsum与ONNX Runtime在QLinearConv样例上bit-exact；1/4-slice候选layout通过round-trip。本地 `NDPFuncModel@789d121` 已修复slice跨度、slice AG基址和RDAG/WRAG跨transaction地址；根adapter能在独立NDP进程中写入同一physical bundle并逐region读回相同hash。NDP侧4项、根侧21项测试通过。当前闭环只到NDP DRAM ingress，尚未经过整数PEA、reduction、requant和真实writeback，故G2未通过、16-slice尚未扩展。
 
 细分：
 
@@ -729,8 +729,8 @@ W0实现前还需把以上补充转成可执行的schema字段、测试用例和
 | 顺序 | 问题 | 为什么先做/后做 | 解决与验收方案 | 难度 |
 |---:|---|---|---|---|
 | 1 | 建立独立最小 Conv 真值 | 现有 `extracted_*.npy`、psum trace 不可信，缺少判错基准 | 自建 1 个小 UINT8×INT8 Conv，保存 activation/weight/int32 bias、逐 K psum、requant D；NumPy/QNN 双实现互验 | 中 |
-| 2 | 修复 slice/bank 物理寻址 | 当前四个逻辑 slice 都读物理 slice0，bias slice1~3 为空 | `per_slice` 包含 bank 维度；所有 DRAM→AG/AG→DRAM 地址显式带 slice；逐 byte provenance 验证每个 slice 唯一 | 中 |
-| 3 | 修复 RDAG/WRAG transaction 地址 | 多 transaction stride 当前被计算后丢弃，真实 shape 会触发 | 对连续/非连续、1/2/多 transaction 编写地址序列单测，再修最终 transfer address | 中 |
+| 2 | 修复 slice/bank 物理寻址【已完成候选修复】 | 上游四个逻辑slice都读物理slice0，bias slice1~3为空 | `789d121`已使`per_slice`包含bank并将slice span加入AG base；4-slice逐byte provenance和bundle hash读回通过 | 中 |
+| 3 | 修复 RDAG/WRAG transaction 地址【已完成候选修复】 | 上游计算stride后丢弃，真实shape会触发 | `789d121`已分离逻辑counter和物理transaction offset；非连续、跨16-byte边界的RDAG/WRAG序列测试通过 | 中 |
 | 4 | 固化 INT8 数值语义 | signed A×unsigned B、float32 中转会使 psum 非 bit-exact | activation uint8、weight int8、bias/psum int32，全程整数；明确溢出/branch；删除 `np.float128` 依赖 | 中高 |
 | 5 | 修复 reduction 与输出坐标 | 最后 reduction 条件永假，当前没有真实 D | 使用各 LC 的 `last`/`last_index` 或词典序末状态，逐输出坐标只 flush 一次；小真值逐坐标核验 | 中 |
 | 6 | 实现 requant 与真实 writeback | 没有 UINT8 D 就无法和 ResNet golden 比较 | per-channel multiplier/shift 或批准公式、nearest-even、zero-point、saturation；INT8 packing；真实 DRAM write 并 inverse-relayout | 高 |
