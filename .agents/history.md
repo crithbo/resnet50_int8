@@ -4,14 +4,14 @@
 
 本文件只保留已经发生的关键决策、验证和状态变化。当前任务看 `.agents/plan.md`，代码和仓库细节看 `.agents/agent.md`，单算子推导看 `.agents/rules/算子配置规则.md`。
 
-## Git提交与空间清理规则（2026-07-11确认并修正）
+## Git提交、GitHub备份与本地空间规则（2026-07-11最终修正）
 
 - 每个有效小步骤都要提交；`history.md` 必须记录仓库、完整40位commit、直接父commit、改动范围、验证结果和精确回退位置。短hash只用于正文易读，不能替代本节台账。
 - 回退默认使用 `git revert <commit>` 生成保留历史的新提交；不得自行使用reset、rebase、filter、强推或删除提交。任何改写历史仍须操作者单独确认。
-- 子仓库内的已有提交和子仓库本地副本都保留，不因阶段完成或空间占用而删除，也不在仓库内部裁剪提交。
-- 一个大工作包通过验收门且操作者确认后，如果空间占用过大，可评估删除的范围仅限**主仓库的额外副本/备份**；当前正在工作的主仓库不得删除，任何子仓库副本不得删除。
-- 删除主仓库额外副本前必须同时满足：能够确认目标确为冗余副本而不是当前工作仓；当前主仓工作树和提交完整；`repos.lock.json` 与本台账记录完整hash；恢复路径已验证；再次取得操作者对具体绝对路径的明确批准。
-- 当前主仓没有remote；`NDPFuncModel` 的3个修复提交只在本机、相对 `origin/conv_func` ahead 3。这进一步要求保留当前主仓和全部子仓库，但即使以后完成推送，子仓库副本仍按本规则保留。
+- 操作者最终澄清：真正需要永久保留的是提交，不是仓库目录副本。项目应尽量只保留一份必要工作树，不为备份目的额外创建clone、worktree、zip或目录复制；云端恢复以GitHub已推送提交为主。
+- 主仓和发生修改的子仓都必须先提交、在history登记，再推送到操作者控制的GitHub仓库或fork。不得把对上游仓库可能无权限的 `origin` 当成已经完成云端备份。
+- 冗余本地副本只有在其中没有唯一未提交内容、所有需保留提交已经推送并核对远端hash、且操作者批准具体路径后才能删除。删除副本不等于删除提交；不得通过reset/rebase/filter/强推或裁剪历史来节省空间。
+- `.venv`、模型、golden、trace和运行artifact不是仓库副本，也不会由普通GitHub提交自动备份；它们按可重建性和大文件策略另行管理，不能混入普通Git历史。
 - Git commit hash由提交内容决定，提交无法在自身文件内容中稳定写入自己的hash。因此业务/代码提交在同一次或紧随其后的history同步提交中登记；最新一笔“只更新台账”的提交以当前 `HEAD` 和 `git log -1 --format=fuller` 精确定位，并在下一次台账同步时补入。不得借此漏记任何业务提交。
 
 ## 精确提交台账
@@ -42,6 +42,10 @@
    - 范围：建立完整提交台账和恢复规则；按操作者修正，规定子仓库提交及副本永久保留，仅可在大阶段验收和再次批准后清理主仓库额外冗余副本。
    - 验证：三个文档差异通过 `git diff --check`；逐项对照根仓 `git log` 与NDP `origin/conv_func..HEAD` 的完整hash/父提交。
    - 精确回退：revert本commit；改动前根状态为 `7ca487b…`。revert只撤销文档策略，不会删除任何代码或子仓库提交。
+7. `8d21d736435b88ef98ea205b5d0236fbf8d56208`，父提交 `d85a1576ba01d9caa5ae7784344b5e685af4da2f`，`chore: sync Git recovery ledger`。
+   - 范围：把 `d85a157…` 的完整hash、父提交、验证和回退位置同步到本台账。
+   - 验证：`git diff --cached --check`通过，提交后工作树干净。
+   - 精确回退：revert本commit；改动前根状态为 `d85a157…`，只影响台账登记。
 
 ### 子仓库 `NDPFuncModel/conv_func`
 
@@ -59,6 +63,15 @@
    - 范围：用LC `last/last_index`替代错误乘积末态；将psum清零移到完整C/S/R与ring reduction之后；新增reduction调度测试。
    - 验证：NDP累计11项测试通过，覆盖词典序末态、非零start、非单位step和非法状态；完整D仍未跑通，G2未通过。
    - 精确回退：revert本commit；保留寻址和整数PEA的上一状态为 `deee41f…`。
+
+## 当前本地副本与空间审计（2026-07-11）
+
+- 父目录中只有当前主仓 `resnet50_int8`，没有第二份主仓clone、额外worktree或项目zip/bundle备份；主仓 `.git` 约0.64 MiB。
+- 主仓内有三个必要的独立参考仓工作树：`CGRA_SIM`约347.14 MiB、`ndp-sim-ref`约390.35 MiB、`NDPFuncModel`约266.95 MiB。它们不是主仓Git历史中的重复内容，而是各自独立仓库。
+- 唯一明确的冗余仓库工作树是 `artifacts/smoke/NDPFuncModel`，约130.68 MiB，作为 `NDPFuncModel@89d1655` 的linked worktree用于早期缺依赖/缺 `hex_data` 探测；它共享主NDP仓的Git对象，但重复保存工作文件，且当前有运行生成的 `.pyc` 修改。后续删除前需先确认不再需要该烟测现场并由操作者批准。
+- `.venv`约917.41 MiB，是共享依赖环境而非仓库副本；`artifacts/reference_model`约33.87 MiB，是ONNX/输入/输出基线而非仓库副本。三份W0小artifact合计不足0.03 MiB。
+- `CGRA_SIM/.git`另报告约113.98 MiB临时pack垃圾；这不是有效提交副本，可在确认仓库状态后用Git维护方式清理，但本轮未删除。
+- 云端状态：主仓没有remote；`CGRA_SIM`没有remote且有4个进入任务前已有的未提交修改；`ndp-sim-ref`干净并跟踪上游 `origin/main`；`NDPFuncModel`跟踪上游 `origin/conv_func`但本地ahead 3。GitHub连接器已安装，但主仓目标仓库和NDP个人fork/可写remote仍需确定，当前还不能声称云端备份完成。
 
 ## 2026-07-05～2026-07-09：确认原始ResNet参考链
 
