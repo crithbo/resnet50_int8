@@ -58,6 +58,10 @@
     - 范围：记录已批准删除 `artifacts/smoke/NDPFuncModel` linked worktree、实际释放空间、删除后验证，以及主仓/NDP建立可写GitHub远端所需信息。
     - 验证：目标路径不存在；NDP `git worktree list`只剩主工作树；NDP工作树干净；artifact总量约33.90 MiB；文档通过 `git diff --check`。
     - 精确回退：revert本commit只撤销记录，不能也不应恢复已删除的冗余worktree；如确需重现烟测现场，可从记录的 `89d1655…` 临时创建新的可删除worktree。
+11. `38c6c0a2152f833a50d05cb00678a9d0b4c15679`，父提交 `2f480ccfca4bc17d5fb153e6e4f3e1f6626cc797`，`chore: sync worktree removal ledger`。
+    - 范围：登记 `2f480cc…` 的完整hash、父提交、删除验证和重现方式。
+    - 验证：`git diff --cached --check`通过，提交后主仓工作树干净。
+    - 精确回退：revert本commit；改动前根状态为 `2f480cc…`，只影响台账内容。
 
 ### 子仓库 `NDPFuncModel/conv_func`
 
@@ -83,9 +87,11 @@
 - 操作者批准后，冗余linked worktree `artifacts/smoke/NDPFuncModel` 已通过 `git worktree remove --force` 删除并执行 `git worktree prune`，释放约130.68 MiB。删除前确认其没有独有提交或源码改动，仅有运行生成的跟踪 `.pyc` 变化；删除后NDP worktree列表只剩 `NDPFuncModel@86cd3e3`，主NDP工作树干净，artifact总量降至约33.90 MiB。
 - `.venv`约917.41 MiB，是共享依赖环境而非仓库副本；`artifacts/reference_model`约33.87 MiB，是ONNX/输入/输出基线而非仓库副本。三份W0小artifact合计不足0.03 MiB。
 - `CGRA_SIM/.git`另报告约113.98 MiB临时pack垃圾；这不是有效提交副本，可在确认仓库状态后用Git维护方式清理，但本轮未删除。
-- 云端状态：主仓没有remote；`CGRA_SIM`没有remote且有4个进入任务前已有的未提交修改；`ndp-sim-ref`干净并跟踪上游 `origin/main`；`NDPFuncModel`跟踪上游 `origin/conv_func`但本地ahead 3。GitHub连接器已安装，但主仓目标仓库和NDP个人fork/可写remote仍需确定，当前还不能声称云端备份完成。
-- 建立主仓GitHub远端所需最小信息：GitHub owner（个人账号或组织）、仓库名、public/private可见性，以及对应空仓库的HTTPS URL。推荐创建private空仓，不初始化README、LICENSE或`.gitignore`，再把本地主仓 `main` 原样推送。
-- NDP的3个独有提交不能跟随主仓一起推送，因为它是独立Git仓库；还需提供操作者账号下的 `runoobb/NDPFuncModel` fork或私有镜像URL。`CGRA_SIM`需先审查4个既有未提交修改，再决定是否提交到单独fork/镜像；干净的 `ndp-sim-ref` 暂可继续以固定上游hash恢复。
+- GitHub owner确认为 `crithbo`；后续提交作者名配置为 `crithbo`，提交邮箱使用操作者确认的Gmail。身份写入四个仓库的repository-local Git配置，不改写任何既有commit，也不在项目文档重复保存私人邮箱明文。
+- 已创建并由GitHub页面确认两个空Private仓库：主仓 `https://github.com/crithbo/resnet50_int8.git`，NDP独立私有镜像 `https://github.com/crithbo/NDPFuncModel-private.git`；均未初始化README、LICENSE或`.gitignore`。
+- 主仓已配置 `origin` 指向Private主仓；NDP保留公开上游 `origin`，新增 `private` 指向私有镜像。当前状态为“远端已建立、推送待完成”，只有推送并核对远端hash后才能标记云端备份完成。
+- `CGRA_SIM`仍没有可写remote且有4个进入任务前已有的未提交修改；`ndp-sim-ref`干净并跟踪上游 `origin/main`。CGRA需先审核既有修改，再按同一策略建立Private镜像。
+- NDP的3个独有提交不能跟随主仓一起推送，因为它是独立Git仓库；已为其建立独立Private镜像。`CGRA_SIM`需先审查4个既有未提交修改，再决定是否提交到单独Private镜像；干净的 `ndp-sim-ref` 暂可继续以固定上游hash恢复。
 
 ## 2026-07-05～2026-07-09：确认原始ResNet参考链
 

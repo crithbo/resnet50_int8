@@ -37,7 +37,7 @@
 - 不要回退或覆盖已有未提交修改，除非操作者明确要求。
 - 根仓库和子仓库每个经过验证的有效小步骤都做原子Git提交；W1/W2等完整工作包通过验收门后形成里程碑并推送GitHub。每次提交必须在 `.agents/history.md` 台账记录仓库、完整hash、父提交、范围、验证和精确回退点。大模型、运行产物、trace和其他可再生大文件不得进入普通Git历史。
 - 永久保留的是提交，不是副本：尽量只保留完成工作所需的一份工作树，不为备份额外创建clone/worktree/zip；主仓和修改过的子仓提交在history登记后推送到操作者控制的GitHub仓库/fork。冗余副本仅在无唯一未提交内容、远端hash已核对且操作者批准具体路径后删除；不得通过改写或裁剪提交历史节省空间。
-- 建立主仓远端需要GitHub owner、仓库名、public/private选择和空仓库HTTPS URL；推荐private且不预建README/LICENSE/`.gitignore`。NDP本地3个提交属于独立仓库，必须另给个人fork或私有镜像URL，不能靠推送主仓保存。
+- GitHub owner为 `crithbo`。空Private主仓 `crithbo/resnet50_int8` 已配置为根仓 `origin`；空Private镜像 `crithbo/NDPFuncModel-private` 已配置为NDP的 `private`，公开上游仍保留为 `origin`。后续提交作者名和操作者确认的Gmail已写入四仓repository-local配置；既有提交不改写。两仓推送及远端hash核对尚待完成。
 
 ## 最终目标
 
