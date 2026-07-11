@@ -1,7 +1,7 @@
 operator_family,raw_golden,subop_golden,forward_layout,inverse_layout,json,bitstream,simulator,hardware,three_way
 MockIdentity,w0,w0,w0,w0,w0,n/a,w0,n/a,n/a
 QuantizeLinear,pending,pending,pending,pending,reference,pending,pending,pending,pending
-QLinearConv,pending,pending,pending,pending,missing,pending,pending,pending,pending
+QLinearConv,w2_candidate,w2_candidate,w2_candidate,w2_candidate,missing,pending,pending,pending,pending
 MaxPool,pending,pending,pending,pending,reference,pending,pending,pending,pending
 QLinearAdd,pending,pending,pending,pending,partial,pending,pending,pending,pending
 QLinearGlobalAveragePool,pending,pending,pending,pending,partial,pending,pending,pending,pending

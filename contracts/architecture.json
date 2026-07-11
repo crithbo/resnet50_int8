@@ -19,6 +19,29 @@
       "source": "NDPFuncModel config/config_nse.py"
     }
   },
+  "candidate_memory": {
+    "source": "NDPFuncModel/component/DRAM.py audited by W2 tests",
+    "status": "candidate",
+    "address_unit": "byte",
+    "bank_count": 4,
+    "row_count": 6144,
+    "col_count": 64,
+    "subword_bytes": 16,
+    "bytes_per_slice_formula": "bank_count * row_count * col_count * subword_bytes",
+    "address_order": "slice, bank, row, reversed_col, reversed_subword_byte"
+  },
+  "candidate_layouts": {
+    "w2_ndp_ring_candidate_v1": {
+      "status": "candidate",
+      "scope": "1-slice and 4-slice software fixtures only; not hardware-approved",
+      "activation": "contiguous C partition per slice, physical NHWC with C fastest, tail=x_zero_point",
+      "weight": "contiguous K partition per slice, physical RSKC with global C padded, tail=w_zero_point",
+      "bias_and_weight_qparams": "contiguous K partition, little-endian scalar elements",
+      "output": "contiguous K partition per slice, physical NHWK with K fastest, tail=y_zero_point",
+      "alignment_bytes": 16,
+      "implementation": "resnet50_pipeline/conv_layout.py"
+    }
+  },
   "unresolved": [
     "target RTL/ISA/register-map commit",
     "resource counts and field widths for the target version",

@@ -335,7 +335,7 @@ W1的模型子任务已完成，但G1尚未通过；architecture/quantization/ba
 
 目标：完全不依赖正式ResNet模型，让一个小Conv完成 raw→physical→functional model→logical D。
 
-当前状态（2026-07-11）：第1～2项的软件数学基线已开始闭环。已实现标量循环和im2col/einsum两份独立QLinearConv golden，并与ONNX Runtime在per-channel scale、非零zero-point、负weight、padding、group、stride、dilation、nearest-even、饱和和reduction tail样例上bit-exact；物理layout和NDP功能模型修复尚未开始验收。
+当前状态（2026-07-11）：第1～3项和第7项的软件候选实现已完成。标量循环、im2col/einsum与ONNX Runtime在QLinearConv样例上bit-exact；NDP DRAM地址正逆公式、16-byte transfer拆分、显式byte-stride transaction、逐字节provenance，以及1/4-slice activation-C/weight-output-K候选layout均已通过round-trip。当前20项测试通过。该layout仍为 `w2_ndp_ring_candidate_v1` candidate，NDP functional model尚未消费physical image，因此G2未通过、16-slice尚未扩展。
 
 细分：
 

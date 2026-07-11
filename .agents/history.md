@@ -51,3 +51,8 @@
 - 开始W2并完成独立QLinearConv软件golden：标量循环和im2col/einsum两条实现均覆盖UINT8 activation×INT8 weight、INT32 bias/psum、per-channel weight scale、非零zero-point、group/stride/padding/dilation、nearest-even和UINT8饱和，并输出bias初值、reduction tile psum、最终accumulator和requant结果。
 - QLinearConv两条实现与ONNX Runtime在小型确定样例上逐元素bit-exact；连同W0当前共15项测试通过。下一步是小Conv物理partition/layout、地址provenance和正逆round-trip，再接入修复后的NDP功能模型。
 - 操作者规定版本策略：现在建立根本地Git仓库并做首个提交；此后每个验证有效的小步骤做原子提交，W1/W2等大步骤完成后推送GitHub。任何删除、压缩或改写历史必须先询问确认。
+- 根本地Git仓库已建立，首个提交为 `5bf423f`；首版排除了模型、虚拟环境、运行产物和三个参考仓库，提交后根工作树干净。
+- W2小Conv候选物理布局已实现：严格复现NDP DRAM的slice/bank/row以及反向col/subword字节坐标，修正 `bytes_per_slice` 必须包含bank数；提供16-byte边界拆分、显式byte-stride transaction和稀疏physical image。
+- 布局合同 `w2_ndp_ring_candidate_v1` 按NDP ring意图将activation沿C连续分片并存为NHWC，将weight/bias/qparams/output沿K连续分片，weight存为RSKC、output存为NHWK；C/K tail分别用zero-point填充，所有region对齐到16字节。
+- 每个physical byte均记录tensor、逻辑坐标、element byte、data/tensor-padding/alignment语义和DRAM五维坐标；实现统一 `forward/inverse/explain_coordinate/validate`，1-slice与4-slice含C/K tail样例均bit-exact round-trip。
+- 当前共20项测试通过。此步骤只完成raw↔physical和provenance，仍是candidate；NDP functional model尚未消费该image，G2尚未通过，16-slice扩展仍按计划留到G2之后。

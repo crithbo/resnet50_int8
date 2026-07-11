@@ -319,7 +319,7 @@ CGRA_SIM/testing/resnet-50-int8/
 
 - **模型和 golden——正式模型基线已有/全节点dump待做**：官方Model Zoo模型已按SHA-256暂定为正式模型，固定 `cat.jpg`、batch=16输入和ORT最终输出均已hash锁定；`golden_model/golden.py` 仍只列35个检查名、30个唯一节点，全节点input/output与硬件子步骤golden需补全。
 - **lowering 和统一 manifest——仓库中没有**：旧计划精确还原为 77 个模型级原语，但依赖 328 个有序字典项；没有 ONNX node→硬件原子 op→JSON→execplan→结果的一对多映射。
-- **数据变换——仓库内明确需完成**：已知 4×INT8/32-bit lane packing、候选 im2col 和 LLM relayout 框架；ResNet 16-slice 的 Quantize、Conv、MaxPool、Add、AvgPool、MatMul/dense、Dequantize、Flatten/View 均需由本项目逐算子实现输入/输出 relayout 与 inverse-relayout。
+- **数据变换——Conv候选已开始/其余需完成**：W2已实现1/4-slice `w2_ndp_ring_candidate_v1`，覆盖DRAM五维地址、activation-C和weight/output-K分片、bias/qparams、C/K tail、16-byte对齐、逐字节provenance及正逆round-trip；它尚未由NDP functional model验证，也不是硬件批准layout。ResNet 16-slice Conv以及Quantize、MaxPool、Add、AvgPool、MatMul/dense、Dequantize、Flatten/View仍需继续实现。
 - **单算子配置——部分已有**：42 个静态 JSON 中只有 MaxPool、sum 型 AvgPool、固定样例 quant、fp32 输出 add-dequant 可局部参考；6 个 SA JSON 全是 FP16、bias=0；没有核心 INT8 Conv/MatMul。
 - **目标数值模拟——Conv 通路骨架已有，可信数值链和目标解释器仍没有**：`NDPFuncModel/conv_func` 能产生硬编码的 Conv DRAM/AG/Buffer/PE/ring trace，但当前 slice 物理寻址和 bias 预载已经失真，不能称为可信 Conv 数值模拟；它也不消费 `ndp-sim-ref` JSON/bitstream，写回、requant、符号和 16-slice 尚未闭环。`model_execplan --export-emulator` 仍只导出 patched JSON 和 `dram_data.bin`。
 - **execplan——框架已有/ResNet 适配没有**：可规划地址、重生成 bitstream、输出指令和 Bank_data，但 schema 无 numeric attributes，仍硬编码 28 slice，bitstream 失败后部分路径继续。
