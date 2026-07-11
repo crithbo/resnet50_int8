@@ -4,6 +4,58 @@
 
 本文件只保留已经发生的关键决策、验证和状态变化。当前任务看 `.agents/plan.md`，代码和仓库细节看 `.agents/agent.md`，单算子推导看 `.agents/rules/算子配置规则.md`。
 
+## Git提交与空间清理规则（2026-07-11确认并修正）
+
+- 每个有效小步骤都要提交；`history.md` 必须记录仓库、完整40位commit、直接父commit、改动范围、验证结果和精确回退位置。短hash只用于正文易读，不能替代本节台账。
+- 回退默认使用 `git revert <commit>` 生成保留历史的新提交；不得自行使用reset、rebase、filter、强推或删除提交。任何改写历史仍须操作者单独确认。
+- 子仓库内的已有提交和子仓库本地副本都保留，不因阶段完成或空间占用而删除，也不在仓库内部裁剪提交。
+- 一个大工作包通过验收门且操作者确认后，如果空间占用过大，可评估删除的范围仅限**主仓库的额外副本/备份**；当前正在工作的主仓库不得删除，任何子仓库副本不得删除。
+- 删除主仓库额外副本前必须同时满足：能够确认目标确为冗余副本而不是当前工作仓；当前主仓工作树和提交完整；`repos.lock.json` 与本台账记录完整hash；恢复路径已验证；再次取得操作者对具体绝对路径的明确批准。
+- 当前主仓没有remote；`NDPFuncModel` 的3个修复提交只在本机、相对 `origin/conv_func` ahead 3。这进一步要求保留当前主仓和全部子仓库，但即使以后完成推送，子仓库副本仍按本规则保留。
+- Git commit hash由提交内容决定，提交无法在自身文件内容中稳定写入自己的hash。因此业务/代码提交在同一次或紧随其后的history同步提交中登记；最新一笔“只更新台账”的提交以当前 `HEAD` 和 `git log -1 --format=fuller` 精确定位，并在下一次台账同步时补入。不得借此漏记任何业务提交。
+
+## 精确提交台账
+
+### 根集成仓库 `resnet50_int8`
+
+1. `5bf423fe49170b5a4333b4912a6f3d44ab85624d`，无父提交，`chore: establish ResNet50 INT8 pipeline baseline`。
+   - 范围：建立W0集成骨架、contracts/schema/manifest/backend/artifact/cache、QLinearConv双golden、测试、三个接手文档及仓库边界。
+   - 验证：W0 11项和QLinearConv 4项，共15项测试通过；正式模型/输入hash与环境锁定已记录。
+   - 精确位置：这是根仓库首个可恢复基线；查看或重建首版使用本commit。没有可回退的根仓父提交。
+2. `dbd78ab2ed8343e4571eda9d48ef44689da962bc`，父提交 `5bf423fe49170b5a4333b4912a6f3d44ab85624d`，`feat: add reversible small-conv physical layout`。
+   - 范围：新增NDP DRAM几何、稀疏物理镜像、1/4-slice Conv候选layout、逐字节provenance、forward/inverse与tail/alignment处理。
+   - 验证：根仓20项测试通过；1/4-slice raw↔physical round-trip bit-exact。
+   - 精确回退：保留后续历史时revert本commit；需要检查改动前状态时定位父提交 `5bf423f…`。
+3. `016b594051b6501491d7440cd738ee3976c8e106`，父提交 `dbd78ab2ed8343e4571eda9d48ef44689da962bc`，`feat: connect W2 physical image to NDP DRAM`。
+   - 范围：新增显式NDP子进程adapter，把W2 physical bundle写入NDP DRAM并逐region校验hash/slice；锁定NDP寻址修复版本。
+   - 验证：根仓21项、NDP寻址4项测试通过；raw↔physical↔NDP DRAM bit-exact。
+   - 精确回退：revert本commit；改动前根状态为 `dbd78ab…`，配套NDP基线应回看 `789d121…` 的父提交说明。
+4. `8e3f7db689ed66d0344fc22e2c260db69d8241b5`，父提交 `016b594051b6501491d7440cd738ee3976c8e106`，`feat: validate INT8 PEA from physical addresses`。
+   - 范围：adapter新增physical-address INT8 dot probe；从activation/weight物理地址驱动PEA；合同和覆盖矩阵记录候选INT8语义。
+   - 验证：根仓21项、NDP 8项测试通过；单输出坐标int32 accumulator与独立QLinearConv golden一致。
+   - 精确回退：revert本commit；改动前根状态为 `016b594…`，配套NDP状态为 `789d121…`。
+5. `7ca487b5da2be273dcef435c474c6d6ef45ec99d`，父提交 `8e3f7db689ed66d0344fc22e2c260db69d8241b5`，`chore: record corrected Conv reduction control`。
+   - 范围：把NDP reduction修复hash写入lock/quantization contract，并同步agent/history/plan/规则的完成边界。
+   - 验证：根仓21项、NDP 11项测试通过；JSON解析与 `git diff --check` 通过。
+   - 精确回退：revert本commit；改动前根状态为 `8e3f7db…`，配套NDP状态为 `deee41f…`。
+
+### 子仓库 `NDPFuncModel/conv_func`
+
+上游共同基线为 `89d1655ce6450477cdcc04965d8b4866f12066e5`。以下提交均为当前本机独有提交，尚未推送到 `origin/conv_func`：
+
+1. `789d121327d8e855d33f16c2103a6422a521fa25`，父提交 `89d1655ce6450477cdcc04965d8b4866f12066e5`，`fix: correct slice and strided AG addressing`。
+   - 范围：修复DRAM `per_slice`漏bank、slice AG基址、RDAG/WRAG跨transaction物理地址；新增physical image probe和寻址测试。
+   - 验证：4项寻址回归通过，覆盖4-slice独立读写及跨16-byte transaction。
+   - 精确回退：revert本commit；纯上游状态为父提交 `89d1655…`。旧trace/`.npy`不得因此恢复为真值。
+2. `deee41fdb1d2f344a283df757bfbc8f0b6dd27af`，父提交 `789d121327d8e855d33f16c2103a6422a521fa25`，`fix: keep INT8 PEA accumulation integer`。
+   - 范围：固定uint8 activation A×int8 weight B、int32 psum/int64检查中间值、branch lane清零和显式overflow；扩展物理地址dot probe。
+   - 验证：NDP累计8项测试通过；单坐标物理地址dot可由根adapter与golden核验。
+   - 精确回退：revert本commit；保留寻址修复的上一状态为 `789d121…`。
+3. `86cd3e328b45c37a1c8a133c650eb1f756b0c233`，父提交 `deee41fdb1d2f344a283df757bfbc8f0b6dd27af`，`fix: preserve psums through final reduction`。
+   - 范围：用LC `last/last_index`替代错误乘积末态；将psum清零移到完整C/S/R与ring reduction之后；新增reduction调度测试。
+   - 验证：NDP累计11项测试通过，覆盖词典序末态、非零start、非单位step和非法状态；完整D仍未跑通，G2未通过。
+   - 精确回退：revert本commit；保留寻址和整数PEA的上一状态为 `deee41f…`。
+
 ## 2026-07-05～2026-07-09：确认原始ResNet参考链
 
 - 克隆 `CGRA_SIM`，基线commit为 `53c41e0`；确认其中已有ONNXRuntime golden、QNN软件算子、DDR辅助、旧手写execution plan和Python functional simulator。
