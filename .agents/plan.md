@@ -45,7 +45,7 @@
 - 每完成一个阶段，更新本文件的状态，并在 `history.md` 追加记录；每个提交台账必须包含仓库、完整hash、父提交、范围、验证结果和精确回退位置。
 - 根仓库和子仓库每个经过测试确认有效的小步骤做原子Git提交；W1/W2等工作包通过验收门后形成GitHub里程碑。修改过的仓库必须推送到操作者控制的GitHub仓库或fork并核对远端hash，不能只依赖本地副本。
 - 尽量只保留必要工作树，不为备份额外创建clone/worktree/zip。冗余副本只有在无唯一未提交内容、全部需保留提交已推送、恢复路径验证通过且操作者批准具体绝对路径后才能删除；所有提交历史保留，不通过reset/rebase/filter/强推或裁剪历史释放空间。
-- 当前冗余 `artifacts/smoke/NDPFuncModel` worktree已按批准删除；主仓 `main` 与NDP `conv_func` 已推送到各自Private仓并通过GitHub完整commit页面核验。版本任务下一步只剩审核CGRA的4个既有未提交修改，并判断是否建立CGRA Private镜像。
+- 当前冗余 `artifacts/smoke/NDPFuncModel` worktree已按批准删除；主仓 `main` 与NDP `conv_func` 已推送到各自Private仓并通过GitHub完整commit页面核验。CGRA的4项状态已证明仅是Windows权限位噪声，现已干净并锁定正式upstream，无需Private镜像。
 
 ## 当前总体状态
 
@@ -95,10 +95,11 @@
 ```text
 resnet50_int8/
   pyproject.toml               # 新建：集成层包、CLI、测试和静态检查入口
-  repos.lock.json              # 新建：三个参考仓库remote/branch/commit/dirty状态
+  repos.lock.json              # v0.2：三仓upstream/private mirror/branch/commit/dirty状态
   resnet50_pipeline/          # 新建：唯一端到端集成层
   tests/                      # 新建：单元、集成、回归测试
   schemas/                    # 新建：manifest/config/result JSON schema
+  tools/                      # 仓库恢复与验证等维护入口
   contracts/                  # 新建：架构、量化、layout和后端批准契约
   .agents/decisions/          # 外部问题和批准结论记录（ADR）
   coverage/                   # 新建：逐算子/逐阶段覆盖矩阵
@@ -116,6 +117,7 @@ resnet50_int8/
 - 大模型、DDR、trace、运行输出不入库；小fixture、schema、源码和测试必须入库。
 - 每次运行固定三个仓库commit、Python/包版本、模型/input hash和目标架构版本。
 - 根集成层的跟踪边界已由 `.gitignore` 和 `repos.lock.json` 固定：根仓库只跟踪集成源码、schema、fixture、文档和lock文件，三个嵌套仓库保持独立且不生成隐式gitlink。操作者已授权现在初始化本地根仓库并提交首版；W1/W2通过验收门后再推送GitHub里程碑。
+- 仓库恢复合同已升级到lock 0.2和独立schema；`tools/sync_repositories.py verify`只读核验三仓，显式`sync`才克隆/检出。脚本优先Private镜像、采用partial clone、拒绝路径越界及脏工作树，当前三仓逐项验证通过。
 
 ### 2. 第一版目录骨架
 

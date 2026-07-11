@@ -12,7 +12,7 @@
 - **当前可直接推进**：W0/G0、小QLinearConv golden、1/4-slice候选layout、NDP DRAM ingress和单坐标整数PEA已经通过；当前继续W2完整输出坐标/reduction，再修复requant和真实writeback。
 - **当前外部阻塞**：正式模型和固定输入基线已经自行取得；剩余外部阻塞为目标16-slice RTL/ISA版本、正式物理layout、INT8 SA/GA/qparams硬件约定、目标emulator关系、硬件加载与dump协议。
 - **禁止误用**：NDPFuncModel 当前 `extracted_*.npy` 和 `verify_pe` psum 不是可信 golden；42个 JSON也不等于 ResNet算子配置已完成；bitstream生成成功不等于数值正确。
-- **接手第一条命令**：使用根目录 `.venv\Scripts\python.exe`，不要调用系统 `python`，也不要重新把依赖装进 Codex 公共运行时。
+- **接手第一条命令**：先运行 `.venv\Scripts\python.exe tools\sync_repositories.py verify` 核验三仓commit/remote/dirty状态；始终使用根目录 `.venv\Scripts\python.exe`，不要调用系统 `python` 或重装Codex公共运行时。
 
 下一步任务和验收条件只以 `.agents/plan.md` 为准；本文件后半部分是查代码时使用的详细地图，不需要接手时从头逐行阅读。
 
@@ -79,6 +79,7 @@ resnet50_int8/
   resnet50_pipeline/     # 端到端Python集成包
   tests/                 # unit/integration/regression
   schemas/               # manifest、contract、comparison schema
+  tools/                 # 仓库恢复/验证等维护工具
   contracts/             # 机器可读模型/量化/架构/backend契约
   fixtures/              # 可入库的小型确定测试数据
   artifacts/             # 忽略的运行产物和大模型
@@ -92,6 +93,15 @@ resnet50_int8/
   ndp-sim-ref/            # 目标JSON/bitstream/execplan参考
   NDPFuncModel/           # Conv功能模型和旧配置参考
 ```
+
+`repos.lock.json` 版本为0.2，每仓显式记录 `upstream`、可选 `private_mirror`、`branch`、完整 `commit` 和dirty状态；结构由 `schemas/repositories_lock.schema.json` 约束。仓库操作入口：
+
+```powershell
+.\.venv\Scripts\python.exe tools\sync_repositories.py verify
+.\.venv\Scripts\python.exe tools\sync_repositories.py sync --repo NDPFuncModel
+```
+
+`verify`只读；`sync`优先从Private镜像恢复本地独有commit，否则使用upstream，并采用partial clone减少空间。现有脏仓、非Git目录、路径越界、HEAD/remote/dirty不一致都会硬失败，不会覆盖现场。
 
 计划中的 `resnet50_pipeline/` 模块边界：
 

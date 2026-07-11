@@ -1,24 +1,21 @@
 {
-  "schema_version": "0.1",
+  "schema_version": "0.2",
   "repositories": [
     {
       "name": "CGRA_SIM",
       "path": "CGRA_SIM",
-      "remote": null,
-      "branch": null,
+      "upstream": "https://github.com/KingICCrab/CGRA_SIM.git",
+      "private_mirror": null,
+      "branch": "main",
       "commit": "53c41e02c294bcc54379e686dc9d25bbb93919fa",
-      "dirty": true,
-      "dirty_paths": [
-        "cgra_python/arch/__init__.py",
-        "cgra_python/arch/arch_base.py",
-        "cgra_python/util/extract_blocks.py",
-        "env.sh"
-      ]
+      "dirty": false,
+      "dirty_paths": []
     },
     {
       "name": "ndp-sim-ref",
       "path": "ndp-sim-ref",
-      "remote": "https://github.com/uSFrances/ndp-sim.git",
+      "upstream": "https://github.com/uSFrances/ndp-sim.git",
+      "private_mirror": null,
       "branch": "main",
       "commit": "e299b2804448242d1589b3e58ed7c5a9a5eca09f",
       "dirty": false,
@@ -27,7 +24,8 @@
     {
       "name": "NDPFuncModel",
       "path": "NDPFuncModel",
-      "remote": "https://github.com/runoobb/NDPFuncModel.git",
+      "upstream": "https://github.com/runoobb/NDPFuncModel.git",
+      "private_mirror": "https://github.com/crithbo/NDPFuncModel-private.git",
       "branch": "conv_func",
       "commit": "86cd3e328b45c37a1c8a133c650eb1f756b0c233",
       "dirty": false,

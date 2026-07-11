@@ -1,6 +1,6 @@
 # ResNet50 INT8 工作日志
 
-最后更新：2026-07-11
+最后更新：2026-07-12
 
 本文件只保留已经发生的关键决策、验证和状态变化。当前任务看 `.agents/plan.md`，代码和仓库细节看 `.agents/agent.md`，单算子推导看 `.agents/rules/算子配置规则.md`。
 
@@ -70,6 +70,10 @@
     - 范围：把主仓/NDP push成功、tracking关系和GitHub完整commit页面核验结果写回agent/history/plan。
     - 验证：GitHub登录页面可访问主仓完整commit `4b7d7e1…` 和NDP完整commit `86cd3e3…`；本commit随后成功推送到 `origin/main`。
     - 精确回退：revert本commit；改动前根状态为 `4b7d7e1…`。revert只改变状态记录，不删除远端提交或tracking配置。
+14. `6a729fe6d578c763b7e6f524e7d278abbbbf3fd7`，父提交 `7216691f038bf4a71569daab90973d239f26df24`，`chore: sync verified backup ledger`。
+    - 范围：登记 `7216691…` 的完整hash、父提交、GitHub核验和回退位置。
+    - 验证：提交成功推送到 `origin/main`；GitHub登录页面可访问完整commit `6a729fe…`；本地HEAD与tracking ref一致且ahead/behind为0/0。
+    - 精确回退：revert本commit；改动前根状态为 `7216691…`，只影响台账内容。
 
 ### 子仓库 `NDPFuncModel/conv_func`
 
@@ -98,8 +102,16 @@
 - GitHub owner确认为 `crithbo`；后续提交作者名配置为 `crithbo`，提交邮箱使用操作者确认的Gmail。身份写入四个仓库的repository-local Git配置，不改写任何既有commit，也不在项目文档重复保存私人邮箱明文。
 - 已创建并由GitHub页面确认两个空Private仓库：主仓 `https://github.com/crithbo/resnet50_int8.git`，NDP独立私有镜像 `https://github.com/crithbo/NDPFuncModel-private.git`；均未初始化README、LICENSE或`.gitignore`。
 - 主仓 `main` 已推送到Private `origin/main`，NDP `conv_func` 已推送到Private `private/conv_func`；两次push均成功并建立tracking。已在登录后的GitHub提交页独立确认主仓 `4b7d7e1b4475c0763c936abc80489ab676711a86` 和NDP `86cd3e328b45c37a1c8a133c650eb1f756b0c233` 可访问，云端备份状态为完成。
-- `CGRA_SIM`仍没有可写remote且有4个进入任务前已有的未提交修改；`ndp-sim-ref`干净并跟踪上游 `origin/main`。CGRA需先审核既有修改，再按同一策略建立Private镜像。
-- NDP的3个独有提交不能跟随主仓一起推送，因为它是独立Git仓库；已为其建立独立Private镜像。`CGRA_SIM`需先审查4个既有未提交修改，再决定是否提交到单独Private镜像；干净的 `ndp-sim-ref` 暂可继续以固定上游hash恢复。
+- 在该次空间审计时，`CGRA_SIM`仍显示4个未提交项且没有remote；此状态后来已在2026-07-12复审为纯Windows权限位噪声并解决，不能再作为当前阻塞。
+- NDP的3个独有提交不能跟随主仓一起推送，因此为其建立了独立Private镜像；干净的 `ndp-sim-ref` 和复审后干净的CGRA均可通过固定upstream hash恢复。
+
+## 2026-07-12：主仓可定位并自动恢复三个参考仓
+
+- 复审CGRA的4个所谓修改，确认全部仅为Windows权限位将4个文件显示为`755→644`，内容0行变化；设置该仓repository-local `core.filemode=false` 后工作树干净，并补回 `https://github.com/KingICCrab/CGRA_SIM.git` 为 `origin`。没有业务修改，因此不建立无意义Private镜像。
+- `repos.lock.json` 升级到0.2：CGRA、ndp-sim-ref、NDPFuncModel均记录upstream、可选private mirror、branch、完整commit和dirty状态；NDP明确指向 `crithbo/NDPFuncModel-private`。
+- 新增 `schemas/repositories_lock.schema.json` 和 `tools/sync_repositories.py`。`verify`只读核验HEAD、dirty paths和remote URL；`sync`对缺失仓使用partial clone并检出固定commit，优先Private镜像，拒绝路径越界、非Git目录和既有脏工作树。
+- 新增6项仓库恢复测试，覆盖lock/schema一致性、版本/路径越界、HEAD/dirty/remote验证、缺失仓固定commit恢复、Private镜像优先和脏仓拒绝；当前三个实际仓库均通过verify。
+- 根仓完整回归由21项增至27项并全部通过；lock与schema JSON解析、`git diff --check`及三仓clean/remote/HEAD复核均通过。
 
 ## 2026-07-05～2026-07-09：确认原始ResNet参考链
 

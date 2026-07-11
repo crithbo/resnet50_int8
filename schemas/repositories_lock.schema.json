@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/crithbo/resnet50_int8/schemas/repositories_lock.schema.json",
+  "title": "ResNet50 INT8 reference repository lock",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "repositories"],
+  "properties": {
+    "schema_version": {"const": "0.2"},
+    "repositories": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "name",
+          "path",
+          "upstream",
+          "private_mirror",
+          "branch",
+          "commit",
+          "dirty",
+          "dirty_paths"
+        ],
+        "properties": {
+          "name": {"type": "string", "minLength": 1},
+          "path": {"type": "string", "pattern": "^[A-Za-z0-9._-]+$"},
+          "upstream": {"type": "string", "format": "uri", "minLength": 1},
+          "private_mirror": {
+            "oneOf": [
+              {"type": "null"},
+              {"type": "string", "format": "uri", "minLength": 1}
+            ]
+          },
+          "branch": {"type": "string", "minLength": 1},
+          "commit": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+          "dirty": {"type": "boolean"},
+          "dirty_paths": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {"type": "string", "minLength": 1}
+          }
+        }
+      }
+    }
+  }
+}
