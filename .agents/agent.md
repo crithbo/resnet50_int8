@@ -37,6 +37,7 @@
 - 不要回退或覆盖已有未提交修改，除非操作者明确要求。
 - 根仓库和子仓库每个经过验证的有效小步骤都做原子Git提交；W1/W2等完整工作包通过验收门后形成里程碑并推送GitHub。每次提交必须在 `.agents/history.md` 台账记录仓库、完整hash、父提交、范围、验证和精确回退点。大模型、运行产物、trace和其他可再生大文件不得进入普通Git历史。
 - 永久保留的是提交，不是副本：尽量只保留完成工作所需的一份工作树，不为备份额外创建clone/worktree/zip；主仓和修改过的子仓提交在history登记后推送到操作者控制的GitHub仓库/fork。冗余副本仅在无唯一未提交内容、远端hash已核对且操作者批准具体路径后删除；不得通过改写或裁剪提交历史节省空间。
+- 建立主仓远端需要GitHub owner、仓库名、public/private选择和空仓库HTTPS URL；推荐private且不预建README/LICENSE/`.gitignore`。NDP本地3个提交属于独立仓库，必须另给个人fork或私有镜像URL，不能靠推送主仓保存。
 
 ## 最终目标
 
@@ -191,9 +192,9 @@ conv_func
 - 环境为 CPython 3.12.13，直接依赖包含 NumPy 1.26.4、ONNX 1.22.0、ONNX Runtime 1.27.0、PyTorch 2.13.0+cpu、OpenCV、Pillow、Matplotlib、OpenPyXL 和 tqdm；`pip check` 已通过。
 - PyTorch不能继续视为可选：`CGRA_SIM/cgra_python/__init__.py` 会传递导入 `op_lib`，其中 MaxPool 直接导入 torch。
 - `ndp-sim-ref/model_execplan/main.py --help` 已成功，证明 execplan Python 前端可启动。
-- `NDPFuncModel/main_CONV_N2N.py` 曾在 `artifacts/smoke/NDPFuncModel` 隔离worktree中运行到 `DRAM.init_from_file()`，当前停在缺少 `./hex_data`，不再缺Python包。该worktree约130.68 MiB，是目前唯一明确的额外仓库副本；现场结论已记录，但删除仍需操作者按具体路径批准。
+- `NDPFuncModel/main_CONV_N2N.py` 曾在 `artifacts/smoke/NDPFuncModel` 隔离worktree中运行到 `DRAM.init_from_file()`，停在缺少 `./hex_data`，不再缺Python包。该额外worktree已在操作者批准后删除并清理Git元数据，释放约130.68 MiB；现场结论保留在history。
 - `CGRA_SIM/.../golden.py` 在设置仓库根为 `PYTHONPATH` 后，当前首先停在 `cgra_python/layout/layout_buffer.py:201` 的既有 `SyntaxError`；官方模型、固定图片和ORT最终输出基线已经准备完成，修复后可直接进入全节点golden改造。
-- `.venv` 当前约 962 MB，主要体积来自 CPU PyTorch；运行产物统一放 `artifacts/`，不要覆盖三个仓库内的跟踪 trace。
+- `.venv` 当前约917 MiB，主要体积来自CPU PyTorch；运行产物统一放 `artifacts/`，不要覆盖三个仓库内的跟踪trace。
 
 重建环境：
 

@@ -50,6 +50,10 @@
    - 范围：最终澄清“永久保留提交而非副本”，建立少副本/GitHub优先规则；审计主仓、三个参考仓、linked worktree、artifact和依赖环境的实际空间与远端状态。
    - 验证：逐仓运行 `git worktree list`、`remote -v`、`branch -vv`、`status`、`count-objects -vH`并统计目录大小；三个文档通过 `git diff --check`。
    - 精确回退：revert本commit；改动前根状态为 `8d21d73…`。该回退只撤销最终策略/审计文档，不删除提交、副本或artifact。
+9. `677b0b45538f352f75377333b6fc32234a4006ee`，父提交 `f0cfd3bc08abf0acc1d0aa5f01c505745a93cc1a`，`chore: sync GitHub backup policy ledger`。
+   - 范围：登记 `f0cfd3b…` 的完整hash、父提交、验证和回退位置，并注明旧副本策略已被GitHub优先策略取代。
+   - 验证：`git diff --cached --check`通过，提交后工作树干净。
+   - 精确回退：revert本commit；改动前根状态为 `f0cfd3b…`，只影响台账内容。
 
 ### 子仓库 `NDPFuncModel/conv_func`
 
@@ -72,10 +76,12 @@
 
 - 父目录中只有当前主仓 `resnet50_int8`，没有第二份主仓clone、额外worktree或项目zip/bundle备份；主仓 `.git` 约0.64 MiB。
 - 主仓内有三个必要的独立参考仓工作树：`CGRA_SIM`约347.14 MiB、`ndp-sim-ref`约390.35 MiB、`NDPFuncModel`约266.95 MiB。它们不是主仓Git历史中的重复内容，而是各自独立仓库。
-- 唯一明确的冗余仓库工作树是 `artifacts/smoke/NDPFuncModel`，约130.68 MiB，作为 `NDPFuncModel@89d1655` 的linked worktree用于早期缺依赖/缺 `hex_data` 探测；它共享主NDP仓的Git对象，但重复保存工作文件，且当前有运行生成的 `.pyc` 修改。后续删除前需先确认不再需要该烟测现场并由操作者批准。
+- 操作者批准后，冗余linked worktree `artifacts/smoke/NDPFuncModel` 已通过 `git worktree remove --force` 删除并执行 `git worktree prune`，释放约130.68 MiB。删除前确认其没有独有提交或源码改动，仅有运行生成的跟踪 `.pyc` 变化；删除后NDP worktree列表只剩 `NDPFuncModel@86cd3e3`，主NDP工作树干净，artifact总量降至约33.90 MiB。
 - `.venv`约917.41 MiB，是共享依赖环境而非仓库副本；`artifacts/reference_model`约33.87 MiB，是ONNX/输入/输出基线而非仓库副本。三份W0小artifact合计不足0.03 MiB。
 - `CGRA_SIM/.git`另报告约113.98 MiB临时pack垃圾；这不是有效提交副本，可在确认仓库状态后用Git维护方式清理，但本轮未删除。
 - 云端状态：主仓没有remote；`CGRA_SIM`没有remote且有4个进入任务前已有的未提交修改；`ndp-sim-ref`干净并跟踪上游 `origin/main`；`NDPFuncModel`跟踪上游 `origin/conv_func`但本地ahead 3。GitHub连接器已安装，但主仓目标仓库和NDP个人fork/可写remote仍需确定，当前还不能声称云端备份完成。
+- 建立主仓GitHub远端所需最小信息：GitHub owner（个人账号或组织）、仓库名、public/private可见性，以及对应空仓库的HTTPS URL。推荐创建private空仓，不初始化README、LICENSE或`.gitignore`，再把本地主仓 `main` 原样推送。
+- NDP的3个独有提交不能跟随主仓一起推送，因为它是独立Git仓库；还需提供操作者账号下的 `runoobb/NDPFuncModel` fork或私有镜像URL。`CGRA_SIM`需先审查4个既有未提交修改，再决定是否提交到单独fork/镜像；干净的 `ndp-sim-ref` 暂可继续以固定上游hash恢复。
 
 ## 2026-07-05～2026-07-09：确认原始ResNet参考链
 
