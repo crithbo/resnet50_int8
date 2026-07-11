@@ -66,6 +66,10 @@
     - 范围：记录GitHub owner、repository-local提交身份、两个Private空仓、主仓/NDP远端配置和CGRA剩余云端任务。
     - 验证：主仓 `origin`、NDP `origin/private` URL正确；GitHub页面确认两仓均为Private且创建时为空；`git diff --cached --check`通过。
     - 精确回退：revert本commit；改动前根状态为 `38c6c0a…`。远端和本地Git配置位于`.git/config`，不随文档revert改变。
+13. `7216691f038bf4a71569daab90973d239f26df24`，父提交 `4b7d7e1b4475c0763c936abc80489ab676711a86`，`docs: record verified GitHub backups`。
+    - 范围：把主仓/NDP push成功、tracking关系和GitHub完整commit页面核验结果写回agent/history/plan。
+    - 验证：GitHub登录页面可访问主仓完整commit `4b7d7e1…` 和NDP完整commit `86cd3e3…`；本commit随后成功推送到 `origin/main`。
+    - 精确回退：revert本commit；改动前根状态为 `4b7d7e1…`。revert只改变状态记录，不删除远端提交或tracking配置。
 
 ### 子仓库 `NDPFuncModel/conv_func`
 
