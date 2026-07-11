@@ -54,6 +54,10 @@
    - 范围：登记 `f0cfd3b…` 的完整hash、父提交、验证和回退位置，并注明旧副本策略已被GitHub优先策略取代。
    - 验证：`git diff --cached --check`通过，提交后工作树干净。
    - 精确回退：revert本commit；改动前根状态为 `f0cfd3b…`，只影响台账内容。
+10. `2f480ccfca4bc17d5fb153e6e4f3e1f6626cc797`，父提交 `677b0b45538f352f75377333b6fc32234a4006ee`，`docs: record redundant worktree removal`。
+    - 范围：记录已批准删除 `artifacts/smoke/NDPFuncModel` linked worktree、实际释放空间、删除后验证，以及主仓/NDP建立可写GitHub远端所需信息。
+    - 验证：目标路径不存在；NDP `git worktree list`只剩主工作树；NDP工作树干净；artifact总量约33.90 MiB；文档通过 `git diff --check`。
+    - 精确回退：revert本commit只撤销记录，不能也不应恢复已删除的冗余worktree；如确需重现烟测现场，可从记录的 `89d1655…` 临时创建新的可删除worktree。
 
 ### 子仓库 `NDPFuncModel/conv_func`
 
