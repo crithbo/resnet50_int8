@@ -74,6 +74,10 @@
     - 范围：登记 `7216691…` 的完整hash、父提交、GitHub核验和回退位置。
     - 验证：提交成功推送到 `origin/main`；GitHub登录页面可访问完整commit `6a729fe…`；本地HEAD与tracking ref一致且ahead/behind为0/0。
     - 精确回退：revert本commit；改动前根状态为 `7216691…`，只影响台账内容。
+15. `d98d91f7ae61e82f885def7239cde593410a5477`，父提交 `6a729fe6d578c763b7e6f524e7d278abbbbf3fd7`，`feat: add reproducible reference repository sync`。
+    - 范围：升级`repos.lock.json`到0.2，加入三仓upstream/private mirror/branch/commit；新增lock schema、安全的verify/sync工具、6项恢复测试并同步agent/history/plan。
+    - 验证：根仓27项测试全部通过；三仓实际verify通过；lock/schema JSON解析和`git diff --check`通过；CGRA、ndp-sim-ref、NDP工作树均干净且HEAD/remote与lock一致。
+    - 精确回退：revert本commit；改动前根状态为 `6a729fe…`。revert会恢复旧lock并删除恢复工具/schema/测试，但不会删除三个本地仓或修改其Git配置。
 
 ### 子仓库 `NDPFuncModel/conv_func`
 
