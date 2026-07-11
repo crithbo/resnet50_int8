@@ -169,12 +169,12 @@ C:\Users\15383\Desktop\Codex\project\resnet50_int8\NDPFuncModel
 
 ```text
 conv_func
-deee41fdb1d2f344a283df757bfbc8f0b6dd27af
+86cd3e328b45c37a1c8a133c650eb1f756b0c233
 ```
 
 状态说明：
 
-- 从 `runoobb/NDPFuncModel` 的 `conv_func` 分支单分支克隆；当前本地分支在上游 `89d1655` 基础上增加寻址修复 `789d121` 和整数PEA修复 `deee41f`，工作树干净、相对origin ahead 2。
+- 从 `runoobb/NDPFuncModel` 的 `conv_func` 分支单分支克隆；当前本地分支在上游 `89d1655` 基础上增加寻址修复 `789d121`、整数PEA修复 `deee41f` 和reduction修复 `86cd3e3`，工作树干净、相对origin ahead 3。
 - 它是以 Python 硬编码循环和数据通路的 Conv 功能模型，不是 `ndp-sim-ref/jsons` 或 bitstream 的解释器。
 - 仓库按 Git 记录了 `conv_config` gitlink，但没有 `.gitmodules` 和 URL；该目录无法还原。`graph/` 也只有 `.pyc`，没有对应 `.py` 源码。
 - `hex_data/` 被忽略且未随仓库提供，因此 `main_CONV_N2N.py` 当前不能从干净 clone 直接完整运行。
@@ -302,7 +302,7 @@ CGRA_SIM/testing/resnet-50-int8/
 
 该仓库补齐的是“Conv 数据通路怎样走”的重要参考：DRAM 几何、地址/掩码、Buffer 行列、8×8 PEA、4-slice ring 和 psum provenance 都能用于设计 ResNet Conv relayout 与配置适配。它尚未补齐目标数值闭环，已确认的直接阻塞包括：
 
-1. `reduc_state = r*s*cc_shared` 不可能等于 `end` 乘积减一，导致 `flush_output` 永不成立。
+1. 上游 `reduc_state = r*s*cc_shared` 不可能正确表示多层循环末态，且在每个R后清空psum；本地 `86cd3e3` 已改用LC `last/last_index`并把清零移到完整C/S/R+ring之后。仍需用完整D验证每个输出坐标只flush一次。
 2. `run_buffer_writeback_to_dram()` 只记录“将要写回”的日志，实际 `dram.stream_write()` 被注释。
 3. INT8 Conv 输出仍走 FP16 packing，未执行 per-channel requant/zero-point/saturation；主入口创建的 `ActivationUnit` 没有被使用。
 4. 上游PEA按signed A×unsigned B计算；本地 `deee41f` 已按主链实际端口修为uint8 activation A×int8 weight B，并由physical-address dot probe与QLinearConv accumulator对齐。目标硬件物理端口仍需外部确认。
@@ -321,7 +321,7 @@ CGRA_SIM/testing/resnet-50-int8/
 - **lowering 和统一 manifest——仓库中没有**：旧计划精确还原为 77 个模型级原语，但依赖 328 个有序字典项；没有 ONNX node→硬件原子 op→JSON→execplan→结果的一对多映射。
 - **数据变换——Conv候选已进入NDP验证/其余需完成**：W2已实现1/4-slice `w2_ndp_ring_candidate_v1`，覆盖DRAM五维地址、activation-C和weight/output-K分片、bias/qparams、C/K tail、16-byte对齐、逐字节provenance及正逆round-trip；NDP已逐region读回并由物理地址完成单坐标整数dot，但它仍不是硬件批准layout。ResNet 16-slice Conv以及Quantize、MaxPool、Add、AvgPool、MatMul/dense、Dequantize、Flatten/View仍需继续实现。
 - **单算子配置——部分已有**：42 个静态 JSON 中只有 MaxPool、sum 型 AvgPool、固定样例 quant、fp32 输出 add-dequant 可局部参考；6 个 SA JSON 全是 FP16、bias=0；没有核心 INT8 Conv/MatMul。
-- **目标数值模拟——DRAM ingress和单坐标整数PEA已通过/完整输出仍未闭环**：本地 `NDPFuncModel@deee41f` 可消费W2 physical bundle，逐region hash一致，并从跨slice activation地址与K-owner weight地址执行uint8×int8纯整数dot；目标坐标accumulator与QLinearConv golden一致。完整坐标调度、reduction结束判定、requant、真实writeback、JSON驱动和16-slice尚未闭环。
+- **目标数值模拟——DRAM ingress和单坐标整数PEA已通过/reduction控制已修复**：本地 `NDPFuncModel@86cd3e3` 可消费W2 physical bundle，逐region hash一致，并从跨slice activation地址与K-owner weight地址执行uint8×int8纯整数dot；目标坐标accumulator与QLinearConv golden一致。LC末态和psum生命周期已有回归，但完整坐标执行、requant、真实writeback、JSON驱动和16-slice尚未闭环。
 - **execplan——框架已有/ResNet 适配没有**：可规划地址、重生成 bitstream、输出指令和 Bank_data，但 schema 无 numeric attributes，仍硬编码 28 slice，bitstream 失败后部分路径继续。
 - **RTL/硬件——外部阻塞**：没有完整 runner/testbench、加载/启动/完成/dump 协议或逐算子 checkpoint 入口。
 - **三方比较——仓库中没有通用实现**：旧 runner 只有 21 个硬编码 checkpoint，另一个工具只比较两个 128-bit 物理文件；没有 inverse-relayout 后的三方比较。

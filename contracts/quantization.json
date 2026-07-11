@@ -29,11 +29,12 @@
   },
   "ndp_functional_candidate": {
     "status": "candidate",
-    "source": "NDPFuncModel commit deee41f and W2 physical-address dot probe",
+    "source": "NDPFuncModel commit 86cd3e3 and W2 physical-address dot probe",
     "operand_order": "uint8 activation on buffer/port A times int8 weight on buffer/port B",
     "accumulator": "int32 psum with int64 checked intermediate in the Python model",
     "branch": "masked lanes are zeroed before the integer dot product",
-    "overflow": "raise explicitly; target hardware wrap/saturate/error behavior remains unresolved"
+    "overflow": "raise explicitly; target hardware wrap/saturate/error behavior remains unresolved",
+    "reduction_completion": "LC last/last_index; psums persist across all C/S/R and ring steps"
   },
   "hardware_unresolved": [
     "PEA physical A/B port assignment",
