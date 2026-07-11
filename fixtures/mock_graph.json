@@ -1,0 +1,16 @@
+{
+  "schema_version": "0.1",
+  "graph_id": "mock_identity_uint8",
+  "nodes": [
+    {
+      "node_id": "node-0000",
+      "op_type": "MockIdentity",
+      "inputs": ["tensor-input"],
+      "outputs": ["tensor-output"]
+    }
+  ],
+  "tensors": [
+    {"tensor_id": "tensor-input", "dtype": "uint8", "shape": [1, 1, 2, 2]},
+    {"tensor_id": "tensor-output", "dtype": "uint8", "shape": [1, 1, 2, 2]}
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "schema_version": "0.1",
+  "contract_type": "architecture",
+  "status": "candidate",
+  "known": {
+    "slice_count": {
+      "value": 16,
+      "status": "provisionally_approved",
+      "source": "operator confirmation"
+    },
+    "special_pe_array_shape": {
+      "value": [8, 8],
+      "status": "candidate",
+      "source": "NDPFuncModel SpecialPEA"
+    },
+    "neighbor_transfer_count": {
+      "value": 15,
+      "status": "candidate",
+      "source": "NDPFuncModel config/config_nse.py"
+    }
+  },
+  "unresolved": [
+    "target RTL/ISA/register-map commit",
+    "resource counts and field widths for the target version",
+    "opcode definitions",
+    "DDR row count and byte/word address units",
+    "instruction mask interpretation",
+    "approved physical layouts for activation, weight, bias, qparams, psum and output",
+    "load/start/wait/error/dump protocol"
+  ]
+}

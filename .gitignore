@@ -1,0 +1,14 @@
+.venv/
+artifacts/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Reference repositories are version-pinned by repos.lock.json and remain
+# independent repositories. Do not create accidental gitlinks in the root repo.
+/CGRA_SIM/
+/ndp-sim-ref/
+/NDPFuncModel/

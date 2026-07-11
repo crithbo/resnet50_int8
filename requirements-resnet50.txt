@@ -1,0 +1,11 @@
+# Persistent project environment for the three-repository ResNet50 INT8 workflow.
+# CGRA_SIM imports torch transitively from cgra_python.op_lib.
+numpy>=1.26,<2
+openpyxl>=3.1,<4
+tqdm>=4.66,<5
+onnx>=1.16,<2
+onnxruntime>=1.18,<2
+Pillow>=10,<13
+opencv-python-headless>=4.9,<5
+matplotlib>=3.8,<4
+torch>=2.5,<3

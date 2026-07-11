@@ -1,0 +1,26 @@
+{
+  "schema_version": "0.1",
+  "contract_type": "backend",
+  "status": "candidate",
+  "backends": {
+    "mock": {
+      "status": "approved_for_w0_only",
+      "supported_ops": ["MockIdentity"],
+      "supported_dtypes": ["uint8"],
+      "slice_counts": [1, 4, 16],
+      "config_versions": ["mock-0.1"],
+      "can_dump_physical_output": true
+    },
+    "target_simulator": {
+      "status": "unknown"
+    },
+    "target_hardware": {
+      "status": "unknown"
+    }
+  },
+  "unresolved": [
+    "authoritative target simulator command and version",
+    "target JSON/bitstream compatibility version",
+    "hardware load/start/wait/error/dump protocol"
+  ]
+}

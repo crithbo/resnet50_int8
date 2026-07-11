@@ -1,0 +1,38 @@
+{
+  "schema_version": "0.1",
+  "contract_type": "quantization",
+  "status": "candidate",
+  "source_model_sha256": "c234f30975989788b4405f25253275aae247ab6dbdd34aaa69ab0a59ff76f6d0",
+  "model_facts": {
+    "qlinearconv_count": 53,
+    "activation_zero_point_dtype": "uint8",
+    "weight_dtype": "int8",
+    "bias_dtype": "int32",
+    "output_zero_point_dtype": "uint8",
+    "conv_weight_scale": "per_output_channel",
+    "all_conv_weight_zero_points_are_zero": true,
+    "conv_input_zero_points_are_not_all_zero": true,
+    "conv_output_zero_points_are_not_all_zero": true,
+    "qlinearmatmul_feature_dtype": "uint8",
+    "qlinearmatmul_weight_dtype": "int8",
+    "qlinearmatmul_weight_zero_point": 0,
+    "qlinearmatmul_output_zero_point": 60,
+    "global_average_pool_input_zero_point": 0,
+    "global_average_pool_output_zero_point": 0
+  },
+  "software_semantics": {
+    "status": "candidate",
+    "conv_product": "(uint8_activation - x_zero_point) * (int8_weight - w_zero_point)",
+    "accumulator": "int32",
+    "bias": "int32 with real scale x_scale * w_scale",
+    "requantization": "must reproduce ONNX QLinear operator output"
+  },
+  "hardware_unresolved": [
+    "PEA physical A/B port assignment",
+    "derived fixed-point multiplier and shift encoding",
+    "rounding implementation and exact stage",
+    "overflow behavior before final saturation",
+    "optional activation fusion order",
+    "qparams transport through JSON, tensor stream or control writes"
+  ]
+}

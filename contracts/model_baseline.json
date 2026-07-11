@@ -1,0 +1,83 @@
+{
+  "schema_version": "0.1",
+  "contract_type": "model_baseline",
+  "status": "candidate",
+  "decision": "provisionally_accepted_by_operator",
+  "recorded_at": "2026-07-11",
+  "source": {
+    "publisher": "ONNX Model Zoo",
+    "repository": "https://huggingface.co/onnxmodelzoo/resnet50-v1-12-int8",
+    "download_url": "https://huggingface.co/onnxmodelzoo/resnet50-v1-12-int8/resolve/main/resnet50-v1-12-int8.onnx",
+    "license": "Apache-2.0"
+  },
+  "model": {
+    "artifact_path": "artifacts/reference_model/resnet50-v1-12-int8.onnx",
+    "filename": "resnet50-v1-12-int8.onnx",
+    "size_bytes": 25816052,
+    "sha256": "c234f30975989788b4405f25253275aae247ab6dbdd34aaa69ab0a59ff76f6d0",
+    "checker": "passed",
+    "ir_version": 4,
+    "opset": 12,
+    "producer_name": "onnx.quantize",
+    "producer_version": "0.1.0",
+    "node_count": 78,
+    "initializer_count": 366,
+    "external_data_initializer_count": 0,
+    "input": {
+      "name": "data",
+      "dtype": "float32",
+      "shape": ["N", 3, 224, 224]
+    },
+    "output": {
+      "name": "resnetv17_dense0_fwd",
+      "dtype": "float32",
+      "shape": ["N", 1000]
+    },
+    "operator_counts": {
+      "QuantizeLinear": 2,
+      "QLinearConv": 53,
+      "MaxPool": 1,
+      "QLinearAdd": 17,
+      "QLinearGlobalAveragePool": 1,
+      "Flatten": 1,
+      "QLinearMatMul": 1,
+      "DequantizeLinear": 2
+    }
+  },
+  "preprocessing": {
+    "contract_id": "legacy_direct_resize_256_center_crop_224_v1",
+    "status": "candidate",
+    "source": "CGRA_SIM/testing/resnet-50-int8/golden_model/golden.py:12-28",
+    "steps": [
+      "decode image and convert to RGB",
+      "divide pixel values by 255.0",
+      "resize directly to 256x256 with OpenCV default linear interpolation",
+      "center crop rows and columns [16:240] to 224x224",
+      "normalize with mean [0.485, 0.456, 0.406] and std [0.229, 0.224, 0.225]",
+      "transpose HWC to CHW",
+      "cast to float32 and add batch dimension",
+      "replicate the same sample 16 times"
+    ],
+    "official_preprocessing_verification": "pending: the ONNX graph does not encode resize/crop/normalization, and the exact publisher evaluation implementation has not yet been verified",
+    "project_policy": "Reproduce the legacy CGRA_SIM direct 256x256 resize contract; changing this contract invalidates downstream artifacts."
+  },
+  "reference_run": {
+    "image_path": "CGRA_SIM/testing/resnet-50-int8/cat.jpg",
+    "image_sha256": "d5f516d7cde858db080760927ea73b1d5bab21a38ca0d4a1aea5b0e6f884969c",
+    "input_path": "artifacts/reference_model/input_batch16.npy",
+    "input_sha256": "6661a1671a07256fa7b4792851bc8bee41409495a7b5b705fbb3fe0976601a9c",
+    "input_shape": [16, 3, 224, 224],
+    "output_path": "artifacts/reference_model/output_batch16.npy",
+    "output_sha256": "2c6c5fabc1d41fceee35f06221efb4c64b94fabfe7a0b4680d2acf2186ca0894",
+    "output_shape": [16, 1000],
+    "onnxruntime_version": "1.27.0",
+    "execution_provider": "CPUExecutionProvider",
+    "batch_rows_identical": true,
+    "repeat_run_bit_exact": true,
+    "top5_logit_indices": [282, 281, 285, 287, 288]
+  },
+  "change_policy": {
+    "replaceable": true,
+    "required_action": "Changing the model hash or preprocessing contract invalidates all golden, lowering, relayout, config, simulator, execplan, hardware and comparison artifacts."
+  }
+}
