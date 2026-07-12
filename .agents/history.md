@@ -122,6 +122,18 @@
     - 范围：新增固定ORT选项的全node output runner、原子artifact发布、initializer hash引用、node input/output manifest及CLI。
     - 验证：正式batch16保存79个运行时tensor/366 initializer引用，最终输出hash与W1相同，临时目录第二次运行全部79个hash一致；根36项测试通过。
     - 精确回退：revert本commit；保留图目录/lowering但删除运行时golden runner。
+27. `d88ea2fba78225a8f1e04cc23360bb2efa7cc674`，父提交 `80b95fe3be5e5f1fd3cdfc06f8f7bdcb3e4b5e09`，`docs: record formal all-node golden baseline`。
+    - 范围：批准正式全节点ORT运行合同，记录模型/input、79个运行时tensor、366个initializer引用、最终输出和manifest hash，并同步W3状态文档。
+    - 验证：合同JSON可解析；正式manifest SHA-256为`f7e90cf1f087acf255e93d98d1788e0fb0b4c77bbe935ea9addb17feea583180`，最终输出文件SHA-256为`2c6c5fabc1d41fceee35f06221efb4c64b94fabfe7a0b4680d2acf2186ca0894`。
+    - 精确回退：revert本commit只撤销运行合同和对应状态记录；`80b95fe…`的runner代码与被Git忽略的可再生产物仍保留。本提交仅本地、未单独推送。
+28. `096efc347bec1932102103b0cec5092bb7684d13`，父提交 `d88ea2fba78225a8f1e04cc23360bb2efa7cc674`，`feat: generate ResNet subop golden tensors`。
+    - 范围：新增Conv/MatMul INT32 accumulator、GlobalAveragePool centered INT32 sum及其requant参考实现和CLI；建立旧77原语稳定映射，明确排除zero-copy Flatten。
+    - 验证：正式batch16生成55个内部tensor（53 Conv、1 GAP、1 MatMul），每个对应requant输出均匹配ORT；第二次临时运行55个文件hash全部一致；旧索引0..76共77项无缺失映射；相关单测及根仓回归通过。
+    - 精确回退：revert本commit；保留ORT全节点golden，但删除subop生成器、旧77映射器和相关测试。被Git忽略的`artifacts/w3/subop_batch16`需手动再生或清理，不属于Git回退范围。本提交仅本地、未单独推送。
+29. `c5de5e66c24e252be19d911b05ab37acbc75cb84`，父提交 `096efc347bec1932102103b0cec5092bb7684d13`，`test: replay every ResNet node formula`。
+    - 范围：把独立公式重放扩展到全部78节点，覆盖17个QLinearAdd affine requant、2个Quantize nearest-even、2个Dequantize、1个MaxPool和1个Flatten，并保留55个多阶段内部结果验证。
+    - 验证：全部78个节点输出逐项等于ORT；公式分类计数55+17+2+2+1+1=78；正式subop manifest SHA-256为`8bfdd042570408c1df793044407a8e6262bfa261b3cc6f02f64b94ad47d9c1c2`；根仓42项测试通过。
+    - 精确回退：revert本commit；回到`096efc3…`时仍有55个内部tensor及其requant验证，但不再宣称其余23个单阶段节点已独立重放。本提交仅本地、未单独推送。
 
 ## 2026-07-12：W3正式图目录与语义lowering启动
 
@@ -129,6 +141,13 @@
 - ONNX标准shape inference在首个QLinearAdd后停止传播，新增仅覆盖当前8类已知算子的补充规则，并为每个tensor记录`initializer/onnx_inference/supplemental`来源，禁止静默猜shape。
 - 核心解析层不导入`cgra_python`，因此不受`layout_buffer.py:201`语法错误和顶层`import *`影响；该子仓错误仍需单独修复，不能宣称源码已正确。
 - 正式batch16已运行全部78个node output，落盘约273.56 MB且由Git忽略；最终输出`.npy` hash为`2c6c5f…`，与W1基线文件完全相同。第二次运行使用临时目录，79个tensor文件hash全部一致并自动删除临时副本。
+
+## 2026-07-12：W3/G3全图subop golden通过
+
+- 正式batch16已生成55个lowering内部INT32 tensor：53个QLinearConv accumulator、1个QLinearGlobalAveragePool centered sum、1个QLinearMatMul accumulator；逻辑数据量677,771,776字节，包含manifest的artifact目录占677,828,490字节，均由Git忽略且可由正式模型/input重建。
+- 每个多阶段算子的内部结果均经过独立requant公式恢复为对应ORT node output；另外对QuantizeLinear、QLinearAdd、MaxPool、DequantizeLinear和Flatten独立重放，最终全部78个ONNX节点逐项匹配ORT。
+- 旧脚本的77个模型级原语已按原索引0..76逐项对应当前稳定node ID、旧generator名称和1或2个语义hw_op ID；当前图多出的Flatten明确标记为zero-copy而不是遗漏。映射artifact为`artifacts/w3/legacy77_mapping.json`，SHA-256为`b6507dec2b564a0b5a06b185a4ce5070909194d5cf164edc503d840740b94ed3`。
+- G3据此通过。这里批准的是模型语义、lowering边界和软件golden；尚未批准16-slice物理layout、逐K-tile psum快照、目标JSON/bitstream或硬件数值链。完整reduction的INT32边界将在W4/W5取得tile/layout合同后细化为首/中/末K tile。
 
 ### 子仓库 `NDPFuncModel/conv_func`
 

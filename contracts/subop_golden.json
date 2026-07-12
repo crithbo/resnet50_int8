@@ -1,0 +1,35 @@
+{
+  "schema_version": "0.1",
+  "contract_type": "subop_golden",
+  "status": "approved_for_w3_g3",
+  "model_sha256": "c234f30975989788b4405f25253275aae247ab6dbdd34aaa69ab0a59ff76f6d0",
+  "input_sha256": "6661a1671a07256fa7b4792851bc8bee41409495a7b5b705fbb3fe0976601a9c",
+  "runtime_manifest_sha256": "f7e90cf1f087acf255e93d98d1788e0fb0b4c77bbe935ea9addb17feea583180",
+  "artifact_root": "artifacts/w3/subop_batch16",
+  "manifest_sha256": "8bfdd042570408c1df793044407a8e6262bfa261b3cc6f02f64b94ad47d9c1c2",
+  "artifact_size_bytes": 677828490,
+  "internal_tensor_count": 55,
+  "internal_tensor_breakdown": {
+    "QLinearConv_int32_accumulator": 53,
+    "QLinearGlobalAveragePool_centered_sum": 1,
+    "QLinearMatMul_int32_accumulator": 1
+  },
+  "node_formula_replay_count": 78,
+  "node_formula_breakdown": {
+    "int32_internal_then_requant": 55,
+    "qlinear_add_affine_requant": 17,
+    "quantize_nearest_even": 2,
+    "dequantize_affine": 2,
+    "max_pool_uint8": 1,
+    "view_flatten": 1
+  },
+  "all_replayed_outputs_match_onnxruntime": true,
+  "repeat_run_all_internal_tensor_hashes_equal": true,
+  "legacy_mapping": {
+    "source": "CGRA_SIM/testing/resnet-50-int8/gen_execu_plan_ver1.py",
+    "artifact_path": "artifacts/w3/legacy77_mapping.json",
+    "sha256": "b6507dec2b564a0b5a06b185a4ce5070909194d5cf164edc503d840740b94ed3",
+    "primitive_count": 77,
+    "excluded_zero_copy_node": "node-0073"
+  }
+}

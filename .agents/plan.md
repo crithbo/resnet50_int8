@@ -357,18 +357,18 @@ W1的模型子任务已完成，但G1尚未通过；architecture/quantization/ba
 
 ### W3：正式模型解析、lowering和全节点golden【难度：高】
 
-当前状态（2026-07-12）：正式ONNX图解析、语义lowering和全节点ORT输出已完成。模型SHA校验、checker、标准shape inference和受控补充传播得到78节点/617张量，366个initializer均有内容hash，所有node output的dtype/shape已知；78节点由8类插件lower为133个语义hw_op并生成55个内部tensor。正式batch16保存1个图输入+78个node output，initializer只按hash引用；全部79个artifact重复运行hash一致，最终输出hash与W1基线完全相同。运行合同见`contracts/golden_runtime.json`。根仓36项测试通过。旧`layout_buffer.py`通过零导入隔离但尚未修复；lowering内部tensor的subop golden和旧77原语逐项对照仍未完成，G3未通过。
+当前状态（2026-07-12）：**W3/G3已通过**。正式ONNX图解析得到78节点/617张量，78节点由8类插件lower为133个语义hw_op和55个内部tensor。正式batch16保存1个图输入+78个node output；55个内部INT32 tensor包括53个Conv accumulator、1个GlobalAveragePool centered sum和1个MatMul accumulator。独立公式已重放全部78个节点：55个内部累加/求和后requant、17个QLinearAdd affine requant、2个Quantize、2个Dequantize、1个MaxPool和1个Flatten，结果逐项等于ORT。旧77原语已按索引0..76逐项映射到当前node/hw_op，Flatten作为zero-copy明确排除。运行与subop合同分别见`contracts/golden_runtime.json`和`contracts/subop_golden.json`；根仓42项测试通过。旧`layout_buffer.py`通过零导入隔离但尚未修复；首/中/末K tile仍需W4/W5在目标tile/layout合同下把完整INT32边界细化为逐tile边界。
 
 1. 最小修复 `layout_buffer.py:201`，并隔离 `cgra_python` eager import。【核心隔离已完成；子仓语法修复待独立提交/镜像】
 2. 参数化 `golden.py` 的模型、图片和输出路径；固定ORT provider/优化设置。【模型/input.npy/output已完成；图片预处理沿用W1基线】
 3. ONNX shape inference，建立稳定node/tensor ID和initializer引用。【已完成】
 4. 定义QLinearConv、MaxPool、QLinearAdd、GlobalAveragePool、MatMul、Dequantize、View的lowering插件。【语义阶段已完成，硬件tile待contract】
-5. 保存每个节点全部运行时input/output；生成首/中/末K psum、sum和requant subop golden。【node input/output已完成；subop待完成】
-6. 对旧77原语逐一映射，不再依赖328项字典插入顺序。
+5. 保存每个节点全部运行时input/output；生成accumulator、sum和requant subop golden。【已完成55个语义内部tensor；首/中/末K tile快照在W4/W5按批准tile合同细化】
+6. 对旧77原语逐一映射，不再依赖328项字典插入顺序。【已完成；77项全部覆盖，Flatten单独记录为zero-copy】
 7. 处理多输入/多输出、空名字、initializer复用、图优化融合和控制模型外部数据；每个raw output保存原始ONNX名称与稳定ID双映射。
 8. 记录ORT版本、provider、图优化等级、intra/inter-op线程、随机seed和预处理代码hash，保证重放一致。
 
-验收门 G3：任一ONNX node可查全部hw_op；任一hw_op结果可反查逻辑tensor；保存结果可由独立软件公式重放。
+验收门 G3【2026-07-12通过】：任一ONNX node可查全部hw_op；任一hw_op结果可反查逻辑tensor；55个内部结果与全部78个node output均可由独立软件公式重放，并逐项匹配ORT。证据为42项根仓测试、重复运行55个内部文件hash全部一致，以及`legacy77_mapping.json`的77项全覆盖。
 
 ### W4：逐算子16-slice relayout【难度：高】
 
