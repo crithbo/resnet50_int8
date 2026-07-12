@@ -3,6 +3,7 @@ from __future__ import annotations
 import hashlib
 import json
 import os
+import struct
 import subprocess
 import sys
 import tempfile
@@ -27,6 +28,7 @@ class NdpPhysicalProbeResult:
 @dataclass(frozen=True)
 class NdpConvAccumulatorResult:
     accumulator: np.ndarray
+    output: np.ndarray
     physical_probe: NdpPhysicalProbeResult
 
 
@@ -39,6 +41,9 @@ class NdpInt8DotProbe:
     logical_output_coordinate: tuple[int, int, int, int] | None = None
     branch_mask: tuple[bool, ...] = ()
     ring_segment_ends: tuple[int, ...] = ()
+    output_address: int | None = None
+    requant_multiplier: float | None = None
+    output_zero_point: int | None = None
 
 
 class NdpFunctionalAdapter:
@@ -95,6 +100,7 @@ class NdpFunctionalAdapter:
         expected_dot_metadata: dict[
             str, tuple[tuple[int, int, int, int] | None, tuple[int, ...]]
         ] = {}
+        expected_requant: dict[str, tuple[int, int, int] | None] = {}
         for probe in int8_dot_probes:
             if probe.name in expected_dots:
                 raise ValueError(f"duplicate int8 dot probe name: {probe.name}")
@@ -133,6 +139,35 @@ class NdpFunctionalAdapter:
                 probe.logical_output_coordinate,
                 segment_ends,
             )
+            requant_fields = (
+                probe.output_address,
+                probe.requant_multiplier,
+                probe.output_zero_point,
+            )
+            if any(item is not None for item in requant_fields) and not all(
+                item is not None for item in requant_fields
+            ):
+                raise ValueError(
+                    "requantization requires output address, multiplier, and zero point"
+                )
+            if probe.output_address is None:
+                expected_requant[probe.name] = None
+            else:
+                output_address = int(probe.output_address)
+                output_before = bundle.image.read(output_address, 1)[0]
+                scaled = np.float32(expected_accumulator) * np.float32(
+                    probe.requant_multiplier
+                )
+                requantized = int(
+                    np.clip(
+                        int(np.rint(scaled)) + int(probe.output_zero_point), 0, 255
+                    )
+                )
+                expected_requant[probe.name] = (
+                    output_address,
+                    output_before,
+                    requantized,
+                )
             request["int8_dot_probes"].append(
                 {
                     "name": probe.name,
@@ -146,6 +181,9 @@ class NdpFunctionalAdapter:
                     ),
                     "branch_mask": list(branch_mask),
                     "ring_segment_ends": list(segment_ends),
+                    "output_address": probe.output_address,
+                    "requant_multiplier": probe.requant_multiplier,
+                    "output_zero_point": probe.output_zero_point,
                 }
             )
 
@@ -209,6 +247,7 @@ class NdpFunctionalAdapter:
         if len(dot_response) != len(expected_dots):
             raise PipelineError("NDP probe returned the wrong int8 dot count")
         seen_dots: set[str] = set()
+        pending_writes: dict[int, int] = {}
         for dot in dot_response:
             name = dot["name"]
             if name not in expected_dots or name in seen_dots:
@@ -227,7 +266,27 @@ class NdpFunctionalAdapter:
                 expected_segments
             ):
                 raise PipelineError(f"NDP probe omitted ring partial sums for: {name}")
+            expected_output = expected_requant[name]
+            if expected_output is None:
+                if dot.get("requantized_output") is not None:
+                    raise PipelineError(f"NDP probe unexpectedly requantized: {name}")
+            else:
+                output_address, output_before, requantized = expected_output
+                if (
+                    int(dot.get("output_address", -1)) != output_address
+                    or int(dot.get("output_before", -1)) != output_before
+                    or int(dot.get("requantized_output", -1)) != requantized
+                    or int(dot.get("output_after", -1)) != requantized
+                ):
+                    raise PipelineError(f"NDP requant/writeback mismatch for: {name}")
+                if output_address in pending_writes:
+                    raise PipelineError(
+                        f"multiple NDP outputs target physical address: {output_address}"
+                    )
+                pending_writes[output_address] = requantized
             seen_dots.add(name)
+        for output_address, value in pending_writes.items():
+            bundle.image.overwrite(output_address, bytes([value]))
         return NdpPhysicalProbeResult(
             per_slice=int(response["per_slice"]),
             total_bytes=int(response["total_bytes"]),
@@ -300,17 +359,56 @@ class NdpFunctionalAdapter:
         expected_output_shape = (n_count, output_channels, output_h, output_w)
         if recorded_output_shape is not None and tuple(recorded_output_shape) != expected_output_shape:
             raise PipelineError("physical bundle output shape disagrees with Conv parameters")
+        if recorded_output_shape is None:
+            raise PipelineError("Conv requant/writeback probes require an output region")
 
         x_zero_points = self._read_logical_bytes(bundle, "x_zero_point", ())
         if not x_zero_points or any(item != x_zero_points[0] for item in x_zero_points):
             raise PipelineError("replicated activation zero points differ between slices")
         x_zero_point = x_zero_points[0]
+        x_scale_bytes = self._read_logical_bytes(bundle, "x_scale", ())
+        y_scale_bytes = self._read_logical_bytes(bundle, "y_scale", ())
+        scalar_copies = slice_count
+        if len(x_scale_bytes) != 4 * scalar_copies or len(y_scale_bytes) != 4 * scalar_copies:
+            raise PipelineError("replicated x/y scales have the wrong physical size")
+        x_scales = tuple(
+            struct.unpack("<f", x_scale_bytes[index : index + 4])[0]
+            for index in range(0, len(x_scale_bytes), 4)
+        )
+        y_scales = tuple(
+            struct.unpack("<f", y_scale_bytes[index : index + 4])[0]
+            for index in range(0, len(y_scale_bytes), 4)
+        )
+        if any(value != x_scales[0] for value in x_scales) or any(
+            value != y_scales[0] for value in y_scales
+        ):
+            raise PipelineError("replicated x/y scales differ between slices")
+        if x_scales[0] <= 0 or y_scales[0] <= 0:
+            raise PipelineError("x/y scales must be positive")
+        y_zero_points = self._read_logical_bytes(bundle, "y_zero_point", ())
+        if not y_zero_points or any(item != y_zero_points[0] for item in y_zero_points):
+            raise PipelineError("replicated output zero points differ between slices")
+        output_zero_point = y_zero_points[0]
         weight_zero_points = []
+        requant_multipliers = []
         for output_channel in range(output_channels):
             raw = self._read_logical_bytes(bundle, "w_zero_point", (output_channel,))
             if len(raw) != 1:
                 raise PipelineError("weight zero point must map to exactly one physical byte")
             weight_zero_points.append(int(np.array([raw[0]], dtype=np.uint8).view(np.int8)[0]))
+            w_scale_bytes = self._read_logical_bytes(bundle, "w_scale", (output_channel,))
+            if len(w_scale_bytes) != 4:
+                raise PipelineError("weight scale must map to exactly four physical bytes")
+            weight_scale = struct.unpack("<f", w_scale_bytes)[0]
+            if weight_scale <= 0:
+                raise PipelineError("weight scales must be positive")
+            requant_multipliers.append(
+                float(
+                    np.float32(x_scales[0])
+                    * np.float32(weight_scale)
+                    / np.float32(y_scales[0])
+                )
+            )
         if any(weight_zero_points):
             raise PipelineError(
                 "candidate NDP PE path currently requires symmetric int8 weights (w_zero_point=0)"
@@ -393,6 +491,11 @@ class NdpFunctionalAdapter:
                                 logical_output_coordinate=coordinate,
                                 branch_mask=tuple(branch_mask),
                                 ring_segment_ends=tuple(segment_ends),
+                                output_address=bundle.addresses_for(
+                                    "output", coordinate
+                                )[0],
+                                requant_multiplier=requant_multipliers[output_channel],
+                                output_zero_point=output_zero_point,
                             )
                         )
         return tuple(probes)
@@ -414,17 +517,20 @@ class NdpFunctionalAdapter:
             raise AssertionError("generated Conv probes must have output coordinates")
         output_shape = tuple(max(coordinate[axis] for coordinate in coordinates) + 1 for axis in range(4))
         accumulator = np.empty(output_shape, dtype=np.int32)
+        output = np.empty(output_shape, dtype=np.uint8)
         seen: set[tuple[int, int, int, int]] = set()
         for dot in physical_probe.int8_dot_probes:
             coordinate = tuple(int(item) for item in dot["logical_output_coordinate"])
             if coordinate in seen:
                 raise PipelineError(f"duplicate NDP Conv output coordinate: {coordinate}")
             accumulator[coordinate] = np.int32(dot["accumulator"])
+            output[coordinate] = np.uint8(dot["output_after"])
             seen.add(coordinate)
         expected = set(coordinates)
         if seen != expected or len(seen) != accumulator.size:
             raise PipelineError("NDP Conv probes did not cover every output coordinate")
         return NdpConvAccumulatorResult(
             accumulator=accumulator,
+            output=output,
             physical_probe=physical_probe,
         )

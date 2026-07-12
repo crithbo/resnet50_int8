@@ -149,7 +149,8 @@ class NdpFunctionalAdapterTests(unittest.TestCase):
             col_count=8,
             subword_bytes=16,
         )
-        bundle = SmallConvPhysicalLayout(geometry, slice_count=4).forward(
+        layout = SmallConvPhysicalLayout(geometry, slice_count=4)
+        bundle = layout.forward(
             activation=activation,
             weight=weight,
             bias=bias,
@@ -159,7 +160,7 @@ class NdpFunctionalAdapterTests(unittest.TestCase):
             x_zero_point=x_zero_point,
             y_scale=y_scale,
             y_zero_point=y_zero_point,
-            output=golden.output,
+            output=np.full_like(golden.output, y_zero_point),
         )
         adapter = self._adapter()
         probes = adapter.build_qlinear_conv_accumulator_probes(bundle, pads=pads)
@@ -168,12 +169,21 @@ class NdpFunctionalAdapterTests(unittest.TestCase):
         self.assertTrue(any(any(probe.branch_mask) for probe in probes))
         result = adapter.run_qlinear_conv_accumulators(bundle, pads=pads)
         np.testing.assert_array_equal(result.accumulator, golden.accumulator)
+        np.testing.assert_array_equal(result.output, golden.output)
+        np.testing.assert_array_equal(layout.inverse_output(bundle), golden.output)
         self.assertEqual(
             len(result.physical_probe.int8_dot_probes), golden.accumulator.size
         )
         self.assertTrue(
             all(
                 len(dot["partial_accumulators"]) == 4
+                for dot in result.physical_probe.int8_dot_probes
+            )
+        )
+        self.assertTrue(
+            all(
+                dot["output_before"] == int(y_zero_point)
+                and dot["output_after"] == dot["requantized_output"]
                 for dot in result.physical_probe.int8_dot_probes
             )
         )

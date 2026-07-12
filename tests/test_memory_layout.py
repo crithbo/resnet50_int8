@@ -56,6 +56,12 @@ class DramGeometryTests(unittest.TestCase):
         self.assertEqual(source.logical_coordinate, (1,))
         with self.assertRaisesRegex(ValueError, "overlaps"):
             image.write(4, b"x", (ByteProvenance("y", (0,), 0, "data"),))
+        explanation = image.explain(3)
+        image.overwrite(3, b"z")
+        self.assertEqual(image.read(3, 1), b"z")
+        self.assertEqual(image.explain(3), explanation)
+        with self.assertRaisesRegex(KeyError, "unwritten byte"):
+            image.overwrite(20, b"x")
 
 
 class SmallConvPhysicalLayoutTests(unittest.TestCase):

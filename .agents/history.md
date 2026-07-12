@@ -86,10 +86,14 @@
     - 范围：根adapter从physical provenance构造全部QLinearConv输出坐标的4-slice ring probe，处理padding/空段/奇数lane、activation zero point折叠和分段partial sum；新增全坐标差分测试，锁定NDP `d212225…`，同步W2状态及新的“小进度只做本地提交”规则，并禁止adapter子进程重写NDP `.pyc`。
     - 验证：带3×3/padding/C-K tail的84个int32 accumulator与独立QLinearConv golden逐元素相同；根仓28项、NDP 11项测试通过；三参考仓verify和`git diff --check`通过，测试后NDP工作树保持干净。
     - 精确回退：revert本commit；根仓回到 `f4f71f…` 的单坐标probe状态，配套NDP `d212225…` 可继续保留但不会被旧lock引用。本commit按新规则仅保留本地，尚未推送 `origin/main`。
+18. `c21a5346616bde3e2ed6cda0713c6c252a9d2a07`，父提交 `758a7c5b5eed8415a184380f2fab227ecea58dfa`，`chore: sync Conv accumulator ledger`。
+    - 范围：把全坐标ring accumulator业务提交 `758a7c5…` 的完整hash、验证和精确回退点补入台账。
+    - 验证：提交后根工作树干净，三参考仓verify通过；按小进度策略仅本地提交。
+    - 精确回退：revert本commit；改动前根状态为 `758a7c5…`，只影响台账登记。
 
 ### 子仓库 `NDPFuncModel/conv_func`
 
-上游共同基线为 `89d1655ce6450477cdcc04965d8b4866f12066e5`。以下提交不在公开 `origin/conv_func`，均已推送到操作者Private镜像 `private/conv_func`：
+上游共同基线为 `89d1655ce6450477cdcc04965d8b4866f12066e5`。以下提交均不在公开 `origin/conv_func`；第1～4项已推送操作者Private镜像，第5～6项按“小进度只本地提交”暂未推送：
 
 1. `789d121327d8e855d33f16c2103a6422a521fa25`，父提交 `89d1655ce6450477cdcc04965d8b4866f12066e5`，`fix: correct slice and strided AG addressing`。
    - 范围：修复DRAM `per_slice`漏bank、slice AG基址、RDAG/WRAG跨transaction物理地址；新增physical image probe和寻址测试。
@@ -107,6 +111,14 @@
    - 范围：physical image probe接收branch mask与ring segment边界，把logical output coordinate、各段partial accumulator和最终accumulator返回根adapter。
    - 验证：NDP 11项测试通过；根集成测试进一步以84个实际输出坐标验证4段ring结果。提交已成功推送到Private `conv_func`。
    - 精确回退：revert本commit；上一NDP状态为 `86cd3e3…`，仍保留寻址、整数PEA及LC reduction控制，但根adapter的分段probe将不兼容。
+5. `7a4770178eb7788dad5211102bd3a2f17591d753`，父提交 `d212225bb466bb1d46a6b5c9ba528e5d6c28e34d`，`fix: implement candidate INT8 requantization`。
+   - 范围：修复ActivationUnit缺失round函数和标量维度错误；新增int32输入检查、scalar/per-channel float32 multiplier、nearest-even、output zero-point及uint8 saturation。
+   - 验证：新增3项requant测试，覆盖tie、负值、饱和、NCHW逐通道广播和非法dtype；NDP累计14项测试通过。
+   - 精确回退：revert本commit；回到 `d212225…` 时仅保留整数accumulator，ActivationUnit requant不可用。本commit仅本地、未推送。
+6. `3cb0ef91c1bd7117ebda5004519f22ff227a22e5`，父提交 `7a4770178eb7788dad5211102bd3a2f17591d753`，`feat: requantize and write probe outputs`。
+   - 范围：physical probe接收D物理地址、per-channel multiplier和output zero-point；对最终int32 accumulator调用ActivationUnit，真实写入NDP DRAM并立即读回before/after。
+   - 验证：根聚焦测试覆盖84个输出地址，physical和inverse logical UINT8 D均与golden一致；配套NDP 14项测试通过。
+   - 精确回退：revert本commit；保留 `7a47701…` 的候选requant单元，但probe不再执行物理D写回。本commit仅本地、未推送。
 
 ## 当前本地副本与空间审计（2026-07-11）
 
@@ -135,6 +147,8 @@
 - 根adapter不从raw数组旁路取值：它通过provenance取得activation/weight/bias/qparams物理地址，按输出K-owner开始的4-slice ring顺序组织reduction；越界padding不伪造逻辑坐标，空段和奇数lane统一用branch mask补齐PE dot size。
 - 确定性小Conv覆盖非零activation zero point、3×3 kernel、padding、C/K tail和7个输出通道，共84个输出坐标；每坐标回传4个partial sum，最终int32 accumulator与独立QLinearConv golden逐元素bit-exact。
 - 根仓28项、NDP 11项测试全部通过。当前闭环边界是raw↔physical↔NDP DRAM↔全部坐标4-slice ring整数accumulator；probe仍未执行主入口完整LC/Buffer调度，requant、INT8 packing、真实D writeback和inverse D未完成，因此G2仍未通过。
+- 后续本地提交 `7a47701…` 修复ActivationUnit候选requant，`3cb0ef9…` 让probe对每个输出坐标真实覆盖D物理字节。根镜像用新增overwrite保留原provenance，再由既有inverse layout恢复logical D；84个physical/logical UINT8 D与golden一致。
+- 该进展只关闭probe候选路径：主入口仍未调用ActivationUnit，SpecialPEA仍按FP16打包，`run_buffer_writeback_to_dram()`的实际stream write仍被注释，JSON/LC/Buffer/WRAG唯一flush尚未验证；因此G2继续保持未通过。
 
 ## 2026-07-05～2026-07-09：确认原始ResNet参考链
 

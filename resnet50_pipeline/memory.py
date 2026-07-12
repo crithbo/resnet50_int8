@@ -174,6 +174,17 @@ class SparsePhysicalImage:
             raise KeyError(f"physical byte has not been written: {missing[0]}")
         return bytes(self._data[item] for item in range(address, address + size_bytes))
 
+    def overwrite(self, address: int, payload: bytes) -> None:
+        """Replace existing physical bytes without changing their provenance."""
+
+        if address < 0 or address + len(payload) > self.geometry.total_bytes:
+            raise ValueError("physical overwrite is outside DRAM")
+        missing = [item for item in range(address, address + len(payload)) if item not in self._data]
+        if missing:
+            raise KeyError(f"physical overwrite targets an unwritten byte: {missing[0]}")
+        for offset, value in enumerate(payload):
+            self._data[address + offset] = value
+
     def explain(self, address: int) -> tuple[DramCoordinate, ByteProvenance]:
         if address not in self._provenance:
             raise KeyError(f"physical byte has no provenance: {address}")

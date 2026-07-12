@@ -9,7 +9,7 @@
 - **最终验收**：正式 ResNet50 INT8 ONNX→逐节点/硬件原子算子 golden→16-slice relayout→JSON/bitstream→目标 simulator→execplan/Bank_data→RTL/硬件→三方逐算子和整网一致。
 - **实际进度**：代码和资料摸底基本完成，但端到端工程完成度仅约 15%~25%；当前没有一个目标 NDP ResNet 算子达到 `golden=simulator=hardware`。
 - **三个仓库分工**：`CGRA_SIM` 给软件/QNN语义和旧 ResNet 计划；`ndp-sim-ref` 给目标 JSON、bitstream、relayout/execplan 框架；`NDPFuncModel` 给 Conv 数据通路和旧固定配置。三者尚无共同 manifest 或可运行适配层。
-- **当前可直接推进**：W0/G0、小QLinearConv golden、1/4-slice候选layout、NDP DRAM ingress和全部小Conv输出坐标的整数PEA/ring分段累加已经通过；当前继续W2 requant、INT8 packing和真实writeback。
+- **当前可直接推进**：W0/G0、小QLinearConv golden、1/4-slice候选layout，以及NDP probe路径的全部坐标ring累加→per-channel requant→物理D写回→inverse D已经通过；当前继续把该候选数值链接回主入口的LC/Buffer/WRAG，去掉INT8输出的FP16 packing并验证唯一flush。
 - **当前外部阻塞**：正式模型和固定输入基线已经自行取得；剩余外部阻塞为目标16-slice RTL/ISA版本、正式物理layout、INT8 SA/GA/qparams硬件约定、目标emulator关系、硬件加载与dump协议。
 - **禁止误用**：NDPFuncModel 当前 `extracted_*.npy` 和 `verify_pe` psum 不是可信 golden；42个 JSON也不等于 ResNet算子配置已完成；bitstream生成成功不等于数值正确。
 - **接手第一条命令**：先运行 `.venv\Scripts\python.exe tools\sync_repositories.py verify` 核验三仓commit/remote/dirty状态；始终使用根目录 `.venv\Scripts\python.exe`，不要调用系统 `python` 或重装Codex公共运行时。
@@ -180,12 +180,12 @@ C:\Users\15383\Desktop\Codex\project\resnet50_int8\NDPFuncModel
 
 ```text
 conv_func
-d212225bb466bb1d46a6b5c9ba528e5d6c28e34d
+3cb0ef91c1bd7117ebda5004519f22ff227a22e5
 ```
 
 状态说明：
 
-- 从 `runoobb/NDPFuncModel` 的 `conv_func` 分支单分支克隆；当前本地分支在上游 `89d1655` 基础上增加寻址修复 `789d121`、整数PEA修复 `deee41f`、reduction修复 `86cd3e3` 和分段probe `d212225`，工作树干净；独有提交已推送Private镜像。
+- 从 `runoobb/NDPFuncModel` 的 `conv_func` 分支单分支克隆；当前本地分支在上游 `89d1655` 基础上增加寻址修复 `789d121`、整数PEA修复 `deee41f`、reduction修复 `86cd3e3`、分段probe `d212225`、候选requant `7a47701` 和probe物理D写回 `3cb0ef9`。前4个独有提交已推送Private镜像，后2个小进度按现行规则仅本地提交。
 - 它是以 Python 硬编码循环和数据通路的 Conv 功能模型，不是 `ndp-sim-ref/jsons` 或 bitstream 的解释器。
 - 仓库按 Git 记录了 `conv_config` gitlink，但没有 `.gitmodules` 和 URL；该目录无法还原。`graph/` 也只有 `.pyc`，没有对应 `.py` 源码。
 - `hex_data/` 被忽略且未随仓库提供，因此 `main_CONV_N2N.py` 当前不能从干净 clone 直接完整运行。
@@ -304,7 +304,7 @@ CGRA_SIM/testing/resnet-50-int8/
 - `component/Buffer.py`：数据、last/last_index/branch tag、列反序存取和 tag 压缩。
 - `component/SpecialPEA.py`：8×8 PEA、每 PE dot、int32 psum、邻接/分支处理和输出 buffer packing。
 - `component/DataTransfer.py`：DRAM→AG→Buffer→PE、PE 执行、邻接传输和候选写回的主要 trace 链；Conv AG 参数仍由 Python 函数硬编码，不从 JSON 读取。
-- `component/ActiUnit.py`：候选 requant 单元，但 Conv 主入口没有调用它，且 `quantize()` 引用了未实现的 `sse2_round_to_int()`。
+- `component/ActiUnit.py`：`7a47701` 已修复候选requant，支持int32×float32 multiplier、nearest-even、scalar/per-channel广播、output zero-point和uint8饱和；physical probe已调用，Conv主入口仍未调用。
 - `main_GEMM*.py`、`main_GEMV.py`、`generate_gemm_fp16.py`：GEMM/GEMV 开发与验证参考，不是 ResNet Conv 主线。
 - `verify_*.py`、`torch_verify*.py`、`test_compare.py`、`track_data_path.py`：trace/统计验证工具；当前没有对 QLinearConv 做坐标级 bit-exact 全输出比较。
 - `config/`：旧配置位拼接工具，与 `ndp-sim-ref` 同源的历史参考；没有接入 Conv 主入口。其中 `config_generator_ver2.py` 是固定 Conv 配置，`config_nse.py` 是增加邻居流和重复 LC 链的版本，`nse_cnt_size=15` 是当前仓库里最直接的 16-slice/ring 配置证据。它们属于旧寄存器架构，且输出路径硬编码，不能不经版本映射直接复制成目标 JSON。
@@ -314,8 +314,8 @@ CGRA_SIM/testing/resnet-50-int8/
 该仓库补齐的是“Conv 数据通路怎样走”的重要参考：DRAM 几何、地址/掩码、Buffer 行列、8×8 PEA、4-slice ring 和 psum provenance 都能用于设计 ResNet Conv relayout 与配置适配。它尚未补齐目标数值闭环，已确认的直接阻塞包括：
 
 1. 上游 `reduc_state = r*s*cc_shared` 不可能正确表示多层循环末态，且在每个R后清空psum；本地 `86cd3e3` 已改用LC `last/last_index`并把清零移到完整C/S/R+ring之后。`d212225` 和根adapter已用全部输出坐标验证四段ring整数累加；真实主入口flush/writeback仍未恢复。
-2. `run_buffer_writeback_to_dram()` 只记录“将要写回”的日志，实际 `dram.stream_write()` 被注释。
-3. INT8 Conv 输出仍走 FP16 packing，未执行 per-channel requant/zero-point/saturation；主入口创建的 `ActivationUnit` 没有被使用。
+2. `run_buffer_writeback_to_dram()` 仍只记录“将要写回”的日志，实际 `dram.stream_write()` 被注释；`3cb0ef9`完成的是probe路径按provenance地址的真实单字节写回，不能冒充主WRAG路径已修复。
+3. INT8 Conv主入口输出仍走FP16 packing；虽然probe已执行per-channel requant/zero-point/saturation，主入口创建的 `ActivationUnit` 仍没有被使用。
 4. 上游PEA按signed A×unsigned B计算；本地 `deee41f` 已按主链实际端口修为uint8 activation A×int8 weight B，并由physical-address dot probe与QLinearConv accumulator对齐。目标硬件物理端口仍需外部确认。
 5. 主示例固定 4 slice，不等于已确认的目标 16 slice，也没有 JSON/bitstream、qparams 或命令行参数化接口。
 6. 上游 `SpecialPEA.PE.execute()` 的INT8路径经过 `np.float128/float32` 且debug含 `.asctype`；本地 `deee41f` 已改为纯int32 psum、int64检查中间值并移除函数内直接 `np.float128`。溢出暂显式报错，等待硬件规则裁决。
@@ -332,14 +332,14 @@ CGRA_SIM/testing/resnet-50-int8/
 - **lowering 和统一 manifest——仓库中没有**：旧计划精确还原为 77 个模型级原语，但依赖 328 个有序字典项；没有 ONNX node→硬件原子 op→JSON→execplan→结果的一对多映射。
 - **数据变换——Conv候选已进入NDP验证/其余需完成**：W2已实现1/4-slice `w2_ndp_ring_candidate_v1`，覆盖DRAM五维地址、activation-C和weight/output-K分片、bias/qparams、C/K tail、16-byte对齐、逐字节provenance及正逆round-trip；NDP已逐region读回并由物理地址完成单坐标整数dot，但它仍不是硬件批准layout。ResNet 16-slice Conv以及Quantize、MaxPool、Add、AvgPool、MatMul/dense、Dequantize、Flatten/View仍需继续实现。
 - **单算子配置——部分已有**：42 个静态 JSON 中只有 MaxPool、sum 型 AvgPool、固定样例 quant、fp32 输出 add-dequant 可局部参考；6 个 SA JSON 全是 FP16、bias=0；没有核心 INT8 Conv/MatMul。
-- **目标数值模拟——DRAM ingress和全部坐标整数PEA已通过**：本地 `NDPFuncModel@d212225` 可消费W2 physical bundle，逐region hash一致，并按K-owner起点的4-slice ring顺序从物理地址执行uint8×int8纯整数dot；padding/空段/奇数lane由branch mask补齐，全部84个输出坐标及每坐标4个分段partial sum均运行，最终accumulator与独立QLinearConv golden逐元素一致。该probe尚绕过硬编码主入口的LC/Buffer调度和真实D writeback；requant、JSON驱动和16-slice仍未闭环。
+- **目标数值模拟——probe候选D已闭环，主入口未闭环**：本地 `NDPFuncModel@3cb0ef9` 可消费W2 physical bundle，按K-owner起点的4-slice ring顺序执行全部84个输出坐标，每坐标4个partial sum及最终int32 accumulator与golden一致；随后从physical x/w/y scale推导float32 multiplier，经ActivationUnit nearest-even/zero-point/saturation得到UINT8，并真实覆盖各自D物理地址。根侧保持provenance同步写回，既有inverse layout恢复的逻辑D与golden逐元素一致。该probe仍绕过硬编码主入口的LC/Buffer/WRAG和FP16 pack路径；JSON驱动、唯一flush及16-slice尚未闭环。
 - **execplan——框架已有/ResNet 适配没有**：可规划地址、重生成 bitstream、输出指令和 Bank_data，但 schema 无 numeric attributes，仍硬编码 28 slice，bitstream 失败后部分路径继续。
 - **RTL/硬件——外部阻塞**：没有完整 runner/testbench、加载/启动/完成/dump 协议或逐算子 checkpoint 入口。
 - **三方比较——仓库中没有通用实现**：旧 runner 只有 21 个硬编码 checkpoint，另一个工具只比较两个 128-bit 物理文件；没有 inverse-relayout 后的三方比较。
 
 ## 当前最高优先级
 
-严格按 `.agents/plan.md` 的 W0→W9 工作包和 G0→G9 验收门推进。W0/G0已经完成，W1外部规格继续并行；W2已越过物理layout、地址provenance和单坐标整数PEA，当前继续全部输出坐标/reduction，再接requant与真实writeback。relayout实现本身不再等待外部提供现成脚本。
+严格按 `.agents/plan.md` 的 W0→W9 工作包和 G0→G9 验收门推进。W0/G0已经完成，W1外部规格继续并行；W2的probe候选链已到physical/logical UINT8 D，当前继续把同一数值合同接回主入口LC/Buffer/WRAG，验证INT8 packing和唯一flush。relayout实现本身不再等待外部提供现成脚本。
 
 优先向学长或硬件侧确认：目标16-slice RTL/ISA/register-map版本、正式物理layout、最小INT8 SA+bias+requant硬件配置、量化参数传递协议、NDPFuncModel/官方emulator关系，以及硬件加载和dump接口。旧ONNX、旧产物、原 `hex_data` 和 `conv_config` 来源已降级为兼容性资料，不再阻塞软件推进。
 
