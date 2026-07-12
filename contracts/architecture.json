@@ -96,6 +96,27 @@
       }
     }
   },
+  "candidate_validation_reports": {
+    "w4_conv_shape_coverage_v1": {
+      "status": "candidate_software_evidence",
+      "path": "artifacts/w4/conv_shape_coverage.json",
+      "sha256": "307f54bd55330270de1cb90fe42a8ee4433d6de66e23f9291c46148f1d2b30b3",
+      "size_bytes": 116635,
+      "formal_conv_nodes": 53,
+      "stable_shape_families": 20,
+      "formal_plan_batch_size": 16,
+      "roundtrip_batch_size": 1,
+      "batch_and_ring_all_fit": true,
+      "all_owner_ranges_exact": true,
+      "all_ring_orders_are_permutations": true,
+      "all_family_roundtrips_bit_exact": true,
+      "all_batch_ring_logical_bit_exact": true,
+      "maximum_per_slice_case": "conv-family-a3194a82fe78 (Conv0)",
+      "maximum_batch_bytes": 4441472,
+      "maximum_ring_bytes": 4820160,
+      "slice_capacity_bytes": 25165824
+    }
+  },
   "unresolved": [
     "target RTL/ISA/register-map commit",
     "resource counts and field widths for the target version",
