@@ -187,6 +187,13 @@ class NdpFunctionalAdapterTests(unittest.TestCase):
                 for dot in result.physical_probe.int8_dot_probes
             )
         )
+        self.assertTrue(
+            all(
+                [state["last"] for state in dot["ring_loop_states"]]
+                == [0, 0, 0, 1]
+                for dot in result.physical_probe.int8_dot_probes
+            )
+        )
 
 
 if __name__ == "__main__":

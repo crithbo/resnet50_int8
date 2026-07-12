@@ -27,7 +27,7 @@
       "upstream": "https://github.com/runoobb/NDPFuncModel.git",
       "private_mirror": "https://github.com/crithbo/NDPFuncModel-private.git",
       "branch": "conv_func",
-      "commit": "3cb0ef91c1bd7117ebda5004519f22ff227a22e5",
+      "commit": "35eab40e5314bf603481dd6268bc96ab2ca514a6",
       "dirty": false,
       "dirty_paths": []
     }

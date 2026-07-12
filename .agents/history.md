@@ -123,6 +123,10 @@
    - 范围：physical probe接收D物理地址、per-channel multiplier和output zero-point；对最终int32 accumulator调用ActivationUnit，真实写入NDP DRAM并立即读回before/after。
    - 验证：根聚焦测试覆盖84个输出地址，physical和inverse logical UINT8 D均与golden一致；配套NDP 14项测试通过。
    - 精确回退：revert本commit；保留 `7a47701…` 的候选requant单元，但probe不再执行物理D写回。本commit仅本地、未推送。
+7. `35eab40e5314bf603481dd6268bc96ab2ca514a6`，父提交 `3cb0ef91c1bd7117ebda5004519f22ff227a22e5`，`feat: route Conv probes through functional buffers`。
+   - 范围：单算子runner不再直接调用PE；每个dot实际经过input Buffer、SpecialPEA，ring分段记录LC last/last_index，requant结果经过output Buffer再写DRAM。
+   - 验证：84坐标聚焦测试通过，执行路径和4步ring末态均由根adapter强校验。
+   - 精确回退：revert本commit；回到 `3cb0ef9…` 的直接PE probe。本commit仅本地、未推送。
 
 ## 当前本地副本与空间审计（2026-07-11）
 

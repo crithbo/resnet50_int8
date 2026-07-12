@@ -266,6 +266,21 @@ class NdpFunctionalAdapter:
                 expected_segments
             ):
                 raise PipelineError(f"NDP probe omitted ring partial sums for: {name}")
+            if expected_segments:
+                ring_states = dot.get("ring_loop_states", [])
+                if len(ring_states) != len(expected_segments) or [
+                    int(item["last"]) for item in ring_states
+                ] != [0] * (len(expected_segments) - 1) + [1]:
+                    raise PipelineError(f"NDP probe returned invalid ring LC state for: {name}")
+                if dot.get("execution_path") != [
+                    "DRAM",
+                    "input_buffer",
+                    "SpecialPEA",
+                    "ActivationUnit",
+                    "output_buffer",
+                    "DRAM",
+                ]:
+                    raise PipelineError(f"NDP probe bypassed the candidate runner for: {name}")
             expected_output = expected_requant[name]
             if expected_output is None:
                 if dot.get("requantized_output") is not None:
