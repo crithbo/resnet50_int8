@@ -114,12 +114,21 @@
     - 范围：建立8类lowering插件；Conv/GAP/MatMul拆成两阶段，其他算子单阶段；生成稳定hw_op ID、显式内部tensor和拓扑依赖。
     - 验证：78节点全部映射为133个hw_op、55个内部tensor；任一node可查hw_op且末阶段回写原ONNX tensor；根35项测试通过。
     - 精确回退：revert本commit；保留 `4f2828b…` 图目录但移除lowering。本提交仅本地、未推送。
+25. `42b65198231928ec5d49309718c3f21032ea5db3`，父提交 `060d3c84c7c68845c782c12e21bd00ae328be8be`，`docs: record W3 graph and lowering progress`。
+    - 范围：同步W3图目录/lowering状态及提交台账。
+    - 验证：文档diff检查通过。
+    - 精确回退：revert本commit只撤销状态记录。
+26. `80b95fe3be5e5f1fd3cdfc06f8f7bdcb3e4b5e09`，父提交 `42b65198231928ec5d49309718c3f21032ea5db3`，`feat: dump all ONNX node outputs reproducibly`。
+    - 范围：新增固定ORT选项的全node output runner、原子artifact发布、initializer hash引用、node input/output manifest及CLI。
+    - 验证：正式batch16保存79个运行时tensor/366 initializer引用，最终输出hash与W1相同，临时目录第二次运行全部79个hash一致；根36项测试通过。
+    - 精确回退：revert本commit；保留图目录/lowering但删除运行时golden runner。
 
 ## 2026-07-12：W3正式图目录与语义lowering启动
 
 - 旧golden脚本的硬编码输出名、伪四维ValueInfo和个人绝对路径不再作为W3接口；正式解析从model contract的SHA开始。
 - ONNX标准shape inference在首个QLinearAdd后停止传播，新增仅覆盖当前8类已知算子的补充规则，并为每个tensor记录`initializer/onnx_inference/supplemental`来源，禁止静默猜shape。
 - 核心解析层不导入`cgra_python`，因此不受`layout_buffer.py:201`语法错误和顶层`import *`影响；该子仓错误仍需单独修复，不能宣称源码已正确。
+- 正式batch16已运行全部78个node output，落盘约273.56 MB且由Git忽略；最终输出`.npy` hash为`2c6c5f…`，与W1基线文件完全相同。第二次运行使用临时目录，79个tensor文件hash全部一致并自动删除临时副本。
 
 ### 子仓库 `NDPFuncModel/conv_func`
 

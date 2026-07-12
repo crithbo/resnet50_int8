@@ -1,0 +1,28 @@
+{
+  "schema_version": "0.1",
+  "contract_type": "golden_runtime",
+  "status": "approved_for_w3_node_outputs",
+  "model_sha256": "c234f30975989788b4405f25253275aae247ab6dbdd34aaa69ab0a59ff76f6d0",
+  "input_sha256": "6661a1671a07256fa7b4792851bc8bee41409495a7b5b705fbb3fe0976601a9c",
+  "input_shape": [16, 3, 224, 224],
+  "runtime": {
+    "onnxruntime_version": "1.27.0",
+    "provider": "CPUExecutionProvider",
+    "graph_optimization": "ORT_DISABLE_ALL",
+    "execution_mode": "ORT_SEQUENTIAL",
+    "intra_op_threads": 1,
+    "inter_op_threads": 1,
+    "memory_pattern": false,
+    "cpu_memory_arena": false
+  },
+  "artifact_root": "artifacts/w3/golden_batch16",
+  "manifest_sha256": "f7e90cf1f087acf255e93d98d1788e0fb0b4c77bbe935ea9addb17feea583180",
+  "node_count": 78,
+  "saved_runtime_tensor_count": 79,
+  "initializer_reference_count": 366,
+  "artifact_size_bytes": 273561363,
+  "final_output_sha256": "2c6c5fabc1d41fceee35f06221efb4c64b94fabfe7a0b4680d2acf2186ca0894",
+  "final_output_matches_w1_baseline": true,
+  "repeat_run_all_tensor_hashes_equal": true,
+  "scope": "ONNX node inputs/outputs; lowering subop golden remains pending"
+}
