@@ -56,6 +56,24 @@
       "rule": "producer D and consumer A alias the same per-slice base addresses only when element count and byte order are unchanged",
       "formal_shape": "[16,2048,1,1] -> [16,2048]",
       "implementation": "resnet50_pipeline/simple_layout.py"
+    },
+    "w4_conv_batch16_candidate_v1": {
+      "status": "candidate",
+      "scope": "QLinearConv batch-parallel software relayout; not hardware-approved and not the W2 ring profile",
+      "slice_topology": "one batch item per slice; N must be between 1 and 16",
+      "activation": "NCHW logical to per-slice HWC with C padded to 8 using x_zero_point",
+      "im2col": "not materialized; AG window coordinates map to the padded HWC A region",
+      "weight": "OIHW logical to RSKC with C/K padded to 8; replicated on every slice",
+      "bias_and_qparams": "K vectors/scalars replicated on every slice; multiplier=x_scale*w_scale/y_scale",
+      "accumulator": "INT32 NCHW logical to per-slice HWK with K padded to 8 using zero",
+      "output": "UINT8 NCHW logical to per-slice HWK with K padded to 8 using y_zero_point",
+      "alignment_bytes": 16,
+      "implementation": "resnet50_pipeline/conv16_layout.py",
+      "formal_conv0_report": {
+        "path": "artifacts/w4/conv0_batch16_report.json",
+        "sha256": "c91ae0ddbc17b41121d832a16d4a3de3706a9eaccfc59faf834de45b9e6f23b5",
+        "all_inverse_bit_exact": true
+      }
     }
   },
   "unresolved": [
