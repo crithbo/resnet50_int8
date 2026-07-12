@@ -134,6 +134,10 @@
     - 范围：把独立公式重放扩展到全部78节点，覆盖17个QLinearAdd affine requant、2个Quantize nearest-even、2个Dequantize、1个MaxPool和1个Flatten，并保留55个多阶段内部结果验证。
     - 验证：全部78个节点输出逐项等于ORT；公式分类计数55+17+2+2+1+1=78；正式subop manifest SHA-256为`8bfdd042570408c1df793044407a8e6262bfa261b3cc6f02f64b94ad47d9c1c2`；根仓42项测试通过。
     - 精确回退：revert本commit；回到`096efc3…`时仍有55个内部tensor及其requant验证，但不再宣称其余23个单阶段节点已独立重放。本提交仅本地、未单独推送。
+30. `aa6ee26e78e90f9c5b68f8a62899d40663abfd76`，父提交 `c5de5e66c24e252be19d911b05ab37acbc75cb84`，`docs: approve W3 G3 golden milestone`。
+    - 范围：新增机器可读`subop_golden`合同；把7类真实算子的raw/subop覆盖标记为`w3_g3`；同步agent/plan/history并正式批准G3。
+    - 验证：根仓42项测试、三参考仓verify、合同JSON解析、Git diff检查通过；subop manifest和旧77映射的实际SHA及677,828,490字节目录大小均与合同一致。
+    - 精确回退：revert本commit；代码仍停在`c5de5e6…`且计算结果不变，但G3批准合同、覆盖状态与里程碑文档被撤销。本提交将在本次W3批量推送中进入Private `origin/main`。
 
 ## 2026-07-12：W3正式图目录与语义lowering启动
 
