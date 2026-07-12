@@ -414,3 +414,15 @@
 - 机器报告`artifacts/w4/avgpool_profiles_report.json`为13,910 bytes，SHA-256 `cb8ccd709616a851bed109a2a47a70706f9c8ecc0ba76f47eafa0ba3fbb4d3f8`。新增3项聚焦测试，覆盖正逆、reduction地址、P/D坐标、qparam副本、tail/inactive slice、Add exact alias、Flatten零拷贝、正式shape、非法channels_last/dtype/base；根仓全量64项测试通过，报告重复生成hash稳定，architecture严格JSON解析及`git diff --check`通过。
 - 边界：当前证明软件candidate布局、正式W3 sum/requant结果的可逆装载及上下游零拷贝，不证明目标AvgPool JSON/GA/simulator/hardware数值执行；G4保持未通过，下一原子步骤是MatMul/dense。
 - 精确回退：revert `164bc6c09ffa15e333e7a2e8196355369fdea4a6`；上一根仓恢复点为`b0ec7112e41ecde312ecae3c84c569ede02d00db`。
+
+## 2026-07-12：W4 MatMul/dense双profile与head边界闭合
+
+- 根仓提交 `e0be1cf848850af317e1cb6f120b1c1c2adba3e8`，父提交 `2c4b9ad0361fb039dd4f4845865d2cf68d59e055`，`feat: add W4 QLinearMatMul relayouts`。
+- 新增`w4_qlinearmatmul_batch16_candidate_v1`和`w4_qlinearmatmul_ring16_candidate_v1`。batch profile按样本行归属slice，A按K=8补tail，B按K/O=8补tail并逐slice复制，P/D按O=8补tail；ring profile按连续K chunk归属A slice，按连续O owner归属B/P/D，B保存K-global-padded/O-local。六个标量qparams及`x_scale*w_scale/y_scale` multiplier逐slice复制。
+- ring候选为每个O owner显式执行16步，activation slice顺序`(owner+step)%16`、15次neighbor transfer；P合同只记录完整K reduction后的INT32 accumulator，逐K tile/逐ring step psum物理保存位置仍明确留到W5取得目标tile合同后确定。
+- 正式node-0075为`[16,2048] uint8 × [2048,1000] int8 → [16,1000] int32 P → [16,1000] uint8 D`。batch为K tile 2048/O tile 1000，每slice 2,063,392 bytes；ring为K tile 128/O tile 63、O padded 1008，每slice136,224 bytes；均低于25,165,824-byte容量。两profile的A/B、六qparams、multiplier、P/D共11端口inverse全部bit-exact，W3 `int32_internal_then_requant`及最终Dequantize仍匹配既有证据。
+- head转换责任已闭合：正式batch Quantize node-0074 D→MatMul A逐slice字节和base完全一致，exact alias成立；ring输入必须执行batch→K-partition relayout。batch/ring MatMul D→dense Add node-0076 A均exact alias，bias `[1000]`分别逐slice复制或按O owner分片。batch dense Add D与最终Dequantize A物理字节一致但独立bundle基址不同，留W7统一；ring/channel D必须显式O-owner→batch relayout。
+- 微型测试额外确认零拷贝需要inactive padding也一致：正式x_zero_point=0与当前Quantize padding相符；若N<16且x_zero_point非零，不得仅比较有效样本后宣称alias。机器报告`artifacts/w4/matmul_profiles_report.json`为16,816 bytes，SHA-256 `c561f4f23e5f5f7e1e5c5a556237fef4266b2b3a99f62ababc0f205a36e565ea`。
+- 新增3项聚焦测试，覆盖双profile正逆、K/O tail、inactive slice、scalar副本、坐标、ring step、正式shape/capacity、Quantize alias、dense Add alias和非法shape/dtype；根仓全量67项测试通过，报告重复生成hash稳定，architecture严格JSON解析及`git diff --check`通过。
+- W4计划内全部算子族至此均有软件candidate，但G4仍未通过：Conv/整体profile及正式硬件layout未获批准，部分channel↔batch边界需要显式relayout，逐K tile psum属于W5目标合同。下一原子步骤应为全W4 profile/transition矩阵与G4综合门审计，而不是直接把candidate升级为approved。
+- 精确回退：revert `e0be1cf848850af317e1cb6f120b1c1c2adba3e8`；上一根仓恢复点为`2c4b9ad0361fb039dd4f4845865d2cf68d59e055`。
