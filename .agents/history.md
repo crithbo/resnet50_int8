@@ -187,6 +187,10 @@
     - 范围：登记W3/G3批准提交`aa6ee26…`的完整hash、父提交、验证和回退边界，形成W3云端封版HEAD。
     - 验证：从`5f25526…`到本提交的9个W3提交已批量推送Private `origin/main`；本地HEAD与tracking ref均为本提交，ahead/behind为0/0，工作树干净。
     - 精确回退：revert本commit只撤销`aa6ee26…`的台账登记，不撤销W3代码、合同或云端提交；W3业务回退应按第23～30项从后向前逐项revert。
+32. `e3142bf0d5b03d891c13a4670e83d10b0862c1fc`，父提交 `35a4fde106d102b0e165e7eb13d60f7dd980db71`，`docs: seal W0-W3 handoff`。
+    - 范围：新增W0～W3交接封版总账；把`agent.md`重构为新对话接手控制台；把`plan.md`中W2/W3开始前的过时状态替换为当前门状态，并明确新对话推进W4、本对话返工/查验W1～W3。
+    - 验证：根仓42项测试、三参考仓verify、`git diff --check`通过；W3 runtime/subop/旧77映射三个artifact的实际SHA-256均与封版记录一致。
+    - 精确回退：revert本commit；恢复`35a4fde…`时W0～W3业务代码和合同不变，只撤销本次交接重构与过时状态修订。
 
 ## 2026-07-12：W3正式图目录与语义lowering启动
 
