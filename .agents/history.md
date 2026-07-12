@@ -380,3 +380,15 @@
 - 新增ADR-002候选裁决文档：不批准任何profile，集中请求硬件侧确认slice含义、B/qparams归属、ring方向/起点、im2col/AG、psum和requant位置及适用RTL/ISA版本。等待回复不阻塞W4内部继续MaxPool。
 - 边界：除Conv0外，其余family使用N=1确定性layout模式而非重新加载全部W3 runtime tensor；该证据证明shape/layout可逆，不证明目标simulator或硬件数值执行。G4保持未通过。
 - 精确回退：revert `274d6c6db55c3912cf4c111b98a95abb1d863723`；上一根仓恢复点为`c4eb3b3e4e65c55b52480c7192285553e4d43380`。
+
+## 2026-07-12：W4 MaxPool双profile与Conv D零拷贝
+
+- 根仓提交 `eef252d5d0d0cd2eb56a651a83882cb5d604a943`，父提交 `393965720c06d9cf0e875829d0ae2fb547a5207d`，`feat: add W4 MaxPool relayouts`。
+- 新增`w4_maxpool_batch16_candidate_v1`和`w4_maxpool_channel16_candidate_v1`：前者一张样本一个slice，A/D为HWC并按C=8补tail；后者按连续C chunk分16 slice，A/D为NHWC-local。两者都不物化窗口，由AG坐标解释；正式软件语义的空间padding固定uint8 0，channel tail使用显式producer tail值，二者不得混用。
+- 支持forward/inverse、logical/physical coordinate、window data/padding解释、tail/activity/address校验和LayoutRecord。仅支持正式路径需要的`ceil_mode=0`、`storage_order=0`，其他值执行前硬失败。
+- 引入可审计零拷贝证明：consumer A可显式复用producer Conv D的16个base address；证明同时检查稳定tensor ID、logical shape、每slice physical shape、payload大小和全部物理字节。微型C=5用非零tail验证batch Conv→batch Pool及ring Conv→channel Pool均成立。
+- 正式node-0002属性为kernel 3×3、stride 2×2、pads 1、ceil/storage 0，shape `[16,64,112,112]→[16,64,56,56]`。工具只读取现有W3输入/输出并复用Conv0 initializer；batch/channel两profileinverse均bit-exact，两个Conv D→Pool A零拷贝证明均通过。含alias地址时每slice使用4,642,176/5,020,864 bytes，均小于25,165,824-byte容量。
+- 机器报告`artifacts/w4/maxpool_profiles_report.json`为3,882 bytes，SHA-256 `97373125f62ba29c47981bb7e05e1ccd3862060f6275fe4ee34418b6c16f9cfc`；architecture合同登记两profile和正式证据。
+- 新增3项聚焦测试，覆盖双profile round-trip、坐标/window、channel tail、Conv alias、正式shape、非法ceil/storage/base和故意破坏tail；根仓全量57项测试通过。
+- 边界：当前只证明layout、正式raw inverse和producer/consumer零拷贝兼容，不证明目标MaxPool JSON/GA/simulator/hardware数值执行；candidate未获硬件批准，G4保持未通过。下一原子步骤是QLinearAdd。
+- 精确回退：revert `eef252d5d0d0cd2eb56a651a83882cb5d604a943`；上一根仓恢复点为`393965720c06d9cf0e875829d0ae2fb547a5207d`。
