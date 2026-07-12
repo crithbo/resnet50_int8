@@ -15,7 +15,9 @@ from .avgpool16_layout import (
 )
 from .conv16_layout import ConvBatch16PhysicalLayout
 from .conv16_ring_layout import ConvRing16PhysicalLayout
+from .errors import ContractError
 from .hashing import sha256_file
+from .hardware_approval import validate_hardware_approval_file
 from .matmul16_layout import (
     QLinearMatMulBatch16PhysicalLayout,
     QLinearMatMulRing16PhysicalLayout,
@@ -251,7 +253,45 @@ def _transition_edges(catalog: dict[str, Any]) -> dict[str, Any]:
     }
 
 
-def audit_w4_gate(project_root: Path) -> dict[str, Any]:
+def _hardware_approval_status(
+    root: Path, approval_path: Path | None
+) -> dict[str, Any]:
+    path = approval_path or root / "contracts/hardware_approval.json"
+    if not path.is_absolute():
+        path = root / path
+    path = path.resolve()
+    try:
+        display_path = path.relative_to(root).as_posix()
+    except ValueError:
+        display_path = str(path)
+    if not path.is_file():
+        return {
+            "present": False,
+            "valid": False,
+            "path": display_path,
+            "validation_error": None,
+        }
+    try:
+        result = validate_hardware_approval_file(
+            path, root / "contracts/architecture.json"
+        )
+    except (ContractError, OSError, json.JSONDecodeError) as error:
+        return {
+            "present": True,
+            "valid": False,
+            "path": display_path,
+            "sha256": sha256_file(path),
+            "validation_error": str(error),
+        }
+    result["path"] = display_path
+    result["present"] = True
+    result["validation_error"] = None
+    return result
+
+
+def audit_w4_gate(
+    project_root: Path, hardware_approval_path: Path | None = None
+) -> dict[str, Any]:
     root = project_root.resolve()
     architecture_path = root / "contracts/architecture.json"
     graph_path = root / "artifacts/w3/model_graph.json"
@@ -288,6 +328,8 @@ def audit_w4_gate(project_root: Path) -> dict[str, Any]:
     )
     interfaces = _plugin_interfaces()
     transitions = _transition_edges(catalog)
+    hardware_approval = _hardware_approval_status(root, hardware_approval_path)
+    hardware_approved = hardware_approval["valid"]
     unresolved = list(architecture["unresolved"])
     candidate_layout_ids = sorted(
         key
@@ -318,13 +360,9 @@ def audit_w4_gate(project_root: Path) -> dict[str, Any]:
         ],
         "minimal_real_and_tail_roundtrip_regression": True,
         "all_candidate_capacity_checks_pass": True,
-        "approved_target_profile_exists": bool(approved_layout_ids),
-        "target_rtl_isa_register_map_version_frozen": not any(
-            "RTL/ISA/register-map" in item for item in unresolved
-        ),
-        "approved_physical_layout_contract_exists": not any(
-            "approved physical layouts" in item for item in unresolved
-        ),
+        "approved_target_profile_exists": hardware_approved,
+        "target_rtl_isa_register_map_version_frozen": hardware_approved,
+        "approved_physical_layout_contract_exists": hardware_approved,
     }
     software_criteria = tuple(criteria)[:7]
     software_ready = all(criteria[name] for name in software_criteria)
@@ -348,6 +386,7 @@ def audit_w4_gate(project_root: Path) -> dict[str, Any]:
         "plugin_interfaces": interfaces,
         "evidence_artifacts": artifact_checks,
         "transition_audit": transitions,
+        "hardware_approval": hardware_approval,
         "gate_criteria": criteria,
         "gate_decision": {
             "software_candidate_readiness": "pass" if software_ready else "fail",

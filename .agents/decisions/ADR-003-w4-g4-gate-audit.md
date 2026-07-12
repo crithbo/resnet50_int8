@@ -7,7 +7,7 @@
 
 W4计划内全部算子族的软件candidate readiness通过，但G4保持未通过，W5不获授权。项目停在W4/G4边界，等待硬件侧给出带版本的正式profile与物理layout批准；不得把任一candidate改写为approved，也不得用candidate直接生成目标INT8 JSON/bitstream。
 
-机器审计报告：`artifacts/w4/g4_gate_audit.json`，100,609 bytes，SHA-256 `f4bd5d3e84ad6c022729179fe2ce01643792c9fedb792bf61c58b83684e32a5a`。
+机器审计报告：`artifacts/w4/g4_gate_audit.json`，100,764 bytes，SHA-256 `4f0fd947d55293bd02361ae920e1678c59d3051438562b14d7b9c36e660bdeef`。报告现会只读检查`contracts/hardware_approval.json`；当前文件不存在，因此结论不变。
 
 ## 软件审计通过项
 
@@ -47,9 +47,9 @@ W4计划内全部算子族的软件candidate readiness通过，但G4保持未通
 
 ## 裁决后动作
 
-- 将获批profile写成新的版本化`approved`合同，不原地篡改candidate证据。
+- 将获批profile写成新的版本化`approved`合同`contracts/hardware_approval.json`，不原地篡改candidate证据；字段和验证规则见ADR-004。
 - 使未获批candidate及其下游JSON/地址产物显式失效。
-- 重新运行本G4审计；只有三个阻塞条件全部转为true且回归保持通过，才允许将G4标记通过并进入W5。
+- 重新运行本G4审计；审计会自动严格验证批准合同，只有三个阻塞条件全部转为true且回归保持通过，才允许将G4标记通过并进入W5。
 
 ## 批准记录
 

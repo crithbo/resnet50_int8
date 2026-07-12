@@ -1,0 +1,180 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/crithbo/resnet50_int8/schemas/hardware_approval.schema.json",
+  "title": "Versioned target hardware approval contract",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "contract_type", "status", "approval_id", "authority",
+    "target_version", "architecture", "network_profile", "operator_layouts",
+    "physical_objects", "numeric_semantics", "isa", "runtime_protocol", "evidence"
+  ],
+  "properties": {
+    "schema_version": {"const": "0.1"},
+    "contract_type": {"const": "hardware_approval"},
+    "status": {"const": "approved"},
+    "approval_id": {"type": "string", "minLength": 1},
+    "authority": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "organization", "approved_at"],
+      "properties": {
+        "name": {"type": "string", "minLength": 1},
+        "organization": {"type": "string", "minLength": 1},
+        "approved_at": {"type": "string", "format": "date"}
+      }
+    },
+    "target_version": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["rtl_commit", "isa_version", "register_map_version"],
+      "properties": {
+        "rtl_commit": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+        "isa_version": {"type": "string", "minLength": 1},
+        "register_map_version": {"type": "string", "minLength": 1}
+      }
+    },
+    "network_profile": {"enum": ["batch", "ring_channel", "mixed"]},
+    "operator_layouts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["simple", "view", "conv", "maxpool", "add", "global_average_pool", "matmul"],
+      "properties": {
+        "simple": {"type": "string", "minLength": 1},
+        "view": {"type": "string", "minLength": 1},
+        "conv": {"type": "string", "minLength": 1},
+        "maxpool": {"type": "string", "minLength": 1},
+        "add": {"type": "string", "minLength": 1},
+        "global_average_pool": {"type": "string", "minLength": 1},
+        "matmul": {"type": "string", "minLength": 1}
+      }
+    },
+    "architecture": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["slice_count", "pe_array", "neighbor_transfer_count", "dram"],
+      "properties": {
+        "slice_count": {"const": 16},
+        "pe_array": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["rows", "cols"],
+          "properties": {
+            "rows": {"type": "integer", "minimum": 1},
+            "cols": {"type": "integer", "minimum": 1}
+          }
+        },
+        "neighbor_transfer_count": {"type": "integer", "minimum": 0},
+        "dram": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["bank_count", "row_count", "col_count", "subword_bytes", "address_unit", "address_order"],
+          "properties": {
+            "bank_count": {"type": "integer", "minimum": 1},
+            "row_count": {"type": "integer", "minimum": 1},
+            "col_count": {"type": "integer", "minimum": 1},
+            "subword_bytes": {"type": "integer", "minimum": 1},
+            "address_unit": {"type": "string", "minLength": 1},
+            "address_order": {"type": "string", "minLength": 1}
+          }
+        }
+      }
+    },
+    "physical_objects": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["activation", "weight", "bias", "qparams", "psum", "output"],
+      "properties": {
+        "activation": {"$ref": "#/$defs/physical_object"},
+        "weight": {"$ref": "#/$defs/physical_object"},
+        "bias": {"$ref": "#/$defs/physical_object"},
+        "qparams": {"$ref": "#/$defs/physical_object"},
+        "psum": {"$ref": "#/$defs/physical_object"},
+        "output": {"$ref": "#/$defs/physical_object"}
+      }
+    },
+    "numeric_semantics": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["accumulator_bits", "overflow", "requant", "qparams_transport", "psum_lifecycle"],
+      "properties": {
+        "accumulator_bits": {"type": "integer", "minimum": 32},
+        "overflow": {"enum": ["wrap", "saturate", "error"]},
+        "requant": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["multiplier_encoding", "rounding", "saturation", "zero_point_stage"],
+          "properties": {
+            "multiplier_encoding": {"type": "string", "minLength": 1},
+            "rounding": {"const": "nearest_even"},
+            "saturation": {"const": "uint8"},
+            "zero_point_stage": {"type": "string", "minLength": 1}
+          }
+        },
+        "qparams_transport": {"type": "string", "minLength": 1},
+        "psum_lifecycle": {"type": "string", "minLength": 1}
+      }
+    },
+    "isa": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["opcodes", "field_widths", "instruction_mask_semantics"],
+      "properties": {
+        "opcodes": {"$ref": "#/$defs/nonnegative_integer_map"},
+        "field_widths": {"$ref": "#/$defs/positive_integer_map"},
+        "instruction_mask_semantics": {"type": "string", "minLength": 1}
+      }
+    },
+    "runtime_protocol": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["load_config", "load_data", "start", "wait", "status", "error", "dump"],
+      "properties": {
+        "load_config": {"type": "string", "minLength": 1},
+        "load_data": {"type": "string", "minLength": 1},
+        "start": {"type": "string", "minLength": 1},
+        "wait": {"type": "string", "minLength": 1},
+        "status": {"type": "string", "minLength": 1},
+        "error": {"type": "string", "minLength": 1},
+        "dump": {"type": "string", "minLength": 1}
+      }
+    },
+    "evidence": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["uri", "sha256"],
+        "properties": {
+          "uri": {"type": "string", "minLength": 1},
+          "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+        }
+      }
+    }
+  },
+  "$defs": {
+    "physical_object": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["owner", "axis_order", "alignment_bytes", "tail_rule", "address_unit"],
+      "properties": {
+        "owner": {"type": "string", "minLength": 1},
+        "axis_order": {"type": "string", "minLength": 1},
+        "alignment_bytes": {"type": "integer", "minimum": 1},
+        "tail_rule": {"type": "string", "minLength": 1},
+        "address_unit": {"type": "string", "minLength": 1}
+      }
+    },
+    "nonnegative_integer_map": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": {"type": "integer", "minimum": 0}
+    },
+    "positive_integer_map": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": {"type": "integer", "minimum": 1}
+    }
+  }
+}

@@ -15,8 +15,13 @@ def main() -> int:
         "--project-root", type=Path, default=Path(__file__).resolve().parents[1]
     )
     parser.add_argument("--output", type=Path)
+    parser.add_argument(
+        "--hardware-approval",
+        type=Path,
+        help="Optional approved hardware contract; defaults to contracts/hardware_approval.json",
+    )
     args = parser.parse_args()
-    report = audit_w4_gate(args.project_root)
+    report = audit_w4_gate(args.project_root, args.hardware_approval)
     encoded = json.dumps(report, ensure_ascii=False, indent=2, sort_keys=True) + "\n"
     if args.output is not None:
         output = args.output

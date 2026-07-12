@@ -314,8 +314,8 @@
     "w4_g4_gate_audit_v1": {
       "status": "candidate_software_evidence",
       "path": "artifacts/w4/g4_gate_audit.json",
-      "sha256": "f4bd5d3e84ad6c022729179fe2ce01643792c9fedb792bf61c58b83684e32a5a",
-      "size_bytes": 100609,
+      "sha256": "4f0fd947d55293bd02361ae920e1678c59d3051438562b14d7b9c36e660bdeef",
+      "size_bytes": 100764,
       "formal_nodes_covered": 78,
       "runtime_tensor_edges_audited": 93,
       "quantized_edges_with_exact_qparam_identity": 91,
@@ -323,6 +323,8 @@
       "software_candidate_readiness": "pass",
       "g4_status": "not_passed",
       "w5_authorized": false,
+      "hardware_approval_contract": "contracts/hardware_approval.json",
+      "hardware_approval_present": false,
       "decision": "wait_for_formal_hardware_layout_and_topology_adjudication",
       "blocking_criteria": [
         "approved_target_profile_exists",

@@ -113,6 +113,12 @@
     "software_candidate_readiness": "pass",
     "w5_authorized": false
   },
+  "hardware_approval": {
+    "path": "contracts/hardware_approval.json",
+    "present": false,
+    "valid": false,
+    "validation_error": null
+  },
   "hardware_unresolved": [
     "target RTL/ISA/register-map commit",
     "resource counts and field widths for the target version",
