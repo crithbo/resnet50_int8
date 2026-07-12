@@ -392,3 +392,14 @@
 - 新增3项聚焦测试，覆盖双profile round-trip、坐标/window、channel tail、Conv alias、正式shape、非法ceil/storage/base和故意破坏tail；根仓全量57项测试通过。
 - 边界：当前只证明layout、正式raw inverse和producer/consumer零拷贝兼容，不证明目标MaxPool JSON/GA/simulator/hardware数值执行；candidate未获硬件批准，G4保持未通过。下一原子步骤是QLinearAdd。
 - 精确回退：revert `eef252d5d0d0cd2eb56a651a83882cb5d604a943`；上一根仓恢复点为`393965720c06d9cf0e875829d0ae2fb547a5207d`。
+
+## 2026-07-12：W4 QLinearAdd双profile、残差兼容与dense广播
+
+- 根仓提交 `63f5eb5437057f6aa032feaceb9a0af7adaea7b6`，父提交 `ff1f49bb22c9de548420e4220e19204c19e9cb26`，`feat: add W4 QLinearAdd relayouts`。
+- 新增`w4_qlinearadd_batch16_candidate_v1`和`w4_qlinearadd_channel16_candidate_v1`。正式广播范围冻结为同shape rank-4/rank-2及dense `[N,F]+[F]`；batch profile按样本归属slice并把feature补到8，channel profile按连续C/F chunk归属16 slice。A、B、D的tail分别使用`a_zero_point`、`b_zero_point`、`y_zero_point`，六个独立标量qparams逐slice复制。
+- 两残差分支可独立执行producer兼容证明：检查producer合同、稳定tensor ID、logical shape/dtype、每slice physical shape、payload大小及全部物理字节。基址也相等时才标记exact alias；默认独立producer常使用相同相对D offset，不能同时占用Add A/B，因此双分支同时零拷贝明确留给W7分配互不重叠的producer基址，不把布局兼容误报成已完成内存计划。
+- 正式图17个QLinearAdd归为5类shape-broadcast：16个残差节点覆盖`[16,256,56,56]`、`[16,512,28,28]`、`[16,1024,14,14]`、`[16,2048,7,7]`，另有node-0076 `[16,1000]+[1000]`。32条残差输入中20条来自QLinearConv、12条来自前一QLinearAdd；每条producer输出zero-point tensor ID均与consumer对应输入zero-point ID一致，batch/channel physical shape和payload公式也逐条相等。
+- 验证工具只读取现有W3图、subop manifest、node-0007/node-0076的既有tensor及ONNX initializer，不运行ORT、不重建W3。两代表节点的A/B、六个qparams和D共9端口在batch/channel profile下inverse均bit-exact；W3记录的`qlinear_add_affine_requant`仍匹配ORT。机器报告`artifacts/w4/add_profiles_report.json`为74,305 bytes，SHA-256 `9769589a14cc281968925e49645715010db634a8f722093e3ba106d47ae03108`；最大每slice占用2,408,544/25,165,824 bytes。
+- 新增4项聚焦测试，覆盖残差与dense广播正逆、D/标量坐标、两类producer profile、单输入exact alias、双输入offset冲突、feature tail、inactive slice、qparam副本、非法广播和越slice地址；根仓全量61项测试通过，正式报告重复生成hash稳定，architecture严格JSON解析及`git diff --check`通过。
+- 边界：当前证明软件candidate布局、正式W3 inverse、残差producer/consumer物理兼容及qparam链；不证明目标Add JSON/GA/simulator/hardware数值执行，也不批准双输入同时零拷贝。dense A来自QLinearMatMul，其D兼容待W4 MatMul布局完成；G4保持未通过，下一原子步骤是GlobalAveragePool。
+- 精确回退：revert `63f5eb5437057f6aa032feaceb9a0af7adaea7b6`；上一根仓恢复点为`ff1f49bb22c9de548420e4220e19204c19e9cb26`。

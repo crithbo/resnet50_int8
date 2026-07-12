@@ -9,11 +9,11 @@
 - **最终验收**：正式 ResNet50 INT8 ONNX→逐节点/硬件原子算子 golden→16-slice relayout→JSON/bitstream→目标 simulator→execplan/Bank_data→RTL/硬件→三方逐算子和整网一致。
 - **W3业务封版检查点**：`35a4fde106d102b0e165e7eb13d60f7dd980db71`；W0/G0、W2/G2、W3/G3已通过，W1只完成模型/输入/软件量化事实，G1因目标硬件合同缺失尚未通过。交接文档可能有后续纯文档提交，当前恢复点以`git rev-parse HEAD`和`history.md`精确台账为准。
 - **三个仓库分工**：`CGRA_SIM` 给软件/QNN语义和旧 ResNet 计划；`ndp-sim-ref` 给目标 JSON、bitstream、relayout/execplan 框架；`NDPFuncModel` 给 Conv 数据通路。根集成层已经统一W3图/lowering/golden身份，但配置、simulator、execplan和hardware尚未接入同一manifest。
-- **当前成果**：正式图含78节点/617张量，lower为133个语义hw_op；保存79个运行时tensor和55个INT32内部tensor，全部78节点独立公式重放匹配ORT，旧77原语已逐项映射。W2小Conv在1/4-slice候选软件布局下达到golden=NDP functional model，但这不是目标JSON simulator或硬件通过。
-- **下一主线**：新对话从W4逐算子16-slice relayout开始，同时继续追踪W1硬件合同；本对话保留用于W1～W3返工、证据查验和回归定位，除非操作者明确改变分工，不在本对话推进W4。
+- **当前成果**：正式图含78节点/617张量，lower为133个语义hw_op；保存79个运行时tensor和55个INT32内部tensor，全部78节点独立公式重放匹配ORT，旧77原语已逐项映射。W4已完成简单算子、全部Conv shape、MaxPool和QLinearAdd的batch/channel候选布局；W2小Conv的软件闭环和W4可逆布局都不等于目标JSON simulator或硬件通过。
+- **下一主线**：继续按W4顺序进入GlobalAveragePool，再处理MatMul/dense，同时继续追踪W1硬件合同；不得重跑约951 MB的W3产物，除非合同/hash/回归明确失效。
 - **当前外部阻塞**：正式模型和固定输入基线已经自行取得；剩余外部阻塞为目标16-slice RTL/ISA版本、正式物理layout、INT8 SA/GA/qparams硬件约定、目标emulator关系、硬件加载与dump协议。
 - **禁止误用**：NDPFuncModel 当前 `extracted_*.npy` 和 `verify_pe` psum 不是可信 golden；42个 JSON也不等于 ResNet算子配置已完成；bitstream生成成功不等于数值正确。
-- **接手检查**：依次运行 `git status --short`、`.venv\Scripts\python.exe tools\sync_repositories.py verify`、`.venv\Scripts\python.exe -m unittest discover -s tests -v`；预期根工作树干净、三参考仓匹配lock、42项测试通过。始终使用根目录 `.venv\Scripts\python.exe`。
+- **接手检查**：依次运行 `git status --short`、`.venv\Scripts\python.exe tools\sync_repositories.py verify`、`.venv\Scripts\python.exe -m unittest discover -s tests -v`；预期根工作树干净、三参考仓匹配lock、61项测试通过。始终使用根目录 `.venv\Scripts\python.exe`。
 
 下一步任务和验收条件只以 `.agents/plan.md` 为准；本文件后半部分是查代码时使用的详细地图，不需要接手时从头逐行阅读。
 
@@ -283,7 +283,7 @@ CGRA_SIM/testing/resnet-50-int8/
 
 - **模型和golden——W3/G3已通过**：模型/input/hash和ORT设置已锁定；正式保存79个运行时tensor和55个lowering内部INT32 tensor，全部78节点由独立公式重放并匹配ORT。旧`golden.py`的30个唯一检查点只保留为历史参考。
 - **lowering和身份映射——W3语义层已完成**：78个ONNX节点稳定lower为133个语义hw_op；旧77模型级原语已逐项映射，Flatten明确为zero-copy。JSON实例、逐K-tile和execplan身份在W4/W5/W7继续扩展，不得说成W3尚未实现。
-- **数据变换——W4进行中/G4未通过**：Quantize/Dequantize/View、正式20类Conv shape及MaxPool candidate已完成。MaxPool同时支持batch/channel-owner，正式W3输入输出在两profile下inverse bit-exact；对应Conv D→Pool A的tensor ID、shape、base、payload和物理字节全部相同，零拷贝成立。ADR-002仍等待Conv拓扑裁决；Add、AvgPool、MatMul/dense未完成，内部下一步是QLinearAdd。
+- **数据变换——W4进行中/G4未通过**：Quantize/Dequantize/View、正式20类Conv shape、MaxPool和QLinearAdd candidate已完成。Add覆盖16个同shape残差节点与1个`[N,1000]+[1000]`广播尾节点；32条残差输入的producer D→consumer A/B physical shape、payload和zero-point链均兼容。两输入只分别证明布局兼容，是否同时零拷贝取决于W7分配互不重叠基址。ADR-002仍等待Conv拓扑裁决；AvgPool和MatMul/dense未完成，内部下一步是GlobalAveragePool。
 - **单算子配置——部分已有**：42 个静态 JSON 中只有 MaxPool、sum 型 AvgPool、固定样例 quant、fp32 输出 add-dequant 可局部参考；6 个 SA JSON 全是 FP16、bias=0；没有核心 INT8 Conv/MatMul。
 - **W2/G2小Conv软件闭环已通过**：`NDPFuncModel@35eab40` 的参数化runner在同一fixture上完成1/4-slice全部84坐标，实际经过DRAM、input Buffer、SpecialPEA、ActivationUnit、output Buffer和DRAM；NumPy、im2col、ORT、CGRA QNN rounding与NDP的accumulator/D一致，physical D可inverse且全部物理字节可解释。该结论不批准旧固定主入口、目标JSON或硬件layout；16-slice为下一步。
 - **execplan——框架已有/ResNet 适配没有**：可规划地址、重生成 bitstream、输出指令和 Bank_data，但 schema 无 numeric attributes，仍硬编码 28 slice，bitstream 失败后部分路径继续。
@@ -292,7 +292,7 @@ CGRA_SIM/testing/resnet-50-int8/
 
 ## 当前最高优先级
 
-严格按 `.agents/plan.md` 的W0→W9工作包和G0→G9验收门推进。W0/G0、W2/G2、W3/G3已经完成；W1模型部分完成但G1未通过。新推进对话从W4开始，本对话只用于W1～W3查验和返工。任何W1～W3修改都必须先说明会使哪些manifest/hash/下游产物失效。
+严格按 `.agents/plan.md` 的W0→W9工作包和G0→G9验收门推进。W0/G0、W2/G2、W3/G3已经完成；W1模型部分完成但G1未通过。W4已推进至QLinearAdd，下一步是GlobalAveragePool。任何W1～W3修改都必须先说明会使哪些manifest/hash/下游产物失效。
 
 优先向学长或硬件侧确认：目标16-slice RTL/ISA/register-map版本、正式物理layout、最小INT8 SA+bias+requant硬件配置、量化参数传递协议、NDPFuncModel/官方emulator关系，以及硬件加载和dump接口。旧ONNX、旧产物、原 `hex_data` 和 `conv_config` 来源已降级为兼容性资料，不再阻塞软件推进。
 
