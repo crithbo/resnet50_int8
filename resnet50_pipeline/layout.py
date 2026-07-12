@@ -33,3 +33,19 @@ class IdentityLayout:
         expected = metadata.get("size_bytes")
         if expected is not None and len(logical) != expected:
             raise ValueError(f"identity layout expected {expected} bytes, got {len(logical)}")
+
+
+from .simple_layout import (  # noqa: E402  (keeps the protocol definitions first)
+    DequantizeLinearPhysicalLayout,
+    QuantizeLinearPhysicalLayout,
+    ZeroCopyViewLayout,
+)
+
+
+__all__ = [
+    "DequantizeLinearPhysicalLayout",
+    "IdentityLayout",
+    "LayoutTransform",
+    "QuantizeLinearPhysicalLayout",
+    "ZeroCopyViewLayout",
+]

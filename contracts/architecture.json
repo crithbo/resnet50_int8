@@ -40,6 +40,22 @@
       "output": "contiguous K partition per slice, physical NHWK with K fastest, tail=y_zero_point",
       "alignment_bytes": 16,
       "implementation": "resnet50_pipeline/conv_layout.py"
+    },
+    "w4_batch_slice_candidate_v1": {
+      "status": "candidate",
+      "scope": "QuantizeLinear and DequantizeLinear software relayout; not hardware-approved",
+      "batch_partition": "one batch item per slice for N<=16; inactive slices contain explicit tensor padding",
+      "qparams": "scalar scale and zero_point replicated on all 16 slices",
+      "packing": "C-order elements, little-endian scalar bytes, 16-byte aligned port regions",
+      "ports": "A, scale, zero_point and D have explicit per-slice base addresses",
+      "implementation": "resnet50_pipeline/simple_layout.py"
+    },
+    "w4_zero_copy_view_candidate_v1": {
+      "status": "candidate",
+      "scope": "Flatten axis=1 over a batch-partitioned C-contiguous tensor; not hardware-approved",
+      "rule": "producer D and consumer A alias the same per-slice base addresses only when element count and byte order are unchanged",
+      "formal_shape": "[16,2048,1,1] -> [16,2048]",
+      "implementation": "resnet50_pipeline/simple_layout.py"
     }
   },
   "unresolved": [

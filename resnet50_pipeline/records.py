@@ -34,6 +34,14 @@ class LayoutRecord:
     tensor_id: str
     transform: str
     contract_status: str
+    port: str | None = None
+    logical_shape: tuple[int | str, ...] = ()
+    logical_dtype: str | None = None
+    partition: dict[str, Any] = field(default_factory=dict)
+    packing: dict[str, Any] = field(default_factory=dict)
+    base_addresses: tuple[int, ...] = ()
+    inverse_status: str | None = None
+    alias_of: str | None = None
 
 
 @dataclass(frozen=True)
@@ -139,7 +147,16 @@ class ObjectManifest:
                 )
                 for item in value["hw_ops"]
             ],
-            layouts=[LayoutRecord(**item) for item in value["layouts"]],
+            layouts=[
+                LayoutRecord(
+                    **{
+                        **item,
+                        "logical_shape": tuple(item.get("logical_shape", ())),
+                        "base_addresses": tuple(item.get("base_addresses", ())),
+                    }
+                )
+                for item in value["layouts"]
+            ],
             configs=[ConfigRecord(**item) for item in value["configs"]],
             executions=[ExecutionRecord(**item) for item in value["executions"]],
             results=[ResultRecord(**item) for item in value["results"]],
