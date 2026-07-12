@@ -49,40 +49,27 @@
 
 ## 当前总体状态
 
-- **已有可复用**：`CGRA_SIM/testing/resnet-50-int8/golden_model/golden.py` 已提供 ResNet50 的 ONNXRuntime 执行、ImageNet 预处理、batch=16 输入和输出保存基线；另有 ResNet QNN 软件语义、旧 77 原语调度、LC/stream/packing 的部分规则、JSON→bitstream 编译器、LLM 的 relayout 组织方式和 `model_execplan` 地址/指令框架。新增 `NDPFuncModel/conv_func` 提供 Conv 的 DRAM→AG→Buffer→8×8 PEA→ring reduction 逐字节功能 trace。
-- **部分已有**：现有 `golden.py` 只 dump 手写的部分节点，尚未形成逐算子 input/output 与 manifest；旧 `.cu` 功能模拟只验证旧链；Conv layout 只有实验脚本；42 个 JSON 只局部覆盖 ResNet。
-- **模型基线已取得/旧产物仍缺**：官方Model Zoo `resnet50-v1-12-int8.onnx` 已下载、校验并按SHA-256暂定为正式模型；固定 `cat.jpg` 的batch=16输入和ORT输出已生成。旧 `tensor_dict`、DDR/plan和完整逐节点golden仍未取得，但可从当前模型重建，不再作为开工阻塞。
-- **仓库中没有实现**：能直接消费目标 JSON/bitstream 并完成正确 requant/writeback 的数值 emulator、ResNet ONNX→execplan lowerer、完整 ResNet relayout、硬件/RTL runner、通用三方比较器。Conv physical probe已有4-slice候选requant/写回闭环，但绕过目标JSON和主LC/Buffer/WRAG路径，不能替代这一项。
-- **待外部确认**：正式物理 layout、INT8 SA/bias/psum/requant 接口、GA 无符号与转换语义、逐层量化常量协议、目标 RTL/ISA 版本、硬件加载和 dump 协议。
-
-因此当前处于“参考代码和生成框架已定位，端到端接口尚未闭合”阶段；还没有任何目标 NDP ResNet 算子达到 golden=simulator=hardware。
+- **已通过**：W0/G0集成骨架，W2/G2小Conv候选软件纵向闭环，W3/G3正式图/lowering/全节点与subop golden。
+- **部分通过**：W1已冻结正式候选模型、固定输入、预处理和软件量化事实；目标架构、layout、JSON/emulator和硬件接口未批准，所以G1仍未通过。
+- **尚未开始主线实现**：W4正式16-slice逐算子relayout、W5目标JSON/bitstream、W6目标simulator、W7网络execplan、W8硬件、W9通用三方比较。
+- **当前边界**：W2只证明小合成Conv的golden=NDP functional model；W3公式重放仍属于golden侧。当前没有任何正式ResNet算子达到golden=target simulator=hardware。
 
 ### 接手进度总表
 
-比例按“达到本阶段验收标准”估计，不按已有文件数量估计：
-
-| 阶段 | 当前完成度 | 难度/阻塞 | 接手判断 |
-|---|---:|---|---|
-| A 权威输入和接口 | 约40% | 外部阻塞 | 模型/hash/暂定预处理已冻结；layout、ISA、emulator关系和硬件协议未冻结 |
-| B lowering与manifest | 约10% | 高 | 只有旧77原语参考，没有统一实现 |
-| C raw/subop golden | 25%~30% | 中高 | runner基线已有；全节点dump未实现，入口另有语法阻塞 |
-| D 16-slice relayout | 10%~15% | 高 | 只有LLM/Conv候选，全部ResNet算子仍需正逆实现 |
-| E 全算子JSON/bitstream | 20%~25% | 很高 | 42个参考JSON存在，核心INT8 SA/MatMul缺失 |
-| F 目标数值模拟 | 5%~10% | 很高/部分外部阻塞 | Conv骨架有缺陷；通用JSON解释器未找到 |
-| G ResNet execplan | 25%~30% | 高 | 框架可启动；ResNet前端、16-slice和qparams缺失 |
-| H RTL/硬件运行 | 约0% | 外部阻塞 | runner、加载和dump协议均未入库 |
-| I 三方比较/回归 | 5%~10% | 中高 | 只有旧checkpoint和二方物理比较脚本 |
-
-总体工程完成度约15%~25%，仍余约75%~85%。代码地图摸底已基本完成，不应把后续时间继续投入无目的目录搜索。
+| 工作包 | 门状态 | 已完成边界 | 接手动作 |
+|---|---|---|---|
+| W0 | G0通过 | manifest/contract/backend/artifact/cache/resume/mock DAG | 不重做，只回归 |
+| W1 | G1未通过 | 模型、固定输入、预处理、ONNX量化事实 | 并行补目标硬件合同 |
+| W2 | G2通过 | 1/4-slice小Conv候选layout和NDP functional数值闭环 | 作为W4 fixture，不外推为硬件规格 |
+| W3 | G3通过 | 78节点、133 hw_op、79 runtime tensor、55内部tensor、旧77映射 | 不重跑大artifact，除非hash/合同失效 |
+| W4～W9 | 未通过 | 仅有参考框架或mock接口 | 新对话从W4开始 |
 
 ### 当前可立即执行队列
 
-1. **已完成**：W0根目录 `resnet50_pipeline/` 集成骨架、统一manifest、artifact manager、适配器接口和CLI；mock状态机及失败/resume路径通过G0。
-2. **已完成**：独立小UINT8 activation×INT8 weight、INT32 bias/psum、UINT8 requant D golden；标量、im2col和ORT三方bit-exact。
-3. **当前执行**：实现小Conv物理partition/layout及正逆round-trip，并为DRAM slice/bank、RDAG/WRAG transaction写地址/provenance测试。
-4. 固化整数 PEA、reduction、requant和真实 writeback，使小 Conv 达到软件 golden=Conv functional model。
-5. 恢复/重建 Conv 配置前端，把 `config_nse.py` 的旧字段关系映射到目标 JSON；之后才扩1/4/16 slice。
-6. W1剩余硬件规格并行推进；模型已到位，修复 `layout_buffer.py:201` 后即可进入W3全节点golden改造。
+1. 新对话先执行只读接手检查：根状态、三仓verify、42项unittest；不要先重跑约951 MB的W3正式artifact。
+2. 从W4为简单算子和Conv建立正式16-slice forward/inverse/explain/validate；W2 candidate只作可回归输入，不自动升级为正式layout。
+3. 并行推进W1剩余硬件合同；没有approved合同不得宣布G4/G5硬件格式通过。
+4. 本对话只处理W1～W3返工和查验；若模型、预处理、量化公式或lowering变化，先列出所有失效的manifest/hash和下游产物。
 
 环境已经准备完成，不再把安装依赖列为任务：使用根目录 `.venv` 和 `requirements-resnet50.lock.txt`。当前三个最小入口结果见 `agent.md`“本地 Python 环境与已验证入口”。
 
@@ -521,13 +508,13 @@ W0实现前还需把以上补充转成可执行的schema字段、测试用例和
 - 硬件/RTL 接口至少能完成一次加载和 dump，或明确记录外部负责人和阻塞状态。
 - 架构参数不再从冲突的旧文件中混选。
 
-当前状态：官方模型、固定图片、暂定预处理、batch=16输入和ORT最终输出已建立可重放hash基线，阶段B/C不再等待ONNX。W0/G0已完成；Conv功能模型仍缺原始输入/gitlink且数值链有缺陷，目标layout、emulator和硬件接口继续作为外部阻塞并与W1/W2/W3并行推进。
+当前状态：模型、固定图片、暂定预处理、batch=16输入和ORT输出已建立可重放hash基线，W3已基于它通过G3。W1仍未通过G1，因为目标layout、RTL/ISA、JSON/emulator关系和硬件接口没有approved合同；这些继续与W4并行推进。
 
 ## 阶段 B：建立统一图、lowering 和产物契约
 
 目标：建立 ONNX 节点、硬件原子算子、JSON 实例、execplan op 和三方结果之间的唯一映射。
 
-状态：仓库中没有通用实现；旧手写计划可作为参考。
+状态：W3语义层已实现；JSON实例、逐K-tile和execplan身份将在W4/W5/W7扩展。
 
 难度：高。难点是一对多 lowering、残差分支、量化常量和中间 psum 的身份管理。
 
@@ -545,13 +532,13 @@ W0实现前还需把以上补充转成可执行的schema字段、测试用例和
 - 分支、复用、Flatten/View 和一对多 lowering 不依赖字典插入顺序。
 - manifest 通过 schema 校验，并成为 golden、relayout、JSON、execplan、simulator 和 hardware 的共同输入。
 
-当前状态：待实现。旧计划已精确给出 77 个模型级原语及固定 tile，但绑定依赖 328 个有序字典项，不能直接作为正式 manifest。
+当前状态：G3已通过。正式图目录含78节点/617 tensor，lowering含133个语义hw_op和55个内部tensor；旧77原语已按稳定node/hw_op ID逐项映射，Flatten明确为zero-copy。当前manifest尚未包含正式layout、JSON实例、地址和execplan记录，属于后续阶段而非W3缺失。
 
 ## 阶段 C：生成完整 raw golden 和硬件子步骤 golden
 
 目标：对每个 ONNX 节点保存 raw input/output，并为 lowering 后需要观察的 psum、sum、requant 等子步骤生成软件 golden。
 
-状态：模型和最终输出基线已有；完整逐节点input/output和subop dump仍需实现。
+状态：W3/G3已完成当前批准范围；正式batch16逐节点输出和55个语义内部tensor均已保存、hash锁定并可重放。
 
 难度：中高。ONNX 节点输出 dump 本身难度中等，正确处理融合、dtype/shape、子步骤和名称映射难度较高。
 
@@ -569,7 +556,7 @@ W0实现前还需把以上补充转成可执行的schema字段、测试用例和
 - 对任一算子能重放软件计算并复现保存的 output。
 - 子步骤 golden 的累加顺序、zero point、rounding、saturation 与批准的 lowering 一致。
 
-当前状态：ResNet50 ONNXRuntime实现入口已经明确为上述 `golden.py`；官方模型和固定batch=16输入/最终输出基线已取得。但它只覆盖30个唯一节点名，runner只有21个checkpoint，通用 `func_validator.py` 仍有名称映射、地址和比较TODO。项目 `.venv` 已补齐依赖，当前源码入口首先被 `CGRA_SIM/cgra_python/layout/layout_buffer.py:201` 的既有 `SyntaxError` 阻塞；修复后进入全节点dump改造。
+当前状态：G3已通过。根集成runner绕开旧CGRA eager import，保存1个图输入+78个node output并引用366个initializer；55个内部tensor包括53个Conv accumulator、1个GAP sum和1个MatMul accumulator。全部78节点由独立公式重放匹配ORT，重复运行文件hash一致。旧`golden.py`的30个唯一检查名、21个checkpoint和`layout_buffer.py`语法错误只影响旧入口，不再阻塞W3；逐K-tile快照待W4/W5取得正式tile合同后细化。
 
 ## 阶段 D：实现 ResNet 16-slice 数据变换
 
@@ -607,7 +594,7 @@ W0实现前还需把以上补充转成可执行的schema字段、测试用例和
 - 每个 slice 的元素归属、复制规则、padding 区和 128-bit 行内顺序可由 manifest 验证。
 - 上一算子 D 与下一算子 A 的物理布局不一致时，明确由 remapping、后继 stream 还是显式 relayout 解决。
 
-当前状态：DeepSeek relayout 仅覆盖 28-slice LLM；`relayout_layer0.py` 只是把已有单算子目录复制拼装并按固定表重排 28 个 slice，不会推导新 layout；`conv_layout.py` 只是 conv0 候选实验；`layout_buffer.py` 还是未完成原型且当前有语法错误；address-remapping registry 没有 ResNet 算子。新增 `NDPFuncModel` 给出了固定 Conv 示例意图采用的 activation 按 C 分片、weight/output 按 K 分片、16-byte DRAM subword、Buffer 列反序、padding/branch mask 和 4-slice activation ring；但其当前 slice 物理地址错误，只能作为待修复的第二份候选规格，不能作为已验证 relayout。它也不是 16-slice 通用布局，没有从 raw ONNX tensor 生成 `hex_data` 的实现。ResNet relayout 仍由本项目按上表逐项实现；阶段 A 需要提供目标 layout/端口规则和校验样例来裁决不同参考之间的差异。
+当前状态：DeepSeek relayout仍只覆盖28-slice LLM，旧`relayout_layer0.py`、`conv_layout.py`和`layout_buffer.py`不能直接作为ResNet实现。W2已修复NDP slice/transaction寻址并验证1/4-slice小Conv candidate：activation按C、weight/output按K分片，含16-byte对齐、padding/tail、逐字节provenance和bit-exact inverse；但它不是正式16-slice硬件layout。W4仍需为全部ResNet算子实现正式正逆变换，并用外部layout/端口合同裁决候选规则。
 
 ## 阶段 E：完成 ResNet 单算子 JSON 和数值参数化
 
@@ -657,7 +644,7 @@ W0实现前还需把以上补充转成可执行的schema字段、测试用例和
 - 单算子 golden=simulator；整数 bit-exact，浮点符合 tolerance。
 - emulator 不在仓库时，阻塞必须记录为外部依赖，不能用 bitstream 生成成功替代。
 
-当前状态：本地候选已修复slice/transaction寻址、INT8 A/B语义、整数PEA、LC reduction末态/psum生命周期和ActivationUnit候选requant；physical-address ring probe已证明带padding/tail的小Conv全部84个accumulator及physical/logical UINT8 D与golden一致，不再依赖旧 `hex_data`。仍不能宣称完整Conv主入口可信：probe没有执行硬编码LC/Buffer完整调度，也未验证唯一flush；`run_buffer_writeback_to_dram()`实际写仍被注释，主INT8输出仍按FP16 packing，manifest/JSON尚未参数化。`write_emulator_bundle()` 仍只写输入包，不执行；非Conv目标emulator源码/二进制和命令未找到。
+当前状态：W2参数化runner已实际经过DRAM→input Buffer→SpecialPEA→ActivationUnit→output Buffer→DRAM，1/4-slice小Conv全部84个accumulator及physical/logical UINT8 D与golden一致；slice/transaction寻址、INT8 A/B、LC末态、psum生命周期和候选requant均有回归。该runner仍由fixture/adapter驱动而非目标JSON/bitstream，旧硬编码主入口和正式flush/packing不能据此批准；`write_emulator_bundle()`仍只写输入包，非Conv目标emulator也未找到。
 
 ## 阶段 G：生成 ResNet 网络级硬件 execplan
 
@@ -737,9 +724,9 @@ W0实现前还需把以上补充转成可执行的schema字段、测试用例和
 | 1 | 建立独立最小 Conv 真值 | 现有 `extracted_*.npy`、psum trace 不可信，缺少判错基准 | 自建 1 个小 UINT8×INT8 Conv，保存 activation/weight/int32 bias、逐 K psum、requant D；NumPy/QNN 双实现互验 | 中 |
 | 2 | 修复 slice/bank 物理寻址【已完成候选修复】 | 上游四个逻辑slice都读物理slice0，bias slice1~3为空 | `789d121`已使`per_slice`包含bank并将slice span加入AG base；4-slice逐byte provenance和bundle hash读回通过 | 中 |
 | 3 | 修复 RDAG/WRAG transaction 地址【已完成候选修复】 | 上游计算stride后丢弃，真实shape会触发 | `789d121`已分离逻辑counter和物理transaction offset；非连续、跨16-byte边界的RDAG/WRAG序列测试通过 | 中 |
-| 4 | 固化 INT8 数值语义【软件候选已完成】 | signed A×unsigned B、float32 中转会使 psum 非 bit-exact | `deee41f`已实现activation uint8、weight int8、bias/psum int32和branch清零；physical-address单坐标accumulator与golden一致。溢出暂显式报错，硬件wrap/saturate/error规则待确认 | 中高 |
-| 5 | 修复 reduction 与输出坐标【probe整数累加已验证】 | 上游最后reduction条件永假且每个R后清空psum | `86cd3e3`修复末态/生命周期；`d212225`与根adapter已验证全部坐标四段ring accumulator；仍需主入口证明每坐标只flush一次 | 中 |
-| 6 | 实现 requant 与真实 writeback【probe候选已验证】 | 没有 UINT8 D 就无法和 ResNet golden 比较 | `7a47701`+`3cb0ef9`已完成float32候选公式、nearest-even、zp/saturation、实际D地址覆盖和inverse；仍需主LC/Buffer/WRAG INT8 pack及批准硬件multiplier/shift | 高 |
+| 4 | 固化 INT8 数值语义【W2软件候选已完成】 | signed A×unsigned B、float32 中转会使 psum 非 bit-exact | `deee41f`已实现activation uint8、weight int8、bias/psum int32和branch清零；W2最终验证全部84个physical-address accumulator。溢出暂显式报错，硬件wrap/saturate/error规则待确认 | 中高 |
+| 5 | 修复 reduction 与输出坐标【W2软件候选已完成】 | 上游最后reduction条件永假且每个R后清空psum | `86cd3e3`修复末态/生命周期；`d212225`及后续runner验证全部坐标四段ring和每坐标候选flush；正式JSON调度仍在W5验证 | 中 |
+| 6 | 实现 requant 与真实 writeback【W2软件候选已完成】 | 没有 UINT8 D 就无法和 ResNet golden 比较 | `7a47701`+`3cb0ef9`及后续buffered runner完成nearest-even、zp/saturation、output Buffer→DRAM、实际D地址覆盖和inverse；硬件multiplier/shift与正式pack仍待合同/W5 | 高 |
 | 7 | 恢复配置驱动 | 当前主程序完全绕过 `config/` 和 JSON | 先恢复 `graph` pyc 对应源码或取得 `conv_config`；把 `config_nse.py` 固定 Conv 逐字段映射到目标 JSON，明确架构版本，不复制整段位串 | 高 |
 | 8 | 从 4 slice 扩到确认的 16 PE 阵列 | 只有前 7 步正确后，扩规模结果才可判定 | 参数化 slice 数、ring count、C/K partition、tail；1/4/16 slice 对同一逻辑 Conv 结果一致 | 高 |
 | 9 | 接 ResNet conv0 与全层 relayout | 小模型通过后才能区分算法问题和布局问题 | raw ONNX→forward relayout→JSON runner→physical D→inverse→QNN/ORT golden；再覆盖全部 Conv shape | 很高 |

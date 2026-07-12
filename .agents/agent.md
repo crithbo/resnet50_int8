@@ -7,12 +7,13 @@
 ## 五分钟接手摘要
 
 - **最终验收**：正式 ResNet50 INT8 ONNX→逐节点/硬件原子算子 golden→16-slice relayout→JSON/bitstream→目标 simulator→execplan/Bank_data→RTL/硬件→三方逐算子和整网一致。
-- **实际进度**：代码和资料摸底基本完成，但端到端工程完成度仅约 15%~25%；当前没有一个目标 NDP ResNet 算子达到 `golden=simulator=hardware`。
-- **三个仓库分工**：`CGRA_SIM` 给软件/QNN语义和旧 ResNet 计划；`ndp-sim-ref` 给目标 JSON、bitstream、relayout/execplan 框架；`NDPFuncModel` 给 Conv 数据通路和旧固定配置。三者尚无共同 manifest 或可运行适配层。
-- **当前可直接推进**：W0/G0、W2/G2、W3/G3已通过；W3已有78节点/617张量正式图目录、133个语义hw_op、79个运行时tensor、55个INT32内部tensor和全部78节点的独立公式重放，旧77原语也已逐项映射。下一步进入W4逐算子16-slice relayout；目标JSON/硬件合同仍属G1阻塞。
+- **W3业务封版检查点**：`35a4fde106d102b0e165e7eb13d60f7dd980db71`；W0/G0、W2/G2、W3/G3已通过，W1只完成模型/输入/软件量化事实，G1因目标硬件合同缺失尚未通过。交接文档可能有后续纯文档提交，当前恢复点以`git rev-parse HEAD`和`history.md`精确台账为准。
+- **三个仓库分工**：`CGRA_SIM` 给软件/QNN语义和旧 ResNet 计划；`ndp-sim-ref` 给目标 JSON、bitstream、relayout/execplan 框架；`NDPFuncModel` 给 Conv 数据通路。根集成层已经统一W3图/lowering/golden身份，但配置、simulator、execplan和hardware尚未接入同一manifest。
+- **当前成果**：正式图含78节点/617张量，lower为133个语义hw_op；保存79个运行时tensor和55个INT32内部tensor，全部78节点独立公式重放匹配ORT，旧77原语已逐项映射。W2小Conv在1/4-slice候选软件布局下达到golden=NDP functional model，但这不是目标JSON simulator或硬件通过。
+- **下一主线**：新对话从W4逐算子16-slice relayout开始，同时继续追踪W1硬件合同；本对话保留用于W1～W3返工、证据查验和回归定位，除非操作者明确改变分工，不在本对话推进W4。
 - **当前外部阻塞**：正式模型和固定输入基线已经自行取得；剩余外部阻塞为目标16-slice RTL/ISA版本、正式物理layout、INT8 SA/GA/qparams硬件约定、目标emulator关系、硬件加载与dump协议。
 - **禁止误用**：NDPFuncModel 当前 `extracted_*.npy` 和 `verify_pe` psum 不是可信 golden；42个 JSON也不等于 ResNet算子配置已完成；bitstream生成成功不等于数值正确。
-- **接手第一条命令**：先运行 `.venv\Scripts\python.exe tools\sync_repositories.py verify` 核验三仓commit/remote/dirty状态；始终使用根目录 `.venv\Scripts\python.exe`，不要调用系统 `python` 或重装Codex公共运行时。
+- **接手检查**：依次运行 `git status --short`、`.venv\Scripts\python.exe tools\sync_repositories.py verify`、`.venv\Scripts\python.exe -m unittest discover -s tests -v`；预期根工作树干净、三参考仓匹配lock、42项测试通过。始终使用根目录 `.venv\Scripts\python.exe`。
 
 下一步任务和验收条件只以 `.agents/plan.md` 为准；本文件后半部分是查代码时使用的详细地图，不需要接手时从头逐行阅读。
 
@@ -127,68 +128,20 @@ resnet50_int8/
 9. **逐门推进**：W0~W9是执行顺序、G0~G9是验收门；无subop golden不验JSON，无simulator通过不进硬件，单算子未三方一致不扩整网。
 10. **禁止伪证据**：当前NDP `.npy`/psum trace、旧ADD伪代码、FP16 SA JSON和bitstream生成成功都不能替代数值验收。
 
-`resnet50_pipeline/`、CLI、manifest、contract/backend、artifact、cache/resume、schema、mock fixture和测试已经建立；W0共11项测试通过并达到G0。当前业务实现从W2小Conv物理layout和地址provenance继续。
+`resnet50_pipeline/`、CLI、manifest、contract/backend、artifact、cache/resume、schema、mock fixture和测试已经建立；W0/G0、W2/G2和W3/G3均已通过。接手者不得重做W2/W3，除非合同/hash/回归失败；下一业务阶段是W4。
 
-## 本地仓库状态
+## 仓库和恢复检查点
 
-主仓库：
+| 工作树 | 锁定分支/commit | 远端与作用 |
+|---|---|---|
+| 根集成仓 | W3业务封版`35a4fde106d102b0e165e7eb13d60f7dd980db71`；当前文档HEAD见Git | Private `crithbo/resnet50_int8`，W0～W3代码、合同和文档 |
+| `CGRA_SIM` | `53c41e02c294bcc54379e686dc9d25bbb93919fa` | 公开upstream，QNN语义和旧ResNet参考 |
+| `ndp-sim-ref` | `e299b2804448242d1589b3e58ed7c5a9a5eca09f` | 公开upstream，JSON/bitstream/execplan参考 |
+| `NDPFuncModel` | `conv_func@35eab40e5314bf603481dd6268bc96ab2ca514a6` | Private `crithbo/NDPFuncModel-private`，W2修复后的Conv功能模型 |
 
-```text
-C:\Users\15383\Desktop\Codex\project\resnet50_int8\CGRA_SIM
-```
+`repos.lock.json`是三个参考仓的恢复真值；用`tools/sync_repositories.py verify`只读核验，用显式`sync --repo <name>`恢复缺失工作树。当前四个工作树均应干净。模型、`.venv`和`artifacts/`不在普通Git提交中，按合同中的路径/hash下载或重建。
 
-当前已知提交：
-
-```text
-53c41e0 Ignore .bin files in data_bin directory. Complete the tile-wise computation for the PE array.
-```
-
-主仓库中已有未提交修改，属于进入当前任务前已经存在的状态，不要随意回退：
-
-```text
-cgra_python/arch/__init__.py
-cgra_python/arch/arch_base.py
-cgra_python/util/extract_blocks.py
-env.sh
-```
-
-`ndp-sim` 参考仓库：
-
-```text
-C:\Users\15383\Desktop\Codex\project\resnet50_int8\ndp-sim-ref
-```
-
-当前已知提交：
-
-```text
-e299b2804448242d1589b3e58ed7c5a9a5eca09f
-```
-
-状态说明：
-
-- `ndp-sim-ref` 已尽量拉成完整工作树，当前工作树干净。
-- 该副本仍是 shallow / partial clone，历史不完整，但代码和配置分析所需文件已经展开。
-- 旧的半成品 `ndp-sim/` 目录已经删除，后续使用 `ndp-sim-ref/`。
-
-Conv 功能模型仓库：
-
-```text
-C:\Users\15383\Desktop\Codex\project\resnet50_int8\NDPFuncModel
-```
-
-当前分支和提交：
-
-```text
-conv_func
-35eab40e5314bf603481dd6268bc96ab2ca514a6
-```
-
-状态说明：
-
-- 从 `runoobb/NDPFuncModel` 的 `conv_func` 分支单分支克隆；当前本地分支在上游 `89d1655` 基础上增加修复至 `35eab40`。W2/G2通过后全部独有提交已作为里程碑推送Private镜像。
-- 它是以 Python 硬编码循环和数据通路的 Conv 功能模型，不是 `ndp-sim-ref/jsons` 或 bitstream 的解释器。
-- 仓库按 Git 记录了 `conv_config` gitlink，但没有 `.gitmodules` 和 URL；该目录无法还原。`graph/` 也只有 `.pyc`，没有对应 `.py` 源码。
-- `hex_data/` 被忽略且未随仓库提供，因此 `main_CONV_N2N.py` 当前不能从干净 clone 直接完整运行。
+NDPFuncModel仍不是目标JSON/bitstream解释器；其`conv_config`缺URL、`graph/`缺源码、`hex_data/`未随仓提供。W2参数化fixture已绕开这些缺失并完成软件验证，但不能据此批准正式硬件接口。
 
 ## 本地 Python 环境与已验证入口
 
@@ -203,7 +156,7 @@ conv_func
 - PyTorch不能继续视为可选：`CGRA_SIM/cgra_python/__init__.py` 会传递导入 `op_lib`，其中 MaxPool 直接导入 torch。
 - `ndp-sim-ref/model_execplan/main.py --help` 已成功，证明 execplan Python 前端可启动。
 - `NDPFuncModel/main_CONV_N2N.py` 曾在 `artifacts/smoke/NDPFuncModel` 隔离worktree中运行到 `DRAM.init_from_file()`，停在缺少 `./hex_data`，不再缺Python包。该额外worktree已在操作者批准后删除并清理Git元数据，释放约130.68 MiB；现场结论保留在history。
-- `CGRA_SIM/.../golden.py` 在设置仓库根为 `PYTHONPATH` 后，当前首先停在 `cgra_python/layout/layout_buffer.py:201` 的既有 `SyntaxError`；官方模型、固定图片和ORT最终输出基线已经准备完成，修复后可直接进入全节点golden改造。
+- `CGRA_SIM/.../golden.py` 旧入口仍会被 `cgra_python/layout/layout_buffer.py:201` 的既有 `SyntaxError`影响；W3已经通过根集成层零导入隔离完成正式全节点golden，不得再把该语法错误写成W3阻塞。只有需要修复/运行旧CGRA入口时才单独处理。
 - `.venv` 当前约917 MiB，主要体积来自CPU PyTorch；运行产物统一放 `artifacts/`，不要覆盖三个仓库内的跟踪trace。
 
 重建环境：
@@ -328,9 +281,9 @@ CGRA_SIM/testing/resnet-50-int8/
 
 ## 当前闭环状态
 
-- **模型和 golden——正式模型基线已有/全节点dump待做**：官方Model Zoo模型已按SHA-256暂定为正式模型，固定 `cat.jpg`、batch=16输入和ORT最终输出均已hash锁定；`golden_model/golden.py` 仍只列35个检查名、30个唯一节点，全节点input/output与硬件子步骤golden需补全。
-- **lowering 和统一 manifest——仓库中没有**：旧计划精确还原为 77 个模型级原语，但依赖 328 个有序字典项；没有 ONNX node→硬件原子 op→JSON→execplan→结果的一对多映射。
-- **数据变换——Conv候选已进入NDP验证/其余需完成**：W2已实现1/4-slice `w2_ndp_ring_candidate_v1`，覆盖DRAM五维地址、activation-C和weight/output-K分片、bias/qparams、C/K tail、16-byte对齐、逐字节provenance及正逆round-trip；NDP已逐region读回并由物理地址完成单坐标整数dot，但它仍不是硬件批准layout。ResNet 16-slice Conv以及Quantize、MaxPool、Add、AvgPool、MatMul/dense、Dequantize、Flatten/View仍需继续实现。
+- **模型和golden——W3/G3已通过**：模型/input/hash和ORT设置已锁定；正式保存79个运行时tensor和55个lowering内部INT32 tensor，全部78节点由独立公式重放并匹配ORT。旧`golden.py`的30个唯一检查点只保留为历史参考。
+- **lowering和身份映射——W3语义层已完成**：78个ONNX节点稳定lower为133个语义hw_op；旧77模型级原语已逐项映射，Flatten明确为zero-copy。JSON实例、逐K-tile和execplan身份在W4/W5/W7继续扩展，不得说成W3尚未实现。
+- **数据变换——小Conv候选已通过/正式W4未开始**：W2已实现1/4-slice `w2_ndp_ring_candidate_v1`，覆盖DRAM五维地址、activation-C和weight/output-K分片、bias/qparams、C/K tail、16-byte对齐、逐字节provenance及正逆round-trip；NDP已验证全部84个输出坐标及D写回。它仍不是硬件批准layout；ResNet 16-slice Conv以及Quantize、MaxPool、Add、AvgPool、MatMul/dense、Dequantize、Flatten/View需在W4实现。
 - **单算子配置——部分已有**：42 个静态 JSON 中只有 MaxPool、sum 型 AvgPool、固定样例 quant、fp32 输出 add-dequant 可局部参考；6 个 SA JSON 全是 FP16、bias=0；没有核心 INT8 Conv/MatMul。
 - **W2/G2小Conv软件闭环已通过**：`NDPFuncModel@35eab40` 的参数化runner在同一fixture上完成1/4-slice全部84坐标，实际经过DRAM、input Buffer、SpecialPEA、ActivationUnit、output Buffer和DRAM；NumPy、im2col、ORT、CGRA QNN rounding与NDP的accumulator/D一致，physical D可inverse且全部物理字节可解释。该结论不批准旧固定主入口、目标JSON或硬件layout；16-slice为下一步。
 - **execplan——框架已有/ResNet 适配没有**：可规划地址、重生成 bitstream、输出指令和 Bank_data，但 schema 无 numeric attributes，仍硬编码 28 slice，bitstream 失败后部分路径继续。
@@ -339,7 +292,7 @@ CGRA_SIM/testing/resnet-50-int8/
 
 ## 当前最高优先级
 
-严格按 `.agents/plan.md` 的 W0→W9 工作包和 G0→G9 验收门推进。W0/G0、W2/G2已经完成，W1外部规格继续并行；当前允许把已验证合同扩到16-slice，并为W3正式模型lowering/golden准备接口。
+严格按 `.agents/plan.md` 的W0→W9工作包和G0→G9验收门推进。W0/G0、W2/G2、W3/G3已经完成；W1模型部分完成但G1未通过。新推进对话从W4开始，本对话只用于W1～W3查验和返工。任何W1～W3修改都必须先说明会使哪些manifest/hash/下游产物失效。
 
 优先向学长或硬件侧确认：目标16-slice RTL/ISA/register-map版本、正式物理layout、最小INT8 SA+bias+requant硬件配置、量化参数传递协议、NDPFuncModel/官方emulator关系，以及硬件加载和dump接口。旧ONNX、旧产物、原 `hex_data` 和 `conv_config` 来源已降级为兼容性资料，不再阻塞软件推进。
 
@@ -383,8 +336,8 @@ cgra_python/execution_plan/tensor_dict.json
 
 ```text
 正式 ResNet ONNX / 输入 / initializer
-  -> 统一 lowering + tensor/op manifest（待实现）
-  -> raw golden + 硬件子步骤 golden（部分参考已有，待完整实现）
+  -> 统一 ONNX node/tensor/语义 hw_op lowering（W3/G3已完成）
+  -> raw node golden + 55个语义内部tensor golden（W3/G3已完成）
   -> 16-slice partition/relayout/packing/remapping（待实现）
   -> ndp-sim-ref/jsons + bitstream（框架已有，ResNet INT8 配置待实现）
   -> 目标 JSON/bitstream emulator（仓库内缺失）

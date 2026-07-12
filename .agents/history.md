@@ -14,6 +14,51 @@
 - `.venv`、模型、golden、trace和运行artifact不是仓库副本，也不会由普通GitHub提交自动备份；它们按可重建性和大文件策略另行管理，不能混入普通Git历史。
 - Git commit hash由提交内容决定，提交无法在自身文件内容中稳定写入自己的hash。因此业务/代码提交在同一次或紧随其后的history同步提交中登记；最新一笔“只更新台账”的提交以当前 `HEAD` 和 `git log -1 --format=fuller` 精确定位，并在下一次台账同步时补入。不得借此漏记任何业务提交。
 
+## W0～W3交接封版（2026-07-12）
+
+本节是新对话判断“哪些已经完成、哪些不得误判”的首要历史快照；后面的精确提交台账和逐日记录保留证据细节。封版前根仓本地与Private `origin/main`均为`35a4fde106d102b0e165e7eb13d60f7dd980db71`，ahead/behind为0/0，三个参考仓由`repos.lock.json`锁定并通过verify。
+
+| 工作包 | 结论 | 已完成内容 | 未批准边界 |
+|---|---|---|---|
+| W0/G0 | 通过 | 根集成包、CLI、稳定manifest对象、contracts/backend能力、artifact原子发布、阶段DAG、失败阻断、cache/resume、schema和mock测试 | 只证明框架和mock生命周期，不证明真实算子/hardware |
+| W1/G1 | 部分完成，G1未通过 | 正式候选ONNX、固定图片与batch16输入、旧脚本预处理、ORT环境、模型/输入/输出hash、UINT8×INT8×INT32量化事实 | 正式16-slice layout、RTL/ISA、SA/GA/qparams、目标emulator和硬件协议仍为candidate/unknown |
+| W2/G2 | 通过 | 小Conv 1/4-slice候选物理layout、地址/provenance、正逆round-trip、DRAM/Buffer/PEA/ring/requant/writeback功能链；NumPy、im2col、ORT、CGRA QNN与NDP全部84坐标一致 | 不是正式16-slice layout，不消费目标JSON/bitstream，不是硬件通过 |
+| W3/G3 | 通过 | 78节点/617 tensor正式图，133语义hw_op，79运行时tensor，55个INT32内部tensor，全部78节点独立公式重放，旧77原语稳定映射 | 未生成正式逐K-tile快照、layout、JSON、execplan、target simulator或hardware结果 |
+
+### W0封版证据
+
+- G0最初以11项W0单测通过；后续功能加入后，封版全量根测试为42项且继续覆盖W0的成功、失败、resume、cache失效、schema和引用完整性。
+- 根仓边界明确：集成源码、测试、schema、合同和小fixture入Git；ONNX、`.venv`、golden/trace/hardware dump和普通artifact不入普通Git。
+- 三参考仓保持独立工作树；`repos.lock.json`和`tools/sync_repositories.py`提供只读verify及显式恢复路径。
+
+### W1已完成与未完成
+
+- 模型位于`artifacts/reference_model/resnet50-v1-12-int8.onnx`，SHA-256 `c234f30975989788b4405f25253275aae247ab6dbdd34aaa69ab0a59ff76f6d0`；IR 4、opset 12、78节点、366 initializer。
+- 预处理暂定复现旧脚本：RGB、除255、直接缩放256×256、中心裁剪224×224、ImageNet mean/std、HWC→CHW、float32、复制batch=16。输入SHA-256为`6661a1671a07256fa7b4792851bc8bee41409495a7b5b705fbb3fe0976601a9c`，最终输出SHA-256为`2c6c5fabc1d41fceee35f06221efb4c64b94fabfe7a0b4680d2acf2186ca0894`。
+- 53层Conv均确认是UINT8 activation、INT8 weight、INT32 bias、per-output-channel weight scale；weight zero point为0，输入/输出zero point不保证为0。
+- G1没有通过。后续取得正式layout/RTL/ISA/量化常量/runner资料时必须更新对应contract，而不能把W2 candidate当作硬件批准结论。
+
+### W2封版证据
+
+- `w2_ndp_ring_candidate_v1`实现activation沿C、weight/output沿K分片，RSKC/NHWK物理顺序、bias/qparams、C/K tail、16-byte对齐、DRAM slice/bank/row/col/subword坐标和逐字节data/padding/alignment provenance。
+- 1-slice和4-slice均完成raw→physical→raw bit-exact；参数化NDP runner实际经过DRAM→input Buffer→SpecialPEA→ActivationUnit→output Buffer→DRAM。
+- 带padding及C/K tail的小Conv共84个输出坐标，其INT32 accumulator、physical UINT8 D和inverse logical D逐项匹配独立golden；G2通过时根28项、NDP14项回归通过。
+- NDP修复封版为`35eab40e5314bf603481dd6268bc96ab2ca514a6`并已推送Private镜像。该结论只批准候选软件闭环，不批准目标JSON、bitstream、16-slice硬件layout或真实hardware。
+
+### W3封版证据
+
+- 模型解析通过SHA/checker、ONNX shape inference和受控补充传播，得到78节点/617 tensor；366 initializer均有内容hash，所有node output dtype/shape已知。
+- 8类插件把78节点lower为133个语义hw_op和55个内部tensor。`artifacts/w3/golden_batch16`保存1个图输入+78个node output并引用366个initializer；运行manifest SHA-256为`f7e90cf1f087acf255e93d98d1788e0fb0b4c77bbe935ea9addb17feea583180`。
+- `artifacts/w3/subop_batch16`中的55个内部INT32 tensor为53个Conv accumulator、1个GlobalAveragePool centered sum和1个MatMul accumulator；subop manifest SHA-256为`8bfdd042570408c1df793044407a8e6262bfa261b3cc6f02f64b94ad47d9c1c2`，目录大小677,828,490字节。
+- 全部78节点独立公式重放匹配ORT：55个内部累加/求和后requant、17个QLinearAdd、2个Quantize、2个Dequantize、1个MaxPool、1个Flatten。第二次运行79个runtime tensor和55个内部tensor的文件hash分别全部一致。
+- 旧计划索引0..76的77个模型级原语全部映射到当前稳定node/hw_op；Flatten作为zero-copy明确排除。映射SHA-256为`b6507dec2b564a0b5a06b185a4ce5070909194d5cf164edc503d840740b94ed3`。
+
+### 新旧对话分工与返工规则
+
+- 新对话读取`agent.md`后从W4开始推进；本对话保留用于W1～W3查验、复现、审计和返工，除非操作者明确更改分工。
+- W1～W3返工前先确定是否改变模型hash、预处理、ORT设置、量化公式、稳定ID或lowering。任何一项改变都必须列出失效的runtime/subop manifest、artifact、W2 fixture和后续依赖，不能静默覆盖。
+- 正常接手只需运行`git status --short`、`.venv\Scripts\python.exe tools\sync_repositories.py verify`和`.venv\Scripts\python.exe -m unittest discover -s tests -v`。约951 MB的W3正式artifact不应无理由重复生成；先按合同检查路径、大小和manifest hash。
+
 ## 精确提交台账
 
 ### 根集成仓库 `resnet50_int8`
@@ -138,6 +183,10 @@
     - 范围：新增机器可读`subop_golden`合同；把7类真实算子的raw/subop覆盖标记为`w3_g3`；同步agent/plan/history并正式批准G3。
     - 验证：根仓42项测试、三参考仓verify、合同JSON解析、Git diff检查通过；subop manifest和旧77映射的实际SHA及677,828,490字节目录大小均与合同一致。
     - 精确回退：revert本commit；代码仍停在`c5de5e6…`且计算结果不变，但G3批准合同、覆盖状态与里程碑文档被撤销。本提交将在本次W3批量推送中进入Private `origin/main`。
+31. `35a4fde106d102b0e165e7eb13d60f7dd980db71`，父提交 `aa6ee26e78e90f9c5b68f8a62899d40663abfd76`，`chore: sync W3 G3 milestone ledger`。
+    - 范围：登记W3/G3批准提交`aa6ee26…`的完整hash、父提交、验证和回退边界，形成W3云端封版HEAD。
+    - 验证：从`5f25526…`到本提交的9个W3提交已批量推送Private `origin/main`；本地HEAD与tracking ref均为本提交，ahead/behind为0/0，工作树干净。
+    - 精确回退：revert本commit只撤销`aa6ee26…`的台账登记，不撤销W3代码、合同或云端提交；W3业务回退应按第23～30项从后向前逐项revert。
 
 ## 2026-07-12：W3正式图目录与语义lowering启动
 
@@ -155,7 +204,7 @@
 
 ### 子仓库 `NDPFuncModel/conv_func`
 
-上游共同基线为 `89d1655ce6450477cdcc04965d8b4866f12066e5`。以下提交均不在公开 `origin/conv_func`；第1～4项已推送操作者Private镜像，第5～7项按“小进度只本地提交”暂未推送：
+上游共同基线为 `89d1655ce6450477cdcc04965d8b4866f12066e5`。以下提交均不在公开 `origin/conv_func`；第1～7项已随W2/G2里程碑批量推送操作者Private镜像，最终封版为`35eab40e5314bf603481dd6268bc96ab2ca514a6`。各条中“仅本地、未推送”描述的是提交当时状态，已由本句和后续G2记录取代：
 
 1. `789d121327d8e855d33f16c2103a6422a521fa25`，父提交 `89d1655ce6450477cdcc04965d8b4866f12066e5`，`fix: correct slice and strided AG addressing`。
    - 范围：修复DRAM `per_slice`漏bank、slice AG基址、RDAG/WRAG跨transaction物理地址；新增physical image probe和寻址测试。
