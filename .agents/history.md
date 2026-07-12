@@ -358,3 +358,13 @@
 - 验证：新增3项聚焦测试，覆盖N<16、C/K tail、per-channel qparams、AG padding/data窗口、logical/physical坐标、Conv0正式shape规划及单slice等价round-trip、tail破坏、非法group和错误output shape；根仓全量49项测试通过，architecture合同严格JSON解析、Python编译和`git diff --check`通过。
 - 边界：该profile是软件candidate，不声明目标硬件采用batch并行；ring16 profile、其余19类Conv shape、目标JSON/simulator/hardware均未接入，G4保持未通过。下一原子步骤是实现`w4_conv_ring16_candidate_v1`并与本profile在同一logical tensor上比较。
 - 精确回退：revert `299290de9de07a442fcb6be4779880e3cf08c63b`；上一根仓恢复点为`ccaf43b8230edcfcf78109676998cc48f614af3f`。
+
+## 2026-07-12：W4 ring16 Conv0 profile与双profile一致性
+
+- 根仓提交 `08d863ab89c184ea5c2ba18801c336737da14789`，父提交 `16377fa143bdd16571446839d6f337355894dcdb`，`feat: add W4 ring16 Conv relayout`。
+- 范围：新增`w4_conv_ring16_candidate_v1`，A按连续C chunk归属16个slice，B/bias/per-channel qparams/multiplier/P/D按连续K-owner归属slice，x/y标量qparams逐slice复制；物理轴分别为NHWC-local、RSK-local/global-C、NHWK-local。每个K owner的候选ring顺序显式为`(owner+step)%16`，共16步/15次neighbor transfer。
+- 实现独立于W2 `SmallConvPhysicalLayout`和batch profile；提供forward/inverse、logical/physical coordinate、AG window、ring step解释、tail/replica/activity/address校验及LayoutRecord。微型C=5/K=7用同一golden同时生成batch/ring bundle，两侧恢复的A/B/qparams/P/D逐对象bit-exact。
+- 正式双profile报告`artifacts/w4/conv0_profiles_report.json`为11,840 bytes，SHA-256 `11ba322444c624a5ab1f6b4f7797b96b84eb45692d6b2c0b92eb1e44105f4e67`。现有W3 Conv0的12类对象在batch/ring下inverse hash均等于logical hash且彼此相同；batch使用71,063,552 physical bytes、每slice 4,441,472 bytes，ring使用77,122,560 physical bytes、每slice 4,820,160 bytes，均低于25,165,824-byte slice容量。Conv0 ring为`c_tile=1`、`k_tile=4`，step0～2携带C=0～2，step3～15为空贡献且last只在step15。
+- 验证：Conv聚焦测试增至5项，新增非零K owner环回、batch/ring logical一致、formal Conv0 ring capacity、C/K tail、scalar replica破坏等；根仓全量51项测试通过。原batch-only报告重跑后SHA-256仍为`c91ae0ddbc17b41121d832a16d4a3de3706a9eaccfc59faf834de45b9e6f23b5`，证明验证工具重构未改变既有证据。
+- 边界：本提交只证明两种软件物理合同可逆且logical等价，不证明ring数据在NDP/目标simulator中完成数值执行，也不批准`(owner+step)%16`为硬件真值。下一原子步骤是自动覆盖正式20类Conv shape并形成profile裁决包；G4保持未通过。
+- 精确回退：revert `08d863ab89c184ea5c2ba18801c336737da14789`；上一根仓恢复点为`16377fa143bdd16571446839d6f337355894dcdb`。

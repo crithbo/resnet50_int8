@@ -51,7 +51,7 @@
 
 - **已通过**：W0/G0集成骨架，W2/G2小Conv候选软件纵向闭环，W3/G3正式图/lowering/全节点与subop golden。
 - **部分通过**：W1已冻结正式候选模型、固定输入、预处理和软件量化事实；目标架构、layout、JSON/emulator和硬件接口未批准，所以G1仍未通过。
-- **正在推进**：W4已完成Quantize/Dequantize/View和batch-parallel Conv0的16-slice candidate正逆布局、坐标解释、校验和manifest记录；ring16 Conv、全部Conv shape族、Pool、Add、AvgPool、MatMul仍待实现。W5目标JSON/bitstream、W6目标simulator、W7网络execplan、W8硬件、W9通用三方比较尚未开始。
+- **正在推进**：W4已完成Quantize/Dequantize/View及batch-parallel/ring16两种Conv0 candidate的正逆布局、坐标解释、校验和manifest记录；全部Conv shape族、Pool、Add、AvgPool、MatMul仍待实现。W5目标JSON/bitstream、W6目标simulator、W7网络execplan、W8硬件、W9通用三方比较尚未开始。
 - **当前边界**：W2只证明小合成Conv的golden=NDP functional model；W3公式重放仍属于golden侧。当前没有任何正式ResNet算子达到golden=target simulator=hardware。
 
 ### 接手进度总表
@@ -62,7 +62,7 @@
 | W1 | G1未通过 | 模型、固定输入、预处理、ONNX量化事实 | 并行补目标硬件合同 |
 | W2 | G2通过 | 1/4-slice小Conv候选layout和NDP functional数值闭环 | 作为W4 fixture，不外推为硬件规格 |
 | W3 | G3通过 | 78节点、133 hw_op、79 runtime tensor、55内部tensor、旧77映射 | 不重跑大artifact，除非hash/合同失效 |
-| W4 | 进行中/G4未通过 | Quantize/Dequantize/View及batch16 Conv0 candidate已通过软件round-trip | 继续ring16/profile裁决与全部Conv shape族，再扩Pool/Add/AvgPool/MatMul |
+| W4 | 进行中/G4未通过 | Quantize/Dequantize/View及batch16/ring16 Conv0 candidate已通过软件round-trip | 覆盖全部20类Conv shape并形成profile裁决包，再扩Pool/Add/AvgPool/MatMul |
 | W5～W9 | 未通过 | 仅有参考框架或mock接口 | 等待对应前置门通过 |
 
 ### 当前可立即执行队列
@@ -375,7 +375,7 @@ layout描述不能只写名称，必须能给出逻辑坐标→slice/bank/byte a
 
 验收门 G4：最小shape、真实ResNet shape和tail shape均通过 raw→physical→raw bit-exact；上游D/下游A的零拷贝或转换责任有显式记录。
 
-当前进度（2026-07-12）：`w4_batch_slice_candidate_v1`已覆盖QuantizeLinear/DequantizeLinear的A、scale、zero_point、D；`w4_zero_copy_view_candidate_v1`已证明正式Flatten `[16,2048,1,1]→[16,2048]` 零拷贝。新增`w4_conv_batch16_candidate_v1`：一张样本一个slice，A为HWC+C-tail且窗口由AG解释，B为逐slice复制的RSKC，bias/qparams/multiplier逐slice复制，P/D为HWK+K-tail。正式Conv0已有W3 activation/initializer/int32 accumulator/D定向验证，12类对象inverse全部bit-exact，每slice使用4,441,472/25,165,824 bytes。该合同仍为candidate；ring16 profile、其余Conv shape族和其他算子未完成，所以G4保持未通过。
+当前进度（2026-07-12）：Quantize/Dequantize/View candidate已完成。Conv0已有两种显式profile：`w4_conv_batch16_candidate_v1`按一张样本一个slice；`w4_conv_ring16_candidate_v1`令A按C owner分片、B/qparams/P/D按K owner分片，并按`(k_owner+step)%16`记录16步ring。正式W3 Conv0的12类对象在两profile下inverse均bit-exact，且batch/ring恢复的logical tensor逐对象一致；batch/ring每slice分别使用4,441,472和4,820,160 bytes。两合同仍为candidate，ring顺序尚未由硬件批准；其余19类Conv shape和其他算子未完成，所以G4保持未通过。
 
 ### W5：逐算子JSON和bitstream【难度：很高】
 
@@ -597,7 +597,7 @@ W0实现前还需把以上补充转成可执行的schema字段、测试用例和
 - 每个 slice 的元素归属、复制规则、padding 区和 128-bit 行内顺序可由 manifest 验证。
 - 上一算子 D 与下一算子 A 的物理布局不一致时，明确由 remapping、后继 stream 还是显式 relayout 解决。
 
-当前状态：DeepSeek relayout仍只覆盖28-slice LLM，旧`relayout_layer0.py`、`conv_layout.py`和`layout_buffer.py`不能直接作为ResNet实现。W2已验证1/4-slice C/K ring小Conv，但它不是正式16-slice硬件layout。W4已新增Quantize/Dequantize/View及batch-parallel Conv0的16-slice candidate并通过最小/正式/tail round-trip；下一步需独立实现ring16 profile并与batch profile比较/提交硬件裁决，再覆盖其余19类Conv shape。MaxPool、QLinearAdd、GlobalAveragePool和MatMul/dense仍需完成。
+当前状态：DeepSeek relayout仍只覆盖28-slice LLM，旧`relayout_layer0.py`、`conv_layout.py`和`layout_buffer.py`不能直接作为ResNet实现。W2的1/4-slice C/K ring语义保持冻结；W4已独立实现batch16和ring16 Conv0 profile，两者在正式W3数据上均可逆且logical一致。下一步是从`model_graph.json`生成20类Conv shape覆盖矩阵，用两个profile逐类做capacity、tail、owner和round-trip验证，再形成最小硬件裁决包。MaxPool、QLinearAdd、GlobalAveragePool和MatMul/dense仍需完成。
 
 ## 阶段 E：完成 ResNet 单算子 JSON 和数值参数化
 
