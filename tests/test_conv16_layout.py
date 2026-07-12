@@ -5,6 +5,7 @@ import unittest
 import numpy as np
 
 from resnet50_pipeline.conv16_layout import ConvBatch16PhysicalLayout
+from resnet50_pipeline.conv16_ring_layout import ConvRing16PhysicalLayout
 from resnet50_pipeline.golden.qlinear_conv import qlinear_conv_im2col
 
 
@@ -191,6 +192,87 @@ class ConvBatch16PhysicalLayoutTests(unittest.TestCase):
             clean = self._micro_case()
             clean["accumulator"] = clean["accumulator"][:, :, :-1]
             layout.forward(**clean)
+
+    def test_ring_profile_round_trip_matches_batch_profile(self) -> None:
+        values = self._micro_case()
+        batch_layout = ConvBatch16PhysicalLayout()
+        ring_layout = ConvRing16PhysicalLayout()
+        batch = batch_layout.forward(**values)
+        ring = ring_layout.forward(**values)
+        batch_inverse = batch_layout.inverse(batch)
+        ring_inverse = ring_layout.inverse(ring)
+        self.assertEqual(set(batch_inverse), set(ring_inverse))
+        for tensor_id in batch_inverse:
+            np.testing.assert_array_equal(ring_inverse[tensor_id], batch_inverse[tensor_id])
+
+        self.assertEqual(ring.metadata["slice_topology"], "ring_C_activation_K_output_partition")
+        self.assertEqual(ring.metadata["c_tile"], 1)
+        self.assertEqual(ring.metadata["k_tile"], 1)
+        report = ring_layout.validate(ring)
+        self.assertEqual(report["ring_steps"], 16)
+        self.assertEqual(report["region_count"], 192)
+        a = ring_layout.explain_coordinate(ring, "conv_activation", (2, 4, 3, 5))
+        self.assertEqual(a[0]["slice_id"], 4)
+        self.assertEqual(a[0]["physical_coordinate"], (2, 3, 5, 0))
+        b = ring_layout.explain_coordinate(ring, "conv_weight", (6, 4, 2, 1))
+        self.assertEqual(b[0]["slice_id"], 6)
+        self.assertEqual(b[0]["physical_coordinate"], (2, 1, 0, 4))
+
+        first = ring_layout.explain_ring_step(ring, output_channel=0, step=0)
+        self.assertEqual(first["k_owner_slice"], 0)
+        self.assertEqual(first["activation_slice"], 0)
+        self.assertEqual(first["channel_range"], (0, 1))
+        self.assertTrue(first["has_data"])
+        empty = ring_layout.explain_ring_step(ring, output_channel=0, step=5)
+        self.assertEqual(empty["activation_slice"], 5)
+        self.assertEqual(empty["channel_range"], (5, 5))
+        self.assertFalse(empty["has_data"])
+        last = ring_layout.explain_ring_step(ring, output_channel=0, step=15)
+        self.assertTrue(last["last"])
+        wrapped = ring_layout.explain_ring_step(ring, output_channel=6, step=10)
+        self.assertEqual(wrapped["k_owner_slice"], 6)
+        self.assertEqual(wrapped["activation_slice"], 0)
+        self.assertTrue(wrapped["has_data"])
+
+        records = {record.port: record for record in ring.layout_records()}
+        self.assertEqual(
+            records["A"].partition["policy"], "contiguous_c_partition_across_ring"
+        )
+        self.assertEqual(
+            records["B"].partition["policy"],
+            "contiguous_k_owner_partition_across_ring",
+        )
+        self.assertEqual(records["x_scale"].partition["policy"], "replicated_on_every_slice")
+
+    def test_ring_conv0_formal_shape_and_tail_corruption(self) -> None:
+        layout = ConvRing16PhysicalLayout()
+        plan = layout.plan(
+            activation_shape=(16, 3, 224, 224),
+            weight_shape=(64, 3, 7, 7),
+            strides=(2, 2),
+            pads=(3, 3, 3, 3),
+        )
+        self.assertEqual(plan["output_shape"], (16, 64, 112, 112))
+        self.assertEqual(plan["c_tile"], 1)
+        self.assertEqual(plan["k_tile"], 4)
+        self.assertEqual(plan["c_padded"], 16)
+        self.assertEqual(plan["k_padded"], 64)
+        self.assertLess(plan["per_slice_used_bytes"], plan["capacity_bytes"])
+
+        values = self._micro_case()
+        bundle = layout.forward(**values)
+        payload = bytearray(bundle.read("A", 5))
+        payload[0] = 0
+        bundle.payloads[("A", 5)] = bytes(payload)
+        with self.assertRaisesRegex(ValueError, "activation C tail is corrupted"):
+            layout.validate(bundle)
+
+        replicated = layout.forward(**values)
+        scale = bytearray(replicated.read("x_scale", 3))
+        scale[0] ^= 1
+        replicated.payloads[("x_scale", 3)] = bytes(scale)
+        with self.assertRaisesRegex(ValueError, "replicated scalar port x_scale"):
+            layout.validate(replicated)
 
 
 if __name__ == "__main__":

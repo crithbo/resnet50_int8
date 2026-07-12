@@ -26,7 +26,7 @@ def _load_graph_catalog(path: Path) -> tuple[dict[str, Any], dict[str, Any]]:
     return node, tensors
 
 
-def verify(project_root: Path) -> dict[str, Any]:
+def load_formal_conv0_case(project_root: Path) -> dict[str, Any]:
     root = project_root.resolve()
     model_path = root / "artifacts/reference_model/resnet50-v1-12-int8.onnx"
     graph_path = root / "artifacts/w3/model_graph.json"
@@ -63,7 +63,6 @@ def verify(project_root: Path) -> dict[str, Any]:
     attributes = {
         item.name: onnx.helper.get_attribute_value(item) for item in node.attribute
     }
-    layout = ConvBatch16PhysicalLayout()
     tensor_ids = {
         "A": input_ids[0],
         "x_scale": input_ids[1],
@@ -78,25 +77,24 @@ def verify(project_root: Path) -> dict[str, Any]:
         "P": accumulator_id,
         "D": output_id,
     }
-    bundle = layout.forward(
-        activation=activation,
-        weight=weight,
-        bias=bias,
-        w_scale=w_scale,
-        w_zero_point=w_zero_point,
-        x_scale=x_scale,
-        x_zero_point=x_zero_point,
-        y_scale=y_scale,
-        y_zero_point=y_zero_point,
-        accumulator=accumulator,
-        output=output,
-        strides=tuple(attributes.get("strides", (1, 1))),
-        pads=tuple(attributes.get("pads", (0, 0, 0, 0))),
-        dilations=tuple(attributes.get("dilations", (1, 1))),
-        group=int(attributes.get("group", 1)),
-        tensor_ids=tensor_ids,
-    )
-    recovered = layout.inverse(bundle)
+    values = {
+        "activation": activation,
+        "weight": weight,
+        "bias": bias,
+        "w_scale": w_scale,
+        "w_zero_point": w_zero_point,
+        "x_scale": x_scale,
+        "x_zero_point": x_zero_point,
+        "y_scale": y_scale,
+        "y_zero_point": y_zero_point,
+        "accumulator": accumulator,
+        "output": output,
+        "strides": tuple(attributes.get("strides", (1, 1))),
+        "pads": tuple(attributes.get("pads", (0, 0, 0, 0))),
+        "dilations": tuple(attributes.get("dilations", (1, 1))),
+        "group": int(attributes.get("group", 1)),
+        "tensor_ids": tensor_ids,
+    }
     expected = {
         input_ids[0]: activation,
         input_ids[1]: x_scale.reshape(1),
@@ -110,6 +108,37 @@ def verify(project_root: Path) -> dict[str, Any]:
         accumulator_id: accumulator,
         output_id: output,
     }
+    return {
+        "root": root,
+        "model_path": model_path,
+        "node_record": node_record,
+        "tensors": tensors,
+        "activation_path": activation_path,
+        "accumulator_path": accumulator_path,
+        "output_path": output_path,
+        "values": values,
+        "expected": expected,
+        "tensor_ids": tensor_ids,
+    }
+
+
+def verify(project_root: Path) -> dict[str, Any]:
+    case = load_formal_conv0_case(project_root)
+    root = case["root"]
+    model_path = case["model_path"]
+    node_record = case["node_record"]
+    tensors = case["tensors"]
+    activation_path = case["activation_path"]
+    accumulator_path = case["accumulator_path"]
+    output_path = case["output_path"]
+    values = case["values"]
+    tensor_ids = case["tensor_ids"]
+    expected = case["expected"]
+    layout = ConvBatch16PhysicalLayout()
+    bundle = layout.forward(
+        **values,
+    )
+    recovered = layout.inverse(bundle)
     comparisons: dict[str, Any] = {}
     for tensor_id, reference in expected.items():
         candidate = recovered[tensor_id]
@@ -124,9 +153,9 @@ def verify(project_root: Path) -> dict[str, Any]:
         }
     multiplier_id = tensor_ids["multiplier"]
     expected_multiplier = (
-        np.float32(x_scale.reshape(-1)[0])
-        * w_scale.astype(np.float32).reshape(-1)
-        / np.float32(y_scale.reshape(-1)[0])
+        np.float32(values["x_scale"].reshape(-1)[0])
+        * values["w_scale"].astype(np.float32).reshape(-1)
+        / np.float32(values["y_scale"].reshape(-1)[0])
     ).astype(np.float32)
     np.testing.assert_array_equal(recovered[multiplier_id], expected_multiplier)
     comparisons[multiplier_id] = {

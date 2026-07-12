@@ -41,11 +41,13 @@ from .simple_layout import (  # noqa: E402  (keeps the protocol definitions firs
     ZeroCopyViewLayout,
 )
 from .conv16_layout import ConvBatch16PhysicalLayout  # noqa: E402
+from .conv16_ring_layout import ConvRing16PhysicalLayout  # noqa: E402
 
 
 __all__ = [
     "DequantizeLinearPhysicalLayout",
     "ConvBatch16PhysicalLayout",
+    "ConvRing16PhysicalLayout",
     "IdentityLayout",
     "LayoutTransform",
     "QuantizeLinearPhysicalLayout",

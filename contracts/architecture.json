@@ -74,6 +74,26 @@
         "sha256": "c91ae0ddbc17b41121d832a16d4a3de3706a9eaccfc59faf834de45b9e6f23b5",
         "all_inverse_bit_exact": true
       }
+    },
+    "w4_conv_ring16_candidate_v1": {
+      "status": "candidate",
+      "scope": "QLinearConv 16-slice C/K ring software relayout; not hardware-approved",
+      "slice_topology": "activation owns contiguous C chunks; weight/qparams/psum/output own contiguous K chunks",
+      "activation": "NCHW logical to per-slice NHWC-local; c_tile=ceil(C/16), tail=x_zero_point",
+      "im2col": "not materialized; AG window coordinates resolve to the owning activation slice",
+      "weight": "OIHW logical to per-K-owner RSKC with global C padded to c_tile*16",
+      "bias_and_qparams": "per-channel vectors follow K ownership; scalar x/y qparams replicate on all slices",
+      "accumulator_and_output": "P/D follow K ownership as NHWK-local",
+      "ring_order": "for K owner s, activation slice at step t is (s+t)%16; 16 steps and 15 neighbor transfers",
+      "alignment_bytes": 16,
+      "implementation": "resnet50_pipeline/conv16_ring_layout.py",
+      "formal_conv0_profile_comparison": {
+        "path": "artifacts/w4/conv0_profiles_report.json",
+        "sha256": "11ba322444c624a5ab1f6b4f7797b96b84eb45692d6b2c0b92eb1e44105f4e67",
+        "batch_inverse_bit_exact": true,
+        "ring_inverse_bit_exact": true,
+        "batch_ring_logical_bit_exact": true
+      }
     }
   },
   "unresolved": [
