@@ -90,6 +90,10 @@
     - 范围：把全坐标ring accumulator业务提交 `758a7c5…` 的完整hash、验证和精确回退点补入台账。
     - 验证：提交后根工作树干净，三参考仓verify通过；按小进度策略仅本地提交。
     - 精确回退：revert本commit；改动前根状态为 `758a7c5…`，只影响台账登记。
+19. `56ccf5e2cdcecb80918b12bed74363daaca26d21`，父提交 `c21a5346616bde3e2ed6cda0713c6c252a9d2a07`，`feat: close candidate Conv output writeback`。
+    - 范围：根adapter从physical x/w/y qparams推导per-channel候选multiplier，将84个probe输出绑定D provenance地址；验证NDP ActivationUnit requant及真实DRAM字节覆盖，并把返回写回根物理镜像后执行既有inverse layout。新增安全overwrite API及provenance保持测试，锁定NDP `3cb0ef9…`，同步quantization contract和W2文档边界。
+    - 验证：根仓28项、NDP 14项测试全部通过；84个int32 accumulator、physical UINT8 D和inverse logical D均与独立QLinearConv golden逐元素一致；三仓verify、JSON解析和`git diff --check`通过。
+    - 精确回退：revert本commit；根仓回到 `c21a534…` 的全坐标accumulator状态，配套NDP `7a47701…`/`3cb0ef9…`可保留但不会被旧lock引用。本commit仅本地、未推送。
 
 ### 子仓库 `NDPFuncModel/conv_func`
 
