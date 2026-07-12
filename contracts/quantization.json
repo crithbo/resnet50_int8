@@ -29,7 +29,7 @@
   },
   "ndp_functional_candidate": {
     "status": "candidate",
-    "source": "NDPFuncModel commit 3cb0ef9 and W2 physical-address Conv probe",
+    "source": "NDPFuncModel commit 35eab40 and W2/G2 buffered physical Conv runner",
     "operand_order": "uint8 activation on buffer/port A times int8 weight on buffer/port B",
     "accumulator": "int32 psum with int64 checked intermediate in the Python model",
     "branch": "masked lanes are zeroed before the integer dot product",

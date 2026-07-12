@@ -11,6 +11,15 @@
       "config_versions": ["mock-0.1"],
       "can_dump_physical_output": true
     },
+    "ndp_conv_functional": {
+      "status": "approved_for_w2_g2_only",
+      "supported_ops": ["QLinearConv"],
+      "supported_dtypes": ["uint8_activation", "int8_weight", "int32_accumulator", "uint8_output"],
+      "slice_counts": [1, 4],
+      "config_versions": ["w2_ndp_ring_candidate_v1"],
+      "can_dump_physical_output": true,
+      "limitations": ["group=1", "weight_zero_point=0", "not_target_json_or_bitstream", "not_hardware_approved"]
+    },
     "target_simulator": {
       "status": "unknown"
     },

@@ -94,10 +94,14 @@
     - 范围：根adapter从physical x/w/y qparams推导per-channel候选multiplier，将84个probe输出绑定D provenance地址；验证NDP ActivationUnit requant及真实DRAM字节覆盖，并把返回写回根物理镜像后执行既有inverse layout。新增安全overwrite API及provenance保持测试，锁定NDP `3cb0ef9…`，同步quantization contract和W2文档边界。
     - 验证：根仓28项、NDP 14项测试全部通过；84个int32 accumulator、physical UINT8 D和inverse logical D均与独立QLinearConv golden逐元素一致；三仓verify、JSON解析和`git diff --check`通过。
     - 精确回退：revert本commit；根仓回到 `c21a534…` 的全坐标accumulator状态，配套NDP `7a47701…`/`3cb0ef9…`可保留但不会被旧lock引用。本commit仅本地、未推送。
+20. `b1126f4a9fd013bcea9d58f8da3443fa41e6cecb`，父提交 `5d7f1a348f8af9a8402dfb5931bd753ebd6ed93a`，`feat: validate buffered Conv functional path`。
+    - 范围：根adapter强制验证NDP执行路径包含input/output Buffer、SpecialPEA、ActivationUnit和DRAM，并检查每坐标ring LC末态；锁定NDP `35eab40…`。
+    - 验证：4-slice 84坐标聚焦及根28/NDP14项回归通过。
+    - 精确回退：revert本commit；回到 `5d7f1a3…` 的直接PE probe验证。本commit仅本地、未推送。
 
 ### 子仓库 `NDPFuncModel/conv_func`
 
-上游共同基线为 `89d1655ce6450477cdcc04965d8b4866f12066e5`。以下提交均不在公开 `origin/conv_func`；第1～4项已推送操作者Private镜像，第5～6项按“小进度只本地提交”暂未推送：
+上游共同基线为 `89d1655ce6450477cdcc04965d8b4866f12066e5`。以下提交均不在公开 `origin/conv_func`；第1～4项已推送操作者Private镜像，第5～7项按“小进度只本地提交”暂未推送：
 
 1. `789d121327d8e855d33f16c2103a6422a521fa25`，父提交 `89d1655ce6450477cdcc04965d8b4866f12066e5`，`fix: correct slice and strided AG addressing`。
    - 范围：修复DRAM `per_slice`漏bank、slice AG基址、RDAG/WRAG跨transaction物理地址；新增physical image probe和寻址测试。
@@ -157,6 +161,13 @@
 - 根仓28项、NDP 11项测试全部通过。当前闭环边界是raw↔physical↔NDP DRAM↔全部坐标4-slice ring整数accumulator；probe仍未执行主入口完整LC/Buffer调度，requant、INT8 packing、真实D writeback和inverse D未完成，因此G2仍未通过。
 - 后续本地提交 `7a47701…` 修复ActivationUnit候选requant，`3cb0ef9…` 让probe对每个输出坐标真实覆盖D物理字节。根镜像用新增overwrite保留原provenance，再由既有inverse layout恢复logical D；84个physical/logical UINT8 D与golden一致。
 - 该进展只关闭probe候选路径：主入口仍未调用ActivationUnit，SpecialPEA仍按FP16打包，`run_buffer_writeback_to_dram()`的实际stream write仍被注释，JSON/LC/Buffer/WRAG唯一flush尚未验证；因此G2继续保持未通过。
+
+## 2026-07-12：W2/G2正式通过
+
+- 同一确定性小Conv新增1-slice执行，并与4-slice共用同一physical runner；两者全部84个accumulator、physical D、inverse logical D一致。
+- runner路径为DRAM→input Buffer→SpecialPEA→ActivationUnit→output Buffer→DRAM；ring LC在1-slice为`[1]`、4-slice为`[0,0,0,1]`，每坐标仅最终ring状态结束。
+- 直接加载CGRA `qnn_round.py`执行同一accumulator/multiplier/zp，输出与标量NumPy、im2col、ORT及NDP一致；每个region全部物理字节均可反查正确slice及data/tensor-padding/alignment语义。
+- 根28项、NDP14项回归通过，故按原G2门槛判定W2/G2通过。此批准仅限小Conv软件候选合同；目标JSON/bitstream、正式layout、旧固定主入口和硬件三方一致仍未批准。
 
 ## 2026-07-05～2026-07-09：确认原始ResNet参考链
 

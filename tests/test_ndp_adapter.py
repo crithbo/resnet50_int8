@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import sys
+import importlib.util
 import unittest
 from pathlib import Path
 
@@ -13,6 +14,16 @@ from resnet50_pipeline.memory import DramGeometry
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
+
+
+def _load_cgra_qnn_round():
+    path = PROJECT_ROOT / "CGRA_SIM" / "cgra_python" / "op_lib" / "qnn" / "qnn_round.py"
+    spec = importlib.util.spec_from_file_location("cgra_qnn_round_for_w2", path)
+    if spec is None or spec.loader is None:
+        raise RuntimeError(f"cannot load CGRA QNN round reference: {path}")
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
 
 
 class NdpFunctionalAdapterTests(unittest.TestCase):
@@ -142,58 +153,72 @@ class NdpFunctionalAdapterTests(unittest.TestCase):
             bias=bias,
             pads=pads,
         )
-        geometry = DramGeometry(
-            slice_count=4,
-            bank_count=2,
-            row_count=8,
-            col_count=8,
-            subword_bytes=16,
+        qnn_round = _load_cgra_qnn_round()
+        multiplier = (x_scale * w_scale / y_scale).astype(np.float32)
+        qnn_output = qnn_round.quantize(
+            golden.accumulator,
+            multiplier,
+            np.array(y_zero_point, dtype=np.uint8),
         )
-        layout = SmallConvPhysicalLayout(geometry, slice_count=4)
-        bundle = layout.forward(
-            activation=activation,
-            weight=weight,
-            bias=bias,
-            w_scale=w_scale,
-            w_zero_point=w_zero_point,
-            x_scale=x_scale,
-            x_zero_point=x_zero_point,
-            y_scale=y_scale,
-            y_zero_point=y_zero_point,
-            output=np.full_like(golden.output, y_zero_point),
-        )
+        np.testing.assert_array_equal(qnn_output, golden.output)
         adapter = self._adapter()
-        probes = adapter.build_qlinear_conv_accumulator_probes(bundle, pads=pads)
-        self.assertEqual(len(probes), golden.accumulator.size)
-        self.assertTrue(all(len(probe.ring_segment_ends) == 4 for probe in probes))
-        self.assertTrue(any(any(probe.branch_mask) for probe in probes))
-        result = adapter.run_qlinear_conv_accumulators(bundle, pads=pads)
-        np.testing.assert_array_equal(result.accumulator, golden.accumulator)
-        np.testing.assert_array_equal(result.output, golden.output)
-        np.testing.assert_array_equal(layout.inverse_output(bundle), golden.output)
-        self.assertEqual(
-            len(result.physical_probe.int8_dot_probes), golden.accumulator.size
-        )
-        self.assertTrue(
-            all(
-                len(dot["partial_accumulators"]) == 4
-                for dot in result.physical_probe.int8_dot_probes
-            )
-        )
-        self.assertTrue(
-            all(
-                dot["output_before"] == int(y_zero_point)
-                and dot["output_after"] == dot["requantized_output"]
-                for dot in result.physical_probe.int8_dot_probes
-            )
-        )
-        self.assertTrue(
-            all(
-                [state["last"] for state in dot["ring_loop_states"]]
-                == [0, 0, 0, 1]
-                for dot in result.physical_probe.int8_dot_probes
-            )
-        )
+        for slice_count in (1, 4):
+            with self.subTest(slice_count=slice_count):
+                geometry = DramGeometry(
+                    slice_count=slice_count,
+                    bank_count=2,
+                    row_count=8,
+                    col_count=8,
+                    subword_bytes=16,
+                )
+                layout = SmallConvPhysicalLayout(geometry, slice_count=slice_count)
+                bundle = layout.forward(
+                    activation=activation,
+                    weight=weight,
+                    bias=bias,
+                    w_scale=w_scale,
+                    w_zero_point=w_zero_point,
+                    x_scale=x_scale,
+                    x_zero_point=x_zero_point,
+                    y_scale=y_scale,
+                    y_zero_point=y_zero_point,
+                    output=np.full_like(golden.output, y_zero_point),
+                )
+                probes = adapter.build_qlinear_conv_accumulator_probes(bundle, pads=pads)
+                self.assertEqual(len(probes), golden.accumulator.size)
+                self.assertTrue(
+                    all(len(probe.ring_segment_ends) == slice_count for probe in probes)
+                )
+                self.assertTrue(any(any(probe.branch_mask) for probe in probes))
+                result = adapter.run_qlinear_conv_accumulators(bundle, pads=pads)
+                np.testing.assert_array_equal(result.accumulator, golden.accumulator)
+                np.testing.assert_array_equal(result.output, golden.output)
+                np.testing.assert_array_equal(layout.inverse_output(bundle), golden.output)
+                self.assertEqual(layout.validate(bundle)["slice_count"], slice_count)
+                for region in bundle.regions:
+                    for address in range(
+                        region.base_address, region.base_address + region.size_bytes
+                    ):
+                        coordinate, provenance = bundle.explain_address(address)
+                        self.assertEqual(coordinate.slice_id, region.slice_id)
+                        self.assertIn(
+                            provenance.semantic,
+                            {"data", "tensor_padding", "alignment"},
+                        )
+                self.assertEqual(
+                    len(result.physical_probe.int8_dot_probes), golden.accumulator.size
+                )
+                expected_last = [0] * (slice_count - 1) + [1]
+                self.assertTrue(
+                    all(
+                        len(dot["partial_accumulators"]) == slice_count
+                        and [state["last"] for state in dot["ring_loop_states"]]
+                        == expected_last
+                        and dot["output_before"] == int(y_zero_point)
+                        and dot["output_after"] == dot["requantized_output"]
+                        for dot in result.physical_probe.int8_dot_probes
+                    )
+                )
 
 
 if __name__ == "__main__":

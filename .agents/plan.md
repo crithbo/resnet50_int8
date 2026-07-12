@@ -339,7 +339,7 @@ W1的模型子任务已完成，但G1尚未通过；architecture/quantization/ba
 
 目标：完全不依赖正式ResNet模型，让一个小Conv完成 raw→physical→functional model→logical D。
 
-当前状态（2026-07-12）：第1～5项、第6项的probe候选reduction/requant/物理写回和第7项的软件候选实现已完成。标量循环、im2col/einsum与ONNX Runtime在QLinearConv样例上bit-exact；1/4-slice候选layout通过round-trip。本地 `NDPFuncModel@3cb0ef9` 已修复slice/transaction寻址、INT8 PEA、LC末态/psum生命周期和ActivationUnit候选requant，并支持branch-masked ring分段probe。根adapter以physical provenance/qparams覆盖带padding、C/K tail的 `[1,3,3,4]×[7,3,3,3]` 小Conv全部84个输出坐标：4段partial sum、int32 accumulator、float32 per-channel multiplier、nearest-even、output zero-point、uint8 saturation和实际D地址覆盖均运行；inverse layout恢复的logical D与独立QLinearConv golden逐元素bit-exact。该probe仍绕过主入口硬编码LC/Buffer/WRAG，主入口仍FP16 pack且未验证唯一flush；因此G2仍未通过、16-slice尚未扩展。
+当前状态（2026-07-12）：**G2已通过**。同一带padding、C/K tail的确定性小Conv已分别以1-slice和4-slice执行；标量NumPy、im2col、ONNX Runtime、直接加载的CGRA QNN rounding和 `NDPFuncModel@35eab40` 在全部84个int32 accumulator及UINT8 D上逐元素一致。NDP参数化runner实际经过DRAM→input Buffer→SpecialPEA→ActivationUnit→output Buffer→DRAM，ring LC末态、per-channel requant、物理D覆盖和inverse logical D均验证；每个region的全部物理字节均能解释为data/tensor-padding/alignment并落在正确slice。G2只批准W2小Conv软件候选合同，不批准目标JSON/bitstream、正式硬件layout或旧固定56×56主入口；下一步允许开展16-slice扩展。
 
 细分：
 
@@ -353,7 +353,7 @@ W1的模型子任务已完成，但G1尚未通过；architecture/quantization/ba
 8. 在quantization contract中同时保存ONNX原始float scale/zp和硬件派生multiplier/shift；明确运算顺序、中间位宽、溢出、nearest-even、saturation和可选ReLU位置。
 9. 固定随机seed、数组内存序、线程数和参考实现版本；同一fixture重复执行至少两次验证确定性。
 
-验收门 G2：1/4 slice小例中，NumPy=QNN=NDP functional model逐坐标bit-exact；所有物理字节能反查逻辑坐标。16-slice只在G2后扩展。
+验收门 G2【2026-07-12通过】：1/4 slice小例中，NumPy=QNN=NDP functional model逐坐标bit-exact；所有物理字节能反查逻辑坐标。证据为根仓28项、NDP 14项全量回归及1/4-slice同fixture完整D差分。现在可扩展16-slice，但W5目标JSON仍受G1硬件合同约束。
 
 ### W3：正式模型解析、lowering和全节点golden【难度：高】
 
