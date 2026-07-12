@@ -50,6 +50,10 @@ from .add16_layout import (  # noqa: E402
     QLinearAddBatch16PhysicalLayout,
     QLinearAddChannel16PhysicalLayout,
 )
+from .avgpool16_layout import (  # noqa: E402
+    GlobalAveragePoolBatch16PhysicalLayout,
+    GlobalAveragePoolChannel16PhysicalLayout,
+)
 
 
 __all__ = [
@@ -60,6 +64,8 @@ __all__ = [
     "MaxPoolChannel16PhysicalLayout",
     "QLinearAddBatch16PhysicalLayout",
     "QLinearAddChannel16PhysicalLayout",
+    "GlobalAveragePoolBatch16PhysicalLayout",
+    "GlobalAveragePoolChannel16PhysicalLayout",
     "IdentityLayout",
     "LayoutTransform",
     "QuantizeLinearPhysicalLayout",

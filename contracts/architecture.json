@@ -144,6 +144,34 @@
       "alias_policy": "each input is exact-alias only when producer D and Add input bases also match; simultaneous A/B alias requires W7 to allocate distinct non-overlapping producer bases",
       "alignment_bytes": 16,
       "implementation": "resnet50_pipeline/add16_layout.py"
+    },
+    "w4_globalavgpool_batch16_candidate_v1": {
+      "status": "candidate",
+      "scope": "QLinearGlobalAveragePool batch-parallel software relayout; not hardware-approved",
+      "slice_topology": "one batch item per slice",
+      "activation": "NCHW logical to per-slice HWC with channels padded to 8 using x_zero_point",
+      "reduction": "each slice independently sums (A-x_zero_point) over H and W for its sample; no cross-slice reduction",
+      "qparams": "x/y scale and zero_point plus derived x_scale/(y_scale*H*W) multiplier are scalar tensors replicated on all 16 slices",
+      "accumulator": "INT32 [N,C,1,1] logical to per-slice 11C-padded using zero tail",
+      "output": "UINT8 [N,C,1,1] logical to per-slice 11C-padded using y_zero_point tail",
+      "producer_compatibility": "batch Add D and pool A may exact-alias when tensor ID, logical and physical shape, payload, bytes and bases match",
+      "flatten_compatibility": "singleton H/W are removed without changing per-slice C-order bytes or D base addresses",
+      "alignment_bytes": 16,
+      "implementation": "resnet50_pipeline/avgpool16_layout.py"
+    },
+    "w4_globalavgpool_channel16_candidate_v1": {
+      "status": "candidate",
+      "scope": "QLinearGlobalAveragePool channel-owner software relayout; not hardware-approved",
+      "slice_topology": "contiguous channel chunks across 16 slices",
+      "activation": "NCHW logical to per-slice NHWC-local; c_tile=ceil(C/16) and tail=x_zero_point",
+      "reduction": "each channel-owner slice independently sums (A-x_zero_point) over H and W for every batch item; no cross-slice reduction",
+      "qparams": "x/y scale and zero_point plus derived x_scale/(y_scale*H*W) multiplier are scalar tensors replicated on all 16 slices",
+      "accumulator": "INT32 [N,C,1,1] logical to per-slice N11C-local using zero tail",
+      "output": "UINT8 [N,C,1,1] logical to per-slice N11C-local using y_zero_point tail",
+      "producer_compatibility": "channel Add D and pool A may exact-alias when tensor ID, logical and physical shape, payload, bytes and bases match",
+      "flatten_compatibility": "singleton H/W are removed to NF-local without changing per-slice C-order bytes or D base addresses",
+      "alignment_bytes": 16,
+      "implementation": "resnet50_pipeline/avgpool16_layout.py"
     }
   },
   "candidate_validation_reports": {
@@ -201,6 +229,26 @@
       "maximum_per_slice_used_bytes": 2408544,
       "slice_capacity_bytes": 25165824,
       "simultaneous_two_input_alias_deferred_to": "W7 memory allocation"
+    },
+    "w4_globalavgpool_profiles_v1": {
+      "status": "candidate_software_evidence",
+      "path": "artifacts/w4/avgpool_profiles_report.json",
+      "sha256": "cb8ccd709616a851bed109a2a47a70706f9c8ecc0ba76f47eafa0ba3fbb4d3f8",
+      "size_bytes": 13910,
+      "formal_node_id": "node-0071",
+      "formal_input_shape": [16, 2048, 7, 7],
+      "formal_sum_shape": [16, 2048, 1, 1],
+      "formal_output_shape": [16, 2048, 1, 1],
+      "spatial_size": 49,
+      "all_profiles_inverse_bit_exact": true,
+      "all_profiles_logical_bit_exact": true,
+      "batch_add_d_to_pool_a_exact_alias": true,
+      "channel_add_d_to_pool_a_exact_alias": true,
+      "batch_pool_d_to_flatten_zero_copy": true,
+      "channel_pool_d_to_flatten_zero_copy": true,
+      "batch_per_slice_used_bytes_with_alias": 311472,
+      "channel_per_slice_used_bytes_with_alias": 311472,
+      "slice_capacity_bytes": 25165824
     }
   },
   "unresolved": [
