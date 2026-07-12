@@ -98,6 +98,10 @@
     - 范围：根adapter强制验证NDP执行路径包含input/output Buffer、SpecialPEA、ActivationUnit和DRAM，并检查每坐标ring LC末态；锁定NDP `35eab40…`。
     - 验证：4-slice 84坐标聚焦及根28/NDP14项回归通过。
     - 精确回退：revert本commit；回到 `5d7f1a3…` 的直接PE probe验证。本commit仅本地、未推送。
+21. `d77a076ff62f48dc1e8aaf687d82834091e481ef`，父提交 `b1126f4a9fd013bcea9d58f8da3443fa41e6cecb`，`test: approve W2 small Conv G2 gate`。
+    - 范围：把完整runner测试参数化为同fixture 1/4-slice；直接执行CGRA QNN rounding；逐字节审核全部region provenance；将G2通过写入plan、backend/quantization contract和coverage matrix。
+    - 验证：根28项、NDP14项回归通过；1/4-slice各84个accumulator、physical/logical D一致；聚焦测试连续执行两次结果一致；三仓verify、JSON和diff检查通过。
+    - 精确回退：revert本commit；回到 `b1126f4…` 的4-slice buffered runner状态，G2恢复未通过。本提交为W2/G2里程碑。
 
 ### 子仓库 `NDPFuncModel/conv_func`
 
