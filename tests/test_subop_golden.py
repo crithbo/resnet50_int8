@@ -5,6 +5,7 @@ import unittest
 import numpy as np
 
 from resnet50_pipeline.golden.subops import (
+    _qlinear_add,
     _requantize,
     conv_accumulator,
     global_average_sum,
@@ -33,6 +34,21 @@ class SubopGoldenTests(unittest.TestCase):
         value = np.array([[[[4, 5], [6, 7]]]], dtype=np.uint8)
         np.testing.assert_array_equal(
             global_average_sum(value, 5), np.array([[[[2]]]], dtype=np.int32)
+        )
+
+    def test_qlinear_add_requantizes_two_affine_inputs(self) -> None:
+        inputs = [
+            np.array([0, 10], dtype=np.uint8),
+            np.array(0.5, dtype=np.float32),
+            np.array(2, dtype=np.uint8),
+            np.array([4, 8], dtype=np.uint8),
+            np.array(0.25, dtype=np.float32),
+            np.array(4, dtype=np.uint8),
+            np.array(0.5, dtype=np.float32),
+            np.array(100, dtype=np.uint8),
+        ]
+        np.testing.assert_array_equal(
+            _qlinear_add(inputs), np.array([98, 110], dtype=np.uint8)
         )
 
 

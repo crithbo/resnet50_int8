@@ -99,6 +99,55 @@ def global_average_sum(activation: np.ndarray, zero_point: int) -> np.ndarray:
     return _checked_int32(result, "GlobalAveragePool sum")
 
 
+def _quantize_linear(value: np.ndarray, scale: np.ndarray, zero_point: np.ndarray) -> np.ndarray:
+    scale_value = np.asarray(scale, dtype=np.float32)
+    zero = np.asarray(zero_point)
+    rounded = np.rint(value.astype(np.float32) / scale_value).astype(np.int64)
+    limits = np.iinfo(zero.dtype)
+    return np.clip(rounded + zero.astype(np.int64), limits.min, limits.max).astype(zero.dtype)
+
+
+def _dequantize_linear(value: np.ndarray, scale: np.ndarray, zero_point: np.ndarray) -> np.ndarray:
+    return (
+        (value.astype(np.int32) - np.asarray(zero_point, dtype=np.int32))
+        .astype(np.float32)
+        * np.asarray(scale, dtype=np.float32)
+    ).astype(np.float32)
+
+
+def _qlinear_add(inputs: list[np.ndarray]) -> np.ndarray:
+    left = (inputs[0].astype(np.int32) - int(inputs[2])).astype(np.float32)
+    right = (inputs[3].astype(np.int32) - int(inputs[5])).astype(np.float32)
+    real_sum = left * np.float32(inputs[1]) + right * np.float32(inputs[4])
+    shifted = np.rint(real_sum / np.float32(inputs[6])).astype(np.int64) + int(inputs[7])
+    return np.clip(shifted, 0, 255).astype(np.uint8)
+
+
+def _max_pool(value: np.ndarray, attributes: dict[str, Any]) -> np.ndarray:
+    kernel = tuple(int(item) for item in attributes["kernel_shape"])
+    strides = tuple(int(item) for item in attributes.get("strides", kernel))
+    dilations = tuple(int(item) for item in attributes.get("dilations", [1, 1]))
+    pads = [int(item) for item in attributes.get("pads", [0, 0, 0, 0])]
+    if pads != [pads[0], pads[1], pads[0], pads[1]]:
+        padded = np.pad(
+            value,
+            ((0, 0), (0, 0), (pads[0], pads[2]), (pads[1], pads[3])),
+            constant_values=np.iinfo(value.dtype).min,
+        )
+        padding: int | tuple[int, int] = 0
+    else:
+        padded = value
+        padding = (pads[0], pads[1])
+    return torch_functional.max_pool2d(
+        torch.from_numpy(np.ascontiguousarray(padded.astype(np.int32))),
+        kernel_size=kernel,
+        stride=strides,
+        padding=padding,
+        dilation=dilations,
+        ceil_mode=bool(attributes.get("ceil_mode", 0)),
+    ).numpy().astype(value.dtype)
+
+
 def generate_subop_golden(
     model_path: Path,
     runtime_root: Path,
@@ -135,6 +184,7 @@ def generate_subop_golden(
         raise FileExistsError(f"subop golden root already exists: {root}")
     torch.set_num_threads(1)
     records: dict[str, dict[str, Any]] = {}
+    node_replays: dict[str, dict[str, Any]] = {}
     with tempfile.TemporaryDirectory(prefix=f".{root.name}-", dir=root.parent) as temporary:
         staging = Path(temporary) / root.name
         tensor_dir = staging / "tensors"
@@ -145,6 +195,40 @@ def generate_subop_golden(
                 "QLinearGlobalAveragePool",
                 "QLinearMatMul",
             }:
+                inputs = [tensor_value(name) for name in node_proto.input if name]
+                if node_proto.op_type == "QuantizeLinear":
+                    replayed = _quantize_linear(inputs[0], inputs[1], inputs[2])
+                    formula = "quantize_nearest_even"
+                elif node_proto.op_type == "DequantizeLinear":
+                    replayed = _dequantize_linear(inputs[0], inputs[1], inputs[2])
+                    formula = "dequantize_affine"
+                elif node_proto.op_type == "MaxPool":
+                    replayed = _max_pool(inputs[0], _attributes(node_proto))
+                    formula = "max_pool_uint8"
+                elif node_proto.op_type == "QLinearAdd":
+                    replayed = _qlinear_add(inputs)
+                    formula = "qlinear_add_affine_requant"
+                elif node_proto.op_type == "Flatten":
+                    axis = int(_attributes(node_proto).get("axis", 1))
+                    replayed = inputs[0].reshape(
+                        int(np.prod(inputs[0].shape[:axis])),
+                        int(np.prod(inputs[0].shape[axis:])),
+                    )
+                    formula = "view_flatten"
+                else:
+                    raise ValueError(f"no independent replay for {node_proto.op_type}")
+                expected_output = tensor_value(node_proto.output[0])
+                if not np.array_equal(replayed, expected_output):
+                    mismatch = int(np.count_nonzero(replayed != expected_output))
+                    raise ValueError(
+                        f"{node_info.node_id} {node_proto.op_type} replay mismatch: {mismatch} elements"
+                    )
+                node_replays[node_info.node_id] = {
+                    "op_type": node_proto.op_type,
+                    "formula": formula,
+                    "output_tensor_id": node_info.output_tensor_ids[0],
+                    "matches_ort": True,
+                }
                 continue
             inputs = list(node_proto.input)
             if node_proto.op_type == "QLinearConv":
@@ -192,6 +276,12 @@ def generate_subop_golden(
                 raise ValueError(
                     f"{node_info.node_id} {node_proto.op_type} requant mismatch: {mismatch} elements"
                 )
+            node_replays[node_info.node_id] = {
+                "op_type": node_proto.op_type,
+                "formula": "int32_internal_then_requant",
+                "output_tensor_id": node_info.output_tensor_ids[0],
+                "matches_ort": True,
+            }
             first_hw_op = lowering.for_node(node_info.node_id)[0]
             internal_tensor_id = first_hw_op.output_tensor_ids[0]
             path = tensor_dir / f"{internal_tensor_id}.npy"
@@ -212,11 +302,14 @@ def generate_subop_golden(
             }
         if set(records) != set(lowering.internal_tensor_ids):
             raise ValueError("subop generator did not produce every internal tensor")
+        if set(node_replays) != {item.node_id for item in graph.nodes}:
+            raise ValueError("independent formulas did not replay every ONNX node")
         manifest = {
             "schema_version": "0.1",
             "model_sha256": graph.model_sha256,
             "runtime_manifest_sha256": sha256_file(runtime_root / "manifest.json"),
             "internal_tensors": records,
+            "node_replays": node_replays,
         }
         (staging / "manifest.json").write_text(
             json.dumps(manifest, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
