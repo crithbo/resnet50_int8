@@ -348,3 +348,13 @@
 - 验证：新增4项测试，覆盖最小shape、N<16的inactive slice、正式Quantize输入`[16,3,224,224]`、Dequantize dense 1000类tail、正式Flatten、逐元素地址解释、manifest往返、padding破坏和非法View；根仓全量46项测试通过，`contracts/architecture.json`严格JSON解析和`git diff --check`通过。
 - 边界：本提交没有读取或重跑约951 MB的W3 tensor产物，只消费已有`artifacts/w3/model_graph.json`的小型图目录确认正式shape。Conv、MaxPool、QLinearAdd、GlobalAveragePool、MatMul/dense尚未进入W4实现，目标硬件layout仍缺approved合同，故G4保持未通过。
 - 精确回退：revert `c375c368f861b0e374f3ee61f90fb2beaf1eff28`；上一根仓恢复点为`b695dcaa18633dea2b553f8060c8c5823a855986`。
+
+## 2026-07-12：W4 batch-parallel Conv0 candidate relayout
+
+- 根仓提交 `299290de9de07a442fcb6be4779880e3cf08c63b`，父提交 `ccaf43b8230edcfcf78109676998cc48f614af3f`，`feat: add W4 batch16 Conv relayout`。
+- 范围：新增`w4_conv_batch16_candidate_v1`，明确一张batch样本归属一个slice；A从NCHW显式重排为HWC并按C=8补`x_zero_point`，im2col不物化而由AG窗口坐标解释；B从OIHW重排为逐slice复制的RSKC并按C/K=8补tail；bias、weight qparams、x/y qparams和effective multiplier逐slice复制；int32 P及uint8 D按HWK存放并补K tail。全部12类对象提供forward、inverse、coordinate/window explain、validate和LayoutRecord。
+- 实现隔离在`resnet50_pipeline/conv16_layout.py`，未修改W2 `SmallConvPhysicalLayout`的C/K ring语义；因此batch-parallel与ring-parallel不会再由同一个隐式`slice_count`混用。
+- 正式Conv0定向验证工具`tools/verify_w4_conv0_layout.py`只读取已有W3 activation、ONNX initializer、int32 accumulator和D，不执行ORT或重建W3。报告`artifacts/w4/conv0_batch16_report.json`为6,281 bytes，SHA-256 `c91ae0ddbc17b41121d832a16d4a3de3706a9eaccfc59faf834de45b9e6f23b5`；12类逻辑对象inverse均bit-exact，physical逻辑总量71,063,552 bytes，每slice使用4,441,472/25,165,824 bytes。
+- 验证：新增3项聚焦测试，覆盖N<16、C/K tail、per-channel qparams、AG padding/data窗口、logical/physical坐标、Conv0正式shape规划及单slice等价round-trip、tail破坏、非法group和错误output shape；根仓全量49项测试通过，architecture合同严格JSON解析、Python编译和`git diff --check`通过。
+- 边界：该profile是软件candidate，不声明目标硬件采用batch并行；ring16 profile、其余19类Conv shape、目标JSON/simulator/hardware均未接入，G4保持未通过。下一原子步骤是实现`w4_conv_ring16_candidate_v1`并与本profile在同一logical tensor上比较。
+- 精确回退：revert `299290de9de07a442fcb6be4779880e3cf08c63b`；上一根仓恢复点为`ccaf43b8230edcfcf78109676998cc48f614af3f`。

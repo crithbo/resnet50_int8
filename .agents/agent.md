@@ -283,7 +283,7 @@ CGRA_SIM/testing/resnet-50-int8/
 
 - **模型和golden——W3/G3已通过**：模型/input/hash和ORT设置已锁定；正式保存79个运行时tensor和55个lowering内部INT32 tensor，全部78节点由独立公式重放并匹配ORT。旧`golden.py`的30个唯一检查点只保留为历史参考。
 - **lowering和身份映射——W3语义层已完成**：78个ONNX节点稳定lower为133个语义hw_op；旧77模型级原语已逐项映射，Flatten明确为zero-copy。JSON实例、逐K-tile和execplan身份在W4/W5/W7继续扩展，不得说成W3尚未实现。
-- **数据变换——W4进行中/G4未通过**：W2已实现1/4-slice `w2_ndp_ring_candidate_v1`并完成小Conv软件闭环；W4新增`w4_batch_slice_candidate_v1`，覆盖Quantize/Dequantize的16-slice A/scale/zp/D正逆布局、坐标解释、校验与manifest记录，并用`w4_zero_copy_view_candidate_v1`证明正式Flatten零拷贝。两者仍是candidate；Conv、MaxPool、Add、AvgPool、MatMul/dense未完成，正式硬件layout也未批准。
+- **数据变换——W4进行中/G4未通过**：Quantize/Dequantize/View candidate已完成；新增`w4_conv_batch16_candidate_v1`，按一张样本一个slice实现A(HWC+C-tail)、复制B(RSKC)/qparams、P/D(HWK+K-tail)的正逆布局、AG窗口解释和manifest记录。正式Conv0的12类对象已用现有W3数据inverse bit-exact，每slice使用4,441,472/25,165,824 bytes。它仍不是硬件批准layout；ring16 profile、其余Conv shape、MaxPool、Add、AvgPool、MatMul/dense未完成。
 - **单算子配置——部分已有**：42 个静态 JSON 中只有 MaxPool、sum 型 AvgPool、固定样例 quant、fp32 输出 add-dequant 可局部参考；6 个 SA JSON 全是 FP16、bias=0；没有核心 INT8 Conv/MatMul。
 - **W2/G2小Conv软件闭环已通过**：`NDPFuncModel@35eab40` 的参数化runner在同一fixture上完成1/4-slice全部84坐标，实际经过DRAM、input Buffer、SpecialPEA、ActivationUnit、output Buffer和DRAM；NumPy、im2col、ORT、CGRA QNN rounding与NDP的accumulator/D一致，physical D可inverse且全部物理字节可解释。该结论不批准旧固定主入口、目标JSON或硬件layout；16-slice为下一步。
 - **execplan——框架已有/ResNet 适配没有**：可规划地址、重生成 bitstream、输出指令和 Bank_data，但 schema 无 numeric attributes，仍硬编码 28 slice，bitstream 失败后部分路径继续。
