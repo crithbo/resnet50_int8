@@ -46,6 +46,10 @@ from .maxpool16_layout import (  # noqa: E402
     MaxPoolBatch16PhysicalLayout,
     MaxPoolChannel16PhysicalLayout,
 )
+from .add16_layout import (  # noqa: E402
+    QLinearAddBatch16PhysicalLayout,
+    QLinearAddChannel16PhysicalLayout,
+)
 
 
 __all__ = [
@@ -54,6 +58,8 @@ __all__ = [
     "ConvRing16PhysicalLayout",
     "MaxPoolBatch16PhysicalLayout",
     "MaxPoolChannel16PhysicalLayout",
+    "QLinearAddBatch16PhysicalLayout",
+    "QLinearAddChannel16PhysicalLayout",
     "IdentityLayout",
     "LayoutTransform",
     "QuantizeLinearPhysicalLayout",

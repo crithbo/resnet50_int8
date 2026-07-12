@@ -118,6 +118,32 @@
       "zero_copy_precondition": "Conv ring D and MaxPool A share tensor shape, NHWC-local axis order, C ownership, tail value, base addresses and bytes",
       "alignment_bytes": 16,
       "implementation": "resnet50_pipeline/maxpool16_layout.py"
+    },
+    "w4_qlinearadd_batch16_candidate_v1": {
+      "status": "candidate",
+      "scope": "QLinearAdd batch-parallel software relayout; not hardware-approved",
+      "formal_broadcast_modes": "equal rank-4/rank-2 A+B and dense [N,F]+[F] only",
+      "residual_inputs": "A/B use one batch item per slice, HWC/F physical order, feature axis padded to 8, and independent a_zero_point/b_zero_point tails",
+      "dense_broadcast_b": "the [F] initializer is padded to 8 and replicated on every slice",
+      "qparams": "a/b/y scale and zero_point are six independent scalar tensors replicated on all 16 slices",
+      "output": "D follows A batch ownership and HWC/F packing; tail=y_zero_point",
+      "producer_compatibility": "Conv batch D or prior batch Add D is layout-compatible when tensor ID, logical shape/dtype, physical shape, payload size, tail bytes and physical bytes match",
+      "alias_policy": "each input is exact-alias only when producer D and Add input bases also match; simultaneous A/B alias requires W7 to allocate distinct non-overlapping producer bases",
+      "alignment_bytes": 16,
+      "implementation": "resnet50_pipeline/add16_layout.py"
+    },
+    "w4_qlinearadd_channel16_candidate_v1": {
+      "status": "candidate",
+      "scope": "QLinearAdd channel-owner software relayout; not hardware-approved",
+      "formal_broadcast_modes": "equal rank-4/rank-2 A+B and dense [N,F]+[F] only",
+      "residual_inputs": "A/B use contiguous feature ownership across 16 slices, NHWC-local/NF-local physical order, and independent a_zero_point/b_zero_point tails",
+      "dense_broadcast_b": "the [F] initializer follows the same feature ownership as A/D instead of replication",
+      "qparams": "a/b/y scale and zero_point are six independent scalar tensors replicated on all 16 slices",
+      "output": "D follows A feature ownership and NHWC-local/NF-local packing; tail=y_zero_point",
+      "producer_compatibility": "ring Conv D or prior channel Add D is layout-compatible when tensor ID, logical shape/dtype, physical shape, payload size, tail bytes and physical bytes match",
+      "alias_policy": "each input is exact-alias only when producer D and Add input bases also match; simultaneous A/B alias requires W7 to allocate distinct non-overlapping producer bases",
+      "alignment_bytes": 16,
+      "implementation": "resnet50_pipeline/add16_layout.py"
     }
   },
   "candidate_validation_reports": {
@@ -154,6 +180,27 @@
       "batch_per_slice_used_bytes_with_alias": 4642176,
       "channel_per_slice_used_bytes_with_alias": 5020864,
       "slice_capacity_bytes": 25165824
+    },
+    "w4_qlinearadd_profiles_v1": {
+      "status": "candidate_software_evidence",
+      "path": "artifacts/w4/add_profiles_report.json",
+      "sha256": "9769589a14cc281968925e49645715010db634a8f722093e3ba106d47ae03108",
+      "size_bytes": 74305,
+      "formal_add_nodes": 17,
+      "stable_shape_broadcast_families": 5,
+      "residual_branch_inputs": 32,
+      "conv_producer_inputs": 20,
+      "prior_add_producer_inputs": 12,
+      "all_six_qparams_scalar_initializers": true,
+      "all_residual_qparam_chains_exact": true,
+      "all_residual_branches_layout_compatible": true,
+      "all_formal_plans_fit": true,
+      "representative_residual_node_id": "node-0007",
+      "representative_dense_broadcast_node_id": "node-0076",
+      "all_representatives_batch_channel_inverse_bit_exact": true,
+      "maximum_per_slice_used_bytes": 2408544,
+      "slice_capacity_bytes": 25165824,
+      "simultaneous_two_input_alias_deferred_to": "W7 memory allocation"
     }
   },
   "unresolved": [
