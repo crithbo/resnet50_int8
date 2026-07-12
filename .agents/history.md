@@ -368,3 +368,15 @@
 - 验证：Conv聚焦测试增至5项，新增非零K owner环回、batch/ring logical一致、formal Conv0 ring capacity、C/K tail、scalar replica破坏等；根仓全量51项测试通过。原batch-only报告重跑后SHA-256仍为`c91ae0ddbc17b41121d832a16d4a3de3706a9eaccfc59faf834de45b9e6f23b5`，证明验证工具重构未改变既有证据。
 - 边界：本提交只证明两种软件物理合同可逆且logical等价，不证明ring数据在NDP/目标simulator中完成数值执行，也不批准`(owner+step)%16`为硬件真值。下一原子步骤是自动覆盖正式20类Conv shape并形成profile裁决包；G4保持未通过。
 - 精确回退：revert `08d863ab89c184ea5c2ba18801c336737da14789`；上一根仓恢复点为`16377fa143bdd16571446839d6f337355894dcdb`。
+
+## 2026-07-12：W4正式Conv 53节点/20类shape覆盖矩阵
+
+- 根仓提交 `274d6c6db55c3912cf4c111b98a95abb1d863723`，父提交 `c4eb3b3e4e65c55b52480c7192285553e4d43380`，`feat: verify all W4 Conv shape families`。
+- 新增稳定family提取：从现有`artifacts/w3/model_graph.json`按A/B/D shape、kernel、stride、padding、dilation和group归并QLinearConv，得到20个内容hash ID family，覆盖53/53节点且无重复；重复运行family ID和成员顺序一致。
+- 每个family用N=16正式shape同时执行batch/ring `plan()`：输出shape匹配图目录，per-slice容量均小于25,165,824 bytes；C/K逻辑坐标各归属唯一slice，所有16个K owner的`(owner+step)%16`均为slice 0～15排列。最大占用仍是Conv0 family `conv-family-a3194a82fe78`：batch 4,441,472 bytes、ring 4,820,160 bytes。
+- 每类再生成N=1非零坐标模式，覆盖A、B、bias、w_scale/w_zp、x/y qparams、multiplier、int32 P和uint8 D；两profile分别forward/inverse并逐端口对logical hash，20类全部bit-exact且batch/ring hash一致。N=16 batch维不在此重复放大，已由正式Conv0真实W3报告覆盖。
+- 机器报告`artifacts/w4/conv_shape_coverage.json`为116,635 bytes，SHA-256 `307f54bd55330270de1cb90fe42a8ee4433d6de66e23f9291c46148f1d2b30b3`；`contracts/architecture.json`登记为candidate software evidence。
+- 新增3项普通回归，验证53→20稳定归并、全部formal plan容量/owner/ring排列及一个确定性family双profile完整round-trip；根仓全量54项测试通过，coverage工具全20类显式运行通过。
+- 新增ADR-002候选裁决文档：不批准任何profile，集中请求硬件侧确认slice含义、B/qparams归属、ring方向/起点、im2col/AG、psum和requant位置及适用RTL/ISA版本。等待回复不阻塞W4内部继续MaxPool。
+- 边界：除Conv0外，其余family使用N=1确定性layout模式而非重新加载全部W3 runtime tensor；该证据证明shape/layout可逆，不证明目标simulator或硬件数值执行。G4保持未通过。
+- 精确回退：revert `274d6c6db55c3912cf4c111b98a95abb1d863723`；上一根仓恢复点为`c4eb3b3e4e65c55b52480c7192285553e4d43380`。
