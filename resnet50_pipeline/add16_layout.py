@@ -667,11 +667,13 @@ class QLinearAdd16PhysicalLayout:
                 "w4_conv_batch16_candidate_v1",
                 "w4_maxpool_batch16_candidate_v1",
                 "w4_qlinearadd_batch16_candidate_v1",
+                "w4_qlinearmatmul_batch16_candidate_v1",
             },
             "channel": {
                 "w4_conv_ring16_candidate_v1",
                 "w4_maxpool_channel16_candidate_v1",
                 "w4_qlinearadd_channel16_candidate_v1",
+                "w4_qlinearmatmul_ring16_candidate_v1",
             },
         }[self.topology]
         if producer_contract not in expected_contracts:

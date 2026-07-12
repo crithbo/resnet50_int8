@@ -54,6 +54,10 @@ from .avgpool16_layout import (  # noqa: E402
     GlobalAveragePoolBatch16PhysicalLayout,
     GlobalAveragePoolChannel16PhysicalLayout,
 )
+from .matmul16_layout import (  # noqa: E402
+    QLinearMatMulBatch16PhysicalLayout,
+    QLinearMatMulRing16PhysicalLayout,
+)
 
 
 __all__ = [
@@ -66,6 +70,8 @@ __all__ = [
     "QLinearAddChannel16PhysicalLayout",
     "GlobalAveragePoolBatch16PhysicalLayout",
     "GlobalAveragePoolChannel16PhysicalLayout",
+    "QLinearMatMulBatch16PhysicalLayout",
+    "QLinearMatMulRing16PhysicalLayout",
     "IdentityLayout",
     "LayoutTransform",
     "QuantizeLinearPhysicalLayout",
