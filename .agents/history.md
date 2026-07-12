@@ -338,3 +338,13 @@
 - 当前闭环边界推进为“raw↔physical↔NDP DRAM↔单坐标整数PEA accumulator bit-exact”。尚未覆盖全部输出坐标、跨slice reduction结束、requant、INT8 packing和真实writeback，故G2仍未通过。
 - 在 `NDPFuncModel` 子仓库完成并提交 `86cd3e3`：删除错误的 `r*s*cc_shared` reduction末态判定，统一使用LC `last/last_index`；同时把PEA psum清零从每个R迭代后移到完整C/S/R及ring reduction结束后，避免3×3/C累加被中途丢弃。
 - NDP侧新增3项reduction调度回归，覆盖词典序末态、非零start/非单位step及非法状态，连同既有测试共11项通过。该提交修复控制与生命周期，但完整输出坐标尚未实际跑通，不能据此宣布G2通过。
+
+## 2026-07-12：W4简单算子16-slice candidate relayout
+
+- 根仓提交 `c375c368f861b0e374f3ee61f90fb2beaf1eff28`，父提交 `b695dcaa18633dea2b553f8060c8c5823a855986`，`feat: add W4 simple-op relayouts`。
+- 范围：新增`w4_batch_slice_candidate_v1`，为QuantizeLinear/DequantizeLinear的A、scale、zero_point和D实现16-slice `forward/inverse/explain_coordinate/validate`；batch按一项一slice，标量qparams逐slice复制，端口C-order/little-endian并按16 byte对齐。布局使用紧凑per-region payload和可计算坐标映射，避免为正式`[16,3,224,224]`逐字节建立高内存provenance字典。
+- 新增`w4_zero_copy_view_candidate_v1`：仅在axis=1、元素数不变、batch partition和C-order字节序兼容时，证明正式Flatten `[16,2048,1,1]→[16,2048]`共用producer D的16个base address；非法axis/shape提前失败。
+- `LayoutRecord`扩展端口、logical shape/dtype、partition、packing、base address、inverse状态和alias字段；新记录可经`ObjectManifest.to_dict/from_dict`无损往返。候选合同已登记到`contracts/architecture.json`，未升级为硬件approved。
+- 验证：新增4项测试，覆盖最小shape、N<16的inactive slice、正式Quantize输入`[16,3,224,224]`、Dequantize dense 1000类tail、正式Flatten、逐元素地址解释、manifest往返、padding破坏和非法View；根仓全量46项测试通过，`contracts/architecture.json`严格JSON解析和`git diff --check`通过。
+- 边界：本提交没有读取或重跑约951 MB的W3 tensor产物，只消费已有`artifacts/w3/model_graph.json`的小型图目录确认正式shape。Conv、MaxPool、QLinearAdd、GlobalAveragePool、MatMul/dense尚未进入W4实现，目标硬件layout仍缺approved合同，故G4保持未通过。
+- 精确回退：revert `c375c368f861b0e374f3ee61f90fb2beaf1eff28`；上一根仓恢复点为`b695dcaa18633dea2b553f8060c8c5823a855986`。
