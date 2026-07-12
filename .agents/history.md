@@ -102,6 +102,24 @@
     - 范围：把完整runner测试参数化为同fixture 1/4-slice；直接执行CGRA QNN rounding；逐字节审核全部region provenance；将G2通过写入plan、backend/quantization contract和coverage matrix。
     - 验证：根28项、NDP14项回归通过；1/4-slice各84个accumulator、physical/logical D一致；聚焦测试连续执行两次结果一致；三仓verify、JSON和diff检查通过。
     - 精确回退：revert本commit；回到 `b1126f4…` 的4-slice buffered runner状态，G2恢复未通过。本提交为W2/G2里程碑。
+22. `5f25526b731bd19a5f29276b6f726d29240154c3`，父提交 `e01adc0c1ef71e431f223358348f428ddac11e17`，`docs: record W2 G2 GitHub milestone`。
+    - 范围：记录W2/G2根仓与NDP里程碑推送完成状态。
+    - 验证：主仓与NDP tracking均为0/0，三仓verify通过；该提交已推送Private `origin/main`。
+    - 精确回退：revert本commit只撤销云端状态记录，不删除远端提交。
+23. `4f2828b1a2c2a57aadc85f8a686742f4831055c2`，父提交 `5f25526b731bd19a5f29276b6f726d29240154c3`，`feat: catalog formal ONNX graph`。
+    - 范围：新增W3 ONNX目录模块和CLI，校验正式模型hash/checker，执行标准及补充shape推断，生成稳定node/tensor ID、initializer hash、原名、属性和producer/consumer关系。
+    - 验证：78节点、617张量、366 initializer；185个ONNX inference、66个supplemental shape，未知shape/dtype为0；重复解析canonical JSON一致；根32项测试通过。
+    - 精确回退：revert本commit；回到 `5f25526…` 时不存在正式图目录。本提交仅本地、未推送。
+24. `060d3c84c7c68845c782c12e21bd00ae328be8be`，父提交 `4f2828b1a2c2a57aadc85f8a686742f4831055c2`，`feat: lower formal ResNet graph to semantic hw ops`。
+    - 范围：建立8类lowering插件；Conv/GAP/MatMul拆成两阶段，其他算子单阶段；生成稳定hw_op ID、显式内部tensor和拓扑依赖。
+    - 验证：78节点全部映射为133个hw_op、55个内部tensor；任一node可查hw_op且末阶段回写原ONNX tensor；根35项测试通过。
+    - 精确回退：revert本commit；保留 `4f2828b…` 图目录但移除lowering。本提交仅本地、未推送。
+
+## 2026-07-12：W3正式图目录与语义lowering启动
+
+- 旧golden脚本的硬编码输出名、伪四维ValueInfo和个人绝对路径不再作为W3接口；正式解析从model contract的SHA开始。
+- ONNX标准shape inference在首个QLinearAdd后停止传播，新增仅覆盖当前8类已知算子的补充规则，并为每个tensor记录`initializer/onnx_inference/supplemental`来源，禁止静默猜shape。
+- 核心解析层不导入`cgra_python`，因此不受`layout_buffer.py:201`语法错误和顶层`import *`影响；该子仓错误仍需单独修复，不能宣称源码已正确。
 
 ### 子仓库 `NDPFuncModel/conv_func`
 

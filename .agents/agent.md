@@ -9,7 +9,7 @@
 - **最终验收**：正式 ResNet50 INT8 ONNX→逐节点/硬件原子算子 golden→16-slice relayout→JSON/bitstream→目标 simulator→execplan/Bank_data→RTL/硬件→三方逐算子和整网一致。
 - **实际进度**：代码和资料摸底基本完成，但端到端工程完成度仅约 15%~25%；当前没有一个目标 NDP ResNet 算子达到 `golden=simulator=hardware`。
 - **三个仓库分工**：`CGRA_SIM` 给软件/QNN语义和旧 ResNet 计划；`ndp-sim-ref` 给目标 JSON、bitstream、relayout/execplan 框架；`NDPFuncModel` 给 Conv 数据通路和旧固定配置。三者尚无共同 manifest 或可运行适配层。
-- **当前可直接推进**：W0/G0和W2/G2已通过；同一小QLinearConv在1/4-slice参数化runner上完成raw→physical→Buffer/SpecialPEA→requant→物理D→inverse D。下一步按计划扩展16-slice，并保持目标JSON/硬件合同仍属G1阻塞。
+- **当前可直接推进**：W0/G0、W2/G2已通过；W3正式模型图目录和语义lowering已建立，78节点/617张量无未知shape/dtype，lower为133个hw_op。当前继续参数化ORT全节点dump和subop golden；16-slice relayout可在W3并行后续开展，目标JSON/硬件合同仍属G1阻塞。
 - **当前外部阻塞**：正式模型和固定输入基线已经自行取得；剩余外部阻塞为目标16-slice RTL/ISA版本、正式物理layout、INT8 SA/GA/qparams硬件约定、目标emulator关系、硬件加载与dump协议。
 - **禁止误用**：NDPFuncModel 当前 `extracted_*.npy` 和 `verify_pe` psum 不是可信 golden；42个 JSON也不等于 ResNet算子配置已完成；bitstream生成成功不等于数值正确。
 - **接手第一条命令**：先运行 `.venv\Scripts\python.exe tools\sync_repositories.py verify` 核验三仓commit/remote/dirty状态；始终使用根目录 `.venv\Scripts\python.exe`，不要调用系统 `python` 或重装Codex公共运行时。
