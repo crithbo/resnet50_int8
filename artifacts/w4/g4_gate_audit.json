@@ -1,0 +1,3390 @@
+{
+  "audit_id": "w4_g4_gate_audit_v1",
+  "audit_observations": [
+    "The GAP D-to-Flatten proof is a storage-view property; the formal graph edge is GAP-to-Dequantize followed by Dequantize-to-Flatten.",
+    "Exact aliases proven on standalone bundles do not allocate simultaneous network-wide bases; W7 owns rebase and overlap decisions.",
+    "The ring/channel candidate requires explicit transitions at batch-simple-operator boundaries, including Quantize-to-MatMul and final channel output to Dequantize.",
+    "Final INT32 Conv/MatMul accumulators are covered in W4; per-K-tile physical psum placement remains a target-dependent W5 contract."
+  ],
+  "candidate_layouts": {
+    "all_remain_candidate": true,
+    "approved_layout_ids": [],
+    "count": 12,
+    "layout_ids": [
+      "w4_batch_slice_candidate_v1",
+      "w4_conv_batch16_candidate_v1",
+      "w4_conv_ring16_candidate_v1",
+      "w4_globalavgpool_batch16_candidate_v1",
+      "w4_globalavgpool_channel16_candidate_v1",
+      "w4_maxpool_batch16_candidate_v1",
+      "w4_maxpool_channel16_candidate_v1",
+      "w4_qlinearadd_batch16_candidate_v1",
+      "w4_qlinearadd_channel16_candidate_v1",
+      "w4_qlinearmatmul_batch16_candidate_v1",
+      "w4_qlinearmatmul_ring16_candidate_v1",
+      "w4_zero_copy_view_candidate_v1"
+    ]
+  },
+  "evidence_artifacts": {
+    "w4_conv0_batch16": {
+      "actual_sha256": "c91ae0ddbc17b41121d832a16d4a3de3706a9eaccfc59faf834de45b9e6f23b5",
+      "actual_size_bytes": 6281,
+      "expected_sha256": "c91ae0ddbc17b41121d832a16d4a3de3706a9eaccfc59faf834de45b9e6f23b5",
+      "expected_size_bytes": null,
+      "path": "artifacts/w4/conv0_batch16_report.json",
+      "sha256_match": true,
+      "size_match": true
+    },
+    "w4_conv0_profiles": {
+      "actual_sha256": "11ba322444c624a5ab1f6b4f7797b96b84eb45692d6b2c0b92eb1e44105f4e67",
+      "actual_size_bytes": 11840,
+      "expected_sha256": "11ba322444c624a5ab1f6b4f7797b96b84eb45692d6b2c0b92eb1e44105f4e67",
+      "expected_size_bytes": null,
+      "path": "artifacts/w4/conv0_profiles_report.json",
+      "sha256_match": true,
+      "size_match": true
+    },
+    "w4_conv_shape_coverage_v1": {
+      "actual_sha256": "307f54bd55330270de1cb90fe42a8ee4433d6de66e23f9291c46148f1d2b30b3",
+      "actual_size_bytes": 116635,
+      "expected_sha256": "307f54bd55330270de1cb90fe42a8ee4433d6de66e23f9291c46148f1d2b30b3",
+      "expected_size_bytes": 116635,
+      "path": "artifacts/w4/conv_shape_coverage.json",
+      "sha256_match": true,
+      "size_match": true
+    },
+    "w4_globalavgpool_profiles_v1": {
+      "actual_sha256": "cb8ccd709616a851bed109a2a47a70706f9c8ecc0ba76f47eafa0ba3fbb4d3f8",
+      "actual_size_bytes": 13910,
+      "expected_sha256": "cb8ccd709616a851bed109a2a47a70706f9c8ecc0ba76f47eafa0ba3fbb4d3f8",
+      "expected_size_bytes": 13910,
+      "path": "artifacts/w4/avgpool_profiles_report.json",
+      "sha256_match": true,
+      "size_match": true
+    },
+    "w4_maxpool_profiles_v1": {
+      "actual_sha256": "97373125f62ba29c47981bb7e05e1ccd3862060f6275fe4ee34418b6c16f9cfc",
+      "actual_size_bytes": 3882,
+      "expected_sha256": "97373125f62ba29c47981bb7e05e1ccd3862060f6275fe4ee34418b6c16f9cfc",
+      "expected_size_bytes": 3882,
+      "path": "artifacts/w4/maxpool_profiles_report.json",
+      "sha256_match": true,
+      "size_match": true
+    },
+    "w4_qlinearadd_profiles_v1": {
+      "actual_sha256": "9769589a14cc281968925e49645715010db634a8f722093e3ba106d47ae03108",
+      "actual_size_bytes": 74305,
+      "expected_sha256": "9769589a14cc281968925e49645715010db634a8f722093e3ba106d47ae03108",
+      "expected_size_bytes": 74305,
+      "path": "artifacts/w4/add_profiles_report.json",
+      "sha256_match": true,
+      "size_match": true
+    },
+    "w4_qlinearmatmul_profiles_v1": {
+      "actual_sha256": "c561f4f23e5f5f7e1e5c5a556237fef4266b2b3a99f62ababc0f205a36e565ea",
+      "actual_size_bytes": 16816,
+      "expected_sha256": "c561f4f23e5f5f7e1e5c5a556237fef4266b2b3a99f62ababc0f205a36e565ea",
+      "expected_size_bytes": 16816,
+      "path": "artifacts/w4/matmul_profiles_report.json",
+      "sha256_match": true,
+      "size_match": true
+    }
+  },
+  "gate_criteria": {
+    "all_candidate_capacity_checks_pass": true,
+    "all_layout_interfaces_complete": true,
+    "all_quantized_edge_qparam_identities_exact": true,
+    "all_registered_evidence_hashes_match": true,
+    "all_runtime_edge_responsibilities_explicit": true,
+    "approved_physical_layout_contract_exists": false,
+    "approved_target_profile_exists": false,
+    "formal_node_coverage_78_of_78": true,
+    "minimal_real_and_tail_roundtrip_regression": true,
+    "target_rtl_isa_register_map_version_frozen": false
+  },
+  "gate_decision": {
+    "blocking_criteria": [
+      "approved_target_profile_exists",
+      "target_rtl_isa_register_map_version_frozen",
+      "approved_physical_layout_contract_exists"
+    ],
+    "decision": "wait_for_formal_hardware_layout_and_topology_adjudication",
+    "g4_status": "not_passed",
+    "software_candidate_readiness": "pass",
+    "w5_authorized": false
+  },
+  "hardware_unresolved": [
+    "target RTL/ISA/register-map commit",
+    "resource counts and field widths for the target version",
+    "opcode definitions",
+    "DDR row count and byte/word address units",
+    "instruction mask interpretation",
+    "approved physical layouts for activation, weight, bias, qparams, psum and output",
+    "load/start/wait/error/dump protocol"
+  ],
+  "model_sha256": "c234f30975989788b4405f25253275aae247ab6dbdd34aaa69ab0a59ff76f6d0",
+  "node_coverage": {
+    "all_formal_nodes_covered": true,
+    "by_op_type": {
+      "DequantizeLinear": {
+        "actual": 2,
+        "covered": true,
+        "expected": 2
+      },
+      "Flatten": {
+        "actual": 1,
+        "covered": true,
+        "expected": 1
+      },
+      "MaxPool": {
+        "actual": 1,
+        "covered": true,
+        "expected": 1
+      },
+      "QLinearAdd": {
+        "actual": 17,
+        "covered": true,
+        "expected": 17
+      },
+      "QLinearConv": {
+        "actual": 53,
+        "covered": true,
+        "expected": 53
+      },
+      "QLinearGlobalAveragePool": {
+        "actual": 1,
+        "covered": true,
+        "expected": 1
+      },
+      "QLinearMatMul": {
+        "actual": 1,
+        "covered": true,
+        "expected": 1
+      },
+      "QuantizeLinear": {
+        "actual": 2,
+        "covered": true,
+        "expected": 2
+      }
+    },
+    "formal_node_count": 78
+  },
+  "plugin_interfaces": [
+    {
+      "class": "resnet50_pipeline.simple_layout.QuantizeLinearPhysicalLayout",
+      "interface_complete": true,
+      "layout_id": "w4_batch_slice_candidate_v1:Quantize",
+      "methods": {
+        "explain_coordinate": true,
+        "forward": true,
+        "inverse": true,
+        "validate": true
+      }
+    },
+    {
+      "class": "resnet50_pipeline.simple_layout.DequantizeLinearPhysicalLayout",
+      "interface_complete": true,
+      "layout_id": "w4_batch_slice_candidate_v1:Dequantize",
+      "methods": {
+        "explain_coordinate": true,
+        "forward": true,
+        "inverse": true,
+        "validate": true
+      }
+    },
+    {
+      "class": "resnet50_pipeline.simple_layout.ZeroCopyViewLayout",
+      "interface_complete": true,
+      "layout_id": "w4_zero_copy_view_candidate_v1",
+      "methods": {
+        "explain_coordinate": true,
+        "forward": true,
+        "inverse": true,
+        "validate": true
+      }
+    },
+    {
+      "class": "resnet50_pipeline.conv16_layout.ConvBatch16PhysicalLayout",
+      "interface_complete": true,
+      "layout_id": "w4_conv_batch16_candidate_v1",
+      "methods": {
+        "explain_coordinate": true,
+        "forward": true,
+        "inverse": true,
+        "validate": true
+      }
+    },
+    {
+      "class": "resnet50_pipeline.conv16_ring_layout.ConvRing16PhysicalLayout",
+      "interface_complete": true,
+      "layout_id": "w4_conv_ring16_candidate_v1",
+      "methods": {
+        "explain_coordinate": true,
+        "forward": true,
+        "inverse": true,
+        "validate": true
+      }
+    },
+    {
+      "class": "resnet50_pipeline.maxpool16_layout.MaxPoolBatch16PhysicalLayout",
+      "interface_complete": true,
+      "layout_id": "w4_maxpool_batch16_candidate_v1",
+      "methods": {
+        "explain_coordinate": true,
+        "forward": true,
+        "inverse": true,
+        "validate": true
+      }
+    },
+    {
+      "class": "resnet50_pipeline.maxpool16_layout.MaxPoolChannel16PhysicalLayout",
+      "interface_complete": true,
+      "layout_id": "w4_maxpool_channel16_candidate_v1",
+      "methods": {
+        "explain_coordinate": true,
+        "forward": true,
+        "inverse": true,
+        "validate": true
+      }
+    },
+    {
+      "class": "resnet50_pipeline.add16_layout.QLinearAddBatch16PhysicalLayout",
+      "interface_complete": true,
+      "layout_id": "w4_qlinearadd_batch16_candidate_v1",
+      "methods": {
+        "explain_coordinate": true,
+        "forward": true,
+        "inverse": true,
+        "validate": true
+      }
+    },
+    {
+      "class": "resnet50_pipeline.add16_layout.QLinearAddChannel16PhysicalLayout",
+      "interface_complete": true,
+      "layout_id": "w4_qlinearadd_channel16_candidate_v1",
+      "methods": {
+        "explain_coordinate": true,
+        "forward": true,
+        "inverse": true,
+        "validate": true
+      }
+    },
+    {
+      "class": "resnet50_pipeline.avgpool16_layout.GlobalAveragePoolBatch16PhysicalLayout",
+      "interface_complete": true,
+      "layout_id": "w4_globalavgpool_batch16_candidate_v1",
+      "methods": {
+        "explain_coordinate": true,
+        "forward": true,
+        "inverse": true,
+        "validate": true
+      }
+    },
+    {
+      "class": "resnet50_pipeline.avgpool16_layout.GlobalAveragePoolChannel16PhysicalLayout",
+      "interface_complete": true,
+      "layout_id": "w4_globalavgpool_channel16_candidate_v1",
+      "methods": {
+        "explain_coordinate": true,
+        "forward": true,
+        "inverse": true,
+        "validate": true
+      }
+    },
+    {
+      "class": "resnet50_pipeline.matmul16_layout.QLinearMatMulBatch16PhysicalLayout",
+      "interface_complete": true,
+      "layout_id": "w4_qlinearmatmul_batch16_candidate_v1",
+      "methods": {
+        "explain_coordinate": true,
+        "forward": true,
+        "inverse": true,
+        "validate": true
+      }
+    },
+    {
+      "class": "resnet50_pipeline.matmul16_layout.QLinearMatMulRing16PhysicalLayout",
+      "interface_complete": true,
+      "layout_id": "w4_qlinearmatmul_ring16_candidate_v1",
+      "methods": {
+        "explain_coordinate": true,
+        "forward": true,
+        "inverse": true,
+        "validate": true
+      }
+    }
+  ],
+  "schema_version": "0.1",
+  "scope": "W4 software candidate coverage, profile transitions, and G4 decision",
+  "transition_audit": {
+    "all_quantized_qparam_identities_exact": true,
+    "all_responsibilities_explicit": true,
+    "classification_counts": {
+      "batch": {
+        "exact_alias_proved": 4,
+        "explicit_relayout": 1,
+        "layout_compatible_rebase_w7": 87,
+        "zero_copy_proved": 1
+      },
+      "ring_channel": {
+        "exact_alias_proved": 3,
+        "explicit_relayout": 4,
+        "layout_compatible_rebase_w7": 85,
+        "zero_copy_proved": 1
+      }
+    },
+    "edges": [
+      {
+        "consumer_node_id": "node-0001",
+        "consumer_op_type": "QLinearConv",
+        "consumer_qparams": [
+          "tensor-e2b841fe976590e8",
+          "tensor-c3e3eaf52407b04d"
+        ],
+        "dtype": "uint8",
+        "producer_node_id": "node-0000",
+        "producer_op_type": "QuantizeLinear",
+        "producer_qparams": [
+          "tensor-e2b841fe976590e8",
+          "tensor-c3e3eaf52407b04d"
+        ],
+        "profiles": {
+          "batch": {
+            "classification": "explicit_relayout",
+            "responsibility_explicit": true
+          },
+          "ring_channel": {
+            "classification": "explicit_relayout",
+            "responsibility_explicit": true
+          }
+        },
+        "qparam_identity_exact": true,
+        "shape": [
+          "N",
+          3,
+          224,
+          224
+        ],
+        "tensor_id": "tensor-a60f1132af1aa3d0"
+      },
+      {
+        "consumer_node_id": "node-0002",
+        "consumer_op_type": "MaxPool",
+        "consumer_qparams": [
+          "tensor-3f3181c9a6f928a5",
+          "tensor-65fe804af253d161"
+        ],
+        "dtype": "uint8",
+        "producer_node_id": "node-0001",
+        "producer_op_type": "QLinearConv",
+        "producer_qparams": [
+          "tensor-3f3181c9a6f928a5",
+          "tensor-65fe804af253d161"
+        ],
+        "profiles": {
+          "batch": {
+            "classification": "exact_alias_proved",
+            "responsibility_explicit": true
+          },
+          "ring_channel": {
+            "classification": "exact_alias_proved",
+            "responsibility_explicit": true
+          }
+        },
+        "qparam_identity_exact": true,
+        "shape": [
+          "N",
+          64,
+          112,
+          112
+        ],
+        "tensor_id": "tensor-f6c1a8fb6fd529e8"
+      },
+      {
+        "consumer_node_id": "node-0003",
+        "consumer_op_type": "QLinearConv",
+        "consumer_qparams": [
+          "tensor-3f3181c9a6f928a5",
+          "tensor-65fe804af253d161"
+        ],
+        "dtype": "uint8",
+        "producer_node_id": "node-0002",
+        "producer_op_type": "MaxPool",
+        "producer_qparams": [
+          "tensor-3f3181c9a6f928a5",
+          "tensor-65fe804af253d161"
+        ],
+        "profiles": {
+          "batch": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          },
+          "ring_channel": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          }
+        },
+        "qparam_identity_exact": true,
+        "shape": [
+          "N",
+          64,
+          56,
+          56
+        ],
+        "tensor_id": "tensor-8d2f28c80ac24676"
+      },
+      {
+        "consumer_node_id": "node-0004",
+        "consumer_op_type": "QLinearConv",
+        "consumer_qparams": [
+          "tensor-3f3181c9a6f928a5",
+          "tensor-65fe804af253d161"
+        ],
+        "dtype": "uint8",
+        "producer_node_id": "node-0002",
+        "producer_op_type": "MaxPool",
+        "producer_qparams": [
+          "tensor-3f3181c9a6f928a5",
+          "tensor-65fe804af253d161"
+        ],
+        "profiles": {
+          "batch": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          },
+          "ring_channel": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          }
+        },
+        "qparam_identity_exact": true,
+        "shape": [
+          "N",
+          64,
+          56,
+          56
+        ],
+        "tensor_id": "tensor-8d2f28c80ac24676"
+      },
+      {
+        "consumer_node_id": "node-0007",
+        "consumer_op_type": "QLinearAdd",
+        "consumer_qparams": [
+          "tensor-ae5b62ff677b035b",
+          "tensor-37765b4825ceb8ba"
+        ],
+        "dtype": "uint8",
+        "producer_node_id": "node-0003",
+        "producer_op_type": "QLinearConv",
+        "producer_qparams": [
+          "tensor-ae5b62ff677b035b",
+          "tensor-37765b4825ceb8ba"
+        ],
+        "profiles": {
+          "batch": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          },
+          "ring_channel": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          }
+        },
+        "qparam_identity_exact": true,
+        "shape": [
+          "N",
+          256,
+          56,
+          56
+        ],
+        "tensor_id": "tensor-01b2df1cb3665358"
+      },
+      {
+        "consumer_node_id": "node-0005",
+        "consumer_op_type": "QLinearConv",
+        "consumer_qparams": [
+          "tensor-92e50ed8fd15d492",
+          "tensor-40fa0d7c5fec6f1c"
+        ],
+        "dtype": "uint8",
+        "producer_node_id": "node-0004",
+        "producer_op_type": "QLinearConv",
+        "producer_qparams": [
+          "tensor-92e50ed8fd15d492",
+          "tensor-40fa0d7c5fec6f1c"
+        ],
+        "profiles": {
+          "batch": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          },
+          "ring_channel": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          }
+        },
+        "qparam_identity_exact": true,
+        "shape": [
+          "N",
+          64,
+          56,
+          56
+        ],
+        "tensor_id": "tensor-78b29737ada5ce7a"
+      },
+      {
+        "consumer_node_id": "node-0006",
+        "consumer_op_type": "QLinearConv",
+        "consumer_qparams": [
+          "tensor-368c660b334918c0",
+          "tensor-19a6d2dfbb4cb8fc"
+        ],
+        "dtype": "uint8",
+        "producer_node_id": "node-0005",
+        "producer_op_type": "QLinearConv",
+        "producer_qparams": [
+          "tensor-368c660b334918c0",
+          "tensor-19a6d2dfbb4cb8fc"
+        ],
+        "profiles": {
+          "batch": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          },
+          "ring_channel": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          }
+        },
+        "qparam_identity_exact": true,
+        "shape": [
+          "N",
+          64,
+          56,
+          56
+        ],
+        "tensor_id": "tensor-e8601bbe424bc09e"
+      },
+      {
+        "consumer_node_id": "node-0007",
+        "consumer_op_type": "QLinearAdd",
+        "consumer_qparams": [
+          "tensor-2a8b0429890bd6e7",
+          "tensor-403d036e85dc3d33"
+        ],
+        "dtype": "uint8",
+        "producer_node_id": "node-0006",
+        "producer_op_type": "QLinearConv",
+        "producer_qparams": [
+          "tensor-2a8b0429890bd6e7",
+          "tensor-403d036e85dc3d33"
+        ],
+        "profiles": {
+          "batch": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          },
+          "ring_channel": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          }
+        },
+        "qparam_identity_exact": true,
+        "shape": [
+          "N",
+          256,
+          56,
+          56
+        ],
+        "tensor_id": "tensor-a2a1607bd3ac6eee"
+      },
+      {
+        "consumer_node_id": "node-0008",
+        "consumer_op_type": "QLinearConv",
+        "consumer_qparams": [
+          "tensor-ed2010f4c3e9faf7",
+          "tensor-b78aca174a8b599b"
+        ],
+        "dtype": "uint8",
+        "producer_node_id": "node-0007",
+        "producer_op_type": "QLinearAdd",
+        "producer_qparams": [
+          "tensor-ed2010f4c3e9faf7",
+          "tensor-b78aca174a8b599b"
+        ],
+        "profiles": {
+          "batch": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          },
+          "ring_channel": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          }
+        },
+        "qparam_identity_exact": true,
+        "shape": [
+          "N",
+          256,
+          56,
+          56
+        ],
+        "tensor_id": "tensor-32e7128618bb2a38"
+      },
+      {
+        "consumer_node_id": "node-0011",
+        "consumer_op_type": "QLinearAdd",
+        "consumer_qparams": [
+          "tensor-ed2010f4c3e9faf7",
+          "tensor-b78aca174a8b599b"
+        ],
+        "dtype": "uint8",
+        "producer_node_id": "node-0007",
+        "producer_op_type": "QLinearAdd",
+        "producer_qparams": [
+          "tensor-ed2010f4c3e9faf7",
+          "tensor-b78aca174a8b599b"
+        ],
+        "profiles": {
+          "batch": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          },
+          "ring_channel": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          }
+        },
+        "qparam_identity_exact": true,
+        "shape": [
+          "N",
+          256,
+          56,
+          56
+        ],
+        "tensor_id": "tensor-32e7128618bb2a38"
+      },
+      {
+        "consumer_node_id": "node-0009",
+        "consumer_op_type": "QLinearConv",
+        "consumer_qparams": [
+          "tensor-b90e946e6e0a8a5e",
+          "tensor-c00f6653c9a0e1d7"
+        ],
+        "dtype": "uint8",
+        "producer_node_id": "node-0008",
+        "producer_op_type": "QLinearConv",
+        "producer_qparams": [
+          "tensor-b90e946e6e0a8a5e",
+          "tensor-c00f6653c9a0e1d7"
+        ],
+        "profiles": {
+          "batch": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          },
+          "ring_channel": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          }
+        },
+        "qparam_identity_exact": true,
+        "shape": [
+          "N",
+          64,
+          56,
+          56
+        ],
+        "tensor_id": "tensor-ae132d1ab25a5cd7"
+      },
+      {
+        "consumer_node_id": "node-0010",
+        "consumer_op_type": "QLinearConv",
+        "consumer_qparams": [
+          "tensor-3ef27c8e00dd2857",
+          "tensor-844fbe89a4228e34"
+        ],
+        "dtype": "uint8",
+        "producer_node_id": "node-0009",
+        "producer_op_type": "QLinearConv",
+        "producer_qparams": [
+          "tensor-3ef27c8e00dd2857",
+          "tensor-844fbe89a4228e34"
+        ],
+        "profiles": {
+          "batch": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          },
+          "ring_channel": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          }
+        },
+        "qparam_identity_exact": true,
+        "shape": [
+          "N",
+          64,
+          56,
+          56
+        ],
+        "tensor_id": "tensor-0c6fec8190caf0ba"
+      },
+      {
+        "consumer_node_id": "node-0011",
+        "consumer_op_type": "QLinearAdd",
+        "consumer_qparams": [
+          "tensor-21dd60dd624abd61",
+          "tensor-4c13e112ab8b391b"
+        ],
+        "dtype": "uint8",
+        "producer_node_id": "node-0010",
+        "producer_op_type": "QLinearConv",
+        "producer_qparams": [
+          "tensor-21dd60dd624abd61",
+          "tensor-4c13e112ab8b391b"
+        ],
+        "profiles": {
+          "batch": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          },
+          "ring_channel": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          }
+        },
+        "qparam_identity_exact": true,
+        "shape": [
+          "N",
+          256,
+          56,
+          56
+        ],
+        "tensor_id": "tensor-0765b664b09ffabd"
+      },
+      {
+        "consumer_node_id": "node-0012",
+        "consumer_op_type": "QLinearConv",
+        "consumer_qparams": [
+          "tensor-aa74de3587282f0d",
+          "tensor-0d7e1b6429067d2a"
+        ],
+        "dtype": "uint8",
+        "producer_node_id": "node-0011",
+        "producer_op_type": "QLinearAdd",
+        "producer_qparams": [
+          "tensor-aa74de3587282f0d",
+          "tensor-0d7e1b6429067d2a"
+        ],
+        "profiles": {
+          "batch": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          },
+          "ring_channel": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          }
+        },
+        "qparam_identity_exact": true,
+        "shape": [
+          "N",
+          256,
+          56,
+          56
+        ],
+        "tensor_id": "tensor-82c66d4018bf271e"
+      },
+      {
+        "consumer_node_id": "node-0015",
+        "consumer_op_type": "QLinearAdd",
+        "consumer_qparams": [
+          "tensor-aa74de3587282f0d",
+          "tensor-0d7e1b6429067d2a"
+        ],
+        "dtype": "uint8",
+        "producer_node_id": "node-0011",
+        "producer_op_type": "QLinearAdd",
+        "producer_qparams": [
+          "tensor-aa74de3587282f0d",
+          "tensor-0d7e1b6429067d2a"
+        ],
+        "profiles": {
+          "batch": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          },
+          "ring_channel": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          }
+        },
+        "qparam_identity_exact": true,
+        "shape": [
+          "N",
+          256,
+          56,
+          56
+        ],
+        "tensor_id": "tensor-82c66d4018bf271e"
+      },
+      {
+        "consumer_node_id": "node-0013",
+        "consumer_op_type": "QLinearConv",
+        "consumer_qparams": [
+          "tensor-104fdac3dd60ddeb",
+          "tensor-b8350059470c8475"
+        ],
+        "dtype": "uint8",
+        "producer_node_id": "node-0012",
+        "producer_op_type": "QLinearConv",
+        "producer_qparams": [
+          "tensor-104fdac3dd60ddeb",
+          "tensor-b8350059470c8475"
+        ],
+        "profiles": {
+          "batch": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          },
+          "ring_channel": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          }
+        },
+        "qparam_identity_exact": true,
+        "shape": [
+          "N",
+          64,
+          56,
+          56
+        ],
+        "tensor_id": "tensor-0136eff67a52a7e2"
+      },
+      {
+        "consumer_node_id": "node-0014",
+        "consumer_op_type": "QLinearConv",
+        "consumer_qparams": [
+          "tensor-544a3bf74fe88067",
+          "tensor-939d0007028de821"
+        ],
+        "dtype": "uint8",
+        "producer_node_id": "node-0013",
+        "producer_op_type": "QLinearConv",
+        "producer_qparams": [
+          "tensor-544a3bf74fe88067",
+          "tensor-939d0007028de821"
+        ],
+        "profiles": {
+          "batch": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          },
+          "ring_channel": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          }
+        },
+        "qparam_identity_exact": true,
+        "shape": [
+          "N",
+          64,
+          56,
+          56
+        ],
+        "tensor_id": "tensor-aa863e70f68d6cca"
+      },
+      {
+        "consumer_node_id": "node-0015",
+        "consumer_op_type": "QLinearAdd",
+        "consumer_qparams": [
+          "tensor-2b045183471e9231",
+          "tensor-57a3287553f37e56"
+        ],
+        "dtype": "uint8",
+        "producer_node_id": "node-0014",
+        "producer_op_type": "QLinearConv",
+        "producer_qparams": [
+          "tensor-2b045183471e9231",
+          "tensor-57a3287553f37e56"
+        ],
+        "profiles": {
+          "batch": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          },
+          "ring_channel": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          }
+        },
+        "qparam_identity_exact": true,
+        "shape": [
+          "N",
+          256,
+          56,
+          56
+        ],
+        "tensor_id": "tensor-8c1be27e26450107"
+      },
+      {
+        "consumer_node_id": "node-0016",
+        "consumer_op_type": "QLinearConv",
+        "consumer_qparams": [
+          "tensor-412fe0b5b4dde76d",
+          "tensor-97751944ef3c0c7a"
+        ],
+        "dtype": "uint8",
+        "producer_node_id": "node-0015",
+        "producer_op_type": "QLinearAdd",
+        "producer_qparams": [
+          "tensor-412fe0b5b4dde76d",
+          "tensor-97751944ef3c0c7a"
+        ],
+        "profiles": {
+          "batch": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          },
+          "ring_channel": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          }
+        },
+        "qparam_identity_exact": true,
+        "shape": [
+          "N",
+          256,
+          56,
+          56
+        ],
+        "tensor_id": "tensor-f7f005ed7333a3c6"
+      },
+      {
+        "consumer_node_id": "node-0017",
+        "consumer_op_type": "QLinearConv",
+        "consumer_qparams": [
+          "tensor-412fe0b5b4dde76d",
+          "tensor-97751944ef3c0c7a"
+        ],
+        "dtype": "uint8",
+        "producer_node_id": "node-0015",
+        "producer_op_type": "QLinearAdd",
+        "producer_qparams": [
+          "tensor-412fe0b5b4dde76d",
+          "tensor-97751944ef3c0c7a"
+        ],
+        "profiles": {
+          "batch": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          },
+          "ring_channel": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          }
+        },
+        "qparam_identity_exact": true,
+        "shape": [
+          "N",
+          256,
+          56,
+          56
+        ],
+        "tensor_id": "tensor-f7f005ed7333a3c6"
+      },
+      {
+        "consumer_node_id": "node-0020",
+        "consumer_op_type": "QLinearAdd",
+        "consumer_qparams": [
+          "tensor-f53dde57e5280650",
+          "tensor-572d5a395c2d300a"
+        ],
+        "dtype": "uint8",
+        "producer_node_id": "node-0016",
+        "producer_op_type": "QLinearConv",
+        "producer_qparams": [
+          "tensor-f53dde57e5280650",
+          "tensor-572d5a395c2d300a"
+        ],
+        "profiles": {
+          "batch": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          },
+          "ring_channel": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          }
+        },
+        "qparam_identity_exact": true,
+        "shape": [
+          "N",
+          512,
+          28,
+          28
+        ],
+        "tensor_id": "tensor-2a5c276debef7169"
+      },
+      {
+        "consumer_node_id": "node-0018",
+        "consumer_op_type": "QLinearConv",
+        "consumer_qparams": [
+          "tensor-0fb1f7346d312417",
+          "tensor-b70c76352ea5f157"
+        ],
+        "dtype": "uint8",
+        "producer_node_id": "node-0017",
+        "producer_op_type": "QLinearConv",
+        "producer_qparams": [
+          "tensor-0fb1f7346d312417",
+          "tensor-b70c76352ea5f157"
+        ],
+        "profiles": {
+          "batch": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          },
+          "ring_channel": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          }
+        },
+        "qparam_identity_exact": true,
+        "shape": [
+          "N",
+          128,
+          28,
+          28
+        ],
+        "tensor_id": "tensor-948f0fb754d688bc"
+      },
+      {
+        "consumer_node_id": "node-0019",
+        "consumer_op_type": "QLinearConv",
+        "consumer_qparams": [
+          "tensor-989e51dac458481e",
+          "tensor-440f4d823d9796f4"
+        ],
+        "dtype": "uint8",
+        "producer_node_id": "node-0018",
+        "producer_op_type": "QLinearConv",
+        "producer_qparams": [
+          "tensor-989e51dac458481e",
+          "tensor-440f4d823d9796f4"
+        ],
+        "profiles": {
+          "batch": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          },
+          "ring_channel": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          }
+        },
+        "qparam_identity_exact": true,
+        "shape": [
+          "N",
+          128,
+          28,
+          28
+        ],
+        "tensor_id": "tensor-16c99724c2cfa9ef"
+      },
+      {
+        "consumer_node_id": "node-0020",
+        "consumer_op_type": "QLinearAdd",
+        "consumer_qparams": [
+          "tensor-4bfdf04157aadedd",
+          "tensor-05314db13acdd37a"
+        ],
+        "dtype": "uint8",
+        "producer_node_id": "node-0019",
+        "producer_op_type": "QLinearConv",
+        "producer_qparams": [
+          "tensor-4bfdf04157aadedd",
+          "tensor-05314db13acdd37a"
+        ],
+        "profiles": {
+          "batch": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          },
+          "ring_channel": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          }
+        },
+        "qparam_identity_exact": true,
+        "shape": [
+          "N",
+          512,
+          28,
+          28
+        ],
+        "tensor_id": "tensor-1b2b0059ea24f835"
+      },
+      {
+        "consumer_node_id": "node-0021",
+        "consumer_op_type": "QLinearConv",
+        "consumer_qparams": [
+          "tensor-50f894b7ffc34b2b",
+          "tensor-706839eab4be2653"
+        ],
+        "dtype": "uint8",
+        "producer_node_id": "node-0020",
+        "producer_op_type": "QLinearAdd",
+        "producer_qparams": [
+          "tensor-50f894b7ffc34b2b",
+          "tensor-706839eab4be2653"
+        ],
+        "profiles": {
+          "batch": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          },
+          "ring_channel": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          }
+        },
+        "qparam_identity_exact": true,
+        "shape": [
+          "N",
+          512,
+          28,
+          28
+        ],
+        "tensor_id": "tensor-59f2c73ec0319a11"
+      },
+      {
+        "consumer_node_id": "node-0024",
+        "consumer_op_type": "QLinearAdd",
+        "consumer_qparams": [
+          "tensor-50f894b7ffc34b2b",
+          "tensor-706839eab4be2653"
+        ],
+        "dtype": "uint8",
+        "producer_node_id": "node-0020",
+        "producer_op_type": "QLinearAdd",
+        "producer_qparams": [
+          "tensor-50f894b7ffc34b2b",
+          "tensor-706839eab4be2653"
+        ],
+        "profiles": {
+          "batch": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          },
+          "ring_channel": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          }
+        },
+        "qparam_identity_exact": true,
+        "shape": [
+          "N",
+          512,
+          28,
+          28
+        ],
+        "tensor_id": "tensor-59f2c73ec0319a11"
+      },
+      {
+        "consumer_node_id": "node-0022",
+        "consumer_op_type": "QLinearConv",
+        "consumer_qparams": [
+          "tensor-15a7f2821d83f8eb",
+          "tensor-21f0423204f4b982"
+        ],
+        "dtype": "uint8",
+        "producer_node_id": "node-0021",
+        "producer_op_type": "QLinearConv",
+        "producer_qparams": [
+          "tensor-15a7f2821d83f8eb",
+          "tensor-21f0423204f4b982"
+        ],
+        "profiles": {
+          "batch": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          },
+          "ring_channel": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          }
+        },
+        "qparam_identity_exact": true,
+        "shape": [
+          "N",
+          128,
+          28,
+          28
+        ],
+        "tensor_id": "tensor-3e6311fc2c581cdb"
+      },
+      {
+        "consumer_node_id": "node-0023",
+        "consumer_op_type": "QLinearConv",
+        "consumer_qparams": [
+          "tensor-6db5426adfc5702a",
+          "tensor-da5ba8d5cb934112"
+        ],
+        "dtype": "uint8",
+        "producer_node_id": "node-0022",
+        "producer_op_type": "QLinearConv",
+        "producer_qparams": [
+          "tensor-6db5426adfc5702a",
+          "tensor-da5ba8d5cb934112"
+        ],
+        "profiles": {
+          "batch": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          },
+          "ring_channel": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          }
+        },
+        "qparam_identity_exact": true,
+        "shape": [
+          "N",
+          128,
+          28,
+          28
+        ],
+        "tensor_id": "tensor-f4820dc4ea2b1a36"
+      },
+      {
+        "consumer_node_id": "node-0024",
+        "consumer_op_type": "QLinearAdd",
+        "consumer_qparams": [
+          "tensor-1e5e9eae0e7478d7",
+          "tensor-03b4d2b3cf33b20f"
+        ],
+        "dtype": "uint8",
+        "producer_node_id": "node-0023",
+        "producer_op_type": "QLinearConv",
+        "producer_qparams": [
+          "tensor-1e5e9eae0e7478d7",
+          "tensor-03b4d2b3cf33b20f"
+        ],
+        "profiles": {
+          "batch": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          },
+          "ring_channel": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          }
+        },
+        "qparam_identity_exact": true,
+        "shape": [
+          "N",
+          512,
+          28,
+          28
+        ],
+        "tensor_id": "tensor-246af5369516486f"
+      },
+      {
+        "consumer_node_id": "node-0025",
+        "consumer_op_type": "QLinearConv",
+        "consumer_qparams": [
+          "tensor-db49e68d829ccfd7",
+          "tensor-8390203b0c99495e"
+        ],
+        "dtype": "uint8",
+        "producer_node_id": "node-0024",
+        "producer_op_type": "QLinearAdd",
+        "producer_qparams": [
+          "tensor-db49e68d829ccfd7",
+          "tensor-8390203b0c99495e"
+        ],
+        "profiles": {
+          "batch": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          },
+          "ring_channel": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          }
+        },
+        "qparam_identity_exact": true,
+        "shape": [
+          "N",
+          512,
+          28,
+          28
+        ],
+        "tensor_id": "tensor-34d625554b4d1420"
+      },
+      {
+        "consumer_node_id": "node-0028",
+        "consumer_op_type": "QLinearAdd",
+        "consumer_qparams": [
+          "tensor-db49e68d829ccfd7",
+          "tensor-8390203b0c99495e"
+        ],
+        "dtype": "uint8",
+        "producer_node_id": "node-0024",
+        "producer_op_type": "QLinearAdd",
+        "producer_qparams": [
+          "tensor-db49e68d829ccfd7",
+          "tensor-8390203b0c99495e"
+        ],
+        "profiles": {
+          "batch": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          },
+          "ring_channel": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          }
+        },
+        "qparam_identity_exact": true,
+        "shape": [
+          "N",
+          512,
+          28,
+          28
+        ],
+        "tensor_id": "tensor-34d625554b4d1420"
+      },
+      {
+        "consumer_node_id": "node-0026",
+        "consumer_op_type": "QLinearConv",
+        "consumer_qparams": [
+          "tensor-43f715de1c27892a",
+          "tensor-75bc832cfe6ed2a3"
+        ],
+        "dtype": "uint8",
+        "producer_node_id": "node-0025",
+        "producer_op_type": "QLinearConv",
+        "producer_qparams": [
+          "tensor-43f715de1c27892a",
+          "tensor-75bc832cfe6ed2a3"
+        ],
+        "profiles": {
+          "batch": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          },
+          "ring_channel": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          }
+        },
+        "qparam_identity_exact": true,
+        "shape": [
+          "N",
+          128,
+          28,
+          28
+        ],
+        "tensor_id": "tensor-6b624f8184cddae5"
+      },
+      {
+        "consumer_node_id": "node-0027",
+        "consumer_op_type": "QLinearConv",
+        "consumer_qparams": [
+          "tensor-0d114bd92462866b",
+          "tensor-6a4a136a3004c34a"
+        ],
+        "dtype": "uint8",
+        "producer_node_id": "node-0026",
+        "producer_op_type": "QLinearConv",
+        "producer_qparams": [
+          "tensor-0d114bd92462866b",
+          "tensor-6a4a136a3004c34a"
+        ],
+        "profiles": {
+          "batch": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          },
+          "ring_channel": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          }
+        },
+        "qparam_identity_exact": true,
+        "shape": [
+          "N",
+          128,
+          28,
+          28
+        ],
+        "tensor_id": "tensor-9913103382d54aa4"
+      },
+      {
+        "consumer_node_id": "node-0028",
+        "consumer_op_type": "QLinearAdd",
+        "consumer_qparams": [
+          "tensor-df81e4c8d182cbd9",
+          "tensor-0cb8a2f1ee041cca"
+        ],
+        "dtype": "uint8",
+        "producer_node_id": "node-0027",
+        "producer_op_type": "QLinearConv",
+        "producer_qparams": [
+          "tensor-df81e4c8d182cbd9",
+          "tensor-0cb8a2f1ee041cca"
+        ],
+        "profiles": {
+          "batch": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          },
+          "ring_channel": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          }
+        },
+        "qparam_identity_exact": true,
+        "shape": [
+          "N",
+          512,
+          28,
+          28
+        ],
+        "tensor_id": "tensor-9cf4216370288a7f"
+      },
+      {
+        "consumer_node_id": "node-0029",
+        "consumer_op_type": "QLinearConv",
+        "consumer_qparams": [
+          "tensor-b0cf93b6af39ca18",
+          "tensor-100a206b3e4e2b12"
+        ],
+        "dtype": "uint8",
+        "producer_node_id": "node-0028",
+        "producer_op_type": "QLinearAdd",
+        "producer_qparams": [
+          "tensor-b0cf93b6af39ca18",
+          "tensor-100a206b3e4e2b12"
+        ],
+        "profiles": {
+          "batch": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          },
+          "ring_channel": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          }
+        },
+        "qparam_identity_exact": true,
+        "shape": [
+          "N",
+          512,
+          28,
+          28
+        ],
+        "tensor_id": "tensor-e4b20c961f1520f0"
+      },
+      {
+        "consumer_node_id": "node-0032",
+        "consumer_op_type": "QLinearAdd",
+        "consumer_qparams": [
+          "tensor-b0cf93b6af39ca18",
+          "tensor-100a206b3e4e2b12"
+        ],
+        "dtype": "uint8",
+        "producer_node_id": "node-0028",
+        "producer_op_type": "QLinearAdd",
+        "producer_qparams": [
+          "tensor-b0cf93b6af39ca18",
+          "tensor-100a206b3e4e2b12"
+        ],
+        "profiles": {
+          "batch": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          },
+          "ring_channel": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          }
+        },
+        "qparam_identity_exact": true,
+        "shape": [
+          "N",
+          512,
+          28,
+          28
+        ],
+        "tensor_id": "tensor-e4b20c961f1520f0"
+      },
+      {
+        "consumer_node_id": "node-0030",
+        "consumer_op_type": "QLinearConv",
+        "consumer_qparams": [
+          "tensor-37687d45a09bbb64",
+          "tensor-5402fab27c173954"
+        ],
+        "dtype": "uint8",
+        "producer_node_id": "node-0029",
+        "producer_op_type": "QLinearConv",
+        "producer_qparams": [
+          "tensor-37687d45a09bbb64",
+          "tensor-5402fab27c173954"
+        ],
+        "profiles": {
+          "batch": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          },
+          "ring_channel": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          }
+        },
+        "qparam_identity_exact": true,
+        "shape": [
+          "N",
+          128,
+          28,
+          28
+        ],
+        "tensor_id": "tensor-1624db7953195520"
+      },
+      {
+        "consumer_node_id": "node-0031",
+        "consumer_op_type": "QLinearConv",
+        "consumer_qparams": [
+          "tensor-b7af2d33a0da5e3a",
+          "tensor-abfccd77a2418b71"
+        ],
+        "dtype": "uint8",
+        "producer_node_id": "node-0030",
+        "producer_op_type": "QLinearConv",
+        "producer_qparams": [
+          "tensor-b7af2d33a0da5e3a",
+          "tensor-abfccd77a2418b71"
+        ],
+        "profiles": {
+          "batch": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          },
+          "ring_channel": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          }
+        },
+        "qparam_identity_exact": true,
+        "shape": [
+          "N",
+          128,
+          28,
+          28
+        ],
+        "tensor_id": "tensor-fadd1de650537c13"
+      },
+      {
+        "consumer_node_id": "node-0032",
+        "consumer_op_type": "QLinearAdd",
+        "consumer_qparams": [
+          "tensor-482e8a55b5dfdf58",
+          "tensor-1ca84721e986bca7"
+        ],
+        "dtype": "uint8",
+        "producer_node_id": "node-0031",
+        "producer_op_type": "QLinearConv",
+        "producer_qparams": [
+          "tensor-482e8a55b5dfdf58",
+          "tensor-1ca84721e986bca7"
+        ],
+        "profiles": {
+          "batch": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          },
+          "ring_channel": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          }
+        },
+        "qparam_identity_exact": true,
+        "shape": [
+          "N",
+          512,
+          28,
+          28
+        ],
+        "tensor_id": "tensor-b84d652de9bfccfa"
+      },
+      {
+        "consumer_node_id": "node-0033",
+        "consumer_op_type": "QLinearConv",
+        "consumer_qparams": [
+          "tensor-8bb761a890eadf11",
+          "tensor-346afd8857ec0925"
+        ],
+        "dtype": "uint8",
+        "producer_node_id": "node-0032",
+        "producer_op_type": "QLinearAdd",
+        "producer_qparams": [
+          "tensor-8bb761a890eadf11",
+          "tensor-346afd8857ec0925"
+        ],
+        "profiles": {
+          "batch": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          },
+          "ring_channel": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          }
+        },
+        "qparam_identity_exact": true,
+        "shape": [
+          "N",
+          512,
+          28,
+          28
+        ],
+        "tensor_id": "tensor-aae4196a1ed7fec7"
+      },
+      {
+        "consumer_node_id": "node-0034",
+        "consumer_op_type": "QLinearConv",
+        "consumer_qparams": [
+          "tensor-8bb761a890eadf11",
+          "tensor-346afd8857ec0925"
+        ],
+        "dtype": "uint8",
+        "producer_node_id": "node-0032",
+        "producer_op_type": "QLinearAdd",
+        "producer_qparams": [
+          "tensor-8bb761a890eadf11",
+          "tensor-346afd8857ec0925"
+        ],
+        "profiles": {
+          "batch": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          },
+          "ring_channel": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          }
+        },
+        "qparam_identity_exact": true,
+        "shape": [
+          "N",
+          512,
+          28,
+          28
+        ],
+        "tensor_id": "tensor-aae4196a1ed7fec7"
+      },
+      {
+        "consumer_node_id": "node-0037",
+        "consumer_op_type": "QLinearAdd",
+        "consumer_qparams": [
+          "tensor-b0a150dc1ceca726",
+          "tensor-fb9be9e7c0d4eef1"
+        ],
+        "dtype": "uint8",
+        "producer_node_id": "node-0033",
+        "producer_op_type": "QLinearConv",
+        "producer_qparams": [
+          "tensor-b0a150dc1ceca726",
+          "tensor-fb9be9e7c0d4eef1"
+        ],
+        "profiles": {
+          "batch": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          },
+          "ring_channel": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          }
+        },
+        "qparam_identity_exact": true,
+        "shape": [
+          "N",
+          1024,
+          14,
+          14
+        ],
+        "tensor_id": "tensor-cd249d0ee63fd36d"
+      },
+      {
+        "consumer_node_id": "node-0035",
+        "consumer_op_type": "QLinearConv",
+        "consumer_qparams": [
+          "tensor-8ab529c638b83333",
+          "tensor-8a04166ec499dbfe"
+        ],
+        "dtype": "uint8",
+        "producer_node_id": "node-0034",
+        "producer_op_type": "QLinearConv",
+        "producer_qparams": [
+          "tensor-8ab529c638b83333",
+          "tensor-8a04166ec499dbfe"
+        ],
+        "profiles": {
+          "batch": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          },
+          "ring_channel": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          }
+        },
+        "qparam_identity_exact": true,
+        "shape": [
+          "N",
+          256,
+          14,
+          14
+        ],
+        "tensor_id": "tensor-01059514dc484e38"
+      },
+      {
+        "consumer_node_id": "node-0036",
+        "consumer_op_type": "QLinearConv",
+        "consumer_qparams": [
+          "tensor-926e44d4687c94db",
+          "tensor-227be49f6c59270a"
+        ],
+        "dtype": "uint8",
+        "producer_node_id": "node-0035",
+        "producer_op_type": "QLinearConv",
+        "producer_qparams": [
+          "tensor-926e44d4687c94db",
+          "tensor-227be49f6c59270a"
+        ],
+        "profiles": {
+          "batch": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          },
+          "ring_channel": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          }
+        },
+        "qparam_identity_exact": true,
+        "shape": [
+          "N",
+          256,
+          14,
+          14
+        ],
+        "tensor_id": "tensor-34424d1361beda7c"
+      },
+      {
+        "consumer_node_id": "node-0037",
+        "consumer_op_type": "QLinearAdd",
+        "consumer_qparams": [
+          "tensor-92df18a79a9acc7b",
+          "tensor-f0df4cc22d2000ec"
+        ],
+        "dtype": "uint8",
+        "producer_node_id": "node-0036",
+        "producer_op_type": "QLinearConv",
+        "producer_qparams": [
+          "tensor-92df18a79a9acc7b",
+          "tensor-f0df4cc22d2000ec"
+        ],
+        "profiles": {
+          "batch": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          },
+          "ring_channel": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          }
+        },
+        "qparam_identity_exact": true,
+        "shape": [
+          "N",
+          1024,
+          14,
+          14
+        ],
+        "tensor_id": "tensor-a62e0be502d6a025"
+      },
+      {
+        "consumer_node_id": "node-0038",
+        "consumer_op_type": "QLinearConv",
+        "consumer_qparams": [
+          "tensor-f96565df8b0b6943",
+          "tensor-fb88f81435f792a0"
+        ],
+        "dtype": "uint8",
+        "producer_node_id": "node-0037",
+        "producer_op_type": "QLinearAdd",
+        "producer_qparams": [
+          "tensor-f96565df8b0b6943",
+          "tensor-fb88f81435f792a0"
+        ],
+        "profiles": {
+          "batch": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          },
+          "ring_channel": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          }
+        },
+        "qparam_identity_exact": true,
+        "shape": [
+          "N",
+          1024,
+          14,
+          14
+        ],
+        "tensor_id": "tensor-4fd0b49057ad84c3"
+      },
+      {
+        "consumer_node_id": "node-0041",
+        "consumer_op_type": "QLinearAdd",
+        "consumer_qparams": [
+          "tensor-f96565df8b0b6943",
+          "tensor-fb88f81435f792a0"
+        ],
+        "dtype": "uint8",
+        "producer_node_id": "node-0037",
+        "producer_op_type": "QLinearAdd",
+        "producer_qparams": [
+          "tensor-f96565df8b0b6943",
+          "tensor-fb88f81435f792a0"
+        ],
+        "profiles": {
+          "batch": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          },
+          "ring_channel": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          }
+        },
+        "qparam_identity_exact": true,
+        "shape": [
+          "N",
+          1024,
+          14,
+          14
+        ],
+        "tensor_id": "tensor-4fd0b49057ad84c3"
+      },
+      {
+        "consumer_node_id": "node-0039",
+        "consumer_op_type": "QLinearConv",
+        "consumer_qparams": [
+          "tensor-57ae70b2847bb6ee",
+          "tensor-1bd355e193b1f98f"
+        ],
+        "dtype": "uint8",
+        "producer_node_id": "node-0038",
+        "producer_op_type": "QLinearConv",
+        "producer_qparams": [
+          "tensor-57ae70b2847bb6ee",
+          "tensor-1bd355e193b1f98f"
+        ],
+        "profiles": {
+          "batch": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          },
+          "ring_channel": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          }
+        },
+        "qparam_identity_exact": true,
+        "shape": [
+          "N",
+          256,
+          14,
+          14
+        ],
+        "tensor_id": "tensor-1eaecc27f38552c9"
+      },
+      {
+        "consumer_node_id": "node-0040",
+        "consumer_op_type": "QLinearConv",
+        "consumer_qparams": [
+          "tensor-bc2b7aa817b6f4fc",
+          "tensor-7dda41a2ac105b4e"
+        ],
+        "dtype": "uint8",
+        "producer_node_id": "node-0039",
+        "producer_op_type": "QLinearConv",
+        "producer_qparams": [
+          "tensor-bc2b7aa817b6f4fc",
+          "tensor-7dda41a2ac105b4e"
+        ],
+        "profiles": {
+          "batch": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          },
+          "ring_channel": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          }
+        },
+        "qparam_identity_exact": true,
+        "shape": [
+          "N",
+          256,
+          14,
+          14
+        ],
+        "tensor_id": "tensor-0598464ca408ca68"
+      },
+      {
+        "consumer_node_id": "node-0041",
+        "consumer_op_type": "QLinearAdd",
+        "consumer_qparams": [
+          "tensor-a41c673539e9751f",
+          "tensor-977824bebafb1a5c"
+        ],
+        "dtype": "uint8",
+        "producer_node_id": "node-0040",
+        "producer_op_type": "QLinearConv",
+        "producer_qparams": [
+          "tensor-a41c673539e9751f",
+          "tensor-977824bebafb1a5c"
+        ],
+        "profiles": {
+          "batch": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          },
+          "ring_channel": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          }
+        },
+        "qparam_identity_exact": true,
+        "shape": [
+          "N",
+          1024,
+          14,
+          14
+        ],
+        "tensor_id": "tensor-04ba34034c6e79c5"
+      },
+      {
+        "consumer_node_id": "node-0042",
+        "consumer_op_type": "QLinearConv",
+        "consumer_qparams": [
+          "tensor-ce6c5ff79a407da6",
+          "tensor-df84c3bbb550cfc0"
+        ],
+        "dtype": "uint8",
+        "producer_node_id": "node-0041",
+        "producer_op_type": "QLinearAdd",
+        "producer_qparams": [
+          "tensor-ce6c5ff79a407da6",
+          "tensor-df84c3bbb550cfc0"
+        ],
+        "profiles": {
+          "batch": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          },
+          "ring_channel": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          }
+        },
+        "qparam_identity_exact": true,
+        "shape": [
+          "N",
+          1024,
+          14,
+          14
+        ],
+        "tensor_id": "tensor-db61b1deced2d607"
+      },
+      {
+        "consumer_node_id": "node-0045",
+        "consumer_op_type": "QLinearAdd",
+        "consumer_qparams": [
+          "tensor-ce6c5ff79a407da6",
+          "tensor-df84c3bbb550cfc0"
+        ],
+        "dtype": "uint8",
+        "producer_node_id": "node-0041",
+        "producer_op_type": "QLinearAdd",
+        "producer_qparams": [
+          "tensor-ce6c5ff79a407da6",
+          "tensor-df84c3bbb550cfc0"
+        ],
+        "profiles": {
+          "batch": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          },
+          "ring_channel": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          }
+        },
+        "qparam_identity_exact": true,
+        "shape": [
+          "N",
+          1024,
+          14,
+          14
+        ],
+        "tensor_id": "tensor-db61b1deced2d607"
+      },
+      {
+        "consumer_node_id": "node-0043",
+        "consumer_op_type": "QLinearConv",
+        "consumer_qparams": [
+          "tensor-132e0c07d3d7f19c",
+          "tensor-14b1f5a8fd9fb153"
+        ],
+        "dtype": "uint8",
+        "producer_node_id": "node-0042",
+        "producer_op_type": "QLinearConv",
+        "producer_qparams": [
+          "tensor-132e0c07d3d7f19c",
+          "tensor-14b1f5a8fd9fb153"
+        ],
+        "profiles": {
+          "batch": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          },
+          "ring_channel": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          }
+        },
+        "qparam_identity_exact": true,
+        "shape": [
+          "N",
+          256,
+          14,
+          14
+        ],
+        "tensor_id": "tensor-6d4dc59ebcffc89c"
+      },
+      {
+        "consumer_node_id": "node-0044",
+        "consumer_op_type": "QLinearConv",
+        "consumer_qparams": [
+          "tensor-ed5e7c359fea41e8",
+          "tensor-29f33aec47dc97ef"
+        ],
+        "dtype": "uint8",
+        "producer_node_id": "node-0043",
+        "producer_op_type": "QLinearConv",
+        "producer_qparams": [
+          "tensor-ed5e7c359fea41e8",
+          "tensor-29f33aec47dc97ef"
+        ],
+        "profiles": {
+          "batch": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          },
+          "ring_channel": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          }
+        },
+        "qparam_identity_exact": true,
+        "shape": [
+          "N",
+          256,
+          14,
+          14
+        ],
+        "tensor_id": "tensor-8289aef919831eb7"
+      },
+      {
+        "consumer_node_id": "node-0045",
+        "consumer_op_type": "QLinearAdd",
+        "consumer_qparams": [
+          "tensor-3633beb30c01f1c2",
+          "tensor-a5eb9dc0739bb972"
+        ],
+        "dtype": "uint8",
+        "producer_node_id": "node-0044",
+        "producer_op_type": "QLinearConv",
+        "producer_qparams": [
+          "tensor-3633beb30c01f1c2",
+          "tensor-a5eb9dc0739bb972"
+        ],
+        "profiles": {
+          "batch": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          },
+          "ring_channel": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          }
+        },
+        "qparam_identity_exact": true,
+        "shape": [
+          "N",
+          1024,
+          14,
+          14
+        ],
+        "tensor_id": "tensor-9b1cfc3a9e3176ce"
+      },
+      {
+        "consumer_node_id": "node-0046",
+        "consumer_op_type": "QLinearConv",
+        "consumer_qparams": [
+          "tensor-e95173c8a96a49e0",
+          "tensor-d5defc07e5746aa0"
+        ],
+        "dtype": "uint8",
+        "producer_node_id": "node-0045",
+        "producer_op_type": "QLinearAdd",
+        "producer_qparams": [
+          "tensor-e95173c8a96a49e0",
+          "tensor-d5defc07e5746aa0"
+        ],
+        "profiles": {
+          "batch": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          },
+          "ring_channel": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          }
+        },
+        "qparam_identity_exact": true,
+        "shape": [
+          "N",
+          1024,
+          14,
+          14
+        ],
+        "tensor_id": "tensor-b0a5621512e60845"
+      },
+      {
+        "consumer_node_id": "node-0049",
+        "consumer_op_type": "QLinearAdd",
+        "consumer_qparams": [
+          "tensor-e95173c8a96a49e0",
+          "tensor-d5defc07e5746aa0"
+        ],
+        "dtype": "uint8",
+        "producer_node_id": "node-0045",
+        "producer_op_type": "QLinearAdd",
+        "producer_qparams": [
+          "tensor-e95173c8a96a49e0",
+          "tensor-d5defc07e5746aa0"
+        ],
+        "profiles": {
+          "batch": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          },
+          "ring_channel": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          }
+        },
+        "qparam_identity_exact": true,
+        "shape": [
+          "N",
+          1024,
+          14,
+          14
+        ],
+        "tensor_id": "tensor-b0a5621512e60845"
+      },
+      {
+        "consumer_node_id": "node-0047",
+        "consumer_op_type": "QLinearConv",
+        "consumer_qparams": [
+          "tensor-183108d3f2425f81",
+          "tensor-f6f977dd09149b79"
+        ],
+        "dtype": "uint8",
+        "producer_node_id": "node-0046",
+        "producer_op_type": "QLinearConv",
+        "producer_qparams": [
+          "tensor-183108d3f2425f81",
+          "tensor-f6f977dd09149b79"
+        ],
+        "profiles": {
+          "batch": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          },
+          "ring_channel": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          }
+        },
+        "qparam_identity_exact": true,
+        "shape": [
+          "N",
+          256,
+          14,
+          14
+        ],
+        "tensor_id": "tensor-2bd5dccff49a1e10"
+      },
+      {
+        "consumer_node_id": "node-0048",
+        "consumer_op_type": "QLinearConv",
+        "consumer_qparams": [
+          "tensor-89e897688890a86d",
+          "tensor-d807698a254671c5"
+        ],
+        "dtype": "uint8",
+        "producer_node_id": "node-0047",
+        "producer_op_type": "QLinearConv",
+        "producer_qparams": [
+          "tensor-89e897688890a86d",
+          "tensor-d807698a254671c5"
+        ],
+        "profiles": {
+          "batch": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          },
+          "ring_channel": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          }
+        },
+        "qparam_identity_exact": true,
+        "shape": [
+          "N",
+          256,
+          14,
+          14
+        ],
+        "tensor_id": "tensor-79e8e744ad09fba4"
+      },
+      {
+        "consumer_node_id": "node-0049",
+        "consumer_op_type": "QLinearAdd",
+        "consumer_qparams": [
+          "tensor-db51fe8e7f7e374b",
+          "tensor-74dc494973719dbb"
+        ],
+        "dtype": "uint8",
+        "producer_node_id": "node-0048",
+        "producer_op_type": "QLinearConv",
+        "producer_qparams": [
+          "tensor-db51fe8e7f7e374b",
+          "tensor-74dc494973719dbb"
+        ],
+        "profiles": {
+          "batch": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          },
+          "ring_channel": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          }
+        },
+        "qparam_identity_exact": true,
+        "shape": [
+          "N",
+          1024,
+          14,
+          14
+        ],
+        "tensor_id": "tensor-02a4e27851fa2e87"
+      },
+      {
+        "consumer_node_id": "node-0050",
+        "consumer_op_type": "QLinearConv",
+        "consumer_qparams": [
+          "tensor-91368a59e17171de",
+          "tensor-914e86b90b2e24e5"
+        ],
+        "dtype": "uint8",
+        "producer_node_id": "node-0049",
+        "producer_op_type": "QLinearAdd",
+        "producer_qparams": [
+          "tensor-91368a59e17171de",
+          "tensor-914e86b90b2e24e5"
+        ],
+        "profiles": {
+          "batch": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          },
+          "ring_channel": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          }
+        },
+        "qparam_identity_exact": true,
+        "shape": [
+          "N",
+          1024,
+          14,
+          14
+        ],
+        "tensor_id": "tensor-d48007d4e289be70"
+      },
+      {
+        "consumer_node_id": "node-0053",
+        "consumer_op_type": "QLinearAdd",
+        "consumer_qparams": [
+          "tensor-91368a59e17171de",
+          "tensor-914e86b90b2e24e5"
+        ],
+        "dtype": "uint8",
+        "producer_node_id": "node-0049",
+        "producer_op_type": "QLinearAdd",
+        "producer_qparams": [
+          "tensor-91368a59e17171de",
+          "tensor-914e86b90b2e24e5"
+        ],
+        "profiles": {
+          "batch": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          },
+          "ring_channel": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          }
+        },
+        "qparam_identity_exact": true,
+        "shape": [
+          "N",
+          1024,
+          14,
+          14
+        ],
+        "tensor_id": "tensor-d48007d4e289be70"
+      },
+      {
+        "consumer_node_id": "node-0051",
+        "consumer_op_type": "QLinearConv",
+        "consumer_qparams": [
+          "tensor-bfc57787cd3deca0",
+          "tensor-a256562523b769bf"
+        ],
+        "dtype": "uint8",
+        "producer_node_id": "node-0050",
+        "producer_op_type": "QLinearConv",
+        "producer_qparams": [
+          "tensor-bfc57787cd3deca0",
+          "tensor-a256562523b769bf"
+        ],
+        "profiles": {
+          "batch": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          },
+          "ring_channel": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          }
+        },
+        "qparam_identity_exact": true,
+        "shape": [
+          "N",
+          256,
+          14,
+          14
+        ],
+        "tensor_id": "tensor-8744f5eabc402dcc"
+      },
+      {
+        "consumer_node_id": "node-0052",
+        "consumer_op_type": "QLinearConv",
+        "consumer_qparams": [
+          "tensor-bc2ca9d4c228b75e",
+          "tensor-10c6f19b4086c1da"
+        ],
+        "dtype": "uint8",
+        "producer_node_id": "node-0051",
+        "producer_op_type": "QLinearConv",
+        "producer_qparams": [
+          "tensor-bc2ca9d4c228b75e",
+          "tensor-10c6f19b4086c1da"
+        ],
+        "profiles": {
+          "batch": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          },
+          "ring_channel": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          }
+        },
+        "qparam_identity_exact": true,
+        "shape": [
+          "N",
+          256,
+          14,
+          14
+        ],
+        "tensor_id": "tensor-a6f805cbcb4841d6"
+      },
+      {
+        "consumer_node_id": "node-0053",
+        "consumer_op_type": "QLinearAdd",
+        "consumer_qparams": [
+          "tensor-21e80d613b57c9cd",
+          "tensor-0cbf04b67e942661"
+        ],
+        "dtype": "uint8",
+        "producer_node_id": "node-0052",
+        "producer_op_type": "QLinearConv",
+        "producer_qparams": [
+          "tensor-21e80d613b57c9cd",
+          "tensor-0cbf04b67e942661"
+        ],
+        "profiles": {
+          "batch": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          },
+          "ring_channel": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          }
+        },
+        "qparam_identity_exact": true,
+        "shape": [
+          "N",
+          1024,
+          14,
+          14
+        ],
+        "tensor_id": "tensor-08c6233f00fb5e72"
+      },
+      {
+        "consumer_node_id": "node-0054",
+        "consumer_op_type": "QLinearConv",
+        "consumer_qparams": [
+          "tensor-66e7b6e2b49759bb",
+          "tensor-8bce2474803191bd"
+        ],
+        "dtype": "uint8",
+        "producer_node_id": "node-0053",
+        "producer_op_type": "QLinearAdd",
+        "producer_qparams": [
+          "tensor-66e7b6e2b49759bb",
+          "tensor-8bce2474803191bd"
+        ],
+        "profiles": {
+          "batch": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          },
+          "ring_channel": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          }
+        },
+        "qparam_identity_exact": true,
+        "shape": [
+          "N",
+          1024,
+          14,
+          14
+        ],
+        "tensor_id": "tensor-2693c2d8af64c587"
+      },
+      {
+        "consumer_node_id": "node-0057",
+        "consumer_op_type": "QLinearAdd",
+        "consumer_qparams": [
+          "tensor-66e7b6e2b49759bb",
+          "tensor-8bce2474803191bd"
+        ],
+        "dtype": "uint8",
+        "producer_node_id": "node-0053",
+        "producer_op_type": "QLinearAdd",
+        "producer_qparams": [
+          "tensor-66e7b6e2b49759bb",
+          "tensor-8bce2474803191bd"
+        ],
+        "profiles": {
+          "batch": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          },
+          "ring_channel": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          }
+        },
+        "qparam_identity_exact": true,
+        "shape": [
+          "N",
+          1024,
+          14,
+          14
+        ],
+        "tensor_id": "tensor-2693c2d8af64c587"
+      },
+      {
+        "consumer_node_id": "node-0055",
+        "consumer_op_type": "QLinearConv",
+        "consumer_qparams": [
+          "tensor-c759b5b7552b1ba5",
+          "tensor-6194144b76ed8ad4"
+        ],
+        "dtype": "uint8",
+        "producer_node_id": "node-0054",
+        "producer_op_type": "QLinearConv",
+        "producer_qparams": [
+          "tensor-c759b5b7552b1ba5",
+          "tensor-6194144b76ed8ad4"
+        ],
+        "profiles": {
+          "batch": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          },
+          "ring_channel": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          }
+        },
+        "qparam_identity_exact": true,
+        "shape": [
+          "N",
+          256,
+          14,
+          14
+        ],
+        "tensor_id": "tensor-98b11e719bf6a208"
+      },
+      {
+        "consumer_node_id": "node-0056",
+        "consumer_op_type": "QLinearConv",
+        "consumer_qparams": [
+          "tensor-9a3c64a071702ee3",
+          "tensor-1fae5b722735a1f0"
+        ],
+        "dtype": "uint8",
+        "producer_node_id": "node-0055",
+        "producer_op_type": "QLinearConv",
+        "producer_qparams": [
+          "tensor-9a3c64a071702ee3",
+          "tensor-1fae5b722735a1f0"
+        ],
+        "profiles": {
+          "batch": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          },
+          "ring_channel": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          }
+        },
+        "qparam_identity_exact": true,
+        "shape": [
+          "N",
+          256,
+          14,
+          14
+        ],
+        "tensor_id": "tensor-62c02a0b772afe06"
+      },
+      {
+        "consumer_node_id": "node-0057",
+        "consumer_op_type": "QLinearAdd",
+        "consumer_qparams": [
+          "tensor-63e353399944fd5d",
+          "tensor-45328562e055c1d0"
+        ],
+        "dtype": "uint8",
+        "producer_node_id": "node-0056",
+        "producer_op_type": "QLinearConv",
+        "producer_qparams": [
+          "tensor-63e353399944fd5d",
+          "tensor-45328562e055c1d0"
+        ],
+        "profiles": {
+          "batch": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          },
+          "ring_channel": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          }
+        },
+        "qparam_identity_exact": true,
+        "shape": [
+          "N",
+          1024,
+          14,
+          14
+        ],
+        "tensor_id": "tensor-cc32cd91d4261c5e"
+      },
+      {
+        "consumer_node_id": "node-0058",
+        "consumer_op_type": "QLinearConv",
+        "consumer_qparams": [
+          "tensor-a286a66f97d38142",
+          "tensor-22be7055150957d3"
+        ],
+        "dtype": "uint8",
+        "producer_node_id": "node-0057",
+        "producer_op_type": "QLinearAdd",
+        "producer_qparams": [
+          "tensor-a286a66f97d38142",
+          "tensor-22be7055150957d3"
+        ],
+        "profiles": {
+          "batch": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          },
+          "ring_channel": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          }
+        },
+        "qparam_identity_exact": true,
+        "shape": [
+          "N",
+          1024,
+          14,
+          14
+        ],
+        "tensor_id": "tensor-ca794a1bcdf3adcb"
+      },
+      {
+        "consumer_node_id": "node-0059",
+        "consumer_op_type": "QLinearConv",
+        "consumer_qparams": [
+          "tensor-a286a66f97d38142",
+          "tensor-22be7055150957d3"
+        ],
+        "dtype": "uint8",
+        "producer_node_id": "node-0057",
+        "producer_op_type": "QLinearAdd",
+        "producer_qparams": [
+          "tensor-a286a66f97d38142",
+          "tensor-22be7055150957d3"
+        ],
+        "profiles": {
+          "batch": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          },
+          "ring_channel": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          }
+        },
+        "qparam_identity_exact": true,
+        "shape": [
+          "N",
+          1024,
+          14,
+          14
+        ],
+        "tensor_id": "tensor-ca794a1bcdf3adcb"
+      },
+      {
+        "consumer_node_id": "node-0062",
+        "consumer_op_type": "QLinearAdd",
+        "consumer_qparams": [
+          "tensor-0adc1804e8cb964b",
+          "tensor-bcba66fb5147051a"
+        ],
+        "dtype": "uint8",
+        "producer_node_id": "node-0058",
+        "producer_op_type": "QLinearConv",
+        "producer_qparams": [
+          "tensor-0adc1804e8cb964b",
+          "tensor-bcba66fb5147051a"
+        ],
+        "profiles": {
+          "batch": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          },
+          "ring_channel": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          }
+        },
+        "qparam_identity_exact": true,
+        "shape": [
+          "N",
+          2048,
+          7,
+          7
+        ],
+        "tensor_id": "tensor-b09fc451dddbbaf4"
+      },
+      {
+        "consumer_node_id": "node-0060",
+        "consumer_op_type": "QLinearConv",
+        "consumer_qparams": [
+          "tensor-63ac9085f63f4ac2",
+          "tensor-e2285b0f5113c173"
+        ],
+        "dtype": "uint8",
+        "producer_node_id": "node-0059",
+        "producer_op_type": "QLinearConv",
+        "producer_qparams": [
+          "tensor-63ac9085f63f4ac2",
+          "tensor-e2285b0f5113c173"
+        ],
+        "profiles": {
+          "batch": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          },
+          "ring_channel": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          }
+        },
+        "qparam_identity_exact": true,
+        "shape": [
+          "N",
+          512,
+          7,
+          7
+        ],
+        "tensor_id": "tensor-c5eef492186615c7"
+      },
+      {
+        "consumer_node_id": "node-0061",
+        "consumer_op_type": "QLinearConv",
+        "consumer_qparams": [
+          "tensor-86dfa6da75955af4",
+          "tensor-c8181a9d01a74f6f"
+        ],
+        "dtype": "uint8",
+        "producer_node_id": "node-0060",
+        "producer_op_type": "QLinearConv",
+        "producer_qparams": [
+          "tensor-86dfa6da75955af4",
+          "tensor-c8181a9d01a74f6f"
+        ],
+        "profiles": {
+          "batch": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          },
+          "ring_channel": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          }
+        },
+        "qparam_identity_exact": true,
+        "shape": [
+          "N",
+          512,
+          7,
+          7
+        ],
+        "tensor_id": "tensor-dec7daf297e288ec"
+      },
+      {
+        "consumer_node_id": "node-0062",
+        "consumer_op_type": "QLinearAdd",
+        "consumer_qparams": [
+          "tensor-c65d7914b723b97c",
+          "tensor-2edb084564317ab5"
+        ],
+        "dtype": "uint8",
+        "producer_node_id": "node-0061",
+        "producer_op_type": "QLinearConv",
+        "producer_qparams": [
+          "tensor-c65d7914b723b97c",
+          "tensor-2edb084564317ab5"
+        ],
+        "profiles": {
+          "batch": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          },
+          "ring_channel": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          }
+        },
+        "qparam_identity_exact": true,
+        "shape": [
+          "N",
+          2048,
+          7,
+          7
+        ],
+        "tensor_id": "tensor-fc0d731d1ad01bb1"
+      },
+      {
+        "consumer_node_id": "node-0063",
+        "consumer_op_type": "QLinearConv",
+        "consumer_qparams": [
+          "tensor-85afc11824735990",
+          "tensor-2731338aab1a3b06"
+        ],
+        "dtype": "uint8",
+        "producer_node_id": "node-0062",
+        "producer_op_type": "QLinearAdd",
+        "producer_qparams": [
+          "tensor-85afc11824735990",
+          "tensor-2731338aab1a3b06"
+        ],
+        "profiles": {
+          "batch": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          },
+          "ring_channel": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          }
+        },
+        "qparam_identity_exact": true,
+        "shape": [
+          "N",
+          2048,
+          7,
+          7
+        ],
+        "tensor_id": "tensor-cf02cca080037995"
+      },
+      {
+        "consumer_node_id": "node-0066",
+        "consumer_op_type": "QLinearAdd",
+        "consumer_qparams": [
+          "tensor-85afc11824735990",
+          "tensor-2731338aab1a3b06"
+        ],
+        "dtype": "uint8",
+        "producer_node_id": "node-0062",
+        "producer_op_type": "QLinearAdd",
+        "producer_qparams": [
+          "tensor-85afc11824735990",
+          "tensor-2731338aab1a3b06"
+        ],
+        "profiles": {
+          "batch": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          },
+          "ring_channel": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          }
+        },
+        "qparam_identity_exact": true,
+        "shape": [
+          "N",
+          2048,
+          7,
+          7
+        ],
+        "tensor_id": "tensor-cf02cca080037995"
+      },
+      {
+        "consumer_node_id": "node-0064",
+        "consumer_op_type": "QLinearConv",
+        "consumer_qparams": [
+          "tensor-c3b4c5194c1bad70",
+          "tensor-769d3404a0207350"
+        ],
+        "dtype": "uint8",
+        "producer_node_id": "node-0063",
+        "producer_op_type": "QLinearConv",
+        "producer_qparams": [
+          "tensor-c3b4c5194c1bad70",
+          "tensor-769d3404a0207350"
+        ],
+        "profiles": {
+          "batch": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          },
+          "ring_channel": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          }
+        },
+        "qparam_identity_exact": true,
+        "shape": [
+          "N",
+          512,
+          7,
+          7
+        ],
+        "tensor_id": "tensor-e7db8e484392cc75"
+      },
+      {
+        "consumer_node_id": "node-0065",
+        "consumer_op_type": "QLinearConv",
+        "consumer_qparams": [
+          "tensor-a269b4fb0997df5b",
+          "tensor-0a7d24de96207a1d"
+        ],
+        "dtype": "uint8",
+        "producer_node_id": "node-0064",
+        "producer_op_type": "QLinearConv",
+        "producer_qparams": [
+          "tensor-a269b4fb0997df5b",
+          "tensor-0a7d24de96207a1d"
+        ],
+        "profiles": {
+          "batch": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          },
+          "ring_channel": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          }
+        },
+        "qparam_identity_exact": true,
+        "shape": [
+          "N",
+          512,
+          7,
+          7
+        ],
+        "tensor_id": "tensor-d127ee99710043c1"
+      },
+      {
+        "consumer_node_id": "node-0066",
+        "consumer_op_type": "QLinearAdd",
+        "consumer_qparams": [
+          "tensor-99b5f653e2bd7d62",
+          "tensor-30e2f288cf3054b0"
+        ],
+        "dtype": "uint8",
+        "producer_node_id": "node-0065",
+        "producer_op_type": "QLinearConv",
+        "producer_qparams": [
+          "tensor-99b5f653e2bd7d62",
+          "tensor-30e2f288cf3054b0"
+        ],
+        "profiles": {
+          "batch": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          },
+          "ring_channel": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          }
+        },
+        "qparam_identity_exact": true,
+        "shape": [
+          "N",
+          2048,
+          7,
+          7
+        ],
+        "tensor_id": "tensor-411fb27ae9c5f364"
+      },
+      {
+        "consumer_node_id": "node-0067",
+        "consumer_op_type": "QLinearConv",
+        "consumer_qparams": [
+          "tensor-6b68ff344055b9e3",
+          "tensor-3822c8c036c6b675"
+        ],
+        "dtype": "uint8",
+        "producer_node_id": "node-0066",
+        "producer_op_type": "QLinearAdd",
+        "producer_qparams": [
+          "tensor-6b68ff344055b9e3",
+          "tensor-3822c8c036c6b675"
+        ],
+        "profiles": {
+          "batch": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          },
+          "ring_channel": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          }
+        },
+        "qparam_identity_exact": true,
+        "shape": [
+          "N",
+          2048,
+          7,
+          7
+        ],
+        "tensor_id": "tensor-eaff748fc06bcda1"
+      },
+      {
+        "consumer_node_id": "node-0070",
+        "consumer_op_type": "QLinearAdd",
+        "consumer_qparams": [
+          "tensor-6b68ff344055b9e3",
+          "tensor-3822c8c036c6b675"
+        ],
+        "dtype": "uint8",
+        "producer_node_id": "node-0066",
+        "producer_op_type": "QLinearAdd",
+        "producer_qparams": [
+          "tensor-6b68ff344055b9e3",
+          "tensor-3822c8c036c6b675"
+        ],
+        "profiles": {
+          "batch": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          },
+          "ring_channel": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          }
+        },
+        "qparam_identity_exact": true,
+        "shape": [
+          "N",
+          2048,
+          7,
+          7
+        ],
+        "tensor_id": "tensor-eaff748fc06bcda1"
+      },
+      {
+        "consumer_node_id": "node-0068",
+        "consumer_op_type": "QLinearConv",
+        "consumer_qparams": [
+          "tensor-e8a512f0ed767e78",
+          "tensor-9ee9ce6b5ffc8637"
+        ],
+        "dtype": "uint8",
+        "producer_node_id": "node-0067",
+        "producer_op_type": "QLinearConv",
+        "producer_qparams": [
+          "tensor-e8a512f0ed767e78",
+          "tensor-9ee9ce6b5ffc8637"
+        ],
+        "profiles": {
+          "batch": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          },
+          "ring_channel": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          }
+        },
+        "qparam_identity_exact": true,
+        "shape": [
+          "N",
+          512,
+          7,
+          7
+        ],
+        "tensor_id": "tensor-ef05bf4a95e4d172"
+      },
+      {
+        "consumer_node_id": "node-0069",
+        "consumer_op_type": "QLinearConv",
+        "consumer_qparams": [
+          "tensor-844debc873f51f29",
+          "tensor-17b7ad931da38e4a"
+        ],
+        "dtype": "uint8",
+        "producer_node_id": "node-0068",
+        "producer_op_type": "QLinearConv",
+        "producer_qparams": [
+          "tensor-844debc873f51f29",
+          "tensor-17b7ad931da38e4a"
+        ],
+        "profiles": {
+          "batch": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          },
+          "ring_channel": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          }
+        },
+        "qparam_identity_exact": true,
+        "shape": [
+          "N",
+          512,
+          7,
+          7
+        ],
+        "tensor_id": "tensor-7cfaa04fc4836786"
+      },
+      {
+        "consumer_node_id": "node-0070",
+        "consumer_op_type": "QLinearAdd",
+        "consumer_qparams": [
+          "tensor-8302e2f3f9d44962",
+          "tensor-2821114bc5ed55a8"
+        ],
+        "dtype": "uint8",
+        "producer_node_id": "node-0069",
+        "producer_op_type": "QLinearConv",
+        "producer_qparams": [
+          "tensor-8302e2f3f9d44962",
+          "tensor-2821114bc5ed55a8"
+        ],
+        "profiles": {
+          "batch": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          },
+          "ring_channel": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          }
+        },
+        "qparam_identity_exact": true,
+        "shape": [
+          "N",
+          2048,
+          7,
+          7
+        ],
+        "tensor_id": "tensor-9dda09e05b608c9d"
+      },
+      {
+        "consumer_node_id": "node-0071",
+        "consumer_op_type": "QLinearGlobalAveragePool",
+        "consumer_qparams": [
+          "tensor-bdd32534497d9913",
+          "tensor-1cc0294c70090e58"
+        ],
+        "dtype": "uint8",
+        "producer_node_id": "node-0070",
+        "producer_op_type": "QLinearAdd",
+        "producer_qparams": [
+          "tensor-bdd32534497d9913",
+          "tensor-1cc0294c70090e58"
+        ],
+        "profiles": {
+          "batch": {
+            "classification": "exact_alias_proved",
+            "responsibility_explicit": true
+          },
+          "ring_channel": {
+            "classification": "exact_alias_proved",
+            "responsibility_explicit": true
+          }
+        },
+        "qparam_identity_exact": true,
+        "shape": [
+          "N",
+          2048,
+          7,
+          7
+        ],
+        "tensor_id": "tensor-55360f2ec724d2f3"
+      },
+      {
+        "consumer_node_id": "node-0072",
+        "consumer_op_type": "DequantizeLinear",
+        "consumer_qparams": [
+          "tensor-2cc427657ec3a8ed",
+          "tensor-03b21228355c36d2"
+        ],
+        "dtype": "uint8",
+        "producer_node_id": "node-0071",
+        "producer_op_type": "QLinearGlobalAveragePool",
+        "producer_qparams": [
+          "tensor-2cc427657ec3a8ed",
+          "tensor-03b21228355c36d2"
+        ],
+        "profiles": {
+          "batch": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          },
+          "ring_channel": {
+            "classification": "explicit_relayout",
+            "responsibility_explicit": true
+          }
+        },
+        "qparam_identity_exact": true,
+        "shape": [
+          "N",
+          2048,
+          1,
+          1
+        ],
+        "tensor_id": "tensor-ab32f279540568c3"
+      },
+      {
+        "consumer_node_id": "node-0073",
+        "consumer_op_type": "Flatten",
+        "consumer_qparams": null,
+        "dtype": "float32",
+        "producer_node_id": "node-0072",
+        "producer_op_type": "DequantizeLinear",
+        "producer_qparams": null,
+        "profiles": {
+          "batch": {
+            "classification": "zero_copy_proved",
+            "responsibility_explicit": true
+          },
+          "ring_channel": {
+            "classification": "zero_copy_proved",
+            "responsibility_explicit": true
+          }
+        },
+        "qparam_identity_exact": null,
+        "shape": [
+          "N",
+          2048,
+          1,
+          1
+        ],
+        "tensor_id": "tensor-50c285690f899b1b"
+      },
+      {
+        "consumer_node_id": "node-0074",
+        "consumer_op_type": "QuantizeLinear",
+        "consumer_qparams": null,
+        "dtype": "float32",
+        "producer_node_id": "node-0073",
+        "producer_op_type": "Flatten",
+        "producer_qparams": null,
+        "profiles": {
+          "batch": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          },
+          "ring_channel": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          }
+        },
+        "qparam_identity_exact": null,
+        "shape": [
+          "N",
+          2048
+        ],
+        "tensor_id": "tensor-9b1363d3baf474c8"
+      },
+      {
+        "consumer_node_id": "node-0075",
+        "consumer_op_type": "QLinearMatMul",
+        "consumer_qparams": [
+          "tensor-f65fcc89b57d931f",
+          "tensor-fb899ce9723da4d7"
+        ],
+        "dtype": "uint8",
+        "producer_node_id": "node-0074",
+        "producer_op_type": "QuantizeLinear",
+        "producer_qparams": [
+          "tensor-f65fcc89b57d931f",
+          "tensor-fb899ce9723da4d7"
+        ],
+        "profiles": {
+          "batch": {
+            "classification": "exact_alias_proved",
+            "responsibility_explicit": true
+          },
+          "ring_channel": {
+            "classification": "explicit_relayout",
+            "responsibility_explicit": true
+          }
+        },
+        "qparam_identity_exact": true,
+        "shape": [
+          "N",
+          2048
+        ],
+        "tensor_id": "tensor-6fbd5707d5f08110"
+      },
+      {
+        "consumer_node_id": "node-0076",
+        "consumer_op_type": "QLinearAdd",
+        "consumer_qparams": [
+          "tensor-4ee4af3963971db8",
+          "tensor-2e2dfe5611779700"
+        ],
+        "dtype": "uint8",
+        "producer_node_id": "node-0075",
+        "producer_op_type": "QLinearMatMul",
+        "producer_qparams": [
+          "tensor-4ee4af3963971db8",
+          "tensor-2e2dfe5611779700"
+        ],
+        "profiles": {
+          "batch": {
+            "classification": "exact_alias_proved",
+            "responsibility_explicit": true
+          },
+          "ring_channel": {
+            "classification": "exact_alias_proved",
+            "responsibility_explicit": true
+          }
+        },
+        "qparam_identity_exact": true,
+        "shape": [
+          "N",
+          1000
+        ],
+        "tensor_id": "tensor-6cc774b369e8dea4"
+      },
+      {
+        "consumer_node_id": "node-0077",
+        "consumer_op_type": "DequantizeLinear",
+        "consumer_qparams": [
+          "tensor-1dcd30b27960784d",
+          "tensor-1ff0ad61fc06574b"
+        ],
+        "dtype": "uint8",
+        "producer_node_id": "node-0076",
+        "producer_op_type": "QLinearAdd",
+        "producer_qparams": [
+          "tensor-1dcd30b27960784d",
+          "tensor-1ff0ad61fc06574b"
+        ],
+        "profiles": {
+          "batch": {
+            "classification": "layout_compatible_rebase_w7",
+            "responsibility_explicit": true
+          },
+          "ring_channel": {
+            "classification": "explicit_relayout",
+            "responsibility_explicit": true
+          }
+        },
+        "qparam_identity_exact": true,
+        "shape": [
+          "N",
+          1000
+        ],
+        "tensor_id": "tensor-02aeb7457d1ccf49"
+      }
+    ],
+    "quantized_edge_count": 91,
+    "runtime_tensor_edge_count": 93
+  }
+}

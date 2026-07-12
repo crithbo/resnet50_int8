@@ -155,7 +155,7 @@
       "accumulator": "INT32 [N,C,1,1] logical to per-slice 11C-padded using zero tail",
       "output": "UINT8 [N,C,1,1] logical to per-slice 11C-padded using y_zero_point tail",
       "producer_compatibility": "batch Add D and pool A may exact-alias when tensor ID, logical and physical shape, payload, bytes and bases match",
-      "flatten_compatibility": "singleton H/W are removed without changing per-slice C-order bytes or D base addresses",
+      "flatten_compatibility": "storage-view proof only: singleton H/W can be removed without changing per-slice C-order bytes; the formal graph actually uses GlobalAveragePool -> Dequantize -> Flatten",
       "alignment_bytes": 16,
       "implementation": "resnet50_pipeline/avgpool16_layout.py"
     },
@@ -169,7 +169,7 @@
       "accumulator": "INT32 [N,C,1,1] logical to per-slice N11C-local using zero tail",
       "output": "UINT8 [N,C,1,1] logical to per-slice N11C-local using y_zero_point tail",
       "producer_compatibility": "channel Add D and pool A may exact-alias when tensor ID, logical and physical shape, payload, bytes and bases match",
-      "flatten_compatibility": "singleton H/W are removed to NF-local without changing per-slice C-order bytes or D base addresses",
+      "flatten_compatibility": "storage-view proof only: singleton H/W can be removed to NF-local without changing bytes; the formal graph actually uses GlobalAveragePool -> Dequantize -> Flatten and therefore needs the recorded channel-to-batch boundary",
       "alignment_bytes": 16,
       "implementation": "resnet50_pipeline/avgpool16_layout.py"
     },
@@ -310,6 +310,25 @@
       "batch_per_slice_used_bytes": 2063392,
       "ring_per_slice_used_bytes": 136224,
       "slice_capacity_bytes": 25165824
+    },
+    "w4_g4_gate_audit_v1": {
+      "status": "candidate_software_evidence",
+      "path": "artifacts/w4/g4_gate_audit.json",
+      "sha256": "f4bd5d3e84ad6c022729179fe2ce01643792c9fedb792bf61c58b83684e32a5a",
+      "size_bytes": 100609,
+      "formal_nodes_covered": 78,
+      "runtime_tensor_edges_audited": 93,
+      "quantized_edges_with_exact_qparam_identity": 91,
+      "all_registered_evidence_hashes_match": true,
+      "software_candidate_readiness": "pass",
+      "g4_status": "not_passed",
+      "w5_authorized": false,
+      "decision": "wait_for_formal_hardware_layout_and_topology_adjudication",
+      "blocking_criteria": [
+        "approved_target_profile_exists",
+        "target_rtl_isa_register_map_version_frozen",
+        "approved_physical_layout_contract_exists"
+      ]
     }
   },
   "unresolved": [
