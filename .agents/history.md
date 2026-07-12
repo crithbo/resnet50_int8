@@ -426,3 +426,15 @@
 - 新增3项聚焦测试，覆盖双profile正逆、K/O tail、inactive slice、scalar副本、坐标、ring step、正式shape/capacity、Quantize alias、dense Add alias和非法shape/dtype；根仓全量67项测试通过，报告重复生成hash稳定，architecture严格JSON解析及`git diff --check`通过。
 - W4计划内全部算子族至此均有软件candidate，但G4仍未通过：Conv/整体profile及正式硬件layout未获批准，部分channel↔batch边界需要显式relayout，逐K tile psum属于W5目标合同。下一原子步骤应为全W4 profile/transition矩阵与G4综合门审计，而不是直接把candidate升级为approved。
 - 精确回退：revert `e0be1cf848850af317e1cb6f120b1c1c2adba3e8`；上一根仓恢复点为`2c4b9ad0361fb039dd4f4845865d2cf68d59e055`。
+
+## 2026-07-12：全W4 profile/transition综合审计与G4门裁决
+
+- 根仓提交 `f569a1d134f20ec7a1286b4230d86f2fca3f0485`，父提交 `73120e9246cf24e5fd02449c6dbdd55b74fc881f`，`audit: evaluate W4 G4 gate`。
+- 新增可重放`resnet50_pipeline.w4_audit.audit_w4_gate()`、CLI `tools/audit_w4_gate.py`和门测试。审计严格使用正式W3图目录、`contracts/architecture.json`及已登记W4报告，不执行ORT、不重建约951 MB W3产物。
+- 节点覆盖为78/78：2 Quantize、53 QLinearConv、1 MaxPool、17 QLinearAdd、1 QLinearGlobalAveragePool、1 Flatten、1 QLinearMatMul、2 Dequantize。12个W4 candidate的实现接口均含`forward/inverse/explain_coordinate/validate`；5份算子族报告及2份Conv0报告共7份证据的文件大小和SHA-256全部匹配。
+- 正式图93条runtime tensor边均对batch和ring/channel给出责任，91条量化边的producer输出与consumer输入scale/zero-point稳定tensor ID全部一致。batch分类为4 exact alias、1 explicit relayout、87 layout-compatible/W7 rebase、1 zero-copy；ring/channel分类为3、4、85、1。
+- 审计纠正GAP边界表述：GAP D→Flatten只是一项singleton存储视图性质，正式图实际为`GAP→Dequantize→Flatten`；batch GAP D与Dequantize A布局兼容并需W7统一base，channel需要显式转batch，真正zero-copy是Dequantize D→Flatten。
+- 机器报告`artifacts/w4/g4_gate_audit.json`为100,609 bytes，SHA-256 `f4bd5d3e84ad6c022729179fe2ce01643792c9fedb792bf61c58b83684e32a5a`。新增ADR-003固定结论：software candidate readiness通过，但G4=`not_passed`、`w5_authorized=false`。
+- G4三项阻塞标准为：没有approved target profile、没有冻结的RTL/ISA/register-map版本、没有approved activation/weight/bias/qparams/psum/D物理layout合同。其余资源数、opcode、DDR地址单位、instruction mask和硬件load/dump协议继续留在architecture unresolved账本。
+- 根仓全量68项测试通过，审计报告重复生成hash稳定，architecture严格JSON解析及`git diff --check`通过。当前按操作者要求等待正式硬件布局与拓扑裁决，暂不进入W5。
+- 精确回退：revert `f569a1d134f20ec7a1286b4230d86f2fca3f0485`；上一根仓恢复点为`73120e9246cf24e5fd02449c6dbdd55b74fc881f`。

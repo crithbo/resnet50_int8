@@ -51,7 +51,7 @@
 
 - **已通过**：W0/G0集成骨架，W2/G2小Conv候选软件纵向闭环，W3/G3正式图/lowering/全节点与subop golden。
 - **部分通过**：W1已冻结正式候选模型、固定输入、预处理和软件量化事实；目标架构、layout、JSON/emulator和硬件接口未批准，所以G1仍未通过。
-- **正在推进**：W4计划内全部算子族均已有软件candidate。MatMul/dense正式INT32 accumulator、1000类tail、Quantize输入、bias Add和最终Dequantize转换责任已闭合。W4软件覆盖完成但G4未通过：Conv/整体profile、正式硬件layout及逐K tile物理边界仍未批准。W5目标JSON/bitstream、W6目标simulator、W7网络execplan、W8硬件、W9通用三方比较尚未开始。
+- **当前等待外部裁决**：W4/G4综合审计已覆盖78/78节点、93条runtime边、91条量化qparam链和7份正式证据；software candidate readiness通过。G4因approved profile、冻结RTL/ISA/register-map版本和approved物理layout三项缺失而未通过，`w5_authorized=false`。W5目标JSON/bitstream、W6目标simulator、W7网络execplan、W8硬件、W9通用三方比较均不启动。
 - **当前边界**：W2只证明小合成Conv的golden=NDP functional model；W3公式重放仍属于golden侧。当前没有任何正式ResNet算子达到golden=target simulator=hardware。
 
 ### 接手进度总表
@@ -62,13 +62,13 @@
 | W1 | G1未通过 | 模型、固定输入、预处理、ONNX量化事实 | 并行补目标硬件合同 |
 | W2 | G2通过 | 1/4-slice小Conv候选layout和NDP functional数值闭环 | 作为W4 fixture，不外推为硬件规格 |
 | W3 | G3通过 | 78节点、133 hw_op、79 runtime tensor、55内部tensor、旧77映射 | 不重跑大artifact，除非hash/合同失效 |
-| W4 | 软件candidate覆盖完成/G4未通过 | 计划内全部算子族已通过软件round-trip，边界转换责任已记录 | 执行G4综合门审计；外部裁决Conv/整体profile与正式layout |
+| W4 | software readiness通过/G4未通过 | 78节点、93边、91量化链和7份证据通过审计 | 等待Conv/整体profile、RTL/ISA版本和正式layout批准；不进W5 |
 | W5～W9 | 未通过 | 仅有参考框架或mock接口 | 等待对应前置门通过 |
 
 ### 当前可立即执行队列
 
-1. 新对话先执行只读接手检查：根状态、三仓verify、67项unittest；不要先重跑约951 MB的W3正式artifact。
-2. 汇总W4所有candidate的节点覆盖、profile选择和D→A转换矩阵，逐条审计G4；未取得正式profile/硬件layout裁决前不把candidate升级为approved。
+1. 新对话先执行只读接手检查：根状态、三仓verify、68项unittest；不要先重跑约951 MB的W3正式artifact。
+2. 等待并记录硬件侧对ADR-002/ADR-003的正式回复；未取得带版本的profile/物理layout批准前，不把candidate升级为approved且不进入W5。
 3. 并行推进W1剩余硬件合同；没有approved合同不得宣布G4/G5硬件格式通过。
 4. 若模型、预处理、量化公式或lowering变化，先列出所有失效的manifest/hash和下游产物。
 
@@ -375,7 +375,7 @@ layout描述不能只写名称，必须能给出逻辑坐标→slice/bank/byte a
 
 验收门 G4：最小shape、真实ResNet shape和tail shape均通过 raw→physical→raw bit-exact；上游D/下游A的零拷贝或转换责任有显式记录。
 
-当前进度（2026-07-12）：W4计划内全部算子candidate已完成。正式MatMul node-0075为`[16,2048]×[2048,1000]→INT32 P/UINT8 D [16,1000]`；batch profile一行样本一slice、B复制，ring profile按K输入/O输出owner并执行16步。A/B、六个qparams、派生multiplier、P/D共11端口在两profile下inverse bit-exact。batch Quantize D→MatMul A exact alias；ring输入显式batch→K relayout；两profile MatMul D→dense Add A exact alias，bias `[1000]`广播成立；batch dense Add D→Dequantize A物理字节兼容但基址留W7统一，ring边界要求O-owner→batch relayout。软件覆盖完成不等于正式layout获批，ADR-002和整体profile裁决仍未完成，所以G4保持未通过。
+当前进度（2026-07-12）：W4/G4综合门审计已完成。机器报告`artifacts/w4/g4_gate_audit.json`覆盖78/78正式节点、93条runtime tensor边、91条量化边qparam身份和12个W4 candidate；7份登记证据的hash/大小全部匹配。batch边分类为4 exact alias、1 explicit relayout、87 layout-compatible/W7 rebase、1 zero-copy；ring/channel为3、4、85、1。software candidate readiness通过，但12个layout全部仍为candidate，目标RTL/ISA/register-map版本与正式物理layout未冻结，因此G4=`not_passed`、W5未授权。ADR-003已形成等待硬件裁决的正式记录。
 
 ### W5：逐算子JSON和bitstream【难度：很高】
 
@@ -597,7 +597,7 @@ W0实现前还需把以上补充转成可执行的schema字段、测试用例和
 - 每个 slice 的元素归属、复制规则、padding 区和 128-bit 行内顺序可由 manifest 验证。
 - 上一算子 D 与下一算子 A 的物理布局不一致时，明确由 remapping、后继 stream 还是显式 relayout 解决。
 
-当前状态：W2语义保持冻结；W4计划内全部算子软件candidate均已完成。MatMul正式报告为`artifacts/w4/matmul_profiles_report.json`，SHA-256 `c561f4f23e5f5f7e1e5c5a556237fef4266b2b3a99f62ababc0f205a36e565ea`；两profile的11端口、ring owner顺序、Quantize/加偏置Add/最终Dequantize边界均已验证。下一步先形成全W4 profile/transition矩阵并执行G4综合审计；等待外部裁决时不得把candidate写成approved或直接进入依赖approved layout的W5实现。
+当前状态：W2语义保持冻结；W4 software candidate readiness已由`artifacts/w4/g4_gate_audit.json`证明，SHA-256 `f4bd5d3e84ad6c022729179fe2ce01643792c9fedb792bf61c58b83684e32a5a`。G4未通过且W5未授权；当前只等待ADR-002/ADR-003列出的正式硬件布局、整体profile和版本裁决。裁决到达后必须写新版本approved合同并重新运行本审计，不能原地改写candidate历史。
 
 ## 阶段 E：完成 ResNet 单算子 JSON 和数值参数化
 
