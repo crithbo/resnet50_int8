@@ -172,6 +172,7 @@
 - runner路径为DRAM→input Buffer→SpecialPEA→ActivationUnit→output Buffer→DRAM；ring LC在1-slice为`[1]`、4-slice为`[0,0,0,1]`，每坐标仅最终ring状态结束。
 - 直接加载CGRA `qnn_round.py`执行同一accumulator/multiplier/zp，输出与标量NumPy、im2col、ORT及NDP一致；每个region全部物理字节均可反查正确slice及data/tensor-padding/alignment语义。
 - 根28项、NDP14项回归通过，故按原G2门槛判定W2/G2通过。此批准仅限小Conv软件候选合同；目标JSON/bitstream、正式layout、旧固定主入口和硬件三方一致仍未批准。
+- W2/G2作为大步骤里程碑已云端备份：NDP `35eab40e5314bf603481dd6268bc96ab2ca514a6` 推送到Private `conv_func`，根台账 `e01adc0…` 推送到Private `origin/main`；两仓tracking均应保持0/0，后续由仓库verify持续核验。
 
 ## 2026-07-05～2026-07-09：确认原始ResNet参考链
 
