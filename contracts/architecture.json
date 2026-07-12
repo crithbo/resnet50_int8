@@ -94,6 +94,30 @@
         "ring_inverse_bit_exact": true,
         "batch_ring_logical_bit_exact": true
       }
+    },
+    "w4_maxpool_batch16_candidate_v1": {
+      "status": "candidate",
+      "scope": "MaxPool batch-parallel software relayout compatible with batch Conv D; not hardware-approved",
+      "slice_topology": "one batch item per slice",
+      "activation_and_output": "NCHW logical to per-slice HWC with channels padded to 8",
+      "window": "not materialized; AG resolves kernel coordinates and synthesizes spatial padding",
+      "spatial_padding_value": 0,
+      "channel_tail_value": "explicit producer quantized tail value; separate from spatial padding",
+      "zero_copy_precondition": "Conv batch D and MaxPool A share tensor shape, HWC axis order, tail value, base addresses and bytes",
+      "alignment_bytes": 16,
+      "implementation": "resnet50_pipeline/maxpool16_layout.py"
+    },
+    "w4_maxpool_channel16_candidate_v1": {
+      "status": "candidate",
+      "scope": "MaxPool channel-owner software relayout compatible with ring Conv D; not hardware-approved",
+      "slice_topology": "contiguous channel chunks across 16 slices",
+      "activation_and_output": "NCHW logical to per-slice NHWC-local; c_tile=ceil(C/16)",
+      "window": "not materialized; AG resolves kernel coordinates on the channel owner slice",
+      "spatial_padding_value": 0,
+      "channel_tail_value": "explicit producer quantized tail value; separate from spatial padding",
+      "zero_copy_precondition": "Conv ring D and MaxPool A share tensor shape, NHWC-local axis order, C ownership, tail value, base addresses and bytes",
+      "alignment_bytes": 16,
+      "implementation": "resnet50_pipeline/maxpool16_layout.py"
     }
   },
   "candidate_validation_reports": {
@@ -114,6 +138,21 @@
       "maximum_per_slice_case": "conv-family-a3194a82fe78 (Conv0)",
       "maximum_batch_bytes": 4441472,
       "maximum_ring_bytes": 4820160,
+      "slice_capacity_bytes": 25165824
+    },
+    "w4_maxpool_profiles_v1": {
+      "status": "candidate_software_evidence",
+      "path": "artifacts/w4/maxpool_profiles_report.json",
+      "sha256": "97373125f62ba29c47981bb7e05e1ccd3862060f6275fe4ee34418b6c16f9cfc",
+      "size_bytes": 3882,
+      "formal_node_id": "node-0002",
+      "formal_input_shape": [16, 64, 112, 112],
+      "formal_output_shape": [16, 64, 56, 56],
+      "all_profiles_inverse_bit_exact": true,
+      "batch_conv_d_to_pool_a_zero_copy": true,
+      "ring_conv_d_to_pool_a_zero_copy": true,
+      "batch_per_slice_used_bytes_with_alias": 4642176,
+      "channel_per_slice_used_bytes_with_alias": 5020864,
       "slice_capacity_bytes": 25165824
     }
   },

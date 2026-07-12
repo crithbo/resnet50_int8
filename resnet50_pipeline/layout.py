@@ -42,12 +42,18 @@ from .simple_layout import (  # noqa: E402  (keeps the protocol definitions firs
 )
 from .conv16_layout import ConvBatch16PhysicalLayout  # noqa: E402
 from .conv16_ring_layout import ConvRing16PhysicalLayout  # noqa: E402
+from .maxpool16_layout import (  # noqa: E402
+    MaxPoolBatch16PhysicalLayout,
+    MaxPoolChannel16PhysicalLayout,
+)
 
 
 __all__ = [
     "DequantizeLinearPhysicalLayout",
     "ConvBatch16PhysicalLayout",
     "ConvRing16PhysicalLayout",
+    "MaxPoolBatch16PhysicalLayout",
+    "MaxPoolChannel16PhysicalLayout",
     "IdentityLayout",
     "LayoutTransform",
     "QuantizeLinearPhysicalLayout",
