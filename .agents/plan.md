@@ -51,7 +51,7 @@
 
 - **已通过**：W0/G0集成骨架，W2/G2小Conv候选软件纵向闭环，W3/G3正式图/lowering/全节点与subop golden。
 - **部分通过**：W1已冻结正式候选模型、固定输入、预处理和软件量化事实；目标架构、layout、JSON/emulator和硬件接口未批准，所以G1仍未通过。
-- **正在推进**：W4已完成Quantize/Dequantize/View、全部Conv shape、MaxPool及QLinearAdd的双profile candidate。Add的17个正式节点/5类shape-broadcast均可规划，32条残差输入分支的布局与qparam链兼容；两输入同时零拷贝仍由W7地址分配决定。AvgPool、MatMul仍待实现。W5目标JSON/bitstream、W6目标simulator、W7网络execplan、W8硬件、W9通用三方比较尚未开始。
+- **正在推进**：W4已完成Quantize/Dequantize/View、全部Conv shape、MaxPool、QLinearAdd及GlobalAveragePool的双profile candidate。GAP正式centered sum、requant参数、Add D→A exact alias和D→Flatten零拷贝均已验证。MatMul/dense仍待实现。W5目标JSON/bitstream、W6目标simulator、W7网络execplan、W8硬件、W9通用三方比较尚未开始。
 - **当前边界**：W2只证明小合成Conv的golden=NDP functional model；W3公式重放仍属于golden侧。当前没有任何正式ResNet算子达到golden=target simulator=hardware。
 
 ### 接手进度总表
@@ -62,13 +62,13 @@
 | W1 | G1未通过 | 模型、固定输入、预处理、ONNX量化事实 | 并行补目标硬件合同 |
 | W2 | G2通过 | 1/4-slice小Conv候选layout和NDP functional数值闭环 | 作为W4 fixture，不外推为硬件规格 |
 | W3 | G3通过 | 78节点、133 hw_op、79 runtime tensor、55内部tensor、旧77映射 | 不重跑大artifact，除非hash/合同失效 |
-| W4 | 进行中/G4未通过 | Quantize/Dequantize/View、全部Conv shape、MaxPool及QLinearAdd candidate已通过软件round-trip | 外部裁决Conv profile；内部继续AvgPool，再扩MatMul |
+| W4 | 进行中/G4未通过 | Quantize/Dequantize/View、全部Conv shape、MaxPool、QLinearAdd及GlobalAveragePool candidate已通过软件round-trip | 外部裁决Conv profile；内部继续MatMul/dense |
 | W5～W9 | 未通过 | 仅有参考框架或mock接口 | 等待对应前置门通过 |
 
 ### 当前可立即执行队列
 
-1. 新对话先执行只读接手检查：根状态、三仓verify、61项unittest；不要先重跑约951 MB的W3正式artifact。
-2. 按W4顺序继续GlobalAveragePool和MatMul/dense的16-slice forward/inverse/explain/validate；W2 candidate只作可回归输入，不自动升级为正式layout。
+1. 新对话先执行只读接手检查：根状态、三仓verify、64项unittest；不要先重跑约951 MB的W3正式artifact。
+2. 按W4顺序继续MatMul/dense的16-slice forward/inverse/explain/validate；W2 candidate只作可回归输入，不自动升级为正式layout。
 3. 并行推进W1剩余硬件合同；没有approved合同不得宣布G4/G5硬件格式通过。
 4. 若模型、预处理、量化公式或lowering变化，先列出所有失效的manifest/hash和下游产物。
 
@@ -375,7 +375,7 @@ layout描述不能只写名称，必须能给出逻辑坐标→slice/bank/byte a
 
 验收门 G4：最小shape、真实ResNet shape和tail shape均通过 raw→physical→raw bit-exact；上游D/下游A的零拷贝或转换责任有显式记录。
 
-当前进度（2026-07-12）：Quantize/Dequantize/View、Conv、MaxPool和QLinearAdd candidate已完成；ADR-002等待Conv拓扑裁决。Add冻结`same_shape`和`[N,F]+[F]`两种正式广播，A/B/D分别使用各自zero-point tail，六个标量qparams逐slice复制。17个正式节点归为5类shape-broadcast；32条残差输入的producer D与Add A/B逐分支比较physical shape、payload和zero-point tensor ID均一致。node-0007残差与node-0076 dense尾节点在batch/channel布局下9端口inverse均bit-exact。单输入exact alias可显式证明，但A/B同时零拷贝必须由W7分配互不重叠基址，当前不作虚假声明。AvgPool和MatMul尚未完成，所以G4保持未通过。
+当前进度（2026-07-12）：Quantize/Dequantize/View、Conv、MaxPool、QLinearAdd和GlobalAveragePool candidate已完成；ADR-002等待Conv拓扑裁决。正式GAP node-0071输入`[16,2048,7,7]`，centered INT32 sum与UINT8 D均为`[16,2048,1,1]`；batch profile逐样本slice reduction，channel profile逐channel-owner slice对全部batch reduction，均无需跨slice求和。A、四个qparams、派生multiplier、P和D共8端口在两profile下inverse bit-exact；正式Add node-0070 D→GAP A exact alias及GAP D→Flatten零拷贝均通过。MatMul尚未完成，所以G4保持未通过。
 
 ### W5：逐算子JSON和bitstream【难度：很高】
 
@@ -584,7 +584,7 @@ W0实现前还需把以上补充转成可执行的schema字段、测试用例和
 | QLinearConv | activation、OIHW weight、bias、scale/zp、首/中/末 K tile psum 和 D | W4 layout candidate已完成；逐K tile待W5合同 |
 | MaxPool | UINT8 activation、padding/tail、池化输出 D | W4 candidate已完成 |
 | QLinearAdd | 两个残差分支输入、各自 qparams、对齐/广播和 UINT8 D | W4 candidate已完成；双alias地址待W7 |
-| QLinearGlobalAveragePool | activation、int32 sum/中间结果、requant 参数和 D | 需完成 |
+| QLinearGlobalAveragePool | activation、int32 sum/中间结果、requant 参数和 D | W4 candidate已完成 |
 | QLinearMatMul / dense Add | feature、weight、bias、qparams、psum 和最终 D | 需完成 |
 | DequantizeLinear | UINT8 输入、scale/zp 和 FP32 D | W4 candidate已完成 |
 | Flatten/View | 验证是否物理零拷贝；若不是，完成显式重排和逆变换 | W4 candidate已完成 |
@@ -597,7 +597,7 @@ W0实现前还需把以上补充转成可执行的schema字段、测试用例和
 - 每个 slice 的元素归属、复制规则、padding 区和 128-bit 行内顺序可由 manifest 验证。
 - 上一算子 D 与下一算子 A 的物理布局不一致时，明确由 remapping、后继 stream 还是显式 relayout 解决。
 
-当前状态：W2语义保持冻结；W4 Conv覆盖正式20类shape，ADR-002已形成裁决包。MaxPool已完成batch/channel双profile和对应Conv D→Pool A零拷贝。QLinearAdd已覆盖17个节点、5类shape-broadcast、32条残差输入兼容、六类标量qparams和D布局；正式报告为`artifacts/w4/add_profiles_report.json`，SHA-256 `9769589a14cc281968925e49645715010db634a8f722093e3ba106d47ae03108`。在等待外部裁决时，内部下一步按W4顺序实现GlobalAveragePool，再处理MatMul/dense。
+当前状态：W2语义保持冻结；W4 Conv覆盖正式20类shape，ADR-002已形成裁决包。MaxPool和QLinearAdd双profile均已完成。GlobalAveragePool正式报告为`artifacts/w4/avgpool_profiles_report.json`，SHA-256 `cb8ccd709616a851bed109a2a47a70706f9c8ecc0ba76f47eafa0ba3fbb4d3f8`；两profile的8端口、49点reduction owner、上游Add exact alias和下游Flatten零拷贝均通过。在等待外部裁决时，内部下一步按W4顺序实现MatMul/dense。
 
 ## 阶段 E：完成 ResNet 单算子 JSON 和数值参数化
 

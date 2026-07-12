@@ -403,3 +403,14 @@
 - 新增4项聚焦测试，覆盖残差与dense广播正逆、D/标量坐标、两类producer profile、单输入exact alias、双输入offset冲突、feature tail、inactive slice、qparam副本、非法广播和越slice地址；根仓全量61项测试通过，正式报告重复生成hash稳定，architecture严格JSON解析及`git diff --check`通过。
 - 边界：当前证明软件candidate布局、正式W3 inverse、残差producer/consumer物理兼容及qparam链；不证明目标Add JSON/GA/simulator/hardware数值执行，也不批准双输入同时零拷贝。dense A来自QLinearMatMul，其D兼容待W4 MatMul布局完成；G4保持未通过，下一原子步骤是GlobalAveragePool。
 - 精确回退：revert `63f5eb5437057f6aa032feaceb9a0af7adaea7b6`；上一根仓恢复点为`ff1f49bb22c9de548420e4220e19204c19e9cb26`。
+
+## 2026-07-12：W4 GlobalAveragePool双profile与上下游零拷贝
+
+- 根仓提交 `164bc6c09ffa15e333e7a2e8196355369fdea4a6`，父提交 `b0ec7112e41ecde312ecae3c84c569ede02d00db`，`feat: add W4 GlobalAveragePool relayouts`。
+- 新增`w4_globalavgpool_batch16_candidate_v1`和`w4_globalavgpool_channel16_candidate_v1`。batch profile按样本归属slice，A为HWC-padded、P/D为11C-padded；channel profile按连续C chunk归属16 slice，A为NHWC-local、P/D为N11C-local。A/P/D tail分别为`x_zero_point`、0、`y_zero_point`；x/y四个qparams及`x_scale/(y_scale*H*W)`派生multiplier逐slice复制。
+- reduction责任明确：batch profile在每个样本slice内对各channel执行H×W centered sum；channel profile在每个channel-owner slice内对全部batch分别执行H×W centered sum，二者都不需要跨slice reduction。`explain_reduction()`可列出每个输入逻辑坐标、物理地址、owner slice和INT32 P地址。
+- 正式node-0071为`[16,2048,7,7]→[16,2048,1,1]`，spatial size 49。工具只读取既有W3 A、INT32 sum、D和ONNX initializer，并复用node-0070 Add输入构造producer物理包；两profile的A、四个qparams、multiplier、P、D共8端口inverse均bit-exact，W3 `int32_internal_then_requant`证据仍匹配ORT。
+- 正式上下游兼容同时闭合：batch/channel的Add node-0070 D→GAP A均满足tensor ID、shape、payload、物理字节和16个base完全一致，exact alias成立；GAP D的singleton H/W在Flatten axis=1时可分别从11C→F或N11C→NF而不改变逐slice字节序和base，零拷贝成立。含输入alias地址时两profile每slice均使用311,472/25,165,824 bytes。
+- 机器报告`artifacts/w4/avgpool_profiles_report.json`为13,910 bytes，SHA-256 `cb8ccd709616a851bed109a2a47a70706f9c8ecc0ba76f47eafa0ba3fbb4d3f8`。新增3项聚焦测试，覆盖正逆、reduction地址、P/D坐标、qparam副本、tail/inactive slice、Add exact alias、Flatten零拷贝、正式shape、非法channels_last/dtype/base；根仓全量64项测试通过，报告重复生成hash稳定，architecture严格JSON解析及`git diff --check`通过。
+- 边界：当前证明软件candidate布局、正式W3 sum/requant结果的可逆装载及上下游零拷贝，不证明目标AvgPool JSON/GA/simulator/hardware数值执行；G4保持未通过，下一原子步骤是MatMul/dense。
+- 精确回退：revert `164bc6c09ffa15e333e7a2e8196355369fdea4a6`；上一根仓恢复点为`b0ec7112e41ecde312ecae3c84c569ede02d00db`。
