@@ -438,3 +438,21 @@
 - G4三项阻塞标准为：没有approved target profile、没有冻结的RTL/ISA/register-map版本、没有approved activation/weight/bias/qparams/psum/D物理layout合同。其余资源数、opcode、DDR地址单位、instruction mask和硬件load/dump协议继续留在architecture unresolved账本。
 - 根仓全量68项测试通过，审计报告重复生成hash稳定，architecture严格JSON解析及`git diff --check`通过。当前按操作者要求等待正式硬件布局与拓扑裁决，暂不进入W5。
 - 精确回退：revert `f569a1d134f20ec7a1286b4230d86f2fca3f0485`；上一根仓恢复点为`73120e9246cf24e5fd02449c6dbdd55b74fc881f`。
+
+## 2026-07-13：版本化硬件批准合同与G4自动重审
+
+- 根仓提交 `c839143bbc8d4909a3eb40bbcb32d53de4eaa3f2`，父提交 `b7e645b40669635e5d68958c7d89319ddc2c6eab`，`feat: validate versioned hardware approvals`。
+- 新增严格`hardware_approval` schema、加载/校验器、CLI与ADR-004；合同必须同时给出批准人/日期、完整RTL commit、ISA/register-map版本、整网profile、各算子layout、A/B/bias/qparams/psum/D物理对象、数值语义、opcode/字段位宽、runtime协议和带SHA证据，未知或多余字段均拒绝。
+- G4审计默认只读`contracts/hardware_approval.json`：文件缺失或无效时三个硬件criteria保持false；测试fixture证明合法batch/ring合同可自动重审并打开G4，但仓库没有伪造真实批准文件，因此正式状态仍为`not_passed`、`w5_authorized=false`。
+- 新增硬件批准及G4正反路径回归；本步骤不生成JSON/bitstream、不修改candidate为approved。
+- 精确回退：revert `c839143bbc8d4909a3eb40bbcb32d53de4eaa3f2`；上一根仓恢复点为`b7e645b40669635e5d68958c7d89319ddc2c6eab`。
+
+## 2026-07-13：W4等待期整网物理审计与通用逻辑比较器
+
+- 根仓提交 `bfafbe61a0a96f47851d6f67101483f6a9f61383`，父提交 `c839143bbc8d4909a3eb40bbcb32d53de4eaa3f2`，`feat: complete W4 pre-hardware readiness`。
+- 对正式图93条runtime边在batch和ring/channel两个profile下逐边构造producer/consumer物理签名并验证；batch 92条直接兼容、1条显式relayout，ring/channel 89条直接兼容、4条显式relayout，91条量化边qparam身份全部一致。
+- 新增双profile整网dry-run成本报告和candidate activation内存计划：报告`artifacts/w4/network_candidate_dry_run.json`为615,520 bytes，SHA-256 `852ea566112a92fd1965b6a2c2525449462e2b716db0941b368f87abc5d1eb18`；两profile的standalone节点容量均通过，生命周期重叠地址互斥，alias动作无冲突，16组残差双分支均为不同且不重叠的活跃对象。报告只估算layout字节，不声称cycle/带宽/能耗。
+- 新增通用逻辑tensor比较器、请求/报告schema和`compare-results` CLI：支持任意两方/默认三方配对，整数bit-exact、浮点显式`atol/rtol`，区分missing/load/inverse/shape/dtype/value失败，并按拓扑报告首错坐标、数值与可扩展物理provenance；`.npy`采用mmap分块，稳定报告无时间戳。
+- G4机器报告更新为103,311 bytes、SHA-256 `c4679a1bc44d0eac35de3035a4627895223140c22f560dcf19d21a06b37a298e`。software candidate readiness通过；真实hardware结果仍不存在，三个原硬件阻塞criteria不变，G4仍未通过且W5未授权。
+- 验证：根仓全量89项测试通过；三参考仓`sync_repositories.py verify`全部匹配lock；schema和architecture严格JSON解析、审计报告重复生成hash稳定、`git diff --check`通过。未读取或重算约951 MB W3产物。
+- 精确回退：revert `bfafbe61a0a96f47851d6f67101483f6a9f61383`；上一根仓恢复点为`c839143bbc8d4909a3eb40bbcb32d53de4eaa3f2`。
