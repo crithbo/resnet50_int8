@@ -82,7 +82,7 @@ class CodexWorktreeEnvironmentTests(unittest.TestCase):
         self.assertIn("worktree metadata is missing; check .worktreeinclude", script)
 
     @unittest.skipUnless(sys.platform == "win32", "PowerShell setup is Windows-only")
-    def test_setup_script_check_only_validates_the_source_checkout(self) -> None:
+    def test_setup_script_check_only_validates_the_current_checkout(self) -> None:
         completed = subprocess.run(
             [
                 "powershell",
@@ -104,15 +104,28 @@ class CodexWorktreeEnvironmentTests(unittest.TestCase):
         self.assertEqual(completed.returncode, 0, completed.stderr)
         report = json.loads(completed.stdout)
         self.assertEqual(report["schema_version"], "1.0")
-        self.assertEqual(report["mode"], "local")
         self.assertTrue(report["check_only"])
         self.assertEqual(report["repository_verify"], "not_run")
         self.assertEqual(
             [item["name"] for item in report["shared_paths"]],
             [".venv", "CGRA_SIM", "ndp-sim-ref", "NDPFuncModel"],
         )
-        self.assertTrue(all(item["status"] == "source" for item in report["shared_paths"]))
-        self.assertTrue(all(item["status"] == "source" for item in report["metadata"]))
+        if report["mode"] == "local":
+            self.assertTrue(
+                all(item["status"] == "source" for item in report["shared_paths"])
+            )
+            self.assertTrue(
+                all(item["status"] == "source" for item in report["metadata"])
+            )
+        else:
+            self.assertEqual(report["mode"], "worktree")
+            self.assertTrue(
+                all(item["status"] == "linked" for item in report["shared_paths"])
+            )
+            self.assertEqual(
+                [item["status"] for item in report["metadata"]],
+                ["included", "included", "restored", "restored"],
+            )
 
 
 if __name__ == "__main__":
