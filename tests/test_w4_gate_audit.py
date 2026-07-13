@@ -42,6 +42,14 @@ class W4GateAuditTests(unittest.TestCase):
         self.assertEqual(
             report["gate_decision"]["software_candidate_readiness"], "fail"
         )
+        self.assertEqual(report["candidate_layouts"]["count"], 4)
+        self.assertEqual(
+            report["current_target_evidence"]["layout_evidence_families"],
+            ["simple", "view"],
+        )
+        self.assertFalse(
+            report["current_target_evidence"]["registered_layout_evidence_complete"]
+        )
         self.assertTrue(
             report["legacy16_evidence"]["criteria"][
                 "all_93_edges_physically_verified"
@@ -88,7 +96,12 @@ class W4GateAuditTests(unittest.TestCase):
             report = audit_w4_gate(root, approval_path)
         self.assertTrue(report["hardware_approval"]["valid"])
         self.assertEqual(report["hardware_approval"]["validation_scope"], "structure_only")
+        self.assertFalse(report["hardware_approval"]["gate_authority_eligible"])
         self.assertFalse(report["hardware_approval"]["current_gate_eligible"])
+        self.assertIn(
+            "hardware_approval_not_gate_authority_eligible",
+            report["hardware_approval"]["current_gate_eligibility_reasons"],
+        )
         self.assertIn(
             "target28_operator_layout_evidence_incomplete",
             report["hardware_approval"]["current_gate_eligibility_reasons"],

@@ -33,6 +33,33 @@ class ContractSemanticTests(unittest.TestCase):
         self.assertEqual(SUPPORTED_CONTRACT_SCHEMA_VERSIONS["architecture"], {"0.2"})
         self.assertEqual(SUPPORTED_CONTRACT_SCHEMA_VERSIONS["backend"], {"0.1"})
         self.assertEqual(SUPPORTED_CONTRACT_SCHEMA_VERSIONS["quantization"], {"0.1"})
+        architecture = contracts.documents["architecture"]
+        self.assertEqual(len(architecture["candidate_layouts"]), 4)
+        self.assertEqual(len(architecture["planned_layouts"]), 10)
+        self.assertEqual(
+            {
+                record["operator_family"]
+                for record in architecture["candidate_layouts"].values()
+            },
+            {"simple", "view"},
+        )
+        self.assertTrue(
+            all(
+                record["current_gate_eligible"]
+                for record in architecture["candidate_layouts"].values()
+            )
+        )
+
+    def test_layout_cannot_be_both_planned_and_candidate(self) -> None:
+        value = deepcopy(self.architecture)
+        layout_id = "w4_simple_group4x7_28_candidate_v1"
+        value["planned_layouts"][layout_id] = deepcopy(
+            value["candidate_layouts"][layout_id]
+        )
+        value["planned_layouts"][layout_id]["status"] = "planned"
+        value["planned_layouts"][layout_id]["current_gate_eligible"] = False
+        with self.assertRaisesRegex(ContractError, "must be disjoint"):
+            validate_architecture_contract(value)
 
     def test_old16_active_target_fails(self) -> None:
         value = deepcopy(self.architecture)

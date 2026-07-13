@@ -38,42 +38,24 @@ class IdentityLayout:
 from .simple_layout import (  # noqa: E402  (keeps the protocol definitions first)
     DequantizeLinearPhysicalLayout,
     QuantizeLinearPhysicalLayout,
+    Rtl28PhysicalBundle,
+    Rtl28PhysicalRegion,
+    Rtl28PortPlacement,
+    SIMPLE_LAYOUT_IDS,
+    VIEW_LAYOUT_IDS,
     ZeroCopyViewLayout,
+    ZeroCopyViewProof,
 )
-from .conv16_layout import ConvBatch16PhysicalLayout  # noqa: E402
-from .conv16_ring_layout import ConvRing16PhysicalLayout  # noqa: E402
-from .maxpool16_layout import (  # noqa: E402
-    MaxPoolBatch16PhysicalLayout,
-    MaxPoolChannel16PhysicalLayout,
-)
-from .add16_layout import (  # noqa: E402
-    QLinearAddBatch16PhysicalLayout,
-    QLinearAddChannel16PhysicalLayout,
-)
-from .avgpool16_layout import (  # noqa: E402
-    GlobalAveragePoolBatch16PhysicalLayout,
-    GlobalAveragePoolChannel16PhysicalLayout,
-)
-from .matmul16_layout import (  # noqa: E402
-    QLinearMatMulBatch16PhysicalLayout,
-    QLinearMatMulRing16PhysicalLayout,
-)
-
-
 __all__ = [
     "DequantizeLinearPhysicalLayout",
-    "ConvBatch16PhysicalLayout",
-    "ConvRing16PhysicalLayout",
-    "MaxPoolBatch16PhysicalLayout",
-    "MaxPoolChannel16PhysicalLayout",
-    "QLinearAddBatch16PhysicalLayout",
-    "QLinearAddChannel16PhysicalLayout",
-    "GlobalAveragePoolBatch16PhysicalLayout",
-    "GlobalAveragePoolChannel16PhysicalLayout",
-    "QLinearMatMulBatch16PhysicalLayout",
-    "QLinearMatMulRing16PhysicalLayout",
     "IdentityLayout",
     "LayoutTransform",
     "QuantizeLinearPhysicalLayout",
+    "Rtl28PhysicalBundle",
+    "Rtl28PhysicalRegion",
+    "Rtl28PortPlacement",
+    "SIMPLE_LAYOUT_IDS",
+    "VIEW_LAYOUT_IDS",
     "ZeroCopyViewLayout",
+    "ZeroCopyViewProof",
 ]

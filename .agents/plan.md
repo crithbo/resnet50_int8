@@ -365,7 +365,7 @@ W1的模型子任务已完成，但G1尚未通过；architecture/quantization/ba
 
 ### W4：逐算子28-slice relayout与性能profile【难度：高】
 
-当前状态（2026-07-13）：ADR-007已采用，旧16-slice W4物理候选全部失效为历史参考。W4按新目标重开；W0～W3不重做，旧93边集合、生命周期/alias算法和逻辑比较器复用，旧物理签名、容量与ring成本不复用。真实`topology28`和`profile28`调度底座以及C0-01～07机器合同/legacy隔离已经完成：现行G4、architecture/approval/backend合同、九份旧报告、旧生成器和RTL external evidence全部fail-closed，配套文档漂移已清理。尚无任何28-slice算子layout；下一步进入C1公共geometry与Quantize/Dequantize/View布局。
+当前状态（2026-07-13）：ADR-007已采用，旧16-slice W4物理候选全部失效为历史参考。W4按新目标重开；W0～W3不重做，旧93边集合、生命周期/alias算法和逻辑比较器复用，旧物理签名、容量与ring成本不复用。真实`topology28`和`profile28`调度底座、C0-01～07机器合同/legacy隔离以及C1公共geometry与Quantize/Dequantize/View正逆布局已经完成；141项根测试通过。现行G4、architecture/approval/backend合同、九份旧报告、旧生成器和RTL external evidence继续fail-closed。当前已有simple/view两个28-slice算子族、4个candidate layout，仍缺Conv、Pool、Add、GAP、MatMul、93边/成本和正式硬件批准，因此G4未通过且W5未授权。P4判定已通过，下一步可按严格文件边界并行实现Conv、Pool（MaxPool+GAP）和MatMul，公共合同与最终集成仍单线程。
 
 #### 方案切换遗留修改清单（2026-07-13全工作文件夹复审）
 
@@ -381,8 +381,8 @@ W1的模型子任务已完成，但G1尚未通过；architecture/quantization/ba
 | C0-05 | P0/P1 | 旧九份报告曾缺统一target/superseded标记且只有4份tracked，合同引用无法从fresh checkout完整复核 | 九份原报告已保留原路径并统一加`legacy16/16/superseded_by_adr_007/current_gate_eligible=false`；`legacy16_index.json`登记全部hash/size，architecture交叉验证；全部小报告纳入Git | 合同和index逐字节复核九份报告；旧`all_profiles_pass=true`只能作为legacy诊断；current证据路径固定为architecture hash+content hash | 已完成 |
 | C0-06 | P0/P1 | 旧network/verify工具名像现行入口且可覆盖旧报告；current G4输出缺target/profile/architecture身份 | 八个旧生成器现在必须显式`--legacy16`且只能写`artifacts/w4/legacy16/`；current G4报告携带RTL28 identity并支持内容寻址路径，拒绝覆盖旧快照 | 无显式legacy flag时在读取W3前失败；旧根快照不可写；current报告包含target/slice/architecture/profile IDs/hash | 已完成 |
 | C0-07 | P1 | `repos.lock.json`曾未覆盖RTL28证据，backend只写target unknown | 采用tracked external evidence snapshot+hash方案：lock 0.3验证来源repo/commit、size/hash、内嵌非批准状态；backend登记不可执行candidate evidence，target sim/hw显式unapproved | `verify --evidence-only`可在无参考仓的fresh checkout验RTL快照；NDPFuncModel固定W2-only且不能冒充target backend | 已完成 |
-| C1-01 | P1/C1 | `memory.py`无参数`DramGeometry()`静默默认16并固化旧address order；新代码易误用 | 分离显式`TARGET_DRAM_GEOMETRY28`与`LEGACY_DRAM_GEOMETRY16`，或禁止目标路径无参构造；未批准地址解释保持candidate | current 28路径不存在隐式16默认；旧16回归显式申请legacy几何 | 待执行 |
-| C1-02 | P1/C1 | `simple_layout.py`名称通用但硬要求16；`layout.py`公共入口仍正常导出所有旧16类 | 新建28公共Quantize/Dequantize/View实现并替换current导出；旧实现重命名/移入legacy namespace，明确只作历史回归 | current registry/public API只暴露28合同；旧测试仍可在legacy suite运行 | 待执行 |
+| C1-01 | P1/C1 | `memory.py`无参数`DramGeometry()`静默默认16并固化旧address order；新代码易误用 | 已分离显式`TARGET_DRAM_GEOMETRY28`与`LEGACY_DRAM_GEOMETRY16`，并禁止无参构造；未批准地址解释保持candidate | current 28路径不存在隐式16默认；旧16回归显式申请legacy几何；141项根测试通过 | 已完成 |
+| C1-02 | P1/C1 | `simple_layout.py`名称通用但硬要求16；`layout.py`公共入口仍正常导出所有旧16类 | 已用28公共Quantize/Dequantize/View实现替换current导出；旧实现迁至`simple16_layout.py`，明确只作历史回归 | current registry/public API只暴露28合同；旧测试继续在legacy suite通过；4个layout由planned转candidate | 已完成 |
 | C3-01 | P1/C3 | `w4_profiles.py`和`network_dry_run.py`仍把16同时当batch、slice/owner和ring步数，无法表达`[3,3,2,2,2,2,2]`与GAP后唯一转换 | 等28 producer/consumer layout冻结后重写profile transition、93边、生命周期/alias与成本审计，不机械改名旧公式 | 报告以28真实owner/HIGH/LOW计算，区分模型batch16与slice28；旧网络报告只作legacy | 待执行 |
 | DOC-01 | P1/C0同批 | `agent.md`曾混写旧main缺陷、参考工具权威性和错误下一步 | 摘要/优先级已改为C0完成→C1；明确ndp-sim只作框架参考、NDPFuncModel仅W2 backend，并区分上游固定入口与W2修复 | `agent.md`摘要、当前优先级和详细地图已一致 | 已完成 |
 | DOC-02 | P1/C0同批 | 算子规则曾把W3全节点golden/manifest、ResNet lowerer和旧一sample一slice写成当前待办 | 相关段已标W1/W3前历史；当前事实为W3 79 runtime+55 internal/78节点与W2五层链已过，缺口改为28 physical、JSON实例/execplan adapter、target sim/hw | 不再诱导重跑W3或恢复旧16调度，旧脚本缺陷仍保留为历史证据 | 已完成 |
@@ -397,7 +397,7 @@ W1的模型子任务已完成，但G1尚未通过；architecture/quantization/ba
 
 0. 机器合同迁移：将架构合同、硬件批准schema/validator、fixture和G4入口切换为28-slice candidate口径；旧16-slice候选/报告只保留在显式legacy区域或历史文件中。冻结RTL commit、HIGH/LOW拓扑ID、七小环主profile和大环候选ID，但不伪造approved合同。
 1. 建立`topology28`：精确编码RTL的七个HIGH 4-slice小环和一条LOW 28-slice大环，提供owner/step正逆查询并拒绝`(owner+step)%28`等伪物理拓扑。【已完成】
-2. Quantize/Dequantize/View：建立七batch group、环内C/F owner、zero-copy和FP32/UINT8 packing规则。
+2. Quantize/Dequantize/View：建立七batch group、环内C/F owner、zero-copy和FP32/UINT8 packing规则。【C1已完成；group4x7与global LOW两个profile共4个candidate layout】
 3. Conv：主体profile使用七小环；每组负责`[3,3,2,2,2,2,2]`个样本，activation按C owner环行4步/3 hop，weight在七组复制并按K owner分片，bias/qparams/P/D跟随K owner。
 4. MaxPool：保持batch group和channel owner，窗口/padding/tail在本地完成。
 5. QLinearAdd：两残差分支必须具有相同batch group、C/K owner、物理轴和tail；A/B各自qparams保持独立，双分支地址同时活跃时不得冲突。
@@ -413,11 +413,11 @@ W1的模型子任务已完成，但G1尚未通过；architecture/quantization/ba
 
 #### W4-28下一执行包与并行波次
 
-**W4-28C0：机器合同迁移与legacy隔离，已完成。** ENV-01、现行G4 fail-closed、architecture/approval/backend合同、fixture、旧报告索引、旧工具guard、RTL external evidence lock和文档清理已经统一为28-slice candidate口径。当前满足：目标slice为28；固定`Trassic2.0_RTL@e3bdebba...`candidate来源；HIGH/LOW映射和两个profile ID可机器读取；旧16-slice证据显式legacy且不能被新批准合同选择或工具覆盖；28结构fixture不能授权G4；缺少28算子证据、真实批准或clean elaboration时仍为`G4=not_passed`、`w5_authorized=false`。下一原子包是C1公共布局，全程不读取W3 tensor。
+**W4-28C0：机器合同迁移与legacy隔离，已完成。** ENV-01、现行G4 fail-closed、architecture/approval/backend合同、fixture、旧报告索引、旧工具guard、RTL external evidence lock和文档清理已经统一为28-slice candidate口径。当前满足：目标slice为28；固定`Trassic2.0_RTL@e3bdebba...`candidate来源；HIGH/LOW映射和两个profile ID可机器读取；旧16-slice证据显式legacy且不能被新批准合同选择或工具覆盖；28结构fixture不能授权G4；缺少28算子证据、真实批准或clean elaboration时仍为`G4=not_passed`、`w5_authorized=false`。
 
-**W4-28C1：Quantize/Dequantize/View公共布局，单线程。** 该步骤冻结所有后续算子共享的28-slice geometry、七组sample owner、环内C/F owner、对齐、FP32/UINT8小端packing、qparam副本、inactive/tail和zero-copy证明接口。覆盖最小shape、正式首尾节点shape、3/2样本组边界和tail shape；必须提供`forward/inverse/explain_coordinate/validate`并bit-exact。完成前不开算子并行，避免每个任务各造一套公共布局。
+**W4-28C1：Quantize/Dequantize/View公共布局，已单线程完成。** 已冻结显式28/legacy16 geometry、七组sample owner、环内C/F owner、16-byte对齐、FP32/UINT8小端packing、qparam全slice副本、inactive/tail和zero-copy证明接口；DRAM geometry/address order继续标`candidate_unapproved`。group4x7采用HIGH owner顺序与固定3个sample存储槽，global profile采用LOW 28-owner顺序；Quantize/Dequantize按端口使用0、zero point或0.0语义padding。最小shape、正式`[16,3,224,224]`、`[16,2048,1,1]→[16,2048]`、3/2边界、feature tail、两profile、破坏性负例均bit-exact；141项根测试通过，全程未读取W3大tensor。
 
-**并行判定门P4。** 只有C0/C1全量回归通过、共享API冻结、每个任务文件集合无重叠、任务只消费小型W3 manifest/fixture且能独立提交时才开启。第一并行波建议最多三个实现任务：A负责Conv七小环和代表family；B负责MaxPool与GAP独立布局；C负责MatMul/dense七小环和大环代表层。三个任务不得编辑`.agents`、`architecture.json`、批准schema、公共layout模块或对方文件，只提交各自实现、测试和证据生成器。
+**并行判定门P4，2026-07-13已通过。** C0/C1全量回归通过，共享API已冻结；Conv、Pool、MatMul可分别落在互不重叠的实现/测试/证据文件，且布局开发只消费小型W3 manifest/合成fixture。第一并行波最多三个Local共享目录协作子任务：A负责Conv七小环和代表family；B负责MaxPool与GAP独立布局；C负责MatMul/dense七小环和大环代表层。三个任务不得编辑`.agents`、`architecture.json`、批准schema、`memory.py`、`profile28.py`、`topology28.py`、公共`layout.py`/`simple_layout.py`或对方文件，不得自行Git暂存/提交；主任务串行审阅、补全全局合同、全量测试和提交。若实现暴露公共API缺口，立即关闭并行门并回到单线程修订。
 
 **W4-28C2：Local顺序集成。** Local按Conv→MaxPool/GAP→MatMul顺序集成并跑全量测试；随后实现依赖producer布局的QLinearAdd，验证两残差分支独立qparams、owner/tail兼容、广播和同时活跃地址。若任一并行结果要求修改公共API，停止下一波并回到单线程修订，不在三个worktree中分别打补丁。
 

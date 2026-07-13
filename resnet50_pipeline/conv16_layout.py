@@ -6,7 +6,7 @@ from typing import Any
 
 import numpy as np
 
-from .memory import DramGeometry
+from .memory import DramGeometry, LEGACY_DRAM_GEOMETRY16
 from .records import LayoutRecord
 
 
@@ -125,7 +125,7 @@ class ConvBatch16PhysicalLayout:
         channel_tile: int = 8,
         output_channel_tile: int = 8,
     ):
-        self.geometry = geometry or DramGeometry()
+        self.geometry = geometry or LEGACY_DRAM_GEOMETRY16
         if self.geometry.slice_count != 16:
             raise ValueError("Conv batch16 candidate requires exactly 16 slices")
         if alignment <= 0 or alignment % self.geometry.subword_bytes:

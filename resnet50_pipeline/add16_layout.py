@@ -7,7 +7,7 @@ from typing import Any, Literal
 import numpy as np
 
 from .conv16_layout import _align, _canonical
-from .memory import DramGeometry
+from .memory import DramGeometry, LEGACY_DRAM_GEOMETRY16
 from .records import LayoutRecord
 
 
@@ -110,7 +110,7 @@ class QLinearAdd16PhysicalLayout:
             raise ValueError("Add topology must be batch or channel")
         self.topology = topology
         self.contract = f"w4_qlinearadd_{topology}16_candidate_v1"
-        self.geometry = geometry or DramGeometry()
+        self.geometry = geometry or LEGACY_DRAM_GEOMETRY16
         if self.geometry.slice_count != 16:
             raise ValueError("Add candidate requires exactly 16 slices")
         if alignment <= 0 or alignment % self.geometry.subword_bytes:

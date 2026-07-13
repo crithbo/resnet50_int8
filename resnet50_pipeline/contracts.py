@@ -194,12 +194,25 @@ def validate_architecture_contract(value: dict[str, Any], root: Path | None = No
     _validate_layout_registry(
         value["candidate_layouts"], "candidate_layouts", {"candidate", "approved"}
     )
-    expected_planned_ids = {layout for mapping in PROFILE_LAYOUTS.values() for layout in mapping.values()}
-    if set(value["planned_layouts"]) != expected_planned_ids:
-        raise ContractError("planned_layouts do not match the frozen profile28 layout IDs")
+    expected_layout_ids = {
+        layout for mapping in PROFILE_LAYOUTS.values() for layout in mapping.values()
+    }
+    planned_ids = set(value["planned_layouts"])
+    candidate_ids = set(value["candidate_layouts"])
+    if planned_ids & candidate_ids:
+        raise ContractError("planned_layouts and candidate_layouts must be disjoint")
+    if planned_ids | candidate_ids != expected_layout_ids:
+        raise ContractError(
+            "planned/candidate layouts do not match the frozen profile28 layout IDs"
+        )
     for profile, mapping in PROFILE_LAYOUTS.items():
         for family, layout_id in mapping.items():
-            if value["planned_layouts"][layout_id]["operator_family"] != family:
+            registry = (
+                value["candidate_layouts"]
+                if layout_id in candidate_ids
+                else value["planned_layouts"]
+            )
+            if registry[layout_id]["operator_family"] != family:
                 raise ContractError(f"planned layout family mismatch for {profile}:{family}")
 
     fixture_layouts = value["fixture_layouts"]

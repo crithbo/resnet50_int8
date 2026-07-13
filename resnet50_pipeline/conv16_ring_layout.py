@@ -13,7 +13,7 @@ from .conv16_layout import (
     _canonical,
     _pair,
 )
-from .memory import DramGeometry
+from .memory import DramGeometry, LEGACY_DRAM_GEOMETRY16
 from .records import LayoutRecord
 
 
@@ -102,7 +102,7 @@ class ConvRing16PhysicalLayout(ConvBatch16PhysicalLayout):
     status = "candidate"
 
     def __init__(self, geometry: DramGeometry | None = None, *, alignment: int = 16):
-        self.geometry = geometry or DramGeometry()
+        self.geometry = geometry or LEGACY_DRAM_GEOMETRY16
         if self.geometry.slice_count != 16:
             raise ValueError("Conv ring16 candidate requires exactly 16 slices")
         if alignment <= 0 or alignment % self.geometry.subword_bytes:

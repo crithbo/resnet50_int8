@@ -19,7 +19,7 @@ from resnet50_pipeline.matmul16_layout import (
     QLinearMatMulBatch16PhysicalLayout,
     QLinearMatMulRing16PhysicalLayout,
 )
-from resnet50_pipeline.simple_layout import (
+from resnet50_pipeline.simple16_layout import (
     DequantizeLinearPhysicalLayout,
     QuantizeLinearPhysicalLayout,
 )

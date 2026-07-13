@@ -15,7 +15,7 @@ from .conv16_layout import ConvBatch16PhysicalLayout
 from .conv16_ring_layout import ConvRing16PhysicalLayout
 from .matmul16_layout import QLinearMatMulBatch16PhysicalLayout, QLinearMatMulRing16PhysicalLayout
 from .maxpool16_layout import MaxPoolBatch16PhysicalLayout, MaxPoolChannel16PhysicalLayout
-from .memory import DramGeometry
+from .memory import LEGACY_DRAM_GEOMETRY16
 from .w4_profiles import PROFILE_POLICIES
 
 
@@ -332,13 +332,13 @@ def _plan_node(
         plan = {
             "raw_sizes": raw_sizes,
             "per_slice_used_bytes": cursor,
-            "capacity_bytes": DramGeometry().bytes_per_slice,
+            "capacity_bytes": LEGACY_DRAM_GEOMETRY16.bytes_per_slice,
         }
     elif op_type == "Flatten":
         plan = {
             "raw_sizes": {},
             "per_slice_used_bytes": 0,
-            "capacity_bytes": DramGeometry().bytes_per_slice,
+            "capacity_bytes": LEGACY_DRAM_GEOMETRY16.bytes_per_slice,
         }
     else:
         raise ValueError(f"unsupported W4 dry-run op: {op_type}")
@@ -496,7 +496,7 @@ def _allocate_lifetimes(
     for step in range(-1, len(nodes) + 1):
         live = sum(item["size_bytes_per_slice"] for item in allocations if item["start_step"] <= step <= item["end_step"])
         peak_live = max(peak_live, live)
-    capacity = DramGeometry().bytes_per_slice
+    capacity = LEGACY_DRAM_GEOMETRY16.bytes_per_slice
     return {
         "allocation_policy": "deterministic first-fit, 16-byte aligned, per-slice symmetric candidate offsets",
         "scope": "runtime activations plus explicit transition buffers; constants and operator-local scratch are reported separately",

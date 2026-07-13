@@ -60,22 +60,77 @@
     "address_order": "slice_owner, local_bank, row, column, byte_offset"
   },
   "planned_layouts": {
-    "w4_simple_group4x7_28_candidate_v1": {"target_family": "rtl28", "slice_count": 28, "operator_family": "simple", "status": "planned", "current_gate_eligible": false},
-    "w4_zero_copy_view_group4x7_28_candidate_v1": {"target_family": "rtl28", "slice_count": 28, "operator_family": "view", "status": "planned", "current_gate_eligible": false},
     "w4_conv_group4x7_28_candidate_v1": {"target_family": "rtl28", "slice_count": 28, "operator_family": "conv", "status": "planned", "current_gate_eligible": false},
     "w4_maxpool_group4x7_28_candidate_v1": {"target_family": "rtl28", "slice_count": 28, "operator_family": "maxpool", "status": "planned", "current_gate_eligible": false},
     "w4_qlinearadd_group4x7_28_candidate_v1": {"target_family": "rtl28", "slice_count": 28, "operator_family": "add", "status": "planned", "current_gate_eligible": false},
     "w4_globalavgpool_group4x7_28_candidate_v1": {"target_family": "rtl28", "slice_count": 28, "operator_family": "global_average_pool", "status": "planned", "current_gate_eligible": false},
     "w4_qlinearmatmul_group4x7_28_candidate_v1": {"target_family": "rtl28", "slice_count": 28, "operator_family": "matmul", "status": "planned", "current_gate_eligible": false},
-    "w4_simple_global_ring28_candidate_v1": {"target_family": "rtl28", "slice_count": 28, "operator_family": "simple", "status": "planned", "current_gate_eligible": false},
-    "w4_zero_copy_view_global_ring28_candidate_v1": {"target_family": "rtl28", "slice_count": 28, "operator_family": "view", "status": "planned", "current_gate_eligible": false},
     "w4_conv_global_ring28_candidate_v1": {"target_family": "rtl28", "slice_count": 28, "operator_family": "conv", "status": "planned", "current_gate_eligible": false},
     "w4_maxpool_global_ring28_candidate_v1": {"target_family": "rtl28", "slice_count": 28, "operator_family": "maxpool", "status": "planned", "current_gate_eligible": false},
     "w4_qlinearadd_global_ring28_candidate_v1": {"target_family": "rtl28", "slice_count": 28, "operator_family": "add", "status": "planned", "current_gate_eligible": false},
     "w4_globalavgpool_global_ring28_candidate_v1": {"target_family": "rtl28", "slice_count": 28, "operator_family": "global_average_pool", "status": "planned", "current_gate_eligible": false},
     "w4_qlinearmatmul_global_ring28_candidate_v1": {"target_family": "rtl28", "slice_count": 28, "operator_family": "matmul", "status": "planned", "current_gate_eligible": false}
   },
-  "candidate_layouts": {},
+  "candidate_layouts": {
+    "w4_simple_group4x7_28_candidate_v1": {
+      "target_family": "rtl28",
+      "slice_count": 28,
+      "operator_family": "simple",
+      "profile_id": "w4_group4x7_batch_channel28_candidate_v1",
+      "status": "candidate",
+      "current_gate_eligible": true,
+      "scope": "QuantizeLinear and DequantizeLinear reversible software layout; not hardware-approved",
+      "batch_partition": "fixed batch16 uses seven HIGH groups with sample counts [3,3,2,2,2,2,2]",
+      "feature_partition": "feature axis is split across each HIGH ring's four explicit RTL owners",
+      "qparams": "scalar scale and zero_point are replicated on all 28 slices",
+      "packing": "logical N,F,... becomes local N,...,F; little-endian elements and 16-byte aligned regions",
+      "tail": "storage reserves three sample slots per HIGH owner; inactive sample and feature tails use per-port semantic padding",
+      "geometry_status": "candidate_unapproved",
+      "address_order_status": "candidate_unapproved",
+      "implementation": "resnet50_pipeline/simple_layout.py"
+    },
+    "w4_zero_copy_view_group4x7_28_candidate_v1": {
+      "target_family": "rtl28",
+      "slice_count": 28,
+      "operator_family": "view",
+      "profile_id": "w4_group4x7_batch_channel28_candidate_v1",
+      "status": "candidate",
+      "current_gate_eligible": true,
+      "scope": "Flatten axis=1 over singleton spatial dimensions of a group4x7 feature-partitioned tensor",
+      "rule": "producer D and View output alias the same 28 base addresses only when local bytes are unchanged",
+      "formal_shape": "[16,2048,1,1] -> [16,2048]",
+      "implementation": "resnet50_pipeline/simple_layout.py"
+    },
+    "w4_simple_global_ring28_candidate_v1": {
+      "target_family": "rtl28",
+      "slice_count": 28,
+      "operator_family": "simple",
+      "profile_id": "w4_global_ring28_candidate_v1",
+      "status": "candidate",
+      "current_gate_eligible": true,
+      "scope": "QuantizeLinear and DequantizeLinear reversible LOW-ring software candidate; not hardware-approved",
+      "batch_partition": "all 16 samples remain local on each selected feature owner",
+      "feature_partition": "feature axis is split across the LOW ring's 28 explicit RTL owners",
+      "qparams": "scalar scale and zero_point are replicated on all 28 slices",
+      "packing": "logical N,F,... becomes local N,...,F; little-endian elements and 16-byte aligned regions",
+      "tail": "feature tails use per-port semantic padding",
+      "geometry_status": "candidate_unapproved",
+      "address_order_status": "candidate_unapproved",
+      "implementation": "resnet50_pipeline/simple_layout.py"
+    },
+    "w4_zero_copy_view_global_ring28_candidate_v1": {
+      "target_family": "rtl28",
+      "slice_count": 28,
+      "operator_family": "view",
+      "profile_id": "w4_global_ring28_candidate_v1",
+      "status": "candidate",
+      "current_gate_eligible": true,
+      "scope": "Flatten axis=1 over singleton spatial dimensions of a LOW-ring feature-partitioned tensor",
+      "rule": "producer D and View output alias the same 28 base addresses only when local bytes are unchanged",
+      "formal_shape": "[16,2048,1,1] -> [16,2048]",
+      "implementation": "resnet50_pipeline/simple_layout.py"
+    }
+  },
   "fixture_layouts": {
     "w2_ndp_ring_candidate_v1": {
       "target_family": "w2_functional_fixture",

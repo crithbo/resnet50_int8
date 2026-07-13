@@ -10,11 +10,28 @@ from resnet50_pipeline.memory import (
     ByteProvenance,
     DramCoordinate,
     DramGeometry,
+    LEGACY_DRAM_GEOMETRY16,
     SparsePhysicalImage,
+    TARGET_DRAM_GEOMETRY28,
 )
 
 
 class DramGeometryTests(unittest.TestCase):
+    def test_target_and_legacy_geometry_are_named_and_slice_count_is_explicit(self) -> None:
+        with self.assertRaises(TypeError):
+            DramGeometry()  # type: ignore[call-arg]
+        self.assertEqual(LEGACY_DRAM_GEOMETRY16.slice_count, 16)
+        self.assertEqual(TARGET_DRAM_GEOMETRY28.slice_count, 28)
+        self.assertEqual(
+            TARGET_DRAM_GEOMETRY28.bytes_per_slice,
+            LEGACY_DRAM_GEOMETRY16.bytes_per_slice,
+        )
+        last = TARGET_DRAM_GEOMETRY28.total_bytes - 1
+        self.assertEqual(
+            TARGET_DRAM_GEOMETRY28.encode(TARGET_DRAM_GEOMETRY28.decode(last)),
+            last,
+        )
+
     def test_ndp_address_mapping_and_inverse(self) -> None:
         geometry = DramGeometry(slice_count=4, bank_count=4, row_count=8, col_count=4)
         self.assertEqual(geometry.decode(0), DramCoordinate(0, 0, 0, 3, 15))

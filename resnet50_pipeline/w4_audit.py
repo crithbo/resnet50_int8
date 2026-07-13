@@ -32,6 +32,11 @@ from .simple_layout import (
     QuantizeLinearPhysicalLayout,
     ZeroCopyViewLayout,
 )
+from .simple16_layout import (
+    DequantizeLinearPhysicalLayout as LegacyDequantizeLinearPhysicalLayout,
+    QuantizeLinearPhysicalLayout as LegacyQuantizeLinearPhysicalLayout,
+    ZeroCopyViewLayout as LegacyZeroCopyViewLayout,
+)
 from .w4_profiles import PROFILE_POLICIES
 
 
@@ -71,6 +76,7 @@ CURRENT_TARGET_SOFTWARE_CRITERIA = (
     "logical_quantized_edge_qparam_identities_exact",
     "logical_result_comparator_ready",
     "current_target_architecture_is_28_slice",
+    "current_target_layout_interfaces_complete",
     "target28_operator_layout_evidence_complete",
     "target28_all_93_edges_physically_verified",
     "target28_profile_cost_evidence_complete",
@@ -98,33 +104,50 @@ def _artifact_check(root: Path, record: dict[str, Any]) -> dict[str, Any]:
 
 def _plugin_interfaces() -> list[dict[str, Any]]:
     plugins = (
-        ("w4_batch_slice_candidate_v1:Quantize", QuantizeLinearPhysicalLayout),
-        ("w4_batch_slice_candidate_v1:Dequantize", DequantizeLinearPhysicalLayout),
-        ("w4_zero_copy_view_candidate_v1", ZeroCopyViewLayout),
-        ("w4_conv_batch16_candidate_v1", ConvBatch16PhysicalLayout),
-        ("w4_conv_ring16_candidate_v1", ConvRing16PhysicalLayout),
-        ("w4_maxpool_batch16_candidate_v1", MaxPoolBatch16PhysicalLayout),
-        ("w4_maxpool_channel16_candidate_v1", MaxPoolChannel16PhysicalLayout),
-        ("w4_qlinearadd_batch16_candidate_v1", QLinearAddBatch16PhysicalLayout),
-        ("w4_qlinearadd_channel16_candidate_v1", QLinearAddChannel16PhysicalLayout),
+        (
+            "w4_simple_group4x7_28_candidate_v1:Quantize",
+            "rtl28",
+            QuantizeLinearPhysicalLayout,
+        ),
+        (
+            "w4_simple_group4x7_28_candidate_v1:Dequantize",
+            "rtl28",
+            DequantizeLinearPhysicalLayout,
+        ),
+        ("w4_zero_copy_view_group4x7_28_candidate_v1", "rtl28", ZeroCopyViewLayout),
+        ("w4_simple_global_ring28_candidate_v1:Quantize", "rtl28", QuantizeLinearPhysicalLayout),
+        ("w4_simple_global_ring28_candidate_v1:Dequantize", "rtl28", DequantizeLinearPhysicalLayout),
+        ("w4_zero_copy_view_global_ring28_candidate_v1", "rtl28", ZeroCopyViewLayout),
+        ("w4_batch_slice_candidate_v1:Quantize", "legacy16", LegacyQuantizeLinearPhysicalLayout),
+        ("w4_batch_slice_candidate_v1:Dequantize", "legacy16", LegacyDequantizeLinearPhysicalLayout),
+        ("w4_zero_copy_view_candidate_v1", "legacy16", LegacyZeroCopyViewLayout),
+        ("w4_conv_batch16_candidate_v1", "legacy16", ConvBatch16PhysicalLayout),
+        ("w4_conv_ring16_candidate_v1", "legacy16", ConvRing16PhysicalLayout),
+        ("w4_maxpool_batch16_candidate_v1", "legacy16", MaxPoolBatch16PhysicalLayout),
+        ("w4_maxpool_channel16_candidate_v1", "legacy16", MaxPoolChannel16PhysicalLayout),
+        ("w4_qlinearadd_batch16_candidate_v1", "legacy16", QLinearAddBatch16PhysicalLayout),
+        ("w4_qlinearadd_channel16_candidate_v1", "legacy16", QLinearAddChannel16PhysicalLayout),
         (
             "w4_globalavgpool_batch16_candidate_v1",
+            "legacy16",
             GlobalAveragePoolBatch16PhysicalLayout,
         ),
         (
             "w4_globalavgpool_channel16_candidate_v1",
+            "legacy16",
             GlobalAveragePoolChannel16PhysicalLayout,
         ),
-        ("w4_qlinearmatmul_batch16_candidate_v1", QLinearMatMulBatch16PhysicalLayout),
-        ("w4_qlinearmatmul_ring16_candidate_v1", QLinearMatMulRing16PhysicalLayout),
+        ("w4_qlinearmatmul_batch16_candidate_v1", "legacy16", QLinearMatMulBatch16PhysicalLayout),
+        ("w4_qlinearmatmul_ring16_candidate_v1", "legacy16", QLinearMatMulRing16PhysicalLayout),
     )
     required = ("forward", "inverse", "explain_coordinate", "validate")
     results = []
-    for layout_id, cls in plugins:
+    for layout_id, target_family, cls in plugins:
         methods = {name: callable(getattr(cls, name, None)) for name in required}
         results.append(
             {
                 "layout_id": layout_id,
+                "target_family": target_family,
                 "class": f"{cls.__module__}.{cls.__name__}",
                 "methods": methods,
                 "interface_complete": all(methods.values()),
@@ -296,6 +319,8 @@ def _hardware_approval_status(
             "valid": False,
             "path": display_path,
             "validation_error": None,
+            "validation_scope": "structure_only",
+            "gate_authority_eligible": False,
         }
     try:
         result = validate_hardware_approval_file(
@@ -308,10 +333,20 @@ def _hardware_approval_status(
             "path": display_path,
             "sha256": sha256_file(path),
             "validation_error": str(error),
+            "validation_scope": "structure_only",
+            "gate_authority_eligible": False,
         }
     result["path"] = display_path
     result["present"] = True
     result["validation_error"] = None
+    result["gate_authority_eligible"] = not str(
+        result.get("approval_id", "")
+    ).startswith("synthetic-")
+    result["validation_scope"] = (
+        "authority_and_structure"
+        if result["gate_authority_eligible"]
+        else "structure_only"
+    )
     return result
 
 
@@ -419,9 +454,13 @@ def _current_target_evidence_status(
     clean_elaboration_approved = bool(
         hardware_approval.get("clean_elaboration_approved", False)
     )
+    gate_authority_eligible = bool(
+        hardware_approval.get("gate_authority_eligible", False)
+    )
     architecture_matches_target = declared_slice_count == CURRENT_TARGET_SLICE_COUNT
     approval_current_gate_eligible = bool(
         hardware_approval.get("valid", False)
+        and gate_authority_eligible
         and architecture_matches_target
         and layout_evidence_complete
         and edge_evidence_complete
@@ -431,6 +470,8 @@ def _current_target_evidence_status(
     reasons = []
     if not hardware_approval.get("valid", False):
         reasons.append("hardware_approval_missing_or_structurally_invalid")
+    if not gate_authority_eligible:
+        reasons.append("hardware_approval_not_gate_authority_eligible")
     if not architecture_matches_target:
         reasons.append("architecture_contract_is_not_current_28_slice_target")
     if not layout_evidence_complete:
@@ -460,6 +501,7 @@ def _current_target_evidence_status(
         "hardware_approval_structurally_valid": bool(
             hardware_approval.get("valid", False)
         ),
+        "hardware_approval_gate_authority_eligible": gate_authority_eligible,
         "hardware_approval_current_gate_eligible": approval_current_gate_eligible,
         "eligibility_reasons": reasons,
     }
@@ -518,7 +560,6 @@ def audit_w4_gate(
     current_target_evidence = _current_target_evidence_status(
         architecture, hardware_approval
     )
-    hardware_approval["validation_scope"] = "structure_only"
     hardware_approval["current_gate_eligible"] = current_target_evidence[
         "hardware_approval_current_gate_eligible"
     ]
@@ -541,7 +582,14 @@ def audit_w4_gate(
         "formal_node_coverage_78_of_78": sum(counts.values()) == 78
         and all(item["covered"] for item in coverage.values()),
         "legacy16_layout_interfaces_complete": all(
-            item["interface_complete"] for item in interfaces
+            item["interface_complete"]
+            for item in interfaces
+            if item["target_family"] == "legacy16"
+        ),
+        "current_target_layout_interfaces_complete": all(
+            item["interface_complete"]
+            for item in interfaces
+            if item["target_family"] == "rtl28"
         ),
         "legacy16_registered_evidence_hashes_match": all(
             item["sha256_match"] and item["size_match"]
@@ -567,6 +615,9 @@ def audit_w4_gate(
         ],
         "current_target_architecture_is_28_slice": current_target_evidence[
             "architecture_matches_target"
+        ],
+        "current_target_layout_interfaces_complete": reusable_criteria[
+            "current_target_layout_interfaces_complete"
         ],
         "target28_operator_layout_evidence_complete": current_target_evidence[
             "layout_evidence_complete"

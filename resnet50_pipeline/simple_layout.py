@@ -1,3 +1,15 @@
+"""Current RTL28 Quantize, Dequantize and zero-copy View layouts.
+
+The default profile assigns the fixed batch of sixteen samples to seven HIGH
+rings and partitions the feature/channel axis over each ring's four physical
+owners.  The optional global profile partitions the feature axis over the
+explicit 28-owner LOW ring.  Both mappings use the RTL lookup-table order;
+numeric slice adjacency is never inferred.
+
+The DRAM geometry and address order remain candidate evidence.  These classes
+prove reversible software relayout and do not claim hardware approval.
+"""
+
 from __future__ import annotations
 
 import math
@@ -6,11 +18,33 @@ from typing import Literal
 
 import numpy as np
 
-from .memory import DramGeometry
+from .memory import DramGeometry, TARGET_DRAM_GEOMETRY28
+from .profile28 import (
+    BATCH_SIZE,
+    DEFAULT_PROFILE,
+    GLOBAL_RING28_PROFILE,
+    GROUP4X7_BATCH_CHANNEL28_PROFILE,
+    GROUP_SAMPLE_COUNTS,
+    group_to_sample_range,
+    sample_to_group,
+    validate_profile_name,
+)
 from .records import LayoutRecord
+from .topology28 import HIGH_RING_OWNERS, LOW_RING_OWNERS, TOPOLOGY28
 
 
-Placement = Literal["batch", "replicated"]
+Placement = Literal["feature_partition", "replicated"]
+
+SIMPLE_LAYOUT_IDS = {
+    GROUP4X7_BATCH_CHANNEL28_PROFILE: "w4_simple_group4x7_28_candidate_v1",
+    GLOBAL_RING28_PROFILE: "w4_simple_global_ring28_candidate_v1",
+}
+VIEW_LAYOUT_IDS = {
+    GROUP4X7_BATCH_CHANNEL28_PROFILE: (
+        "w4_zero_copy_view_group4x7_28_candidate_v1"
+    ),
+    GLOBAL_RING28_PROFILE: "w4_zero_copy_view_global_ring28_candidate_v1",
+}
 
 
 def _align(value: int, alignment: int) -> int:
@@ -22,47 +56,69 @@ def _little_endian(array: np.ndarray) -> np.ndarray:
     return np.ascontiguousarray(array.astype(dtype, copy=False))
 
 
+def _axis_order(rank: int) -> str:
+    if rank == 2:
+        return "NF-local"
+    if rank == 4:
+        return "NHWF-local"
+    return "N-spatial-F-local"
+
+
 @dataclass(frozen=True)
-class PortPlacement:
+class Rtl28PortPlacement:
     port: str
     tensor_id: str
     logical_shape: tuple[int, ...]
     dtype: str
     placement: Placement
-    slot_shape: tuple[int, ...]
+    feature_axis: int | None
+    feature_tile: int | None
+    physical_axis_order: str
     slot_payload_bytes: int
-    padding_byte: int
+    padding_value: int | float
 
 
 @dataclass(frozen=True)
-class SimplePhysicalRegion:
+class Rtl28PhysicalRegion:
     port: str
     tensor_id: str
     slice_id: int
     base_address: int
     payload_bytes: int
     size_bytes: int
+    physical_shape: tuple[int, ...]
     active: bool
+    group_id: int | None
+    owner_step: int | None
+    sample_start: int
+    sample_count: int
+    storage_sample_count: int
+    feature_start: int
+    feature_count: int
 
 
 @dataclass(frozen=True)
-class SimplePhysicalBundle:
+class Rtl28PhysicalBundle:
     operator: str
     contract: str
     status: str
+    target_family: str
+    profile_id: str
+    geometry_status: str
+    address_order_status: str
     geometry: DramGeometry
     alignment: int
-    placements: tuple[PortPlacement, ...]
-    regions: tuple[SimplePhysicalRegion, ...]
+    placements: tuple[Rtl28PortPlacement, ...]
+    regions: tuple[Rtl28PhysicalRegion, ...]
     payloads: dict[tuple[str, int], bytes]
 
-    def placement(self, tensor_id: str) -> PortPlacement:
+    def placement(self, tensor_id: str) -> Rtl28PortPlacement:
         matches = [item for item in self.placements if item.tensor_id == tensor_id]
         if len(matches) != 1:
             raise KeyError(f"expected one placement for tensor {tensor_id!r}")
         return matches[0]
 
-    def region(self, port: str, slice_id: int) -> SimplePhysicalRegion:
+    def region(self, port: str, slice_id: int) -> Rtl28PhysicalRegion:
         matches = [
             item
             for item in self.regions
@@ -78,10 +134,38 @@ class SimplePhysicalBundle:
     def layout_records(self) -> tuple[LayoutRecord, ...]:
         records: list[LayoutRecord] = []
         for placement in self.placements:
-            base_addresses = tuple(
+            bases = tuple(
                 self.region(placement.port, slice_id).base_address
                 for slice_id in range(self.geometry.slice_count)
             )
+            if placement.placement == "replicated":
+                partition = {
+                    "axis": None,
+                    "policy": "replicated_on_every_rtl28_slice",
+                    "slice_count": self.geometry.slice_count,
+                    "profile_id": self.profile_id,
+                }
+            elif self.profile_id == GROUP4X7_BATCH_CHANNEL28_PROFILE:
+                partition = {
+                    "axis": 1,
+                    "policy": "seven_high_groups_sample_and_feature_partition",
+                    "slice_count": self.geometry.slice_count,
+                    "profile_id": self.profile_id,
+                    "batch_group_sample_counts": list(GROUP_SAMPLE_COUNTS),
+                    "high_ring_owners": [list(item) for item in HIGH_RING_OWNERS],
+                    "feature_tile": placement.feature_tile,
+                    "storage_samples_per_owner": max(GROUP_SAMPLE_COUNTS),
+                }
+            else:
+                partition = {
+                    "axis": 1,
+                    "policy": "global_low_ring_feature_partition",
+                    "slice_count": self.geometry.slice_count,
+                    "profile_id": self.profile_id,
+                    "low_ring_owners": list(LOW_RING_OWNERS),
+                    "feature_tile": placement.feature_tile,
+                    "storage_samples_per_owner": BATCH_SIZE,
+                }
             records.append(
                 LayoutRecord(
                     layout_id=(
@@ -94,22 +178,19 @@ class SimplePhysicalBundle:
                     port=placement.port,
                     logical_shape=placement.logical_shape,
                     logical_dtype=placement.dtype,
-                    partition={
-                        "axis": 0 if placement.placement == "batch" else None,
-                        "policy": (
-                            "one_batch_item_per_slice"
-                            if placement.placement == "batch"
-                            else "replicated_on_every_slice"
-                        ),
-                        "slice_count": self.geometry.slice_count,
-                    },
+                    partition=partition,
                     packing={
+                        "logical_order": "N,F,...",
+                        "physical_order": placement.physical_axis_order,
                         "element_order": "C",
                         "byte_order": "little",
                         "alignment_bytes": self.alignment,
                         "subword_bytes": self.geometry.subword_bytes,
+                        "padding_value": placement.padding_value,
+                        "geometry_status": self.geometry_status,
+                        "address_order_status": self.address_order_status,
                     },
-                    base_addresses=base_addresses,
+                    base_addresses=bases,
                     inverse_status="validated",
                 )
             )
@@ -122,22 +203,100 @@ class _PortInput:
     tensor_id: str
     array: np.ndarray
     placement: Placement
-    padding_byte: int = 0
+    padding_value: int | float
 
 
-class _SimpleOperatorLayout:
-    contract = "w4_batch_slice_candidate_v1"
+class _Rtl28SimpleOperatorLayout:
     status = "candidate"
+    target_family = "rtl28"
+    geometry_status = "candidate_unapproved"
+    address_order_status = "candidate_unapproved"
 
-    def __init__(self, geometry: DramGeometry | None = None, alignment: int = 16):
-        self.geometry = geometry or DramGeometry()
-        if self.geometry.slice_count != 16:
-            raise ValueError("W4 simple-op candidate requires exactly 16 slices")
+    def __init__(
+        self,
+        profile_id: str = DEFAULT_PROFILE,
+        geometry: DramGeometry | None = None,
+        alignment: int = 16,
+    ) -> None:
+        self.profile_id = validate_profile_name(profile_id)
+        self.geometry = geometry or TARGET_DRAM_GEOMETRY28
+        if self.geometry != TARGET_DRAM_GEOMETRY28:
+            raise ValueError("current simple layout requires TARGET_DRAM_GEOMETRY28")
         if alignment <= 0 or alignment % self.geometry.subword_bytes:
             raise ValueError("alignment must be a positive multiple of subword_bytes")
         self.alignment = alignment
+        self.contract = SIMPLE_LAYOUT_IDS[self.profile_id]
 
-    def _pack(self, operator: str, ports: tuple[_PortInput, ...]) -> SimplePhysicalBundle:
+    @staticmethod
+    def _validate_feature_array(array: np.ndarray, port: str) -> None:
+        if array.ndim < 2:
+            raise ValueError(f"feature-partitioned port {port} must have rank >= 2")
+        if array.shape[0] != BATCH_SIZE:
+            raise ValueError(
+                f"feature-partitioned port {port} requires batch={BATCH_SIZE}"
+            )
+        if any(int(value) <= 0 for value in array.shape):
+            raise ValueError(f"feature-partitioned port {port} cannot have empty axes")
+
+    def _feature_tile(self, feature_count: int) -> int:
+        owners = 4 if self.profile_id == GROUP4X7_BATCH_CHANNEL28_PROFILE else 28
+        return math.ceil(feature_count / owners)
+
+    def _region_descriptor(
+        self, placement: Rtl28PortPlacement, slice_id: int
+    ) -> dict[str, int | tuple[int, ...] | bool | None]:
+        if placement.placement == "replicated":
+            return {
+                "physical_shape": placement.logical_shape,
+                "active": True,
+                "group_id": None,
+                "owner_step": None,
+                "sample_start": 0,
+                "sample_count": BATCH_SIZE,
+                "storage_sample_count": BATCH_SIZE,
+                "feature_start": 0,
+                "feature_count": int(np.prod(placement.logical_shape)),
+            }
+
+        assert placement.feature_tile is not None
+        feature_count = placement.logical_shape[1]
+        if self.profile_id == GROUP4X7_BATCH_CHANNEL28_PROFILE:
+            group_id = TOPOLOGY28.group_for_slice(slice_id)
+            ring = TOPOLOGY28.high_ring_for_group(group_id)
+            owner_step = ring.owners.index(slice_id)
+            sample_start = group_to_sample_range(group_id).start
+            sample_count = GROUP_SAMPLE_COUNTS[group_id]
+            storage_sample_count = max(GROUP_SAMPLE_COUNTS)
+        else:
+            group_id = None
+            owner_step = LOW_RING_OWNERS.index(slice_id)
+            sample_start = 0
+            sample_count = BATCH_SIZE
+            storage_sample_count = BATCH_SIZE
+        feature_start = owner_step * placement.feature_tile
+        valid_features = max(
+            0, min(placement.feature_tile, feature_count - feature_start)
+        )
+        physical_shape = (
+            storage_sample_count,
+            *placement.logical_shape[2:],
+            placement.feature_tile,
+        )
+        return {
+            "physical_shape": physical_shape,
+            "active": valid_features > 0,
+            "group_id": group_id,
+            "owner_step": owner_step,
+            "sample_start": sample_start,
+            "sample_count": sample_count,
+            "storage_sample_count": storage_sample_count,
+            "feature_start": feature_start,
+            "feature_count": valid_features,
+        }
+
+    def _pack(
+        self, operator: str, ports: tuple[_PortInput, ...]
+    ) -> Rtl28PhysicalBundle:
         if not ports:
             raise ValueError("at least one port is required")
         if len({item.port for item in ports}) != len(ports):
@@ -145,81 +304,118 @@ class _SimpleOperatorLayout:
         if len({item.tensor_id for item in ports}) != len(ports):
             raise ValueError("tensor IDs must be unique within an operator bundle")
 
-        placements: list[PortPlacement] = []
         canonical: dict[str, np.ndarray] = {}
+        placements: list[Rtl28PortPlacement] = []
         offsets: dict[str, int] = {}
         cursor = 0
         for item in ports:
             array = np.asarray(item.array)
             if array.dtype.hasobject:
                 raise TypeError(f"port {item.port} cannot contain object values")
-            if not 0 <= item.padding_byte <= 255:
-                raise ValueError("padding_byte must fit uint8")
-            if item.placement == "batch":
-                if array.ndim < 1:
-                    raise ValueError(f"batch port {item.port} must have rank >= 1")
-                if not 1 <= array.shape[0] <= self.geometry.slice_count:
-                    raise ValueError(
-                        f"batch port {item.port} must contain 1..16 batch items"
-                    )
-                slot_shape = tuple(int(value) for value in array.shape[1:])
-                slot_payload_bytes = int(array[0].nbytes)
+            if item.placement == "feature_partition":
+                self._validate_feature_array(array, item.port)
+                feature_tile = self._feature_tile(int(array.shape[1]))
+                storage_samples = (
+                    max(GROUP_SAMPLE_COUNTS)
+                    if self.profile_id == GROUP4X7_BATCH_CHANNEL28_PROFILE
+                    else BATCH_SIZE
+                )
+                physical_shape = (
+                    storage_samples,
+                    *tuple(int(value) for value in array.shape[2:]),
+                    feature_tile,
+                )
+                slot_payload_bytes = math.prod(physical_shape) * array.dtype.itemsize
+                physical_axis_order = _axis_order(array.ndim)
             else:
                 if array.size == 0:
                     raise ValueError(f"replicated port {item.port} cannot be empty")
-                slot_shape = tuple(int(value) for value in array.shape)
+                feature_tile = None
                 slot_payload_bytes = int(array.nbytes)
+                physical_axis_order = "replicated-scalar"
             canonical[item.port] = _little_endian(array)
             cursor = _align(cursor, self.alignment)
             offsets[item.port] = cursor
             cursor += _align(slot_payload_bytes, self.alignment)
             placements.append(
-                PortPlacement(
+                Rtl28PortPlacement(
                     port=item.port,
                     tensor_id=item.tensor_id,
                     logical_shape=tuple(int(value) for value in array.shape),
                     dtype=str(array.dtype),
                     placement=item.placement,
-                    slot_shape=slot_shape,
+                    feature_axis=1 if item.placement == "feature_partition" else None,
+                    feature_tile=feature_tile,
+                    physical_axis_order=physical_axis_order,
                     slot_payload_bytes=slot_payload_bytes,
-                    padding_byte=item.padding_byte,
+                    padding_value=item.padding_value,
                 )
             )
         if cursor > self.geometry.bytes_per_slice:
-            raise ValueError("simple-op physical regions exceed one slice capacity")
+            raise ValueError("RTL28 simple-op physical regions exceed one slice capacity")
 
-        regions: list[SimplePhysicalRegion] = []
+        regions: list[Rtl28PhysicalRegion] = []
         payloads: dict[tuple[str, int], bytes] = {}
         for item, placement in zip(ports, placements, strict=True):
             array = canonical[item.port]
             aligned_size = _align(placement.slot_payload_bytes, self.alignment)
             for slice_id in range(self.geometry.slice_count):
-                active = item.placement == "replicated" or slice_id < array.shape[0]
-                if item.placement == "replicated":
+                descriptor = self._region_descriptor(placement, slice_id)
+                physical_shape = tuple(descriptor["physical_shape"])
+                if placement.placement == "replicated":
                     raw = array.tobytes(order="C")
-                elif active:
-                    raw = np.ascontiguousarray(array[slice_id]).tobytes(order="C")
                 else:
-                    raw = bytes([item.padding_byte]) * placement.slot_payload_bytes
+                    local = np.full(
+                        physical_shape,
+                        placement.padding_value,
+                        dtype=array.dtype,
+                    )
+                    sample_count = int(descriptor["sample_count"])
+                    feature_count = int(descriptor["feature_count"])
+                    if feature_count:
+                        sample_start = int(descriptor["sample_start"])
+                        feature_start = int(descriptor["feature_start"])
+                        source = array[
+                            sample_start : sample_start + sample_count,
+                            feature_start : feature_start + feature_count,
+                            ...,
+                        ]
+                        local[:sample_count, ..., :feature_count] = np.moveaxis(
+                            source, 1, -1
+                        )
+                    raw = local.tobytes(order="C")
+                if len(raw) != placement.slot_payload_bytes:
+                    raise AssertionError("physical payload size calculation drifted")
                 payload = raw + bytes(aligned_size - len(raw))
                 payloads[(item.port, slice_id)] = payload
                 regions.append(
-                    SimplePhysicalRegion(
+                    Rtl28PhysicalRegion(
                         port=item.port,
                         tensor_id=item.tensor_id,
                         slice_id=slice_id,
-                        base_address=(
-                            self.geometry.slice_base(slice_id) + offsets[item.port]
-                        ),
+                        base_address=self.geometry.slice_base(slice_id)
+                        + offsets[item.port],
                         payload_bytes=placement.slot_payload_bytes,
                         size_bytes=aligned_size,
-                        active=active,
+                        physical_shape=physical_shape,
+                        active=bool(descriptor["active"]),
+                        group_id=descriptor["group_id"],
+                        owner_step=descriptor["owner_step"],
+                        sample_start=int(descriptor["sample_start"]),
+                        sample_count=int(descriptor["sample_count"]),
+                        storage_sample_count=int(descriptor["storage_sample_count"]),
+                        feature_start=int(descriptor["feature_start"]),
+                        feature_count=int(descriptor["feature_count"]),
                     )
                 )
-        bundle = SimplePhysicalBundle(
+        bundle = Rtl28PhysicalBundle(
             operator=operator,
             contract=self.contract,
             status=self.status,
+            target_family=self.target_family,
+            profile_id=self.profile_id,
+            geometry_status=self.geometry_status,
+            address_order_status=self.address_order_status,
             geometry=self.geometry,
             alignment=self.alignment,
             placements=tuple(placements),
@@ -229,41 +425,84 @@ class _SimpleOperatorLayout:
         self.validate(bundle)
         return bundle
 
-    def inverse_port(self, bundle: SimplePhysicalBundle, tensor_id: str) -> np.ndarray:
+    def inverse_port(
+        self, bundle: Rtl28PhysicalBundle, tensor_id: str
+    ) -> np.ndarray:
         placement = bundle.placement(tensor_id)
-        dtype = np.dtype(placement.dtype)
+        dtype = np.dtype(placement.dtype).newbyteorder("<")
         if placement.placement == "replicated":
             arrays = [
                 np.frombuffer(
-                    bundle.read(placement.port, slice_id)[: placement.slot_payload_bytes],
+                    bundle.read(placement.port, slice_id)[
+                        : placement.slot_payload_bytes
+                    ],
                     dtype=dtype,
-                ).reshape(placement.slot_shape)
+                ).reshape(placement.logical_shape)
                 for slice_id in range(bundle.geometry.slice_count)
             ]
             for candidate in arrays[1:]:
                 if not np.array_equal(candidate, arrays[0]):
                     raise ValueError(f"replicated tensor {tensor_id} differs between slices")
-            return arrays[0].copy()
+            return arrays[0].astype(np.dtype(placement.dtype), copy=True)
 
-        batch = placement.logical_shape[0]
-        items = [
-            np.frombuffer(
-                bundle.read(placement.port, slice_id)[: placement.slot_payload_bytes],
+        output = np.empty(placement.logical_shape, dtype=dtype)
+        coverage = np.zeros(placement.logical_shape[:2], dtype=np.bool_)
+        for slice_id in range(bundle.geometry.slice_count):
+            region = bundle.region(placement.port, slice_id)
+            if not region.feature_count:
+                continue
+            local = np.frombuffer(
+                bundle.read(placement.port, slice_id)[: region.payload_bytes],
                 dtype=dtype,
-            ).reshape(placement.slot_shape)
-            for slice_id in range(batch)
-        ]
-        return np.stack(items, axis=0).copy()
+            ).reshape(region.physical_shape)
+            block = np.moveaxis(
+                local[: region.sample_count, ..., : region.feature_count], -1, 1
+            )
+            sample_stop = region.sample_start + region.sample_count
+            feature_stop = region.feature_start + region.feature_count
+            output[
+                region.sample_start:sample_stop,
+                region.feature_start:feature_stop,
+                ...,
+            ] = block
+            if coverage[
+                region.sample_start:sample_stop,
+                region.feature_start:feature_stop,
+            ].any():
+                raise ValueError("feature owner ranges overlap")
+            coverage[
+                region.sample_start:sample_stop,
+                region.feature_start:feature_stop,
+            ] = True
+        if not coverage.all():
+            raise ValueError("feature owner ranges do not cover the logical tensor")
+        return output.astype(np.dtype(placement.dtype), copy=True)
 
-    def inverse(self, bundle: SimplePhysicalBundle) -> dict[str, np.ndarray]:
+    def inverse(self, bundle: Rtl28PhysicalBundle) -> dict[str, np.ndarray]:
         return {
             placement.tensor_id: self.inverse_port(bundle, placement.tensor_id)
             for placement in bundle.placements
         }
 
+    def _coordinate_owner(
+        self, placement: Rtl28PortPlacement, coordinate: tuple[int, ...]
+    ) -> tuple[int, tuple[int, ...]]:
+        assert placement.feature_tile is not None
+        sample_id, feature_id = coordinate[:2]
+        owner_step = feature_id // placement.feature_tile
+        local_feature = feature_id % placement.feature_tile
+        if self.profile_id == GROUP4X7_BATCH_CHANNEL28_PROFILE:
+            assignment = sample_to_group(sample_id)
+            slice_id = HIGH_RING_OWNERS[assignment.group_id][owner_step]
+            local_sample = assignment.local_slot
+        else:
+            slice_id = LOW_RING_OWNERS[owner_step]
+            local_sample = sample_id
+        return slice_id, (local_sample, *coordinate[2:], local_feature)
+
     def explain_coordinate(
         self,
-        bundle: SimplePhysicalBundle,
+        bundle: Rtl28PhysicalBundle,
         tensor_id: str,
         coordinate: tuple[int, ...],
     ) -> tuple[dict[str, object], ...]:
@@ -276,16 +515,17 @@ class _SimpleOperatorLayout:
         ):
             raise IndexError("logical coordinate is out of range")
         dtype = np.dtype(placement.dtype)
-        if placement.placement == "batch":
-            slice_ids = (coordinate[0],)
-            local_coordinate = coordinate[1:]
-        else:
+        if placement.placement == "replicated":
             slice_ids = tuple(range(bundle.geometry.slice_count))
             local_coordinate = coordinate
-        element_index = (
-            0
-            if not placement.slot_shape
-            else int(np.ravel_multi_index(local_coordinate, placement.slot_shape))
+        else:
+            slice_id, local_coordinate = self._coordinate_owner(placement, coordinate)
+            slice_ids = (slice_id,)
+        element_index = int(
+            np.ravel_multi_index(
+                local_coordinate,
+                bundle.region(placement.port, slice_ids[0]).physical_shape,
+            )
         )
         byte_offset = element_index * dtype.itemsize
         explanations: list[dict[str, object]] = []
@@ -298,64 +538,105 @@ class _SimpleOperatorLayout:
                         "tensor_id": tensor_id,
                         "port": placement.port,
                         "logical_coordinate": coordinate,
+                        "profile_id": self.profile_id,
                         "slice_id": slice_id,
+                        "group_id": region.group_id,
+                        "owner_step": region.owner_step,
+                        "physical_coordinate": local_coordinate,
                         "address": address,
                         "dram_coordinate": bundle.geometry.decode(address),
                         "element_byte": element_byte,
                         "semantic": (
-                            "data"
-                            if placement.placement == "batch"
-                            else "replicated_data"
+                            "replicated_qparam"
+                            if placement.placement == "replicated"
+                            else "data"
                         ),
                     }
                 )
         return tuple(explanations)
 
-    def validate(self, bundle: SimplePhysicalBundle) -> dict[str, int]:
-        if bundle.contract != self.contract or bundle.status != self.status:
-            raise ValueError("bundle contract does not match this layout")
-        if bundle.geometry != self.geometry or bundle.alignment != self.alignment:
-            raise ValueError("bundle geometry/alignment does not match this layout")
+    def validate(self, bundle: Rtl28PhysicalBundle) -> dict[str, int | str]:
+        if (
+            bundle.contract != self.contract
+            or bundle.status != self.status
+            or bundle.target_family != self.target_family
+            or bundle.profile_id != self.profile_id
+        ):
+            raise ValueError("bundle identity does not match this RTL28 layout")
+        if (
+            bundle.geometry != self.geometry
+            or bundle.alignment != self.alignment
+            or bundle.geometry_status != self.geometry_status
+            or bundle.address_order_status != self.address_order_status
+        ):
+            raise ValueError("bundle geometry or candidate status differs from layout")
         expected_regions = len(bundle.placements) * bundle.geometry.slice_count
         if len(bundle.regions) != expected_regions:
             raise ValueError("bundle does not contain one region per port and slice")
+
+        tail_bytes = 0
         for slice_id in range(bundle.geometry.slice_count):
             previous_end = bundle.geometry.slice_base(slice_id)
             slice_end = previous_end + bundle.geometry.bytes_per_slice
             for placement in bundle.placements:
                 region = bundle.region(placement.port, slice_id)
                 payload = bundle.read(placement.port, slice_id)
+                expected = self._region_descriptor(placement, slice_id)
+                for field in (
+                    "physical_shape",
+                    "active",
+                    "group_id",
+                    "owner_step",
+                    "sample_start",
+                    "sample_count",
+                    "storage_sample_count",
+                    "feature_start",
+                    "feature_count",
+                ):
+                    if getattr(region, field) != expected[field]:
+                        raise ValueError(f"region {placement.port}:{slice_id} {field} drifted")
                 if region.base_address % self.alignment:
                     raise ValueError(f"port {placement.port} is not aligned")
                 if region.base_address < previous_end:
-                    raise ValueError("simple-op physical regions overlap")
+                    raise ValueError("RTL28 simple-op physical regions overlap")
                 if region.base_address + region.size_bytes > slice_end:
-                    raise ValueError("simple-op physical region crosses a slice boundary")
+                    raise ValueError("physical region crosses a slice boundary")
                 if len(payload) != region.size_bytes:
                     raise ValueError("physical payload size differs from its region")
                 if any(payload[region.payload_bytes :]):
                     raise ValueError("128-bit alignment padding is corrupted")
-                if placement.placement == "batch":
-                    batch = placement.logical_shape[0]
-                    if region.active != (slice_id < batch):
-                        raise ValueError("batch activity mask is inconsistent")
-                    if not region.active and payload[: region.payload_bytes] != bytes(
-                        [placement.padding_byte]
-                    ) * region.payload_bytes:
-                        raise ValueError("inactive batch slice padding is corrupted")
-                elif not region.active:
-                    raise ValueError("replicated region cannot be inactive")
+                if placement.placement == "feature_partition":
+                    dtype = np.dtype(placement.dtype).newbyteorder("<")
+                    local = np.frombuffer(
+                        payload[: region.payload_bytes], dtype=dtype
+                    ).reshape(region.physical_shape)
+                    valid = np.zeros(region.physical_shape, dtype=np.bool_)
+                    if region.feature_count:
+                        valid[
+                            : region.sample_count, ..., : region.feature_count
+                        ] = True
+                    padding = local[~valid]
+                    if padding.size and not np.all(
+                        padding == np.asarray(placement.padding_value, dtype=dtype)
+                    ):
+                        raise ValueError(
+                            f"feature/sample tail for {placement.tensor_id} is corrupted"
+                        )
+                    tail_bytes += int(padding.nbytes)
                 previous_end = region.base_address + region.size_bytes
         self.inverse(bundle)
         return {
+            "target_family": self.target_family,
+            "profile_id": self.profile_id,
             "slice_count": bundle.geometry.slice_count,
             "port_count": len(bundle.placements),
             "region_count": len(bundle.regions),
             "physical_bytes": sum(len(value) for value in bundle.payloads.values()),
+            "tail_bytes": tail_bytes,
         }
 
 
-class QuantizeLinearPhysicalLayout(_SimpleOperatorLayout):
+class QuantizeLinearPhysicalLayout(_Rtl28SimpleOperatorLayout):
     def forward(
         self,
         *,
@@ -364,7 +645,7 @@ class QuantizeLinearPhysicalLayout(_SimpleOperatorLayout):
         zero_point: np.ndarray,
         output_tensor: np.ndarray,
         tensor_ids: dict[str, str] | None = None,
-    ) -> SimplePhysicalBundle:
+    ) -> Rtl28PhysicalBundle:
         ids = {
             "A": "quantize_input",
             "scale": "quantize_scale",
@@ -378,8 +659,13 @@ class QuantizeLinearPhysicalLayout(_SimpleOperatorLayout):
         output_tensor = np.asarray(output_tensor)
         if input_tensor.dtype != np.float32:
             raise TypeError("QuantizeLinear input must be float32")
-        if scale.dtype != np.float32 or scale.shape != (1,):
-            raise TypeError("QuantizeLinear scale must be scalar float32 with shape (1,)")
+        if (
+            scale.dtype != np.float32
+            or scale.shape != (1,)
+            or not np.isfinite(scale[0])
+            or scale[0] <= 0
+        ):
+            raise TypeError("QuantizeLinear scale must be one positive finite float32")
         if zero_point.dtype != np.uint8 or zero_point.shape != (1,):
             raise TypeError("QuantizeLinear zero_point must be scalar uint8 with shape (1,)")
         if output_tensor.dtype != np.uint8 or output_tensor.shape != input_tensor.shape:
@@ -387,15 +673,23 @@ class QuantizeLinearPhysicalLayout(_SimpleOperatorLayout):
         return self._pack(
             "QuantizeLinear",
             (
-                _PortInput("A", ids["A"], input_tensor, "batch"),
-                _PortInput("scale", ids["scale"], scale, "replicated"),
-                _PortInput("zero_point", ids["zero_point"], zero_point, "replicated"),
-                _PortInput("D", ids["D"], output_tensor, "batch"),
+                _PortInput("A", ids["A"], input_tensor, "feature_partition", 0.0),
+                _PortInput("scale", ids["scale"], scale, "replicated", 0.0),
+                _PortInput(
+                    "zero_point", ids["zero_point"], zero_point, "replicated", 0
+                ),
+                _PortInput(
+                    "D",
+                    ids["D"],
+                    output_tensor,
+                    "feature_partition",
+                    int(zero_point[0]),
+                ),
             ),
         )
 
 
-class DequantizeLinearPhysicalLayout(_SimpleOperatorLayout):
+class DequantizeLinearPhysicalLayout(_Rtl28SimpleOperatorLayout):
     def forward(
         self,
         *,
@@ -404,7 +698,7 @@ class DequantizeLinearPhysicalLayout(_SimpleOperatorLayout):
         zero_point: np.ndarray,
         output_tensor: np.ndarray,
         tensor_ids: dict[str, str] | None = None,
-    ) -> SimplePhysicalBundle:
+    ) -> Rtl28PhysicalBundle:
         ids = {
             "A": "dequantize_input",
             "scale": "dequantize_scale",
@@ -418,8 +712,13 @@ class DequantizeLinearPhysicalLayout(_SimpleOperatorLayout):
         output_tensor = np.asarray(output_tensor)
         if input_tensor.dtype != np.uint8:
             raise TypeError("DequantizeLinear input must be uint8")
-        if scale.dtype != np.float32 or scale.shape != (1,):
-            raise TypeError("DequantizeLinear scale must be scalar float32 with shape (1,)")
+        if (
+            scale.dtype != np.float32
+            or scale.shape != (1,)
+            or not np.isfinite(scale[0])
+            or scale[0] <= 0
+        ):
+            raise TypeError("DequantizeLinear scale must be one positive finite float32")
         if zero_point.dtype != np.uint8 or zero_point.shape != (1,):
             raise TypeError("DequantizeLinear zero_point must be scalar uint8 with shape (1,)")
         if output_tensor.dtype != np.float32 or output_tensor.shape != input_tensor.shape:
@@ -427,24 +726,33 @@ class DequantizeLinearPhysicalLayout(_SimpleOperatorLayout):
         return self._pack(
             "DequantizeLinear",
             (
-                _PortInput("A", ids["A"], input_tensor, "batch"),
-                _PortInput("scale", ids["scale"], scale, "replicated"),
-                _PortInput("zero_point", ids["zero_point"], zero_point, "replicated"),
-                _PortInput("D", ids["D"], output_tensor, "batch"),
+                _PortInput(
+                    "A",
+                    ids["A"],
+                    input_tensor,
+                    "feature_partition",
+                    int(zero_point[0]),
+                ),
+                _PortInput("scale", ids["scale"], scale, "replicated", 0.0),
+                _PortInput(
+                    "zero_point", ids["zero_point"], zero_point, "replicated", 0
+                ),
+                _PortInput("D", ids["D"], output_tensor, "feature_partition", 0.0),
             ),
         )
 
 
 @dataclass(frozen=True)
 class ZeroCopyViewProof:
-    source_bundle: SimplePhysicalBundle
+    source_bundle: Rtl28PhysicalBundle
     source_tensor_id: str
     output_tensor_id: str
     input_shape: tuple[int, ...]
     output_shape: tuple[int, ...]
     dtype: str
     axis: int
-    contract: str = "w4_zero_copy_view_candidate_v1"
+    profile_id: str
+    contract: str
     status: str = "candidate"
 
     def layout_record(self) -> LayoutRecord:
@@ -452,6 +760,11 @@ class ZeroCopyViewProof:
         bases = tuple(
             self.source_bundle.region(placement.port, slice_id).base_address
             for slice_id in range(self.source_bundle.geometry.slice_count)
+        )
+        source = next(
+            item
+            for item in self.source_bundle.layout_records()
+            if item.tensor_id == self.source_tensor_id
         )
         return LayoutRecord(
             layout_id=f"layout-view-{self.output_tensor_id}",
@@ -462,14 +775,12 @@ class ZeroCopyViewProof:
             logical_shape=self.output_shape,
             logical_dtype=self.dtype,
             partition={
-                "axis": 0,
-                "policy": "alias_existing_batch_partition",
-                "slice_count": self.source_bundle.geometry.slice_count,
+                **source.partition,
+                "policy": "zero_copy_alias_of_rtl28_feature_partition",
             },
             packing={
-                "element_order": "C",
-                "byte_order": "little",
-                "alignment_bytes": self.source_bundle.alignment,
+                **source.packing,
+                "physical_order": "NF-local",
                 "zero_copy": True,
             },
             base_addresses=bases,
@@ -479,27 +790,36 @@ class ZeroCopyViewProof:
 
 
 class ZeroCopyViewLayout:
+    status = "candidate"
+
+    def __init__(self, profile_id: str = DEFAULT_PROFILE) -> None:
+        self.profile_id = validate_profile_name(profile_id)
+        self.contract = VIEW_LAYOUT_IDS[self.profile_id]
+
     def forward(
         self,
         *,
-        source_bundle: SimplePhysicalBundle,
+        source_bundle: Rtl28PhysicalBundle,
         source_tensor_id: str,
         output_tensor_id: str,
         output_shape: tuple[int, ...],
         axis: int = 1,
     ) -> ZeroCopyViewProof:
+        if source_bundle.profile_id != self.profile_id:
+            raise ValueError("View profile must match its source bundle")
         placement = source_bundle.placement(source_tensor_id)
-        if placement.placement != "batch":
-            raise ValueError("zero-copy View source must use batch partitioning")
+        if placement.placement != "feature_partition":
+            raise ValueError("zero-copy View source must use feature partitioning")
         input_shape = placement.logical_shape
         rank = len(input_shape)
         normalized_axis = axis + rank if axis < 0 else axis
         if normalized_axis != 1:
-            raise ValueError("W4 batch-slice zero-copy View currently requires axis=1")
-        expected = (
-            math.prod(input_shape[:normalized_axis]),
-            math.prod(input_shape[normalized_axis:]),
-        )
+            raise ValueError("RTL28 zero-copy View requires axis=1")
+        if rank < 3 or any(size != 1 for size in input_shape[2:]):
+            raise ValueError(
+                "RTL28 zero-copy View only removes singleton spatial dimensions"
+            )
+        expected = (input_shape[0], input_shape[1])
         if tuple(output_shape) != expected:
             raise ValueError(f"View output shape must be {expected}, got {output_shape}")
         proof = ZeroCopyViewProof(
@@ -510,14 +830,14 @@ class ZeroCopyViewLayout:
             output_shape=tuple(output_shape),
             dtype=placement.dtype,
             axis=normalized_axis,
+            profile_id=self.profile_id,
+            contract=self.contract,
         )
         self.validate(proof)
         return proof
 
     def inverse(self, proof: ZeroCopyViewProof) -> dict[str, np.ndarray]:
-        helper = _SimpleOperatorLayout(
-            proof.source_bundle.geometry, proof.source_bundle.alignment
-        )
+        helper = _Rtl28SimpleOperatorLayout(profile_id=proof.profile_id)
         source = helper.inverse_port(proof.source_bundle, proof.source_tensor_id)
         output = source.reshape(proof.output_shape)
         return {
@@ -535,16 +855,14 @@ class ZeroCopyViewLayout:
             for index, size in zip(coordinate, proof.output_shape, strict=True)
         ):
             raise IndexError("Flatten output coordinate is out of range")
-        source_coordinate = np.unravel_index(
-            np.ravel_multi_index(coordinate, proof.output_shape), proof.input_shape
+        source_coordinate = (
+            coordinate[0],
+            coordinate[1],
+            *([0] * (len(proof.input_shape) - 2)),
         )
-        helper = _SimpleOperatorLayout(
-            proof.source_bundle.geometry, proof.source_bundle.alignment
-        )
+        helper = _Rtl28SimpleOperatorLayout(profile_id=proof.profile_id)
         result = helper.explain_coordinate(
-            proof.source_bundle,
-            proof.source_tensor_id,
-            tuple(int(value) for value in source_coordinate),
+            proof.source_bundle, proof.source_tensor_id, source_coordinate
         )
         return tuple(
             {
@@ -552,23 +870,31 @@ class ZeroCopyViewLayout:
                 "tensor_id": proof.output_tensor_id,
                 "logical_coordinate": coordinate,
                 "source_tensor_id": proof.source_tensor_id,
-                "source_coordinate": tuple(int(value) for value in source_coordinate),
+                "source_coordinate": source_coordinate,
                 "semantic": "zero_copy_alias",
             }
             for item in result
         )
 
-    def validate(self, proof: ZeroCopyViewProof) -> dict[str, int | bool]:
-        if proof.contract != "w4_zero_copy_view_candidate_v1" or proof.status != "candidate":
+    def validate(self, proof: ZeroCopyViewProof) -> dict[str, int | bool | str]:
+        if (
+            proof.contract != self.contract
+            or proof.status != self.status
+            or proof.profile_id != self.profile_id
+        ):
             raise ValueError("unsupported zero-copy View contract")
+        if proof.source_bundle.profile_id != self.profile_id or proof.axis != 1:
+            raise ValueError("View proof is incompatible with the RTL28 source profile")
         placement = proof.source_bundle.placement(proof.source_tensor_id)
-        if placement.placement != "batch" or proof.axis != 1:
-            raise ValueError("View proof is incompatible with batch-slice storage")
-        if math.prod(proof.input_shape) != math.prod(proof.output_shape):
-            raise ValueError("View changes the tensor element count")
-        helper = _SimpleOperatorLayout(
-            proof.source_bundle.geometry, proof.source_bundle.alignment
-        )
+        if placement.placement != "feature_partition":
+            raise ValueError("View proof source is not feature-partitioned")
+        if (
+            len(proof.input_shape) < 3
+            or any(size != 1 for size in proof.input_shape[2:])
+            or proof.output_shape != (proof.input_shape[0], proof.input_shape[1])
+        ):
+            raise ValueError("View changes non-singleton physical storage")
+        helper = _Rtl28SimpleOperatorLayout(profile_id=proof.profile_id)
         helper.validate(proof.source_bundle)
         recovered = self.inverse(proof)
         if recovered[proof.source_tensor_id].tobytes(order="C") != recovered[
@@ -577,6 +903,21 @@ class ZeroCopyViewLayout:
             raise ValueError("View alias changes the physical byte order")
         return {
             "zero_copy": True,
+            "target_family": "rtl28",
+            "profile_id": self.profile_id,
             "slice_count": proof.source_bundle.geometry.slice_count,
             "aliased_bytes": int(recovered[proof.output_tensor_id].nbytes),
         }
+
+
+__all__ = [
+    "DequantizeLinearPhysicalLayout",
+    "QuantizeLinearPhysicalLayout",
+    "Rtl28PhysicalBundle",
+    "Rtl28PhysicalRegion",
+    "Rtl28PortPlacement",
+    "SIMPLE_LAYOUT_IDS",
+    "VIEW_LAYOUT_IDS",
+    "ZeroCopyViewLayout",
+    "ZeroCopyViewProof",
+]

@@ -9,9 +9,9 @@
 - **最终验收**：正式 ResNet50 INT8 ONNX→逐节点/硬件原子算子 golden→28-slice relayout→JSON/bitstream→目标 simulator→execplan/Bank_data→RTL/硬件→三方逐算子和整网一致，并以真实cycle/带宽证据选择性能profile。
 - **W3业务封版检查点**：`35a4fde106d102b0e165e7eb13d60f7dd980db71`；W0/G0、W2/G2、W3/G3已通过，W1只完成模型/输入/软件量化事实，G1因目标硬件合同缺失尚未通过。交接文档可能有后续纯文档提交，当前恢复点以`git rev-parse HEAD`和`history.md`精确台账为准。
 - **三个仓库分工**：`CGRA_SIM` 给软件/QNN语义和旧 ResNet 计划；`ndp-sim-ref` 只给 JSON、bitstream、relayout/execplan 的参考框架，尚未获批为目标工具；`NDPFuncModel` 只给W2 Conv功能数据通路，不是目标backend。根集成层已经统一W3图/lowering/golden身份，但配置、simulator、execplan和hardware尚未接入同一manifest。
-- **当前成果**：正式图含78节点/617张量，lower为133个语义hw_op；保存79个运行时tensor和55个INT32内部tensor，全部78节点独立公式重放匹配ORT，旧77原语已逐项映射。旧16-slice W4曾完成12个candidate、93条边审计、生命周期/alias和通用逻辑比较器；ADR-007已明确这些物理布局与成本报告只作历史证据，比较器和审计框架继续复用。
+- **当前成果**：正式图含78节点/617张量，lower为133个语义hw_op；保存79个运行时tensor和55个INT32内部tensor，全部78节点独立公式重放匹配ORT，旧77原语已逐项映射。W4-28的C0机器合同/legacy隔离和C1 Quantize/Dequantize/View公共正逆布局已经完成，141项根测试通过；旧16-slice布局、93边和成本只作历史证据，比较器和审计框架继续复用。
 - **当前硬件裁决**：目标为28-slice，RTL候选固定`Trassic2.0_RTL@e3bdebba95dec36ee8eba43caa92a326a88392cd`；主体采用七个4-slice小环的batch/channel混合profile，28-slice大环只作代表层性能候选。W4按该方案重开，G4仍未通过，`w5_authorized=false`。
-- **下一主线**：C0-01～07已经把G4、architecture/approval/backend合同、九份旧报告和工具入口迁移或隔离为28-slice fail-closed口径；先完成同批文档漂移清理，再进入C1的28-slice DRAM geometry与Quantize/Dequantize/View公共布局。公共API冻结后才按依赖和文件冲突决定算子分波并行，最后回Local统一重审93条边和成本；不重跑约951 MB的W3产物，除非合同/hash/回归明确失效。
+- **下一主线**：C1和141项全量回归已完成，P4已通过；下一波可用最多三个Local共享目录协作子任务并行Conv、Pool（MaxPool+GAP）、MatMul，主任务串行维护公共合同、审阅集成与Git。随后单线程实现QLinearAdd并统一重审93条边和成本；不重跑约951 MB的W3产物，除非合同/hash/回归明确失效。
 - **当前外部阻塞**：正式模型和固定输入基线已经自行取得；剩余外部阻塞为目标commit的clean elaboration/顶层命名闭合、正式端口layout、INT8 SA/GA/qparams硬件约定、目标emulator关系、硬件加载与dump协议。
 - **禁止误用**：NDPFuncModel 当前 `extracted_*.npy` 和 `verify_pe` psum 不是可信 golden；42个 JSON也不等于 ResNet算子配置已完成；bitstream生成成功不等于数值正确。
 - **接手检查**：Local主工作区依次运行`git status --short`、`.venv\Scripts\python.exe tools\sync_repositories.py verify`、`.venv\Scripts\python.exe -m unittest discover -s tests -v`；fresh checkout可先用`verify --evidence-only`只核对tracked RTL28审计快照。预期根工作树干净、三参考仓匹配lock、RTL28 external evidence匹配hash、登记的全量测试全部通过。2026-07-13已确认managed worktree回收会穿透依赖junction清空Local目标，因此setup对非Local工作树硬失败；依赖`.venv`、三个参考仓或正式W3的任务统一回Local，直到有隔离且通过“销毁安全”验证的新方案。
@@ -44,10 +44,11 @@
 
 ### Codex并行任务与worktree规则
 
+- 必须区分两种并行执行环境。Local任务内派生的协作子代理与主任务共享同一Local工作目录，因此能读取当前tracked源码、`.venv`、三个参考仓和Local-only产物；它们不需要也不得创建junction，但共享工作树意味着只能分配互不重叠的文件范围，Git暂存、提交、全局合同和最终集成仍由Local主任务串行完成。独立Codex managed worktree则只拥有创建时基线commit的tracked快照和明确交付的小型元数据，默认看不到`.venv`、三个参考仓或Local-only产物，也不能假定旧detached worktree包含当前HEAD。
 - 每个新工作包开工前必须先判断是否适合并行，不为了“看起来更快”强行拆分。只有共享合同/API已经冻结、子任务没有前后依赖、主要修改文件互不重叠、各自能独立测试和形成可集成提交时，才采用并行worktree；满足条件时优先并行以缩短等待时间。
 - 以下情况默认单线程：修改同一schema/contract/公共基类；下游必须读取上游刚确定的layout、qparams或地址规则；需要正式W3数据、整网93边、全量回归或最终集成；仍等待同一项硬件裁决；拆分后会重复实现或产生多套真值。单线程不是保守停滞，而是避免并行返工。
 - 并行任务开始前由Local主任务冻结基线commit、公共接口、允许修改的文件集合和验收命令；子任务不得自行编辑共享`.agents`、全局合同或其他任务文件。Local负责按依赖顺序集成、解决接口问题、统一更新合同/文档、执行全量测试并判断是否开启下一并行波次。
-- 只读全项目审查优先在Local任务执行；只依赖Git跟踪文件且互不重叠的代码实现才可放独立Codex worktree。任何需要`.venv`、三个参考仓、正式W3或其他Local-only内容的任务均回Local；整网93边、正式W3输入、全量回归和最终集成只在Local主工作区执行。
+- 只读全项目审查优先在Local任务执行；只依赖Git跟踪文件且互不重叠的代码实现才可放新建的独立Codex worktree。任何需要`.venv`、三个参考仓、正式W3或其他Local-only内容的任务，使用Local主任务或其共享目录协作子代理；整网93边、正式W3输入、全量回归和最终集成只在Local主工作区串行执行。
 - Codex worktree只天然包含Git跟踪文件。根目录`.worktreeinclude`只复制W3目录第一层的2个小型JSON；桌面宿主当前不能可靠复制更深的ignored路径，因此2个manifest以固定hash的base64快照纳入Git，由setup在worktree内部恢复到原路径。禁止加入W3 `.npy`、整个`artifacts/`、`.venv`或三个参考仓，避免每个worktree重复约951 MB或更多数据。
 - `tools/setup_codex_worktree.ps1`只保留Local环境/元数据自检；非Local调用会在任何恢复或链接动作前硬失败。禁止再把Local `.venv`、参考仓或产物以junction/symlink挂入managed worktree；“只读约定”不能约束桌面宿主的回收器。
 - 必须修改参考仓时使用独立、可恢复的正式Git工作树并单独提交；不得把Local源目录作为临时worktree清理范围内的链接目标。
@@ -298,18 +299,18 @@ CGRA_SIM/testing/resnet-50-int8/
 
 - **模型和golden——W3/G3已通过**：模型/input/hash和ORT设置已锁定；正式保存79个运行时tensor和55个lowering内部INT32 tensor，全部78节点由独立公式重放并匹配ORT。旧`golden.py`的30个唯一检查点只保留为历史参考。
 - **lowering和身份映射——W3语义层已完成**：78个ONNX节点稳定lower为133个语义hw_op；旧77模型级原语已逐项映射，Flatten明确为zero-copy。JSON实例、逐K-tile和execplan身份在W4/W5/W7继续扩展，不得说成W3尚未实现。
-- **数据变换——旧16-slice软件审计历史通过/28-slice W4已重开**：旧综合审计覆盖78/78节点、93条runtime边和91条量化qparam链，但物理签名、成本和容量结论已由ADR-007标为过时。新W4必须使用RTL真实七小环/大环映射重新完成全部算子、边、生命周期/alias和性能成本；G4=`not_passed`、`w5_authorized=false`。
+- **数据变换——RTL28 C1已完成/其余W4继续**：C1已提供Quantize、Dequantize和singleton-spatial View在group4x7/LOW两个profile上的正逆、坐标解释与验证；旧综合审计虽覆盖78/78节点、93条runtime边和91条量化qparam链，但旧物理签名、成本和容量仍已过时。新W4还必须完成Conv、Pool、Add、GAP、MatMul以及新93边、生命周期/alias和性能成本；G4=`not_passed`、`w5_authorized=false`。
 - **单算子配置——部分已有**：42 个静态 JSON 中只有 MaxPool、sum 型 AvgPool、固定样例 quant、fp32 输出 add-dequant 可局部参考；6 个 SA JSON 全是 FP16、bias=0；没有核心 INT8 Conv/MatMul。
-- **W2/G2小Conv软件闭环已通过**：`NDPFuncModel@35eab40` 的参数化runner在同一fixture上完成1/4-slice全部84坐标，实际经过DRAM、input Buffer、SpecialPEA、ActivationUnit、output Buffer和DRAM；NumPy、im2col、ORT、CGRA QNN rounding与NDP的accumulator/D一致，physical D可inverse且全部物理字节可解释。该结论不批准旧固定主入口、目标JSON或硬件layout；C0已冻结RTL28机器合同，下一步先完成C1公共布局，再由Conv算子波次把该fixture能力组合进七个真实小环。
+- **W2/G2小Conv软件闭环已通过**：`NDPFuncModel@35eab40` 的参数化runner在同一fixture上完成1/4-slice全部84坐标，实际经过DRAM、input Buffer、SpecialPEA、ActivationUnit、output Buffer和DRAM；NumPy、im2col、ORT、CGRA QNN rounding与NDP的accumulator/D一致，physical D可inverse且全部物理字节可解释。该结论不批准旧固定主入口、目标JSON或硬件layout；C0/C1已冻结RTL28机器合同和公共布局，下一Conv算子波次再把该fixture能力组合进七个真实小环。
 - **execplan——28-slice框架已有/ResNet适配没有**：可规划28个slave、28-bit mask、地址、bitstream、指令和Bank_data；schema仍缺numeric attributes，旧配置镜像与目标RTL存在版本冲突，bitstream失败后部分路径还会继续。
 - **RTL/硬件——外部阻塞**：没有完整 runner/testbench、加载/启动/完成/dump 协议或逐算子 checkpoint 入口。
 - **三方比较——通用逻辑比较器已就绪/真实结果未到位**：根集成层已实现inverse-relayout之后的两方/三方比较、整数bit-exact、浮点显式容差、错误分类、拓扑首错和provenance；旧runner与128-bit物理文件工具仍不能替代它。当前没有目标simulator/hardware逻辑输出，也没有获批inverse layout，因此尚无真实三方通过结论。
 
 ## 当前最高优先级
 
-严格按`.agents/plan.md`的W0→W9工作包和G0→G9验收门推进。W0/G0、W2/G2、W3/G3已经完成；W1已选定目标RTL commit但G1未通过。W4-28的C0机器合同/legacy隔离已完成，旧16-slice software readiness不再代表当前进度；下一业务步骤是C1公共geometry与Quantize/Dequantize/View布局，不进入W5。任何W1～W3修改都必须先说明会使哪些manifest/hash/下游产物失效。
+严格按`.agents/plan.md`的W0→W9工作包和G0→G9验收门推进。W0/G0、W2/G2、W3/G3已经完成；W1已选定目标RTL commit但G1未通过。W4-28的C0机器合同/legacy隔离和C1公共geometry与Quantize/Dequantize/View布局已经完成，P4已允许下一波分文件并行Conv、Pool、MatMul；旧16-slice software readiness不再代表当前进度。下一业务步骤仍属于W4，不进入W5。任何W1～W3修改都必须先说明会使哪些manifest/hash/下游产物失效。
 
-优先推进：先按C1显式分离RTL28 candidate geometry与legacy16 geometry，冻结七组sample owner、环内C/F owner、packing、qparam副本、tail和zero-copy公共接口；同时继续等待`e3bdebba...`的clean elaboration、端口layout、最小INT8 SA+bias+requant、目标emulator以及硬件load/dump批准。旧ONNX、旧16-slice产物、原`hex_data`和`conv_config`均降级为兼容性资料，不阻塞不依赖这些裁决的C1软件工作。
+优先推进：按P4边界实现Conv七小环、Pool（MaxPool+GAP）和MatMul七小环/大环候选，主任务只读审阅各任务并顺序集成；若需要修改C1公共API，立即退回单线程。与此同时继续等待`e3bdebba...`的clean elaboration、端口layout、最小INT8 SA+bias+requant、目标emulator以及硬件load/dump批准。旧ONNX、旧16-slice产物、原`hex_data`和`conv_config`均只作兼容性资料。
 
 配置字段层的Q1~Q4详细背景仍见 `.agents/rules/算子配置规则.md` 第14.3节；端到端外部资料清单以 `plan.md`“当前最高优先级请求”为准。
 

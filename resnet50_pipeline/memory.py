@@ -29,7 +29,7 @@ class Transfer:
 
 @dataclass(frozen=True)
 class DramGeometry:
-    slice_count: int = 16
+    slice_count: int
     bank_count: int = 4
     row_count: int = 6144
     col_count: int = 64
@@ -140,6 +140,25 @@ class DramGeometry:
             if transfer.address < 0 or transfer.address + transfer.size_bytes > self.total_bytes:
                 raise ValueError("strided transaction range is outside DRAM")
         return transactions
+
+
+# Current and legacy call sites use named geometry constants.  ``slice_count``
+# is intentionally required on ad-hoc constructions so new target code cannot
+# silently inherit the historical 16-slice default.
+LEGACY_DRAM_GEOMETRY16 = DramGeometry(
+    slice_count=16,
+    bank_count=4,
+    row_count=6144,
+    col_count=64,
+    subword_bytes=16,
+)
+TARGET_DRAM_GEOMETRY28 = DramGeometry(
+    slice_count=28,
+    bank_count=4,
+    row_count=6144,
+    col_count=64,
+    subword_bytes=16,
+)
 
 
 class SparsePhysicalImage:
