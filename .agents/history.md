@@ -532,3 +532,21 @@
 - 验证：Local setup `-CheckOnly`核对四项source及四个W3小元数据；对真实`e49c` worktree调用明确失败且未写入；环境测试5/5、根仓全量109/109通过；`pip check`、三仓lock/dirty核验及`git diff --check`通过。没有读取、复制或重跑约951 MB W3 tensor。
 - ENV-01完成，下一步恢复权威顺序为C0-01：让现行G4先fail-closed；G4仍为`not_passed`、`w5_authorized=false`，未生成正式W5 JSON/bitstream。
 - 精确回退：如只需撤销防复发代码和现行规则，可revert `6d74a15669bb07281d31e2044380cdcd1c4775d8`，但这会重新开放已证明危险的junction路径，不应在当前桌面宿主使用。忽略目录恢复内容不在Git中；若再次丢失，只能按上述ZIP hash或`repos.lock.json`/requirements lock恢复，不能靠Git revert恢复。
+
+## 2026-07-13：W4-28 C0-01现行G4 fail-closed
+
+- 根仓提交`f897882711114ed9f93c5fc35470dea8cbd55092`，父提交`e0f9fca2dad0bf6db57de99fa96a4f828c3d3e80`，`fix: make current W4 gate fail closed`。
+- `w4_audit.py`不再把旧16-slice插件、93边、容量、生命周期/alias和成本证据混入current gate；这些结果进入`legacy16_evidence`且固定`current_gate_eligible=false`。两个原先无条件为True的roundtrip/capacity项改为从登记报告的实际布尔声明推导。
+- current gate显式要求：architecture声明28 slice、28-slice七算子族布局证据、28-slice 93边物理审计、28-slice profile成本证据、clean elaboration批准，以及目标profile/RTL-ISA-register-map/物理layout批准。缺任一项均保持`G4=not_passed`、`w5_authorized=false`。
+- 硬件批准结构校验与G4授权已分离：旧fixture仍可得到`valid=true`，但只标`validation_scope=structure_only`且`current_gate_eligible=false`，不会再打开W5；无效批准仍给出原校验错误。当前无真实`hardware_approval.json`。
+- 聚焦11项hardware approval/G4测试与根仓全量109/109通过，`py_compile`和`git diff --check`通过。新current报告在临时生成时两次SHA-256均为`222f73709afe439e3f7179bbb503c1b318dbf5bef230b91f7138d71852fe3e83`、106,034 bytes；为避免覆盖仍待C0-05归档的tracked legacy16报告，本提交没有改写`artifacts/w4/g4_gate_audit.json`。没有读取或重跑W3大tensor。
+- C0-01完成；下一步按顺序单线程执行C0-02/03/04，迁移architecture、批准schema/validator和合同语义校验到28-slice candidate。精确回退：revert `f897882711114ed9f93c5fc35470dea8cbd55092`；上一恢复点为`e0f9fca2dad0bf6db57de99fa96a4f828c3d3e80`。
+
+## 2026-07-13：W4-28 C0-02/03/04机器合同迁移
+
+- 根仓提交`448c21c746bb76b271d21f0e9ae43806cab15185`，父提交`f897882711114ed9f93c5fc35470dea8cbd55092`，`feat: migrate W4 contracts to rtl28`。`architecture.json`升级为0.2并唯一登记`Trassic2.0_RTL@e3bdebba95dec36ee8eba43caa92a326a88392cd`、28 slice、SA 8×8、GA 4×4、28-bit mask、显式七条HIGH小环/一条LOW大环、两个精确profile ID和14个planned layout ID；静态RTL审计及地址解释仍为`candidate_unapproved`，没有伪造硬件批准。
+- 旧16-slice布局和九份软件证据从current candidate空间移入`legacy_layouts/legacy_evidence`；W2的1/4-slice软件fixture独立放入`fixture_layouts`。审批validator只从planned/current RTL28 registry选择精确profile布局，完全不能选择legacy16条目；planned布局能用于schema结构测试，但固定`layout_evidence_complete=false`。
+- `hardware_approval.schema.json`、手写validator和合成fixture统一到0.2/RTL28，交叉校验RTL仓库、完整commit、top/filelist、architecture ID/version、clean elaboration、拓扑、SA/GA、DRAM、mask、精确profile/layout、物理对象、数值语义、ISA、runtime和证据。合成fixture仅证明结构；旧16、`mixed`、错误commit、错误profile布局和未批准elaboration均明确失败。没有创建真实`contracts/hardware_approval.json`。
+- `contracts.py`按contract type管理版本，并增加architecture语义校验：旧16活动target、算术/损坏拓扑、含混profile、legacy泄漏、错误RTL入口、错误DRAM address order、planned/current状态和RTL审计文件hash任一不一致均fail-closed。W0临时合同测试只复制20,794-byte RTL审计小证据，不读取正式W3 tensor。`validate-contracts`通过，合同集合digest为`1f138e3bbaad764c3e9756dfabef918dff8f1d34df2b86412bff3977aadea2db`。
+- G4另补一层旁路回归：即使candidate registry人为凑齐七个算子族、93边和成本报告，审批所选profile布局若未达到`layout_evidence_complete`也不能授权。根仓全量122/122、聚焦35/35、`py_compile`、JSON解析和`git diff --check`通过。当前报告只在内存生成两次，均为102,285 bytes、SHA-256 `6d1358778222a4348a7f46c255ff5d17423f4e37c36df58c1a59a168256f7403`；没有覆盖仍待C0-05归档的旧tracked报告。
+- 当前仍为`software_candidate_readiness=fail`、`G4=not_passed`、`w5_authorized=false`；阻断项为28算子layout、28物理93边、28 profile成本、clean elaboration以及正式profile/ISA/register-map/layout批准。下一原子包是C0-05/06/07与DOC-01～04：归档旧报告、隔离旧工具入口、版本化RTL证据来源并清理现行文档漂移；不直接进入C1/W5。精确回退：revert `448c21c746bb76b271d21f0e9ae43806cab15185`；上一恢复点为`f897882711114ed9f93c5fc35470dea8cbd55092`。
