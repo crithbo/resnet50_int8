@@ -51,8 +51,8 @@
 ## 当前总体状态
 
 - **已通过**：W0/G0集成骨架，W2/G2小Conv候选软件纵向闭环，W3/G3正式图/lowering/全节点与subop golden。
-- **部分通过**：W1已冻结正式候选模型、固定输入、预处理和软件量化事实；目标RTL候选已选`Trassic2.0_RTL@e3bdebba...`和28-slice，但clean elaboration、正式端口layout、ISA/register-map、JSON/emulator和硬件接口未批准，所以G1仍未通过。
-- **当前主线**：ADR-007已由操作者采用。旧16-slice W4的12个candidate、93边审计和成本报告改为历史证据；审计框架、生命周期/alias算法和逻辑比较器继续复用。W4按七个4-slice小环主profile与28-slice大环代表层候选重开，G4=`not_passed`、`w5_authorized=false`；当前可推进28-slice软件布局与成本审计，但不生成正式W5 JSON/bitstream。
+- **部分通过**：W1已冻结正式候选模型、固定输入、预处理和软件量化事实；目标RTL候选已选`Trassic2.0_RTL@e3bdebba...`和28-slice。candidate审计已固定权威top/filelist、命令/WREG、HIGH/LOW、DRAM、SA/GA及运行接口的静态证据，但clean elaboration、正式端口layout、量化/requant、JSON/emulator和板级协议未批准，所以G1仍未通过。
+- **当前主线**：ADR-007已由操作者采用。旧16-slice W4的12个candidate、93边审计和成本报告改为历史证据；审计框架、生命周期/alias算法和逻辑比较器继续复用。28-slice真实HIGH/LOW mapper、七组batch调度和profile转换约束已经落地，下一步从Quantize/Dequantize开始重建算子布局。G4=`not_passed`、`w5_authorized=false`；可继续软件布局与成本审计，但不生成正式W5 JSON/bitstream。
 - **当前边界**：W2只证明小合成Conv的golden=NDP functional model；W3公式重放仍属于golden侧。当前没有任何正式ResNet算子达到golden=target simulator=hardware。
 
 ### 接手进度总表
@@ -60,18 +60,18 @@
 | 工作包 | 门状态 | 已完成边界 | 接手动作 |
 |---|---|---|---|
 | W0 | G0通过 | manifest/contract/backend/artifact/cache/resume/mock DAG | 不重做，只回归 |
-| W1 | G1未通过 | 模型、固定输入、预处理、ONNX量化事实；已选28-slice RTL候选commit | 补clean elaboration、端口/寄存器/运行合同 |
+| W1 | G1未通过 | 模型、固定输入、预处理、ONNX量化事实；已选28-slice RTL并完成必要candidate静态审计 | 补clean elaboration、量化/端口/固件/板级批准合同 |
 | W2 | G2通过 | 1/4-slice小Conv候选layout和NDP functional数值闭环 | 作为W4 fixture，不外推为硬件规格 |
 | W3 | G3通过 | 78节点、133 hw_op、79 runtime tensor、55内部tensor、旧77映射 | 不重跑大artifact，除非hash/合同失效 |
-| W4 | 旧16-slice readiness历史通过；28-slice重开/G4未通过 | 旧审计方法和比较器可复用，旧物理布局/成本已失效 | 实现七小环主profile、代表层大环候选并重审93边；不进W5 |
+| W4 | 旧16-slice readiness历史通过；28-slice重开/G4未通过 | 真实HIGH/LOW mapper、七组batch/profile合同已完成；旧审计方法和比较器可复用 | 按算子重建28-slice布局并重审93边；不进W5 |
 | W5～W9 | 未通过 | W9通用比较器基础设施已前置完成；其余仅有参考框架或mock接口 | 等待对应前置门和真实结果通过 |
 
 ### 当前可立即执行队列
 
 1. 新Local对话先执行根状态、三仓verify和登记的全量unittest；新worktree先运行安全setup脚本，再做status/verify和聚焦测试。不要复制、链接或重跑约951 MB的W3正式artifact。
-2. 按ADR-007先实现28-slice HIGH/LOW物理拓扑mapper及单测，不再等待旧ADR-002/003回复。
-3. 依次重建Quantize、Conv、MaxPool、QLinearAdd、GAP、MatMul/head布局，重新生成93边、生命周期/alias和性能成本报告。
-4. 并行推进W1的clean elaboration、RTL/ISA/register-map、端口layout和运行合同；没有approved合同不得宣布G4/G5通过。
+2. 以`topology28.py`和`profile28.py`为唯一拓扑/调度底座，先重建Quantize/Dequantize的28-slice A/qparams/D布局、正逆映射和tail规则；不得套用旧16-slice物理公式。
+3. 再按Conv、MaxPool、QLinearAdd、GAP、MatMul/head顺序重建布局，最后重新生成93边、生命周期/alias和性能成本报告。
+4. 并行推进W1的clean elaboration、量化/端口/固件/板级批准合同；没有approved合同不得宣布G4/G5通过。
 5. 若模型、预处理、量化公式或lowering变化，先列出所有失效的manifest/hash和下游产物。
 
 环境已经准备完成，不再把安装依赖列为任务：使用根目录 `.venv` 和 `requirements-resnet50.lock.txt`。当前三个最小入口结果见 `agent.md`“本地 Python 环境与已验证入口”。
