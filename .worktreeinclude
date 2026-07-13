@@ -3,6 +3,3 @@
 # repositories here: those would multiply roughly 951 MB or more per worktree.
 artifacts/w3/legacy77_mapping.json
 artifacts/w3/model_graph.json
-# The recursive gitignore-style pattern is required for ignored subdirectories;
-# at the frozen W3 baseline it matches exactly the two small manifests below.
-artifacts/w3/**/manifest.json

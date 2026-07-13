@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import base64
+import hashlib
 import json
 import subprocess
 import sys
@@ -33,20 +35,43 @@ class CodexWorktreeEnvironmentTests(unittest.TestCase):
             [
                 "artifacts/w3/legacy77_mapping.json",
                 "artifacts/w3/model_graph.json",
-                "artifacts/w3/**/manifest.json",
             ],
         )
-        manifests = sorted((ROOT / "artifacts" / "w3").glob("**/manifest.json"))
-        self.assertEqual(
-            [path.relative_to(ROOT).as_posix() for path in manifests],
-            [
-                "artifacts/w3/golden_batch16/manifest.json",
-                "artifacts/w3/subop_batch16/manifest.json",
-            ],
-        )
-        self.assertLess(sum(path.stat().st_size for path in manifests), 256 * 1024)
         self.assertFalse(any(".npy" in entry for entry in entries))
         self.assertFalse(any(entry in {".venv", "artifacts"} for entry in entries))
+
+    def test_nested_w3_manifest_snapshots_are_tracked_small_and_frozen(self) -> None:
+        specifications = {
+            "contracts/w3_metadata/golden_batch16_manifest.json.base64": (
+                170131,
+                "f7e90cf1f087acf255e93d98d1788e0fb0b4c77bbe935ea9addb17feea583180",
+            ),
+            "contracts/w3_metadata/subop_batch16_manifest.json.base64": (
+                49674,
+                "8bfdd042570408c1df793044407a8e6262bfa261b3cc6f02f64b94ad47d9c1c2",
+            ),
+        }
+        completed = subprocess.run(
+            [
+                "git",
+                "-c",
+                f"safe.directory={ROOT}",
+                "ls-files",
+                "--error-unmatch",
+                *specifications,
+            ],
+            cwd=ROOT,
+            check=False,
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+        )
+        self.assertEqual(completed.returncode, 0, completed.stderr)
+        self.assertEqual(set(completed.stdout.splitlines()), set(specifications))
+        for relative_path, (expected_size, expected_hash) in specifications.items():
+            payload = base64.b64decode((ROOT / relative_path).read_text(encoding="ascii"))
+            self.assertEqual(len(payload), expected_size)
+            self.assertEqual(hashlib.sha256(payload).hexdigest(), expected_hash)
 
     def test_setup_script_validates_included_metadata_without_copying_w3(self) -> None:
         script = (ROOT / "tools" / "setup_codex_worktree.ps1").read_text(

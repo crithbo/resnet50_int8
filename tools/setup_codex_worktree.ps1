@@ -191,21 +191,29 @@ foreach ($specification in $shareSpecifications) {
 $metadataSpecifications = @(
     [pscustomobject]@{
         relative_path = "artifacts\w3\legacy77_mapping.json"
+        delivery = "included"
+        snapshot_path = $null
         sha256 = "b6507dec2b564a0b5a06b185a4ce5070909194d5cf164edc503d840740b94ed3"
         size_bytes = 25173
     },
     [pscustomobject]@{
         relative_path = "artifacts\w3\model_graph.json"
+        delivery = "included"
+        snapshot_path = $null
         sha256 = "f030c5d4e43f63fbbcce771e4c4ea9e88b042be0a2c988e7f51de2c0e17ac410"
         size_bytes = 339932
     },
     [pscustomobject]@{
         relative_path = "artifacts\w3\golden_batch16\manifest.json"
+        delivery = "restored"
+        snapshot_path = "contracts\w3_metadata\golden_batch16_manifest.json.base64"
         sha256 = "f7e90cf1f087acf255e93d98d1788e0fb0b4c77bbe935ea9addb17feea583180"
         size_bytes = 170131
     },
     [pscustomobject]@{
         relative_path = "artifacts\w3\subop_batch16\manifest.json"
+        delivery = "restored"
+        snapshot_path = "contracts\w3_metadata\subop_batch16_manifest.json.base64"
         sha256 = "8bfdd042570408c1df793044407a8e6262bfa261b3cc6f02f64b94ad47d9c1c2"
         size_bytes = 49674
     }
@@ -216,7 +224,54 @@ foreach ($specification in $metadataSpecifications) {
     $relativePath = [string]$specification.relative_path
     $metadataPath = Join-Path $worktree $relativePath
     if (-not (Test-Path -LiteralPath $metadataPath -PathType Leaf)) {
-        throw "worktree metadata is missing; check .worktreeinclude: $metadataPath"
+        if ($isLocalCheckout -or [string]$specification.delivery -ne "restored") {
+            throw "worktree metadata is missing; check .worktreeinclude: $metadataPath"
+        }
+
+        $snapshotPath = Join-Path $worktree ([string]$specification.snapshot_path)
+        if (-not (Test-Path -LiteralPath $snapshotPath -PathType Leaf)) {
+            throw "tracked worktree metadata snapshot is missing: $snapshotPath"
+        }
+        try {
+            $encodedSnapshot = (
+                Get-Content -Raw -Encoding ASCII -LiteralPath $snapshotPath
+            ) -replace '\s', ''
+            $snapshotBytes = [Convert]::FromBase64String($encodedSnapshot)
+        }
+        catch {
+            throw "tracked worktree metadata snapshot is invalid: $snapshotPath"
+        }
+        $snapshotHasher = [Security.Cryptography.SHA256]::Create()
+        try {
+            $snapshotHash = (
+                [BitConverter]::ToString($snapshotHasher.ComputeHash($snapshotBytes))
+            ).Replace('-', '').ToLowerInvariant()
+        }
+        finally {
+            $snapshotHasher.Dispose()
+        }
+        if (
+            $snapshotBytes.Length -ne [long]$specification.size_bytes -or
+            $snapshotHash -ne [string]$specification.sha256
+        ) {
+            throw "tracked worktree metadata snapshot differs from the frozen W3 baseline: $snapshotPath"
+        }
+
+        if ($CheckOnly) {
+            $metadata.Add([pscustomobject]@{
+                relative_path = $relativePath.Replace('\', '/')
+                status = "would_restore"
+                sha256 = $snapshotHash
+                size_bytes = $snapshotBytes.Length
+            })
+            continue
+        }
+
+        $metadataParent = Split-Path -Parent $metadataPath
+        if (-not (Test-Path -LiteralPath $metadataParent -PathType Container)) {
+            New-Item -ItemType Directory -Force -Path $metadataParent | Out-Null
+        }
+        [IO.File]::WriteAllBytes($metadataPath, $snapshotBytes)
     }
 
     $actualHash = (
@@ -232,7 +287,7 @@ foreach ($specification in $metadataSpecifications) {
 
     $metadata.Add([pscustomobject]@{
         relative_path = $relativePath.Replace('\', '/')
-        status = if ($isLocalCheckout) { "source" } else { "included" }
+        status = if ($isLocalCheckout) { "source" } else { [string]$specification.delivery }
         sha256 = $actualHash
         size_bytes = $actualSize
     })

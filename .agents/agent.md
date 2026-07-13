@@ -44,8 +44,8 @@
 ### Codex并行任务与worktree规则
 
 - 只读全项目审查优先在Local任务执行；互不重叠的代码实现放独立Codex worktree。整网93边、正式W3输入、全量回归和最终集成只在Local主工作区执行。
-- Codex worktree只包含Git跟踪文件。根目录`.worktreeinclude`只复制4个小型W3 JSON/manifest，禁止加入W3 `.npy`、整个`artifacts/`、`.venv`或三个参考仓，避免每个worktree重复约951 MB或更多数据。
-- 新worktree创建后先运行`tools/setup_codex_worktree.ps1`。脚本不联网、不安装、不覆盖现有目录；它从Git common directory定位Local源，只在源`.venv`存在、三个参考仓干净且HEAD匹配`repos.lock.json`时，为`.venv`和三个参考仓建立junction。小型W3 metadata由Codex桌面宿主按`.worktreeinclude`复制，脚本只校验其固定大小和SHA-256，不跨工作区复制W3。
+- Codex worktree只天然包含Git跟踪文件。根目录`.worktreeinclude`只复制W3目录第一层的2个小型JSON；桌面宿主当前不能可靠复制更深的ignored路径，因此2个manifest以固定hash的base64快照纳入Git，由setup在worktree内部恢复到原路径。禁止加入W3 `.npy`、整个`artifacts/`、`.venv`或三个参考仓，避免每个worktree重复约951 MB或更多数据。
+- 新worktree创建后先运行`tools/setup_codex_worktree.ps1`。脚本不联网、不安装、不覆盖现有文件；它从Git common directory定位Local源，只在源`.venv`存在、三个参考仓干净且HEAD匹配`repos.lock.json`时，为`.venv`和三个参考仓建立junction。脚本校验2个included JSON及2个tracked snapshot的固定大小与SHA-256，只在worktree内部恢复缺失manifest，不跨工作区复制W3 tensor。
 - setup脚本建立的参考仓和`.venv`视为只读共享依赖；并行任务不得在junction内修改、安装包、切分支或生成产物。必须修改参考仓时改用独立正式工作树并单独提交。
 - 项目级`.codex/config.toml`使用`approval_policy="on-request"`、`approvals_reviewer="auto_review"`和`workspace-write`；不使用`danger-full-access`。安全操作可自动审查，破坏性、越界写入和不在计划内的网络操作仍需人工许可。
 - 并行任务只在结束时集中执行一次Git暂存/提交，避免重复权限请求；任务报告完整commit、父commit、文件、聚焦测试和回退命令，由Local集成任务统一登记`history.md`并跑全量测试。
