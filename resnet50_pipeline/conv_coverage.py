@@ -1,4 +1,15 @@
+"""Legacy16 Conv shape-coverage evidence; never a current RTL28 layout source.
+
+The shape-family cataloging helpers remain reusable, but every physical layout,
+ring-order and capacity result in this module is superseded by ADR-007.  New
+RTL28 operator modules must use ``profile28`` and ``topology28`` instead.
+"""
+
 from __future__ import annotations
+
+
+TARGET_FAMILY = "legacy16"
+CURRENT_GATE_ELIGIBLE = False
 
 import hashlib
 import json

@@ -52,7 +52,7 @@
 
 - **已通过**：W0/G0集成骨架，W2/G2小Conv候选软件纵向闭环，W3/G3正式图/lowering/全节点与subop golden。
 - **部分通过**：W1已冻结正式候选模型、固定输入、预处理和软件量化事实；目标RTL候选已选`Trassic2.0_RTL@e3bdebba...`和28-slice。candidate审计已固定权威top/filelist、命令/WREG、HIGH/LOW、DRAM、SA/GA及运行接口的静态证据，但clean elaboration、正式端口layout、量化/requant、JSON/emulator和板级协议未批准，所以G1仍未通过。
-- **当前主线**：ADR-007已由操作者采用。旧16-slice W4的12个candidate、93边审计和成本报告改为历史证据；审计框架、生命周期/alias算法和逻辑比较器继续复用。28-slice真实HIGH/LOW mapper、七组batch调度和profile转换约束已经落地。下一步先单线程迁移仍把16写死的`architecture.json`、硬件批准schema/validator和fixture，再实现Quantize/Dequantize/View公共布局；公共合同冻结后才分波并行其他算子。G4=`not_passed`、`w5_authorized=false`；可继续软件布局与成本审计，但不生成正式W5 JSON/bitstream。
+- **当前主线**：ADR-007已由操作者采用。旧16-slice W4的12个candidate、93边审计和成本报告已隔离为历史证据；审计框架、生命周期/alias算法和逻辑比较器继续复用。C0机器合同/legacy隔离和C1 Quantize/Dequantize/View公共布局已经完成，141项根测试通过，P4已允许按严格文件边界并行Conv、Pool（MaxPool+GAP）和MatMul。主任务继续串行维护公共合同、审阅集成与Git，随后实现QLinearAdd和RTL28整网C3审计。G4=`not_passed`、`w5_authorized=false`；不生成正式W5 JSON/bitstream。
 - **当前边界**：W2只证明小合成Conv的golden=NDP functional model；W3公式重放仍属于golden侧。当前没有任何正式ResNet算子达到golden=target simulator=hardware。
 
 ### 接手进度总表
@@ -63,20 +63,18 @@
 | W1 | G1未通过 | 模型、固定输入、预处理、ONNX量化事实；已选28-slice RTL并完成必要candidate静态审计 | 补clean elaboration、量化/端口/固件/板级批准合同 |
 | W2 | G2通过 | 1/4-slice小Conv候选layout和NDP functional数值闭环 | 作为W4 fixture，不外推为硬件规格 |
 | W3 | G3通过 | 78节点、133 hw_op、79 runtime tensor、55内部tensor、旧77映射 | 不重跑大artifact，除非hash/合同失效 |
-| W4 | 旧16-slice readiness历史通过；28-slice重开/G4未通过 | 真实HIGH/LOW mapper、七组batch/profile合同已完成；旧审计方法和比较器可复用；尚无28-slice算子layout | 先迁移机器合同/批准校验链，再按算子重建布局并重审93边；不进W5 |
+| W4 | 旧16-slice readiness历史通过；28-slice重开/G4未通过 | C0机器合同/legacy隔离、真实HIGH/LOW mapper、七组batch/profile及C1 simple/view共4个candidate layout已完成 | 按P4并行Conv、Pool、MatMul；Local集成后实现Add并重审93边；不进W5 |
 | W5～W9 | 未通过 | W9通用比较器基础设施已前置完成；其余仅有参考框架或mock接口 | 等待对应前置门和真实结果通过 |
 
 ### 当前可立即执行队列
 
-1. 先恢复或重新定位Local执行环境：当前根目录`.venv`、`CGRA_SIM`、`ndp-sim-ref`和`NDPFuncModel`均为空目录，与既往验收记录不一致。只恢复Python和三个锁定参考仓，不复制、链接、读取或重跑约951 MB的W3正式artifact；恢复后先做root status、三仓verify和登记测试。
-2. 现行G4入口已完成fail-closed；下一步继续单线程迁移机器合同：把`contracts/architecture.json`、`schemas/hardware_approval.schema.json`、`resnet50_pipeline/hardware_approval.py`和测试fixture从旧16-slice现行口径切到28-slice candidate；旧16-slice证据显式降级为legacy，不创建真实`hardware_approval.json`，不改变G4/W5门状态。
-3. 同一C0提交清理会影响执行判断的现行文档漂移，尤其是ADR-004旧三条件门、`agent.md`错误下一步、算子规则中把W3写成未完成、以及阶段I把通用比较器写成不存在；历史日志和已标废止ADR不改写。
-4. 以`topology28.py`和`profile28.py`为唯一拓扑/调度底座，单线程重建Quantize/Dequantize/View的28-slice A/qparams/D布局、正逆映射、packing、tail和zero-copy规则，并冻结后续算子共享接口；不得套用旧16-slice物理公式。
-5. 公共接口冻结后按本节的并行判定门分波实现Conv、MaxPool/GAP和MatMul/head；QLinearAdd等待producer布局集成后再实现。最后回Local重新生成transition、93边、生命周期/alias和性能成本报告。
-6. 可独立并行推进W1的clean elaboration、量化/端口/固件/板级批准合同；没有approved合同不得宣布G4/G5通过。
-7. 若模型、预处理、量化公式或lowering变化，先列出所有失效的manifest/hash和下游产物。
+1. 【已完成】终审16-slice泄漏：current layout registry只含RTL28/28，公共layout不导出旧16类；旧通用`conv_coverage.py`、`network_dry_run.py`和`w4_profiles.py`显式标为legacy16-only并由自动回归约束。
+2. 按P4使用最多三个共享Local协作子任务：A只实现Conv RTL28布局/测试/证据；B只实现MaxPool+GAP RTL28布局/测试/证据；C只实现MatMul RTL28布局/测试/证据。子任务不得编辑公共layout、geometry、profile/topology、全局合同、`.agents`或Git。
+3. Local主任务顺序审阅三路结果，若发现公共API缺口则关闭并行门回到单线程；否则统一更新`architecture.json`、coverage、G4插件登记和文档，执行全量回归并提交。
+4. 三路producer布局稳定后，单线程实现QLinearAdd的双残差分支/qparams/广播/D布局；随后进入C3，重新生成RTL28 transition、93边、91 qparam链、16个残差Add、生命周期/alias和性能成本报告。
+5. 可独立推进W1的clean elaboration、量化/端口/固件/板级批准合同；没有approved合同不得宣布G4/G5通过。若模型、预处理、量化公式或lowering变化，先列出全部失效manifest/hash和下游产物。
 
-环境历史上曾按`requirements-resnet50.lock.txt`和三个锁定commit验收通过，但2026-07-13本次复审看到四个共享源目录均为空；在恢复并重新验收前，不再使用“环境已经准备完成”的口径。该问题只影响后续执行/测试能力，不改变W0～W4已经形成的版本化结论。
+Local执行环境已从事故前ZIP选择性恢复并重新验收：Python 3.12.13、`pip check`、三个锁定参考仓和根测试均通过；没有恢复任何managed-worktree junction。后续依赖任务可使用Local主任务或共享目录协作子任务，独立managed worktree仍只允许tracked-only工作。
 
 ## 总体实施架构：先骨架，后纵向闭环
 

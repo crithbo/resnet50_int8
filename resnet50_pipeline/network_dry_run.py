@@ -1,4 +1,15 @@
+"""Legacy16 network dry-run implementation; diagnostic evidence only.
+
+Its 93-edge catalog, lifetime algorithm and report structure may inform the
+future RTL28 C3 rewrite.  Its physical signatures, profiles, capacities and
+ring formulas are superseded by ADR-007 and cannot satisfy the current G4.
+"""
+
 from __future__ import annotations
+
+
+TARGET_FAMILY = "legacy16"
+CURRENT_GATE_ELIGIBLE = False
 
 import math
 from collections import Counter

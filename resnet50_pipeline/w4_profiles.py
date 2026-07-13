@@ -1,4 +1,14 @@
+"""Legacy16 batch/ring transition policies retained for historical audits.
+
+Current RTL28 scheduling lives in ``profile28``.  These ``batch`` and
+``ring_channel`` names must not be selected by new operator layouts.
+"""
+
 from __future__ import annotations
+
+
+TARGET_FAMILY = "legacy16"
+CURRENT_GATE_ELIGIBLE = False
 
 
 PROFILE_POLICIES = {
