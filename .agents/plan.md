@@ -68,14 +68,15 @@
 
 ### 当前可立即执行队列
 
-1. 新Local对话先执行根状态、三仓verify和登记的全量unittest；新worktree先运行安全setup脚本，再做status/verify和聚焦测试。不要复制、链接或重跑约951 MB的W3正式artifact。
-2. 单线程迁移机器合同：把`contracts/architecture.json`、`schemas/hardware_approval.schema.json`、`resnet50_pipeline/hardware_approval.py`和测试fixture从旧16-slice现行口径切到28-slice candidate；旧16-slice证据显式降级为legacy，不创建真实`hardware_approval.json`，不改变G4/W5门状态。
-3. 以`topology28.py`和`profile28.py`为唯一拓扑/调度底座，单线程重建Quantize/Dequantize/View的28-slice A/qparams/D布局、正逆映射、packing、tail和zero-copy规则，并冻结后续算子共享接口；不得套用旧16-slice物理公式。
-4. 公共接口冻结后按本节的并行判定门分波实现Conv、MaxPool/GAP和MatMul/head；QLinearAdd等待producer布局集成后再实现。最后回Local重新生成transition、93边、生命周期/alias和性能成本报告。
-5. 可独立并行推进W1的clean elaboration、量化/端口/固件/板级批准合同；没有approved合同不得宣布G4/G5通过。
-6. 若模型、预处理、量化公式或lowering变化，先列出所有失效的manifest/hash和下游产物。
+1. 先恢复或重新定位Local执行环境：当前根目录`.venv`、`CGRA_SIM`、`ndp-sim-ref`和`NDPFuncModel`均为空目录，与既往验收记录不一致。只恢复Python和三个锁定参考仓，不复制、链接、读取或重跑约951 MB的W3正式artifact；恢复后先做root status、三仓verify和登记测试。
+2. 单线程先把现行G4入口改为fail-closed，再迁移机器合同：把`contracts/architecture.json`、`schemas/hardware_approval.schema.json`、`resnet50_pipeline/hardware_approval.py`、测试fixture和G4 audit从旧16-slice现行口径切到28-slice candidate；旧16-slice证据显式降级为legacy，不创建真实`hardware_approval.json`，不改变G4/W5门状态。
+3. 同一C0提交清理会影响执行判断的现行文档漂移，尤其是ADR-004旧三条件门、`agent.md`错误下一步、算子规则中把W3写成未完成、以及阶段I把通用比较器写成不存在；历史日志和已标废止ADR不改写。
+4. 以`topology28.py`和`profile28.py`为唯一拓扑/调度底座，单线程重建Quantize/Dequantize/View的28-slice A/qparams/D布局、正逆映射、packing、tail和zero-copy规则，并冻结后续算子共享接口；不得套用旧16-slice物理公式。
+5. 公共接口冻结后按本节的并行判定门分波实现Conv、MaxPool/GAP和MatMul/head；QLinearAdd等待producer布局集成后再实现。最后回Local重新生成transition、93边、生命周期/alias和性能成本报告。
+6. 可独立并行推进W1的clean elaboration、量化/端口/固件/板级批准合同；没有approved合同不得宣布G4/G5通过。
+7. 若模型、预处理、量化公式或lowering变化，先列出所有失效的manifest/hash和下游产物。
 
-环境已经准备完成，不再把安装依赖列为任务：使用根目录 `.venv` 和 `requirements-resnet50.lock.txt`。当前三个最小入口结果见 `agent.md`“本地 Python 环境与已验证入口”。
+环境历史上曾按`requirements-resnet50.lock.txt`和三个锁定commit验收通过，但2026-07-13本次复审看到四个共享源目录均为空；在恢复并重新验收前，不再使用“环境已经准备完成”的口径。该问题只影响后续执行/测试能力，不改变W0～W4已经形成的版本化结论。
 
 ## 总体实施架构：先骨架，后纵向闭环
 
@@ -366,6 +367,32 @@ W1的模型子任务已完成，但G1尚未通过；architecture/quantization/ba
 
 当前状态（2026-07-13）：ADR-007已采用，旧16-slice W4物理候选全部失效为历史参考。W4按新目标重开；W0～W3不重做，旧93边集合、生命周期/alias算法和逻辑比较器复用，旧物理签名、容量与ring成本不复用。当前只完成真实`topology28`和`profile28`调度底座，聚焦测试14/14通过；尚无任何28-slice算子layout。`architecture.json`、硬件批准schema/validator和fixture仍含16-slice现行断言，必须先迁移，不能让新算子注册到旧合同。
 
+#### 方案切换遗留修改清单（2026-07-13全工作文件夹复审）
+
+审计边界：复核根仓现行Markdown/ADR、合同/schema、Python入口、测试、W4小型JSON报告、coverage与仓库恢复配置；只核对W3文件名/合同元数据，没有读取或重跑W3 `.npy`大产物。结论是旧16-slice不只残留在说明文字里，还能被现行审批validator、G4 audit和通用名称工具实际选择。最严重路径为：测试用虚构16-slice批准可通过现有validator，并按当前回归预期直接令`g4_status=passed`、`w5_authorized=true`。因此C0必须先封住错误放行，不能直接开始28-slice算子layout。
+
+| ID | 优先级/阶段 | 已确认问题 | 计划修改 | 完成判据 | 状态 |
+|---|---|---|---|---|---|
+| ENV-01 | P0/C0前 | 根目录`.venv`和三个参考仓目录目前均为空，不是可用junction/Git worktree；既往“环境已准备”记录不再代表当前现场 | 先溯源目录为何丢失；按`requirements-resnet50.lock.txt`、`repos.lock.json`和setup/sync合同恢复或重新定位，只处理环境和三个小仓，不碰W3正式tensor | Python入口存在；三仓HEAD/dirty匹配lock；setup/verify聚焦测试与根测试可运行；记录恢复来源和hash | 待执行 |
+| C0-01 | P0/立即 | `w4_audit.py`仍消费旧16布局/报告，两个关键criteria无条件为True；一个结构合法的旧批准同时满足三项硬件门，现有测试要求它打开W5 | 先将现行G4改为fail-closed；结构validator与G4授权分离；合成fixture、旧16证据、缺28布局、缺clean elaboration任一存在都不得授权W5 | 即使传入合成“valid approval”，在28算子证据/93边/成本/clean elaboration不齐时仍`G4=not_passed`、`w5_authorized=false`；移除无条件True | 待执行 |
+| C0-02 | P0 | `contracts/architecture.json`仍把16 slice、15次邻传、旧NDP内存/address order和旧W4 layouts/reports放在现行`known/candidate`空间 | 升级architecture合同；登记28 slice、SA 8×8、GA 4×4、28-bit mask、显式HIGH/LOW拓扑与两个profile ID；将RTL静态证据标`candidate_unapproved`，未由RTL批准的address order继续标候选；旧16条目移入`legacy_layouts/legacy_evidence`并禁止G4消费 | 当前target机器可读且唯一指向RTL28；旧16布局不能被approval选择；真正未知与已静态确认但未批准字段分开 | 待执行 |
+| C0-03 | P0 | `hardware_approval.schema.json`、`hardware_approval.py`和fixture固定16 slice、旧`batch/ring_channel/mixed`及旧layout ID；真实28批准反而无法通过 | schema与手写validator同步迁移到28；profile使用`profile28.py`精确ID，不接受含混`mixed`；审批必须交叉校验architecture版本、RTL commit、拓扑、SA/GA、DRAM、mask、布局状态和证据摘要 | 28结构fixture仅通过结构验证；16 fixture明确失败；schema和手写validator一致性回归通过；不生成真实`hardware_approval.json` | 待执行 |
+| C0-04 | P0 | `contracts.py validate-contracts`只查schema版本、类型和根status，当前旧16主合同仍会被报告valid；合同版本升级也会被硬编码`0.1`拒绝 | 新增architecture语义validator和版本兼容策略；W0 mock合同与目标architecture分scope；增加旧16活动主合同负例 | `validate-contracts`能发现target slice/profile/topology/legacy引用错误；W0 mock回归不被误当目标验证 | 待执行 |
+| C0-05 | P0/P1 | `artifacts/w4`九份报告均为旧16证据，多数没有顶层target/superseded标记；只有4份被Git跟踪，而主合同引用全部9份 | 保留历史报告但统一归档/索引为`legacy16`，加`target_family/slice_count/status/superseded_by/current_gate_eligible=false`；新28正式小报告统一放受版本控制、内容寻址的证据目录 | fresh clone/worktree能复核合同引用的全部小证据；旧`all_profiles_pass=true`不会被解释为28通过；旧报告不删除 | 待执行 |
+| C0-06 | P0/P1 | `audit_w4_network_candidates.py`、`audit_w4_gate.py`和多数`verify_w4_*`文件名像现行入口，底层却全部使用旧16类、owner/ring成本和旧输出路径 | 迁移前给现行gate硬拒绝；旧工具改为显式`legacy16`入口/flag/help和独立输出命名空间；28实现后再建立新的current入口 | 无显式legacy选择时不能运行/覆盖旧16报告；任何current工具输出都携带target/profile/architecture hash | 待执行 |
+| C0-07 | P1 | `repos.lock.json`未覆盖提供RTL28证据的`Trassic2.0_RTL`，setup/verify不能复核候选commit；`backend.json`只写target unknown | 选择“第四只读锁仓”或“external evidence snapshot+hash”之一并版本化；backend登记RTL28为candidate evidence，但保持target simulator/hardware未批准 | 在不依赖个人目录的情况下验证RTL证据commit/hash；NDPFuncModel仍明确为W2 functional、不是目标backend | 待执行 |
+| C1-01 | P1/C1 | `memory.py`无参数`DramGeometry()`静默默认16并固化旧address order；新代码易误用 | 分离显式`TARGET_DRAM_GEOMETRY28`与`LEGACY_DRAM_GEOMETRY16`，或禁止目标路径无参构造；未批准地址解释保持candidate | current 28路径不存在隐式16默认；旧16回归显式申请legacy几何 | 待执行 |
+| C1-02 | P1/C1 | `simple_layout.py`名称通用但硬要求16；`layout.py`公共入口仍正常导出所有旧16类 | 新建28公共Quantize/Dequantize/View实现并替换current导出；旧实现重命名/移入legacy namespace，明确只作历史回归 | current registry/public API只暴露28合同；旧测试仍可在legacy suite运行 | 待执行 |
+| C3-01 | P1/C3 | `w4_profiles.py`和`network_dry_run.py`仍把16同时当batch、slice/owner和ring步数，无法表达`[3,3,2,2,2,2,2]`与GAP后唯一转换 | 等28 producer/consumer layout冻结后重写profile transition、93边、生命周期/alias与成本审计，不机械改名旧公式 | 报告以28真实owner/HIGH/LOW计算，区分模型batch16与slice28；旧网络报告只作legacy | 待执行 |
+| DOC-01 | P1/C0同批 | `agent.md`仍有错误“下一步4-slice→七小环Conv”、把ndp-sim说成当前主要工具、旧main缺陷写成当前缺陷，以及把W3 manifest/golden写成待实现 | 统一现行入口为ENV→C0→C1；分清上游baseline、本地W2候选、W3已完成和28待办；明确ndp-sim/NDPFuncModel只是reference/adapter输入 | `agent.md`摘要、当前最高优先级和详细地图不再互相冲突 | 待执行 |
+| DOC-02 | P1/C0同批 | 算子规则15.5等仍称要扩全节点golden、正式ONNX/产物缺失、一张样本一slice；execplan缺口仍写“ResNet lowerer”，weight链也误写未验证 | 把这些段落标为W1/W3前历史局限；更新为W3 79 runtime+55 internal/78节点已完成、W2候选链已过、当前缺口是28 physical、JSON instance/execplan adapter、target sim/hw | 不再诱导重跑W3或恢复旧16调度；保留旧脚本缺陷作为历史证据 | 待执行 |
+| DOC-03 | P1/C0同批 | ADR-004仍写“有效批准+旧W4回归即可开G4”，并称software readiness当前通过 | 增加ADR-007覆盖说明：批准合同只是新五项G4门之一；旧16 readiness仅历史通过，新28 readiness未通过 | ADR-004与ADR-007、现行G4代码和测试口径一致 | 待执行 |
+| DOC-04 | P2 | `rtl28_candidate_audit.md`仍保留早期worktree 63 tests/16 errors而未显式限定审计时点；coverage缺target_family；若干W0设计段用未来时 | 标明历史审计时观察；coverage增加target/profile/superseded备注；给W0原始设计段加历史基线标签，不改写history时间线 | 当前状态与历史快照可一眼区分，不改变旧事实 | 待执行 |
+
+明确不修改/不重算：`golden_batch16`、`subop_batch16`、W3 metadata中的16是模型batch size；`profile28.py`的`BATCH_SIZE=16`及七组`[3,3,2,2,2,2,2]`正确；W0 mock的16只保留在`approved_for_w0_only` scope；`conv16_*`、`maxpool16`、`add16`、`avgpool16`、`matmul16`及明确命名测试作为legacy算法证据保留；W2的1/4-slice fixture继续作为软件基线；ADR-002/003/005和`history.md`已标历史的旧结论不改写；没有发现误生成的正式W5 JSON/bitstream。
+
+执行顺序固定为：`ENV-01 → C0-01 → C0-02/03/04 → C0-05/06/07 + DOC-01/02/03/04 → C1-01/02 → 既定算子波次 → C3-01`。其中C0共享同一真值链，默认单线程；只有合同/API冻结且文件不重叠后才按P4并行。C0整体验收还必须满足：旧16 approval/layout/report无法进入current gate；合成fixture永不授权W5；缺真实approval或clean elaboration时继续`G4=not_passed`；所有小型合同/证据可从fresh checkout复核；根测试通过；全程不读取或重跑W3大tensor。
+
 实施顺序：
 
 0. 机器合同迁移：将架构合同、硬件批准schema/validator、fixture和G4入口切换为28-slice candidate口径；旧16-slice候选/报告只保留在显式legacy区域或历史文件中。冻结RTL commit、HIGH/LOW拓扑ID、七小环主profile和大环候选ID，但不伪造approved合同。
@@ -386,7 +413,7 @@ W1的模型子任务已完成，但G1尚未通过；architecture/quantization/ba
 
 #### W4-28下一执行包与并行波次
 
-**W4-28C0：机器合同迁移，单线程。** 原因是`architecture.json`、批准schema、Python validator、fixture和G4入口构成同一真值链，拆开会产生16/28混用。产物必须满足：目标slice为28；固定`Trassic2.0_RTL@e3bdebba...`candidate来源；HIGH/LOW映射和两个profile ID可机器读取；旧16-slice证据显式legacy且不能被新批准合同选择；合法28-slice fixture可通过、16-slice fixture必须失败；缺少真实批准文件时仍为`G4=not_passed`、`w5_authorized=false`。执行聚焦合同测试和根仓全量测试，不读取W3 tensor。
+**W4-28C0：机器合同迁移，单线程。** 先完成ENV-01并把现行G4改为fail-closed；随后迁移`architecture.json`、批准schema、Python validator、fixture和G4入口这条同一真值链，避免16/28混用。产物必须满足：目标slice为28；固定`Trassic2.0_RTL@e3bdebba...`candidate来源；HIGH/LOW映射和两个profile ID可机器读取；旧16-slice证据显式legacy且不能被新批准合同选择；28结构fixture只验证schema/validator而不能授权G4，16-slice fixture必须失败；缺少28算子证据、真实批准或clean elaboration任一项时仍为`G4=not_passed`、`w5_authorized=false`。执行聚焦合同测试和根仓全量测试，不读取W3 tensor。
 
 **W4-28C1：Quantize/Dequantize/View公共布局，单线程。** 该步骤冻结所有后续算子共享的28-slice geometry、七组sample owner、环内C/F owner、对齐、FP32/UINT8小端packing、qparam副本、inactive/tail和zero-copy证明接口。覆盖最小shape、正式首尾节点shape、3/2样本组边界和tail shape；必须提供`forward/inverse/explain_coordinate/validate`并bit-exact。完成前不开算子并行，避免每个任务各造一套公共布局。
 
@@ -475,7 +502,7 @@ W1 外部规格 ──> W3 正式golden/lowering ───────┘       
 
 - W0与W1立即并行；W1阻塞不妨碍W0/W2使用合成数据。
 - W3依赖正式ONNX，但golden入口修复和manifest骨架可提前做。
-- W4/W5按算子族并行实现，但每个算子必须单独通过G4/G5后才能进入W6。
+- W4只有在C0/C1冻结公共合同/API并通过P4判定后，才按互不重叠的算子族并行实现；G4/G5是整阶段门，不存在单算子自行打开W5/W6的口径。
 - W8不能阻塞软件侧单算子闭环；硬件接口到位前持续积累可重放测试包。
 
 ## 强制质量门和停止条件
@@ -496,7 +523,7 @@ W1 外部规格 ──> W3 正式golden/lowering ───────┘       
 
 1. **单一计划编号**：只使用W0~W9和G0~G9维护进度；A~I仅是领域细则。旧M0~M7编号已移除，避免三套状态漂移。
 2. **根集成层可版本化**：根repo边界、忽略规则和业务源码已经建立，三个参考repo独立保留，commit/dirty patch由lock和manifest记录；本地首版按操作者要求现在提交。
-3. **契约先于硬件真值**：16 PE已确认，但字段位宽、layout、SA/GA、qparams、ISA等必须分别标candidate/approved；candidate允许软件实验，不允许宣称硬件配置完成。
+3. **契约先于硬件真值**：当前RTL候选静态显示28 slice、每slice SA 8×8与GA 4×4；字段位宽、layout、qparams、ISA及板级行为仍必须分别标candidate/approved。candidate允许软件实验，不允许宣称硬件配置完成。
 4. **量化是一级接口**：scale/zp、bias、multiplier/shift、rounding、overflow、saturation和activation融合顺序必须版本化，不能散落在handler常量中。
 5. **状态按对象和attempt记录**：网络中不同op可并行、失败、重试或等待硬件；旧attempt不可覆盖，run汇总不能掩盖局部失败。
 6. **可恢复但不误复用**：resume只复用内容寻址完全匹配的成功产物；模型、输入、contract、代码、repo或backend任一变化都使下游失效。
@@ -513,15 +540,15 @@ W0实现前还需把以上补充转成可执行的schema字段、测试用例和
 
 目标：取得后续无法从仓库内部推导的权威资料，冻结目标版本。
 
-状态：模型/固定输入基线已部分完成 + 硬件接口外部阻塞。
+状态：正式模型、固定输入、预处理、W3 manifest/lowering/golden已完成；RTL28静态candidate已固定，clean elaboration、批准数值/物理layout、目标emulator和硬件运行接口仍阻塞。
 
 难度：外部阻塞；资料到位后的整理难度为中。
 
 任务：
 
-1. 取得正式 `resnet50-v1-12-int8.onnx`、输入预处理约定和至少一组固定测试输入。
-2. 尽量取得原 `tensor_dict.json`、DDR、旧 `.cu/.pkl` plan 和 golden；没有时由正式 ONNX 重建，不再等待不可恢复的本地历史。
-3. 确认 `NDPFuncModel/conv_func` 与目标 JSON emulator 的关系；取得缺失的 `conv_config`、可运行 `hex_data`、目标 JSON/bitstream→LC/AG/Buffer/PE 参数映射。若它只负责 Conv，则另外取得其他算子的 emulator 入口。
+1. 正式 `resnet50-v1-12-int8.onnx`、输入预处理约定和固定测试输入已取得并冻结；除非合同/hash失效，不再重做。
+2. 原 `tensor_dict.json`、DDR、旧 `.cu/.pkl` plan、golden、`conv_config`和`hex_data`仅是可选兼容性资料，不再作为开工前置。
+3. 继续确认 `NDPFuncModel/conv_func` 与目标 JSON emulator 的关系，并取得/实现目标 JSON/bitstream→LC/AG/Buffer/PE 参数adapter；若它只负责 Conv，则另外取得其他算子的 emulator 入口。
 4. 取得硬件或 RTL 的配置/数据/execplan 加载、start/wait、结果 dump 协议。
 5. 目标已确认28 slice、候选RTL已固定`master@e3bdebba...`；继续冻结其权威顶层/filelist、资源数、字段位宽、GA opcode、DDR row、28-bit指令mask和寄存器表版本。
 6. 取得一份批准的 INT8 SA/GA 最小配置和 activation/weight/bias/scale layout 示例。
@@ -721,7 +748,7 @@ W0实现前还需把以上补充转成可执行的schema字段、测试用例和
 
 目标：自动比较 golden、simulator、hardware，定位第一处差异，最终使逐算子与整网三者一致。
 
-状态：只有旧 runner 的 21 个硬编码 checkpoint和 LLM 物理文件二方比较脚本；通用实现不存在。
+状态：通用逻辑结果比较器已就绪，支持inverse后两方/三方、整数bit-exact、浮点容差、首错分类、拓扑/物理provenance与分块mmap；当前缺少获批28 inverse layout、目标simulator结果和hardware dump，因此尚无真实三方通过结论。
 
 难度：中高。比较算法不复杂，难点是统一命名、逆 layout、checkpoint、地址和上游错误传播。
 
