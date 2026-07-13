@@ -494,3 +494,11 @@
 - 验证：`git diff --check`通过；Local setup `-CheckOnly`通过并确认四项共享源、四项固定元数据；三参考仓全部匹配`repos.lock.json`；`tests.test_worktree_environment` 5/5通过。没有联网、安装、读取或重跑W3 tensor。
 - 后续根仓提交 `26cb73fd0c0c64083fa16facd46d140683fccdee`，父提交 `b586eb05d9bafbac2baaecbae3ff3d99c8711271`，`docs: normalize worktree experience markdown`；只移除文档末尾多余空白行，使提交级`git show --check`无提示，不改变任何方案或结论。
 - 精确回退：先revert `26cb73fd0c0c64083fa16facd46d140683fccdee`，再revert `e4d57d6488b511355d6ef69a67e0cff42a85d2e2`；上一根仓恢复点为`2fdc2da5d20bbb4e5cf6248c250cf47e392c02e3`。
+
+## 2026-07-13：三级Git提交与云端推送规则
+
+- 根仓提交 `c7e077d82a6a2e5f8a067ae13c4b2c69471549d1`，父提交 `834b54ca7056f54b4a2d4a2745f3ae02e059bce0`，`docs: adopt tiered git change policy`。
+- 现行规则改为三级：不改变行为/接口/schema合同/layout-qparams/依赖锁/产物hash的微小文字、注释和格式修正不单独提交；范围明确、可聚焦验证的较小代码、测试、规则或文档语义改动做本地原子提交；阶段门、跨模块/跨仓重大集成、关键硬件合同、重要恢复点或操作者明确要求时，才批量推送GitHub并核对远端hash。
+- `.agents/agent.md`、`.agents/plan.md`、本文件顶部现行总则和`.agents/经验.md`已同步；经验文档额外给出微小/较小/重大的判定标准、交接例外和云端验收要求。旧history条目继续作为当时事实，不再覆盖2026-07-13现行规则。
+- 本次自身属于较小规则改动，只提交本地Git，没有推送GitHub。验证使用`git diff --check`和现行文档旧口径冲突检索；未运行代码测试，未触碰W3产物。
+- 精确回退：revert `c7e077d82a6a2e5f8a067ae13c4b2c69471549d1`；上一根仓恢复点为`834b54ca7056f54b4a2d4a2745f3ae02e059bce0`。
