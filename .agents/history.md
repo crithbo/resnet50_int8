@@ -1,8 +1,10 @@
 # ResNet50 INT8 工作日志
 
-最后更新：2026-07-12
+最后更新：2026-07-13
 
 本文件只保留已经发生的关键决策、验证和状态变化。当前任务看 `.agents/plan.md`，代码和仓库细节看 `.agents/agent.md`，单算子推导看 `.agents/rules/算子配置规则.md`。
+
+> 当前口径提示（2026-07-13）：ADR-007已经把目标切换并固定为28-slice RTL候选及七个4-slice小环主profile。本文此前关于16-slice W4布局、ring/channel成本和G4审计的条目均为历史证据，不再代表当前物理方案；W0～W3及约951 MB golden仍有效，28-slice W4已重开，G4未通过且W5未授权。
 
 ## Git提交、GitHub备份与本地空间规则（2026-07-11最终修正）
 
@@ -456,3 +458,14 @@
 - G4机器报告更新为103,311 bytes、SHA-256 `c4679a1bc44d0eac35de3035a4627895223140c22f560dcf19d21a06b37a298e`。software candidate readiness通过；真实hardware结果仍不存在，三个原硬件阻塞criteria不变，G4仍未通过且W5未授权。
 - 验证：根仓全量89项测试通过；三参考仓`sync_repositories.py verify`全部匹配lock；schema和architecture严格JSON解析、审计报告重复生成hash稳定、`git diff --check`通过。未读取或重算约951 MB W3产物。
 - 精确回退：revert `bfafbe61a0a96f47851d6f67101483f6a9f61383`；上一根仓恢复点为`c839143bbc8d4909a3eb40bbcb32d53de4eaa3f2`。
+
+## 2026-07-13：目标RTL与28-slice性能布局裁决
+
+- 根仓提交 `6626d916534d0fbd8cb0ee16b67bedc72e3caeea`，父提交 `5494c7e2d5925da114bf2e4b924e5bfe1394e1c3`，`docs: adopt 28-slice hardware plan`。
+- 操作者确认放弃把旧16-slice布局直接套到28-slice硬件的方案。新增ADR-007，将RTL候选固定为`xlsjdjdk/Trassic2.0_RTL@e3bdebba95dec36ee8eba43caa92a326a88392cd`；在功能完整性相近时选择较新的`master`，不采用旧16-slice `xilinx`分支。
+- ResNet50主体首选`w4_group4x7_batch_channel28_candidate_v1`：七个RTL真实4-slice HIGH小环并行分担batch，样本组为`[3,3,2,2,2,2,2]`，环内按C/K owner执行。`w4_global_ring28_candidate_v1`只作代表层比较候选，第一版整网最多允许在GAP后显式转换一次。
+- `.agents/agent.md`、`.agents/plan.md`和算子配置规则已切换到28-slice口径；ADR-002标为废止，ADR-003/005标为旧16-slice历史审计，ADR-004升级为28-slice批准合同要求，ADR-006比较器继续有效。旧文档未删除，以保留实验来源和精确回退能力，但已明确禁止把旧物理签名、容量、成本、modulo ring和15-hop结论用于新目标。
+- W0～W3模型、lowering、量化语义和约951 MB golden不失效；W4按真实HIGH/LOW拓扑重开，下一步先实现28-slice topology mapper，再按算子顺序重建布局和93边审计。G4=`not_passed`、`w5_authorized=false`，本步骤未生成正式W5 JSON/bitstream。
+- 仍需硬件/权威工具链闭合：目标commit的顶层/filelist和clean elaboration、正式端口layout、ISA/register-map及字段编码、INT8 SA/GA/requant/qparams、目标emulator关系和load/start/wait/dump协议。
+- 验证：三个参考仓全部匹配`repos.lock.json`；根仓89项测试通过；新旧口径检索和`git diff --check`通过。没有重跑或重算约951 MB W3产物。
+- 精确回退：revert `6626d916534d0fbd8cb0ee16b67bedc72e3caeea`；上一根仓恢复点为`5494c7e2d5925da114bf2e4b924e5bfe1394e1c3`。
