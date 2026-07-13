@@ -483,3 +483,12 @@
 - 最终真实Codex managed worktree `de44`只读终验通过：HEAD=`ed06c3e1752952614ae345503b8b2e941ada51ee`，Git状态干净；`.venv`和三参考仓4/4=`linked`；`legacy77_mapping.json`、`model_graph.json`=`included`，两个manifest=`restored`；setup内置`repository_verify=passed`，独立三仓verify为3/3 `[ok]`，环境测试5/5通过。全程没有用户手工许可中断，没有联网/安装，没有读取、复制或重跑约951 MB W3 tensor。
 - 当前W4-28只完成拓扑与调度底座，尚未完成任何28-slice算子物理布局、93边重审或正式硬件数值执行；G4=`not_passed`、`w5_authorized=false`，没有生成W5 JSON/bitstream。下一原子步骤是Quantize/Dequantize 28-slice布局。
 - 精确回退：仅回退W4调度可revert `84d5f06c29c3911d2e52bb84edcef6a92db946e4`，仅回退拓扑可在其后revert `8ffbec2b97d3292e245352243d43aaf1bf2bd608`；回退RTL审计可revert `acd85e9e1d49b86ff952d31eb808cab3888cbfa4`。若完整撤销本轮线性序列，按`ed06c3e`、`34f8320`、`d4aef4f`、`84d5f06`、`8ffbec2`、`acd85e9`、`20351e8`、`29da593`逆序revert；上一完整恢复点为`a887f1f91181e6a46cf91293e321939a7492c22d`。
+
+## 2026-07-13：Codex worktree经验固化与全局化边界
+
+- 根仓提交 `e4d57d6488b511355d6ef69a67e0cff42a85d2e2`，父提交 `2fdc2da5d20bbb4e5cf6248c250cf47e392c02e3`，`docs: record reusable worktree lessons`。
+- 新增`.agents/经验.md`并加入`agent.md`文件入口；文档把tracked源码、小型ignored元数据、深层小型快照、只读大依赖和Local-only大产物分层，记录最终junction/setup方案、真实managed worktree验收、Windows身份/ACL与junction路径校验问题、失败尝试、安全红线、下项目实施顺序和交接检查表。
+- 官方能力与本机实测已明确分开：`.worktreeinclude`按官方说明支持ignored路径和gitignore风格pattern；深层manifest改用快照只是当前桌面宿主的实测兼容性兜底，下个项目仍须先做最小真实worktree试验。
+- 全局配置只建议承载通用`on-request + auto_review + workspace-write`默认值；`.worktreeinclude`、setup、junction目标、依赖commit/hash和Local-only产物边界继续逐项目提交。本机用户级配置已存在`workspace-write`和workspace网络设置，缺少`approval_policy`与`approvals_reviewer`；本步骤只读审计，没有修改用户级全局文件。
+- 验证：`git diff --check`通过；Local setup `-CheckOnly`通过并确认四项共享源、四项固定元数据；三参考仓全部匹配`repos.lock.json`；`tests.test_worktree_environment` 5/5通过。没有联网、安装、读取或重跑W3 tensor。
+- 精确回退：revert `e4d57d6488b511355d6ef69a67e0cff42a85d2e2`；上一根仓恢复点为`2fdc2da5d20bbb4e5cf6248c250cf47e392c02e3`。
