@@ -50,8 +50,8 @@
 ## 当前总体状态
 
 - **已通过**：W0/G0集成骨架，W2/G2小Conv候选软件纵向闭环，W3/G3正式图/lowering/全节点与subop golden。
-- **部分通过**：W1已冻结正式候选模型、固定输入、预处理和软件量化事实；目标架构、layout、JSON/emulator和硬件接口未批准，所以G1仍未通过。
-- **当前等待外部裁决**：W4/G4综合审计已覆盖78/78节点、93条runtime边、91条量化qparam链和8份正式物理证据；两套profile的整网dry-run、activation生命周期/alias检查及通用逻辑结果比较器均已完成，software candidate readiness通过。G4因approved profile、冻结RTL/ISA/register-map版本和approved物理layout三项缺失而未通过，`w5_authorized=false`。W5目标JSON/bitstream、W6目标simulator、W7正式execplan和W8硬件执行不启动；W9的实际三方回归仍等待结果，但其通用比较基础设施已前置完成。
+- **部分通过**：W1已冻结正式候选模型、固定输入、预处理和软件量化事实；目标RTL候选已选`Trassic2.0_RTL@e3bdebba...`和28-slice，但clean elaboration、正式端口layout、ISA/register-map、JSON/emulator和硬件接口未批准，所以G1仍未通过。
+- **当前主线**：ADR-007已由操作者采用。旧16-slice W4的12个candidate、93边审计和成本报告改为历史证据；审计框架、生命周期/alias算法和逻辑比较器继续复用。W4按七个4-slice小环主profile与28-slice大环代表层候选重开，G4=`not_passed`、`w5_authorized=false`；当前可推进28-slice软件布局与成本审计，但不生成正式W5 JSON/bitstream。
 - **当前边界**：W2只证明小合成Conv的golden=NDP functional model；W3公式重放仍属于golden侧。当前没有任何正式ResNet算子达到golden=target simulator=hardware。
 
 ### 接手进度总表
@@ -59,18 +59,19 @@
 | 工作包 | 门状态 | 已完成边界 | 接手动作 |
 |---|---|---|---|
 | W0 | G0通过 | manifest/contract/backend/artifact/cache/resume/mock DAG | 不重做，只回归 |
-| W1 | G1未通过 | 模型、固定输入、预处理、ONNX量化事实 | 并行补目标硬件合同 |
+| W1 | G1未通过 | 模型、固定输入、预处理、ONNX量化事实；已选28-slice RTL候选commit | 补clean elaboration、端口/寄存器/运行合同 |
 | W2 | G2通过 | 1/4-slice小Conv候选layout和NDP functional数值闭环 | 作为W4 fixture，不外推为硬件规格 |
 | W3 | G3通过 | 78节点、133 hw_op、79 runtime tensor、55内部tensor、旧77映射 | 不重跑大artifact，除非hash/合同失效 |
-| W4 | software readiness通过/G4未通过 | 78节点、93边、91量化链、8份物理证据、双profile整网dry-run/生命周期/alias及逻辑比较器通过审计 | 等待Conv/整体profile、RTL/ISA版本和正式layout批准；不进W5 |
+| W4 | 旧16-slice readiness历史通过；28-slice重开/G4未通过 | 旧审计方法和比较器可复用，旧物理布局/成本已失效 | 实现七小环主profile、代表层大环候选并重审93边；不进W5 |
 | W5～W9 | 未通过 | W9通用比较器基础设施已前置完成；其余仅有参考框架或mock接口 | 等待对应前置门和真实结果通过 |
 
 ### 当前可立即执行队列
 
 1. 新对话先执行只读接手检查：根状态、三仓verify、89项unittest；不要先重跑约951 MB的W3正式artifact。
-2. 等待并记录硬件侧对ADR-002/ADR-003的正式回复；未取得带版本的profile/物理layout批准前，不把candidate升级为approved且不进入W5。
-3. 并行推进W1剩余硬件合同；没有approved合同不得宣布G4/G5硬件格式通过。
-4. 若模型、预处理、量化公式或lowering变化，先列出所有失效的manifest/hash和下游产物。
+2. 按ADR-007先实现28-slice HIGH/LOW物理拓扑mapper及单测，不再等待旧ADR-002/003回复。
+3. 依次重建Quantize、Conv、MaxPool、QLinearAdd、GAP、MatMul/head布局，重新生成93边、生命周期/alias和性能成本报告。
+4. 并行推进W1的clean elaboration、RTL/ISA/register-map、端口layout和运行合同；没有approved合同不得宣布G4/G5通过。
+5. 若模型、预处理、量化公式或lowering变化，先列出所有失效的manifest/hash和下游产物。
 
 环境已经准备完成，不再把安装依赖列为任务：使用根目录 `.venv` 和 `requirements-resnet50.lock.txt`。当前三个最小入口结果见 `agent.md`“本地 Python 环境与已验证入口”。
 
@@ -304,7 +305,7 @@ artifacts/<run_id>/
 ### W1：冻结外部规格【与W0并行，难度：外部阻塞】
 
 1. 取得正式ONNX、固定输入和预处理。
-2. 冻结16-slice RTL/ISA/寄存器/JSON版本。
+2. 冻结28-slice RTL/ISA/寄存器/JSON版本；当前候选固定`Trassic2.0_RTL@e3bdebba95dec36ee8eba43caa92a326a88392cd`。
 3. 确认正式layout、SA/GA、bias/psum/requant语义。
 4. 取得目标emulator和硬件load/start/wait/dump协议。
 5. 记录来源、负责人、版本和hash；未确认项不得填默认值冒充批准规则。
@@ -319,7 +320,8 @@ artifacts/<run_id>/
 - **已完成**：暂定旧脚本预处理contract；仓库 `cat.jpg` 生成 `[16,3,224,224]` float32输入并由ORT 1.27 CPU生成 `[16,1000]` 输出，模型/图片/输入/输出hash已写入 `contracts/model_baseline.json`。
 - **已完成**：从模型确认53层Conv语义均为UINT8 activation、INT8 weight、INT32 bias、per-output-channel weight scale，全部weight zero point为0；input/output zero point并非全部为0。
 - **已记录**：`contracts/model_baseline.json`、`contracts/quantization.json`、`contracts/architecture.json` 和 `.agents/decisions/ADR-001-model-and-preprocessing-baseline.md`。
-- **未完成/仍需外部**：目标RTL/ISA/register-map版本、批准物理layout、硬件requant和qparams传递、NDPFuncModel/官方emulator关系、硬件load/start/wait/dump协议。
+- **已完成候选选择**：审查`master/dc/xilinx`后选定最新且功能更完整的28-slice `master@e3bdebba...`；其活动参数、七小环/大环拓扑和28-bit mask已定位。
+- **未完成/仍需外部或权威工具链**：`NDP_Top.sv`/`NDP_Top_new`命名闭合、clean elaboration、批准物理layout、硬件requant和qparams传递、NDPFuncModel/官方emulator关系、硬件load/start/wait/dump协议。
 
 W1的模型子任务已完成，但G1尚未通过；architecture/quantization/backend关键硬件字段仍是candidate/unknown。W0和W2可并行继续，W5目标bitstream与W8硬件验收不得据此提前宣布完成。
 
@@ -327,7 +329,7 @@ W1的模型子任务已完成，但G1尚未通过；architecture/quantization/ba
 
 目标：完全不依赖正式ResNet模型，让一个小Conv完成 raw→physical→functional model→logical D。
 
-当前状态（2026-07-12）：**G2已通过**。同一带padding、C/K tail的确定性小Conv已分别以1-slice和4-slice执行；标量NumPy、im2col、ONNX Runtime、直接加载的CGRA QNN rounding和 `NDPFuncModel@35eab40` 在全部84个int32 accumulator及UINT8 D上逐元素一致。NDP参数化runner实际经过DRAM→input Buffer→SpecialPEA→ActivationUnit→output Buffer→DRAM，ring LC末态、per-channel requant、物理D覆盖和inverse logical D均验证；每个region的全部物理字节均能解释为data/tensor-padding/alignment并落在正确slice。G2只批准W2小Conv软件候选合同，不批准目标JSON/bitstream、正式硬件layout或旧固定56×56主入口；下一步允许开展16-slice扩展。
+当前状态（2026-07-12）：**G2已通过**。同一带padding、C/K tail的确定性小Conv已分别以1-slice和4-slice执行；标量NumPy、im2col、ONNX Runtime、直接加载的CGRA QNN rounding和 `NDPFuncModel@35eab40` 在全部84个int32 accumulator及UINT8 D上逐元素一致。NDP参数化runner实际经过DRAM→input Buffer→SpecialPEA→ActivationUnit→output Buffer→DRAM，ring LC末态、per-channel requant、物理D覆盖和inverse logical D均验证；每个region的全部物理字节均能解释为data/tensor-padding/alignment并落在正确slice。G2只批准W2小Conv软件候选合同，不批准目标JSON/bitstream、正式硬件layout或旧固定56×56主入口；其4-slice fixture作为ADR-007七小环实现的最小数值基线。
 
 细分：
 
@@ -341,7 +343,7 @@ W1的模型子任务已完成，但G1尚未通过；architecture/quantization/ba
 8. 在quantization contract中同时保存ONNX原始float scale/zp和硬件派生multiplier/shift；明确运算顺序、中间位宽、溢出、nearest-even、saturation和可选ReLU位置。
 9. 固定随机seed、数组内存序、线程数和参考实现版本；同一fixture重复执行至少两次验证确定性。
 
-验收门 G2【2026-07-12通过】：1/4 slice小例中，NumPy=QNN=NDP functional model逐坐标bit-exact；所有物理字节能反查逻辑坐标。证据为根仓28项、NDP 14项全量回归及1/4-slice同fixture完整D差分。现在可扩展16-slice，但W5目标JSON仍受G1硬件合同约束。
+验收门 G2【2026-07-12通过】：1/4 slice小例中，NumPy=QNN=NDP functional model逐坐标bit-exact；所有物理字节能反查逻辑坐标。证据为根仓28项、NDP 14项全量回归及1/4-slice同fixture完整D差分。现在可扩展为七小环/28-slice调度，但W5目标JSON仍受G1硬件合同约束。
 
 ### W3：正式模型解析、lowering和全节点golden【难度：高】
 
@@ -358,24 +360,26 @@ W1的模型子任务已完成，但G1尚未通过；architecture/quantization/ba
 
 验收门 G3【2026-07-12通过】：任一ONNX node可查全部hw_op；任一hw_op结果可反查逻辑tensor；55个内部结果与全部78个node output均可由独立软件公式重放，并逐项匹配ORT。证据为42项根仓测试、重复运行55个内部文件hash全部一致，以及`legacy77_mapping.json`的77项全覆盖。
 
-### W4：逐算子16-slice relayout【难度：高】
+### W4：逐算子28-slice relayout与性能profile【难度：高】
+
+当前状态（2026-07-13）：ADR-007已采用，旧16-slice W4物理候选全部失效为历史参考。W4按新目标重开；W0～W3不重做，旧93边集合、生命周期/alias算法和逻辑比较器复用，旧物理签名、容量与ring成本不复用。
 
 实施顺序：
 
-1. Quantize/Dequantize/View：先建立简单端口、zero-copy和FP32/UINT8 packing规则。
-2. Conv：activation、OIHW weight、bias/qparams、psum和D；处理im2col、C/K tile、padding、tail和ring。
-3. MaxPool：窗口、padding、channel pack和tail。
-4. QLinearAdd：两分支layout兼容、广播和各自qparams。
-5. GlobalAveragePool：sum中间值、reduction和requant。
-6. MatMul/dense：feature、weight、bias、K tile psum和1000类tail。
+1. 建立`topology28`：精确编码RTL的七个HIGH 4-slice小环和一条LOW 28-slice大环，提供owner/step正逆查询并拒绝`(owner+step)%28`等伪物理拓扑。
+2. Quantize/Dequantize/View：建立七batch group、环内C/F owner、zero-copy和FP32/UINT8 packing规则。
+3. Conv：主体profile使用七小环；每组负责`[3,3,2,2,2,2,2]`个样本，activation按C owner环行4步/3 hop，weight在七组复制并按K owner分片，bias/qparams/P/D跟随K owner。
+4. MaxPool：保持batch group和channel owner，窗口/padding/tail在本地完成。
+5. QLinearAdd：两残差分支必须具有相同batch group、C/K owner、物理轴和tail；A/B各自qparams保持独立，双分支地址同时活跃时不得冲突。
+6. GlobalAveragePool：每个channel owner本地完成H×W centered sum/requant，不做不必要的跨组归约。
+7. MatMul/dense：先实现七小环一致profile；另实现`w4_global_ring28_candidate_v1`代表层，优先比较GAP后`[16,2048]×[2048,1000]`。
+8. transition：不得在残差块内切profile；第一版整网最多允许一次小环→大环显式转换，优先放在GAP后，只有总成本/实测占优才启用。
 
-每个插件必须同时实现 `forward()`、`inverse()`、`explain_coordinate()` 和 `validate()`。
+每个插件必须同时实现`forward()`、`inverse()`、`explain_coordinate()`和`validate()`。layout描述必须给出逻辑坐标→物理slice/ring step/bank/byte address公式、padding/tail来源、lane端序和逆公式。
 
-layout描述不能只写名称，必须能给出逻辑坐标→slice/bank/byte address的可执行公式、padding/tail来源、lane内端序和逆公式；对于zero-copy必须证明producer D与consumer A的合同完全相同。
+性能报告至少包含SA有效lane比例、activation字节×hop、weight复制倍数、每slice/整机DDR占用、3/2样本组barrier尾部、transition读写量和估算来源；估算不得标为cycle。确认per-slice queue/barrier语义后，可增加异步wavefront候选。
 
-验收门 G4：最小shape、真实ResNet shape和tail shape均通过 raw→physical→raw bit-exact；上游D/下游A的零拷贝或转换责任有显式记录。
-
-当前进度（2026-07-13）：W4/G4综合门审计已完成。机器报告`artifacts/w4/g4_gate_audit.json`覆盖78/78正式节点、93条runtime tensor边、91条量化边qparam身份和12个W4 candidate；5份算子族报告、2份Conv0报告及1份整网candidate dry-run共8份登记物理证据的hash/大小全部匹配。batch边分类为4 exact alias、1 explicit relayout、87 layout-compatible/W7 rebase、1 zero-copy；ring/channel为3、4、85、1。93条边均完成逐边物理签名验证，两profile均完成成本、activation生命周期、alias和16组残差双分支冲突检查。ADR-006的通用逻辑比较器也已纳入软件门。software candidate readiness通过，但12个layout全部仍为candidate，目标RTL/ISA/register-map版本与正式物理layout未冻结，因此G4=`not_passed`、W5未授权。
+验收门 G4：最小shape、真实ResNet shape和tail shape均raw→physical→raw bit-exact；新93边、91量化链和16个残差Add重新通过物理兼容、生命周期和alias审计；HIGH/LOW映射匹配RTL；目标commit完成权威clean elaboration并形成带版本layout/ISA合同。未全部满足前G4=`not_passed`、W5未授权。
 
 ### W5：逐算子JSON和bitstream【难度：很高】
 
@@ -383,7 +387,7 @@ layout描述不能只写名称，必须能给出逻辑坐标→slice/bank/byte a
 2. 实现字段级shape/qparams patch，不做文本字符串替换。
 3. 先用 `config_generator_ver2.py/config_nse.py` 推导Conv关系，再映射目标JSON；旧bit位置必须经过版本审计。
 4. 补INT8 Conv/MatMul、QLinearAdd、AvgPool requant、Quantize/Dequantize模板和handler。
-5. 清除28-slice执行假设，目标资源固定16；若指令容器仍28-bit，明确高12位为0并测试。
+5. 目标资源固定28；保留并验证完整28-bit slice mask、per-slice WREG和真实HIGH/LOW routing，清除旧16-slice目标及高12位强制清零逻辑。
 6. 每个配置输出mapping review、字段范围检查、bitstream hash和架构版本。
 7. 建立逐字段provenance表：字段名、模型/shape来源、推导公式、旧参考位置、目标寄存器/bit range、contract版本和测试ID。
 
@@ -392,10 +396,10 @@ layout描述不能只写名称，必须能给出逻辑坐标→slice/bank/byte a
 ### W6：目标simulator闭环【难度：很高/部分外部阻塞】
 
 1. 把NDP Conv改成读取manifest/JSON adapter的backend，禁止复制硬编码shape。
-2. 对同一physical input比较直接functional配置和JSON adapter配置。
+2. 对同一physical input比较直接functional配置和JSON adapter配置，并分别覆盖一个4-slice小环、七小环并发和代表性28-slice大环。
 3. 接入官方/外部非Conv emulator；若不存在，先实现能覆盖ResNet所需LC/stream/buffer/SA/GA子集的最小解释器。
 4. 统一超时、退出码、日志、physical D、inverse layout和logical D。
-5. 逐算子通过后再组合 `Quantize→conv0→MaxPool`、残差块和head。
+5. 逐算子通过后再组合`Quantize→conv0→MaxPool`、残差块和head；同时记录两profile的模拟cycle/stall（若模拟器提供），不能只比较数值。
 6. 外部进程backend必须限制工作目录、超时、最大日志/产物大小并捕获版本；不得依赖交互式shell或个人环境变量。
 
 验收门 G6：每个hw_op的golden=simulator；整数bit-exact，浮点按manifest tolerance；重复运行稳定。
@@ -404,13 +408,13 @@ layout描述不能只写名称，必须能给出逻辑坐标→slice/bank/byte a
 
 1. 让 `model_execplan` 消费统一manifest，不再手写77+实例。
 2. 扩展schema/handler承载多输入、attributes、qparams和中间psum。
-3. 处理tensor地址生命周期、残差分支、in-place/zero-copy和slice routing。
+3. 处理tensor地址生命周期、残差分支、in-place/zero-copy、七组3/2样本调度和真实HIGH/LOW slice routing。
 4. 每个实例生成独立patched JSON/bitstream/control write。
 5. 输出execplan、cfg_pkg、SCA、Bank_data和emulator bundle，并引用相同hash。
 6. bitstream/模板/数据/handler缺失时严格失败。
 7. memory planner输出每个tensor的 `[base,end)`、alignment、bank/slice、live range和复用来源；验证不越界、不重叠、不读取已释放数据，并对地址单位转换做round-trip。
 
-验收门 G7：单算子、conv0子图、一个残差块和head依次通过simulator整子图逐hw_op比较；无28-slice残留或静默截断。
+验收门 G7：单算子、conv0子图、一个残差块和head依次通过simulator整子图逐hw_op比较；无旧16-slice目标残留、伪modulo拓扑或静默截断。
 
 ### W8：硬件/RTL接入【难度：很高/外部阻塞】
 
@@ -419,8 +423,9 @@ layout描述不能只写名称，必须能给出逻辑坐标→slice/bank/byte a
 3. 先跑小Conv单算子包；保存原始physical dump并inverse成logical tensor。
 4. 支持单算子停止点或逐层checkpoint；记录硬件/RTL/固件版本和运行日志。
 5. 硬件backend先执行capability/protocol probe和只读健康检查；任何写入/启动动作都绑定明确run_id和输入/config hash，dump后验证长度与地址范围。
+6. 对Conv0、56×56残差块、14×14/7×7深层块、GAP和head记录cycle、neighbor/DDR stall及有效slice利用率，决定是否启用大环或profile转换。
 
-验收门 G8：同一包重复运行稳定，小Conv和conv0达到golden=simulator=hardware。
+验收门 G8：同一包重复运行稳定，小Conv和conv0达到golden=simulator=hardware；至少一个主体残差块证明28个slice按新profile被调度，并形成可比较的性能基线。
 
 ### W9：全算子扩展、三方比较与整网回归【难度：高】
 
@@ -433,7 +438,7 @@ layout描述不能只写名称，必须能给出逻辑坐标→slice/bank/byte a
 5. 输出机器可读JSON和人读Markdown；保存所有版本/hash/命令。
 6. 维护 `coverage/operator_matrix.json`：每个operator family×shape类别×backend×阶段门的pass/fail/blocked状态和最近run_id，禁止用单个样例代表全家族完成。
 
-验收门 G9：所有整数中间结果三方bit-exact；批准浮点结果在tolerance内；整网logits/分类结果一致且可一键重建。
+验收门 G9：所有整数中间结果三方bit-exact；批准浮点结果在tolerance内；整网logits/分类结果一致且可一键重建。正式profile必须附整网cycle、主要stall、有效slice利用率和profile转换成本；主体不得以“低16位工作、其余闲置”的兼容方式作为最终实现。
 
 ## 工作包依赖和并行关系
 
@@ -503,7 +508,7 @@ W0实现前还需把以上补充转成可执行的schema字段、测试用例和
 2. 尽量取得原 `tensor_dict.json`、DDR、旧 `.cu/.pkl` plan 和 golden；没有时由正式 ONNX 重建，不再等待不可恢复的本地历史。
 3. 确认 `NDPFuncModel/conv_func` 与目标 JSON emulator 的关系；取得缺失的 `conv_config`、可运行 `hex_data`、目标 JSON/bitstream→LC/AG/Buffer/PE 参数映射。若它只负责 Conv，则另外取得其他算子的 emulator 入口。
 4. 取得硬件或 RTL 的配置/数据/execplan 加载、start/wait、结果 dump 协议。
-5. 确认目标为 16 slice，并冻结对应的资源数、字段位宽、GA opcode、DDR row、指令 mask 和寄存器表版本。
+5. 目标已确认28 slice、候选RTL已固定`master@e3bdebba...`；继续冻结其权威顶层/filelist、资源数、字段位宽、GA opcode、DDR row、28-bit指令mask和寄存器表版本。
 6. 取得一份批准的 INT8 SA/GA 最小配置和 activation/weight/bias/scale layout 示例。
 
 验收标准：
@@ -513,7 +518,7 @@ W0实现前还需把以上补充转成可执行的schema字段、测试用例和
 - 硬件/RTL 接口至少能完成一次加载和 dump，或明确记录外部负责人和阻塞状态。
 - 架构参数不再从冲突的旧文件中混选。
 
-当前状态：模型、固定图片、暂定预处理、batch=16输入和ORT输出已建立可重放hash基线，W3已基于它通过G3。W1仍未通过G1，因为目标layout、RTL/ISA、JSON/emulator关系和硬件接口没有approved合同；这些继续与W4并行推进。
+当前状态：模型、固定图片、暂定预处理、batch=16输入和ORT输出已建立可重放hash基线，W3已基于它通过G3。28-slice RTL候选commit和物理环已选定；W1仍未通过G1，因为clean elaboration、目标layout、RTL/ISA、JSON/emulator关系和硬件接口没有approved合同；这些继续与W4并行推进。
 
 ## 阶段 B：建立统一图、lowering 和产物契约
 
@@ -563,16 +568,16 @@ W0实现前还需把以上补充转成可执行的schema字段、测试用例和
 
 当前状态：G3已通过。根集成runner绕开旧CGRA eager import，保存1个图输入+78个node output并引用366个initializer；55个内部tensor包括53个Conv accumulator、1个GAP sum和1个MatMul accumulator。全部78节点由独立公式重放匹配ORT，重复运行文件hash一致。旧`golden.py`的30个唯一检查名、21个checkpoint和`layout_buffer.py`语法错误只影响旧入口，不再阻塞W3；逐K-tile快照待W4/W5取得正式tile合同后细化。
 
-## 阶段 D：实现 ResNet 16-slice 数据变换
+## 阶段 D：实现 ResNet 28-slice 数据变换
 
 目标：把 raw tensor 转成 simulator/hardware 使用的物理格式，并能无损逆变换回来。
 
-状态：参考规则部分已有；完整 ResNet 实现不存在，逐算子 relayout 属于本项目明确需完成的代码工作。
+状态：旧16-slice逐算子candidate已完成但被ADR-007判定为目标失效；正逆变换结构可参考，28-slice物理实现需重建。
 
 难度：高。主要风险是正式 layout 未确认、Conv weight/im2col、尾块和不同算子间 layout 衔接。
 
-1. 以旧计划为基线：batch=16 时每 slice 一张样本；activation 按 N 切分；weight/bias/qparams 按需要复制或分片。
-2. 为 activation、Conv weight、bias/scale/zp、psum 和输出分别声明 logical/physical layout。
+1. 以ADR-007为基线：七个4-slice小环分别处理`[3,3,2,2,2,2,2]`个样本，环内activation按C owner、weight/P/D按K owner；禁止把旧“一样本一slice”直接扩展到28。
+2. 为activation、Conv weight、bias/scale/zp、psum和输出分别声明logical/physical layout，并显式记录小环ID、真实物理slice顺序和可选大环step。
 3. 为每一种 ONNX/硬件原子算子分别实现 partition、padding、im2col/weight reorder、tile reorder、128-bit packing、bank/remapping；不能用一份通用 reshape 假定覆盖全部算子。
 4. 实现严格 inverse partition/relayout/unpack/merge。
 5. 输出 `install/opX/sliceYY/matrix_{A,B,C,D}_linearized_128bit.{bin,txt}` 和对应 manifest。
@@ -582,14 +587,14 @@ W0实现前还需把以上补充转成可执行的schema字段、测试用例和
 
 | 算子族 | 必须实现的物理数据对象 | 状态 |
 |---|---|---|
-| QuantizeLinear | FP32 输入、scale/zp、UINT8 输出及其逆变换 | W4 candidate已完成 |
-| QLinearConv | activation、OIHW weight、bias、scale/zp、首/中/末 K tile psum 和 D | W4 layout candidate已完成；逐K tile待W5合同 |
-| MaxPool | UINT8 activation、padding/tail、池化输出 D | W4 candidate已完成 |
-| QLinearAdd | 两个残差分支输入、各自 qparams、对齐/广播和 UINT8 D | W4 candidate已完成；双alias地址待W7 |
-| QLinearGlobalAveragePool | activation、int32 sum/中间结果、requant 参数和 D | W4 candidate已完成 |
-| QLinearMatMul / dense Add | feature、weight、bias、qparams、psum 和最终 D | W4 candidate已完成；逐K tile psum待W5合同 |
-| DequantizeLinear | UINT8 输入、scale/zp 和 FP32 D | W4 candidate已完成 |
-| Flatten/View | 验证是否物理零拷贝；若不是，完成显式重排和逆变换 | W4 candidate已完成 |
+| QuantizeLinear | FP32输入、scale/zp、七batch group的UINT8输出及逆变换 | 旧16候选历史完成；28-slice需重建 |
+| QLinearConv | activation、OIHW weight、bias、scale/zp、首/中/末K tile psum和D | 七小环主profile需完成；代表层大环候选需完成 |
+| MaxPool | UINT8 activation、padding/tail、保持group/channel owner的D | 28-slice需重建 |
+| QLinearAdd | 两残差输入、各自qparams、owner兼容、广播和UINT8 D | 28-slice需重建；双alias地址待W7 |
+| QLinearGlobalAveragePool | activation、owner-local int32 sum、requant参数和D | 28-slice需重建 |
+| QLinearMatMul / dense Add | feature、weight、bias、qparams、psum和最终D | 七小环及大环head候选需完成 |
+| DequantizeLinear | UINT8输入、scale/zp和FP32 D | 28-slice需重建 |
+| Flatten/View | 证明物理零拷贝，或实现显式forward/inverse重排 | 28-slice需重审 |
 
 每一行还要按实际 lowering 拆到具体 `hw_op_id`，分别覆盖 A/B/B'/C/D 端口；“该算子的输入已由上游排好”也必须在 manifest 中证明，不能据此省略 relayout 规则。
 
@@ -599,7 +604,7 @@ W0实现前还需把以上补充转成可执行的schema字段、测试用例和
 - 每个 slice 的元素归属、复制规则、padding 区和 128-bit 行内顺序可由 manifest 验证。
 - 上一算子 D 与下一算子 A 的物理布局不一致时，明确由 remapping、后继 stream 还是显式 relayout 解决。
 
-当前状态：W2语义保持冻结；W4 software candidate readiness已由`artifacts/w4/g4_gate_audit.json`证明，SHA-256 `c4679a1bc44d0eac35de3035a4627895223140c22f560dcf19d21a06b37a298e`。G4未通过且W5未授权；当前只等待ADR-002/ADR-003列出的正式硬件布局、整体profile和版本裁决。裁决到达后必须写新版本approved合同并重新运行本审计，不能原地改写candidate历史。
+当前状态：W2语义保持冻结；旧`artifacts/w4/g4_gate_audit.json`及配套报告已在ADR-003/005标为历史16-slice证据。ADR-007已经给出目标版本和软件profile方向，因此不再等待旧拓扑裁决；当前直接实现28-slice W4并生成新版本报告。G4未通过且W5未授权，旧candidate不得原地改写为新profile。
 
 ## 阶段 E：完成 ResNet 单算子 JSON 和数值参数化
 
@@ -637,7 +642,7 @@ W0实现前还需把以上补充转成可执行的schema字段、测试用例和
 
 1. 先把 `NDPFuncModel/main_CONV_N2N.py` 拆成参数化 Conv runner：输入来自 manifest/physical files，循环、地址、slice 和 qparams 来自 adapter。
 2. 修复 Conv 阻塞：正确判定最后 reduction、真正写回 DRAM、实现 uint8 activation×int8 weight、int32 psum、per-channel requant/nearest-even/saturation，去掉 INT8 路径的 FP16 packing，并把函数内直接使用的 `np.float128` 改成跨平台累加类型。
-3. 为 4-slice 合成例和目标 16-slice 建立坐标级比较；补齐 `ActivationUnit.sse2_round_to_int()` 或统一调用项目 QNN 量化实现。
+3. 为4-slice合成例、七个4-slice小环并发和代表性28-slice大环建立坐标级比较；补齐`ActivationUnit.sse2_round_to_int()`或统一调用项目QNN量化实现。
 4. 对接 `model_execplan --export-emulator` 的 per-slice JSON/`dram_data.bin`，建立目标 JSON 字段→功能模型参数映射；若目标要求 bitstream 级解释，另加 decoder 层。
 5. 封装统一 runner：加载、执行、超时、退出码、日志、physical D dump、inverse-relayout 和 logical D。
 6. 非 Conv 算子先用小 MaxPool 确认是否存在统一 emulator；不存在时按优先级实现最小 JSON 数据流解释器或接入外部程序。
@@ -657,12 +662,12 @@ W0实现前还需把以上补充转成可执行的schema字段、测试用例和
 
 状态：框架已有，ResNet 前端和适配不存在。
 
-难度：高。主要风险是 16/28 slice、三维 shape、量化 attributes、一对多 lowering、地址生命周期和失败容错。
+难度：高。主要风险是七小环/大环混合profile、三维shape、量化attributes、一对多lowering、地址生命周期、3/2样本组调度和失败容错。
 
 方案：
 
 1. 扩展 `OperatorSpec/TensorSpec` 支持必要 attributes/constants、多输入语义和稳定 tensor ID。
-2. 把 28-slice 硬编码收敛到目标 16 slice；同步地址 planner、指令 mask、slice routing 和测试。
+2. 保留28-slice地址与28-bit mask框架，把抽象`range(28)`升级为ADR-007的真实HIGH/LOW routing、七batch group和per-slice配置，并删除旧16-slice目标适配逻辑。
 3. 从 manifest 生成网络 JSON，不手写 77+ 实例和 source 关系。
 4. 对每个实例 patch shape、qparams、base address、remapping 并重生成 bitstream。
 5. bitstream/模板/寄存器 unresolved 时严格失败；修复 pipeline 当前打印失败后继续的问题。
@@ -672,7 +677,7 @@ W0实现前还需把以上补充转成可执行的schema字段、测试用例和
 
 - execplan 的每个 op 都能追溯 ONNX node/hw_op，输入 source 和地址无歧义。
 - 生成 `execplan.txt`、说明、patched JSON、cfg_pkg、sca_cfg、Bank_data 和 emulator bundle。
-- 没有 28-slice 残留、静默整除截断、缺模板或 unresolved control。
+- 没有旧16-slice目标残留、伪modulo拓扑、静默整除截断、缺模板或unresolved control。
 - 用阶段 F 模拟整子图时，逐原子输出与 golden 一致。
 
 ## 阶段 H：接通 RTL/硬件运行与结果导出
@@ -722,7 +727,7 @@ W0实现前还需把以上补充转成可执行的schema字段、测试用例和
 
 ## `NDPFuncModel` 问题账本与逐项解决顺序
 
-整库复审后，W2 不应直接从“把 4 slice 改成 16”开始。当前已有 trace 和 `.npy` 由错误物理寻址生成，若先扩规模只会放大不可验证状态。按以下顺序解决：
+整库复审后，W2没有直接把4 slice机械扩成旧16；它先修复物理寻址和数值链。ADR-007之后，4-slice fixture将作为每个HIGH小环的基线，再扩成七小环/28-slice调度。按以下顺序解决：
 
 | 顺序 | 问题 | 为什么先做/后做 | 解决与验收方案 | 难度 |
 |---:|---|---|---|---|
@@ -733,7 +738,7 @@ W0实现前还需把以上补充转成可执行的schema字段、测试用例和
 | 5 | 修复 reduction 与输出坐标【W2软件候选已完成】 | 上游最后reduction条件永假且每个R后清空psum | `86cd3e3`修复末态/生命周期；`d212225`及后续runner验证全部坐标四段ring和每坐标候选flush；正式JSON调度仍在W5验证 | 中 |
 | 6 | 实现 requant 与真实 writeback【W2软件候选已完成】 | 没有 UINT8 D 就无法和 ResNet golden 比较 | `7a47701`+`3cb0ef9`及后续buffered runner完成nearest-even、zp/saturation、output Buffer→DRAM、实际D地址覆盖和inverse；硬件multiplier/shift与正式pack仍待合同/W5 | 高 |
 | 7 | 恢复配置驱动 | 当前主程序完全绕过 `config/` 和 JSON | 先恢复 `graph` pyc 对应源码或取得 `conv_config`；把 `config_nse.py` 固定 Conv 逐字段映射到目标 JSON，明确架构版本，不复制整段位串 | 高 |
-| 8 | 从 4 slice 扩到确认的 16 PE 阵列 | 只有前 7 步正确后，扩规模结果才可判定 | 参数化 slice 数、ring count、C/K partition、tail；1/4/16 slice 对同一逻辑 Conv 结果一致 | 高 |
+| 8 | 从4 slice扩到七小环/28-slice【当前W4】 | 只有前7步正确后，扩规模结果才可判定 | 参数化group、真实ring map、3/2 batch、C/K owner和tail；1/4-slice与28-slice恢复同一逻辑Conv结果 | 高 |
 | 9 | 接 ResNet conv0 与全层 relayout | 小模型通过后才能区分算法问题和布局问题 | raw ONNX→forward relayout→JSON runner→physical D→inverse→QNN/ORT golden；再覆盖全部 Conv shape | 很高 |
 
 其中第 1~6 项不需要等待外部 `hex_data`：可以用小合成数据完成并形成回归。外部样例改为“兼容性验收资料”，不再作为修复当前模型的硬前置。第 7~9 项仍需要确认目标架构版本、正式 layout/端口和 JSON/bitstream 关系。
@@ -742,7 +747,7 @@ W0实现前还需把以上补充转成可执行的schema字段、测试用例和
 
 需要统一向学长或硬件侧确认/索取：
 
-1. 提供目标16-slice RTL/ISA/register-map对应的源码commit或文档版本，覆盖资源数、字段位宽、opcode、DDR row、地址单位和指令mask。
+1. 对已选`Trassic2.0_RTL@e3bdebba...`提供权威顶层/filelist和clean elaboration命令，冻结对应ISA/register-map、资源数、字段位宽、opcode、DDR row、地址单位和28-bit指令mask。
 2. 审核我们后续生成的最小INT8 Conv候选配置，确认activation/weight/bias/qparams/psum/D正式物理layout、PEA物理A/B端口、requant/rounding/saturation和writeback语义。模型语义已确定为UINT8 activation×INT8 weight×INT32 bias，不再询问ONNX数学类型。
 3. 确认逐层qparams由constant patch、tensor stream、control write还是逐层静态JSON传递；若已有批准样例，请提供对应配置和目标版本。
 4. 确认 `NDPFuncModel/conv_func` 是否为认可的Conv emulator，以及是否已有官方JSON/bitstream或非Conv emulator。`conv_config` URL、原 `hex_data` 和预期D只作为兼容性资料，可选提供。

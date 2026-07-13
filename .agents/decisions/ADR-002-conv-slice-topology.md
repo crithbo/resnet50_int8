@@ -1,7 +1,9 @@
-# ADR-002：ResNet INT8 Conv 16-slice拓扑裁决
+# ADR-002：ResNet INT8 Conv 16-slice拓扑裁决【已废止】
 
-状态：待硬件侧批准（proposed / candidate）
+状态：已由ADR-007取代（superseded）；不得再作为当前目标或W4/W5输入
 日期：2026-07-12
+
+> 2026-07-13更新：操作者已确认目标硬件为28-slice，并采用ADR-007的七个4-slice小环主方案及28-slice大环比较候选。本文件只保留旧16-slice候选的历史背景；其中`w4_*16*` profile、`(owner+step)%16`和15次neighbor transfer均不是当前硬件合同。
 
 ## 待裁决事项
 

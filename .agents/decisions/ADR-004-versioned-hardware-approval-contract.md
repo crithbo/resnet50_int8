@@ -1,6 +1,6 @@
 # ADR-004：用版本化硬件批准合同自动重审G4
 
-状态：已采用；等待硬件侧提供真实批准内容  
+状态：已采用；等待硬件侧提供真实批准内容
 日期：2026-07-12
 
 ## 决定
@@ -10,7 +10,7 @@
 批准合同必须由可识别的批准人和组织给出，且至少冻结以下事实：
 
 - 完整RTL commit、ISA版本、register-map版本；
-- 16-slice拓扑、PE阵列、neighbor transfer数量和DRAM几何/地址单位；
+- 28-slice拓扑、七个4-slice小环和28-slice大环的物理顺序、PE阵列、neighbor transfer数量和DRAM几何/地址单位；
 - 整网采用batch、ring/channel或逐算子mixed profile，以及每类算子批准的W4 layout ID；
 - activation、weight、bias、qparams、psum、output的owner、轴顺序、对齐、tail和地址单位；
 - accumulator、overflow、nearest-even requant、qparams传输和psum生命周期；
@@ -25,7 +25,7 @@
 2. 文件存在但不完整、含未知字段或内容不一致：记录具体错误，继续阻塞；
 3. 文件严格有效：同时满足approved profile、冻结版本和approved physical layout三项硬件门槛；若其余W4回归仍通过，才令`g4_status=passed`和`w5_authorized=true`。
 
-合同批准某个已有candidate，只表示硬件权威选中了该版本；不会回写或销毁W4候选证据。未被选择的candidate可保留用于追溯，但不得驱动W5产物。
+合同批准某个已有candidate，只表示硬件权威选中了该版本；不会回写或销毁W4候选证据。ADR-007之前的全部`w4_*16*` candidate只能保留用于追溯，不能被新合同选择，也不得驱动W5产物。
 
 ## 为什么这一步不会因硬件定型而作废
 

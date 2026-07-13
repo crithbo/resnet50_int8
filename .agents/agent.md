@@ -6,12 +6,13 @@
 
 ## 五分钟接手摘要
 
-- **最终验收**：正式 ResNet50 INT8 ONNX→逐节点/硬件原子算子 golden→16-slice relayout→JSON/bitstream→目标 simulator→execplan/Bank_data→RTL/硬件→三方逐算子和整网一致。
+- **最终验收**：正式 ResNet50 INT8 ONNX→逐节点/硬件原子算子 golden→28-slice relayout→JSON/bitstream→目标 simulator→execplan/Bank_data→RTL/硬件→三方逐算子和整网一致，并以真实cycle/带宽证据选择性能profile。
 - **W3业务封版检查点**：`35a4fde106d102b0e165e7eb13d60f7dd980db71`；W0/G0、W2/G2、W3/G3已通过，W1只完成模型/输入/软件量化事实，G1因目标硬件合同缺失尚未通过。交接文档可能有后续纯文档提交，当前恢复点以`git rev-parse HEAD`和`history.md`精确台账为准。
 - **三个仓库分工**：`CGRA_SIM` 给软件/QNN语义和旧 ResNet 计划；`ndp-sim-ref` 给目标 JSON、bitstream、relayout/execplan 框架；`NDPFuncModel` 给 Conv 数据通路。根集成层已经统一W3图/lowering/golden身份，但配置、simulator、execplan和hardware尚未接入同一manifest。
-- **当前成果**：正式图含78节点/617张量，lower为133个语义hw_op；保存79个运行时tensor和55个INT32内部tensor，全部78节点独立公式重放匹配ORT，旧77原语已逐项映射。W4计划内全部算子族均已有batch/channel或batch/ring软件candidate布局；93条边物理兼容、双profile整网成本、生命周期/alias和通用逻辑比较器均已完成。W2小Conv的软件闭环和W4软件证据都不等于目标JSON simulator或硬件通过。
-- **下一主线**：W4/G4综合门审计已经完成，当前等待Conv/整体profile、RTL/ISA版本和正式物理layout裁决；`w5_authorized=false`，不进入W5。不得重跑约951 MB的W3产物，除非合同/hash/回归明确失效。
-- **当前外部阻塞**：正式模型和固定输入基线已经自行取得；剩余外部阻塞为目标16-slice RTL/ISA版本、正式物理layout、INT8 SA/GA/qparams硬件约定、目标emulator关系、硬件加载与dump协议。
+- **当前成果**：正式图含78节点/617张量，lower为133个语义hw_op；保存79个运行时tensor和55个INT32内部tensor，全部78节点独立公式重放匹配ORT，旧77原语已逐项映射。旧16-slice W4曾完成12个candidate、93条边审计、生命周期/alias和通用逻辑比较器；ADR-007已明确这些物理布局与成本报告只作历史证据，比较器和审计框架继续复用。
+- **当前硬件裁决**：目标为28-slice，RTL候选固定`Trassic2.0_RTL@e3bdebba95dec36ee8eba43caa92a326a88392cd`；主体采用七个4-slice小环的batch/channel混合profile，28-slice大环只作代表层性能候选。W4按该方案重开，G4仍未通过，`w5_authorized=false`。
+- **下一主线**：先实现RTL真实HIGH/LOW拓扑mapper，再按Quantize/Conv/MaxPool/Add/GAP/MatMul顺序重建28-slice布局、93条边和成本审计；不重跑约951 MB的W3产物，除非合同/hash/回归明确失效。
+- **当前外部阻塞**：正式模型和固定输入基线已经自行取得；剩余外部阻塞为目标commit的clean elaboration/顶层命名闭合、正式端口layout、INT8 SA/GA/qparams硬件约定、目标emulator关系、硬件加载与dump协议。
 - **禁止误用**：NDPFuncModel 当前 `extracted_*.npy` 和 `verify_pe` psum 不是可信 golden；42个 JSON也不等于 ResNet算子配置已完成；bitstream生成成功不等于数值正确。
 - **接手检查**：依次运行 `git status --short`、`.venv\Scripts\python.exe tools\sync_repositories.py verify`、`.venv\Scripts\python.exe -m unittest discover -s tests -v`；预期根工作树干净、三参考仓匹配lock、89项测试通过。始终使用根目录 `.venv\Scripts\python.exe`。
 
@@ -24,7 +25,7 @@
 - `.agents/history.md`：历史日志。记录已经做过的操作、发现、产物和阻塞点。
 - `.agents/rules/算子配置规则.md`：从模型计算到单算子JSON、bitstream、`model_execplan`和数值验证的工作规则，以及对当前DeepSeek资料的反向审核结论。
 - `contracts/`：W1开始建立的版本化事实/候选契约；当前包含模型基线、量化语义和仍待批准的架构字段。
-- `.agents/decisions/`：关键选择的ADR；当前ADR-001记录官方模型与旧脚本预处理的暂定采用及失效规则。
+- `.agents/decisions/`：关键选择的ADR；ADR-007是当前28-slice RTL/profile权威裁决，ADR-002/003/005已标为旧16-slice历史，ADR-004/006继续有效。
 
 推进任务时，先读本文件；真正开始分析或实现前，再读 `plan.md`；需要追溯之前为什么这么做时，再读 `history.md`。
 
@@ -49,7 +50,7 @@
 需要特别注意：
 
 - “每个算子”包含 ONNX 模型节点和 lowering 后的硬件原子算子；一个 QLinearConv 可能对应多个 K-tile 配置/执行实例。
-- 目标硬件已由操作者确认是 16 个 slice / PE 阵列；仓库中的 28-slice DeepSeek 约定是待移除的软件假设。
+- 目标硬件已由操作者确认是28个slice；当前物理拓扑和资源事实以ADR-007锁定的`Trassic2.0_RTL@e3bdebba...`活动RTL为准，旧16-slice参数镜像和W4候选不得再作为目标真值。
 - `CGRA_SIM` 的旧 `.cu` 功能模拟链和 `ndp-sim-ref` 的 JSON/bitstream 链彼此独立；前者是语义参考，不能代替目标 JSON 模拟器。
 - bitstream 生成成功只证明编码/placement 通过，不证明数值正确；单算子至少达到 golden=simulator，最终必须达到三方一致。
 - 详细阶段、难度和验收门槛以 `.agents/plan.md` 为准；`.agents/rules/算子配置规则.md` 约束每个配置和跨阶段产物怎样推导与验收。
@@ -61,7 +62,7 @@
 1. 固定 ONNX、输入、预处理、软件版本和模型 hash。
 2. 建立 ONNX 节点→硬件原子算子 lowering manifest。
 3. 生成每个逻辑/原子算子的 raw golden input/output。
-4. 对 tensor 做 16-slice partition、relayout、packing、remapping，并保留 inverse 变换。
+4. 对 tensor 做28-slice partition、relayout、packing、remapping，并保留 inverse 变换；主体优先映射到七个真实4-slice小环。
 5. 生成每个原子算子的 JSON、bitstream 和参数化元数据。
 6. 用目标 JSON/bitstream emulator 执行并导出 D。
 7. 从 manifest 自动生成网络 execplan、cfg_pkg、Bank_data 和 emulator bundle。
@@ -260,7 +261,7 @@ CGRA_SIM/testing/resnet-50-int8/
 - `component/ActiUnit.py`：`7a47701` 已修复候选requant，支持int32×float32 multiplier、nearest-even、scalar/per-channel广播、output zero-point和uint8饱和；physical probe已调用，Conv主入口仍未调用。
 - `main_GEMM*.py`、`main_GEMV.py`、`generate_gemm_fp16.py`：GEMM/GEMV 开发与验证参考，不是 ResNet Conv 主线。
 - `verify_*.py`、`torch_verify*.py`、`test_compare.py`、`track_data_path.py`：trace/统计验证工具；当前没有对 QLinearConv 做坐标级 bit-exact 全输出比较。
-- `config/`：旧配置位拼接工具，与 `ndp-sim-ref` 同源的历史参考；没有接入 Conv 主入口。其中 `config_generator_ver2.py` 是固定 Conv 配置，`config_nse.py` 是增加邻居流和重复 LC 链的版本，`nse_cnt_size=15` 是当前仓库里最直接的 16-slice/ring 配置证据。它们属于旧寄存器架构，且输出路径硬编码，不能不经版本映射直接复制成目标 JSON。
+- `config/`：旧配置位拼接工具，与 `ndp-sim-ref` 同源的历史参考；没有接入 Conv 主入口。其中 `config_generator_ver2.py` 是固定 Conv 配置，`config_nse.py` 是增加邻居流和重复 LC 链的版本，`nse_cnt_size=15` 只说明旧16-slice/ring样例，已被ADR-007判定为非目标证据。它们属于旧寄存器架构，且输出路径硬编码，不能不经版本映射直接复制成目标 JSON。
 - `kernel/add_config_MN_N.json`、`output/add_config_MN_N_pseudocode.py`：ADD JSON 与生成伪代码的完整工作样例，不是 Conv 配置。`graph/` 虽只跟踪 CPython 3.12 `.pyc`，但已恢复其职责：加载 JSON 为 LC/PE/AG 依赖图、拓扑排序、生成嵌套循环伪代码和地址队列；因此是可恢复的配置前端，不再视为完全未知文件。
 - `verify_pe/` 及各 dump 目录：大量生成 trace/日志，属于验证产物，不是配置规则真值。
 
@@ -270,7 +271,7 @@ CGRA_SIM/testing/resnet-50-int8/
 2. `run_buffer_writeback_to_dram()` 仍只记录“将要写回”的日志，实际 `dram.stream_write()` 被注释；`3cb0ef9`完成的是probe路径按provenance地址的真实单字节写回，不能冒充主WRAG路径已修复。
 3. INT8 Conv主入口输出仍走FP16 packing；虽然probe已执行per-channel requant/zero-point/saturation，主入口创建的 `ActivationUnit` 仍没有被使用。
 4. 上游PEA按signed A×unsigned B计算；本地 `deee41f` 已按主链实际端口修为uint8 activation A×int8 weight B，并由physical-address dot probe与QLinearConv accumulator对齐。目标硬件物理端口仍需外部确认。
-5. 主示例固定 4 slice，不等于已确认的目标 16 slice，也没有 JSON/bitstream、qparams 或命令行参数化接口。
+5. 主示例固定4 slice，只能作为一个小环的数据通路参考，不等于七小环/28-slice整机，也没有 JSON/bitstream、qparams 或命令行参数化接口。
 6. 上游 `SpecialPEA.PE.execute()` 的INT8路径经过 `np.float128/float32` 且debug含 `.asctype`；本地 `deee41f` 已改为纯int32 psum、int64检查中间值并移除函数内直接 `np.float128`。溢出暂显式报错，等待硬件规则裁决。
 7. 上游 `89d1655` 的 `DRAM.per_slice` 少乘 `bank_num`；本地 `789d121` 已修复并用4-slice独立写读验证。旧 `extracted_bias.npy` 和旧trace仍由错误版本生成，继续禁止作为真值。
 8. 上游 `run_dram_to_ag()` 只把 `slice_id` 写进日志名；本地 `789d121` 已把完整slice byte span加入AG tensor base，slice0～3数据与物理provenance测试通过。
@@ -283,18 +284,18 @@ CGRA_SIM/testing/resnet-50-int8/
 
 - **模型和golden——W3/G3已通过**：模型/input/hash和ORT设置已锁定；正式保存79个运行时tensor和55个lowering内部INT32 tensor，全部78节点由独立公式重放并匹配ORT。旧`golden.py`的30个唯一检查点只保留为历史参考。
 - **lowering和身份映射——W3语义层已完成**：78个ONNX节点稳定lower为133个语义hw_op；旧77模型级原语已逐项映射，Flatten明确为zero-copy。JSON实例、逐K-tile和execplan身份在W4/W5/W7继续扩展，不得说成W3尚未实现。
-- **数据变换——W4软件candidate readiness通过/G4未通过**：综合审计覆盖78/78节点、93条runtime边和91条量化qparam链；8份登记物理证据hash/大小全部匹配，所有边在batch与ring/channel下均已逐边验证物理签名及exact alias、W7 rebase或explicit relayout责任；双profile整网成本、activation生命周期/alias和残差分支检查通过。阻塞条件为没有approved profile、没有冻结RTL/ISA/register-map版本、没有approved物理layout；ADR-003规定`w5_authorized=false`并等待硬件裁决。
+- **数据变换——旧16-slice软件审计历史通过/28-slice W4已重开**：旧综合审计覆盖78/78节点、93条runtime边和91条量化qparam链，但物理签名、成本和容量结论已由ADR-007标为过时。新W4必须使用RTL真实七小环/大环映射重新完成全部算子、边、生命周期/alias和性能成本；G4=`not_passed`、`w5_authorized=false`。
 - **单算子配置——部分已有**：42 个静态 JSON 中只有 MaxPool、sum 型 AvgPool、固定样例 quant、fp32 输出 add-dequant 可局部参考；6 个 SA JSON 全是 FP16、bias=0；没有核心 INT8 Conv/MatMul。
-- **W2/G2小Conv软件闭环已通过**：`NDPFuncModel@35eab40` 的参数化runner在同一fixture上完成1/4-slice全部84坐标，实际经过DRAM、input Buffer、SpecialPEA、ActivationUnit、output Buffer和DRAM；NumPy、im2col、ORT、CGRA QNN rounding与NDP的accumulator/D一致，physical D可inverse且全部物理字节可解释。该结论不批准旧固定主入口、目标JSON或硬件layout；16-slice为下一步。
-- **execplan——框架已有/ResNet 适配没有**：可规划地址、重生成 bitstream、输出指令和 Bank_data，但 schema 无 numeric attributes，仍硬编码 28 slice，bitstream 失败后部分路径继续。
+- **W2/G2小Conv软件闭环已通过**：`NDPFuncModel@35eab40` 的参数化runner在同一fixture上完成1/4-slice全部84坐标，实际经过DRAM、input Buffer、SpecialPEA、ActivationUnit、output Buffer和DRAM；NumPy、im2col、ORT、CGRA QNN rounding与NDP的accumulator/D一致，physical D可inverse且全部物理字节可解释。该结论不批准旧固定主入口、目标JSON或硬件layout；下一步把4-slice fixture映射为七个真实小环并验证28-slice调度。
+- **execplan——28-slice框架已有/ResNet适配没有**：可规划28个slave、28-bit mask、地址、bitstream、指令和Bank_data；schema仍缺numeric attributes，旧配置镜像与目标RTL存在版本冲突，bitstream失败后部分路径还会继续。
 - **RTL/硬件——外部阻塞**：没有完整 runner/testbench、加载/启动/完成/dump 协议或逐算子 checkpoint 入口。
 - **三方比较——通用逻辑比较器已就绪/真实结果未到位**：根集成层已实现inverse-relayout之后的两方/三方比较、整数bit-exact、浮点显式容差、错误分类、拓扑首错和provenance；旧runner与128-bit物理文件工具仍不能替代它。当前没有目标simulator/hardware逻辑输出，也没有获批inverse layout，因此尚无真实三方通过结论。
 
 ## 当前最高优先级
 
-严格按 `.agents/plan.md` 的W0→W9工作包和G0→G9验收门推进。W0/G0、W2/G2、W3/G3已经完成；W1模型部分完成但G1未通过。W4软件candidate readiness通过，但G4综合审计结论为未通过，当前等待正式硬件布局与拓扑裁决，不进入W5。任何W1～W3修改都必须先说明会使哪些manifest/hash/下游产物失效。
+严格按 `.agents/plan.md` 的W0→W9工作包和G0→G9验收门推进。W0/G0、W2/G2、W3/G3已经完成；W1已选定目标RTL commit但G1未通过。旧16-slice W4 software readiness不再代表当前进度；28-slice W4按ADR-007重开并可立即推进，不进入W5。任何W1～W3修改都必须先说明会使哪些manifest/hash/下游产物失效。
 
-优先向学长或硬件侧确认：目标16-slice RTL/ISA/register-map版本、正式物理layout、最小INT8 SA+bias+requant硬件配置、量化参数传递协议、NDPFuncModel/官方emulator关系，以及硬件加载和dump接口。旧ONNX、旧产物、原 `hex_data` 和 `conv_config` 来源已降级为兼容性资料，不再阻塞软件推进。
+优先推进：按`master@e3bdebba...`完成权威elaboration/filelist/顶层确认；从同一commit冻结寄存器与端口layout；确认最小INT8 SA+bias+requant配置、量化参数传递协议、NDPFuncModel/官方emulator关系，以及硬件加载和dump接口。旧ONNX、旧16-slice产物、原`hex_data`和`conv_config`均降级为兼容性资料，不阻塞28-slice W4软件推进。
 
 配置字段层的Q1~Q4详细背景仍见 `.agents/rules/算子配置规则.md` 第14.3节；端到端外部资料清单以 `plan.md`“当前最高优先级请求”为准。
 
@@ -338,10 +339,10 @@ cgra_python/execution_plan/tensor_dict.json
 正式 ResNet ONNX / 输入 / initializer
   -> 统一 ONNX node/tensor/语义 hw_op lowering（W3/G3已完成）
   -> raw node golden + 55个语义内部tensor golden（W3/G3已完成）
-  -> 16-slice partition/relayout/packing/remapping（待实现）
+  -> 28-slice七小环主profile/大环候选的partition/relayout/packing/remapping（待实现）
   -> ndp-sim-ref/jsons + bitstream（框架已有，ResNet INT8 配置待实现）
   -> 目标 JSON/bitstream emulator（仓库内缺失）
-  -> model_execplan + cfg_pkg + Bank_data（框架已有，ResNet/16-slice 待适配）
+  -> model_execplan + cfg_pkg + Bank_data（28-slice框架已有，ResNet/真实拓扑待适配）
   -> RTL/硬件 runner（仓库内缺失）
   -> inverse-relayout + 三方比较（待实现）
 ```
@@ -492,7 +493,7 @@ testing/resnet-50-int8/gen_execu_plan_ver1.py
 - `component_config/`：旧版逐模块 packer，覆盖 buffer、GA in/out/PE、IGA loop/PE、read/write MSE、NSE、SA。
 - `config_generator.py`、`config_generator_ver2.py`、`config_nse.py`：手工拼配置的样例/原型，含硬编码 cluster 路径和未实现 `pass`，不是当前 JSON 编译入口。
 - `iga_generator.py`、`iga_generator_ver2.py`：旧 IGA loop/tag 传播原型；可帮助理解 LC 层级，但区间/接口与当前 encoder 不完全一致。
-- `utils/config_parameters.py`、`config_parameters_ver1.py`：16-slice 参数镜像；给出 16/4/4/8/3 等 slice 内资源数和寄存器位宽，但与当前 bitstream 20/5/5/10/4 定义冲突。
+- `utils/config_parameters.py`、`config_parameters_ver1.py`：已失效的旧16-slice参数镜像；给出16/4/4/8/3等slice内资源数和寄存器位宽，但与当前bitstream及目标RTL冲突，只作版本考古。
 - `utils/bitgen.py`、`module_idx.py`：旧位拼接和模块编号辅助。
 - `utils/excel_config.py`、`excel_generator.py`：从表格生成/整理寄存器配置说明。
 - `get_parameters.py`、`get_random_data.py`：参数和随机数据辅助。
@@ -502,7 +503,7 @@ testing/resnet-50-int8/gen_execu_plan_ver1.py
 
 ### 其他顶层内容
 
-- `run_all_slices.py`【实验】：生成并运行 ring GEMM 多 slice JSON，默认 4 slice；按 slice 改高位地址。bitstream 失败会每两秒无限重试，不能作为通用 16-slice 入口。
+- `run_all_slices.py`【实验】：生成并运行ring GEMM多slice JSON，默认4 slice；按slice改高位地址。bitstream失败会每两秒无限重试，不能作为目标七小环/28-slice入口。
 - `outputs/`【产物】：批量 bitstream、报告和调试输出。
 - `.gitignore`【仓库规则】：忽略大量模型、矩阵和二进制产物，缺文件时先判断是否未入库。
 
@@ -522,7 +523,7 @@ testing/resnet-50-int8/gen_execu_plan_ver1.py
 - `cgra_ver20.py`：16 个计算阵列、8x8x8 tensor core 和 INT8 吞吐等 ver20 参数。
 - `__init__.py`：导出两版架构；已有用户修改。
 
-两版 `sm_count=16` 支持目标阵列数量，但不能解决 LC/stream/PE 配置位宽版本冲突。
+两版`sm_count=16`仅描述旧性能模型，已不匹配目标28-slice；仍可参考单阵列吞吐公式，但不能用于整机数量、LC/stream/PE位宽或正式性能结论。
 
 ### `cgra_python/execution_plan/`：ONNX 参数和旧计划辅助【语义参考/验证】
 
@@ -661,7 +662,7 @@ testing/resnet-50-int8/gen_execu_plan_ver1.py
 
 - 根目录 4 个 `main_*` 分别驱动 Conv/GEMM/GEMV；ResNet 当前只以 `main_CONV_N2N.py` 为核心。
 - `component/` 是运行主体；`GeneralPEA.py` 为空，实际使用 `SpecialPEA.py`。
-- `config/` 是历史配置生成/寄存器拼接代码；`config_generator_ver2.py` 和 `config_nse.py` 分别给出固定 Conv 与邻居流 Conv 的字段实例，后者的 NSE 计数 15 与 16 个 slice 相符；`config_parameters.py` 与 `config_parameters_ver1.py` 对应不同架构版本，资源数/位宽并不等价。主 Conv 没有导入该目录，不能据此认为 Conv 已由配置驱动。
+- `config/`是历史配置生成/寄存器拼接代码；`config_generator_ver2.py`和`config_nse.py`分别给出固定Conv与旧邻居流Conv字段实例，后者NSE计数15只对应已废止的16-slice样例；`config_parameters.py`与`config_parameters_ver1.py`对应不同旧版本。主Conv没有导入该目录，不能据此认为Conv已由配置驱动或符合目标28-slice RTL。
 - `utils/` 提供 dump、初始化、解析和输出重置；`requirements.txt` 仅列 numpy/openpyxl/tqdm，但 PyTorch 验证脚本还依赖未声明的 torch。
 - `conv_config` 是无法解析来源的 gitlink；没有 `.gitmodules`，只知道对象提交 `51c15b6…`，无法恢复 URL。`graph/` 只有 CPython 3.12 字节码，但已可反序列化确认其 JSON 图、依赖树、伪代码和地址 dump 功能；适合后续恢复为源码，不适合直接当长期依赖。
 - `verify_pe/` 有 1000 余个 trace 文件，另有多组 GEMM dump、根目录 `.npy/.log/.txt`；统一按生成验证产物处理。
@@ -701,8 +702,8 @@ testing/resnet-50-int8/gen_execu_plan_ver1.py
 3. INT8 SA 的端口、`bias_enable`、int32 psum、requant 和可选 ReLU 接口。
 4. GA 的 unsigned max、转换、rounding、saturation 和溢出语义。
 5. per-layer/per-channel qparams 采用 constant patch、tensor stream 还是逐层静态 JSON。
-6. 目标 16-slice RTL/ISA 对应的资源数、字段位宽、opcode、DDR row 和指令格式。
-7. `NDPFuncModel/conv_func` 是否就是目标 Conv 模拟器基线；若是，需提供缺失 `conv_config`/`hex_data`、目标 JSON/bitstream 到其参数的映射，以及正确的 uint8×int8、requant、16-slice 和写回约定。
+6. 已选`Trassic2.0_RTL@e3bdebba...`的权威顶层/filelist、可复现elaboration、ISA/register-map、字段位宽、opcode、DDR row和指令格式。
+7. `NDPFuncModel/conv_func` 是否就是目标 Conv 模拟器基线；若是，需提供缺失 `conv_config`/`hex_data`、目标 JSON/bitstream 到其参数的映射，以及正确的 uint8×int8、requant、七小环/28-slice 和写回约定。
 8. 非 Conv 算子的目标 emulator，以及硬件/RTL 的加载、运行、完成判定和 dump 协议。
 
 配置算法类问题的详细证据见 `.agents/rules/算子配置规则.md` 第14.3节；完整资料请求见 `plan.md`。
@@ -711,10 +712,10 @@ testing/resnet-50-int8/gen_execu_plan_ver1.py
 
 - 统一 ONNX→硬件原子算子 lowering 和 manifest。
 - 全节点 raw golden、QNN 子步骤 golden 和可重放测试输入。
-- 逐算子实现 ResNet 16-slice partition/relayout/packing/remapping 及全部逆变换，覆盖 Quantize、Conv、MaxPool、Add、AvgPool、MatMul/dense、Dequantize 和 Flatten/View；这是本项目需完成内容，不等待现成 ResNet relayout。
+- 逐算子实现ResNet 28-slice partition/relayout/packing/remapping及全部逆变换，主体使用七个4-slice小环，并为代表层实现28-slice大环候选；覆盖Quantize、Conv、MaxPool、Add、AvgPool、MatMul/dense、Dequantize和Flatten/View。
 - 全部 ResNet 原子 JSON、base-info、handler、量化常量参数化和稳定 bitstream。
 - 目标 emulator runner、输出提取和逻辑 tensor 恢复。
-- 16-slice ResNet execplan 前端、schema 扩展、严格失败和完整数据包。
+- 28-slice真实物理拓扑的ResNet execplan前端、schema扩展、严格失败和完整数据包。
 - RTL/硬件 runner、checkpoint/dump 和版本记录。
 - 用已完成的通用逻辑比较器接入真实golden/simulator/hardware结果，并建立逐算子到整网的分层回归。
 
@@ -728,7 +729,7 @@ testing/resnet-50-int8/gen_execu_plan_ver1.py
 
 ## 已经不再未知的规则
 
-- 目标是 16 个 slice/PE 阵列，不是 28。
+- 目标是28个slice；主体性能profile使用七个真实4-slice小环，28-slice大环只在成本/实测占优的层启用。
 - LC 控制循环，区间按 `[start,end)`；`last_index` 是循环层级，外层到内层递增。
 - keep、buffer full、ping-pong、transout 的 last index 引用相应循环层结束事件。
 - stream 端口配置顺序为 `[port2,port1,port0]`。

@@ -1,7 +1,9 @@
-# ADR-003：W4 profile/transition综合审计与G4门结论
+# ADR-003：W4 profile/transition综合审计与G4门结论【历史16-slice审计】
 
-状态：G4未通过，等待正式硬件布局与拓扑裁决
+状态：16-slice软件审计已完成但目标已由ADR-007取代；报告不得用于批准28-slice G4
 日期：2026-07-12
+
+> 2026-07-13更新：本文件记录的12个W4 candidate、双profile边分类和成本均基于旧16-slice假设。其审计方法、93条边清单和门禁结构可复用，但所有物理结论必须按ADR-007的28-slice拓扑重建。当前G4仍为`not_passed`、W5仍未授权。
 
 ## 决定
 
