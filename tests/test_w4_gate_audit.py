@@ -29,14 +29,20 @@ class W4GateAuditTests(unittest.TestCase):
             )
         )
         self.assertEqual(
-            report["gate_decision"]["software_candidate_readiness"], "pass"
-        )
-        self.assertTrue(report["gate_criteria"]["all_93_edges_physically_verified"])
-        self.assertTrue(
-            report["gate_criteria"]["both_profile_dry_runs_fit_candidate_capacity"]
+            report["gate_decision"]["software_candidate_readiness"], "fail"
         )
         self.assertTrue(
-            report["gate_criteria"][
+            report["legacy16_evidence"]["criteria"][
+                "all_93_edges_physically_verified"
+            ]
+        )
+        self.assertTrue(
+            report["legacy16_evidence"]["criteria"][
+                "both_profile_dry_runs_fit_candidate_capacity"
+            ]
+        )
+        self.assertTrue(
+            report["legacy16_evidence"]["criteria"][
                 "candidate_lifetimes_and_aliases_conflict_free"
             ]
         )
@@ -47,16 +53,22 @@ class W4GateAuditTests(unittest.TestCase):
         )
         self.assertEqual(report["gate_decision"]["g4_status"], "not_passed")
         self.assertFalse(report["gate_decision"]["w5_authorized"])
-        self.assertEqual(
-            set(report["gate_decision"]["blocking_criteria"]),
+        self.assertEqual(report["gate_decision"]["legacy16_software_evidence"], "pass")
+        self.assertFalse(report["legacy16_evidence"]["current_gate_eligible"])
+        self.assertTrue(
             {
+                "current_target_architecture_is_28_slice",
+                "target28_operator_layout_evidence_complete",
+                "target28_all_93_edges_physically_verified",
+                "target28_profile_cost_evidence_complete",
+                "target28_clean_elaboration_approved",
                 "approved_target_profile_exists",
                 "target_rtl_isa_register_map_version_frozen",
                 "approved_physical_layout_contract_exists",
-            },
+            }.issubset(report["gate_decision"]["blocking_criteria"])
         )
 
-    def test_valid_external_hardware_approval_opens_g4(self) -> None:
+    def test_valid_legacy_hardware_approval_is_structure_only(self) -> None:
         root = Path(__file__).resolve().parents[1]
         with tempfile.TemporaryDirectory() as directory:
             approval_path = Path(directory) / "hardware_approval.json"
@@ -65,9 +77,18 @@ class W4GateAuditTests(unittest.TestCase):
             )
             report = audit_w4_gate(root, approval_path)
         self.assertTrue(report["hardware_approval"]["valid"])
-        self.assertEqual(report["gate_decision"]["g4_status"], "passed")
-        self.assertTrue(report["gate_decision"]["w5_authorized"])
-        self.assertEqual(report["gate_decision"]["blocking_criteria"], [])
+        self.assertEqual(report["hardware_approval"]["validation_scope"], "structure_only")
+        self.assertFalse(report["hardware_approval"]["current_gate_eligible"])
+        self.assertIn(
+            "architecture_contract_is_not_current_28_slice_target",
+            report["hardware_approval"]["current_gate_eligibility_reasons"],
+        )
+        self.assertEqual(report["gate_decision"]["g4_status"], "not_passed")
+        self.assertFalse(report["gate_decision"]["w5_authorized"])
+        self.assertIn(
+            "approved_target_profile_exists",
+            report["gate_decision"]["blocking_criteria"],
+        )
 
     def test_invalid_external_hardware_approval_remains_blocked(self) -> None:
         root = Path(__file__).resolve().parents[1]

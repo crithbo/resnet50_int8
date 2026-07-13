@@ -55,6 +55,27 @@ REQUIRED_REPORT_IDS = (
     "w4_network_candidate_dry_run_v1",
 )
 
+CURRENT_TARGET_FAMILY = "rtl28"
+CURRENT_TARGET_SLICE_COUNT = 28
+CURRENT_TARGET_REQUIRED_LAYOUT_FAMILIES = (
+    "simple",
+    "view",
+    "conv",
+    "maxpool",
+    "add",
+    "global_average_pool",
+    "matmul",
+)
+CURRENT_TARGET_SOFTWARE_CRITERIA = (
+    "formal_node_coverage_78_of_78",
+    "logical_quantized_edge_qparam_identities_exact",
+    "logical_result_comparator_ready",
+    "current_target_architecture_is_28_slice",
+    "target28_operator_layout_evidence_complete",
+    "target28_all_93_edges_physically_verified",
+    "target28_profile_cost_evidence_complete",
+)
+
 def _load_json(path: Path) -> dict[str, Any]:
     return json.loads(path.read_text(encoding="utf-8"))
 
@@ -294,6 +315,151 @@ def _hardware_approval_status(
     return result
 
 
+def _legacy16_evidence_status(
+    report_payloads: dict[str, dict[str, Any]],
+    network_profiles: dict[str, Any],
+) -> dict[str, Any]:
+    roundtrip_claims = (
+        report_payloads["w4_conv_shape_coverage_v1"][
+            "all_family_roundtrips_bit_exact"
+        ],
+        report_payloads["w4_conv_shape_coverage_v1"][
+            "all_batch_ring_logical_bit_exact"
+        ],
+        report_payloads["w4_maxpool_profiles_v1"][
+            "all_profiles_inverse_bit_exact"
+        ],
+        report_payloads["w4_qlinearadd_profiles_v1"][
+            "all_representatives_inverse_bit_exact"
+        ],
+        report_payloads["w4_globalavgpool_profiles_v1"][
+            "all_profiles_inverse_bit_exact"
+        ],
+        report_payloads["w4_qlinearmatmul_profiles_v1"][
+            "all_profiles_inverse_bit_exact"
+        ],
+    )
+    capacity_claims = tuple(
+        profile["dry_run_cost"]["all_standalone_node_plans_fit"]
+        for profile in network_profiles.values()
+    )
+    criteria = {
+        "minimal_real_and_tail_roundtrip_regression": all(roundtrip_claims),
+        "all_candidate_capacity_checks_pass": all(capacity_claims),
+        "all_93_edges_physically_verified": all(
+            profile["transition_audit"]["edge_count"] == 93
+            and profile["transition_audit"][
+                "all_policy_relations_physically_verified"
+            ]
+            for profile in network_profiles.values()
+        ),
+        "both_profile_dry_runs_fit_candidate_capacity": all(capacity_claims),
+        "candidate_lifetimes_and_aliases_conflict_free": all(
+            profile["memory_lifecycle"]["all_allocations_fit"]
+            and profile["memory_lifecycle"][
+                "all_lifetime_overlaps_address_disjoint"
+            ]
+            and profile["memory_lifecycle"]["all_alias_actions_conflict_free"]
+            and profile["memory_lifecycle"][
+                "all_residual_branches_distinct_and_disjoint"
+            ]
+            for profile in network_profiles.values()
+        ),
+    }
+    return {
+        "target_family": "legacy16",
+        "slice_count": 16,
+        "current_gate_eligible": False,
+        "criteria": criteria,
+        "software_evidence_ready": all(criteria.values()),
+    }
+
+
+def _current_target_evidence_status(
+    architecture: dict[str, Any], hardware_approval: dict[str, Any]
+) -> dict[str, Any]:
+    declared_slice_count = architecture.get("known", {}).get("slice_count", {}).get(
+        "value"
+    )
+    target_layouts = {
+        layout_id: record
+        for layout_id, record in architecture.get("candidate_layouts", {}).items()
+        if record.get("target_family") == CURRENT_TARGET_FAMILY
+        and record.get("slice_count") == CURRENT_TARGET_SLICE_COUNT
+        and record.get("status") in {"candidate", "approved"}
+    }
+    target_layout_ids = sorted(target_layouts)
+    target_layout_families = {
+        record.get("operator_family") for record in target_layouts.values()
+    }
+    target_reports = {
+        report_id: record
+        for report_id, record in architecture.get(
+            "candidate_validation_reports", {}
+        ).items()
+        if record.get("target_family") == CURRENT_TARGET_FAMILY
+        and record.get("slice_count") == CURRENT_TARGET_SLICE_COUNT
+        and record.get("current_gate_eligible") is True
+    }
+    layout_evidence_complete = set(CURRENT_TARGET_REQUIRED_LAYOUT_FAMILIES).issubset(
+        target_layout_families
+    )
+    edge_evidence_complete = any(
+        record.get("evidence_kind") == "network_physical_edge_audit"
+        and record.get("edge_count") == 93
+        for record in target_reports.values()
+    )
+    cost_evidence_complete = any(
+        record.get("evidence_kind") == "network_profile_cost"
+        for record in target_reports.values()
+    )
+    clean_elaboration_approved = bool(
+        hardware_approval.get("clean_elaboration_approved", False)
+    )
+    architecture_matches_target = declared_slice_count == CURRENT_TARGET_SLICE_COUNT
+    approval_current_gate_eligible = bool(
+        hardware_approval.get("valid", False)
+        and architecture_matches_target
+        and layout_evidence_complete
+        and edge_evidence_complete
+        and cost_evidence_complete
+        and clean_elaboration_approved
+    )
+    reasons = []
+    if not hardware_approval.get("valid", False):
+        reasons.append("hardware_approval_missing_or_structurally_invalid")
+    if not architecture_matches_target:
+        reasons.append("architecture_contract_is_not_current_28_slice_target")
+    if not layout_evidence_complete:
+        reasons.append("target28_operator_layout_evidence_incomplete")
+    if not edge_evidence_complete:
+        reasons.append("target28_network_93_edge_evidence_missing")
+    if not cost_evidence_complete:
+        reasons.append("target28_profile_cost_evidence_missing")
+    if not clean_elaboration_approved:
+        reasons.append("target28_clean_elaboration_not_approved")
+    return {
+        "target_family": CURRENT_TARGET_FAMILY,
+        "slice_count": CURRENT_TARGET_SLICE_COUNT,
+        "declared_architecture_slice_count": declared_slice_count,
+        "architecture_matches_target": architecture_matches_target,
+        "layout_evidence_ids": target_layout_ids,
+        "layout_evidence_families": sorted(
+            family for family in target_layout_families if family is not None
+        ),
+        "layout_evidence_complete": layout_evidence_complete,
+        "eligible_report_ids": sorted(target_reports),
+        "network_93_edge_evidence_complete": edge_evidence_complete,
+        "profile_cost_evidence_complete": cost_evidence_complete,
+        "clean_elaboration_approved": clean_elaboration_approved,
+        "hardware_approval_structurally_valid": bool(
+            hardware_approval.get("valid", False)
+        ),
+        "hardware_approval_current_gate_eligible": approval_current_gate_eligible,
+        "eligibility_reasons": reasons,
+    }
+
+
 def audit_w4_gate(
     project_root: Path, hardware_approval_path: Path | None = None
 ) -> dict[str, Any]:
@@ -313,6 +479,10 @@ def audit_w4_gate(
     }
 
     report_records = architecture["candidate_validation_reports"]
+    report_payloads = {
+        report_id: _load_json(root / report_records[report_id]["path"])
+        for report_id in REQUIRED_REPORT_IDS
+    }
     artifact_checks = {
         report_id: _artifact_check(root, report_records[report_id])
         for report_id in REQUIRED_REPORT_IDS
@@ -334,12 +504,22 @@ def audit_w4_gate(
     interfaces = _plugin_interfaces()
     comparison_interface = _comparison_interface(root)
     transitions = _transition_edges(catalog)
-    network_report = _load_json(
-        root / report_records["w4_network_candidate_dry_run_v1"]["path"]
-    )
+    network_report = report_payloads["w4_network_candidate_dry_run_v1"]
     network_profiles = network_report["profiles"]
     hardware_approval = _hardware_approval_status(root, hardware_approval_path)
-    hardware_approved = hardware_approval["valid"]
+    legacy16_evidence = _legacy16_evidence_status(
+        report_payloads, network_profiles
+    )
+    current_target_evidence = _current_target_evidence_status(
+        architecture, hardware_approval
+    )
+    hardware_approval["validation_scope"] = "structure_only"
+    hardware_approval["current_gate_eligible"] = current_target_evidence[
+        "hardware_approval_current_gate_eligible"
+    ]
+    hardware_approval["current_gate_eligibility_reasons"] = list(
+        current_target_evidence["eligibility_reasons"]
+    )
     unresolved = list(architecture["unresolved"])
     candidate_layout_ids = sorted(
         key
@@ -352,63 +532,74 @@ def audit_w4_gate(
         if architecture["candidate_layouts"][key]["status"] == "approved"
     )
 
-    criteria = {
+    reusable_criteria = {
         "formal_node_coverage_78_of_78": sum(counts.values()) == 78
         and all(item["covered"] for item in coverage.values()),
-        "all_layout_interfaces_complete": all(
+        "legacy16_layout_interfaces_complete": all(
             item["interface_complete"] for item in interfaces
         ),
-        "all_registered_evidence_hashes_match": all(
+        "legacy16_registered_evidence_hashes_match": all(
             item["sha256_match"] and item["size_match"]
             for item in artifact_checks.values()
         ),
-        "all_runtime_edge_responsibilities_explicit": transitions[
+        "legacy16_runtime_edge_responsibilities_explicit": transitions[
             "all_responsibilities_explicit"
         ],
-        "all_quantized_edge_qparam_identities_exact": transitions[
+        "logical_quantized_edge_qparam_identities_exact": transitions[
             "all_quantized_qparam_identities_exact"
         ],
-        "minimal_real_and_tail_roundtrip_regression": True,
-        "all_candidate_capacity_checks_pass": True,
-        "all_93_edges_physically_verified": all(
-            profile["transition_audit"]["edge_count"] == 93
-            and profile["transition_audit"][
-                "all_policy_relations_physically_verified"
-            ]
-            for profile in network_profiles.values()
-        ),
-        "both_profile_dry_runs_fit_candidate_capacity": all(
-            profile["dry_run_cost"]["all_standalone_node_plans_fit"]
-            for profile in network_profiles.values()
-        ),
-        "candidate_lifetimes_and_aliases_conflict_free": all(
-            profile["memory_lifecycle"]["all_allocations_fit"]
-            and profile["memory_lifecycle"][
-                "all_lifetime_overlaps_address_disjoint"
-            ]
-            and profile["memory_lifecycle"]["all_alias_actions_conflict_free"]
-            and profile["memory_lifecycle"][
-                "all_residual_branches_distinct_and_disjoint"
-            ]
-            for profile in network_profiles.values()
-        ),
         "logical_result_comparator_ready": comparison_interface["interface_ready"],
-        "approved_target_profile_exists": hardware_approved,
-        "target_rtl_isa_register_map_version_frozen": hardware_approved,
-        "approved_physical_layout_contract_exists": hardware_approved,
     }
-    software_criteria = tuple(criteria)[:-3]
-    software_ready = all(criteria[name] for name in software_criteria)
+    criteria = {
+        "formal_node_coverage_78_of_78": reusable_criteria[
+            "formal_node_coverage_78_of_78"
+        ],
+        "logical_quantized_edge_qparam_identities_exact": reusable_criteria[
+            "logical_quantized_edge_qparam_identities_exact"
+        ],
+        "logical_result_comparator_ready": reusable_criteria[
+            "logical_result_comparator_ready"
+        ],
+        "current_target_architecture_is_28_slice": current_target_evidence[
+            "architecture_matches_target"
+        ],
+        "target28_operator_layout_evidence_complete": current_target_evidence[
+            "layout_evidence_complete"
+        ],
+        "target28_all_93_edges_physically_verified": current_target_evidence[
+            "network_93_edge_evidence_complete"
+        ],
+        "target28_profile_cost_evidence_complete": current_target_evidence[
+            "profile_cost_evidence_complete"
+        ],
+        "target28_clean_elaboration_approved": current_target_evidence[
+            "clean_elaboration_approved"
+        ],
+        "approved_target_profile_exists": current_target_evidence[
+            "hardware_approval_current_gate_eligible"
+        ],
+        "target_rtl_isa_register_map_version_frozen": current_target_evidence[
+            "hardware_approval_current_gate_eligible"
+        ],
+        "approved_physical_layout_contract_exists": current_target_evidence[
+            "hardware_approval_current_gate_eligible"
+        ],
+    }
+    software_ready = all(
+        criteria[name] for name in CURRENT_TARGET_SOFTWARE_CRITERIA
+    )
     g4_passed = all(criteria.values())
     return {
-        "schema_version": "0.1",
-        "audit_id": "w4_g4_gate_audit_v1",
+        "schema_version": "0.2",
+        "audit_id": "w4_28_g4_gate_fail_closed_v1",
         "model_sha256": catalog["model_sha256"],
-        "scope": "W4 software candidate coverage, profile transitions, and G4 decision",
+        "scope": "Current 28-slice G4 decision with legacy16 evidence isolated",
         "node_coverage": {
             "formal_node_count": len(catalog["nodes"]),
             "by_op_type": coverage,
-            "all_formal_nodes_covered": criteria["formal_node_coverage_78_of_78"],
+            "all_formal_nodes_covered": reusable_criteria[
+                "formal_node_coverage_78_of_78"
+            ],
         },
         "candidate_layouts": {
             "count": len(candidate_layout_ids),
@@ -446,13 +637,19 @@ def audit_w4_gate(
             for profile_name, profile in network_profiles.items()
         },
         "hardware_approval": hardware_approval,
+        "legacy16_evidence": legacy16_evidence,
+        "current_target_evidence": current_target_evidence,
+        "reusable_criteria": reusable_criteria,
         "gate_criteria": criteria,
         "gate_decision": {
             "software_candidate_readiness": "pass" if software_ready else "fail",
+            "legacy16_software_evidence": (
+                "pass" if legacy16_evidence["software_evidence_ready"] else "fail"
+            ),
             "g4_status": "passed" if g4_passed else "not_passed",
             "w5_authorized": g4_passed,
             "decision": (
-                "wait_for_formal_hardware_layout_and_topology_adjudication"
+                "complete_target28_contract_layout_edge_cost_and_elaboration_evidence"
                 if not g4_passed
                 else "proceed_to_w5"
             ),
@@ -465,5 +662,7 @@ def audit_w4_gate(
             "The ring/channel candidate requires explicit transitions at batch-simple-operator boundaries, including Quantize-to-MatMul and final channel output to Dequantize.",
             "Final INT32 Conv/MatMul accumulators are covered in W4; per-K-tile physical psum placement remains a target-dependent W5 contract.",
             "The logical result comparator is ready for two-way or three-way reports, but no absent simulator/hardware output is treated as a numerical pass.",
+            "Legacy16 layout, edge, capacity, lifetime and cost evidence is diagnostic only and cannot satisfy any current 28-slice G4 criterion.",
+            "A structurally valid hardware approval remains ineligible for G4 until the current 28-slice architecture, operator layouts, 93-edge audit, profile cost evidence and clean elaboration are all present.",
         ],
     }
