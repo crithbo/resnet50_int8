@@ -54,10 +54,55 @@ def _git(cwd: Path, *args: str, check: bool = True) -> subprocess.CompletedProce
 
 
 def _target_path(root: Path, value: str) -> Path:
-    target = (root / value).resolve()
-    if target.parent != root.resolve():
+    relative = Path(value)
+    if (
+        not value
+        or relative.is_absolute()
+        or len(relative.parts) != 1
+        or relative.parts[0] in {".", ".."}
+    ):
         raise RepositoryLockError(f"repository path must be one direct child of root: {value}")
-    return target
+    return root.resolve() / relative
+
+
+def _source_checkout_root(root: Path) -> Path:
+    common = _git(
+        root,
+        "rev-parse",
+        "--path-format=absolute",
+        "--git-common-dir",
+        check=False,
+    )
+    if common.returncode or not common.stdout.strip():
+        raise RepositoryLockError("cannot locate the local checkout for a linked repository")
+    common_path = Path(common.stdout.strip())
+    if not common_path.is_absolute():
+        common_path = root / common_path
+    source_root = common_path.resolve().parent
+    reported = _git(source_root, "rev-parse", "--show-toplevel", check=False)
+    if (
+        reported.returncode
+        or not reported.stdout.strip()
+        or Path(reported.stdout.strip()).resolve() != source_root
+    ):
+        raise RepositoryLockError("Git common directory does not identify a local checkout")
+    return source_root
+
+
+def _verification_target_path(root: Path, value: str) -> Path:
+    lexical_target = _target_path(root, value)
+    resolved_target = lexical_target.resolve()
+    resolved_root = root.resolve()
+    if resolved_target.parent == resolved_root:
+        return resolved_target
+
+    source_root = _source_checkout_root(resolved_root)
+    expected_target = _target_path(source_root, value).resolve()
+    if source_root == resolved_root or resolved_target != expected_target:
+        raise RepositoryLockError(
+            f"linked repository path does not match the local checkout: {value}"
+        )
+    return resolved_target
 
 
 def load_lock(path: Path) -> list[dict[str, Any]]:
@@ -128,7 +173,7 @@ def _remote_urls(path: Path) -> tuple[str, ...]:
 
 
 def verify_repository(root: Path, repository: dict[str, Any]) -> RepositoryState:
-    target = _target_path(root, repository["path"])
+    target = _verification_target_path(root, repository["path"])
     if not target.is_dir():
         raise RepositoryLockError(f"{repository['name']} is missing: {target}")
     inside = _git(target, "rev-parse", "--is-inside-work-tree", check=False)
@@ -167,6 +212,10 @@ def _set_remote(path: Path, name: str, url: str) -> None:
 
 def sync_repository(root: Path, repository: dict[str, Any]) -> RepositoryState:
     target = _target_path(root, repository["path"])
+    if target.exists() and target.resolve() != target:
+        raise RepositoryLockError(
+            f"refusing to sync shared linked repository: {repository['name']}"
+        )
     mirror = repository["private_mirror"]
     preferred_url = mirror or repository["upstream"]
     preferred_name = "private" if mirror else "origin"

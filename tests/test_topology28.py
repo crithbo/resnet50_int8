@@ -1,6 +1,8 @@
 from __future__ import annotations
 
+import json
 import unittest
+from pathlib import Path
 
 from resnet50_pipeline.topology28 import (
     Direction,
@@ -9,6 +11,10 @@ from resnet50_pipeline.topology28 import (
     RingKind,
     TOPOLOGY28,
 )
+from resnet50_pipeline.profile28 import GROUP_COUNT
+
+
+ROOT = Path(__file__).resolve().parents[1]
 
 
 class Topology28Tests(unittest.TestCase):
@@ -105,8 +111,28 @@ class Topology28Tests(unittest.TestCase):
         report = TOPOLOGY28.validate()
         self.assertEqual(report.slice_count, 28)
         self.assertEqual(report.high_group_count, 7)
+        self.assertEqual(report.high_group_count, GROUP_COUNT)
         self.assertEqual(report.high_ring_lengths, (4, 4, 4, 4, 4, 4, 4))
         self.assertEqual(report.low_ring_length, 28)
+
+    def test_maps_match_the_fixed_rtl_candidate_evidence(self) -> None:
+        audit = json.loads(
+            (ROOT / "contracts" / "rtl28_candidate_audit.json").read_text(
+                encoding="utf-8"
+            )
+        )
+        evidence = audit["fixed_by_rtl"]["topology"]
+        for kind, prefix in ((RingKind.HIGH, "high"), (RingKind.LOW, "low")):
+            with self.subTest(kind=kind.value, direction="next"):
+                self.assertEqual(
+                    [TOPOLOGY28.next(owner, kind) for owner in range(28)],
+                    evidence[f"{prefix}_next"],
+                )
+            with self.subTest(kind=kind.value, direction="prev"):
+                self.assertEqual(
+                    [TOPOLOGY28.prev(owner, kind) for owner in range(28)],
+                    evidence[f"{prefix}_prev"],
+                )
 
 
 if __name__ == "__main__":

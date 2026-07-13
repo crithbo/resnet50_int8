@@ -2,9 +2,11 @@ from __future__ import annotations
 
 import json
 import subprocess
+import sys
 import tempfile
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
 from tools.sync_repositories import (
     RepositoryLockError,
@@ -38,6 +40,24 @@ def make_repository(path: Path) -> str:
     git(path, "add", "payload.txt")
     git(path, "commit", "-m", "initial")
     return git(path, "rev-parse", "HEAD")
+
+
+def make_directory_link(link: Path, target: Path) -> None:
+    if sys.platform == "win32":
+        subprocess.run(
+            [
+                "powershell",
+                "-NoProfile",
+                "-Command",
+                f"New-Item -ItemType Junction -Path '{link}' -Target '{target}' | Out-Null",
+            ],
+            check=True,
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+        )
+    else:
+        link.symlink_to(target, target_is_directory=True)
 
 
 def record(name: str, commit: str, upstream: str) -> dict[str, object]:
@@ -99,6 +119,39 @@ class RepositorySyncTests(unittest.TestCase):
             (repository / "untracked.txt").write_text("dirty\n", encoding="utf-8")
             with self.assertRaisesRegex(RepositoryLockError, "dirty paths mismatch"):
                 verify_repository(root, record("repo", commit, upstream))
+
+    def test_verify_accepts_only_the_matching_local_checkout_link(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            base = Path(directory)
+            source_root = base / "source"
+            worktree_root = base / "worktree"
+            source_root.mkdir()
+            worktree_root.mkdir()
+            repository = source_root / "repo"
+            commit = make_repository(repository)
+            upstream = "https://example.invalid/repo.git"
+            git(repository, "remote", "add", "origin", upstream)
+            make_directory_link(worktree_root / "repo", repository)
+
+            with patch(
+                "tools.sync_repositories._source_checkout_root",
+                return_value=source_root,
+            ):
+                state = verify_repository(
+                    worktree_root, record("repo", commit, upstream)
+                )
+            self.assertEqual(state.path, repository.resolve())
+
+            other_source = base / "other"
+            other_source.mkdir()
+            with patch(
+                "tools.sync_repositories._source_checkout_root",
+                return_value=other_source,
+            ), self.assertRaisesRegex(RepositoryLockError, "does not match"):
+                verify_repository(worktree_root, record("repo", commit, upstream))
+
+            with self.assertRaisesRegex(RepositoryLockError, "refusing to sync shared"):
+                sync_repository(worktree_root, record("repo", commit, upstream))
 
     def test_sync_clones_missing_repository_at_pinned_commit(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
