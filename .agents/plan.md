@@ -42,10 +42,10 @@
 - 每个阶段都要产生机器可读 manifest，名字、shape、dtype、layout、slice、地址和来源不可只写在脚本常量中。
 - 所有物理变换必须同时实现正向和逆向；不能 inverse-relayout 的输出不得宣布数值验证完成。
 - INT8/UINT8/INT32 默认 bit-exact；FP32 必须记录 `atol/rtol`。
-- 每完成一个阶段，更新本文件的状态，并在 `history.md` 追加记录；每个提交台账必须包含仓库、完整hash、父提交、范围、验证结果和精确回退位置。
-- 根仓库和子仓库每个经过测试确认有效的小步骤做本地原子Git提交，小进度不逐次推送；W1/W2等工作包通过验收门、形成明确恢复检查点，或操作者明确要求时，再批量推送到操作者控制的GitHub仓库或fork并核对远端hash。
+- 每完成一个阶段，更新本文件的状态，并在 `history.md` 追加记录；凡形成Git提交，台账必须包含仓库、完整hash、父提交、范围、验证结果和精确回退位置。
+- Git按改动规模分级：不改变行为、接口、schema/合同、layout/qparams、依赖锁或产物hash的微小文字/注释/格式修正不单独提交；范围明确且可聚焦验证的较小代码、测试、规则或文档语义改动做本地原子提交；阶段门、跨模块/跨仓重大集成、关键硬件合同、重要恢复检查点，或操作者明确要求时，才批量推送到操作者控制的GitHub仓库或fork并核对远端hash。微小改动可以合并进下一次相关本地提交，但必须在任务报告中说明。
 - 尽量只保留必要工作树，不为备份额外创建clone/worktree/zip。冗余副本只有在无唯一未提交内容、全部需保留提交已推送、恢复路径验证通过且操作者批准具体绝对路径后才能删除；所有提交历史保留，不通过reset/rebase/filter/强推或裁剪历史释放空间。
-- 并行协作采用“Local集中集成+worktree独立代码”模式：Codex桌面宿主按`.worktreeinclude`复制W3目录第一层2个小JSON，另2个嵌套manifest以固定hash base64快照纳入Git并由setup在worktree内恢复；`tools/setup_codex_worktree.ps1`只读共享`.venv`和三个锁定参考仓并校验4项metadata，再跑聚焦测试。正式W3 tensor、整网报告和全量回归只在Local执行。项目配置使用自动审批reviewer而非全权限，任务只在结束时集中一次Git写操作。
+- 并行协作采用“Local集中集成+worktree独立代码”模式：Codex桌面宿主按`.worktreeinclude`复制W3目录第一层2个小JSON，另2个嵌套manifest以固定hash base64快照纳入Git并由setup在worktree内恢复；`tools/setup_codex_worktree.ps1`只读共享`.venv`和三个锁定参考仓并校验4项metadata，再跑聚焦测试。正式W3 tensor、整网报告和全量回归只在Local执行。项目配置使用自动审批reviewer而非全权限；达到本地提交门槛的任务只在结束时集中一次Git写操作，纯微小改动不强制单独提交。
 - 当前冗余 `artifacts/smoke/NDPFuncModel` worktree已按批准删除；主仓 `main` 与NDP `conv_func` 已推送到各自Private仓并通过GitHub完整commit页面核验。CGRA的4项状态已证明仅是Windows权限位噪声，现已干净并锁定正式upstream，无需Private镜像。
 
 ## 当前总体状态

@@ -38,7 +38,7 @@
 - 局部实现细节可以在不改变总体路线的前提下直接做更稳妥的调整，但完成后要说明调整内容。
 - 每完成一个明确子任务后，需要向操作者说明：完成了什么、如何验证、还剩什么风险，并同步更新 `plan.md` 和 `history.md`。
 - 不要回退或覆盖已有未提交修改，除非操作者明确要求。
-- 根仓库和子仓库每个经过验证的有效小步骤都做本地原子Git提交；小进度不逐次推送。W1/W2等完整工作包通过验收门、形成明确恢复检查点，或操作者明确要求时，再批量推送GitHub并核对远端hash。每次提交必须在 `.agents/history.md` 台账记录仓库、完整hash、父提交、范围、验证和精确回退点。大模型、运行产物、trace和其他可再生大文件不得进入普通Git历史。
+- Git采用三级规则：不改变行为、接口、schema/合同、layout/qparams、依赖锁或产物hash的错字、措辞、注释、空白等微小改动，不单独提交，可随下一次相关提交合并；范围明确且可聚焦验证的较小代码、测试、规则或文档语义改动，只做本地原子Git提交；阶段门通过、跨模块/跨仓重大集成、关键硬件合同、重要恢复检查点，或操作者明确要求时，才把相关本地提交批量推送GitHub并核对远端hash。凡形成提交，都必须在 `.agents/history.md` 台账记录仓库、完整hash、父提交、范围、验证和精确回退点；微小未提交改动在任务报告中列明。大模型、运行产物、trace和其他可再生大文件不得进入普通Git历史。
 - 永久保留的是提交，不是副本：尽量只保留完成工作所需的一份工作树，不为备份额外创建clone/worktree/zip；主仓和修改过的子仓提交在history登记后推送到操作者控制的GitHub仓库/fork。冗余副本仅在无唯一未提交内容、远端hash已核对且操作者批准具体路径后删除；不得通过改写或裁剪提交历史节省空间。
 - GitHub owner为 `crithbo`。Private主仓 `crithbo/resnet50_int8` 的 `origin/main` 保存根集成代码，Private镜像 `crithbo/NDPFuncModel-private` 的 `private/conv_func` 保存NDP独有提交，公开上游仍保留为 `origin`。本地源码即使全部丢失，也可按主仓 `repos.lock.json` 和 `tools/sync_repositories.py sync` 恢复四份代码工作树；`.venv`、ONNX、golden/trace/hardware dump和普通运行artifact不在GitHub普通提交中，需按lock/hash重新下载或生成。当前这种“代码云端提交、可再生产物不入库”的恢复范围已获操作者接受。后续提交作者名和操作者确认的Gmail已写入四仓repository-local配置；既有提交不改写。
 
@@ -49,7 +49,7 @@
 - 新worktree创建后先运行`tools/setup_codex_worktree.ps1`。脚本不联网、不安装、不覆盖现有文件；它从Git common directory定位Local源，只在源`.venv`存在、三个参考仓干净且HEAD匹配`repos.lock.json`时，为`.venv`和三个参考仓建立junction。脚本校验2个included JSON及2个tracked snapshot的固定大小与SHA-256，只在worktree内部恢复缺失manifest，不跨工作区复制W3 tensor。
 - setup脚本建立的参考仓和`.venv`视为只读共享依赖；并行任务不得在junction内修改、安装包、切分支或生成产物。必须修改参考仓时改用独立正式工作树并单独提交。
 - 项目级`.codex/config.toml`使用`approval_policy="on-request"`、`approvals_reviewer="auto_review"`和`workspace-write`；不使用`danger-full-access`。安全操作可自动审查，破坏性、越界写入和不在计划内的网络操作仍需人工许可。
-- 并行任务只在结束时集中执行一次Git暂存/提交，避免重复权限请求；任务报告完整commit、父commit、文件、聚焦测试和回退命令，由Local集成任务统一登记`history.md`并跑全量测试。
+- 并行任务达到“较小改动”本地提交门槛时，只在结束时集中执行一次Git暂存/提交，避免重复权限请求；纯微小改动不强制单独提交。已提交任务报告完整commit、父commit、文件、聚焦测试和回退命令，由Local集成任务统一登记`history.md`并跑全量测试。
 
 ## 最终目标
 
