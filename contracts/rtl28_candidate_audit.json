@@ -1,0 +1,387 @@
+{
+  "artifact": "rtl28_candidate_hardware_contract",
+  "schema_version": 1,
+  "status": "candidate_unapproved",
+  "generated_on": "2026-07-13",
+  "source": {
+    "repository": "https://github.com/xlsjdjdk/Trassic2.0_RTL",
+    "commit": "e3bdebba95dec36ee8eba43caa92a326a88392cd",
+    "commit_required_for_all_evidence": true
+  },
+  "approval": {
+    "approved": false,
+    "approver": null,
+    "approval_artifact_created": false,
+    "note": "This file is evidence-backed candidate material only. It is not hardware_approval.json and cannot satisfy G1 or G4."
+  },
+  "authority": {
+    "filelist": "code/NDP_rtl/filelists/NDP_Top_filelist.f",
+    "top_source": "code/NDP_rtl/NDP_Top.sv",
+    "top_module": "NDP_Top_new",
+    "naming_relationship": "NDP_Top is the authoritative filename/filelist stem, not an active wrapper or module alias. The authoritative source declares NDP_Top_new. A module named NDP_Top exists only under code/NDP_rtl/not_used and is outside this filelist.",
+    "evidence": [
+      "EV_FILELIST",
+      "EV_TOP_PORTS"
+    ]
+  },
+  "elaboration": {
+    "result": "blocked_not_clean",
+    "clean_elaboration_claimed": false,
+    "candidate_vcs_replay": {
+      "working_directory": "code/NDP_rtl/filelists",
+      "environment": {
+        "MC_DIR": "<absolute checkout>/code/NDP_rtl/DDR_Model/MC_IP/rtl",
+        "DIR_HOME": "<hardware-team-approved root resolving Hardware/IP/bus/nic_cgra_0310>"
+      },
+      "argv": [
+        "vcs",
+        "-full64",
+        "-sverilog",
+        "-top",
+        "NDP_Top_new",
+        "-f",
+        "NDP_Top_filelist.f",
+        "-l",
+        "vcs_elab.log"
+      ],
+      "status": "not_run_tool_and_library_blocked"
+    },
+    "local_attempt": {
+      "tool": "C:/iverilog/bin/iverilog.exe",
+      "method": "Recursively flatten -F/-f filelists with MC_DIR mapped, then elaborate with -g2012 -s NDP_Top_new.",
+      "result": "failed at code/NDP_rtl/DDR_Model/MC_IP/test/mc_env/tb/quad/phy_dram_wrapper.vp:99 because the active source enters a protected128 payload unsupported by the available tool. The direct authoritative filelist also uses -F, unsupported by Icarus.",
+      "is_clean_elaboration": false
+    },
+    "blockers": [
+      "No vcs, verilator, verilator_bin, slang, verible, or other supported full-design elaborator was available locally.",
+      "The active DDR filelist includes a protected128 .vp model; a compatible simulator, decryption support, and vendor library/license are required.",
+      "MC_DIR must resolve to code/NDP_rtl/DDR_Model/MC_IP/rtl.",
+      "The NIC filelist contains ${DIR_HOME}/Hardware/IP/bus/nic_cgra_0310; the authoritative DIR_HOME value is not supplied.",
+      "The checked-in lint scripts default to module NDP_Top and lowercase filelists/ndp_top_filelist.f; the PowerShell parser also rewrites MC_DIR relative to each nested filelist rather than honoring the required root.",
+      "The checked-in LINT_SUMMARY.md records a failed run (7 errors, 436 warnings), not a clean result."
+    ],
+    "evidence": [
+      "EV_DDR_FILELIST",
+      "EV_MC_FILELIST",
+      "EV_PROTECTED_MODEL",
+      "EV_NIC_FILELIST",
+      "EV_LINT_SCRIPT",
+      "EV_LINT_SUMMARY"
+    ]
+  },
+  "fixed_by_rtl": {
+    "topology": {
+      "slice_count": 28,
+      "slice_groups": {
+        "group_size": 14,
+        "group_count": 2
+      },
+      "neighbor_source_select": {
+        "0": "LOW",
+        "1": "HIGH",
+        "basis": "The top concatenates {HIGH, LOW} into the two-source vector, and Stream_Engine_Connect indexes that vector with nse_*_slice_sel."
+      },
+      "low_prev": [1, 3, 14, 5, 2, 7, 4, 6, 9, 11, 26, 10, 0, 12, 16, 13, 18, 15, 20, 17, 22, 19, 24, 21, 8, 23, 27, 25],
+      "low_next": [12, 0, 4, 1, 6, 3, 7, 5, 24, 8, 11, 9, 13, 15, 2, 17, 14, 19, 16, 21, 18, 23, 20, 25, 22, 27, 10, 26],
+      "high_prev": [1, 3, 0, 2, 5, 7, 4, 6, 9, 11, 8, 10, 14, 12, 15, 13, 18, 16, 19, 17, 22, 20, 23, 21, 26, 24, 27, 25],
+      "high_next": [2, 0, 3, 1, 6, 4, 7, 5, 10, 8, 11, 9, 13, 15, 12, 14, 17, 19, 16, 18, 21, 23, 20, 22, 25, 27, 24, 26],
+      "evidence": [
+        "EV_PARAMS_GLOBAL",
+        "EV_RING_MAPS",
+        "EV_NSE_SELECT"
+      ]
+    },
+    "command_abi": {
+      "word_bits": 64,
+      "opcodes": {
+        "CFG": "000",
+        "CKEN": "001",
+        "WREG": "100",
+        "CMPT": "101",
+        "BARR_defined_only": "110",
+        "RST": "111"
+      },
+      "mask_commands": {
+        "slice_mask_bits": "[30:3]",
+        "mask_width": 28
+      },
+      "wreg": {
+        "slice_id_bits": "[7:3]",
+        "reserved_bits": "[17:8]",
+        "address_bits": "[31:18]",
+        "data_bits": "[63:32]",
+        "address_hierarchy": {
+          "first_bits_13_12": {
+            "00": "IGA",
+            "01": "LSU",
+            "10": "SA",
+            "11": "GA"
+          },
+          "second_bits_11_10": {
+            "IGA": ["LC", "ROW_LC", "COL_LC", "PE"],
+            "LSU": ["RD_MSE", "WR_MSE", "NSE", "BMC"],
+            "GA": ["INPORT", "OUTPORT", "PE", "reserved"]
+          },
+          "unit_bits": "[9:5]",
+          "leaf_register_bits": "[4:0]"
+        },
+        "behavior": "WREG is routed to exactly the matching 5-bit slice id, pulses the selected leaf valid for one FSM cycle, supplies a 5-bit leaf address and 32-bit data, then returns to IDLE. Other decoded commands use the 28-bit mask."
+      },
+      "control_behavior": {
+        "CFG": "waits for scm2sem_cfg_finish",
+        "CMPT": "asserts sem2iga_exec_start and waits for slice_cmpt_finish",
+        "CKEN": "waits for scgm2sem_delay_finish",
+        "WREG": "one local FSM cycle",
+        "BARR": "constant is declared but no barr_cmd_vld or FSM state is implemented in Slice_Execution_Manager"
+      },
+      "evidence": [
+        "EV_SEM_DECODE",
+        "EV_SEM_WREG_FIELDS",
+        "EV_SEM_FSM",
+        "EV_SEM_OUTPUTS"
+      ]
+    },
+    "logical_dram": {
+      "banks_per_slice": 4,
+      "rows_per_bank": 6144,
+      "columns_per_row": 64,
+      "column_bits": 128,
+      "minimum_element_bits": 8,
+      "byte_offset_per_column": 16,
+      "address_fields": {
+        "global_bank_bits": 7,
+        "slice_owner_bits": 5,
+        "local_bank_bits": 2,
+        "row_bits": 13,
+        "column_bits": 6,
+        "byte_offset_bits": 4,
+        "global_address_bits": 30
+      },
+      "derived_capacity": {
+        "per_slice_bytes": 25165824,
+        "per_slice_mib": 24,
+        "all_28_slices_bytes": 704643072,
+        "all_28_slices_mib": 672,
+        "classification": "arithmetic derived from logical RTL parameters, not a board capacity approval"
+      },
+      "remote_request_rule": "Read and write MSE logic marks a request remote when the top five bank-address bits differ from SLICE_ID.",
+      "evidence": [
+        "EV_DDR_PARAMS",
+        "EV_STREAM_REMOTE"
+      ]
+    },
+    "arrays_and_int8_primitives": {
+      "specialized_array": {
+        "shape": "8x8",
+        "pe_count": 64,
+        "ports": "3 input groups and 1 output group; each group exposes 8 lanes of 32-bit data",
+        "modes": {
+          "INT8": "00",
+          "FP16": "10",
+          "BF16": "11"
+        },
+        "int8_operand_semantics": "Each byte of FMA DataA is converted from signed two's-complement magnitude and its sign bits are carried separately; DataB bytes are consumed without sign conversion. The observable primitive is therefore signed-A by unsigned-B, pending system-level operand assignment approval.",
+        "psum_and_bias": "FMA DataC is the outbuffer psum feedback. Input group 2 supplies the initial outbuffer value when bias is enabled; when disabled the control block substitutes zero. The outbuffer tags initial and subsequent ALU values as psum and feeds them back.",
+        "wreg_config": "SA leaf address 0 replaces the packed SA config register. sa_enable itself is asserted by the streamed configure-valid path, not by the WREG branch."
+      },
+      "general_array": {
+        "shape": "4x4",
+        "pe_count": 16,
+        "ports": "3 input groups and 1 output group; groups expose 8 lanes of 32-bit data",
+        "input_conversions": ["FP16_TO_FP32", "BF16_TO_FP32", "INT32_TO_FP32", "UINT8_TO_FP32", "UINT8_TO_INT32"],
+        "relevant_opcodes": ["FP32_MUL", "INT32_MAC", "INT32_SUM", "INT32_SUB", "INT8_MAX"],
+        "constant_primitive": "Each PE has three 32-bit constant-capable inputs selected by inport mode 11.",
+        "constant_wreg_caveat": "The source asserts constant_valid for WREG leaf address INPORT_ID+1, but selects WREG data as constant_value only for INPORT_ID+2. This apparent address mismatch is not resolved by static reading.",
+        "wreg_config": "GA PE and GA outport WREG branches update packed configuration storage, but their enable/configure-finish state is asserted by the streamed configure-valid path rather than by WREG alone.",
+        "int32_to_uint8": "Negative values clamp to 0, any set bit in [30:8] clamps to 255, otherwise [7:0] is emitted. No scale multiplication, zero-point addition, or rounding occurs in this output primitive."
+      },
+      "conv_statement": "No named Conv or convolution block exists in the authoritative RTL closure. Convolution can only be a compiler/firmware mapping onto stream engines plus SA/GA primitives; that mapping is not fixed by these primitives.",
+      "requant_statement": "No named requant, qparam, zero-point, or quantization-scale field was found in the authoritative RTL closure. Available conversions/constants are primitives, not a numerically complete requant contract.",
+      "evidence": [
+        "EV_ARRAY_PARAMS",
+        "EV_SA_CONFIG",
+        "EV_SA_BIAS",
+        "EV_SA_PSUM",
+        "EV_SA_INT8_SIGN",
+        "EV_GA_PE_CONFIG",
+        "EV_GA_OUT_CONFIG",
+        "EV_GA_CLAMP"
+      ]
+    },
+    "external_ports": {
+      "clock_reset_control": ["clk", "rst_n", "apb_clk", "apb_rst_n", "ras_clr"],
+      "apb": {
+        "signals": ["apb_sel", "apb_enable", "apb_write", "apb_addr", "apb_wdata", "apb_rdata", "apb_pslverr", "apb_pready"],
+        "address_bits_derived": 21,
+        "data_bits": 32
+      },
+      "reserved_axi": {
+        "role_at_top": "host-facing AXI slave-style channel despite the m_axi_reserved prefix",
+        "id_bits": 2,
+        "address_bits": 32,
+        "data_bits": 128,
+        "aw_fields": ["id", "addr", "len[7:0]", "size[2:0]", "burst[1:0]", "lock", "cache[3:0]", "prot[2:0]", "qos[3:0]", "valid", "ready"],
+        "w_fields": ["data[127:0]", "strb[15:0]", "last", "valid", "ready"],
+        "b_fields": ["id", "resp[1:0]", "valid", "ready"],
+        "ar_fields": ["id", "addr", "len[7:0]", "size[2:0]", "burst[1:0]", "lock", "cache[3:0]", "prot[2:0]", "qos[3:0]", "valid", "ready"],
+        "r_fields": ["id", "data[127:0]", "resp[1:0]", "last", "valid", "ready"]
+      },
+      "evidence": [
+        "EV_TOP_PORTS",
+        "EV_PARAMS_GLOBAL",
+        "EV_TOP_EXTERNAL_BRIDGE"
+      ]
+    },
+    "global_registers": {
+      "decode": "After subtracting NDP_AXI_BASE_ADDR=0, addresses whose [31:28] nibble equals GLB_REG_BASE_ADDR[31:28]=8 route to the register slave; all other addresses are forwarded.",
+      "registers": {
+        "0x80000000": {
+          "access": "RW",
+          "bits_31_0": "init_exec_base_addr",
+          "bits_47_32": "init_exec_inst_length"
+        },
+        "0x80000010": {
+          "access": "WO; reads zero",
+          "bit_0": "global_sca_start pulse",
+          "bit_1": "global_reset pulse",
+          "behavior": "both bits auto-clear when the following cycle has no register write handshake"
+        },
+        "0x80000020": {
+          "access": "RO",
+          "bits_13_0": "exec_fetch_cnt",
+          "bit_14": "exec_fetch_finish",
+          "bit_15": "exec_fetch_cnt_overflow",
+          "bits_43_16": "exec_slice_finish[27:0]"
+        }
+      },
+      "execution_length_behavior": "init_exec_inst_length controls 128-bit AXI read beats: the fetch counter increments once per 128-bit response handshake, while FIFO_128to64 splits every beat into two 64-bit commands. Firmware must not assume the field counts 64-bit commands without owner approval.",
+      "finish_behavior": "A slice finish bit is set only after the global queue is empty, fetch_finish is set, that slice local queue is empty, and slice2gexec_ready is true.",
+      "evidence": [
+        "EV_REG_DECODE",
+        "EV_GLOBAL_REGS",
+        "EV_EXEC_FETCH",
+        "EV_EXEC_DISTRIBUTION",
+        "EV_EXEC_FINISH"
+      ]
+    }
+  },
+  "candidate_host_workflow": {
+    "load": {
+      "candidate": "Use m_axi_reserved writes outside the 0x8... register-decode region to reach the forwarded internal AXI fabric. Place 128-bit execution beats at init_exec_base_addr; a CFG command may in turn fetch 64-bit configuration words from its 22-bit base address and multicast them to its 28-bit slice mask.",
+      "status": "mechanism_visible_address_map_unapproved"
+    },
+    "start": {
+      "candidate": "Write base/length to 0x80000000, then write bit 0 at 0x80000010.",
+      "status": "register_behavior_fixed_sequence_unapproved"
+    },
+    "wait": {
+      "candidate": "Poll 0x80000020. Require fetch_finish, no overflow, and all intended exec_slice_finish bits; host timeout and error policy are not defined in RTL.",
+      "status": "status_bits_fixed_host_policy_unapproved"
+    },
+    "dump": {
+      "candidate": "The non-register m_axi_reserved read path is forwarded, so memory readback is structurally possible.",
+      "status": "gap",
+      "missing": "No authoritative top-level dump command, output address/layout, coherency rule, completion fence, or board/driver API is present in the active filelist. Testbench waveform dumps are not a hardware dump interface."
+    },
+    "evidence": [
+      "EV_TOP_EXTERNAL_BRIDGE",
+      "EV_REG_DECODE",
+      "EV_GLOBAL_REGS",
+      "EV_EXEC_FETCH",
+      "EV_CFG_FETCH"
+    ]
+  },
+  "approval_required": [
+    {
+      "id": "APR_ELAB_001",
+      "owner": "RTL/integration",
+      "decision": "Approve NDP_Top_new plus NDP_Top_filelist.f as the build authority, provide MC_DIR/DIR_HOME/vendor libraries, and return a clean elaboration log from a simulator that supports protected128.",
+      "why": "Static inspection and a failed Icarus attempt cannot establish build closure."
+    },
+    {
+      "id": "APR_BOARD_002",
+      "owner": "board/SoC integration",
+      "decision": "Approve the physical base address presented to m_axi_reserved, the 0x8 register window, forwarded DRAM address map, APB initialization, clock/reset sequencing, and logical-to-physical bank/ECC mapping.",
+      "why": "Logical RTL geometry is fixed, but the active physical model advertises 13 row bits, 7 column bits, and 144-bit array data before entering an encrypted body."
+    },
+    {
+      "id": "APR_FW_003",
+      "owner": "firmware/compiler",
+      "decision": "Approve the 64-bit command ABI, 128-bit execution-list packing order, execution-length unit, CFG length convention, address alignment, reset/start ordering, and status polling mask.",
+      "why": "Register writes have identifiable side effects, but list construction and host policy are not specified by the register RTL."
+    },
+    {
+      "id": "APR_INT8_004",
+      "owner": "RTL + quantization/compiler",
+      "decision": "Approve which tensor is placed on signed DataA versus unsigned DataB, the byte/lane ordering, zero-point treatment, accumulator signedness/overflow expectations, and bias layout/type.",
+      "why": "The primitive is observably signed-A by unsigned-B and seeds psum from input group 2; this does not by itself define a correct ResNet50 Conv binding."
+    },
+    {
+      "id": "APR_QPARAM_005",
+      "owner": "RTL + quantization/compiler",
+      "decision": "Provide and validate an end-to-end requant recipe: scale representation, zero-point addition, rounding rule, saturation, per-channel qparam layout, and the exact GA/SA instruction sequence. Clarify the GA constant WREG address mismatch.",
+      "why": "The visible INT32-to-UINT8 block only clamps; it does not perform scale or rounding, and no named qparam register exists."
+    },
+    {
+      "id": "APR_CONV_006",
+      "owner": "compiler/performance",
+      "decision": "Approve Conv lowering, tiling, padding/stride mapping, DRAM placement, buffer lifetime, HIGH/LOW route selection, slice masking, synchronization, and a measured performance configuration.",
+      "why": "RTL fixes primitive reactions, not a numerically correct or high-performance schedule."
+    },
+    {
+      "id": "APR_DUMP_007",
+      "owner": "board/firmware",
+      "decision": "Approve output placement, completion fence, readback/dump API, transfer sizes, cache/coherency behavior, and comparison format.",
+      "why": "Forwarded reads exist, but no authoritative dump contract does."
+    },
+    {
+      "id": "APR_WAIT_008",
+      "owner": "RTL/firmware",
+      "decision": "Approve timeout/error handling and whether a barrier is required; clarify BARR opcode 110, which is declared but not decoded by the slice FSM.",
+      "why": "Polling bits are visible, but a robust wait/synchronization contract is not."
+    }
+  ],
+  "claims_not_made": [
+    "No RTL was modified.",
+    "No bitstream was generated.",
+    "No W5 JSON was generated.",
+    "No hardware approval artifact was created.",
+    "No claim is made that G1 or G4 passes.",
+    "No clean lint or elaboration claim is made.",
+    "No numerical-correctness or performance claim is made."
+  ],
+  "evidence": {
+    "EV_FILELIST": {"path": "code/NDP_rtl/filelists/NDP_Top_filelist.f", "lines": "1-29"},
+    "EV_TOP_PORTS": {"path": "code/NDP_rtl/NDP_Top.sv", "lines": "7-78"},
+    "EV_PARAMS_GLOBAL": {"path": "code/NDP_rtl/includes/NDP_Parameters.svh", "lines": "1-83"},
+    "EV_RING_MAPS": {"path": "code/NDP_rtl/NDP_Top.sv", "lines": "274-299"},
+    "EV_NSE_SELECT": {"path": "code/NDP_rtl/Slice/LSU/Stream_Engine/Stream_Engine_Connect.sv", "lines": "275-292"},
+    "EV_SEM_DECODE": {"path": "code/NDP_rtl/Slice/Slice_Execution_Manager.sv", "lines": "45-86"},
+    "EV_SEM_WREG_FIELDS": {"path": "code/NDP_rtl/Slice/Slice_Execution_Manager.sv", "lines": "90-179"},
+    "EV_SEM_FSM": {"path": "code/NDP_rtl/Slice/Slice_Execution_Manager.sv", "lines": "247-325"},
+    "EV_SEM_OUTPUTS": {"path": "code/NDP_rtl/Slice/Slice_Execution_Manager.sv", "lines": "425-473"},
+    "EV_DDR_PARAMS": {"path": "code/NDP_rtl/includes/NDP_Parameters.svh", "lines": "92-155"},
+    "EV_STREAM_REMOTE": {"path": "code/NDP_rtl/Slice/LSU/Stream_Engine/Stream_Engine_Config.sv", "lines": "190-210,215-305"},
+    "EV_ARRAY_PARAMS": {"path": "code/NDP_rtl/includes/NDP_Parameters.svh", "lines": "533-715"},
+    "EV_SA_CONFIG": {"path": "code/NDP_rtl/Slice/Specialized_Array/Specialized_Array_Config.sv", "lines": "40-121"},
+    "EV_SA_BIAS": {"path": "code/NDP_rtl/Slice/Specialized_Array/SA_PE/SA_PE_Control_Block.sv", "lines": "138-175"},
+    "EV_SA_PSUM": {"path": "code/NDP_rtl/Slice/Specialized_Array/SA_PE/SA_PE_Outbuffer.sv", "lines": "240-270,548-561"},
+    "EV_SA_INT8_SIGN": {"path": "code/NDP_rtl/Slice/Specialized_Array/SA_PE/SA_PE_ALU/SA_PE_Float_Control.v", "lines": "217-227,252-258"},
+    "EV_GA_PE_CONFIG": {"path": "code/NDP_rtl/Slice/General_Array/GA_PE_Group/GA_PE_Config.sv", "lines": "62-144"},
+    "EV_GA_OUT_CONFIG": {"path": "code/NDP_rtl/Slice/General_Array/GA_Outport/GA_Outport_Group_Config.sv", "lines": "31-93"},
+    "EV_GA_CLAMP": {"path": "code/NDP_rtl/Slice/General_Array/GA_Outport/GA_Outport.sv", "lines": "207-215,275-351"},
+    "EV_REG_DECODE": {"path": "code/NDP_rtl/Global/global_axi_reg_fwd_arbiter.sv", "lines": "113-180"},
+    "EV_GLOBAL_REGS": {"path": "code/NDP_rtl/Global/global_axi_reg_slave.sv", "lines": "232-294"},
+    "EV_EXEC_FETCH": {"path": "code/NDP_rtl/Global/global_exec_manager.sv", "lines": "40-134,217-273"},
+    "EV_EXEC_DISTRIBUTION": {"path": "code/NDP_rtl/Global/global_exec_manager.sv", "lines": "137-215"},
+    "EV_EXEC_FINISH": {"path": "code/NDP_rtl/Global/global_exec_manager.sv", "lines": "276-293"},
+    "EV_CFG_FETCH": {"path": "code/NDP_rtl/Global/global_config_manager.sv", "lines": "84-186"},
+    "EV_TOP_EXTERNAL_BRIDGE": {"path": "code/NDP_rtl/NDP_Top.sv", "lines": "1486-1560"},
+    "EV_DDR_FILELIST": {"path": "code/NDP_rtl/filelists/DDR_Model_filelist.f", "lines": "1-8"},
+    "EV_MC_FILELIST": {"path": "code/NDP_rtl/DDR_Model/MC_IP/rtl/mc_subsys_top/filelist.f", "lines": "1-13"},
+    "EV_PROTECTED_MODEL": {"path": "code/NDP_rtl/DDR_Model/MC_IP/test/mc_env/tb/quad/phy_dram_wrapper.vp", "lines": "1-4,99-100"},
+    "EV_NIC_FILELIST": {"path": "code/NDP_rtl/AXI_Bus/nic400_cgra_0310/nic_cgra_0310.vf", "lines": "1-68"},
+    "EV_LINT_SCRIPT": {"path": "verilator_lint.ps1", "lines": "22-24,79-109,118-180"},
+    "EV_LINT_SUMMARY": {"path": "LINT_SUMMARY.md", "lines": "1-35,54-96"}
+  }
+}
