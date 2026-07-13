@@ -521,3 +521,14 @@
 - 现场新增独立环境阻断：Local根目录`.venv`、`CGRA_SIM`、`ndp-sim-ref`、`NDPFuncModel`均为空目录，与先前验收记录不一致。ENV-01被置于C0之前；只恢复Python和三个锁定参考仓，不触碰W3正式tensor。由于当前无可用项目Python，本轮只执行`git diff --check`和文本冲突检索，没有运行unittest。
 - 当前仍为`G4=not_passed`、`w5_authorized=false`，没有生成正式W5 JSON/bitstream。下一原子步骤是ENV-01环境溯源/恢复；随后单线程执行C0-01现行G4 fail-closed，不直接开始28-slice算子layout。
 - 精确回退：revert `37109ca25086bd39b318ebdc839c329323102583`；上一根仓恢复点为`4b2d4cebf93410a9a51f897f23e80325799e3834`。
+
+## 2026-07-13：managed worktree junction事故取证、环境恢复与防复发
+
+- 事故根因定位到根仓提交`29da59346509c11c6bfe6ec168537f278aa7c50b`引入的依赖junction设计。会话记录证明15:52时`de44` managed worktree的`.venv`与三参考仓4/4链接及校验仍通过；Local四个目标随后在16:25:01～16:25:04依次被清空，`C:\Users\15383\.codex\worktrees`在16:25:05变化并且`de44`消失。7月可访问任务记录中没有手工删除四目录的命令，因此结论是“桌面宿主回收managed worktree时穿透junction清理Local目标”的高置信因果推断；宿主内部删除没有作为agent shell调用记录，不能表述为捕获到的绝对命令证据。
+- 已核对主会话16:25窗口：`4b2d4ce...`只提交`history.md`，相邻agent命令只有状态/文档/Git操作，不会按该顺序清空四项；更早删除smoke worktree和单文件ADR也与本事故无关。错误不在W4-28业务代码，而在“只验证setup即时成功，没有验证worktree归档/销毁安全”的环境交付设计。
+- 恢复源为事故前生成的`C:\Users\15383\Desktop\Codex\project\resnet50_int8.zip`，900,437,181 bytes，SHA-256 `f51ba6fff4ed36579b5a35c122ef959da9b603e8cc177deb55bdfbd90ecc2d2e`。先只删除`e49c`中四个已核验junction对象并确认managed worktree无残留同类reparse point，再校验压缩包43,077个选定条目均位于四个指定前缀、无路径越界，最后只恢复`.venv`、`CGRA_SIM`、`ndp-sim-ref`和`NDPFuncModel`；没有整包覆盖主仓、根`.git`或W3。
+- 恢复后Python为3.12.13，`pip check`无损坏依赖；`tools/sync_repositories.py verify`确认CGRA=`53c41e02c294bcc54379e686dc9d25bbb93919fa`、ndp=`e299b2804448242d1589b3e58ed7c5a9a5eca09f`、NDP=`35eab40e5314bf603481dd6268bc96ab2ca514a6`，三仓均clean且匹配`repos.lock.json`。ZIP内根仓HEAD较旧，所以该ZIP只作为四项离线恢复源，不能整体还原当前项目。
+- 根仓提交`6d74a15669bb07281d31e2044380cdcd1c4775d8`，父提交`91d8577c3131681cbf9360d03e9c99b18da2ffb6`，`fix: disable unsafe worktree junction sharing`。setup删除创建/复用junction的代码并对非Local调用在任何恢复/链接前硬失败；环境测试同步验证Local与fail-closed语义；`agent.md`、`plan.md`和`经验.md`改为“Local集中集成+tracked-only worktree”，并把旧junction结论标为严重失败历史。
+- 验证：Local setup `-CheckOnly`核对四项source及四个W3小元数据；对真实`e49c` worktree调用明确失败且未写入；环境测试5/5、根仓全量109/109通过；`pip check`、三仓lock/dirty核验及`git diff --check`通过。没有读取、复制或重跑约951 MB W3 tensor。
+- ENV-01完成，下一步恢复权威顺序为C0-01：让现行G4先fail-closed；G4仍为`not_passed`、`w5_authorized=false`，未生成正式W5 JSON/bitstream。
+- 精确回退：如只需撤销防复发代码和现行规则，可revert `6d74a15669bb07281d31e2044380cdcd1c4775d8`，但这会重新开放已证明危险的junction路径，不应在当前桌面宿主使用。忽略目录恢复内容不在Git中；若再次丢失，只能按上述ZIP hash或`repos.lock.json`/requirements lock恢复，不能靠Git revert恢复。
