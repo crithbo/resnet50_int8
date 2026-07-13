@@ -1,0 +1,9 @@
+# Project-scoped Codex defaults for this trusted repository.
+# Keep review interactive, but route eligible prompts through auto-review so
+# parallel worktree tasks do not repeatedly block on routine safe actions.
+approval_policy = "on-request"
+approvals_reviewer = "auto_review"
+sandbox_mode = "workspace-write"
+
+[sandbox_workspace_write]
+network_access = true

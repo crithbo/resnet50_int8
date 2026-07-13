@@ -45,6 +45,7 @@
 - 每完成一个阶段，更新本文件的状态，并在 `history.md` 追加记录；每个提交台账必须包含仓库、完整hash、父提交、范围、验证结果和精确回退位置。
 - 根仓库和子仓库每个经过测试确认有效的小步骤做本地原子Git提交，小进度不逐次推送；W1/W2等工作包通过验收门、形成明确恢复检查点，或操作者明确要求时，再批量推送到操作者控制的GitHub仓库或fork并核对远端hash。
 - 尽量只保留必要工作树，不为备份额外创建clone/worktree/zip。冗余副本只有在无唯一未提交内容、全部需保留提交已推送、恢复路径验证通过且操作者批准具体绝对路径后才能删除；所有提交历史保留，不通过reset/rebase/filter/强推或裁剪历史释放空间。
+- 并行协作采用“Local集中集成+worktree独立代码”模式：Codex桌面宿主按`.worktreeinclude`复制4个小型W3 metadata，`tools/setup_codex_worktree.ps1`只读共享`.venv`和三个锁定参考仓并校验metadata，再跑聚焦测试；正式W3数据、整网报告和全量回归只在Local执行。项目配置使用自动审批reviewer而非全权限，任务只在结束时集中一次Git写操作。
 - 当前冗余 `artifacts/smoke/NDPFuncModel` worktree已按批准删除；主仓 `main` 与NDP `conv_func` 已推送到各自Private仓并通过GitHub完整commit页面核验。CGRA的4项状态已证明仅是Windows权限位噪声，现已干净并锁定正式upstream，无需Private镜像。
 
 ## 当前总体状态
@@ -67,7 +68,7 @@
 
 ### 当前可立即执行队列
 
-1. 新对话先执行只读接手检查：根状态、三仓verify、89项unittest；不要先重跑约951 MB的W3正式artifact。
+1. 新Local对话先执行根状态、三仓verify和登记的全量unittest；新worktree先运行安全setup脚本，再做status/verify和聚焦测试。不要复制、链接或重跑约951 MB的W3正式artifact。
 2. 按ADR-007先实现28-slice HIGH/LOW物理拓扑mapper及单测，不再等待旧ADR-002/003回复。
 3. 依次重建Quantize、Conv、MaxPool、QLinearAdd、GAP、MatMul/head布局，重新生成93边、生命周期/alias和性能成本报告。
 4. 并行推进W1的clean elaboration、RTL/ISA/register-map、端口layout和运行合同；没有approved合同不得宣布G4/G5通过。
