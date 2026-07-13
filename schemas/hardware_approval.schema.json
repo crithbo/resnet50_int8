@@ -1,16 +1,17 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://github.com/crithbo/resnet50_int8/schemas/hardware_approval.schema.json",
-  "title": "Versioned target hardware approval contract",
+  "title": "Versioned Trassic2 RTL28 hardware approval contract",
   "type": "object",
   "additionalProperties": false,
   "required": [
     "schema_version", "contract_type", "status", "approval_id", "authority",
-    "target_version", "architecture", "network_profile", "operator_layouts",
-    "physical_objects", "numeric_semantics", "isa", "runtime_protocol", "evidence"
+    "target_version", "clean_elaboration", "architecture", "network_profile",
+    "operator_layouts", "physical_objects", "numeric_semantics", "isa",
+    "runtime_protocol", "evidence"
   ],
   "properties": {
-    "schema_version": {"const": "0.1"},
+    "schema_version": {"const": "0.2"},
     "contract_type": {"const": "hardware_approval"},
     "status": {"const": "approved"},
     "approval_id": {"type": "string", "minLength": 1},
@@ -27,14 +28,40 @@
     "target_version": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["rtl_commit", "isa_version", "register_map_version"],
+      "required": [
+        "repository", "rtl_commit", "top_module", "filelist",
+        "architecture_id", "architecture_schema_version", "isa_version",
+        "register_map_version"
+      ],
       "properties": {
-        "rtl_commit": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+        "repository": {"const": "https://github.com/xlsjdjdk/Trassic2.0_RTL"},
+        "rtl_commit": {"const": "e3bdebba95dec36ee8eba43caa92a326a88392cd"},
+        "top_module": {"const": "NDP_Top_new"},
+        "filelist": {"const": "code/NDP_rtl/filelists/NDP_Top_filelist.f"},
+        "architecture_id": {"const": "trassic2_rtl28_candidate_v1"},
+        "architecture_schema_version": {"const": "0.2"},
         "isa_version": {"type": "string", "minLength": 1},
         "register_map_version": {"type": "string", "minLength": 1}
       }
     },
-    "network_profile": {"enum": ["batch", "ring_channel", "mixed"]},
+    "clean_elaboration": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "tool", "tool_version", "log_uri", "log_sha256"],
+      "properties": {
+        "status": {"const": "approved"},
+        "tool": {"type": "string", "minLength": 1},
+        "tool_version": {"type": "string", "minLength": 1},
+        "log_uri": {"type": "string", "minLength": 1},
+        "log_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      }
+    },
+    "network_profile": {
+      "enum": [
+        "w4_group4x7_batch_channel28_candidate_v1",
+        "w4_global_ring28_candidate_v1"
+      ]
+    },
     "operator_layouts": {
       "type": "object",
       "additionalProperties": false,
@@ -52,30 +79,38 @@
     "architecture": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["slice_count", "pe_array", "neighbor_transfer_count", "dram"],
+      "required": [
+        "target_family", "slice_count", "topology_id", "specialized_array",
+        "general_array", "instruction_mask_bits", "dram"
+      ],
       "properties": {
-        "slice_count": {"const": 16},
-        "pe_array": {
+        "target_family": {"const": "rtl28"},
+        "slice_count": {"const": 28},
+        "topology_id": {"const": "rtl28_high7x4_low28_e3bdebba"},
+        "specialized_array": {
           "type": "object",
           "additionalProperties": false,
           "required": ["rows", "cols"],
-          "properties": {
-            "rows": {"type": "integer", "minimum": 1},
-            "cols": {"type": "integer", "minimum": 1}
-          }
+          "properties": {"rows": {"const": 8}, "cols": {"const": 8}}
         },
-        "neighbor_transfer_count": {"type": "integer", "minimum": 0},
+        "general_array": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["rows", "cols"],
+          "properties": {"rows": {"const": 4}, "cols": {"const": 4}}
+        },
+        "instruction_mask_bits": {"const": 28},
         "dram": {
           "type": "object",
           "additionalProperties": false,
           "required": ["bank_count", "row_count", "col_count", "subword_bytes", "address_unit", "address_order"],
           "properties": {
-            "bank_count": {"type": "integer", "minimum": 1},
-            "row_count": {"type": "integer", "minimum": 1},
-            "col_count": {"type": "integer", "minimum": 1},
-            "subword_bytes": {"type": "integer", "minimum": 1},
-            "address_unit": {"type": "string", "minLength": 1},
-            "address_order": {"type": "string", "minLength": 1}
+            "bank_count": {"const": 4},
+            "row_count": {"const": 6144},
+            "col_count": {"const": 64},
+            "subword_bytes": {"const": 16},
+            "address_unit": {"const": "byte"},
+            "address_order": {"const": "slice_owner, local_bank, row, column, byte_offset"}
           }
         }
       }
@@ -121,7 +156,13 @@
       "required": ["opcodes", "field_widths", "instruction_mask_semantics"],
       "properties": {
         "opcodes": {"$ref": "#/$defs/nonnegative_integer_map"},
-        "field_widths": {"$ref": "#/$defs/positive_integer_map"},
+        "field_widths": {
+          "type": "object",
+          "minProperties": 1,
+          "required": ["slice_mask"],
+          "properties": {"slice_mask": {"const": 28}},
+          "additionalProperties": {"type": "integer", "minimum": 1}
+        },
         "instruction_mask_semantics": {"type": "string", "minLength": 1}
       }
     },
@@ -145,14 +186,63 @@
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["uri", "sha256"],
+        "required": ["kind", "uri", "sha256"],
         "properties": {
+          "kind": {"type": "string", "minLength": 1},
           "uri": {"type": "string", "minLength": 1},
           "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
         }
       }
     }
   },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "network_profile": {"const": "w4_group4x7_batch_channel28_candidate_v1"}
+        },
+        "required": ["network_profile"]
+      },
+      "then": {
+        "properties": {
+          "operator_layouts": {
+            "properties": {
+              "simple": {"const": "w4_simple_group4x7_28_candidate_v1"},
+              "view": {"const": "w4_zero_copy_view_group4x7_28_candidate_v1"},
+              "conv": {"const": "w4_conv_group4x7_28_candidate_v1"},
+              "maxpool": {"const": "w4_maxpool_group4x7_28_candidate_v1"},
+              "add": {"const": "w4_qlinearadd_group4x7_28_candidate_v1"},
+              "global_average_pool": {"const": "w4_globalavgpool_group4x7_28_candidate_v1"},
+              "matmul": {"const": "w4_qlinearmatmul_group4x7_28_candidate_v1"}
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "network_profile": {"const": "w4_global_ring28_candidate_v1"}
+        },
+        "required": ["network_profile"]
+      },
+      "then": {
+        "properties": {
+          "operator_layouts": {
+            "properties": {
+              "simple": {"const": "w4_simple_global_ring28_candidate_v1"},
+              "view": {"const": "w4_zero_copy_view_global_ring28_candidate_v1"},
+              "conv": {"const": "w4_conv_global_ring28_candidate_v1"},
+              "maxpool": {"const": "w4_maxpool_global_ring28_candidate_v1"},
+              "add": {"const": "w4_qlinearadd_global_ring28_candidate_v1"},
+              "global_average_pool": {"const": "w4_globalavgpool_global_ring28_candidate_v1"},
+              "matmul": {"const": "w4_qlinearmatmul_global_ring28_candidate_v1"}
+            }
+          }
+        }
+      }
+    }
+  ],
   "$defs": {
     "physical_object": {
       "type": "object",

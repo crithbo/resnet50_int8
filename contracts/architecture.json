@@ -1,37 +1,86 @@
 {
-  "schema_version": "0.1",
+  "schema_version": "0.2",
   "contract_type": "architecture",
   "status": "candidate",
-  "known": {
-    "slice_count": {
-      "value": 16,
-      "status": "provisionally_approved",
-      "source": "operator confirmation"
+  "scope": "target_rtl28",
+  "target": {
+    "architecture_id": "trassic2_rtl28_candidate_v1",
+    "target_family": "rtl28",
+    "slice_count": 28,
+    "status": "candidate_unapproved",
+    "rtl": {
+      "repository": "https://github.com/xlsjdjdk/Trassic2.0_RTL",
+      "commit": "e3bdebba95dec36ee8eba43caa92a326a88392cd",
+      "top_module": "NDP_Top_new",
+      "filelist": "code/NDP_rtl/filelists/NDP_Top_filelist.f",
+      "clean_elaboration_status": "blocked_not_clean"
     },
-    "special_pe_array_shape": {
-      "value": [8, 8],
-      "status": "candidate",
-      "source": "NDPFuncModel SpecialPEA"
+    "arrays": {
+      "specialized": {"rows": 8, "cols": 8, "status": "candidate_unapproved"},
+      "general": {"rows": 4, "cols": 4, "status": "candidate_unapproved"}
     },
-    "neighbor_transfer_count": {
-      "value": 15,
-      "status": "candidate",
-      "source": "NDPFuncModel config/config_nse.py"
+    "instruction_mask_bits": 28,
+    "topology": {
+      "topology_id": "rtl28_high7x4_low28_e3bdebba",
+      "status": "candidate_unapproved",
+      "high_ring_owners": [
+        [0, 2, 3, 1],
+        [4, 6, 7, 5],
+        [8, 10, 11, 9],
+        [12, 13, 15, 14],
+        [16, 17, 19, 18],
+        [20, 21, 23, 22],
+        [24, 25, 27, 26]
+      ],
+      "low_ring_owners": [0, 12, 13, 15, 17, 19, 21, 23, 25, 27, 26, 10, 11, 9, 8, 24, 22, 20, 18, 16, 14, 2, 4, 6, 7, 5, 3, 1],
+      "source": "resnet50_pipeline/topology28.py cross-checked against rtl28_candidate_audit.json"
+    },
+    "profiles": {
+      "default": "w4_group4x7_batch_channel28_candidate_v1",
+      "candidates": [
+        "w4_group4x7_batch_channel28_candidate_v1",
+        "w4_global_ring28_candidate_v1"
+      ],
+      "batch_group_sample_counts": [3, 3, 2, 2, 2, 2, 2],
+      "transition_policy": "at most one group4x7-to-global conversion after GAP and before MatMul; none inside residual blocks",
+      "source": "resnet50_pipeline/profile28.py"
     }
   },
   "candidate_memory": {
-    "source": "NDPFuncModel/component/DRAM.py audited by W2 tests",
-    "status": "candidate",
+    "source": "contracts/rtl28_candidate_audit.json fixed_by_rtl.logical_dram",
+    "status": "candidate_unapproved",
+    "geometry_status": "candidate_unapproved",
+    "address_order_status": "candidate_unapproved",
     "address_unit": "byte",
     "bank_count": 4,
     "row_count": 6144,
     "col_count": 64,
     "subword_bytes": 16,
     "bytes_per_slice_formula": "bank_count * row_count * col_count * subword_bytes",
-    "address_order": "slice, bank, row, reversed_col, reversed_subword_byte"
+    "address_order": "slice_owner, local_bank, row, column, byte_offset"
   },
-  "candidate_layouts": {
+  "planned_layouts": {
+    "w4_simple_group4x7_28_candidate_v1": {"target_family": "rtl28", "slice_count": 28, "operator_family": "simple", "status": "planned", "current_gate_eligible": false},
+    "w4_zero_copy_view_group4x7_28_candidate_v1": {"target_family": "rtl28", "slice_count": 28, "operator_family": "view", "status": "planned", "current_gate_eligible": false},
+    "w4_conv_group4x7_28_candidate_v1": {"target_family": "rtl28", "slice_count": 28, "operator_family": "conv", "status": "planned", "current_gate_eligible": false},
+    "w4_maxpool_group4x7_28_candidate_v1": {"target_family": "rtl28", "slice_count": 28, "operator_family": "maxpool", "status": "planned", "current_gate_eligible": false},
+    "w4_qlinearadd_group4x7_28_candidate_v1": {"target_family": "rtl28", "slice_count": 28, "operator_family": "add", "status": "planned", "current_gate_eligible": false},
+    "w4_globalavgpool_group4x7_28_candidate_v1": {"target_family": "rtl28", "slice_count": 28, "operator_family": "global_average_pool", "status": "planned", "current_gate_eligible": false},
+    "w4_qlinearmatmul_group4x7_28_candidate_v1": {"target_family": "rtl28", "slice_count": 28, "operator_family": "matmul", "status": "planned", "current_gate_eligible": false},
+    "w4_simple_global_ring28_candidate_v1": {"target_family": "rtl28", "slice_count": 28, "operator_family": "simple", "status": "planned", "current_gate_eligible": false},
+    "w4_zero_copy_view_global_ring28_candidate_v1": {"target_family": "rtl28", "slice_count": 28, "operator_family": "view", "status": "planned", "current_gate_eligible": false},
+    "w4_conv_global_ring28_candidate_v1": {"target_family": "rtl28", "slice_count": 28, "operator_family": "conv", "status": "planned", "current_gate_eligible": false},
+    "w4_maxpool_global_ring28_candidate_v1": {"target_family": "rtl28", "slice_count": 28, "operator_family": "maxpool", "status": "planned", "current_gate_eligible": false},
+    "w4_qlinearadd_global_ring28_candidate_v1": {"target_family": "rtl28", "slice_count": 28, "operator_family": "add", "status": "planned", "current_gate_eligible": false},
+    "w4_globalavgpool_global_ring28_candidate_v1": {"target_family": "rtl28", "slice_count": 28, "operator_family": "global_average_pool", "status": "planned", "current_gate_eligible": false},
+    "w4_qlinearmatmul_global_ring28_candidate_v1": {"target_family": "rtl28", "slice_count": 28, "operator_family": "matmul", "status": "planned", "current_gate_eligible": false}
+  },
+  "candidate_layouts": {},
+  "fixture_layouts": {
     "w2_ndp_ring_candidate_v1": {
+      "target_family": "w2_functional_fixture",
+      "slice_counts": [1, 4],
+      "current_gate_eligible": false,
       "status": "candidate",
       "scope": "1-slice and 4-slice software fixtures only; not hardware-approved",
       "activation": "contiguous C partition per slice, physical NHWC with C fastest, tail=x_zero_point",
@@ -40,7 +89,16 @@
       "output": "contiguous K partition per slice, physical NHWK with K fastest, tail=y_zero_point",
       "alignment_bytes": 16,
       "implementation": "resnet50_pipeline/conv_layout.py"
-    },
+    }
+  },
+  "legacy_target": {
+    "target_family": "legacy16",
+    "slice_count": 16,
+    "status": "superseded_by_adr_007",
+    "current_gate_eligible": false,
+    "note": "Physical signatures, modulo-ring assumptions, capacity and cost claims below are historical evidence only."
+  },
+  "legacy_layouts": {
     "w4_batch_slice_candidate_v1": {
       "status": "candidate",
       "scope": "QuantizeLinear and DequantizeLinear software relayout; not hardware-approved",
@@ -205,7 +263,20 @@
       "implementation": "resnet50_pipeline/matmul16_layout.py"
     }
   },
-  "candidate_validation_reports": {
+  "candidate_evidence": {
+    "rtl28_static_audit_v1": {
+      "target_family": "rtl28",
+      "slice_count": 28,
+      "status": "candidate_unapproved",
+      "current_gate_eligible": false,
+      "evidence_kind": "rtl_static_audit",
+      "path": "contracts/rtl28_candidate_audit.json",
+      "sha256": "69505a527a53c25b0bb828b192aba991fba78e838a2429f9cb99d251b8a815aa",
+      "size_bytes": 20794,
+      "clean_elaboration": false
+    }
+  },
+  "legacy_evidence": {
     "w4_conv_shape_coverage_v1": {
       "status": "candidate_software_evidence",
       "path": "artifacts/w4/conv_shape_coverage.json",
@@ -349,12 +420,12 @@
     }
   },
   "unresolved": [
-    "target RTL/ISA/register-map commit",
-    "resource counts and field widths for the target version",
-    "opcode definitions",
-    "DDR row count and byte/word address units",
-    "instruction mask interpretation",
-    "approved physical layouts for activation, weight, bias, qparams, psum and output",
-    "load/start/wait/error/dump protocol"
+    "clean elaboration of Trassic2.0_RTL@e3bdebba95dec36ee8eba43caa92a326a88392cd with the authoritative protected/vendor libraries",
+    "approved activation, weight, bias, qparams, psum and output physical layouts",
+    "approved INT8 signed/unsigned operand assignment, accumulator overflow, requant and zero-point sequence",
+    "approved DRAM address linearization and physical board mapping beyond the fixed logical geometry",
+    "approved 64-bit command packing, CFG length, execution-list length unit and register-map version",
+    "approved load/start/wait/error/dump protocol and target JSON/bitstream emulator relationship",
+    "measured cycle/bandwidth evidence for choosing any global-ring representative layer"
   ]
 }

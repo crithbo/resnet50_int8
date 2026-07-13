@@ -378,15 +378,14 @@ def _legacy16_evidence_status(
 def _current_target_evidence_status(
     architecture: dict[str, Any], hardware_approval: dict[str, Any]
 ) -> dict[str, Any]:
-    declared_slice_count = architecture.get("known", {}).get("slice_count", {}).get(
-        "value"
-    )
+    declared_slice_count = architecture.get("target", {}).get("slice_count")
     target_layouts = {
         layout_id: record
         for layout_id, record in architecture.get("candidate_layouts", {}).items()
         if record.get("target_family") == CURRENT_TARGET_FAMILY
         and record.get("slice_count") == CURRENT_TARGET_SLICE_COUNT
         and record.get("status") in {"candidate", "approved"}
+        and record.get("current_gate_eligible") is True
     }
     target_layout_ids = sorted(target_layouts)
     target_layout_families = {
@@ -394,15 +393,19 @@ def _current_target_evidence_status(
     }
     target_reports = {
         report_id: record
-        for report_id, record in architecture.get(
-            "candidate_validation_reports", {}
-        ).items()
+        for report_id, record in architecture.get("candidate_evidence", {}).items()
         if record.get("target_family") == CURRENT_TARGET_FAMILY
         and record.get("slice_count") == CURRENT_TARGET_SLICE_COUNT
         and record.get("current_gate_eligible") is True
     }
-    layout_evidence_complete = set(CURRENT_TARGET_REQUIRED_LAYOUT_FAMILIES).issubset(
-        target_layout_families
+    registered_layout_evidence_complete = set(
+        CURRENT_TARGET_REQUIRED_LAYOUT_FAMILIES
+    ).issubset(target_layout_families)
+    approved_profile_layouts_complete = bool(
+        hardware_approval.get("layout_evidence_complete", False)
+    )
+    layout_evidence_complete = bool(
+        registered_layout_evidence_complete and approved_profile_layouts_complete
     )
     edge_evidence_complete = any(
         record.get("evidence_kind") == "network_physical_edge_audit"
@@ -447,6 +450,8 @@ def _current_target_evidence_status(
         "layout_evidence_families": sorted(
             family for family in target_layout_families if family is not None
         ),
+        "registered_layout_evidence_complete": registered_layout_evidence_complete,
+        "approved_profile_layouts_complete": approved_profile_layouts_complete,
         "layout_evidence_complete": layout_evidence_complete,
         "eligible_report_ids": sorted(target_reports),
         "network_93_edge_evidence_complete": edge_evidence_complete,
@@ -478,7 +483,7 @@ def audit_w4_gate(
         for op_type, expected in EXPECTED_NODE_COUNTS.items()
     }
 
-    report_records = architecture["candidate_validation_reports"]
+    report_records = architecture["legacy_evidence"]
     report_payloads = {
         report_id: _load_json(root / report_records[report_id]["path"])
         for report_id in REQUIRED_REPORT_IDS
@@ -488,10 +493,10 @@ def audit_w4_gate(
         for report_id in REQUIRED_REPORT_IDS
     }
     nested_records = {
-        "w4_conv0_batch16": architecture["candidate_layouts"][
+        "w4_conv0_batch16": architecture["legacy_layouts"][
             "w4_conv_batch16_candidate_v1"
         ]["formal_conv0_report"],
-        "w4_conv0_profiles": architecture["candidate_layouts"][
+        "w4_conv0_profiles": architecture["legacy_layouts"][
             "w4_conv_ring16_candidate_v1"
         ]["formal_conv0_profile_comparison"],
     }

@@ -89,10 +89,13 @@ class W0PipelineTests(unittest.TestCase):
                     (PROJECT_ROOT / "contracts" / f"{name}.json").read_text(encoding="utf-8"),
                     encoding="utf-8",
                 )
+            (root / "contracts" / "rtl28_candidate_audit.json").write_bytes(
+                (PROJECT_ROOT / "contracts" / "rtl28_candidate_audit.json").read_bytes()
+            )
             first = execute_mock_run(root, Path(directory) / "out", MockBackend())
             path = root / "contracts" / "architecture.json"
             value = json.loads(path.read_text(encoding="utf-8"))
-            value["test_revision"] = 1
+            value["unresolved"].append("cache-key regression fixture revision")
             path.write_text(json.dumps(value), encoding="utf-8")
             second = execute_mock_run(root, Path(directory) / "out", MockBackend())
             self.assertNotEqual(first.cache_key, second.cache_key)

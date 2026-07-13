@@ -5,7 +5,11 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from resnet50_pipeline.w4_audit import audit_w4_gate
+from resnet50_pipeline.w4_audit import (
+    CURRENT_TARGET_REQUIRED_LAYOUT_FAMILIES,
+    _current_target_evidence_status,
+    audit_w4_gate,
+)
 from tests.hardware_approval_fixture import valid_hardware_approval
 
 
@@ -57,7 +61,6 @@ class W4GateAuditTests(unittest.TestCase):
         self.assertFalse(report["legacy16_evidence"]["current_gate_eligible"])
         self.assertTrue(
             {
-                "current_target_architecture_is_28_slice",
                 "target28_operator_layout_evidence_complete",
                 "target28_all_93_edges_physically_verified",
                 "target28_profile_cost_evidence_complete",
@@ -68,7 +71,7 @@ class W4GateAuditTests(unittest.TestCase):
             }.issubset(report["gate_decision"]["blocking_criteria"])
         )
 
-    def test_valid_legacy_hardware_approval_is_structure_only(self) -> None:
+    def test_valid_rtl28_hardware_approval_fixture_is_structure_only(self) -> None:
         root = Path(__file__).resolve().parents[1]
         with tempfile.TemporaryDirectory() as directory:
             approval_path = Path(directory) / "hardware_approval.json"
@@ -80,8 +83,11 @@ class W4GateAuditTests(unittest.TestCase):
         self.assertEqual(report["hardware_approval"]["validation_scope"], "structure_only")
         self.assertFalse(report["hardware_approval"]["current_gate_eligible"])
         self.assertIn(
-            "architecture_contract_is_not_current_28_slice_target",
+            "target28_operator_layout_evidence_incomplete",
             report["hardware_approval"]["current_gate_eligibility_reasons"],
+        )
+        self.assertTrue(
+            report["current_target_evidence"]["clean_elaboration_approved"]
         )
         self.assertEqual(report["gate_decision"]["g4_status"], "not_passed")
         self.assertFalse(report["gate_decision"]["w5_authorized"])
@@ -105,6 +111,46 @@ class W4GateAuditTests(unittest.TestCase):
             report["hardware_approval"]["validation_error"],
         )
         self.assertFalse(report["gate_decision"]["w5_authorized"])
+
+    def test_unapproved_layout_registry_cannot_bypass_profile_layout_evidence(self) -> None:
+        architecture = {
+            "target": {"slice_count": 28},
+            "candidate_layouts": {
+                f"synthetic_{family}": {
+                    "target_family": "rtl28",
+                    "slice_count": 28,
+                    "operator_family": family,
+                    "status": "candidate",
+                    "current_gate_eligible": True,
+                }
+                for family in CURRENT_TARGET_REQUIRED_LAYOUT_FAMILIES
+            },
+            "candidate_evidence": {
+                "edges": {
+                    "target_family": "rtl28",
+                    "slice_count": 28,
+                    "current_gate_eligible": True,
+                    "evidence_kind": "network_physical_edge_audit",
+                    "edge_count": 93,
+                },
+                "cost": {
+                    "target_family": "rtl28",
+                    "slice_count": 28,
+                    "current_gate_eligible": True,
+                    "evidence_kind": "network_profile_cost",
+                },
+            },
+        }
+        approval = {
+            "valid": True,
+            "clean_elaboration_approved": True,
+            "layout_evidence_complete": False,
+        }
+        status = _current_target_evidence_status(architecture, approval)
+        self.assertTrue(status["registered_layout_evidence_complete"])
+        self.assertFalse(status["approved_profile_layouts_complete"])
+        self.assertFalse(status["layout_evidence_complete"])
+        self.assertFalse(status["hardware_approval_current_gate_eligible"])
 
 
 if __name__ == "__main__":
