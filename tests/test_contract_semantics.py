@@ -34,14 +34,21 @@ class ContractSemanticTests(unittest.TestCase):
         self.assertEqual(SUPPORTED_CONTRACT_SCHEMA_VERSIONS["backend"], {"0.1"})
         self.assertEqual(SUPPORTED_CONTRACT_SCHEMA_VERSIONS["quantization"], {"0.1"})
         architecture = contracts.documents["architecture"]
-        self.assertEqual(len(architecture["candidate_layouts"]), 4)
-        self.assertEqual(len(architecture["planned_layouts"]), 10)
+        self.assertEqual(len(architecture["candidate_layouts"]), 12)
+        self.assertEqual(len(architecture["planned_layouts"]), 2)
         self.assertEqual(
             {
                 record["operator_family"]
                 for record in architecture["candidate_layouts"].values()
             },
-            {"simple", "view"},
+            {"simple", "view", "conv", "maxpool", "global_average_pool", "matmul"},
+        )
+        self.assertEqual(
+            {
+                record["operator_family"]
+                for record in architecture["planned_layouts"].values()
+            },
+            {"add"},
         )
         self.assertTrue(
             all(

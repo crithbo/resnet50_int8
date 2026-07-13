@@ -60,16 +60,8 @@
     "address_order": "slice_owner, local_bank, row, column, byte_offset"
   },
   "planned_layouts": {
-    "w4_conv_group4x7_28_candidate_v1": {"target_family": "rtl28", "slice_count": 28, "operator_family": "conv", "status": "planned", "current_gate_eligible": false},
-    "w4_maxpool_group4x7_28_candidate_v1": {"target_family": "rtl28", "slice_count": 28, "operator_family": "maxpool", "status": "planned", "current_gate_eligible": false},
     "w4_qlinearadd_group4x7_28_candidate_v1": {"target_family": "rtl28", "slice_count": 28, "operator_family": "add", "status": "planned", "current_gate_eligible": false},
-    "w4_globalavgpool_group4x7_28_candidate_v1": {"target_family": "rtl28", "slice_count": 28, "operator_family": "global_average_pool", "status": "planned", "current_gate_eligible": false},
-    "w4_qlinearmatmul_group4x7_28_candidate_v1": {"target_family": "rtl28", "slice_count": 28, "operator_family": "matmul", "status": "planned", "current_gate_eligible": false},
-    "w4_conv_global_ring28_candidate_v1": {"target_family": "rtl28", "slice_count": 28, "operator_family": "conv", "status": "planned", "current_gate_eligible": false},
-    "w4_maxpool_global_ring28_candidate_v1": {"target_family": "rtl28", "slice_count": 28, "operator_family": "maxpool", "status": "planned", "current_gate_eligible": false},
-    "w4_qlinearadd_global_ring28_candidate_v1": {"target_family": "rtl28", "slice_count": 28, "operator_family": "add", "status": "planned", "current_gate_eligible": false},
-    "w4_globalavgpool_global_ring28_candidate_v1": {"target_family": "rtl28", "slice_count": 28, "operator_family": "global_average_pool", "status": "planned", "current_gate_eligible": false},
-    "w4_qlinearmatmul_global_ring28_candidate_v1": {"target_family": "rtl28", "slice_count": 28, "operator_family": "matmul", "status": "planned", "current_gate_eligible": false}
+    "w4_qlinearadd_global_ring28_candidate_v1": {"target_family": "rtl28", "slice_count": 28, "operator_family": "add", "status": "planned", "current_gate_eligible": false}
   },
   "candidate_layouts": {
     "w4_simple_group4x7_28_candidate_v1": {
@@ -129,6 +121,114 @@
       "rule": "producer D and View output alias the same 28 base addresses only when local bytes are unchanged",
       "formal_shape": "[16,2048,1,1] -> [16,2048]",
       "implementation": "resnet50_pipeline/simple_layout.py"
+    },
+    "w4_conv_group4x7_28_candidate_v1": {
+      "target_family": "rtl28",
+      "slice_count": 28,
+      "operator_family": "conv",
+      "profile_id": "w4_group4x7_batch_channel28_candidate_v1",
+      "status": "candidate",
+      "current_gate_eligible": true,
+      "scope": "QLinearConv reversible group4x7 software layout; not hardware-approved",
+      "mapping": "A partitions C inside each HIGH group; B, bias and weight qparams partition K and replicate across the seven groups; P and D partition sample group and K",
+      "packing": "A NHWC-local, B RSKC with globally padded C, P/D NHWK-local; little-endian and 16-byte aligned",
+      "tails": "A uses x_zero_point, P/bias/vector tails use zero, D uses y_zero_point, and valid-K B C tails use per-K weight zero_point",
+      "geometry_status": "candidate_unapproved",
+      "address_order_status": "candidate_unapproved",
+      "implementation": "resnet50_pipeline/conv28_layout.py"
+    },
+    "w4_conv_global_ring28_candidate_v1": {
+      "target_family": "rtl28",
+      "slice_count": 28,
+      "operator_family": "conv",
+      "profile_id": "w4_global_ring28_candidate_v1",
+      "status": "candidate",
+      "current_gate_eligible": true,
+      "scope": "QLinearConv reversible LOW-ring software layout; not hardware-approved",
+      "mapping": "A partitions C and B/bias/weight-qparams/P/D partition K over the explicit 28-owner LOW ring",
+      "packing": "A NHWC-local, B RSKC with globally padded C, P/D NHWK-local; little-endian and 16-byte aligned",
+      "tails": "A uses x_zero_point, P/bias/vector tails use zero, D uses y_zero_point, and valid-K B C tails use per-K weight zero_point",
+      "geometry_status": "candidate_unapproved",
+      "address_order_status": "candidate_unapproved",
+      "implementation": "resnet50_pipeline/conv28_layout.py"
+    },
+    "w4_maxpool_group4x7_28_candidate_v1": {
+      "target_family": "rtl28",
+      "slice_count": 28,
+      "operator_family": "maxpool",
+      "profile_id": "w4_group4x7_batch_channel28_candidate_v1",
+      "status": "candidate",
+      "current_gate_eligible": true,
+      "scope": "MaxPool reversible group4x7 software layout; not hardware-approved",
+      "mapping": "A and D share sample-group and channel ownership within each explicit HIGH ring",
+      "packing": "NHWC-local, little-endian and 16-byte aligned; spatial padding is distinct from inactive sample/channel tails",
+      "window": "kernel coordinates are resolved without materializing im2col and preserve Conv-D to MaxPool-A byte compatibility",
+      "implementation": "resnet50_pipeline/pool28_layout.py"
+    },
+    "w4_maxpool_global_ring28_candidate_v1": {
+      "target_family": "rtl28",
+      "slice_count": 28,
+      "operator_family": "maxpool",
+      "profile_id": "w4_global_ring28_candidate_v1",
+      "status": "candidate",
+      "current_gate_eligible": true,
+      "scope": "MaxPool reversible LOW-ring software layout; not hardware-approved",
+      "mapping": "A and D partition channels over the explicit 28-owner LOW ring while retaining all 16 samples",
+      "packing": "NHWC-local, little-endian and 16-byte aligned; spatial padding is distinct from channel tails",
+      "window": "kernel coordinates are resolved without materializing im2col and preserve Conv-D to MaxPool-A byte compatibility",
+      "implementation": "resnet50_pipeline/pool28_layout.py"
+    },
+    "w4_globalavgpool_group4x7_28_candidate_v1": {
+      "target_family": "rtl28",
+      "slice_count": 28,
+      "operator_family": "global_average_pool",
+      "profile_id": "w4_group4x7_batch_channel28_candidate_v1",
+      "status": "candidate",
+      "current_gate_eligible": true,
+      "scope": "QLinearGlobalAveragePool reversible group4x7 software layout; not hardware-approved",
+      "mapping": "A, final int32 P and uint8 D share sample-group and channel ownership; no cross-group reduction is required",
+      "qparams": "scalar x/y qparams and x_scale/(y_scale*H*W) multiplier replicate on all 28 slices",
+      "packing": "A NHWC-local and P/D singleton-spatial NHWC-local; semantic tails and 16-byte alignment are explicit",
+      "implementation": "resnet50_pipeline/pool28_layout.py"
+    },
+    "w4_globalavgpool_global_ring28_candidate_v1": {
+      "target_family": "rtl28",
+      "slice_count": 28,
+      "operator_family": "global_average_pool",
+      "profile_id": "w4_global_ring28_candidate_v1",
+      "status": "candidate",
+      "current_gate_eligible": true,
+      "scope": "QLinearGlobalAveragePool reversible LOW-ring software layout; not hardware-approved",
+      "mapping": "A, final int32 P and uint8 D share channel ownership over the explicit LOW ring",
+      "qparams": "scalar x/y qparams and x_scale/(y_scale*H*W) multiplier replicate on all 28 slices",
+      "packing": "A NHWC-local and P/D singleton-spatial NHWC-local; semantic tails and 16-byte alignment are explicit",
+      "implementation": "resnet50_pipeline/pool28_layout.py"
+    },
+    "w4_qlinearmatmul_group4x7_28_candidate_v1": {
+      "target_family": "rtl28",
+      "slice_count": 28,
+      "operator_family": "matmul",
+      "profile_id": "w4_group4x7_batch_channel28_candidate_v1",
+      "status": "candidate",
+      "current_gate_eligible": true,
+      "scope": "QLinearMatMul reversible group4x7 software layout; not hardware-approved",
+      "mapping": "A partitions K per HIGH group; B partitions O and replicates across seven groups; final int32 P and uint8 D partition sample group and O",
+      "qparams": "scalar A/B/Y qparams and requant multiplier replicate on all 28 slices",
+      "transition": "same-profile Quantize D can be byte-compatible or exact-alias; group4x7 GAP to global MatMul requires one explicit relayout",
+      "implementation": "resnet50_pipeline/matmul28_layout.py"
+    },
+    "w4_qlinearmatmul_global_ring28_candidate_v1": {
+      "target_family": "rtl28",
+      "slice_count": 28,
+      "operator_family": "matmul",
+      "profile_id": "w4_global_ring28_candidate_v1",
+      "status": "candidate",
+      "current_gate_eligible": true,
+      "scope": "QLinearMatMul reversible LOW-ring software layout; not hardware-approved",
+      "mapping": "A partitions K and B/final-int32-P/uint8-D partition O over the explicit 28-owner LOW ring",
+      "qparams": "scalar A/B/Y qparams and requant multiplier replicate on all 28 slices",
+      "transition": "same-profile Quantize D can be byte-compatible or exact-alias; one explicit group4x7-to-global relayout is permitted before MatMul",
+      "implementation": "resnet50_pipeline/matmul28_layout.py"
     }
   },
   "fixture_layouts": {

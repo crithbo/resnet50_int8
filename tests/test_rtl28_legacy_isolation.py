@@ -26,6 +26,14 @@ class Rtl28LegacyIsolationTests(unittest.TestCase):
         exported = set(public_layout.__all__)
         self.assertFalse(any("16" in name for name in exported))
         self.assertFalse(any("Batch16" in name for name in exported))
+        self.assertTrue(
+            {
+                "QLinearConvPhysicalLayout",
+                "MaxPoolPhysicalLayout",
+                "GlobalAveragePoolPhysicalLayout",
+                "QLinearMatMulPhysicalLayout",
+            }.issubset(exported)
+        )
 
     def test_generic_historical_modules_are_explicitly_gate_ineligible(self) -> None:
         for module in (conv_coverage, network_dry_run, w4_profiles):
@@ -39,6 +47,9 @@ class Rtl28LegacyIsolationTests(unittest.TestCase):
             "resnet50_pipeline/simple_layout.py",
             "resnet50_pipeline/profile28.py",
             "resnet50_pipeline/topology28.py",
+            "resnet50_pipeline/conv28_layout.py",
+            "resnet50_pipeline/pool28_layout.py",
+            "resnet50_pipeline/matmul28_layout.py",
         ):
             source = (ROOT / relative_path).read_text(encoding="utf-8")
             self.assertNotIn("LEGACY_DRAM_GEOMETRY16", source, relative_path)

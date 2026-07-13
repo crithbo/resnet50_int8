@@ -46,11 +46,41 @@ from .simple_layout import (  # noqa: E402  (keeps the protocol definitions firs
     ZeroCopyViewLayout,
     ZeroCopyViewProof,
 )
+from .conv28_layout import (  # noqa: E402
+    CONV28_LAYOUT_IDS,
+    Conv28PhysicalBundle,
+    Conv28PhysicalPlan,
+    QLinearConvPhysicalLayout,
+)
+from .matmul28_layout import (  # noqa: E402
+    MATMUL28_LAYOUT_IDS,
+    MatMul28PhysicalBundle,
+    QLinearMatMulPhysicalLayout,
+)
+from .pool28_layout import (  # noqa: E402
+    GLOBAL_AVERAGE_POOL_LAYOUT_IDS,
+    MAXPOOL_LAYOUT_IDS,
+    GlobalAveragePoolPhysicalLayout,
+    MaxPoolPhysicalLayout,
+    PoolPhysicalBundle,
+)
 __all__ = [
+    "CONV28_LAYOUT_IDS",
+    "Conv28PhysicalBundle",
+    "Conv28PhysicalPlan",
     "DequantizeLinearPhysicalLayout",
+    "GLOBAL_AVERAGE_POOL_LAYOUT_IDS",
+    "GlobalAveragePoolPhysicalLayout",
     "IdentityLayout",
     "LayoutTransform",
+    "MATMUL28_LAYOUT_IDS",
+    "MAXPOOL_LAYOUT_IDS",
+    "MatMul28PhysicalBundle",
+    "MaxPoolPhysicalLayout",
+    "PoolPhysicalBundle",
     "QuantizeLinearPhysicalLayout",
+    "QLinearConvPhysicalLayout",
+    "QLinearMatMulPhysicalLayout",
     "Rtl28PhysicalBundle",
     "Rtl28PhysicalRegion",
     "Rtl28PortPlacement",

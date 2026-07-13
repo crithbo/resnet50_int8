@@ -9,9 +9,9 @@
 - **最终验收**：正式 ResNet50 INT8 ONNX→逐节点/硬件原子算子 golden→28-slice relayout→JSON/bitstream→目标 simulator→execplan/Bank_data→RTL/硬件→三方逐算子和整网一致，并以真实cycle/带宽证据选择性能profile。
 - **W3业务封版检查点**：`35a4fde106d102b0e165e7eb13d60f7dd980db71`；W0/G0、W2/G2、W3/G3已通过，W1只完成模型/输入/软件量化事实，G1因目标硬件合同缺失尚未通过。交接文档可能有后续纯文档提交，当前恢复点以`git rev-parse HEAD`和`history.md`精确台账为准。
 - **三个仓库分工**：`CGRA_SIM` 给软件/QNN语义和旧 ResNet 计划；`ndp-sim-ref` 只给 JSON、bitstream、relayout/execplan 的参考框架，尚未获批为目标工具；`NDPFuncModel` 只给W2 Conv功能数据通路，不是目标backend。根集成层已经统一W3图/lowering/golden身份，但配置、simulator、execplan和hardware尚未接入同一manifest。
-- **当前成果**：正式图含78节点/617张量，lower为133个语义hw_op；保存79个运行时tensor和55个INT32内部tensor，全部78节点独立公式重放匹配ORT，旧77原语已逐项映射。W4-28的C0机器合同/legacy隔离和C1 Quantize/Dequantize/View公共正逆布局已经完成，141项根测试通过；旧16-slice布局、93边和成本只作历史证据，比较器和审计框架继续复用。
+- **当前成果**：正式图含78节点/617张量，lower为133个语义hw_op；保存79个运行时tensor和55个INT32内部tensor，全部78节点独立公式重放匹配ORT，旧77原语已逐项映射。W4-28的C0/C1和C2第一波已完成：12个RTL28 candidate layout覆盖Quantize/Dequantize/View、Conv、MaxPool、GAP和MatMul，167项根测试通过；旧16-slice布局、93边和成本只作历史证据，比较器和审计框架继续复用。
 - **当前硬件裁决**：目标为28-slice，RTL候选固定`Trassic2.0_RTL@e3bdebba95dec36ee8eba43caa92a326a88392cd`；主体采用七个4-slice小环的batch/channel混合profile，28-slice大环只作代表层性能候选。W4按该方案重开，G4仍未通过，`w5_authorized=false`。
-- **下一主线**：C1和141项全量回归已完成，P4已通过；下一波可用最多三个Local共享目录协作子任务并行Conv、Pool（MaxPool+GAP）、MatMul，主任务串行维护公共合同、审阅集成与Git。随后单线程实现QLinearAdd并统一重审93条边和成本；不重跑约951 MB的W3产物，除非合同/hash/回归明确失效。
+- **下一主线**：Conv、Pool（MaxPool+GAP）、MatMul共享Local并行波已完成并由主任务串行集成；现在只剩QLinearAdd的两个RTL28布局仍为planned。下一步单线程完成双残差分支/qparams/广播/D布局，再统一重审RTL28 93条边、生命周期/alias和成本；不重跑约951 MB的W3产物，除非合同/hash/回归明确失效。
 - **当前外部阻塞**：正式模型和固定输入基线已经自行取得；剩余外部阻塞为目标commit的clean elaboration/顶层命名闭合、正式端口layout、INT8 SA/GA/qparams硬件约定、目标emulator关系、硬件加载与dump协议。
 - **禁止误用**：NDPFuncModel 当前 `extracted_*.npy` 和 `verify_pe` psum 不是可信 golden；42个 JSON也不等于 ResNet算子配置已完成；bitstream生成成功不等于数值正确。
 - **接手检查**：Local主工作区依次运行`git status --short`、`.venv\Scripts\python.exe tools\sync_repositories.py verify`、`.venv\Scripts\python.exe -m unittest discover -s tests -v`；fresh checkout可先用`verify --evidence-only`只核对tracked RTL28审计快照。预期根工作树干净、三参考仓匹配lock、RTL28 external evidence匹配hash、登记的全量测试全部通过。2026-07-13已确认managed worktree回收会穿透依赖junction清空Local目标，因此setup对非Local工作树硬失败；依赖`.venv`、三个参考仓或正式W3的任务统一回Local，直到有隔离且通过“销毁安全”验证的新方案。

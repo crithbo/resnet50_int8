@@ -42,11 +42,18 @@ class W4GateAuditTests(unittest.TestCase):
         self.assertEqual(
             report["gate_decision"]["software_candidate_readiness"], "fail"
         )
-        self.assertEqual(report["candidate_layouts"]["count"], 4)
+        self.assertEqual(report["candidate_layouts"]["count"], 12)
         self.assertEqual(
             report["current_target_evidence"]["layout_evidence_families"],
-            ["simple", "view"],
+            ["conv", "global_average_pool", "matmul", "maxpool", "simple", "view"],
         )
+        current_interfaces = [
+            item
+            for item in report["plugin_interfaces"]
+            if item["target_family"] == "rtl28"
+        ]
+        self.assertEqual(len(current_interfaces), 14)
+        self.assertTrue(all(item["interface_complete"] for item in current_interfaces))
         self.assertFalse(
             report["current_target_evidence"]["registered_layout_evidence_complete"]
         )

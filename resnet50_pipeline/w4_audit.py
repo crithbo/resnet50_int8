@@ -14,6 +14,7 @@ from .avgpool16_layout import (
     GlobalAveragePoolChannel16PhysicalLayout,
 )
 from .compare import compare_logical_tensor, compare_request, load_comparison_request
+from .conv28_layout import QLinearConvPhysicalLayout
 from .conv16_layout import ConvBatch16PhysicalLayout
 from .conv16_ring_layout import ConvRing16PhysicalLayout
 from .errors import ContractError
@@ -23,10 +24,12 @@ from .matmul16_layout import (
     QLinearMatMulBatch16PhysicalLayout,
     QLinearMatMulRing16PhysicalLayout,
 )
+from .matmul28_layout import QLinearMatMulPhysicalLayout
 from .maxpool16_layout import (
     MaxPoolBatch16PhysicalLayout,
     MaxPoolChannel16PhysicalLayout,
 )
+from .pool28_layout import GlobalAveragePoolPhysicalLayout, MaxPoolPhysicalLayout
 from .simple_layout import (
     DequantizeLinearPhysicalLayout,
     QuantizeLinearPhysicalLayout,
@@ -118,6 +121,30 @@ def _plugin_interfaces() -> list[dict[str, Any]]:
         ("w4_simple_global_ring28_candidate_v1:Quantize", "rtl28", QuantizeLinearPhysicalLayout),
         ("w4_simple_global_ring28_candidate_v1:Dequantize", "rtl28", DequantizeLinearPhysicalLayout),
         ("w4_zero_copy_view_global_ring28_candidate_v1", "rtl28", ZeroCopyViewLayout),
+        ("w4_conv_group4x7_28_candidate_v1", "rtl28", QLinearConvPhysicalLayout),
+        ("w4_conv_global_ring28_candidate_v1", "rtl28", QLinearConvPhysicalLayout),
+        ("w4_maxpool_group4x7_28_candidate_v1", "rtl28", MaxPoolPhysicalLayout),
+        ("w4_maxpool_global_ring28_candidate_v1", "rtl28", MaxPoolPhysicalLayout),
+        (
+            "w4_globalavgpool_group4x7_28_candidate_v1",
+            "rtl28",
+            GlobalAveragePoolPhysicalLayout,
+        ),
+        (
+            "w4_globalavgpool_global_ring28_candidate_v1",
+            "rtl28",
+            GlobalAveragePoolPhysicalLayout,
+        ),
+        (
+            "w4_qlinearmatmul_group4x7_28_candidate_v1",
+            "rtl28",
+            QLinearMatMulPhysicalLayout,
+        ),
+        (
+            "w4_qlinearmatmul_global_ring28_candidate_v1",
+            "rtl28",
+            QLinearMatMulPhysicalLayout,
+        ),
         ("w4_batch_slice_candidate_v1:Quantize", "legacy16", LegacyQuantizeLinearPhysicalLayout),
         ("w4_batch_slice_candidate_v1:Dequantize", "legacy16", LegacyDequantizeLinearPhysicalLayout),
         ("w4_zero_copy_view_candidate_v1", "legacy16", LegacyZeroCopyViewLayout),
