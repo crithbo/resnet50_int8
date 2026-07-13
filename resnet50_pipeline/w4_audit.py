@@ -13,6 +13,7 @@ from .avgpool16_layout import (
     GlobalAveragePoolBatch16PhysicalLayout,
     GlobalAveragePoolChannel16PhysicalLayout,
 )
+from .compare import compare_logical_tensor, compare_request, load_comparison_request
 from .conv16_layout import ConvBatch16PhysicalLayout
 from .conv16_ring_layout import ConvRing16PhysicalLayout
 from .errors import ContractError
@@ -31,6 +32,7 @@ from .simple_layout import (
     QuantizeLinearPhysicalLayout,
     ZeroCopyViewLayout,
 )
+from .w4_profiles import PROFILE_POLICIES
 
 
 EXPECTED_NODE_COUNTS = {
@@ -50,43 +52,8 @@ REQUIRED_REPORT_IDS = (
     "w4_qlinearadd_profiles_v1",
     "w4_globalavgpool_profiles_v1",
     "w4_qlinearmatmul_profiles_v1",
+    "w4_network_candidate_dry_run_v1",
 )
-
-PROFILE_POLICIES = {
-    "batch": {
-        ("DequantizeLinear", "Flatten"): "zero_copy_proved",
-        ("Flatten", "QuantizeLinear"): "layout_compatible_rebase_w7",
-        ("QuantizeLinear", "QLinearConv"): "explicit_relayout",
-        ("QuantizeLinear", "QLinearMatMul"): "exact_alias_proved",
-        ("QLinearConv", "QLinearConv"): "layout_compatible_rebase_w7",
-        ("QLinearConv", "MaxPool"): "exact_alias_proved",
-        ("MaxPool", "QLinearConv"): "layout_compatible_rebase_w7",
-        ("QLinearConv", "QLinearAdd"): "layout_compatible_rebase_w7",
-        ("QLinearAdd", "QLinearAdd"): "layout_compatible_rebase_w7",
-        ("QLinearAdd", "QLinearConv"): "layout_compatible_rebase_w7",
-        ("QLinearAdd", "QLinearGlobalAveragePool"): "exact_alias_proved",
-        ("QLinearGlobalAveragePool", "DequantizeLinear"): "layout_compatible_rebase_w7",
-        ("QLinearMatMul", "QLinearAdd"): "exact_alias_proved",
-        ("QLinearAdd", "DequantizeLinear"): "layout_compatible_rebase_w7",
-    },
-    "ring_channel": {
-        ("DequantizeLinear", "Flatten"): "zero_copy_proved",
-        ("Flatten", "QuantizeLinear"): "layout_compatible_rebase_w7",
-        ("QuantizeLinear", "QLinearConv"): "explicit_relayout",
-        ("QuantizeLinear", "QLinearMatMul"): "explicit_relayout",
-        ("QLinearConv", "QLinearConv"): "layout_compatible_rebase_w7",
-        ("QLinearConv", "MaxPool"): "exact_alias_proved",
-        ("MaxPool", "QLinearConv"): "layout_compatible_rebase_w7",
-        ("QLinearConv", "QLinearAdd"): "layout_compatible_rebase_w7",
-        ("QLinearAdd", "QLinearAdd"): "layout_compatible_rebase_w7",
-        ("QLinearAdd", "QLinearConv"): "layout_compatible_rebase_w7",
-        ("QLinearAdd", "QLinearGlobalAveragePool"): "exact_alias_proved",
-        ("QLinearGlobalAveragePool", "DequantizeLinear"): "explicit_relayout",
-        ("QLinearMatMul", "QLinearAdd"): "exact_alias_proved",
-        ("QLinearAdd", "DequantizeLinear"): "explicit_relayout",
-    },
-}
-
 
 def _load_json(path: Path) -> dict[str, Any]:
     return json.loads(path.read_text(encoding="utf-8"))
@@ -143,6 +110,44 @@ def _plugin_interfaces() -> list[dict[str, Any]]:
             }
         )
     return results
+
+
+def _comparison_interface(root: Path) -> dict[str, Any]:
+    callables = {
+        "compare_logical_tensor": callable(compare_logical_tensor),
+        "compare_request": callable(compare_request),
+        "load_comparison_request": callable(load_comparison_request),
+    }
+    schemas = {
+        name: (root / "schemas" / name).is_file()
+        for name in (
+            "comparison_request.schema.json",
+            "comparison_report.schema.json",
+        )
+    }
+    return {
+        "domain": "logical_tensor_after_inverse_layout",
+        "required_pairs": [
+            ["golden", "simulator"],
+            ["golden", "hardware"],
+            ["simulator", "hardware"],
+        ],
+        "integer_policy": "bit_exact",
+        "float_policy": "manifest_declared_atol_rtol",
+        "failure_categories": [
+            "missing",
+            "load_error",
+            "layout_inverse_failure",
+            "shape_mismatch",
+            "dtype_mismatch",
+            "tolerance_required",
+            "value_mismatch",
+        ],
+        "callables": callables,
+        "schemas": schemas,
+        "interface_ready": all(callables.values()) and all(schemas.values()),
+        "hardware_results_available": False,
+    }
 
 
 def _output_qparams(
@@ -327,7 +332,12 @@ def audit_w4_gate(
         }
     )
     interfaces = _plugin_interfaces()
+    comparison_interface = _comparison_interface(root)
     transitions = _transition_edges(catalog)
+    network_report = _load_json(
+        root / report_records["w4_network_candidate_dry_run_v1"]["path"]
+    )
+    network_profiles = network_report["profiles"]
     hardware_approval = _hardware_approval_status(root, hardware_approval_path)
     hardware_approved = hardware_approval["valid"]
     unresolved = list(architecture["unresolved"])
@@ -360,11 +370,34 @@ def audit_w4_gate(
         ],
         "minimal_real_and_tail_roundtrip_regression": True,
         "all_candidate_capacity_checks_pass": True,
+        "all_93_edges_physically_verified": all(
+            profile["transition_audit"]["edge_count"] == 93
+            and profile["transition_audit"][
+                "all_policy_relations_physically_verified"
+            ]
+            for profile in network_profiles.values()
+        ),
+        "both_profile_dry_runs_fit_candidate_capacity": all(
+            profile["dry_run_cost"]["all_standalone_node_plans_fit"]
+            for profile in network_profiles.values()
+        ),
+        "candidate_lifetimes_and_aliases_conflict_free": all(
+            profile["memory_lifecycle"]["all_allocations_fit"]
+            and profile["memory_lifecycle"][
+                "all_lifetime_overlaps_address_disjoint"
+            ]
+            and profile["memory_lifecycle"]["all_alias_actions_conflict_free"]
+            and profile["memory_lifecycle"][
+                "all_residual_branches_distinct_and_disjoint"
+            ]
+            for profile in network_profiles.values()
+        ),
+        "logical_result_comparator_ready": comparison_interface["interface_ready"],
         "approved_target_profile_exists": hardware_approved,
         "target_rtl_isa_register_map_version_frozen": hardware_approved,
         "approved_physical_layout_contract_exists": hardware_approved,
     }
-    software_criteria = tuple(criteria)[:7]
+    software_criteria = tuple(criteria)[:-3]
     software_ready = all(criteria[name] for name in software_criteria)
     g4_passed = all(criteria.values())
     return {
@@ -384,8 +417,34 @@ def audit_w4_gate(
             "all_remain_candidate": not approved_layout_ids,
         },
         "plugin_interfaces": interfaces,
+        "logical_result_comparator": comparison_interface,
         "evidence_artifacts": artifact_checks,
         "transition_audit": transitions,
+        "candidate_network_dry_run_summary": {
+            profile_name: {
+                "edge_count": profile["transition_audit"]["edge_count"],
+                "explicit_relayout_edge_count": profile["transition_audit"][
+                    "explicit_relayout_edge_count"
+                ],
+                "logical_io_bytes": profile["dry_run_cost"]["logical_io_bytes"],
+                "candidate_bundle_bytes_all_slices": profile["dry_run_cost"][
+                    "candidate_bundle_bytes_all_slices"
+                ],
+                "explicit_relayout_read_write_bytes": profile["dry_run_cost"][
+                    "explicit_relayout_read_write_bytes"
+                ],
+                "estimated_ring_neighbor_bytes": profile["dry_run_cost"][
+                    "estimated_ring_neighbor_bytes"
+                ],
+                "activation_high_water_bytes_per_slice": profile[
+                    "memory_lifecycle"
+                ]["high_water_bytes_per_slice"],
+                "residual_branch_check_count": len(
+                    profile["memory_lifecycle"]["residual_branch_checks"]
+                ),
+            }
+            for profile_name, profile in network_profiles.items()
+        },
         "hardware_approval": hardware_approval,
         "gate_criteria": criteria,
         "gate_decision": {
@@ -405,5 +464,6 @@ def audit_w4_gate(
             "Exact aliases proven on standalone bundles do not allocate simultaneous network-wide bases; W7 owns rebase and overlap decisions.",
             "The ring/channel candidate requires explicit transitions at batch-simple-operator boundaries, including Quantize-to-MatMul and final channel output to Dequantize.",
             "Final INT32 Conv/MatMul accumulators are covered in W4; per-K-tile physical psum placement remains a target-dependent W5 contract.",
+            "The logical result comparator is ready for two-way or three-way reports, but no absent simulator/hardware output is treated as a numerical pass.",
         ],
     }

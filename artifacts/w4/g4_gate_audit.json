@@ -4,7 +4,8 @@
     "The GAP D-to-Flatten proof is a storage-view property; the formal graph edge is GAP-to-Dequantize followed by Dequantize-to-Flatten.",
     "Exact aliases proven on standalone bundles do not allocate simultaneous network-wide bases; W7 owns rebase and overlap decisions.",
     "The ring/channel candidate requires explicit transitions at batch-simple-operator boundaries, including Quantize-to-MatMul and final channel output to Dequantize.",
-    "Final INT32 Conv/MatMul accumulators are covered in W4; per-K-tile physical psum placement remains a target-dependent W5 contract."
+    "Final INT32 Conv/MatMul accumulators are covered in W4; per-K-tile physical psum placement remains a target-dependent W5 contract.",
+    "The logical result comparator is ready for two-way or three-way reports, but no absent simulator/hardware output is treated as a numerical pass."
   ],
   "candidate_layouts": {
     "all_remain_candidate": true,
@@ -24,6 +25,28 @@
       "w4_qlinearmatmul_ring16_candidate_v1",
       "w4_zero_copy_view_candidate_v1"
     ]
+  },
+  "candidate_network_dry_run_summary": {
+    "batch": {
+      "activation_high_water_bytes_per_slice": 3411968,
+      "candidate_bundle_bytes_all_slices": 1722427648,
+      "edge_count": 93,
+      "estimated_ring_neighbor_bytes": 0,
+      "explicit_relayout_edge_count": 1,
+      "explicit_relayout_read_write_bytes": 8830976,
+      "logical_io_bytes": 652723622,
+      "residual_branch_check_count": 16
+    },
+    "ring_channel": {
+      "activation_high_water_bytes_per_slice": 3411968,
+      "candidate_bundle_bytes_all_slices": 1340921344,
+      "edge_count": 93,
+      "estimated_ring_neighbor_bytes": 2589573120,
+      "explicit_relayout_edge_count": 4,
+      "explicit_relayout_read_write_bytes": 15416704,
+      "logical_io_bytes": 652723622,
+      "residual_branch_check_count": 16
+    }
   },
   "evidence_artifacts": {
     "w4_conv0_batch16": {
@@ -71,6 +94,15 @@
       "sha256_match": true,
       "size_match": true
     },
+    "w4_network_candidate_dry_run_v1": {
+      "actual_sha256": "852ea566112a92fd1965b6a2c2525449462e2b716db0941b368f87abc5d1eb18",
+      "actual_size_bytes": 615520,
+      "expected_sha256": "852ea566112a92fd1965b6a2c2525449462e2b716db0941b368f87abc5d1eb18",
+      "expected_size_bytes": 615520,
+      "path": "artifacts/w4/network_candidate_dry_run.json",
+      "sha256_match": true,
+      "size_match": true
+    },
     "w4_qlinearadd_profiles_v1": {
       "actual_sha256": "9769589a14cc281968925e49645715010db634a8f722093e3ba106d47ae03108",
       "actual_size_bytes": 74305,
@@ -91,6 +123,7 @@
     }
   },
   "gate_criteria": {
+    "all_93_edges_physically_verified": true,
     "all_candidate_capacity_checks_pass": true,
     "all_layout_interfaces_complete": true,
     "all_quantized_edge_qparam_identities_exact": true,
@@ -98,7 +131,10 @@
     "all_runtime_edge_responsibilities_explicit": true,
     "approved_physical_layout_contract_exists": false,
     "approved_target_profile_exists": false,
+    "both_profile_dry_runs_fit_candidate_capacity": true,
+    "candidate_lifetimes_and_aliases_conflict_free": true,
     "formal_node_coverage_78_of_78": true,
+    "logical_result_comparator_ready": true,
     "minimal_real_and_tail_roundtrip_regression": true,
     "target_rtl_isa_register_map_version_frozen": false
   },
@@ -128,6 +164,45 @@
     "approved physical layouts for activation, weight, bias, qparams, psum and output",
     "load/start/wait/error/dump protocol"
   ],
+  "logical_result_comparator": {
+    "callables": {
+      "compare_logical_tensor": true,
+      "compare_request": true,
+      "load_comparison_request": true
+    },
+    "domain": "logical_tensor_after_inverse_layout",
+    "failure_categories": [
+      "missing",
+      "load_error",
+      "layout_inverse_failure",
+      "shape_mismatch",
+      "dtype_mismatch",
+      "tolerance_required",
+      "value_mismatch"
+    ],
+    "float_policy": "manifest_declared_atol_rtol",
+    "hardware_results_available": false,
+    "integer_policy": "bit_exact",
+    "interface_ready": true,
+    "required_pairs": [
+      [
+        "golden",
+        "simulator"
+      ],
+      [
+        "golden",
+        "hardware"
+      ],
+      [
+        "simulator",
+        "hardware"
+      ]
+    ],
+    "schemas": {
+      "comparison_report.schema.json": true,
+      "comparison_request.schema.json": true
+    }
+  },
   "model_sha256": "c234f30975989788b4405f25253275aae247ab6dbdd34aaa69ab0a59ff76f6d0",
   "node_coverage": {
     "all_formal_nodes_covered": true,

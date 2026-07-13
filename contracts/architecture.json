@@ -311,15 +311,30 @@
       "ring_per_slice_used_bytes": 136224,
       "slice_capacity_bytes": 25165824
     },
+    "w4_network_candidate_dry_run_v1": {
+      "status": "candidate_software_evidence",
+      "path": "artifacts/w4/network_candidate_dry_run.json",
+      "sha256": "852ea566112a92fd1965b6a2c2525449462e2b716db0941b368f87abc5d1eb18",
+      "size_bytes": 615520,
+      "runtime_edges_per_profile": 93,
+      "profiles": [
+        "batch",
+        "ring_channel"
+      ],
+      "all_profiles_pass": true,
+      "w5_artifacts_generated": false
+    },
     "w4_g4_gate_audit_v1": {
       "status": "candidate_software_evidence",
       "path": "artifacts/w4/g4_gate_audit.json",
-      "sha256": "4f0fd947d55293bd02361ae920e1678c59d3051438562b14d7b9c36e660bdeef",
-      "size_bytes": 100764,
+      "sha256": "c4679a1bc44d0eac35de3035a4627895223140c22f560dcf19d21a06b37a298e",
+      "size_bytes": 103311,
       "formal_nodes_covered": 78,
       "runtime_tensor_edges_audited": 93,
       "quantized_edges_with_exact_qparam_identity": 91,
       "all_registered_evidence_hashes_match": true,
+      "logical_result_comparator_ready": true,
+      "hardware_results_available": false,
       "software_candidate_readiness": "pass",
       "g4_status": "not_passed",
       "w5_authorized": false,

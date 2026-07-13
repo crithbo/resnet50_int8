@@ -1,6 +1,6 @@
 # ResNet50 INT8 项目入口与代码地图
 
-最后更新：2026-07-12
+最后更新：2026-07-13
 
 本文件是新会话进入本项目时的默认入口，记录最终目标、当前闭环状态、协作规则、仓库基线和代码地图。唯一权威执行计划见 `.agents/plan.md`，已经发生的事实见 `.agents/history.md`。
 
@@ -9,11 +9,11 @@
 - **最终验收**：正式 ResNet50 INT8 ONNX→逐节点/硬件原子算子 golden→16-slice relayout→JSON/bitstream→目标 simulator→execplan/Bank_data→RTL/硬件→三方逐算子和整网一致。
 - **W3业务封版检查点**：`35a4fde106d102b0e165e7eb13d60f7dd980db71`；W0/G0、W2/G2、W3/G3已通过，W1只完成模型/输入/软件量化事实，G1因目标硬件合同缺失尚未通过。交接文档可能有后续纯文档提交，当前恢复点以`git rev-parse HEAD`和`history.md`精确台账为准。
 - **三个仓库分工**：`CGRA_SIM` 给软件/QNN语义和旧 ResNet 计划；`ndp-sim-ref` 给目标 JSON、bitstream、relayout/execplan 框架；`NDPFuncModel` 给 Conv 数据通路。根集成层已经统一W3图/lowering/golden身份，但配置、simulator、execplan和hardware尚未接入同一manifest。
-- **当前成果**：正式图含78节点/617张量，lower为133个语义hw_op；保存79个运行时tensor和55个INT32内部tensor，全部78节点独立公式重放匹配ORT，旧77原语已逐项映射。W4计划内全部算子族均已有batch/channel或batch/ring软件candidate布局；W2小Conv的软件闭环和W4可逆布局都不等于目标JSON simulator或硬件通过。
+- **当前成果**：正式图含78节点/617张量，lower为133个语义hw_op；保存79个运行时tensor和55个INT32内部tensor，全部78节点独立公式重放匹配ORT，旧77原语已逐项映射。W4计划内全部算子族均已有batch/channel或batch/ring软件candidate布局；93条边物理兼容、双profile整网成本、生命周期/alias和通用逻辑比较器均已完成。W2小Conv的软件闭环和W4软件证据都不等于目标JSON simulator或硬件通过。
 - **下一主线**：W4/G4综合门审计已经完成，当前等待Conv/整体profile、RTL/ISA版本和正式物理layout裁决；`w5_authorized=false`，不进入W5。不得重跑约951 MB的W3产物，除非合同/hash/回归明确失效。
 - **当前外部阻塞**：正式模型和固定输入基线已经自行取得；剩余外部阻塞为目标16-slice RTL/ISA版本、正式物理layout、INT8 SA/GA/qparams硬件约定、目标emulator关系、硬件加载与dump协议。
 - **禁止误用**：NDPFuncModel 当前 `extracted_*.npy` 和 `verify_pe` psum 不是可信 golden；42个 JSON也不等于 ResNet算子配置已完成；bitstream生成成功不等于数值正确。
-- **接手检查**：依次运行 `git status --short`、`.venv\Scripts\python.exe tools\sync_repositories.py verify`、`.venv\Scripts\python.exe -m unittest discover -s tests -v`；预期根工作树干净、三参考仓匹配lock、68项测试通过。始终使用根目录 `.venv\Scripts\python.exe`。
+- **接手检查**：依次运行 `git status --short`、`.venv\Scripts\python.exe tools\sync_repositories.py verify`、`.venv\Scripts\python.exe -m unittest discover -s tests -v`；预期根工作树干净、三参考仓匹配lock、89项测试通过。始终使用根目录 `.venv\Scripts\python.exe`。
 
 下一步任务和验收条件只以 `.agents/plan.md` 为准；本文件后半部分是查代码时使用的详细地图，不需要接手时从头逐行阅读。
 
@@ -283,12 +283,12 @@ CGRA_SIM/testing/resnet-50-int8/
 
 - **模型和golden——W3/G3已通过**：模型/input/hash和ORT设置已锁定；正式保存79个运行时tensor和55个lowering内部INT32 tensor，全部78节点由独立公式重放并匹配ORT。旧`golden.py`的30个唯一检查点只保留为历史参考。
 - **lowering和身份映射——W3语义层已完成**：78个ONNX节点稳定lower为133个语义hw_op；旧77模型级原语已逐项映射，Flatten明确为zero-copy。JSON实例、逐K-tile和execplan身份在W4/W5/W7继续扩展，不得说成W3尚未实现。
-- **数据变换——W4软件candidate readiness通过/G4未通过**：综合审计覆盖78/78节点、93条runtime边和91条量化qparam链；7份登记证据hash/大小全部匹配，所有边在batch与ring/channel下均有exact alias、W7 rebase或explicit relayout责任。阻塞条件为没有approved profile、没有冻结RTL/ISA/register-map版本、没有approved物理layout；ADR-003规定`w5_authorized=false`并等待硬件裁决。
+- **数据变换——W4软件candidate readiness通过/G4未通过**：综合审计覆盖78/78节点、93条runtime边和91条量化qparam链；8份登记物理证据hash/大小全部匹配，所有边在batch与ring/channel下均已逐边验证物理签名及exact alias、W7 rebase或explicit relayout责任；双profile整网成本、activation生命周期/alias和残差分支检查通过。阻塞条件为没有approved profile、没有冻结RTL/ISA/register-map版本、没有approved物理layout；ADR-003规定`w5_authorized=false`并等待硬件裁决。
 - **单算子配置——部分已有**：42 个静态 JSON 中只有 MaxPool、sum 型 AvgPool、固定样例 quant、fp32 输出 add-dequant 可局部参考；6 个 SA JSON 全是 FP16、bias=0；没有核心 INT8 Conv/MatMul。
 - **W2/G2小Conv软件闭环已通过**：`NDPFuncModel@35eab40` 的参数化runner在同一fixture上完成1/4-slice全部84坐标，实际经过DRAM、input Buffer、SpecialPEA、ActivationUnit、output Buffer和DRAM；NumPy、im2col、ORT、CGRA QNN rounding与NDP的accumulator/D一致，physical D可inverse且全部物理字节可解释。该结论不批准旧固定主入口、目标JSON或硬件layout；16-slice为下一步。
 - **execplan——框架已有/ResNet 适配没有**：可规划地址、重生成 bitstream、输出指令和 Bank_data，但 schema 无 numeric attributes，仍硬编码 28 slice，bitstream 失败后部分路径继续。
 - **RTL/硬件——外部阻塞**：没有完整 runner/testbench、加载/启动/完成/dump 协议或逐算子 checkpoint 入口。
-- **三方比较——仓库中没有通用实现**：旧 runner 只有 21 个硬编码 checkpoint，另一个工具只比较两个 128-bit 物理文件；没有 inverse-relayout 后的三方比较。
+- **三方比较——通用逻辑比较器已就绪/真实结果未到位**：根集成层已实现inverse-relayout之后的两方/三方比较、整数bit-exact、浮点显式容差、错误分类、拓扑首错和provenance；旧runner与128-bit物理文件工具仍不能替代它。当前没有目标simulator/hardware逻辑输出，也没有获批inverse layout，因此尚无真实三方通过结论。
 
 ## 当前最高优先级
 
@@ -690,7 +690,7 @@ testing/resnet-50-int8/gen_execu_plan_ver1.py
 
 审计口径：Python/Go/shell/PowerShell/Makefile/Markdown/TOML/JSON/CSV 逐目录检查入口、类/函数、TODO/`pass`/`NotImplemented` 和调用关系；PPTX/XLSX 检查页/表结构与内容类别；`.params/.bin/.trace/.log/.svg/.png/.jpg` 按生产者、消费者和用途分类。原两仓库 319 个 Python、30 个 Go 均已落入已有功能分组；新增仓库的 81 个 Python 全部通过 AST。原审计唯一 Python 语法失败仍是 `CGRA_SIM/cgra_python/layout/layout_buffer.py:201`。`NDPFuncModel` 的严格 JSON 输入只有 `kernel/add_config_MN_N.json`，`.vscode/launch.json` 按 JSONC 处理。三个仓库未发现新的未分类业务源码。
 
-结论不是“所有代码都可运行”，而是“没有仍无法解释用途的有效文件”：未闭环文件已标为实验/骨架，空文件、第三方 PLY、生成 parser 表、Office 锁文件、测试桩和无关备份已单独识别。新增仓库确实提供了此前缺少的 Conv 功能数据通路模型，但未发现正式 ResNet INT8 ONNX/参数/golden 产物、完整 ResNet 逐算子 relayout、能直接解释目标 JSON/bitstream 的数值 emulator、ResNet ONNX→NDP execplan lowerer、RTL/硬件 runner 或通用三方比较器。
+结论不是“所有代码都可运行”，而是“没有仍无法解释用途的有效文件”：未闭环文件已标为实验/骨架，空文件、第三方 PLY、生成 parser 表、Office 锁文件、测试桩和无关备份已单独识别。参考仓没有提供正式 ResNet INT8 ONNX/参数/golden产物、完整ResNet逐算子relayout、能直接解释目标JSON/bitstream的数值emulator、ResNet ONNX→NDP execplan lowerer、RTL/硬件runner或通用三方比较器；其中逐算子relayout和通用逻辑比较器现已由根集成层自行补齐，其他目标链缺口不变。
 
 ## 剩余问题按解决方式分级
 
@@ -716,7 +716,7 @@ testing/resnet-50-int8/gen_execu_plan_ver1.py
 - 目标 emulator runner、输出提取和逻辑 tensor 恢复。
 - 16-slice ResNet execplan 前端、schema 扩展、严格失败和完整数据包。
 - RTL/硬件 runner、checkpoint/dump 和版本记录。
-- golden/simulator/hardware 三方比较器和分层回归。
+- 用已完成的通用逻辑比较器接入真实golden/simulator/hardware结果，并建立逐算子到整网的分层回归。
 
 ### 功能正确性闭环后再做
 

@@ -5,7 +5,9 @@ import json
 import sys
 from pathlib import Path
 
+from .artifacts import ArtifactManager
 from .backends import MockBackend
+from .compare import compare_request, load_comparison_request
 from .contracts import load_contracts
 from .errors import PipelineError
 from .manifest import RunManifest
@@ -38,6 +40,19 @@ def build_parser() -> argparse.ArgumentParser:
 
     show = subparsers.add_parser("show-manifest", help="validate and summarize a manifest")
     show.add_argument("path", type=Path)
+
+    compare = subparsers.add_parser(
+        "compare-results",
+        help="compare logical golden/simulator/hardware .npy tensors",
+    )
+    compare.add_argument("request", type=Path, help="comparison request JSON")
+    compare.add_argument("--output", type=Path, help="machine-readable report JSON")
+    compare.add_argument(
+        "--block-elements",
+        type=int,
+        default=1_048_576,
+        help="maximum elements compared in memory per block",
+    )
     return parser
 
 
@@ -70,6 +85,29 @@ def main(argv: list[str] | None = None) -> int:
                 "stages": {stage.name: stage.status for stage in manifest.stages},
             }, indent=2))
             return manifest_exit_code(manifest)
+        if args.command == "compare-results":
+            request_path = args.request.resolve()
+            request = load_comparison_request(request_path)
+            report = compare_request(
+                request,
+                base_dir=request_path.parent,
+                block_elements=args.block_elements,
+            )
+            if args.output is None:
+                print(json.dumps(report, ensure_ascii=False, indent=2, sort_keys=True))
+            else:
+                output = args.output.resolve()
+                artifact = ArtifactManager(output.parent).write_json(output.name, report)
+                print(json.dumps({
+                    "comparison_id": report["comparison_id"],
+                    "status": report["status"],
+                    "summary": report["summary"],
+                    "first_failure": report["first_failure"],
+                    "output": str(output),
+                    "sha256": artifact.sha256,
+                    "size_bytes": artifact.size_bytes,
+                }, ensure_ascii=False, indent=2, sort_keys=True))
+            return 0 if report["status"] == "passed" else 1
         if args.command == "mock-run":
             manifest = execute_mock_run(
                 root,

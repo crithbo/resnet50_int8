@@ -7,17 +7,18 @@
 
 W4计划内全部算子族的软件candidate readiness通过，但G4保持未通过，W5不获授权。项目停在W4/G4边界，等待硬件侧给出带版本的正式profile与物理layout批准；不得把任一candidate改写为approved，也不得用candidate直接生成目标INT8 JSON/bitstream。
 
-机器审计报告：`artifacts/w4/g4_gate_audit.json`，100,764 bytes，SHA-256 `4f0fd947d55293bd02361ae920e1678c59d3051438562b14d7b9c36e660bdeef`。报告现会只读检查`contracts/hardware_approval.json`；当前文件不存在，因此结论不变。
+机器审计报告：`artifacts/w4/g4_gate_audit.json`，103,311 bytes，SHA-256 `c4679a1bc44d0eac35de3035a4627895223140c22f560dcf19d21a06b37a298e`。报告现会只读检查`contracts/hardware_approval.json`，把ADR-005的整网物理边/成本/生命周期审计及ADR-006的通用逻辑结果比较器纳入软件门；当前批准文件不存在，因此G4结论不变。
 
 ## 软件审计通过项
 
 - 正式图78/78节点均有W4 candidate：2 Quantize、53 QLinearConv、1 MaxPool、17 QLinearAdd、1 QLinearGlobalAveragePool、1 Flatten、1 QLinearMatMul、2 Dequantize。
 - 12个W4 layout candidate对应的实现均提供`forward/inverse/explain_coordinate/validate`。
-- 已登记的5份算子族正式报告及2份Conv0报告共7份证据，其文件大小和SHA-256全部匹配合同。
+- 已登记的5份算子族正式报告、2份Conv0报告及1份整网candidate dry-run共8份证据，其文件大小和SHA-256全部匹配合同。
 - 正式图93条runtime tensor边均分别给出batch和ring/channel责任；91条量化边的producer输出与consumer输入scale/zero-point稳定tensor ID全部一致。
 - batch候选边分类：4条已证明exact alias、1条显式relayout、87条layout-compatible并留W7统一base、1条zero-copy View。
 - ring/channel候选边分类：3条已证明exact alias、4条显式relayout、85条layout-compatible并留W7统一base、1条zero-copy View。
-- 最小shape、正式shape、tail/inactive slice、qparam副本、容量、坐标与raw→physical→raw回归均通过；当前根仓共68项测试。
+- 通用逻辑结果比较器已提供两方/三方、整数bit-exact、显式浮点容差、缺失/inverse/shape/dtype/value分类、拓扑首错和稳定机器报告；当前尚无真实simulator/hardware输出，因此只标记工具就绪。
+- 最小shape、正式shape、tail/inactive slice、qparam副本、容量、坐标与raw→physical→raw回归均通过；当前根仓共89项测试。
 
 ## 重要审计解释
 

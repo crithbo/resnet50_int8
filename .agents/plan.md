@@ -1,6 +1,6 @@
 # ResNet50 INT8 端到端实施计划
 
-最后更新：2026-07-11
+最后更新：2026-07-13
 
 本文件是项目唯一的权威执行计划。默认入口是 `.agents/agent.md`；已经发生的事实见 `.agents/history.md`；单算子配置推导细则见 `.agents/rules/算子配置规则.md`。
 
@@ -51,7 +51,7 @@
 
 - **已通过**：W0/G0集成骨架，W2/G2小Conv候选软件纵向闭环，W3/G3正式图/lowering/全节点与subop golden。
 - **部分通过**：W1已冻结正式候选模型、固定输入、预处理和软件量化事实；目标架构、layout、JSON/emulator和硬件接口未批准，所以G1仍未通过。
-- **当前等待外部裁决**：W4/G4综合审计已覆盖78/78节点、93条runtime边、91条量化qparam链和7份正式证据；software candidate readiness通过。G4因approved profile、冻结RTL/ISA/register-map版本和approved物理layout三项缺失而未通过，`w5_authorized=false`。W5目标JSON/bitstream、W6目标simulator、W7网络execplan、W8硬件、W9通用三方比较均不启动。
+- **当前等待外部裁决**：W4/G4综合审计已覆盖78/78节点、93条runtime边、91条量化qparam链和8份正式物理证据；两套profile的整网dry-run、activation生命周期/alias检查及通用逻辑结果比较器均已完成，software candidate readiness通过。G4因approved profile、冻结RTL/ISA/register-map版本和approved物理layout三项缺失而未通过，`w5_authorized=false`。W5目标JSON/bitstream、W6目标simulator、W7正式execplan和W8硬件执行不启动；W9的实际三方回归仍等待结果，但其通用比较基础设施已前置完成。
 - **当前边界**：W2只证明小合成Conv的golden=NDP functional model；W3公式重放仍属于golden侧。当前没有任何正式ResNet算子达到golden=target simulator=hardware。
 
 ### 接手进度总表
@@ -62,12 +62,12 @@
 | W1 | G1未通过 | 模型、固定输入、预处理、ONNX量化事实 | 并行补目标硬件合同 |
 | W2 | G2通过 | 1/4-slice小Conv候选layout和NDP functional数值闭环 | 作为W4 fixture，不外推为硬件规格 |
 | W3 | G3通过 | 78节点、133 hw_op、79 runtime tensor、55内部tensor、旧77映射 | 不重跑大artifact，除非hash/合同失效 |
-| W4 | software readiness通过/G4未通过 | 78节点、93边、91量化链和7份证据通过审计 | 等待Conv/整体profile、RTL/ISA版本和正式layout批准；不进W5 |
-| W5～W9 | 未通过 | 仅有参考框架或mock接口 | 等待对应前置门通过 |
+| W4 | software readiness通过/G4未通过 | 78节点、93边、91量化链、8份物理证据、双profile整网dry-run/生命周期/alias及逻辑比较器通过审计 | 等待Conv/整体profile、RTL/ISA版本和正式layout批准；不进W5 |
+| W5～W9 | 未通过 | W9通用比较器基础设施已前置完成；其余仅有参考框架或mock接口 | 等待对应前置门和真实结果通过 |
 
 ### 当前可立即执行队列
 
-1. 新对话先执行只读接手检查：根状态、三仓verify、68项unittest；不要先重跑约951 MB的W3正式artifact。
+1. 新对话先执行只读接手检查：根状态、三仓verify、89项unittest；不要先重跑约951 MB的W3正式artifact。
 2. 等待并记录硬件侧对ADR-002/ADR-003的正式回复；未取得带版本的profile/物理layout批准前，不把candidate升级为approved且不进入W5。
 3. 并行推进W1剩余硬件合同；没有approved合同不得宣布G4/G5硬件格式通过。
 4. 若模型、预处理、量化公式或lowering变化，先列出所有失效的manifest/hash和下游产物。
@@ -375,7 +375,7 @@ layout描述不能只写名称，必须能给出逻辑坐标→slice/bank/byte a
 
 验收门 G4：最小shape、真实ResNet shape和tail shape均通过 raw→physical→raw bit-exact；上游D/下游A的零拷贝或转换责任有显式记录。
 
-当前进度（2026-07-12）：W4/G4综合门审计已完成。机器报告`artifacts/w4/g4_gate_audit.json`覆盖78/78正式节点、93条runtime tensor边、91条量化边qparam身份和12个W4 candidate；7份登记证据的hash/大小全部匹配。batch边分类为4 exact alias、1 explicit relayout、87 layout-compatible/W7 rebase、1 zero-copy；ring/channel为3、4、85、1。software candidate readiness通过，但12个layout全部仍为candidate，目标RTL/ISA/register-map版本与正式物理layout未冻结，因此G4=`not_passed`、W5未授权。ADR-003已形成等待硬件裁决的正式记录。
+当前进度（2026-07-13）：W4/G4综合门审计已完成。机器报告`artifacts/w4/g4_gate_audit.json`覆盖78/78正式节点、93条runtime tensor边、91条量化边qparam身份和12个W4 candidate；5份算子族报告、2份Conv0报告及1份整网candidate dry-run共8份登记物理证据的hash/大小全部匹配。batch边分类为4 exact alias、1 explicit relayout、87 layout-compatible/W7 rebase、1 zero-copy；ring/channel为3、4、85、1。93条边均完成逐边物理签名验证，两profile均完成成本、activation生命周期、alias和16组残差双分支冲突检查。ADR-006的通用逻辑比较器也已纳入软件门。software candidate readiness通过，但12个layout全部仍为candidate，目标RTL/ISA/register-map版本与正式物理layout未冻结，因此G4=`not_passed`、W5未授权。
 
 ### W5：逐算子JSON和bitstream【难度：很高】
 
@@ -423,6 +423,8 @@ layout描述不能只写名称，必须能给出逻辑坐标→slice/bank/byte a
 验收门 G8：同一包重复运行稳定，小Conv和conv0达到golden=simulator=hardware。
 
 ### W9：全算子扩展、三方比较与整网回归【难度：高】
+
+当前前置进度（2026-07-13）：manifest式逻辑tensor比较器、请求/报告schema和CLI已经完成；整数bit-exact、浮点显式`atol/rtol`、missing/load/inverse/shape/dtype/value分类、拓扑首错、坐标provenance及分块mmap均有回归。它只表示工具就绪；目标simulator/hardware结果、批准inverse layout和逐算子/整网三方通过仍未取得，G9不变。
 
 1. 比较器按manifest执行golden↔simulator、golden↔hardware、simulator↔hardware三组比较。
 2. 报告首错node/hw_op/slice/逻辑坐标/物理地址/三方值，不给污染后的下游逐层猜因。
@@ -597,7 +599,7 @@ W0实现前还需把以上补充转成可执行的schema字段、测试用例和
 - 每个 slice 的元素归属、复制规则、padding 区和 128-bit 行内顺序可由 manifest 验证。
 - 上一算子 D 与下一算子 A 的物理布局不一致时，明确由 remapping、后继 stream 还是显式 relayout 解决。
 
-当前状态：W2语义保持冻结；W4 software candidate readiness已由`artifacts/w4/g4_gate_audit.json`证明，SHA-256 `f4bd5d3e84ad6c022729179fe2ce01643792c9fedb792bf61c58b83684e32a5a`。G4未通过且W5未授权；当前只等待ADR-002/ADR-003列出的正式硬件布局、整体profile和版本裁决。裁决到达后必须写新版本approved合同并重新运行本审计，不能原地改写candidate历史。
+当前状态：W2语义保持冻结；W4 software candidate readiness已由`artifacts/w4/g4_gate_audit.json`证明，SHA-256 `c4679a1bc44d0eac35de3035a4627895223140c22f560dcf19d21a06b37a298e`。G4未通过且W5未授权；当前只等待ADR-002/ADR-003列出的正式硬件布局、整体profile和版本裁决。裁决到达后必须写新版本approved合同并重新运行本审计，不能原地改写candidate历史。
 
 ## 阶段 E：完成 ResNet 单算子 JSON 和数值参数化
 

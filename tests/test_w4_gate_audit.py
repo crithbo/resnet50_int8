@@ -31,6 +31,20 @@ class W4GateAuditTests(unittest.TestCase):
         self.assertEqual(
             report["gate_decision"]["software_candidate_readiness"], "pass"
         )
+        self.assertTrue(report["gate_criteria"]["all_93_edges_physically_verified"])
+        self.assertTrue(
+            report["gate_criteria"]["both_profile_dry_runs_fit_candidate_capacity"]
+        )
+        self.assertTrue(
+            report["gate_criteria"][
+                "candidate_lifetimes_and_aliases_conflict_free"
+            ]
+        )
+        self.assertTrue(report["gate_criteria"]["logical_result_comparator_ready"])
+        self.assertTrue(report["logical_result_comparator"]["interface_ready"])
+        self.assertFalse(
+            report["logical_result_comparator"]["hardware_results_available"]
+        )
         self.assertEqual(report["gate_decision"]["g4_status"], "not_passed")
         self.assertFalse(report["gate_decision"]["w5_authorized"])
         self.assertEqual(
