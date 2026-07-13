@@ -491,4 +491,5 @@
 - 官方能力与本机实测已明确分开：`.worktreeinclude`按官方说明支持ignored路径和gitignore风格pattern；深层manifest改用快照只是当前桌面宿主的实测兼容性兜底，下个项目仍须先做最小真实worktree试验。
 - 全局配置只建议承载通用`on-request + auto_review + workspace-write`默认值；`.worktreeinclude`、setup、junction目标、依赖commit/hash和Local-only产物边界继续逐项目提交。本机用户级配置已存在`workspace-write`和workspace网络设置，缺少`approval_policy`与`approvals_reviewer`；本步骤只读审计，没有修改用户级全局文件。
 - 验证：`git diff --check`通过；Local setup `-CheckOnly`通过并确认四项共享源、四项固定元数据；三参考仓全部匹配`repos.lock.json`；`tests.test_worktree_environment` 5/5通过。没有联网、安装、读取或重跑W3 tensor。
-- 精确回退：revert `e4d57d6488b511355d6ef69a67e0cff42a85d2e2`；上一根仓恢复点为`2fdc2da5d20bbb4e5cf6248c250cf47e392c02e3`。
+- 后续根仓提交 `26cb73fd0c0c64083fa16facd46d140683fccdee`，父提交 `b586eb05d9bafbac2baaecbae3ff3d99c8711271`，`docs: normalize worktree experience markdown`；只移除文档末尾多余空白行，使提交级`git show --check`无提示，不改变任何方案或结论。
+- 精确回退：先revert `26cb73fd0c0c64083fa16facd46d140683fccdee`，再revert `e4d57d6488b511355d6ef69a67e0cff42a85d2e2`；上一根仓恢复点为`2fdc2da5d20bbb4e5cf6248c250cf47e392c02e3`。
