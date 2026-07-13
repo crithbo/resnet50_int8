@@ -578,3 +578,11 @@
 - 当前仅simple/view两个算子族进入candidate；仍缺Conv、MaxPool、QLinearAdd、GAP、MatMul、RTL28全93边/成本、clean elaboration和正式布局/ISA批准，所以`software_candidate_readiness=fail`、`G4=not_passed`、`w5_authorized=false`、`current_gate_eligible=false`。没有写入正式G4证据文件，没有生成W5 JSON/bitstream或真实`hardware_approval.json`，没有读取、复制或重跑约951 MB W3 tensor。
 - P4判定通过：下一波可在同一Local工作目录用最多三个协作子任务分别实现Conv、Pool（MaxPool+GAP）和MatMul；三者只能编辑各自实现、测试和证据生成器，不得修改`.agents`、architecture/approval schema、`memory.py`、`profile28.py`、`topology28.py`、公共layout模块或自行Git操作。主任务顺序审阅、更新全局合同、跑全量回归和提交；若任一实现要求改变C1公共API，立即关闭并行门回到单线程。
 - 精确回退：revert `c2443f7dbc33acb36ffb69e4b492d9cf0ed6a1bc`；上一恢复点为`29e2de616b6ef4037a2d67cdccdc45f7e53ee5d8`。该回退会同时移除C1 current布局、显式geometry隔离和P4放行记录，不应在继续RTL28布局波次时使用。
+
+## 2026-07-13：并行波次前16-slice泄漏终审
+
+- 根仓提交`13b9c4a4620f7709aa1e01e1faeaa9c7e1a56b05`，父提交`d905a74ac22db090a2cb023451a5298b5f6f1096`，`test: guard rtl28 from legacy16 leakage`；本步骤单线程完成并作为Conv/Pool/MatMul三路共享Local任务的共同基线。
+- 终审覆盖活动公共API、current architecture registry、hardware approval/G4、默认geometry、通用命名模块、旧工具入口和现行计划。结论：current planned/candidate registry的14个ID全部为`rtl28/28`，公共layout不导出旧16类，目标geometry无隐式16默认；剩余数字16只属于模型batch16、W0 mock、W2 1/4-slice fixture或显式legacy16代码/证据。
+- 修复了`plan.md`顶部仍停在C0/C1前的错误当前主线、进度表、执行队列和“Local环境为空”旧事故状态；`conv_coverage.py`、`network_dry_run.py`、`w4_profiles.py`增加`legacy16`/gate-ineligible模块标识，避免后续RTL28实现误用旧物理公式。新增`test_rtl28_legacy_isolation.py`固定current registry、公共API、current模块导入和三个历史模块的隔离边界。
+- 聚焦隔离/合同/G4/legacy证据回归32/32通过，根仓全量145/145通过，`validate-contracts` digest保持`9672bd530f29b2b1aa3f65e1cf1c0931d878818a175b5404701e638f2baffe28`；没有读取或重跑W3大tensor，没有改变G4/W5状态或生成正式W5产物。
+- 精确回退：revert `13b9c4a4620f7709aa1e01e1faeaa9c7e1a56b05`；上一恢复点为`d905a74ac22db090a2cb023451a5298b5f6f1096`。回退会移除自动泄漏防线并恢复错误现行计划，不应作为并行RTL28波次基线。
