@@ -11,7 +11,7 @@
 - **三个仓库分工**：`CGRA_SIM` 给软件/QNN语义和旧 ResNet 计划；`ndp-sim-ref` 给目标 JSON、bitstream、relayout/execplan 框架；`NDPFuncModel` 给 Conv 数据通路。根集成层已经统一W3图/lowering/golden身份，但配置、simulator、execplan和hardware尚未接入同一manifest。
 - **当前成果**：正式图含78节点/617张量，lower为133个语义hw_op；保存79个运行时tensor和55个INT32内部tensor，全部78节点独立公式重放匹配ORT，旧77原语已逐项映射。旧16-slice W4曾完成12个candidate、93条边审计、生命周期/alias和通用逻辑比较器；ADR-007已明确这些物理布局与成本报告只作历史证据，比较器和审计框架继续复用。
 - **当前硬件裁决**：目标为28-slice，RTL候选固定`Trassic2.0_RTL@e3bdebba95dec36ee8eba43caa92a326a88392cd`；主体采用七个4-slice小环的batch/channel混合profile，28-slice大环只作代表层性能候选。W4按该方案重开，G4仍未通过，`w5_authorized=false`。
-- **下一主线**：先实现RTL真实HIGH/LOW拓扑mapper，再按Quantize/Conv/MaxPool/Add/GAP/MatMul顺序重建28-slice布局、93条边和成本审计；不重跑约951 MB的W3产物，除非合同/hash/回归明确失效。
+- **下一主线**：先单线程把`architecture.json`、硬件批准schema/validator和测试从旧16-slice现行口径迁移到28-slice candidate，同时显式保留旧证据为legacy；再实现Quantize/Dequantize/View公共布局。公共合同冻结后按依赖和文件冲突决定算子分波并行，最后回Local统一重审93条边和成本；不重跑约951 MB的W3产物，除非合同/hash/回归明确失效。
 - **当前外部阻塞**：正式模型和固定输入基线已经自行取得；剩余外部阻塞为目标commit的clean elaboration/顶层命名闭合、正式端口layout、INT8 SA/GA/qparams硬件约定、目标emulator关系、硬件加载与dump协议。
 - **禁止误用**：NDPFuncModel 当前 `extracted_*.npy` 和 `verify_pe` psum 不是可信 golden；42个 JSON也不等于 ResNet算子配置已完成；bitstream生成成功不等于数值正确。
 - **接手检查**：Local主工作区依次运行`git status --short`、`.venv\Scripts\python.exe tools\sync_repositories.py verify`、`.venv\Scripts\python.exe -m unittest discover -s tests -v`；预期根工作树干净、三参考仓匹配lock、登记的全量测试全部通过。Codex worktree先运行`powershell -NoProfile -ExecutionPolicy Bypass -File tools\setup_codex_worktree.ps1`，再做status/verify和本任务聚焦测试；完整W3回归统一回到Local执行。
@@ -44,6 +44,9 @@
 
 ### Codex并行任务与worktree规则
 
+- 每个新工作包开工前必须先判断是否适合并行，不为了“看起来更快”强行拆分。只有共享合同/API已经冻结、子任务没有前后依赖、主要修改文件互不重叠、各自能独立测试和形成可集成提交时，才采用并行worktree；满足条件时优先并行以缩短等待时间。
+- 以下情况默认单线程：修改同一schema/contract/公共基类；下游必须读取上游刚确定的layout、qparams或地址规则；需要正式W3数据、整网93边、全量回归或最终集成；仍等待同一项硬件裁决；拆分后会重复实现或产生多套真值。单线程不是保守停滞，而是避免并行返工。
+- 并行任务开始前由Local主任务冻结基线commit、公共接口、允许修改的文件集合和验收命令；子任务不得自行编辑共享`.agents`、全局合同或其他任务文件。Local负责按依赖顺序集成、解决接口问题、统一更新合同/文档、执行全量测试并判断是否开启下一并行波次。
 - 只读全项目审查优先在Local任务执行；互不重叠的代码实现放独立Codex worktree。整网93边、正式W3输入、全量回归和最终集成只在Local主工作区执行。
 - Codex worktree只天然包含Git跟踪文件。根目录`.worktreeinclude`只复制W3目录第一层的2个小型JSON；桌面宿主当前不能可靠复制更深的ignored路径，因此2个manifest以固定hash的base64快照纳入Git，由setup在worktree内部恢复到原路径。禁止加入W3 `.npy`、整个`artifacts/`、`.venv`或三个参考仓，避免每个worktree重复约951 MB或更多数据。
 - 新worktree创建后先运行`tools/setup_codex_worktree.ps1`。脚本不联网、不安装、不覆盖现有文件；它从Git common directory定位Local源，只在源`.venv`存在、三个参考仓干净且HEAD匹配`repos.lock.json`时，为`.venv`和三个参考仓建立junction。脚本校验2个included JSON及2个tracked snapshot的固定大小与SHA-256，只在worktree内部恢复缺失manifest，不跨工作区复制W3 tensor。

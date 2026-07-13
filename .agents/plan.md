@@ -52,7 +52,7 @@
 
 - **已通过**：W0/G0集成骨架，W2/G2小Conv候选软件纵向闭环，W3/G3正式图/lowering/全节点与subop golden。
 - **部分通过**：W1已冻结正式候选模型、固定输入、预处理和软件量化事实；目标RTL候选已选`Trassic2.0_RTL@e3bdebba...`和28-slice。candidate审计已固定权威top/filelist、命令/WREG、HIGH/LOW、DRAM、SA/GA及运行接口的静态证据，但clean elaboration、正式端口layout、量化/requant、JSON/emulator和板级协议未批准，所以G1仍未通过。
-- **当前主线**：ADR-007已由操作者采用。旧16-slice W4的12个candidate、93边审计和成本报告改为历史证据；审计框架、生命周期/alias算法和逻辑比较器继续复用。28-slice真实HIGH/LOW mapper、七组batch调度和profile转换约束已经落地，下一步从Quantize/Dequantize开始重建算子布局。G4=`not_passed`、`w5_authorized=false`；可继续软件布局与成本审计，但不生成正式W5 JSON/bitstream。
+- **当前主线**：ADR-007已由操作者采用。旧16-slice W4的12个candidate、93边审计和成本报告改为历史证据；审计框架、生命周期/alias算法和逻辑比较器继续复用。28-slice真实HIGH/LOW mapper、七组batch调度和profile转换约束已经落地。下一步先单线程迁移仍把16写死的`architecture.json`、硬件批准schema/validator和fixture，再实现Quantize/Dequantize/View公共布局；公共合同冻结后才分波并行其他算子。G4=`not_passed`、`w5_authorized=false`；可继续软件布局与成本审计，但不生成正式W5 JSON/bitstream。
 - **当前边界**：W2只证明小合成Conv的golden=NDP functional model；W3公式重放仍属于golden侧。当前没有任何正式ResNet算子达到golden=target simulator=hardware。
 
 ### 接手进度总表
@@ -63,16 +63,17 @@
 | W1 | G1未通过 | 模型、固定输入、预处理、ONNX量化事实；已选28-slice RTL并完成必要candidate静态审计 | 补clean elaboration、量化/端口/固件/板级批准合同 |
 | W2 | G2通过 | 1/4-slice小Conv候选layout和NDP functional数值闭环 | 作为W4 fixture，不外推为硬件规格 |
 | W3 | G3通过 | 78节点、133 hw_op、79 runtime tensor、55内部tensor、旧77映射 | 不重跑大artifact，除非hash/合同失效 |
-| W4 | 旧16-slice readiness历史通过；28-slice重开/G4未通过 | 真实HIGH/LOW mapper、七组batch/profile合同已完成；旧审计方法和比较器可复用 | 按算子重建28-slice布局并重审93边；不进W5 |
+| W4 | 旧16-slice readiness历史通过；28-slice重开/G4未通过 | 真实HIGH/LOW mapper、七组batch/profile合同已完成；旧审计方法和比较器可复用；尚无28-slice算子layout | 先迁移机器合同/批准校验链，再按算子重建布局并重审93边；不进W5 |
 | W5～W9 | 未通过 | W9通用比较器基础设施已前置完成；其余仅有参考框架或mock接口 | 等待对应前置门和真实结果通过 |
 
 ### 当前可立即执行队列
 
 1. 新Local对话先执行根状态、三仓verify和登记的全量unittest；新worktree先运行安全setup脚本，再做status/verify和聚焦测试。不要复制、链接或重跑约951 MB的W3正式artifact。
-2. 以`topology28.py`和`profile28.py`为唯一拓扑/调度底座，先重建Quantize/Dequantize的28-slice A/qparams/D布局、正逆映射和tail规则；不得套用旧16-slice物理公式。
-3. 再按Conv、MaxPool、QLinearAdd、GAP、MatMul/head顺序重建布局，最后重新生成93边、生命周期/alias和性能成本报告。
-4. 并行推进W1的clean elaboration、量化/端口/固件/板级批准合同；没有approved合同不得宣布G4/G5通过。
-5. 若模型、预处理、量化公式或lowering变化，先列出所有失效的manifest/hash和下游产物。
+2. 单线程迁移机器合同：把`contracts/architecture.json`、`schemas/hardware_approval.schema.json`、`resnet50_pipeline/hardware_approval.py`和测试fixture从旧16-slice现行口径切到28-slice candidate；旧16-slice证据显式降级为legacy，不创建真实`hardware_approval.json`，不改变G4/W5门状态。
+3. 以`topology28.py`和`profile28.py`为唯一拓扑/调度底座，单线程重建Quantize/Dequantize/View的28-slice A/qparams/D布局、正逆映射、packing、tail和zero-copy规则，并冻结后续算子共享接口；不得套用旧16-slice物理公式。
+4. 公共接口冻结后按本节的并行判定门分波实现Conv、MaxPool/GAP和MatMul/head；QLinearAdd等待producer布局集成后再实现。最后回Local重新生成transition、93边、生命周期/alias和性能成本报告。
+5. 可独立并行推进W1的clean elaboration、量化/端口/固件/板级批准合同；没有approved合同不得宣布G4/G5通过。
+6. 若模型、预处理、量化公式或lowering变化，先列出所有失效的manifest/hash和下游产物。
 
 环境已经准备完成，不再把安装依赖列为任务：使用根目录 `.venv` 和 `requirements-resnet50.lock.txt`。当前三个最小入口结果见 `agent.md`“本地 Python 环境与已验证入口”。
 
@@ -363,11 +364,12 @@ W1的模型子任务已完成，但G1尚未通过；architecture/quantization/ba
 
 ### W4：逐算子28-slice relayout与性能profile【难度：高】
 
-当前状态（2026-07-13）：ADR-007已采用，旧16-slice W4物理候选全部失效为历史参考。W4按新目标重开；W0～W3不重做，旧93边集合、生命周期/alias算法和逻辑比较器复用，旧物理签名、容量与ring成本不复用。
+当前状态（2026-07-13）：ADR-007已采用，旧16-slice W4物理候选全部失效为历史参考。W4按新目标重开；W0～W3不重做，旧93边集合、生命周期/alias算法和逻辑比较器复用，旧物理签名、容量与ring成本不复用。当前只完成真实`topology28`和`profile28`调度底座，聚焦测试14/14通过；尚无任何28-slice算子layout。`architecture.json`、硬件批准schema/validator和fixture仍含16-slice现行断言，必须先迁移，不能让新算子注册到旧合同。
 
 实施顺序：
 
-1. 建立`topology28`：精确编码RTL的七个HIGH 4-slice小环和一条LOW 28-slice大环，提供owner/step正逆查询并拒绝`(owner+step)%28`等伪物理拓扑。
+0. 机器合同迁移：将架构合同、硬件批准schema/validator、fixture和G4入口切换为28-slice candidate口径；旧16-slice候选/报告只保留在显式legacy区域或历史文件中。冻结RTL commit、HIGH/LOW拓扑ID、七小环主profile和大环候选ID，但不伪造approved合同。
+1. 建立`topology28`：精确编码RTL的七个HIGH 4-slice小环和一条LOW 28-slice大环，提供owner/step正逆查询并拒绝`(owner+step)%28`等伪物理拓扑。【已完成】
 2. Quantize/Dequantize/View：建立七batch group、环内C/F owner、zero-copy和FP32/UINT8 packing规则。
 3. Conv：主体profile使用七小环；每组负责`[3,3,2,2,2,2,2]`个样本，activation按C owner环行4步/3 hop，weight在七组复制并按K owner分片，bias/qparams/P/D跟随K owner。
 4. MaxPool：保持batch group和channel owner，窗口/padding/tail在本地完成。
@@ -381,6 +383,18 @@ W1的模型子任务已完成，但G1尚未通过；architecture/quantization/ba
 性能报告至少包含SA有效lane比例、activation字节×hop、weight复制倍数、每slice/整机DDR占用、3/2样本组barrier尾部、transition读写量和估算来源；估算不得标为cycle。确认per-slice queue/barrier语义后，可增加异步wavefront候选。
 
 验收门 G4：最小shape、真实ResNet shape和tail shape均raw→physical→raw bit-exact；新93边、91量化链和16个残差Add重新通过物理兼容、生命周期和alias审计；HIGH/LOW映射匹配RTL；目标commit完成权威clean elaboration并形成带版本layout/ISA合同。未全部满足前G4=`not_passed`、W5未授权。
+
+#### W4-28下一执行包与并行波次
+
+**W4-28C0：机器合同迁移，单线程。** 原因是`architecture.json`、批准schema、Python validator、fixture和G4入口构成同一真值链，拆开会产生16/28混用。产物必须满足：目标slice为28；固定`Trassic2.0_RTL@e3bdebba...`candidate来源；HIGH/LOW映射和两个profile ID可机器读取；旧16-slice证据显式legacy且不能被新批准合同选择；合法28-slice fixture可通过、16-slice fixture必须失败；缺少真实批准文件时仍为`G4=not_passed`、`w5_authorized=false`。执行聚焦合同测试和根仓全量测试，不读取W3 tensor。
+
+**W4-28C1：Quantize/Dequantize/View公共布局，单线程。** 该步骤冻结所有后续算子共享的28-slice geometry、七组sample owner、环内C/F owner、对齐、FP32/UINT8小端packing、qparam副本、inactive/tail和zero-copy证明接口。覆盖最小shape、正式首尾节点shape、3/2样本组边界和tail shape；必须提供`forward/inverse/explain_coordinate/validate`并bit-exact。完成前不开算子并行，避免每个任务各造一套公共布局。
+
+**并行判定门P4。** 只有C0/C1全量回归通过、共享API冻结、每个任务文件集合无重叠、任务只消费小型W3 manifest/fixture且能独立提交时才开启。第一并行波建议最多三个实现任务：A负责Conv七小环和代表family；B负责MaxPool与GAP独立布局；C负责MatMul/dense七小环和大环代表层。三个任务不得编辑`.agents`、`architecture.json`、批准schema、公共layout模块或对方文件，只提交各自实现、测试和证据生成器。
+
+**W4-28C2：Local顺序集成。** Local按Conv→MaxPool/GAP→MatMul顺序集成并跑全量测试；随后实现依赖producer布局的QLinearAdd，验证两残差分支独立qparams、owner/tail兼容、广播和同时活跃地址。若任一并行结果要求修改公共API，停止下一波并回到单线程修订，不在三个worktree中分别打补丁。
+
+**W4-28C3：整网审计，单线程。** 在Local统一实现允许的profile transition，重跑新28-slice的93边、91条qparam链、16个残差Add、生命周期/alias和成本报告；报告包含lane利用率、hop字节、weight复制、容量、3/2 barrier尾部和转换成本，不宣称cycle。最后接入版本化硬件批准与clean elaboration证据重新审G4；未满足全部五项门槛时继续停在W4。
 
 ### W5：逐算子JSON和bitstream【难度：很高】
 
