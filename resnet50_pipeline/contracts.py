@@ -26,6 +26,7 @@ from .profile28 import (
     SUPPORTED_PROFILES,
 )
 from .topology28 import HIGH_RING_OWNERS, LOW_RING_OWNERS
+from .w4_evidence import LEGACY16_METADATA
 
 ALLOWED_CONTRACT_STATUSES = {
     "candidate",
@@ -221,6 +222,93 @@ def validate_architecture_contract(value: dict[str, Any], root: Path | None = No
         raise ContractError("legacy layout leaked into current candidate_layouts")
     if not isinstance(value["legacy_evidence"], dict) or not value["legacy_evidence"]:
         raise ContractError("legacy_evidence must preserve old16 reports")
+    for evidence_id, record in value["legacy_evidence"].items():
+        if not isinstance(record, dict):
+            raise ContractError(f"legacy_evidence.{evidence_id} must be an object")
+        for field in ("target_family", "slice_count", "current_gate_eligible"):
+            if record.get(field) != LEGACY16_METADATA[field]:
+                raise ContractError(
+                    f"legacy_evidence.{evidence_id}.{field} must remain legacy16"
+                )
+        if record.get("status") != LEGACY16_METADATA["status"]:
+            raise ContractError(
+                f"legacy_evidence.{evidence_id}.status must remain superseded"
+            )
+
+    legacy_report_records = dict(value["legacy_evidence"])
+    legacy_report_records.update(
+        {
+            "w4_conv0_batch16_layout_v1": value["legacy_layouts"][
+                "w4_conv_batch16_candidate_v1"
+            ]["formal_conv0_report"],
+            "w4_conv0_profile_comparison_v1": value["legacy_layouts"][
+                "w4_conv_ring16_candidate_v1"
+            ]["formal_conv0_profile_comparison"],
+        }
+    )
+    index_record = legacy_target.get("evidence_index")
+    if not isinstance(index_record, dict):
+        raise ContractError("legacy_target.evidence_index must be an object")
+    if set(index_record) != {"path", "size_bytes", "sha256"}:
+        raise ContractError("legacy_target.evidence_index fields are invalid")
+    for evidence_id, record in legacy_report_records.items():
+        if not isinstance(record.get("path"), str) or not record["path"]:
+            raise ContractError(f"legacy report {evidence_id} has no path")
+        if not isinstance(record.get("size_bytes"), int) or record["size_bytes"] <= 0:
+            raise ContractError(f"legacy report {evidence_id} has invalid size")
+        digest = record.get("sha256")
+        if not isinstance(digest, str) or len(digest) != 64:
+            raise ContractError(f"legacy report {evidence_id} has invalid SHA-256")
+
+    if root is not None:
+        evidence_index_path = root.parent / index_record["path"]
+        if not evidence_index_path.is_file():
+            raise ContractError("legacy16 evidence index is missing")
+        if evidence_index_path.stat().st_size != index_record["size_bytes"]:
+            raise ContractError("legacy16 evidence index size mismatch")
+        if sha256_file(evidence_index_path) != index_record["sha256"]:
+            raise ContractError("legacy16 evidence index hash mismatch")
+        try:
+            legacy_index = json.loads(evidence_index_path.read_text(encoding="utf-8"))
+        except json.JSONDecodeError as error:
+            raise ContractError("legacy16 evidence index is invalid JSON") from error
+        for field, expected in LEGACY16_METADATA.items():
+            if legacy_index.get(field) != expected:
+                raise ContractError(
+                    f"legacy16 evidence index {field} must be {expected!r}"
+                )
+        indexed_reports = legacy_index.get("reports")
+        if not isinstance(indexed_reports, dict) or set(indexed_reports) != set(
+            legacy_report_records
+        ):
+            raise ContractError("legacy16 evidence index does not list exactly nine reports")
+        for evidence_id, record in legacy_report_records.items():
+            indexed = indexed_reports[evidence_id]
+            identity = {
+                field: record[field] for field in ("path", "size_bytes", "sha256")
+            }
+            if indexed != identity:
+                raise ContractError(
+                    f"legacy16 evidence index differs for {evidence_id}"
+                )
+            report_path = root.parent / record["path"]
+            if not report_path.is_file():
+                raise ContractError(f"legacy16 evidence is missing: {report_path}")
+            if report_path.stat().st_size != record["size_bytes"]:
+                raise ContractError(f"legacy16 evidence size mismatch: {evidence_id}")
+            if sha256_file(report_path) != record["sha256"]:
+                raise ContractError(f"legacy16 evidence hash mismatch: {evidence_id}")
+            try:
+                report = json.loads(report_path.read_text(encoding="utf-8"))
+            except json.JSONDecodeError as error:
+                raise ContractError(
+                    f"legacy16 evidence is invalid JSON: {evidence_id}"
+                ) from error
+            for field, expected in LEGACY16_METADATA.items():
+                if report.get(field) != expected:
+                    raise ContractError(
+                        f"legacy16 evidence {evidence_id}.{field} must be {expected!r}"
+                    )
 
     candidate_evidence = value["candidate_evidence"]
     if not isinstance(candidate_evidence, dict) or "rtl28_static_audit_v1" not in candidate_evidence:
@@ -248,6 +336,111 @@ def validate_architecture_contract(value: dict[str, Any], root: Path | None = No
         not isinstance(item, str) or not item for item in unresolved
     ):
         raise ContractError("architecture unresolved list must contain explicit blockers")
+
+
+def validate_backend_contract(
+    value: dict[str, Any], architecture: dict[str, Any], root: Path | None = None
+) -> None:
+    _require_keys(
+        value,
+        {"schema_version", "contract_type", "status", "backends", "unresolved"},
+        "backend contract",
+    )
+    backends = value["backends"]
+    if not isinstance(backends, dict):
+        raise ContractError("backend.backends must be an object")
+    expected_names = {
+        "mock",
+        "ndp_conv_functional",
+        "rtl28_candidate_evidence",
+        "target_simulator",
+        "target_hardware",
+    }
+    if set(backends) != expected_names:
+        raise ContractError("backend registry does not contain the exact expected roles")
+
+    ndp = backends["ndp_conv_functional"]
+    if not isinstance(ndp, dict):
+        raise ContractError("backend.ndp_conv_functional must be an object")
+    if (
+        ndp.get("status") != "approved_for_w2_g2_only"
+        or ndp.get("role") != "w2_functional_reference_only"
+        or ndp.get("source_repository")
+        != "https://github.com/runoobb/NDPFuncModel.git"
+        or ndp.get("source_commit")
+        != "35eab40e5314bf603481dd6268bc96ab2ca514a6"
+        or ndp.get("is_target_backend") is not False
+    ):
+        raise ContractError("NDPFuncModel must remain a W2-only functional reference")
+    ndp_limitations = set(ndp.get("limitations", []))
+    if not {
+        "not_target_json_or_bitstream",
+        "not_target_simulator",
+        "not_target_hardware",
+        "not_hardware_approved",
+    }.issubset(ndp_limitations):
+        raise ContractError("NDPFuncModel limitations must exclude every target backend role")
+
+    architecture_evidence = architecture["candidate_evidence"]["rtl28_static_audit_v1"]
+    rtl = backends["rtl28_candidate_evidence"]
+    if not isinstance(rtl, dict):
+        raise ContractError("backend.rtl28_candidate_evidence must be an object")
+    expected_rtl = {
+        "status": "candidate_evidence_only",
+        "role": "static_rtl_evidence_not_executable_backend",
+        "source_repository": TARGET_RTL_REPOSITORY,
+        "source_commit": TARGET_RTL_COMMIT,
+        "snapshot_path": architecture_evidence["path"],
+        "snapshot_sha256": architecture_evidence["sha256"],
+        "architecture_id": TARGET_ARCHITECTURE_ID,
+        "slice_count": TARGET_SLICE_COUNT,
+        "clean_elaboration": False,
+        "is_target_backend": False,
+        "can_execute": False,
+    }
+    for field, expected in expected_rtl.items():
+        if rtl.get(field) != expected:
+            raise ContractError(
+                f"backend.rtl28_candidate_evidence.{field} differs from locked evidence"
+            )
+    if not {
+        "candidate_unapproved",
+        "not_cleanly_elaborated",
+        "not_target_simulator",
+        "not_hardware_approval",
+    }.issubset(set(rtl.get("limitations", []))):
+        raise ContractError("RTL28 evidence limitations must remain fail-closed")
+    if root is not None:
+        snapshot_path = root.parent / rtl["snapshot_path"]
+        if not snapshot_path.is_file() or sha256_file(snapshot_path) != rtl["snapshot_sha256"]:
+            raise ContractError("backend RTL28 evidence snapshot is missing or hash-mismatched")
+
+    simulator = backends["target_simulator"]
+    if not isinstance(simulator, dict):
+        raise ContractError("backend.target_simulator must be an object")
+    if (
+        simulator.get("status") != "unapproved_missing_authoritative_binding"
+        or simulator.get("approved") is not False
+        or simulator.get("implementation_available") is not False
+    ):
+        raise ContractError("target simulator must remain explicitly unapproved")
+    hardware = backends["target_hardware"]
+    if not isinstance(hardware, dict):
+        raise ContractError("backend.target_hardware must be an object")
+    if (
+        hardware.get("status") != "unapproved_missing_hardware_approval"
+        or hardware.get("approved") is not False
+        or hardware.get("implementation_available") is not False
+        or hardware.get("architecture_id") != TARGET_ARCHITECTURE_ID
+        or hardware.get("candidate_evidence_backend") != "rtl28_candidate_evidence"
+    ):
+        raise ContractError("target hardware must remain explicitly unapproved")
+
+    unresolved = value["unresolved"]
+    if not isinstance(unresolved, list) or not unresolved or any(
+        not isinstance(item, str) or not item for item in unresolved
+    ):
+        raise ContractError("backend unresolved list must contain explicit blockers")
 
 
 @dataclass(frozen=True)
@@ -278,4 +471,5 @@ def load_contracts(root: Path) -> ContractSet:
         documents[name] = value
         hashes[name] = sha256_file(path)
     validate_architecture_contract(documents["architecture"], root)
+    validate_backend_contract(documents["backend"], documents["architecture"], root)
     return ContractSet(documents=documents, hashes=hashes)

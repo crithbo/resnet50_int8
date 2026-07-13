@@ -92,6 +92,19 @@ class W0PipelineTests(unittest.TestCase):
             (root / "contracts" / "rtl28_candidate_audit.json").write_bytes(
                 (PROJECT_ROOT / "contracts" / "rtl28_candidate_audit.json").read_bytes()
             )
+            legacy_index = json.loads(
+                (PROJECT_ROOT / "artifacts/w4/legacy16_index.json").read_text(
+                    encoding="utf-8"
+                )
+            )
+            for relative_path in (
+                "artifacts/w4/legacy16_index.json",
+                *(record["path"] for record in legacy_index["reports"].values()),
+            ):
+                source = PROJECT_ROOT / relative_path
+                destination = root / relative_path
+                destination.parent.mkdir(parents=True, exist_ok=True)
+                destination.write_bytes(source.read_bytes())
             first = execute_mock_run(root, Path(directory) / "out", MockBackend())
             path = root / "contracts" / "architecture.json"
             value = json.loads(path.read_text(encoding="utf-8"))

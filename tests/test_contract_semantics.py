@@ -9,6 +9,7 @@ from resnet50_pipeline.contracts import (
     SUPPORTED_CONTRACT_SCHEMA_VERSIONS,
     load_contracts,
     validate_architecture_contract,
+    validate_backend_contract,
 )
 from resnet50_pipeline.errors import ContractError
 
@@ -21,6 +22,9 @@ class ContractSemanticTests(unittest.TestCase):
     def setUpClass(cls) -> None:
         cls.architecture = json.loads(
             (ROOT / "contracts/architecture.json").read_text(encoding="utf-8")
+        )
+        cls.backend = json.loads(
+            (ROOT / "contracts/backend.json").read_text(encoding="utf-8")
         )
 
     def test_project_contract_set_accepts_versioned_architecture(self) -> None:
@@ -66,11 +70,37 @@ class ContractSemanticTests(unittest.TestCase):
         with self.assertRaisesRegex(ContractError, "must target rtl28"):
             validate_architecture_contract(value)
 
+    def test_legacy_evidence_cannot_become_gate_eligible(self) -> None:
+        value = deepcopy(self.architecture)
+        value["legacy_evidence"]["w4_conv_shape_coverage_v1"][
+            "current_gate_eligible"
+        ] = True
+        with self.assertRaisesRegex(ContractError, "must remain legacy16"):
+            validate_architecture_contract(value)
+
     def test_ambiguous_profile_name_fails(self) -> None:
         value = deepcopy(self.architecture)
         value["target"]["profiles"]["candidates"] = ["mixed"]
         with self.assertRaisesRegex(ContractError, "exact profile28 IDs"):
             validate_architecture_contract(value)
+
+    def test_backend_keeps_ndpfuncmodel_as_w2_reference_only(self) -> None:
+        value = deepcopy(self.backend)
+        value["backends"]["ndp_conv_functional"]["is_target_backend"] = True
+        with self.assertRaisesRegex(ContractError, "W2-only functional reference"):
+            validate_backend_contract(value, self.architecture)
+
+    def test_backend_cannot_approve_target_hardware(self) -> None:
+        value = deepcopy(self.backend)
+        value["backends"]["target_hardware"]["approved"] = True
+        with self.assertRaisesRegex(ContractError, "target hardware"):
+            validate_backend_contract(value, self.architecture)
+
+    def test_backend_candidate_evidence_hash_must_match_architecture(self) -> None:
+        value = deepcopy(self.backend)
+        value["backends"]["rtl28_candidate_evidence"]["snapshot_sha256"] = "0" * 64
+        with self.assertRaisesRegex(ContractError, "differs from locked evidence"):
+            validate_backend_contract(value, self.architecture)
 
 
 if __name__ == "__main__":

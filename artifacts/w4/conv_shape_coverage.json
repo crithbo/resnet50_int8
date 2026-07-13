@@ -1,0 +1,2805 @@
+{
+  "current_gate_eligible": false,
+  "slice_count": 16,
+  "status": "superseded_by_adr_007",
+  "superseded_by": "ADR-007",
+  "target_family": "legacy16",
+  "all_20_families_fit_both_profiles": true,
+  "all_53_nodes_covered_once": true,
+  "all_batch_ring_logical_bit_exact": true,
+  "all_family_roundtrips_bit_exact": true,
+  "all_owner_ranges_exact": true,
+  "all_ring_orders_are_permutations": true,
+  "contracts": [
+    "w4_conv_batch16_candidate_v1",
+    "w4_conv_ring16_candidate_v1"
+  ],
+  "conv_family_count": 20,
+  "conv_node_count": 53,
+  "coverage": [
+    {
+      "all_batch_ring_logical_bit_exact": true,
+      "batch_roundtrip": {
+        "all_inverse_bit_exact": true,
+        "contract": "w4_conv_batch16_candidate_v1",
+        "inverse_hashes": {
+          "A": "7207c38e1b4a28356fbab170e94b974d682ace8e27d3cd873c25e467c9d74802",
+          "B": "f5f864418d132bc5f3e1b0511d5433f10324ca0938a7de8491b06d698381fc82",
+          "D": "3f1d0b9e09f6bf41d20e738cd7dc6e7196d57d522fa3f5b41c9daa5a2cdf9d48",
+          "P": "b50b7d038ac9e3dc7bc3a97b13ec356a1aee52324d6cc4c7ccb7fa191e0c6f8c",
+          "bias": "1dc0828ecd9bd29872411219872f9588faae94a6a66ce3d8a1837bb614caabe4",
+          "multiplier": "fd0c3f4512bb12d7b7fa1dbd258a04d9973796a1d8a1cd6b98ad1de0d2947a39",
+          "w_scale": "a9e153de4c382b8ddddfcd351b2ea145efad6d0ab6088c8bb3cfaf28a80f1500",
+          "w_zero_point": "4a125c6b35bd3f4e6fc1e8436266102f11eefda18d0fe9c529cb2c2e109b9e3c",
+          "x_scale": "2bf14e785577603fda60476e5e5cfd313b95b39166647c4fa6b0b00fcd6d46b3",
+          "x_zero_point": "65c74c15a686187bb6bbf9958f494fc6b80068034a659a9ad44991b08c58f2d2",
+          "y_scale": "08e21eeb808e4a7f66f95c58d9fc585c31f50045de5d8828c81d7a6d97efb559",
+          "y_zero_point": "2e7d2c03a9507ae265ecf5b5356885a53393a2029d241394997265a1a25aefc6"
+        },
+        "per_slice_used_bytes_for_n1": 2826304,
+        "physical_bytes_for_n1": 45220864,
+        "validation": {
+          "per_slice_used_bytes": 2826304,
+          "port_count": 12,
+          "region_count": 192,
+          "slice_count": 16
+        }
+      },
+      "family": {
+        "activation_shape": [
+          16,
+          1024,
+          14,
+          14
+        ],
+        "dilations": [
+          1,
+          1
+        ],
+        "family_id": "conv-family-a253695e9bd3",
+        "group": 1,
+        "node_ids": [
+          "node-0058"
+        ],
+        "onnx_names": [
+          "resnetv17_stage4_conv3_fwd_quant"
+        ],
+        "output_shape": [
+          16,
+          2048,
+          7,
+          7
+        ],
+        "pads": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "strides": [
+          2,
+          2
+        ],
+        "weight_shape": [
+          2048,
+          1024,
+          1,
+          1
+        ]
+      },
+      "formal_n16_plans": {
+        "batch": {
+          "c_padded": 1024,
+          "capacity_bytes": 25165824,
+          "capacity_margin_bytes": 22339520,
+          "k_padded": 2048,
+          "per_slice_used_bytes": 2826304
+        },
+        "ring": {
+          "active_c_slices": 16,
+          "active_k_slices": 16,
+          "all_owner_ranges_exact": true,
+          "all_ring_orders_are_permutations": true,
+          "c_padded": 1024,
+          "c_tile": 64,
+          "capacity_bytes": 25165824,
+          "capacity_margin_bytes": 24330560,
+          "k_padded": 2048,
+          "k_tile": 128,
+          "per_slice_used_bytes": 835264
+        }
+      },
+      "logical_hashes": {
+        "A": "7207c38e1b4a28356fbab170e94b974d682ace8e27d3cd873c25e467c9d74802",
+        "B": "f5f864418d132bc5f3e1b0511d5433f10324ca0938a7de8491b06d698381fc82",
+        "D": "3f1d0b9e09f6bf41d20e738cd7dc6e7196d57d522fa3f5b41c9daa5a2cdf9d48",
+        "P": "b50b7d038ac9e3dc7bc3a97b13ec356a1aee52324d6cc4c7ccb7fa191e0c6f8c",
+        "bias": "1dc0828ecd9bd29872411219872f9588faae94a6a66ce3d8a1837bb614caabe4",
+        "multiplier": "fd0c3f4512bb12d7b7fa1dbd258a04d9973796a1d8a1cd6b98ad1de0d2947a39",
+        "w_scale": "a9e153de4c382b8ddddfcd351b2ea145efad6d0ab6088c8bb3cfaf28a80f1500",
+        "w_zero_point": "4a125c6b35bd3f4e6fc1e8436266102f11eefda18d0fe9c529cb2c2e109b9e3c",
+        "x_scale": "2bf14e785577603fda60476e5e5cfd313b95b39166647c4fa6b0b00fcd6d46b3",
+        "x_zero_point": "65c74c15a686187bb6bbf9958f494fc6b80068034a659a9ad44991b08c58f2d2",
+        "y_scale": "08e21eeb808e4a7f66f95c58d9fc585c31f50045de5d8828c81d7a6d97efb559",
+        "y_zero_point": "2e7d2c03a9507ae265ecf5b5356885a53393a2029d241394997265a1a25aefc6"
+      },
+      "ring_roundtrip": {
+        "all_inverse_bit_exact": true,
+        "contract": "w4_conv_ring16_candidate_v1",
+        "inverse_hashes": {
+          "A": "7207c38e1b4a28356fbab170e94b974d682ace8e27d3cd873c25e467c9d74802",
+          "B": "f5f864418d132bc5f3e1b0511d5433f10324ca0938a7de8491b06d698381fc82",
+          "D": "3f1d0b9e09f6bf41d20e738cd7dc6e7196d57d522fa3f5b41c9daa5a2cdf9d48",
+          "P": "b50b7d038ac9e3dc7bc3a97b13ec356a1aee52324d6cc4c7ccb7fa191e0c6f8c",
+          "bias": "1dc0828ecd9bd29872411219872f9588faae94a6a66ce3d8a1837bb614caabe4",
+          "multiplier": "fd0c3f4512bb12d7b7fa1dbd258a04d9973796a1d8a1cd6b98ad1de0d2947a39",
+          "w_scale": "a9e153de4c382b8ddddfcd351b2ea145efad6d0ab6088c8bb3cfaf28a80f1500",
+          "w_zero_point": "4a125c6b35bd3f4e6fc1e8436266102f11eefda18d0fe9c529cb2c2e109b9e3c",
+          "x_scale": "2bf14e785577603fda60476e5e5cfd313b95b39166647c4fa6b0b00fcd6d46b3",
+          "x_zero_point": "65c74c15a686187bb6bbf9958f494fc6b80068034a659a9ad44991b08c58f2d2",
+          "y_scale": "08e21eeb808e4a7f66f95c58d9fc585c31f50045de5d8828c81d7a6d97efb559",
+          "y_zero_point": "2e7d2c03a9507ae265ecf5b5356885a53393a2029d241394997265a1a25aefc6"
+        },
+        "per_slice_used_bytes_for_n1": 176704,
+        "physical_bytes_for_n1": 2827264,
+        "validation": {
+          "per_slice_used_bytes": 176704,
+          "port_count": 12,
+          "region_count": 192,
+          "ring_steps": 16,
+          "slice_count": 16
+        }
+      },
+      "synthetic_roundtrip_batch_size": 1
+    },
+    {
+      "all_batch_ring_logical_bit_exact": true,
+      "batch_roundtrip": {
+        "all_inverse_bit_exact": true,
+        "contract": "w4_conv_batch16_candidate_v1",
+        "inverse_hashes": {
+          "A": "7207c38e1b4a28356fbab170e94b974d682ace8e27d3cd873c25e467c9d74802",
+          "B": "61bcb4286e4d0a2c42841d10e38b7090435683b5fcaae17358b30e5e4e449948",
+          "D": "d054e3cf5a4bb97bc9b82cc14df14b525cc07b0b160bc3b4f19001bfbe2114fb",
+          "P": "d5457f9a1393e8c9c869281aa6977721523ac440cbb560635e300699ccc7e0ca",
+          "bias": "3120ec8a440b7ba9fc91f565be63c37d96460dbce90513f57374805755e8f648",
+          "multiplier": "be84a8fa67272f7a3fffa336bfb85b9778a31175019f8eaf6ebbbe175f0002b0",
+          "w_scale": "3cc665742c1200b6b11a3f77bc3e55da56286bab8cfbb988bf29c2cdce3991ca",
+          "w_zero_point": "e8fcac491700501cb50008cffbb60a5729c41dd542d78cd1fad2a5879f202bcc",
+          "x_scale": "2bf14e785577603fda60476e5e5cfd313b95b39166647c4fa6b0b00fcd6d46b3",
+          "x_zero_point": "65c74c15a686187bb6bbf9958f494fc6b80068034a659a9ad44991b08c58f2d2",
+          "y_scale": "08e21eeb808e4a7f66f95c58d9fc585c31f50045de5d8828c81d7a6d97efb559",
+          "y_zero_point": "2e7d2c03a9507ae265ecf5b5356885a53393a2029d241394997265a1a25aefc6"
+        },
+        "per_slice_used_bytes_for_n1": 717120,
+        "physical_bytes_for_n1": 11473920,
+        "validation": {
+          "per_slice_used_bytes": 717120,
+          "port_count": 12,
+          "region_count": 192,
+          "slice_count": 16
+        }
+      },
+      "family": {
+        "activation_shape": [
+          16,
+          1024,
+          14,
+          14
+        ],
+        "dilations": [
+          1,
+          1
+        ],
+        "family_id": "conv-family-5d1c8e60422d",
+        "group": 1,
+        "node_ids": [
+          "node-0038",
+          "node-0042",
+          "node-0046",
+          "node-0050",
+          "node-0054"
+        ],
+        "onnx_names": [
+          "fused resnetv17_stage3_conv4_fwd_quant",
+          "fused resnetv17_stage3_conv7_fwd_quant",
+          "fused resnetv17_stage3_conv10_fwd_quant",
+          "fused resnetv17_stage3_conv13_fwd_quant",
+          "fused resnetv17_stage3_conv16_fwd_quant"
+        ],
+        "output_shape": [
+          16,
+          256,
+          14,
+          14
+        ],
+        "pads": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "strides": [
+          1,
+          1
+        ],
+        "weight_shape": [
+          256,
+          1024,
+          1,
+          1
+        ]
+      },
+      "formal_n16_plans": {
+        "batch": {
+          "c_padded": 1024,
+          "capacity_bytes": 25165824,
+          "capacity_margin_bytes": 24448704,
+          "k_padded": 256,
+          "per_slice_used_bytes": 717120
+        },
+        "ring": {
+          "active_c_slices": 16,
+          "active_k_slices": 16,
+          "all_owner_ranges_exact": true,
+          "all_ring_orders_are_permutations": true,
+          "c_padded": 1024,
+          "c_tile": 64,
+          "capacity_bytes": 25165824,
+          "capacity_margin_bytes": 24697584,
+          "k_padded": 256,
+          "k_tile": 16,
+          "per_slice_used_bytes": 468240
+        }
+      },
+      "logical_hashes": {
+        "A": "7207c38e1b4a28356fbab170e94b974d682ace8e27d3cd873c25e467c9d74802",
+        "B": "61bcb4286e4d0a2c42841d10e38b7090435683b5fcaae17358b30e5e4e449948",
+        "D": "d054e3cf5a4bb97bc9b82cc14df14b525cc07b0b160bc3b4f19001bfbe2114fb",
+        "P": "d5457f9a1393e8c9c869281aa6977721523ac440cbb560635e300699ccc7e0ca",
+        "bias": "3120ec8a440b7ba9fc91f565be63c37d96460dbce90513f57374805755e8f648",
+        "multiplier": "be84a8fa67272f7a3fffa336bfb85b9778a31175019f8eaf6ebbbe175f0002b0",
+        "w_scale": "3cc665742c1200b6b11a3f77bc3e55da56286bab8cfbb988bf29c2cdce3991ca",
+        "w_zero_point": "e8fcac491700501cb50008cffbb60a5729c41dd542d78cd1fad2a5879f202bcc",
+        "x_scale": "2bf14e785577603fda60476e5e5cfd313b95b39166647c4fa6b0b00fcd6d46b3",
+        "x_zero_point": "65c74c15a686187bb6bbf9958f494fc6b80068034a659a9ad44991b08c58f2d2",
+        "y_scale": "08e21eeb808e4a7f66f95c58d9fc585c31f50045de5d8828c81d7a6d97efb559",
+        "y_zero_point": "2e7d2c03a9507ae265ecf5b5356885a53393a2029d241394997265a1a25aefc6"
+      },
+      "ring_roundtrip": {
+        "all_inverse_bit_exact": true,
+        "contract": "w4_conv_ring16_candidate_v1",
+        "inverse_hashes": {
+          "A": "7207c38e1b4a28356fbab170e94b974d682ace8e27d3cd873c25e467c9d74802",
+          "B": "61bcb4286e4d0a2c42841d10e38b7090435683b5fcaae17358b30e5e4e449948",
+          "D": "d054e3cf5a4bb97bc9b82cc14df14b525cc07b0b160bc3b4f19001bfbe2114fb",
+          "P": "d5457f9a1393e8c9c869281aa6977721523ac440cbb560635e300699ccc7e0ca",
+          "bias": "3120ec8a440b7ba9fc91f565be63c37d96460dbce90513f57374805755e8f648",
+          "multiplier": "be84a8fa67272f7a3fffa336bfb85b9778a31175019f8eaf6ebbbe175f0002b0",
+          "w_scale": "3cc665742c1200b6b11a3f77bc3e55da56286bab8cfbb988bf29c2cdce3991ca",
+          "w_zero_point": "e8fcac491700501cb50008cffbb60a5729c41dd542d78cd1fad2a5879f202bcc",
+          "x_scale": "2bf14e785577603fda60476e5e5cfd313b95b39166647c4fa6b0b00fcd6d46b3",
+          "x_zero_point": "65c74c15a686187bb6bbf9958f494fc6b80068034a659a9ad44991b08c58f2d2",
+          "y_scale": "08e21eeb808e4a7f66f95c58d9fc585c31f50045de5d8828c81d7a6d97efb559",
+          "y_zero_point": "2e7d2c03a9507ae265ecf5b5356885a53393a2029d241394997265a1a25aefc6"
+        },
+        "per_slice_used_bytes_for_n1": 44880,
+        "physical_bytes_for_n1": 718080,
+        "validation": {
+          "per_slice_used_bytes": 44880,
+          "port_count": 12,
+          "region_count": 192,
+          "ring_steps": 16,
+          "slice_count": 16
+        }
+      },
+      "synthetic_roundtrip_batch_size": 1
+    },
+    {
+      "all_batch_ring_logical_bit_exact": true,
+      "batch_roundtrip": {
+        "all_inverse_bit_exact": true,
+        "contract": "w4_conv_batch16_candidate_v1",
+        "inverse_hashes": {
+          "A": "7207c38e1b4a28356fbab170e94b974d682ace8e27d3cd873c25e467c9d74802",
+          "B": "5ea777e059e58e234a98b113f06f98deeeb8fe1850996f9e78122e8804542ccb",
+          "D": "c6c98cd1aa62b627f691098141e22deabebeb58263973896bb1b26b7270a8c7d",
+          "P": "d2c4acccf22cd4b3b2657248f727469b56da86f7e9e511af823dd8171c8a4126",
+          "bias": "c1e35d499f54a407aa03e20563a07fb78fe3e4be2b25c87cfdaec96327f26b0e",
+          "multiplier": "3925771fd2c5ef441041edba79e4b065fbfc779f8097becdc4882e127f94d883",
+          "w_scale": "1f77ea9eff8f862831e223f29b4ce41180ac04553754389212c28bf808d6bbbb",
+          "w_zero_point": "8750732098f47c8aef71b71f290b452fec30c18ff860852af6d286a26c290fb5",
+          "x_scale": "2bf14e785577603fda60476e5e5cfd313b95b39166647c4fa6b0b00fcd6d46b3",
+          "x_zero_point": "65c74c15a686187bb6bbf9958f494fc6b80068034a659a9ad44991b08c58f2d2",
+          "y_scale": "08e21eeb808e4a7f66f95c58d9fc585c31f50045de5d8828c81d7a6d97efb559",
+          "y_zero_point": "2e7d2c03a9507ae265ecf5b5356885a53393a2029d241394997265a1a25aefc6"
+        },
+        "per_slice_used_bytes_for_n1": 857152,
+        "physical_bytes_for_n1": 13714432,
+        "validation": {
+          "per_slice_used_bytes": 857152,
+          "port_count": 12,
+          "region_count": 192,
+          "slice_count": 16
+        }
+      },
+      "family": {
+        "activation_shape": [
+          16,
+          1024,
+          14,
+          14
+        ],
+        "dilations": [
+          1,
+          1
+        ],
+        "family_id": "conv-family-f003e4ec9d81",
+        "group": 1,
+        "node_ids": [
+          "node-0059"
+        ],
+        "onnx_names": [
+          "fused resnetv17_stage4_conv0_fwd_quant"
+        ],
+        "output_shape": [
+          16,
+          512,
+          7,
+          7
+        ],
+        "pads": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "strides": [
+          2,
+          2
+        ],
+        "weight_shape": [
+          512,
+          1024,
+          1,
+          1
+        ]
+      },
+      "formal_n16_plans": {
+        "batch": {
+          "c_padded": 1024,
+          "capacity_bytes": 25165824,
+          "capacity_margin_bytes": 24308672,
+          "k_padded": 512,
+          "per_slice_used_bytes": 857152
+        },
+        "ring": {
+          "active_c_slices": 16,
+          "active_k_slices": 16,
+          "all_owner_ranges_exact": true,
+          "all_ring_orders_are_permutations": true,
+          "c_padded": 1024,
+          "c_tile": 64,
+          "capacity_bytes": 25165824,
+          "capacity_margin_bytes": 24806432,
+          "k_padded": 512,
+          "k_tile": 32,
+          "per_slice_used_bytes": 359392
+        }
+      },
+      "logical_hashes": {
+        "A": "7207c38e1b4a28356fbab170e94b974d682ace8e27d3cd873c25e467c9d74802",
+        "B": "5ea777e059e58e234a98b113f06f98deeeb8fe1850996f9e78122e8804542ccb",
+        "D": "c6c98cd1aa62b627f691098141e22deabebeb58263973896bb1b26b7270a8c7d",
+        "P": "d2c4acccf22cd4b3b2657248f727469b56da86f7e9e511af823dd8171c8a4126",
+        "bias": "c1e35d499f54a407aa03e20563a07fb78fe3e4be2b25c87cfdaec96327f26b0e",
+        "multiplier": "3925771fd2c5ef441041edba79e4b065fbfc779f8097becdc4882e127f94d883",
+        "w_scale": "1f77ea9eff8f862831e223f29b4ce41180ac04553754389212c28bf808d6bbbb",
+        "w_zero_point": "8750732098f47c8aef71b71f290b452fec30c18ff860852af6d286a26c290fb5",
+        "x_scale": "2bf14e785577603fda60476e5e5cfd313b95b39166647c4fa6b0b00fcd6d46b3",
+        "x_zero_point": "65c74c15a686187bb6bbf9958f494fc6b80068034a659a9ad44991b08c58f2d2",
+        "y_scale": "08e21eeb808e4a7f66f95c58d9fc585c31f50045de5d8828c81d7a6d97efb559",
+        "y_zero_point": "2e7d2c03a9507ae265ecf5b5356885a53393a2029d241394997265a1a25aefc6"
+      },
+      "ring_roundtrip": {
+        "all_inverse_bit_exact": true,
+        "contract": "w4_conv_ring16_candidate_v1",
+        "inverse_hashes": {
+          "A": "7207c38e1b4a28356fbab170e94b974d682ace8e27d3cd873c25e467c9d74802",
+          "B": "5ea777e059e58e234a98b113f06f98deeeb8fe1850996f9e78122e8804542ccb",
+          "D": "c6c98cd1aa62b627f691098141e22deabebeb58263973896bb1b26b7270a8c7d",
+          "P": "d2c4acccf22cd4b3b2657248f727469b56da86f7e9e511af823dd8171c8a4126",
+          "bias": "c1e35d499f54a407aa03e20563a07fb78fe3e4be2b25c87cfdaec96327f26b0e",
+          "multiplier": "3925771fd2c5ef441041edba79e4b065fbfc779f8097becdc4882e127f94d883",
+          "w_scale": "1f77ea9eff8f862831e223f29b4ce41180ac04553754389212c28bf808d6bbbb",
+          "w_zero_point": "8750732098f47c8aef71b71f290b452fec30c18ff860852af6d286a26c290fb5",
+          "x_scale": "2bf14e785577603fda60476e5e5cfd313b95b39166647c4fa6b0b00fcd6d46b3",
+          "x_zero_point": "65c74c15a686187bb6bbf9958f494fc6b80068034a659a9ad44991b08c58f2d2",
+          "y_scale": "08e21eeb808e4a7f66f95c58d9fc585c31f50045de5d8828c81d7a6d97efb559",
+          "y_zero_point": "2e7d2c03a9507ae265ecf5b5356885a53393a2029d241394997265a1a25aefc6"
+        },
+        "per_slice_used_bytes_for_n1": 53632,
+        "physical_bytes_for_n1": 858112,
+        "validation": {
+          "per_slice_used_bytes": 53632,
+          "port_count": 12,
+          "region_count": 192,
+          "ring_steps": 16,
+          "slice_count": 16
+        }
+      },
+      "synthetic_roundtrip_batch_size": 1
+    },
+    {
+      "all_batch_ring_logical_bit_exact": true,
+      "batch_roundtrip": {
+        "all_inverse_bit_exact": true,
+        "contract": "w4_conv_batch16_candidate_v1",
+        "inverse_hashes": {
+          "A": "66712ecc90f5bc5c1ae8c8798849eb032569b62751712de6a035227eb40282eb",
+          "B": "202e9c1c526f5c230d167d0f4bf43134ea3b61340a6a6bf5e67dea86e96d6ff5",
+          "D": "3f1d0b9e09f6bf41d20e738cd7dc6e7196d57d522fa3f5b41c9daa5a2cdf9d48",
+          "P": "b50b7d038ac9e3dc7bc3a97b13ec356a1aee52324d6cc4c7ccb7fa191e0c6f8c",
+          "bias": "76b988ad7898855ece0d640a45838513ad230684a1f1dbb8c72c0468ae2601da",
+          "multiplier": "d4ad1955b3142947439e3204b9b303f622fbfc2ee56dd735b5fd7be69488d8e0",
+          "w_scale": "61da5d3f5f67bf9b01968ef6ae4c5b806e2eb38c37d13ebf4964b689bd61ad65",
+          "w_zero_point": "7c5bce5390567774f8fd1358941b3feb0ebd667a724d926a58e17090a8a3cee1",
+          "x_scale": "2bf14e785577603fda60476e5e5cfd313b95b39166647c4fa6b0b00fcd6d46b3",
+          "x_zero_point": "65c74c15a686187bb6bbf9958f494fc6b80068034a659a9ad44991b08c58f2d2",
+          "y_scale": "08e21eeb808e4a7f66f95c58d9fc585c31f50045de5d8828c81d7a6d97efb559",
+          "y_zero_point": "2e7d2c03a9507ae265ecf5b5356885a53393a2029d241394997265a1a25aefc6"
+        },
+        "per_slice_used_bytes_for_n1": 751296,
+        "physical_bytes_for_n1": 12020736,
+        "validation": {
+          "per_slice_used_bytes": 751296,
+          "port_count": 12,
+          "region_count": 192,
+          "slice_count": 16
+        }
+      },
+      "family": {
+        "activation_shape": [
+          16,
+          128,
+          28,
+          28
+        ],
+        "dilations": [
+          1,
+          1
+        ],
+        "family_id": "conv-family-90d906987097",
+        "group": 1,
+        "node_ids": [
+          "node-0018",
+          "node-0022",
+          "node-0026",
+          "node-0030"
+        ],
+        "onnx_names": [
+          "fused resnetv17_stage2_conv1_fwd_quant",
+          "fused resnetv17_stage2_conv5_fwd_quant",
+          "fused resnetv17_stage2_conv8_fwd_quant",
+          "fused resnetv17_stage2_conv11_fwd_quant"
+        ],
+        "output_shape": [
+          16,
+          128,
+          28,
+          28
+        ],
+        "pads": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "strides": [
+          1,
+          1
+        ],
+        "weight_shape": [
+          128,
+          128,
+          3,
+          3
+        ]
+      },
+      "formal_n16_plans": {
+        "batch": {
+          "c_padded": 128,
+          "capacity_bytes": 25165824,
+          "capacity_margin_bytes": 24414528,
+          "k_padded": 128,
+          "per_slice_used_bytes": 751296
+        },
+        "ring": {
+          "active_c_slices": 16,
+          "active_k_slices": 16,
+          "all_owner_ranges_exact": true,
+          "all_ring_orders_are_permutations": true,
+          "c_padded": 128,
+          "c_tile": 8,
+          "capacity_bytes": 25165824,
+          "capacity_margin_bytes": 24554320,
+          "k_padded": 128,
+          "k_tile": 8,
+          "per_slice_used_bytes": 611504
+        }
+      },
+      "logical_hashes": {
+        "A": "66712ecc90f5bc5c1ae8c8798849eb032569b62751712de6a035227eb40282eb",
+        "B": "202e9c1c526f5c230d167d0f4bf43134ea3b61340a6a6bf5e67dea86e96d6ff5",
+        "D": "3f1d0b9e09f6bf41d20e738cd7dc6e7196d57d522fa3f5b41c9daa5a2cdf9d48",
+        "P": "b50b7d038ac9e3dc7bc3a97b13ec356a1aee52324d6cc4c7ccb7fa191e0c6f8c",
+        "bias": "76b988ad7898855ece0d640a45838513ad230684a1f1dbb8c72c0468ae2601da",
+        "multiplier": "d4ad1955b3142947439e3204b9b303f622fbfc2ee56dd735b5fd7be69488d8e0",
+        "w_scale": "61da5d3f5f67bf9b01968ef6ae4c5b806e2eb38c37d13ebf4964b689bd61ad65",
+        "w_zero_point": "7c5bce5390567774f8fd1358941b3feb0ebd667a724d926a58e17090a8a3cee1",
+        "x_scale": "2bf14e785577603fda60476e5e5cfd313b95b39166647c4fa6b0b00fcd6d46b3",
+        "x_zero_point": "65c74c15a686187bb6bbf9958f494fc6b80068034a659a9ad44991b08c58f2d2",
+        "y_scale": "08e21eeb808e4a7f66f95c58d9fc585c31f50045de5d8828c81d7a6d97efb559",
+        "y_zero_point": "2e7d2c03a9507ae265ecf5b5356885a53393a2029d241394997265a1a25aefc6"
+      },
+      "ring_roundtrip": {
+        "all_inverse_bit_exact": true,
+        "contract": "w4_conv_ring16_candidate_v1",
+        "inverse_hashes": {
+          "A": "66712ecc90f5bc5c1ae8c8798849eb032569b62751712de6a035227eb40282eb",
+          "B": "202e9c1c526f5c230d167d0f4bf43134ea3b61340a6a6bf5e67dea86e96d6ff5",
+          "D": "3f1d0b9e09f6bf41d20e738cd7dc6e7196d57d522fa3f5b41c9daa5a2cdf9d48",
+          "P": "b50b7d038ac9e3dc7bc3a97b13ec356a1aee52324d6cc4c7ccb7fa191e0c6f8c",
+          "bias": "76b988ad7898855ece0d640a45838513ad230684a1f1dbb8c72c0468ae2601da",
+          "multiplier": "d4ad1955b3142947439e3204b9b303f622fbfc2ee56dd735b5fd7be69488d8e0",
+          "w_scale": "61da5d3f5f67bf9b01968ef6ae4c5b806e2eb38c37d13ebf4964b689bd61ad65",
+          "w_zero_point": "7c5bce5390567774f8fd1358941b3feb0ebd667a724d926a58e17090a8a3cee1",
+          "x_scale": "2bf14e785577603fda60476e5e5cfd313b95b39166647c4fa6b0b00fcd6d46b3",
+          "x_zero_point": "65c74c15a686187bb6bbf9958f494fc6b80068034a659a9ad44991b08c58f2d2",
+          "y_scale": "08e21eeb808e4a7f66f95c58d9fc585c31f50045de5d8828c81d7a6d97efb559",
+          "y_zero_point": "2e7d2c03a9507ae265ecf5b5356885a53393a2029d241394997265a1a25aefc6"
+        },
+        "per_slice_used_bytes_for_n1": 47024,
+        "physical_bytes_for_n1": 752384,
+        "validation": {
+          "per_slice_used_bytes": 47024,
+          "port_count": 12,
+          "region_count": 192,
+          "ring_steps": 16,
+          "slice_count": 16
+        }
+      },
+      "synthetic_roundtrip_batch_size": 1
+    },
+    {
+      "all_batch_ring_logical_bit_exact": true,
+      "batch_roundtrip": {
+        "all_inverse_bit_exact": true,
+        "contract": "w4_conv_batch16_candidate_v1",
+        "inverse_hashes": {
+          "A": "66712ecc90f5bc5c1ae8c8798849eb032569b62751712de6a035227eb40282eb",
+          "B": "3d2b8f86b32213231f8bfb6104642d162a94be020fb9753d5cb1fde2f3b1ca5a",
+          "D": "3221b3d6d0ad8136e8ed80ef1f6800adf054aba14c4ea2fe737182e5473952b0",
+          "P": "e794711f25aaaef69dd7d99246227ae1f1010cf6857e22e5d792c7ef842f4c81",
+          "bias": "c1e35d499f54a407aa03e20563a07fb78fe3e4be2b25c87cfdaec96327f26b0e",
+          "multiplier": "3925771fd2c5ef441041edba79e4b065fbfc779f8097becdc4882e127f94d883",
+          "w_scale": "1f77ea9eff8f862831e223f29b4ce41180ac04553754389212c28bf808d6bbbb",
+          "w_zero_point": "8750732098f47c8aef71b71f290b452fec30c18ff860852af6d286a26c290fb5",
+          "x_scale": "2bf14e785577603fda60476e5e5cfd313b95b39166647c4fa6b0b00fcd6d46b3",
+          "x_zero_point": "65c74c15a686187bb6bbf9958f494fc6b80068034a659a9ad44991b08c58f2d2",
+          "y_scale": "08e21eeb808e4a7f66f95c58d9fc585c31f50045de5d8828c81d7a6d97efb559",
+          "y_zero_point": "2e7d2c03a9507ae265ecf5b5356885a53393a2029d241394997265a1a25aefc6"
+        },
+        "per_slice_used_bytes_for_n1": 2179648,
+        "physical_bytes_for_n1": 34874368,
+        "validation": {
+          "per_slice_used_bytes": 2179648,
+          "port_count": 12,
+          "region_count": 192,
+          "slice_count": 16
+        }
+      },
+      "family": {
+        "activation_shape": [
+          16,
+          128,
+          28,
+          28
+        ],
+        "dilations": [
+          1,
+          1
+        ],
+        "family_id": "conv-family-a662d69c0862",
+        "group": 1,
+        "node_ids": [
+          "node-0019",
+          "node-0023",
+          "node-0027",
+          "node-0031"
+        ],
+        "onnx_names": [
+          "resnetv17_stage2_conv2_fwd_quant",
+          "resnetv17_stage2_conv6_fwd_quant",
+          "resnetv17_stage2_conv9_fwd_quant",
+          "resnetv17_stage2_conv12_fwd_quant"
+        ],
+        "output_shape": [
+          16,
+          512,
+          28,
+          28
+        ],
+        "pads": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "strides": [
+          1,
+          1
+        ],
+        "weight_shape": [
+          512,
+          128,
+          1,
+          1
+        ]
+      },
+      "formal_n16_plans": {
+        "batch": {
+          "c_padded": 128,
+          "capacity_bytes": 25165824,
+          "capacity_margin_bytes": 22986176,
+          "k_padded": 512,
+          "per_slice_used_bytes": 2179648
+        },
+        "ring": {
+          "active_c_slices": 16,
+          "active_k_slices": 16,
+          "all_owner_ranges_exact": true,
+          "all_ring_orders_are_permutations": true,
+          "c_padded": 128,
+          "c_tile": 8,
+          "capacity_bytes": 25165824,
+          "capacity_margin_bytes": 23053856,
+          "k_padded": 512,
+          "k_tile": 32,
+          "per_slice_used_bytes": 2111968
+        }
+      },
+      "logical_hashes": {
+        "A": "66712ecc90f5bc5c1ae8c8798849eb032569b62751712de6a035227eb40282eb",
+        "B": "3d2b8f86b32213231f8bfb6104642d162a94be020fb9753d5cb1fde2f3b1ca5a",
+        "D": "3221b3d6d0ad8136e8ed80ef1f6800adf054aba14c4ea2fe737182e5473952b0",
+        "P": "e794711f25aaaef69dd7d99246227ae1f1010cf6857e22e5d792c7ef842f4c81",
+        "bias": "c1e35d499f54a407aa03e20563a07fb78fe3e4be2b25c87cfdaec96327f26b0e",
+        "multiplier": "3925771fd2c5ef441041edba79e4b065fbfc779f8097becdc4882e127f94d883",
+        "w_scale": "1f77ea9eff8f862831e223f29b4ce41180ac04553754389212c28bf808d6bbbb",
+        "w_zero_point": "8750732098f47c8aef71b71f290b452fec30c18ff860852af6d286a26c290fb5",
+        "x_scale": "2bf14e785577603fda60476e5e5cfd313b95b39166647c4fa6b0b00fcd6d46b3",
+        "x_zero_point": "65c74c15a686187bb6bbf9958f494fc6b80068034a659a9ad44991b08c58f2d2",
+        "y_scale": "08e21eeb808e4a7f66f95c58d9fc585c31f50045de5d8828c81d7a6d97efb559",
+        "y_zero_point": "2e7d2c03a9507ae265ecf5b5356885a53393a2029d241394997265a1a25aefc6"
+      },
+      "ring_roundtrip": {
+        "all_inverse_bit_exact": true,
+        "contract": "w4_conv_ring16_candidate_v1",
+        "inverse_hashes": {
+          "A": "66712ecc90f5bc5c1ae8c8798849eb032569b62751712de6a035227eb40282eb",
+          "B": "3d2b8f86b32213231f8bfb6104642d162a94be020fb9753d5cb1fde2f3b1ca5a",
+          "D": "3221b3d6d0ad8136e8ed80ef1f6800adf054aba14c4ea2fe737182e5473952b0",
+          "P": "e794711f25aaaef69dd7d99246227ae1f1010cf6857e22e5d792c7ef842f4c81",
+          "bias": "c1e35d499f54a407aa03e20563a07fb78fe3e4be2b25c87cfdaec96327f26b0e",
+          "multiplier": "3925771fd2c5ef441041edba79e4b065fbfc779f8097becdc4882e127f94d883",
+          "w_scale": "1f77ea9eff8f862831e223f29b4ce41180ac04553754389212c28bf808d6bbbb",
+          "w_zero_point": "8750732098f47c8aef71b71f290b452fec30c18ff860852af6d286a26c290fb5",
+          "x_scale": "2bf14e785577603fda60476e5e5cfd313b95b39166647c4fa6b0b00fcd6d46b3",
+          "x_zero_point": "65c74c15a686187bb6bbf9958f494fc6b80068034a659a9ad44991b08c58f2d2",
+          "y_scale": "08e21eeb808e4a7f66f95c58d9fc585c31f50045de5d8828c81d7a6d97efb559",
+          "y_zero_point": "2e7d2c03a9507ae265ecf5b5356885a53393a2029d241394997265a1a25aefc6"
+        },
+        "per_slice_used_bytes_for_n1": 136288,
+        "physical_bytes_for_n1": 2180608,
+        "validation": {
+          "per_slice_used_bytes": 136288,
+          "port_count": 12,
+          "region_count": 192,
+          "ring_steps": 16,
+          "slice_count": 16
+        }
+      },
+      "synthetic_roundtrip_batch_size": 1
+    },
+    {
+      "all_batch_ring_logical_bit_exact": true,
+      "batch_roundtrip": {
+        "all_inverse_bit_exact": true,
+        "contract": "w4_conv_batch16_candidate_v1",
+        "inverse_hashes": {
+          "A": "66712ecc90f5bc5c1ae8c8798849eb032569b62751712de6a035227eb40282eb",
+          "B": "e3c786c48e81eb81771ae578ea5c1b5027355e2393cfd70a6424bb807ed9662c",
+          "D": "c6c98cd1aa62b627f691098141e22deabebeb58263973896bb1b26b7270a8c7d",
+          "P": "d2c4acccf22cd4b3b2657248f727469b56da86f7e9e511af823dd8171c8a4126",
+          "bias": "c1e35d499f54a407aa03e20563a07fb78fe3e4be2b25c87cfdaec96327f26b0e",
+          "multiplier": "3925771fd2c5ef441041edba79e4b065fbfc779f8097becdc4882e127f94d883",
+          "w_scale": "1f77ea9eff8f862831e223f29b4ce41180ac04553754389212c28bf808d6bbbb",
+          "w_zero_point": "8750732098f47c8aef71b71f290b452fec30c18ff860852af6d286a26c290fb5",
+          "x_scale": "2bf14e785577603fda60476e5e5cfd313b95b39166647c4fa6b0b00fcd6d46b3",
+          "x_zero_point": "65c74c15a686187bb6bbf9958f494fc6b80068034a659a9ad44991b08c58f2d2",
+          "y_scale": "08e21eeb808e4a7f66f95c58d9fc585c31f50045de5d8828c81d7a6d97efb559",
+          "y_zero_point": "2e7d2c03a9507ae265ecf5b5356885a53393a2029d241394997265a1a25aefc6"
+        },
+        "per_slice_used_bytes_for_n1": 1281088,
+        "physical_bytes_for_n1": 20497408,
+        "validation": {
+          "per_slice_used_bytes": 1281088,
+          "port_count": 12,
+          "region_count": 192,
+          "slice_count": 16
+        }
+      },
+      "family": {
+        "activation_shape": [
+          16,
+          2048,
+          7,
+          7
+        ],
+        "dilations": [
+          1,
+          1
+        ],
+        "family_id": "conv-family-2b58aedc8638",
+        "group": 1,
+        "node_ids": [
+          "node-0063",
+          "node-0067"
+        ],
+        "onnx_names": [
+          "fused resnetv17_stage4_conv4_fwd_quant",
+          "fused resnetv17_stage4_conv7_fwd_quant"
+        ],
+        "output_shape": [
+          16,
+          512,
+          7,
+          7
+        ],
+        "pads": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "strides": [
+          1,
+          1
+        ],
+        "weight_shape": [
+          512,
+          2048,
+          1,
+          1
+        ]
+      },
+      "formal_n16_plans": {
+        "batch": {
+          "c_padded": 2048,
+          "capacity_bytes": 25165824,
+          "capacity_margin_bytes": 23884736,
+          "k_padded": 512,
+          "per_slice_used_bytes": 1281088
+        },
+        "ring": {
+          "active_c_slices": 16,
+          "active_k_slices": 16,
+          "all_owner_ranges_exact": true,
+          "all_ring_orders_are_permutations": true,
+          "c_padded": 2048,
+          "c_tile": 128,
+          "capacity_bytes": 25165824,
+          "capacity_margin_bytes": 24874016,
+          "k_padded": 512,
+          "k_tile": 32,
+          "per_slice_used_bytes": 291808
+        }
+      },
+      "logical_hashes": {
+        "A": "66712ecc90f5bc5c1ae8c8798849eb032569b62751712de6a035227eb40282eb",
+        "B": "e3c786c48e81eb81771ae578ea5c1b5027355e2393cfd70a6424bb807ed9662c",
+        "D": "c6c98cd1aa62b627f691098141e22deabebeb58263973896bb1b26b7270a8c7d",
+        "P": "d2c4acccf22cd4b3b2657248f727469b56da86f7e9e511af823dd8171c8a4126",
+        "bias": "c1e35d499f54a407aa03e20563a07fb78fe3e4be2b25c87cfdaec96327f26b0e",
+        "multiplier": "3925771fd2c5ef441041edba79e4b065fbfc779f8097becdc4882e127f94d883",
+        "w_scale": "1f77ea9eff8f862831e223f29b4ce41180ac04553754389212c28bf808d6bbbb",
+        "w_zero_point": "8750732098f47c8aef71b71f290b452fec30c18ff860852af6d286a26c290fb5",
+        "x_scale": "2bf14e785577603fda60476e5e5cfd313b95b39166647c4fa6b0b00fcd6d46b3",
+        "x_zero_point": "65c74c15a686187bb6bbf9958f494fc6b80068034a659a9ad44991b08c58f2d2",
+        "y_scale": "08e21eeb808e4a7f66f95c58d9fc585c31f50045de5d8828c81d7a6d97efb559",
+        "y_zero_point": "2e7d2c03a9507ae265ecf5b5356885a53393a2029d241394997265a1a25aefc6"
+      },
+      "ring_roundtrip": {
+        "all_inverse_bit_exact": true,
+        "contract": "w4_conv_ring16_candidate_v1",
+        "inverse_hashes": {
+          "A": "66712ecc90f5bc5c1ae8c8798849eb032569b62751712de6a035227eb40282eb",
+          "B": "e3c786c48e81eb81771ae578ea5c1b5027355e2393cfd70a6424bb807ed9662c",
+          "D": "c6c98cd1aa62b627f691098141e22deabebeb58263973896bb1b26b7270a8c7d",
+          "P": "d2c4acccf22cd4b3b2657248f727469b56da86f7e9e511af823dd8171c8a4126",
+          "bias": "c1e35d499f54a407aa03e20563a07fb78fe3e4be2b25c87cfdaec96327f26b0e",
+          "multiplier": "3925771fd2c5ef441041edba79e4b065fbfc779f8097becdc4882e127f94d883",
+          "w_scale": "1f77ea9eff8f862831e223f29b4ce41180ac04553754389212c28bf808d6bbbb",
+          "w_zero_point": "8750732098f47c8aef71b71f290b452fec30c18ff860852af6d286a26c290fb5",
+          "x_scale": "2bf14e785577603fda60476e5e5cfd313b95b39166647c4fa6b0b00fcd6d46b3",
+          "x_zero_point": "65c74c15a686187bb6bbf9958f494fc6b80068034a659a9ad44991b08c58f2d2",
+          "y_scale": "08e21eeb808e4a7f66f95c58d9fc585c31f50045de5d8828c81d7a6d97efb559",
+          "y_zero_point": "2e7d2c03a9507ae265ecf5b5356885a53393a2029d241394997265a1a25aefc6"
+        },
+        "per_slice_used_bytes_for_n1": 80128,
+        "physical_bytes_for_n1": 1282048,
+        "validation": {
+          "per_slice_used_bytes": 80128,
+          "port_count": 12,
+          "region_count": 192,
+          "ring_steps": 16,
+          "slice_count": 16
+        }
+      },
+      "synthetic_roundtrip_batch_size": 1
+    },
+    {
+      "all_batch_ring_logical_bit_exact": true,
+      "batch_roundtrip": {
+        "all_inverse_bit_exact": true,
+        "contract": "w4_conv_batch16_candidate_v1",
+        "inverse_hashes": {
+          "A": "b623bd12f510c64584107ea62df4b14c70faa31d238e638069283cb9b2efb5ce",
+          "B": "61bcb4286e4d0a2c42841d10e38b7090435683b5fcaae17358b30e5e4e449948",
+          "D": "c73a3f736006021f3e083d09163c4ee2194631e5e0096c08cd48cb1574d7a2ca",
+          "P": "22265751a03102f1326546c5e6f677bad27d9f42f8a81ee9b1f9999c0ace5783",
+          "bias": "92f6ecd99cf0a557197b0f617943e38c8d078bc5fb61c570bda50ae0687004aa",
+          "multiplier": "d023bff29f71cc28280b8c9865c90e91e8693cccedba896c466e1d6d41fe1d98",
+          "w_scale": "7bcfc471c325f11ad1d9b84e06bb26a1e962c46af76e4e9522bdc4c8ec5c5824",
+          "w_zero_point": "238e94eb1c6eeb7df0b404a3405eb66306cf54c69f18300bcd956975dcb5b977",
+          "x_scale": "2bf14e785577603fda60476e5e5cfd313b95b39166647c4fa6b0b00fcd6d46b3",
+          "x_zero_point": "65c74c15a686187bb6bbf9958f494fc6b80068034a659a9ad44991b08c58f2d2",
+          "y_scale": "08e21eeb808e4a7f66f95c58d9fc585c31f50045de5d8828c81d7a6d97efb559",
+          "y_zero_point": "2e7d2c03a9507ae265ecf5b5356885a53393a2029d241394997265a1a25aefc6"
+        },
+        "per_slice_used_bytes_for_n1": 1329216,
+        "physical_bytes_for_n1": 21267456,
+        "validation": {
+          "per_slice_used_bytes": 1329216,
+          "port_count": 12,
+          "region_count": 192,
+          "slice_count": 16
+        }
+      },
+      "family": {
+        "activation_shape": [
+          16,
+          256,
+          14,
+          14
+        ],
+        "dilations": [
+          1,
+          1
+        ],
+        "family_id": "conv-family-94125da37029",
+        "group": 1,
+        "node_ids": [
+          "node-0036",
+          "node-0040",
+          "node-0044",
+          "node-0048",
+          "node-0052",
+          "node-0056"
+        ],
+        "onnx_names": [
+          "resnetv17_stage3_conv2_fwd_quant",
+          "resnetv17_stage3_conv6_fwd_quant",
+          "resnetv17_stage3_conv9_fwd_quant",
+          "resnetv17_stage3_conv12_fwd_quant",
+          "resnetv17_stage3_conv15_fwd_quant",
+          "resnetv17_stage3_conv18_fwd_quant"
+        ],
+        "output_shape": [
+          16,
+          1024,
+          14,
+          14
+        ],
+        "pads": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "strides": [
+          1,
+          1
+        ],
+        "weight_shape": [
+          1024,
+          256,
+          1,
+          1
+        ]
+      },
+      "formal_n16_plans": {
+        "batch": {
+          "c_padded": 256,
+          "capacity_bytes": 25165824,
+          "capacity_margin_bytes": 23836608,
+          "k_padded": 1024,
+          "per_slice_used_bytes": 1329216
+        },
+        "ring": {
+          "active_c_slices": 16,
+          "active_k_slices": 16,
+          "all_owner_ranges_exact": true,
+          "all_ring_orders_are_permutations": true,
+          "c_padded": 256,
+          "c_tile": 16,
+          "capacity_bytes": 25165824,
+          "capacity_margin_bytes": 24094848,
+          "k_padded": 1024,
+          "k_tile": 64,
+          "per_slice_used_bytes": 1070976
+        }
+      },
+      "logical_hashes": {
+        "A": "b623bd12f510c64584107ea62df4b14c70faa31d238e638069283cb9b2efb5ce",
+        "B": "61bcb4286e4d0a2c42841d10e38b7090435683b5fcaae17358b30e5e4e449948",
+        "D": "c73a3f736006021f3e083d09163c4ee2194631e5e0096c08cd48cb1574d7a2ca",
+        "P": "22265751a03102f1326546c5e6f677bad27d9f42f8a81ee9b1f9999c0ace5783",
+        "bias": "92f6ecd99cf0a557197b0f617943e38c8d078bc5fb61c570bda50ae0687004aa",
+        "multiplier": "d023bff29f71cc28280b8c9865c90e91e8693cccedba896c466e1d6d41fe1d98",
+        "w_scale": "7bcfc471c325f11ad1d9b84e06bb26a1e962c46af76e4e9522bdc4c8ec5c5824",
+        "w_zero_point": "238e94eb1c6eeb7df0b404a3405eb66306cf54c69f18300bcd956975dcb5b977",
+        "x_scale": "2bf14e785577603fda60476e5e5cfd313b95b39166647c4fa6b0b00fcd6d46b3",
+        "x_zero_point": "65c74c15a686187bb6bbf9958f494fc6b80068034a659a9ad44991b08c58f2d2",
+        "y_scale": "08e21eeb808e4a7f66f95c58d9fc585c31f50045de5d8828c81d7a6d97efb559",
+        "y_zero_point": "2e7d2c03a9507ae265ecf5b5356885a53393a2029d241394997265a1a25aefc6"
+      },
+      "ring_roundtrip": {
+        "all_inverse_bit_exact": true,
+        "contract": "w4_conv_ring16_candidate_v1",
+        "inverse_hashes": {
+          "A": "b623bd12f510c64584107ea62df4b14c70faa31d238e638069283cb9b2efb5ce",
+          "B": "61bcb4286e4d0a2c42841d10e38b7090435683b5fcaae17358b30e5e4e449948",
+          "D": "c73a3f736006021f3e083d09163c4ee2194631e5e0096c08cd48cb1574d7a2ca",
+          "P": "22265751a03102f1326546c5e6f677bad27d9f42f8a81ee9b1f9999c0ace5783",
+          "bias": "92f6ecd99cf0a557197b0f617943e38c8d078bc5fb61c570bda50ae0687004aa",
+          "multiplier": "d023bff29f71cc28280b8c9865c90e91e8693cccedba896c466e1d6d41fe1d98",
+          "w_scale": "7bcfc471c325f11ad1d9b84e06bb26a1e962c46af76e4e9522bdc4c8ec5c5824",
+          "w_zero_point": "238e94eb1c6eeb7df0b404a3405eb66306cf54c69f18300bcd956975dcb5b977",
+          "x_scale": "2bf14e785577603fda60476e5e5cfd313b95b39166647c4fa6b0b00fcd6d46b3",
+          "x_zero_point": "65c74c15a686187bb6bbf9958f494fc6b80068034a659a9ad44991b08c58f2d2",
+          "y_scale": "08e21eeb808e4a7f66f95c58d9fc585c31f50045de5d8828c81d7a6d97efb559",
+          "y_zero_point": "2e7d2c03a9507ae265ecf5b5356885a53393a2029d241394997265a1a25aefc6"
+        },
+        "per_slice_used_bytes_for_n1": 83136,
+        "physical_bytes_for_n1": 1330176,
+        "validation": {
+          "per_slice_used_bytes": 83136,
+          "port_count": 12,
+          "region_count": 192,
+          "ring_steps": 16,
+          "slice_count": 16
+        }
+      },
+      "synthetic_roundtrip_batch_size": 1
+    },
+    {
+      "all_batch_ring_logical_bit_exact": true,
+      "batch_roundtrip": {
+        "all_inverse_bit_exact": true,
+        "contract": "w4_conv_batch16_candidate_v1",
+        "inverse_hashes": {
+          "A": "b623bd12f510c64584107ea62df4b14c70faa31d238e638069283cb9b2efb5ce",
+          "B": "43778aabaa854f2899e411a4e1432abe674cc358ea38c8c4c845eb41a08fbd52",
+          "D": "d054e3cf5a4bb97bc9b82cc14df14b525cc07b0b160bc3b4f19001bfbe2114fb",
+          "P": "d5457f9a1393e8c9c869281aa6977721523ac440cbb560635e300699ccc7e0ca",
+          "bias": "3120ec8a440b7ba9fc91f565be63c37d96460dbce90513f57374805755e8f648",
+          "multiplier": "be84a8fa67272f7a3fffa336bfb85b9778a31175019f8eaf6ebbbe175f0002b0",
+          "w_scale": "3cc665742c1200b6b11a3f77bc3e55da56286bab8cfbb988bf29c2cdce3991ca",
+          "w_zero_point": "e8fcac491700501cb50008cffbb60a5729c41dd542d78cd1fad2a5879f202bcc",
+          "x_scale": "2bf14e785577603fda60476e5e5cfd313b95b39166647c4fa6b0b00fcd6d46b3",
+          "x_zero_point": "65c74c15a686187bb6bbf9958f494fc6b80068034a659a9ad44991b08c58f2d2",
+          "y_scale": "08e21eeb808e4a7f66f95c58d9fc585c31f50045de5d8828c81d7a6d97efb559",
+          "y_zero_point": "2e7d2c03a9507ae265ecf5b5356885a53393a2029d241394997265a1a25aefc6"
+        },
+        "per_slice_used_bytes_for_n1": 894272,
+        "physical_bytes_for_n1": 14308352,
+        "validation": {
+          "per_slice_used_bytes": 894272,
+          "port_count": 12,
+          "region_count": 192,
+          "slice_count": 16
+        }
+      },
+      "family": {
+        "activation_shape": [
+          16,
+          256,
+          14,
+          14
+        ],
+        "dilations": [
+          1,
+          1
+        ],
+        "family_id": "conv-family-091984cfac63",
+        "group": 1,
+        "node_ids": [
+          "node-0035",
+          "node-0039",
+          "node-0043",
+          "node-0047",
+          "node-0051",
+          "node-0055"
+        ],
+        "onnx_names": [
+          "fused resnetv17_stage3_conv1_fwd_quant",
+          "fused resnetv17_stage3_conv5_fwd_quant",
+          "fused resnetv17_stage3_conv8_fwd_quant",
+          "fused resnetv17_stage3_conv11_fwd_quant",
+          "fused resnetv17_stage3_conv14_fwd_quant",
+          "fused resnetv17_stage3_conv17_fwd_quant"
+        ],
+        "output_shape": [
+          16,
+          256,
+          14,
+          14
+        ],
+        "pads": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "strides": [
+          1,
+          1
+        ],
+        "weight_shape": [
+          256,
+          256,
+          3,
+          3
+        ]
+      },
+      "formal_n16_plans": {
+        "batch": {
+          "c_padded": 256,
+          "capacity_bytes": 25165824,
+          "capacity_margin_bytes": 24271552,
+          "k_padded": 256,
+          "per_slice_used_bytes": 894272
+        },
+        "ring": {
+          "active_c_slices": 16,
+          "active_k_slices": 16,
+          "all_owner_ranges_exact": true,
+          "all_ring_orders_are_permutations": true,
+          "c_padded": 256,
+          "c_tile": 16,
+          "capacity_bytes": 25165824,
+          "capacity_margin_bytes": 24827632,
+          "k_padded": 256,
+          "k_tile": 16,
+          "per_slice_used_bytes": 338192
+        }
+      },
+      "logical_hashes": {
+        "A": "b623bd12f510c64584107ea62df4b14c70faa31d238e638069283cb9b2efb5ce",
+        "B": "43778aabaa854f2899e411a4e1432abe674cc358ea38c8c4c845eb41a08fbd52",
+        "D": "d054e3cf5a4bb97bc9b82cc14df14b525cc07b0b160bc3b4f19001bfbe2114fb",
+        "P": "d5457f9a1393e8c9c869281aa6977721523ac440cbb560635e300699ccc7e0ca",
+        "bias": "3120ec8a440b7ba9fc91f565be63c37d96460dbce90513f57374805755e8f648",
+        "multiplier": "be84a8fa67272f7a3fffa336bfb85b9778a31175019f8eaf6ebbbe175f0002b0",
+        "w_scale": "3cc665742c1200b6b11a3f77bc3e55da56286bab8cfbb988bf29c2cdce3991ca",
+        "w_zero_point": "e8fcac491700501cb50008cffbb60a5729c41dd542d78cd1fad2a5879f202bcc",
+        "x_scale": "2bf14e785577603fda60476e5e5cfd313b95b39166647c4fa6b0b00fcd6d46b3",
+        "x_zero_point": "65c74c15a686187bb6bbf9958f494fc6b80068034a659a9ad44991b08c58f2d2",
+        "y_scale": "08e21eeb808e4a7f66f95c58d9fc585c31f50045de5d8828c81d7a6d97efb559",
+        "y_zero_point": "2e7d2c03a9507ae265ecf5b5356885a53393a2029d241394997265a1a25aefc6"
+      },
+      "ring_roundtrip": {
+        "all_inverse_bit_exact": true,
+        "contract": "w4_conv_ring16_candidate_v1",
+        "inverse_hashes": {
+          "A": "b623bd12f510c64584107ea62df4b14c70faa31d238e638069283cb9b2efb5ce",
+          "B": "43778aabaa854f2899e411a4e1432abe674cc358ea38c8c4c845eb41a08fbd52",
+          "D": "d054e3cf5a4bb97bc9b82cc14df14b525cc07b0b160bc3b4f19001bfbe2114fb",
+          "P": "d5457f9a1393e8c9c869281aa6977721523ac440cbb560635e300699ccc7e0ca",
+          "bias": "3120ec8a440b7ba9fc91f565be63c37d96460dbce90513f57374805755e8f648",
+          "multiplier": "be84a8fa67272f7a3fffa336bfb85b9778a31175019f8eaf6ebbbe175f0002b0",
+          "w_scale": "3cc665742c1200b6b11a3f77bc3e55da56286bab8cfbb988bf29c2cdce3991ca",
+          "w_zero_point": "e8fcac491700501cb50008cffbb60a5729c41dd542d78cd1fad2a5879f202bcc",
+          "x_scale": "2bf14e785577603fda60476e5e5cfd313b95b39166647c4fa6b0b00fcd6d46b3",
+          "x_zero_point": "65c74c15a686187bb6bbf9958f494fc6b80068034a659a9ad44991b08c58f2d2",
+          "y_scale": "08e21eeb808e4a7f66f95c58d9fc585c31f50045de5d8828c81d7a6d97efb559",
+          "y_zero_point": "2e7d2c03a9507ae265ecf5b5356885a53393a2029d241394997265a1a25aefc6"
+        },
+        "per_slice_used_bytes_for_n1": 55952,
+        "physical_bytes_for_n1": 895232,
+        "validation": {
+          "per_slice_used_bytes": 55952,
+          "port_count": 12,
+          "region_count": 192,
+          "ring_steps": 16,
+          "slice_count": 16
+        }
+      },
+      "synthetic_roundtrip_batch_size": 1
+    },
+    {
+      "all_batch_ring_logical_bit_exact": true,
+      "batch_roundtrip": {
+        "all_inverse_bit_exact": true,
+        "contract": "w4_conv_batch16_candidate_v1",
+        "inverse_hashes": {
+          "A": "1068c2ccd6d39a3a2728e41a4d4262ca1a798f9c505da6ced1aae6ba5b1a1090",
+          "B": "095924d2f8a962b847976a1c490febc213711156f75ae9217d493a55edfd9732",
+          "D": "3f1d0b9e09f6bf41d20e738cd7dc6e7196d57d522fa3f5b41c9daa5a2cdf9d48",
+          "P": "b50b7d038ac9e3dc7bc3a97b13ec356a1aee52324d6cc4c7ccb7fa191e0c6f8c",
+          "bias": "76b988ad7898855ece0d640a45838513ad230684a1f1dbb8c72c0468ae2601da",
+          "multiplier": "d4ad1955b3142947439e3204b9b303f622fbfc2ee56dd735b5fd7be69488d8e0",
+          "w_scale": "61da5d3f5f67bf9b01968ef6ae4c5b806e2eb38c37d13ebf4964b689bd61ad65",
+          "w_zero_point": "7c5bce5390567774f8fd1358941b3feb0ebd667a724d926a58e17090a8a3cee1",
+          "x_scale": "2bf14e785577603fda60476e5e5cfd313b95b39166647c4fa6b0b00fcd6d46b3",
+          "x_zero_point": "65c74c15a686187bb6bbf9958f494fc6b80068034a659a9ad44991b08c58f2d2",
+          "y_scale": "08e21eeb808e4a7f66f95c58d9fc585c31f50045de5d8828c81d7a6d97efb559",
+          "y_zero_point": "2e7d2c03a9507ae265ecf5b5356885a53393a2029d241394997265a1a25aefc6"
+        },
+        "per_slice_used_bytes_for_n1": 1339072,
+        "physical_bytes_for_n1": 21425152,
+        "validation": {
+          "per_slice_used_bytes": 1339072,
+          "port_count": 12,
+          "region_count": 192,
+          "slice_count": 16
+        }
+      },
+      "family": {
+        "activation_shape": [
+          16,
+          256,
+          56,
+          56
+        ],
+        "dilations": [
+          1,
+          1
+        ],
+        "family_id": "conv-family-5835486ebd68",
+        "group": 1,
+        "node_ids": [
+          "node-0017"
+        ],
+        "onnx_names": [
+          "fused resnetv17_stage2_conv0_fwd_quant"
+        ],
+        "output_shape": [
+          16,
+          128,
+          28,
+          28
+        ],
+        "pads": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "strides": [
+          2,
+          2
+        ],
+        "weight_shape": [
+          128,
+          256,
+          1,
+          1
+        ]
+      },
+      "formal_n16_plans": {
+        "batch": {
+          "c_padded": 256,
+          "capacity_bytes": 25165824,
+          "capacity_margin_bytes": 23826752,
+          "k_padded": 128,
+          "per_slice_used_bytes": 1339072
+        },
+        "ring": {
+          "active_c_slices": 16,
+          "active_k_slices": 16,
+          "all_owner_ranges_exact": true,
+          "all_ring_orders_are_permutations": true,
+          "c_padded": 256,
+          "c_tile": 16,
+          "capacity_bytes": 25165824,
+          "capacity_margin_bytes": 23859024,
+          "k_padded": 128,
+          "k_tile": 8,
+          "per_slice_used_bytes": 1306800
+        }
+      },
+      "logical_hashes": {
+        "A": "1068c2ccd6d39a3a2728e41a4d4262ca1a798f9c505da6ced1aae6ba5b1a1090",
+        "B": "095924d2f8a962b847976a1c490febc213711156f75ae9217d493a55edfd9732",
+        "D": "3f1d0b9e09f6bf41d20e738cd7dc6e7196d57d522fa3f5b41c9daa5a2cdf9d48",
+        "P": "b50b7d038ac9e3dc7bc3a97b13ec356a1aee52324d6cc4c7ccb7fa191e0c6f8c",
+        "bias": "76b988ad7898855ece0d640a45838513ad230684a1f1dbb8c72c0468ae2601da",
+        "multiplier": "d4ad1955b3142947439e3204b9b303f622fbfc2ee56dd735b5fd7be69488d8e0",
+        "w_scale": "61da5d3f5f67bf9b01968ef6ae4c5b806e2eb38c37d13ebf4964b689bd61ad65",
+        "w_zero_point": "7c5bce5390567774f8fd1358941b3feb0ebd667a724d926a58e17090a8a3cee1",
+        "x_scale": "2bf14e785577603fda60476e5e5cfd313b95b39166647c4fa6b0b00fcd6d46b3",
+        "x_zero_point": "65c74c15a686187bb6bbf9958f494fc6b80068034a659a9ad44991b08c58f2d2",
+        "y_scale": "08e21eeb808e4a7f66f95c58d9fc585c31f50045de5d8828c81d7a6d97efb559",
+        "y_zero_point": "2e7d2c03a9507ae265ecf5b5356885a53393a2029d241394997265a1a25aefc6"
+      },
+      "ring_roundtrip": {
+        "all_inverse_bit_exact": true,
+        "contract": "w4_conv_ring16_candidate_v1",
+        "inverse_hashes": {
+          "A": "1068c2ccd6d39a3a2728e41a4d4262ca1a798f9c505da6ced1aae6ba5b1a1090",
+          "B": "095924d2f8a962b847976a1c490febc213711156f75ae9217d493a55edfd9732",
+          "D": "3f1d0b9e09f6bf41d20e738cd7dc6e7196d57d522fa3f5b41c9daa5a2cdf9d48",
+          "P": "b50b7d038ac9e3dc7bc3a97b13ec356a1aee52324d6cc4c7ccb7fa191e0c6f8c",
+          "bias": "76b988ad7898855ece0d640a45838513ad230684a1f1dbb8c72c0468ae2601da",
+          "multiplier": "d4ad1955b3142947439e3204b9b303f622fbfc2ee56dd735b5fd7be69488d8e0",
+          "w_scale": "61da5d3f5f67bf9b01968ef6ae4c5b806e2eb38c37d13ebf4964b689bd61ad65",
+          "w_zero_point": "7c5bce5390567774f8fd1358941b3feb0ebd667a724d926a58e17090a8a3cee1",
+          "x_scale": "2bf14e785577603fda60476e5e5cfd313b95b39166647c4fa6b0b00fcd6d46b3",
+          "x_zero_point": "65c74c15a686187bb6bbf9958f494fc6b80068034a659a9ad44991b08c58f2d2",
+          "y_scale": "08e21eeb808e4a7f66f95c58d9fc585c31f50045de5d8828c81d7a6d97efb559",
+          "y_zero_point": "2e7d2c03a9507ae265ecf5b5356885a53393a2029d241394997265a1a25aefc6"
+        },
+        "per_slice_used_bytes_for_n1": 83760,
+        "physical_bytes_for_n1": 1340160,
+        "validation": {
+          "per_slice_used_bytes": 83760,
+          "port_count": 12,
+          "region_count": 192,
+          "ring_steps": 16,
+          "slice_count": 16
+        }
+      },
+      "synthetic_roundtrip_batch_size": 1
+    },
+    {
+      "all_batch_ring_logical_bit_exact": true,
+      "batch_roundtrip": {
+        "all_inverse_bit_exact": true,
+        "contract": "w4_conv_batch16_candidate_v1",
+        "inverse_hashes": {
+          "A": "1068c2ccd6d39a3a2728e41a4d4262ca1a798f9c505da6ced1aae6ba5b1a1090",
+          "B": "5269fcb2e334d0932771ae0976bcd3fff79a96237910d70ad515e58a332b1342",
+          "D": "3221b3d6d0ad8136e8ed80ef1f6800adf054aba14c4ea2fe737182e5473952b0",
+          "P": "e794711f25aaaef69dd7d99246227ae1f1010cf6857e22e5d792c7ef842f4c81",
+          "bias": "c1e35d499f54a407aa03e20563a07fb78fe3e4be2b25c87cfdaec96327f26b0e",
+          "multiplier": "3925771fd2c5ef441041edba79e4b065fbfc779f8097becdc4882e127f94d883",
+          "w_scale": "1f77ea9eff8f862831e223f29b4ce41180ac04553754389212c28bf808d6bbbb",
+          "w_zero_point": "8750732098f47c8aef71b71f290b452fec30c18ff860852af6d286a26c290fb5",
+          "x_scale": "2bf14e785577603fda60476e5e5cfd313b95b39166647c4fa6b0b00fcd6d46b3",
+          "x_zero_point": "65c74c15a686187bb6bbf9958f494fc6b80068034a659a9ad44991b08c58f2d2",
+          "y_scale": "08e21eeb808e4a7f66f95c58d9fc585c31f50045de5d8828c81d7a6d97efb559",
+          "y_zero_point": "2e7d2c03a9507ae265ecf5b5356885a53393a2029d241394997265a1a25aefc6"
+        },
+        "per_slice_used_bytes_for_n1": 2947648,
+        "physical_bytes_for_n1": 47162368,
+        "validation": {
+          "per_slice_used_bytes": 2947648,
+          "port_count": 12,
+          "region_count": 192,
+          "slice_count": 16
+        }
+      },
+      "family": {
+        "activation_shape": [
+          16,
+          256,
+          56,
+          56
+        ],
+        "dilations": [
+          1,
+          1
+        ],
+        "family_id": "conv-family-f3a4a64cb566",
+        "group": 1,
+        "node_ids": [
+          "node-0016"
+        ],
+        "onnx_names": [
+          "resnetv17_stage2_conv3_fwd_quant"
+        ],
+        "output_shape": [
+          16,
+          512,
+          28,
+          28
+        ],
+        "pads": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "strides": [
+          2,
+          2
+        ],
+        "weight_shape": [
+          512,
+          256,
+          1,
+          1
+        ]
+      },
+      "formal_n16_plans": {
+        "batch": {
+          "c_padded": 256,
+          "capacity_bytes": 25165824,
+          "capacity_margin_bytes": 22218176,
+          "k_padded": 512,
+          "per_slice_used_bytes": 2947648
+        },
+        "ring": {
+          "active_c_slices": 16,
+          "active_k_slices": 16,
+          "all_owner_ranges_exact": true,
+          "all_ring_orders_are_permutations": true,
+          "c_padded": 256,
+          "c_tile": 16,
+          "capacity_bytes": 25165824,
+          "capacity_margin_bytes": 22347296,
+          "k_padded": 512,
+          "k_tile": 32,
+          "per_slice_used_bytes": 2818528
+        }
+      },
+      "logical_hashes": {
+        "A": "1068c2ccd6d39a3a2728e41a4d4262ca1a798f9c505da6ced1aae6ba5b1a1090",
+        "B": "5269fcb2e334d0932771ae0976bcd3fff79a96237910d70ad515e58a332b1342",
+        "D": "3221b3d6d0ad8136e8ed80ef1f6800adf054aba14c4ea2fe737182e5473952b0",
+        "P": "e794711f25aaaef69dd7d99246227ae1f1010cf6857e22e5d792c7ef842f4c81",
+        "bias": "c1e35d499f54a407aa03e20563a07fb78fe3e4be2b25c87cfdaec96327f26b0e",
+        "multiplier": "3925771fd2c5ef441041edba79e4b065fbfc779f8097becdc4882e127f94d883",
+        "w_scale": "1f77ea9eff8f862831e223f29b4ce41180ac04553754389212c28bf808d6bbbb",
+        "w_zero_point": "8750732098f47c8aef71b71f290b452fec30c18ff860852af6d286a26c290fb5",
+        "x_scale": "2bf14e785577603fda60476e5e5cfd313b95b39166647c4fa6b0b00fcd6d46b3",
+        "x_zero_point": "65c74c15a686187bb6bbf9958f494fc6b80068034a659a9ad44991b08c58f2d2",
+        "y_scale": "08e21eeb808e4a7f66f95c58d9fc585c31f50045de5d8828c81d7a6d97efb559",
+        "y_zero_point": "2e7d2c03a9507ae265ecf5b5356885a53393a2029d241394997265a1a25aefc6"
+      },
+      "ring_roundtrip": {
+        "all_inverse_bit_exact": true,
+        "contract": "w4_conv_ring16_candidate_v1",
+        "inverse_hashes": {
+          "A": "1068c2ccd6d39a3a2728e41a4d4262ca1a798f9c505da6ced1aae6ba5b1a1090",
+          "B": "5269fcb2e334d0932771ae0976bcd3fff79a96237910d70ad515e58a332b1342",
+          "D": "3221b3d6d0ad8136e8ed80ef1f6800adf054aba14c4ea2fe737182e5473952b0",
+          "P": "e794711f25aaaef69dd7d99246227ae1f1010cf6857e22e5d792c7ef842f4c81",
+          "bias": "c1e35d499f54a407aa03e20563a07fb78fe3e4be2b25c87cfdaec96327f26b0e",
+          "multiplier": "3925771fd2c5ef441041edba79e4b065fbfc779f8097becdc4882e127f94d883",
+          "w_scale": "1f77ea9eff8f862831e223f29b4ce41180ac04553754389212c28bf808d6bbbb",
+          "w_zero_point": "8750732098f47c8aef71b71f290b452fec30c18ff860852af6d286a26c290fb5",
+          "x_scale": "2bf14e785577603fda60476e5e5cfd313b95b39166647c4fa6b0b00fcd6d46b3",
+          "x_zero_point": "65c74c15a686187bb6bbf9958f494fc6b80068034a659a9ad44991b08c58f2d2",
+          "y_scale": "08e21eeb808e4a7f66f95c58d9fc585c31f50045de5d8828c81d7a6d97efb559",
+          "y_zero_point": "2e7d2c03a9507ae265ecf5b5356885a53393a2029d241394997265a1a25aefc6"
+        },
+        "per_slice_used_bytes_for_n1": 184288,
+        "physical_bytes_for_n1": 2948608,
+        "validation": {
+          "per_slice_used_bytes": 184288,
+          "port_count": 12,
+          "region_count": 192,
+          "ring_steps": 16,
+          "slice_count": 16
+        }
+      },
+      "synthetic_roundtrip_batch_size": 1
+    },
+    {
+      "all_batch_ring_logical_bit_exact": true,
+      "batch_roundtrip": {
+        "all_inverse_bit_exact": true,
+        "contract": "w4_conv_batch16_candidate_v1",
+        "inverse_hashes": {
+          "A": "1068c2ccd6d39a3a2728e41a4d4262ca1a798f9c505da6ced1aae6ba5b1a1090",
+          "B": "e8d593ccbecbfa5c8b9e8888904c01dda193b73b2544782363754e412d626fb2",
+          "D": "c73a3f736006021f3e083d09163c4ee2194631e5e0096c08cd48cb1574d7a2ca",
+          "P": "22265751a03102f1326546c5e6f677bad27d9f42f8a81ee9b1f9999c0ace5783",
+          "bias": "a78ded8a6cbd633f1063698597be6a5c3303424a8b90231e552e080fde94b078",
+          "multiplier": "9ccebc4e875256800a85c13bfcb3a087dee293657f5bf08d654822cca55b8db5",
+          "w_scale": "d72bf0420f5f153a9f0b26ea6ead17ad4755acfd5f1f6efd9017a0be91dc9eb3",
+          "w_zero_point": "e4fa3324fc1d013739034c3017d240fa8aa56551717c6b52b95564c8901c2f46",
+          "x_scale": "2bf14e785577603fda60476e5e5cfd313b95b39166647c4fa6b0b00fcd6d46b3",
+          "x_zero_point": "65c74c15a686187bb6bbf9958f494fc6b80068034a659a9ad44991b08c58f2d2",
+          "y_scale": "08e21eeb808e4a7f66f95c58d9fc585c31f50045de5d8828c81d7a6d97efb559",
+          "y_zero_point": "2e7d2c03a9507ae265ecf5b5356885a53393a2029d241394997265a1a25aefc6"
+        },
+        "per_slice_used_bytes_for_n1": 1823616,
+        "physical_bytes_for_n1": 29177856,
+        "validation": {
+          "per_slice_used_bytes": 1823616,
+          "port_count": 12,
+          "region_count": 192,
+          "slice_count": 16
+        }
+      },
+      "family": {
+        "activation_shape": [
+          16,
+          256,
+          56,
+          56
+        ],
+        "dilations": [
+          1,
+          1
+        ],
+        "family_id": "conv-family-d39a21b78bbb",
+        "group": 1,
+        "node_ids": [
+          "node-0008",
+          "node-0012"
+        ],
+        "onnx_names": [
+          "fused resnetv17_stage1_conv4_fwd_quant",
+          "fused resnetv17_stage1_conv7_fwd_quant"
+        ],
+        "output_shape": [
+          16,
+          64,
+          56,
+          56
+        ],
+        "pads": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "strides": [
+          1,
+          1
+        ],
+        "weight_shape": [
+          64,
+          256,
+          1,
+          1
+        ]
+      },
+      "formal_n16_plans": {
+        "batch": {
+          "c_padded": 256,
+          "capacity_bytes": 25165824,
+          "capacity_margin_bytes": 23342208,
+          "k_padded": 64,
+          "per_slice_used_bytes": 1823616
+        },
+        "ring": {
+          "active_c_slices": 16,
+          "active_k_slices": 16,
+          "all_owner_ranges_exact": true,
+          "all_ring_orders_are_permutations": true,
+          "c_padded": 256,
+          "c_tile": 16,
+          "capacity_bytes": 25165824,
+          "capacity_margin_bytes": 23358336,
+          "k_padded": 64,
+          "k_tile": 4,
+          "per_slice_used_bytes": 1807488
+        }
+      },
+      "logical_hashes": {
+        "A": "1068c2ccd6d39a3a2728e41a4d4262ca1a798f9c505da6ced1aae6ba5b1a1090",
+        "B": "e8d593ccbecbfa5c8b9e8888904c01dda193b73b2544782363754e412d626fb2",
+        "D": "c73a3f736006021f3e083d09163c4ee2194631e5e0096c08cd48cb1574d7a2ca",
+        "P": "22265751a03102f1326546c5e6f677bad27d9f42f8a81ee9b1f9999c0ace5783",
+        "bias": "a78ded8a6cbd633f1063698597be6a5c3303424a8b90231e552e080fde94b078",
+        "multiplier": "9ccebc4e875256800a85c13bfcb3a087dee293657f5bf08d654822cca55b8db5",
+        "w_scale": "d72bf0420f5f153a9f0b26ea6ead17ad4755acfd5f1f6efd9017a0be91dc9eb3",
+        "w_zero_point": "e4fa3324fc1d013739034c3017d240fa8aa56551717c6b52b95564c8901c2f46",
+        "x_scale": "2bf14e785577603fda60476e5e5cfd313b95b39166647c4fa6b0b00fcd6d46b3",
+        "x_zero_point": "65c74c15a686187bb6bbf9958f494fc6b80068034a659a9ad44991b08c58f2d2",
+        "y_scale": "08e21eeb808e4a7f66f95c58d9fc585c31f50045de5d8828c81d7a6d97efb559",
+        "y_zero_point": "2e7d2c03a9507ae265ecf5b5356885a53393a2029d241394997265a1a25aefc6"
+      },
+      "ring_roundtrip": {
+        "all_inverse_bit_exact": true,
+        "contract": "w4_conv_ring16_candidate_v1",
+        "inverse_hashes": {
+          "A": "1068c2ccd6d39a3a2728e41a4d4262ca1a798f9c505da6ced1aae6ba5b1a1090",
+          "B": "e8d593ccbecbfa5c8b9e8888904c01dda193b73b2544782363754e412d626fb2",
+          "D": "c73a3f736006021f3e083d09163c4ee2194631e5e0096c08cd48cb1574d7a2ca",
+          "P": "22265751a03102f1326546c5e6f677bad27d9f42f8a81ee9b1f9999c0ace5783",
+          "bias": "a78ded8a6cbd633f1063698597be6a5c3303424a8b90231e552e080fde94b078",
+          "multiplier": "9ccebc4e875256800a85c13bfcb3a087dee293657f5bf08d654822cca55b8db5",
+          "w_scale": "d72bf0420f5f153a9f0b26ea6ead17ad4755acfd5f1f6efd9017a0be91dc9eb3",
+          "w_zero_point": "e4fa3324fc1d013739034c3017d240fa8aa56551717c6b52b95564c8901c2f46",
+          "x_scale": "2bf14e785577603fda60476e5e5cfd313b95b39166647c4fa6b0b00fcd6d46b3",
+          "x_zero_point": "65c74c15a686187bb6bbf9958f494fc6b80068034a659a9ad44991b08c58f2d2",
+          "y_scale": "08e21eeb808e4a7f66f95c58d9fc585c31f50045de5d8828c81d7a6d97efb559",
+          "y_zero_point": "2e7d2c03a9507ae265ecf5b5356885a53393a2029d241394997265a1a25aefc6"
+        },
+        "per_slice_used_bytes_for_n1": 114048,
+        "physical_bytes_for_n1": 1824768,
+        "validation": {
+          "per_slice_used_bytes": 114048,
+          "port_count": 12,
+          "region_count": 192,
+          "ring_steps": 16,
+          "slice_count": 16
+        }
+      },
+      "synthetic_roundtrip_batch_size": 1
+    },
+    {
+      "all_batch_ring_logical_bit_exact": true,
+      "batch_roundtrip": {
+        "all_inverse_bit_exact": true,
+        "contract": "w4_conv_batch16_candidate_v1",
+        "inverse_hashes": {
+          "A": "52a5dc067d63b1835bc2414b243a723045b35a822281828f8042bc1af7d18c2f",
+          "B": "387d54c4fd9239964398ab67b835ff56a6294ab1bec3e5b2cc9851ade2455b56",
+          "D": "3d5362ca70ea8a1651533a2bfc89f9c5b9ad8502b5bb05e7d08106c69016ed0c",
+          "P": "17b0cd82be6aa61a0366391bbdb759493b9b659edd6e6bf9c4735a4a716b47ba",
+          "bias": "a78ded8a6cbd633f1063698597be6a5c3303424a8b90231e552e080fde94b078",
+          "multiplier": "9ccebc4e875256800a85c13bfcb3a087dee293657f5bf08d654822cca55b8db5",
+          "w_scale": "d72bf0420f5f153a9f0b26ea6ead17ad4755acfd5f1f6efd9017a0be91dc9eb3",
+          "w_zero_point": "e4fa3324fc1d013739034c3017d240fa8aa56551717c6b52b95564c8901c2f46",
+          "x_scale": "2bf14e785577603fda60476e5e5cfd313b95b39166647c4fa6b0b00fcd6d46b3",
+          "x_zero_point": "65c74c15a686187bb6bbf9958f494fc6b80068034a659a9ad44991b08c58f2d2",
+          "y_scale": "08e21eeb808e4a7f66f95c58d9fc585c31f50045de5d8828c81d7a6d97efb559",
+          "y_zero_point": "2e7d2c03a9507ae265ecf5b5356885a53393a2029d241394997265a1a25aefc6"
+        },
+        "per_slice_used_bytes_for_n1": 4441472,
+        "physical_bytes_for_n1": 71063552,
+        "validation": {
+          "per_slice_used_bytes": 4441472,
+          "port_count": 12,
+          "region_count": 192,
+          "slice_count": 16
+        }
+      },
+      "family": {
+        "activation_shape": [
+          16,
+          3,
+          224,
+          224
+        ],
+        "dilations": [
+          1,
+          1
+        ],
+        "family_id": "conv-family-a3194a82fe78",
+        "group": 1,
+        "node_ids": [
+          "node-0001"
+        ],
+        "onnx_names": [
+          "fused resnetv17_conv0_fwd_quant"
+        ],
+        "output_shape": [
+          16,
+          64,
+          112,
+          112
+        ],
+        "pads": [
+          3,
+          3,
+          3,
+          3
+        ],
+        "strides": [
+          2,
+          2
+        ],
+        "weight_shape": [
+          64,
+          3,
+          7,
+          7
+        ]
+      },
+      "formal_n16_plans": {
+        "batch": {
+          "c_padded": 8,
+          "capacity_bytes": 25165824,
+          "capacity_margin_bytes": 20724352,
+          "k_padded": 64,
+          "per_slice_used_bytes": 4441472
+        },
+        "ring": {
+          "active_c_slices": 3,
+          "active_k_slices": 16,
+          "all_owner_ranges_exact": true,
+          "all_ring_orders_are_permutations": true,
+          "c_padded": 16,
+          "c_tile": 1,
+          "capacity_bytes": 25165824,
+          "capacity_margin_bytes": 20345664,
+          "k_padded": 64,
+          "k_tile": 4,
+          "per_slice_used_bytes": 4820160
+        }
+      },
+      "logical_hashes": {
+        "A": "52a5dc067d63b1835bc2414b243a723045b35a822281828f8042bc1af7d18c2f",
+        "B": "387d54c4fd9239964398ab67b835ff56a6294ab1bec3e5b2cc9851ade2455b56",
+        "D": "3d5362ca70ea8a1651533a2bfc89f9c5b9ad8502b5bb05e7d08106c69016ed0c",
+        "P": "17b0cd82be6aa61a0366391bbdb759493b9b659edd6e6bf9c4735a4a716b47ba",
+        "bias": "a78ded8a6cbd633f1063698597be6a5c3303424a8b90231e552e080fde94b078",
+        "multiplier": "9ccebc4e875256800a85c13bfcb3a087dee293657f5bf08d654822cca55b8db5",
+        "w_scale": "d72bf0420f5f153a9f0b26ea6ead17ad4755acfd5f1f6efd9017a0be91dc9eb3",
+        "w_zero_point": "e4fa3324fc1d013739034c3017d240fa8aa56551717c6b52b95564c8901c2f46",
+        "x_scale": "2bf14e785577603fda60476e5e5cfd313b95b39166647c4fa6b0b00fcd6d46b3",
+        "x_zero_point": "65c74c15a686187bb6bbf9958f494fc6b80068034a659a9ad44991b08c58f2d2",
+        "y_scale": "08e21eeb808e4a7f66f95c58d9fc585c31f50045de5d8828c81d7a6d97efb559",
+        "y_zero_point": "2e7d2c03a9507ae265ecf5b5356885a53393a2029d241394997265a1a25aefc6"
+      },
+      "ring_roundtrip": {
+        "all_inverse_bit_exact": true,
+        "contract": "w4_conv_ring16_candidate_v1",
+        "inverse_hashes": {
+          "A": "52a5dc067d63b1835bc2414b243a723045b35a822281828f8042bc1af7d18c2f",
+          "B": "387d54c4fd9239964398ab67b835ff56a6294ab1bec3e5b2cc9851ade2455b56",
+          "D": "3d5362ca70ea8a1651533a2bfc89f9c5b9ad8502b5bb05e7d08106c69016ed0c",
+          "P": "17b0cd82be6aa61a0366391bbdb759493b9b659edd6e6bf9c4735a4a716b47ba",
+          "bias": "a78ded8a6cbd633f1063698597be6a5c3303424a8b90231e552e080fde94b078",
+          "multiplier": "9ccebc4e875256800a85c13bfcb3a087dee293657f5bf08d654822cca55b8db5",
+          "w_scale": "d72bf0420f5f153a9f0b26ea6ead17ad4755acfd5f1f6efd9017a0be91dc9eb3",
+          "w_zero_point": "e4fa3324fc1d013739034c3017d240fa8aa56551717c6b52b95564c8901c2f46",
+          "x_scale": "2bf14e785577603fda60476e5e5cfd313b95b39166647c4fa6b0b00fcd6d46b3",
+          "x_zero_point": "65c74c15a686187bb6bbf9958f494fc6b80068034a659a9ad44991b08c58f2d2",
+          "y_scale": "08e21eeb808e4a7f66f95c58d9fc585c31f50045de5d8828c81d7a6d97efb559",
+          "y_zero_point": "2e7d2c03a9507ae265ecf5b5356885a53393a2029d241394997265a1a25aefc6"
+        },
+        "per_slice_used_bytes_for_n1": 304320,
+        "physical_bytes_for_n1": 4869120,
+        "validation": {
+          "per_slice_used_bytes": 304320,
+          "port_count": 12,
+          "region_count": 192,
+          "ring_steps": 16,
+          "slice_count": 16
+        }
+      },
+      "synthetic_roundtrip_batch_size": 1
+    },
+    {
+      "all_batch_ring_logical_bit_exact": true,
+      "batch_roundtrip": {
+        "all_inverse_bit_exact": true,
+        "contract": "w4_conv_batch16_candidate_v1",
+        "inverse_hashes": {
+          "A": "2fdda711387d8508497f51a5e285bcce2b3e8ae02f3b1a6cade756561ff08685",
+          "B": "5ea777e059e58e234a98b113f06f98deeeb8fe1850996f9e78122e8804542ccb",
+          "D": "c73a3f736006021f3e083d09163c4ee2194631e5e0096c08cd48cb1574d7a2ca",
+          "P": "22265751a03102f1326546c5e6f677bad27d9f42f8a81ee9b1f9999c0ace5783",
+          "bias": "92f6ecd99cf0a557197b0f617943e38c8d078bc5fb61c570bda50ae0687004aa",
+          "multiplier": "d023bff29f71cc28280b8c9865c90e91e8693cccedba896c466e1d6d41fe1d98",
+          "w_scale": "7bcfc471c325f11ad1d9b84e06bb26a1e962c46af76e4e9522bdc4c8ec5c5824",
+          "w_zero_point": "238e94eb1c6eeb7df0b404a3405eb66306cf54c69f18300bcd956975dcb5b977",
+          "x_scale": "2bf14e785577603fda60476e5e5cfd313b95b39166647c4fa6b0b00fcd6d46b3",
+          "x_zero_point": "65c74c15a686187bb6bbf9958f494fc6b80068034a659a9ad44991b08c58f2d2",
+          "y_scale": "08e21eeb808e4a7f66f95c58d9fc585c31f50045de5d8828c81d7a6d97efb559",
+          "y_zero_point": "2e7d2c03a9507ae265ecf5b5356885a53393a2029d241394997265a1a25aefc6"
+        },
+        "per_slice_used_bytes_for_n1": 1942592,
+        "physical_bytes_for_n1": 31081472,
+        "validation": {
+          "per_slice_used_bytes": 1942592,
+          "port_count": 12,
+          "region_count": 192,
+          "slice_count": 16
+        }
+      },
+      "family": {
+        "activation_shape": [
+          16,
+          512,
+          28,
+          28
+        ],
+        "dilations": [
+          1,
+          1
+        ],
+        "family_id": "conv-family-308e041b181b",
+        "group": 1,
+        "node_ids": [
+          "node-0033"
+        ],
+        "onnx_names": [
+          "resnetv17_stage3_conv3_fwd_quant"
+        ],
+        "output_shape": [
+          16,
+          1024,
+          14,
+          14
+        ],
+        "pads": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "strides": [
+          2,
+          2
+        ],
+        "weight_shape": [
+          1024,
+          512,
+          1,
+          1
+        ]
+      },
+      "formal_n16_plans": {
+        "batch": {
+          "c_padded": 512,
+          "capacity_bytes": 25165824,
+          "capacity_margin_bytes": 23223232,
+          "k_padded": 1024,
+          "per_slice_used_bytes": 1942592
+        },
+        "ring": {
+          "active_c_slices": 16,
+          "active_k_slices": 16,
+          "all_owner_ranges_exact": true,
+          "all_ring_orders_are_permutations": true,
+          "c_padded": 512,
+          "c_tile": 32,
+          "capacity_bytes": 25165824,
+          "capacity_margin_bytes": 23727232,
+          "k_padded": 1024,
+          "k_tile": 64,
+          "per_slice_used_bytes": 1438592
+        }
+      },
+      "logical_hashes": {
+        "A": "2fdda711387d8508497f51a5e285bcce2b3e8ae02f3b1a6cade756561ff08685",
+        "B": "5ea777e059e58e234a98b113f06f98deeeb8fe1850996f9e78122e8804542ccb",
+        "D": "c73a3f736006021f3e083d09163c4ee2194631e5e0096c08cd48cb1574d7a2ca",
+        "P": "22265751a03102f1326546c5e6f677bad27d9f42f8a81ee9b1f9999c0ace5783",
+        "bias": "92f6ecd99cf0a557197b0f617943e38c8d078bc5fb61c570bda50ae0687004aa",
+        "multiplier": "d023bff29f71cc28280b8c9865c90e91e8693cccedba896c466e1d6d41fe1d98",
+        "w_scale": "7bcfc471c325f11ad1d9b84e06bb26a1e962c46af76e4e9522bdc4c8ec5c5824",
+        "w_zero_point": "238e94eb1c6eeb7df0b404a3405eb66306cf54c69f18300bcd956975dcb5b977",
+        "x_scale": "2bf14e785577603fda60476e5e5cfd313b95b39166647c4fa6b0b00fcd6d46b3",
+        "x_zero_point": "65c74c15a686187bb6bbf9958f494fc6b80068034a659a9ad44991b08c58f2d2",
+        "y_scale": "08e21eeb808e4a7f66f95c58d9fc585c31f50045de5d8828c81d7a6d97efb559",
+        "y_zero_point": "2e7d2c03a9507ae265ecf5b5356885a53393a2029d241394997265a1a25aefc6"
+      },
+      "ring_roundtrip": {
+        "all_inverse_bit_exact": true,
+        "contract": "w4_conv_ring16_candidate_v1",
+        "inverse_hashes": {
+          "A": "2fdda711387d8508497f51a5e285bcce2b3e8ae02f3b1a6cade756561ff08685",
+          "B": "5ea777e059e58e234a98b113f06f98deeeb8fe1850996f9e78122e8804542ccb",
+          "D": "c73a3f736006021f3e083d09163c4ee2194631e5e0096c08cd48cb1574d7a2ca",
+          "P": "22265751a03102f1326546c5e6f677bad27d9f42f8a81ee9b1f9999c0ace5783",
+          "bias": "92f6ecd99cf0a557197b0f617943e38c8d078bc5fb61c570bda50ae0687004aa",
+          "multiplier": "d023bff29f71cc28280b8c9865c90e91e8693cccedba896c466e1d6d41fe1d98",
+          "w_scale": "7bcfc471c325f11ad1d9b84e06bb26a1e962c46af76e4e9522bdc4c8ec5c5824",
+          "w_zero_point": "238e94eb1c6eeb7df0b404a3405eb66306cf54c69f18300bcd956975dcb5b977",
+          "x_scale": "2bf14e785577603fda60476e5e5cfd313b95b39166647c4fa6b0b00fcd6d46b3",
+          "x_zero_point": "65c74c15a686187bb6bbf9958f494fc6b80068034a659a9ad44991b08c58f2d2",
+          "y_scale": "08e21eeb808e4a7f66f95c58d9fc585c31f50045de5d8828c81d7a6d97efb559",
+          "y_zero_point": "2e7d2c03a9507ae265ecf5b5356885a53393a2029d241394997265a1a25aefc6"
+        },
+        "per_slice_used_bytes_for_n1": 121472,
+        "physical_bytes_for_n1": 1943552,
+        "validation": {
+          "per_slice_used_bytes": 121472,
+          "port_count": 12,
+          "region_count": 192,
+          "ring_steps": 16,
+          "slice_count": 16
+        }
+      },
+      "synthetic_roundtrip_batch_size": 1
+    },
+    {
+      "all_batch_ring_logical_bit_exact": true,
+      "batch_roundtrip": {
+        "all_inverse_bit_exact": true,
+        "contract": "w4_conv_batch16_candidate_v1",
+        "inverse_hashes": {
+          "A": "2fdda711387d8508497f51a5e285bcce2b3e8ae02f3b1a6cade756561ff08685",
+          "B": "3d2b8f86b32213231f8bfb6104642d162a94be020fb9753d5cb1fde2f3b1ca5a",
+          "D": "3f1d0b9e09f6bf41d20e738cd7dc6e7196d57d522fa3f5b41c9daa5a2cdf9d48",
+          "P": "b50b7d038ac9e3dc7bc3a97b13ec356a1aee52324d6cc4c7ccb7fa191e0c6f8c",
+          "bias": "76b988ad7898855ece0d640a45838513ad230684a1f1dbb8c72c0468ae2601da",
+          "multiplier": "d4ad1955b3142947439e3204b9b303f622fbfc2ee56dd735b5fd7be69488d8e0",
+          "w_scale": "61da5d3f5f67bf9b01968ef6ae4c5b806e2eb38c37d13ebf4964b689bd61ad65",
+          "w_zero_point": "7c5bce5390567774f8fd1358941b3feb0ebd667a724d926a58e17090a8a3cee1",
+          "x_scale": "2bf14e785577603fda60476e5e5cfd313b95b39166647c4fa6b0b00fcd6d46b3",
+          "x_zero_point": "65c74c15a686187bb6bbf9958f494fc6b80068034a659a9ad44991b08c58f2d2",
+          "y_scale": "08e21eeb808e4a7f66f95c58d9fc585c31f50045de5d8828c81d7a6d97efb559",
+          "y_zero_point": "2e7d2c03a9507ae265ecf5b5356885a53393a2029d241394997265a1a25aefc6"
+        },
+        "per_slice_used_bytes_for_n1": 970432,
+        "physical_bytes_for_n1": 15526912,
+        "validation": {
+          "per_slice_used_bytes": 970432,
+          "port_count": 12,
+          "region_count": 192,
+          "slice_count": 16
+        }
+      },
+      "family": {
+        "activation_shape": [
+          16,
+          512,
+          28,
+          28
+        ],
+        "dilations": [
+          1,
+          1
+        ],
+        "family_id": "conv-family-725aac6e2ee3",
+        "group": 1,
+        "node_ids": [
+          "node-0021",
+          "node-0025",
+          "node-0029"
+        ],
+        "onnx_names": [
+          "fused resnetv17_stage2_conv4_fwd_quant",
+          "fused resnetv17_stage2_conv7_fwd_quant",
+          "fused resnetv17_stage2_conv10_fwd_quant"
+        ],
+        "output_shape": [
+          16,
+          128,
+          28,
+          28
+        ],
+        "pads": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "strides": [
+          1,
+          1
+        ],
+        "weight_shape": [
+          128,
+          512,
+          1,
+          1
+        ]
+      },
+      "formal_n16_plans": {
+        "batch": {
+          "c_padded": 512,
+          "capacity_bytes": 25165824,
+          "capacity_margin_bytes": 24195392,
+          "k_padded": 128,
+          "per_slice_used_bytes": 970432
+        },
+        "ring": {
+          "active_c_slices": 16,
+          "active_k_slices": 16,
+          "all_owner_ranges_exact": true,
+          "all_ring_orders_are_permutations": true,
+          "c_padded": 512,
+          "c_tile": 32,
+          "capacity_bytes": 25165824,
+          "capacity_margin_bytes": 24258384,
+          "k_padded": 128,
+          "k_tile": 8,
+          "per_slice_used_bytes": 907440
+        }
+      },
+      "logical_hashes": {
+        "A": "2fdda711387d8508497f51a5e285bcce2b3e8ae02f3b1a6cade756561ff08685",
+        "B": "3d2b8f86b32213231f8bfb6104642d162a94be020fb9753d5cb1fde2f3b1ca5a",
+        "D": "3f1d0b9e09f6bf41d20e738cd7dc6e7196d57d522fa3f5b41c9daa5a2cdf9d48",
+        "P": "b50b7d038ac9e3dc7bc3a97b13ec356a1aee52324d6cc4c7ccb7fa191e0c6f8c",
+        "bias": "76b988ad7898855ece0d640a45838513ad230684a1f1dbb8c72c0468ae2601da",
+        "multiplier": "d4ad1955b3142947439e3204b9b303f622fbfc2ee56dd735b5fd7be69488d8e0",
+        "w_scale": "61da5d3f5f67bf9b01968ef6ae4c5b806e2eb38c37d13ebf4964b689bd61ad65",
+        "w_zero_point": "7c5bce5390567774f8fd1358941b3feb0ebd667a724d926a58e17090a8a3cee1",
+        "x_scale": "2bf14e785577603fda60476e5e5cfd313b95b39166647c4fa6b0b00fcd6d46b3",
+        "x_zero_point": "65c74c15a686187bb6bbf9958f494fc6b80068034a659a9ad44991b08c58f2d2",
+        "y_scale": "08e21eeb808e4a7f66f95c58d9fc585c31f50045de5d8828c81d7a6d97efb559",
+        "y_zero_point": "2e7d2c03a9507ae265ecf5b5356885a53393a2029d241394997265a1a25aefc6"
+      },
+      "ring_roundtrip": {
+        "all_inverse_bit_exact": true,
+        "contract": "w4_conv_ring16_candidate_v1",
+        "inverse_hashes": {
+          "A": "2fdda711387d8508497f51a5e285bcce2b3e8ae02f3b1a6cade756561ff08685",
+          "B": "3d2b8f86b32213231f8bfb6104642d162a94be020fb9753d5cb1fde2f3b1ca5a",
+          "D": "3f1d0b9e09f6bf41d20e738cd7dc6e7196d57d522fa3f5b41c9daa5a2cdf9d48",
+          "P": "b50b7d038ac9e3dc7bc3a97b13ec356a1aee52324d6cc4c7ccb7fa191e0c6f8c",
+          "bias": "76b988ad7898855ece0d640a45838513ad230684a1f1dbb8c72c0468ae2601da",
+          "multiplier": "d4ad1955b3142947439e3204b9b303f622fbfc2ee56dd735b5fd7be69488d8e0",
+          "w_scale": "61da5d3f5f67bf9b01968ef6ae4c5b806e2eb38c37d13ebf4964b689bd61ad65",
+          "w_zero_point": "7c5bce5390567774f8fd1358941b3feb0ebd667a724d926a58e17090a8a3cee1",
+          "x_scale": "2bf14e785577603fda60476e5e5cfd313b95b39166647c4fa6b0b00fcd6d46b3",
+          "x_zero_point": "65c74c15a686187bb6bbf9958f494fc6b80068034a659a9ad44991b08c58f2d2",
+          "y_scale": "08e21eeb808e4a7f66f95c58d9fc585c31f50045de5d8828c81d7a6d97efb559",
+          "y_zero_point": "2e7d2c03a9507ae265ecf5b5356885a53393a2029d241394997265a1a25aefc6"
+        },
+        "per_slice_used_bytes_for_n1": 60720,
+        "physical_bytes_for_n1": 971520,
+        "validation": {
+          "per_slice_used_bytes": 60720,
+          "port_count": 12,
+          "region_count": 192,
+          "ring_steps": 16,
+          "slice_count": 16
+        }
+      },
+      "synthetic_roundtrip_batch_size": 1
+    },
+    {
+      "all_batch_ring_logical_bit_exact": true,
+      "batch_roundtrip": {
+        "all_inverse_bit_exact": true,
+        "contract": "w4_conv_batch16_candidate_v1",
+        "inverse_hashes": {
+          "A": "2fdda711387d8508497f51a5e285bcce2b3e8ae02f3b1a6cade756561ff08685",
+          "B": "5269fcb2e334d0932771ae0976bcd3fff79a96237910d70ad515e58a332b1342",
+          "D": "d054e3cf5a4bb97bc9b82cc14df14b525cc07b0b160bc3b4f19001bfbe2114fb",
+          "P": "d5457f9a1393e8c9c869281aa6977721523ac440cbb560635e300699ccc7e0ca",
+          "bias": "3120ec8a440b7ba9fc91f565be63c37d96460dbce90513f57374805755e8f648",
+          "multiplier": "be84a8fa67272f7a3fffa336bfb85b9778a31175019f8eaf6ebbbe175f0002b0",
+          "w_scale": "3cc665742c1200b6b11a3f77bc3e55da56286bab8cfbb988bf29c2cdce3991ca",
+          "w_zero_point": "e8fcac491700501cb50008cffbb60a5729c41dd542d78cd1fad2a5879f202bcc",
+          "x_scale": "2bf14e785577603fda60476e5e5cfd313b95b39166647c4fa6b0b00fcd6d46b3",
+          "x_zero_point": "65c74c15a686187bb6bbf9958f494fc6b80068034a659a9ad44991b08c58f2d2",
+          "y_scale": "08e21eeb808e4a7f66f95c58d9fc585c31f50045de5d8828c81d7a6d97efb559",
+          "y_zero_point": "2e7d2c03a9507ae265ecf5b5356885a53393a2029d241394997265a1a25aefc6"
+        },
+        "per_slice_used_bytes_for_n1": 786752,
+        "physical_bytes_for_n1": 12588032,
+        "validation": {
+          "per_slice_used_bytes": 786752,
+          "port_count": 12,
+          "region_count": 192,
+          "slice_count": 16
+        }
+      },
+      "family": {
+        "activation_shape": [
+          16,
+          512,
+          28,
+          28
+        ],
+        "dilations": [
+          1,
+          1
+        ],
+        "family_id": "conv-family-9656ca058f89",
+        "group": 1,
+        "node_ids": [
+          "node-0034"
+        ],
+        "onnx_names": [
+          "fused resnetv17_stage3_conv0_fwd_quant"
+        ],
+        "output_shape": [
+          16,
+          256,
+          14,
+          14
+        ],
+        "pads": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "strides": [
+          2,
+          2
+        ],
+        "weight_shape": [
+          256,
+          512,
+          1,
+          1
+        ]
+      },
+      "formal_n16_plans": {
+        "batch": {
+          "c_padded": 512,
+          "capacity_bytes": 25165824,
+          "capacity_margin_bytes": 24379072,
+          "k_padded": 256,
+          "per_slice_used_bytes": 786752
+        },
+        "ring": {
+          "active_c_slices": 16,
+          "active_k_slices": 16,
+          "all_owner_ranges_exact": true,
+          "all_ring_orders_are_permutations": true,
+          "c_padded": 512,
+          "c_tile": 32,
+          "capacity_bytes": 25165824,
+          "capacity_margin_bytes": 24505072,
+          "k_padded": 256,
+          "k_tile": 16,
+          "per_slice_used_bytes": 660752
+        }
+      },
+      "logical_hashes": {
+        "A": "2fdda711387d8508497f51a5e285bcce2b3e8ae02f3b1a6cade756561ff08685",
+        "B": "5269fcb2e334d0932771ae0976bcd3fff79a96237910d70ad515e58a332b1342",
+        "D": "d054e3cf5a4bb97bc9b82cc14df14b525cc07b0b160bc3b4f19001bfbe2114fb",
+        "P": "d5457f9a1393e8c9c869281aa6977721523ac440cbb560635e300699ccc7e0ca",
+        "bias": "3120ec8a440b7ba9fc91f565be63c37d96460dbce90513f57374805755e8f648",
+        "multiplier": "be84a8fa67272f7a3fffa336bfb85b9778a31175019f8eaf6ebbbe175f0002b0",
+        "w_scale": "3cc665742c1200b6b11a3f77bc3e55da56286bab8cfbb988bf29c2cdce3991ca",
+        "w_zero_point": "e8fcac491700501cb50008cffbb60a5729c41dd542d78cd1fad2a5879f202bcc",
+        "x_scale": "2bf14e785577603fda60476e5e5cfd313b95b39166647c4fa6b0b00fcd6d46b3",
+        "x_zero_point": "65c74c15a686187bb6bbf9958f494fc6b80068034a659a9ad44991b08c58f2d2",
+        "y_scale": "08e21eeb808e4a7f66f95c58d9fc585c31f50045de5d8828c81d7a6d97efb559",
+        "y_zero_point": "2e7d2c03a9507ae265ecf5b5356885a53393a2029d241394997265a1a25aefc6"
+      },
+      "ring_roundtrip": {
+        "all_inverse_bit_exact": true,
+        "contract": "w4_conv_ring16_candidate_v1",
+        "inverse_hashes": {
+          "A": "2fdda711387d8508497f51a5e285bcce2b3e8ae02f3b1a6cade756561ff08685",
+          "B": "5269fcb2e334d0932771ae0976bcd3fff79a96237910d70ad515e58a332b1342",
+          "D": "d054e3cf5a4bb97bc9b82cc14df14b525cc07b0b160bc3b4f19001bfbe2114fb",
+          "P": "d5457f9a1393e8c9c869281aa6977721523ac440cbb560635e300699ccc7e0ca",
+          "bias": "3120ec8a440b7ba9fc91f565be63c37d96460dbce90513f57374805755e8f648",
+          "multiplier": "be84a8fa67272f7a3fffa336bfb85b9778a31175019f8eaf6ebbbe175f0002b0",
+          "w_scale": "3cc665742c1200b6b11a3f77bc3e55da56286bab8cfbb988bf29c2cdce3991ca",
+          "w_zero_point": "e8fcac491700501cb50008cffbb60a5729c41dd542d78cd1fad2a5879f202bcc",
+          "x_scale": "2bf14e785577603fda60476e5e5cfd313b95b39166647c4fa6b0b00fcd6d46b3",
+          "x_zero_point": "65c74c15a686187bb6bbf9958f494fc6b80068034a659a9ad44991b08c58f2d2",
+          "y_scale": "08e21eeb808e4a7f66f95c58d9fc585c31f50045de5d8828c81d7a6d97efb559",
+          "y_zero_point": "2e7d2c03a9507ae265ecf5b5356885a53393a2029d241394997265a1a25aefc6"
+        },
+        "per_slice_used_bytes_for_n1": 49232,
+        "physical_bytes_for_n1": 787712,
+        "validation": {
+          "per_slice_used_bytes": 49232,
+          "port_count": 12,
+          "region_count": 192,
+          "ring_steps": 16,
+          "slice_count": 16
+        }
+      },
+      "synthetic_roundtrip_batch_size": 1
+    },
+    {
+      "all_batch_ring_logical_bit_exact": true,
+      "batch_roundtrip": {
+        "all_inverse_bit_exact": true,
+        "contract": "w4_conv_batch16_candidate_v1",
+        "inverse_hashes": {
+          "A": "343cf8bc393022d5355e000762fc9460011d7a33b5176882126949c3fdd35ba4",
+          "B": "e3c786c48e81eb81771ae578ea5c1b5027355e2393cfd70a6424bb807ed9662c",
+          "D": "3f1d0b9e09f6bf41d20e738cd7dc6e7196d57d522fa3f5b41c9daa5a2cdf9d48",
+          "P": "b50b7d038ac9e3dc7bc3a97b13ec356a1aee52324d6cc4c7ccb7fa191e0c6f8c",
+          "bias": "1dc0828ecd9bd29872411219872f9588faae94a6a66ce3d8a1837bb614caabe4",
+          "multiplier": "fd0c3f4512bb12d7b7fa1dbd258a04d9973796a1d8a1cd6b98ad1de0d2947a39",
+          "w_scale": "a9e153de4c382b8ddddfcd351b2ea145efad6d0ab6088c8bb3cfaf28a80f1500",
+          "w_zero_point": "4a125c6b35bd3f4e6fc1e8436266102f11eefda18d0fe9c529cb2c2e109b9e3c",
+          "x_scale": "2bf14e785577603fda60476e5e5cfd313b95b39166647c4fa6b0b00fcd6d46b3",
+          "x_zero_point": "65c74c15a686187bb6bbf9958f494fc6b80068034a659a9ad44991b08c58f2d2",
+          "y_scale": "08e21eeb808e4a7f66f95c58d9fc585c31f50045de5d8828c81d7a6d97efb559",
+          "y_zero_point": "2e7d2c03a9507ae265ecf5b5356885a53393a2029d241394997265a1a25aefc6"
+        },
+        "per_slice_used_bytes_for_n1": 1602112,
+        "physical_bytes_for_n1": 25633792,
+        "validation": {
+          "per_slice_used_bytes": 1602112,
+          "port_count": 12,
+          "region_count": 192,
+          "slice_count": 16
+        }
+      },
+      "family": {
+        "activation_shape": [
+          16,
+          512,
+          7,
+          7
+        ],
+        "dilations": [
+          1,
+          1
+        ],
+        "family_id": "conv-family-7e0c64287eb9",
+        "group": 1,
+        "node_ids": [
+          "node-0061",
+          "node-0065",
+          "node-0069"
+        ],
+        "onnx_names": [
+          "resnetv17_stage4_conv2_fwd_quant",
+          "resnetv17_stage4_conv6_fwd_quant",
+          "resnetv17_stage4_conv9_fwd_quant"
+        ],
+        "output_shape": [
+          16,
+          2048,
+          7,
+          7
+        ],
+        "pads": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "strides": [
+          1,
+          1
+        ],
+        "weight_shape": [
+          2048,
+          512,
+          1,
+          1
+        ]
+      },
+      "formal_n16_plans": {
+        "batch": {
+          "c_padded": 512,
+          "capacity_bytes": 25165824,
+          "capacity_margin_bytes": 23563712,
+          "k_padded": 2048,
+          "per_slice_used_bytes": 1602112
+        },
+        "ring": {
+          "active_c_slices": 16,
+          "active_k_slices": 16,
+          "all_owner_ranges_exact": true,
+          "all_ring_orders_are_permutations": true,
+          "c_padded": 512,
+          "c_tile": 32,
+          "capacity_bytes": 25165824,
+          "capacity_margin_bytes": 24571712,
+          "k_padded": 2048,
+          "k_tile": 128,
+          "per_slice_used_bytes": 594112
+        }
+      },
+      "logical_hashes": {
+        "A": "343cf8bc393022d5355e000762fc9460011d7a33b5176882126949c3fdd35ba4",
+        "B": "e3c786c48e81eb81771ae578ea5c1b5027355e2393cfd70a6424bb807ed9662c",
+        "D": "3f1d0b9e09f6bf41d20e738cd7dc6e7196d57d522fa3f5b41c9daa5a2cdf9d48",
+        "P": "b50b7d038ac9e3dc7bc3a97b13ec356a1aee52324d6cc4c7ccb7fa191e0c6f8c",
+        "bias": "1dc0828ecd9bd29872411219872f9588faae94a6a66ce3d8a1837bb614caabe4",
+        "multiplier": "fd0c3f4512bb12d7b7fa1dbd258a04d9973796a1d8a1cd6b98ad1de0d2947a39",
+        "w_scale": "a9e153de4c382b8ddddfcd351b2ea145efad6d0ab6088c8bb3cfaf28a80f1500",
+        "w_zero_point": "4a125c6b35bd3f4e6fc1e8436266102f11eefda18d0fe9c529cb2c2e109b9e3c",
+        "x_scale": "2bf14e785577603fda60476e5e5cfd313b95b39166647c4fa6b0b00fcd6d46b3",
+        "x_zero_point": "65c74c15a686187bb6bbf9958f494fc6b80068034a659a9ad44991b08c58f2d2",
+        "y_scale": "08e21eeb808e4a7f66f95c58d9fc585c31f50045de5d8828c81d7a6d97efb559",
+        "y_zero_point": "2e7d2c03a9507ae265ecf5b5356885a53393a2029d241394997265a1a25aefc6"
+      },
+      "ring_roundtrip": {
+        "all_inverse_bit_exact": true,
+        "contract": "w4_conv_ring16_candidate_v1",
+        "inverse_hashes": {
+          "A": "343cf8bc393022d5355e000762fc9460011d7a33b5176882126949c3fdd35ba4",
+          "B": "e3c786c48e81eb81771ae578ea5c1b5027355e2393cfd70a6424bb807ed9662c",
+          "D": "3f1d0b9e09f6bf41d20e738cd7dc6e7196d57d522fa3f5b41c9daa5a2cdf9d48",
+          "P": "b50b7d038ac9e3dc7bc3a97b13ec356a1aee52324d6cc4c7ccb7fa191e0c6f8c",
+          "bias": "1dc0828ecd9bd29872411219872f9588faae94a6a66ce3d8a1837bb614caabe4",
+          "multiplier": "fd0c3f4512bb12d7b7fa1dbd258a04d9973796a1d8a1cd6b98ad1de0d2947a39",
+          "w_scale": "a9e153de4c382b8ddddfcd351b2ea145efad6d0ab6088c8bb3cfaf28a80f1500",
+          "w_zero_point": "4a125c6b35bd3f4e6fc1e8436266102f11eefda18d0fe9c529cb2c2e109b9e3c",
+          "x_scale": "2bf14e785577603fda60476e5e5cfd313b95b39166647c4fa6b0b00fcd6d46b3",
+          "x_zero_point": "65c74c15a686187bb6bbf9958f494fc6b80068034a659a9ad44991b08c58f2d2",
+          "y_scale": "08e21eeb808e4a7f66f95c58d9fc585c31f50045de5d8828c81d7a6d97efb559",
+          "y_zero_point": "2e7d2c03a9507ae265ecf5b5356885a53393a2029d241394997265a1a25aefc6"
+        },
+        "per_slice_used_bytes_for_n1": 100192,
+        "physical_bytes_for_n1": 1603072,
+        "validation": {
+          "per_slice_used_bytes": 100192,
+          "port_count": 12,
+          "region_count": 192,
+          "ring_steps": 16,
+          "slice_count": 16
+        }
+      },
+      "synthetic_roundtrip_batch_size": 1
+    },
+    {
+      "all_batch_ring_logical_bit_exact": true,
+      "batch_roundtrip": {
+        "all_inverse_bit_exact": true,
+        "contract": "w4_conv_batch16_candidate_v1",
+        "inverse_hashes": {
+          "A": "343cf8bc393022d5355e000762fc9460011d7a33b5176882126949c3fdd35ba4",
+          "B": "96cbedfe0510eed968024b9d91dd059bdc2115b89cb65157c961b81bc332a4f3",
+          "D": "c6c98cd1aa62b627f691098141e22deabebeb58263973896bb1b26b7270a8c7d",
+          "P": "d2c4acccf22cd4b3b2657248f727469b56da86f7e9e511af823dd8171c8a4126",
+          "bias": "c1e35d499f54a407aa03e20563a07fb78fe3e4be2b25c87cfdaec96327f26b0e",
+          "multiplier": "3925771fd2c5ef441041edba79e4b065fbfc779f8097becdc4882e127f94d883",
+          "w_scale": "1f77ea9eff8f862831e223f29b4ce41180ac04553754389212c28bf808d6bbbb",
+          "w_zero_point": "8750732098f47c8aef71b71f290b452fec30c18ff860852af6d286a26c290fb5",
+          "x_scale": "2bf14e785577603fda60476e5e5cfd313b95b39166647c4fa6b0b00fcd6d46b3",
+          "x_zero_point": "65c74c15a686187bb6bbf9958f494fc6b80068034a659a9ad44991b08c58f2d2",
+          "y_scale": "08e21eeb808e4a7f66f95c58d9fc585c31f50045de5d8828c81d7a6d97efb559",
+          "y_zero_point": "2e7d2c03a9507ae265ecf5b5356885a53393a2029d241394997265a1a25aefc6"
+        },
+        "per_slice_used_bytes_for_n1": 2516544,
+        "physical_bytes_for_n1": 40264704,
+        "validation": {
+          "per_slice_used_bytes": 2516544,
+          "port_count": 12,
+          "region_count": 192,
+          "slice_count": 16
+        }
+      },
+      "family": {
+        "activation_shape": [
+          16,
+          512,
+          7,
+          7
+        ],
+        "dilations": [
+          1,
+          1
+        ],
+        "family_id": "conv-family-69a6ace75a1c",
+        "group": 1,
+        "node_ids": [
+          "node-0060",
+          "node-0064",
+          "node-0068"
+        ],
+        "onnx_names": [
+          "fused resnetv17_stage4_conv1_fwd_quant",
+          "fused resnetv17_stage4_conv5_fwd_quant",
+          "fused resnetv17_stage4_conv8_fwd_quant"
+        ],
+        "output_shape": [
+          16,
+          512,
+          7,
+          7
+        ],
+        "pads": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "strides": [
+          1,
+          1
+        ],
+        "weight_shape": [
+          512,
+          512,
+          3,
+          3
+        ]
+      },
+      "formal_n16_plans": {
+        "batch": {
+          "c_padded": 512,
+          "capacity_bytes": 25165824,
+          "capacity_margin_bytes": 22649280,
+          "k_padded": 512,
+          "per_slice_used_bytes": 2516544
+        },
+        "ring": {
+          "active_c_slices": 16,
+          "active_k_slices": 16,
+          "all_owner_ranges_exact": true,
+          "all_ring_orders_are_permutations": true,
+          "c_padded": 512,
+          "c_tile": 32,
+          "capacity_bytes": 25165824,
+          "capacity_margin_bytes": 24867360,
+          "k_padded": 512,
+          "k_tile": 32,
+          "per_slice_used_bytes": 298464
+        }
+      },
+      "logical_hashes": {
+        "A": "343cf8bc393022d5355e000762fc9460011d7a33b5176882126949c3fdd35ba4",
+        "B": "96cbedfe0510eed968024b9d91dd059bdc2115b89cb65157c961b81bc332a4f3",
+        "D": "c6c98cd1aa62b627f691098141e22deabebeb58263973896bb1b26b7270a8c7d",
+        "P": "d2c4acccf22cd4b3b2657248f727469b56da86f7e9e511af823dd8171c8a4126",
+        "bias": "c1e35d499f54a407aa03e20563a07fb78fe3e4be2b25c87cfdaec96327f26b0e",
+        "multiplier": "3925771fd2c5ef441041edba79e4b065fbfc779f8097becdc4882e127f94d883",
+        "w_scale": "1f77ea9eff8f862831e223f29b4ce41180ac04553754389212c28bf808d6bbbb",
+        "w_zero_point": "8750732098f47c8aef71b71f290b452fec30c18ff860852af6d286a26c290fb5",
+        "x_scale": "2bf14e785577603fda60476e5e5cfd313b95b39166647c4fa6b0b00fcd6d46b3",
+        "x_zero_point": "65c74c15a686187bb6bbf9958f494fc6b80068034a659a9ad44991b08c58f2d2",
+        "y_scale": "08e21eeb808e4a7f66f95c58d9fc585c31f50045de5d8828c81d7a6d97efb559",
+        "y_zero_point": "2e7d2c03a9507ae265ecf5b5356885a53393a2029d241394997265a1a25aefc6"
+      },
+      "ring_roundtrip": {
+        "all_inverse_bit_exact": true,
+        "contract": "w4_conv_ring16_candidate_v1",
+        "inverse_hashes": {
+          "A": "343cf8bc393022d5355e000762fc9460011d7a33b5176882126949c3fdd35ba4",
+          "B": "96cbedfe0510eed968024b9d91dd059bdc2115b89cb65157c961b81bc332a4f3",
+          "D": "c6c98cd1aa62b627f691098141e22deabebeb58263973896bb1b26b7270a8c7d",
+          "P": "d2c4acccf22cd4b3b2657248f727469b56da86f7e9e511af823dd8171c8a4126",
+          "bias": "c1e35d499f54a407aa03e20563a07fb78fe3e4be2b25c87cfdaec96327f26b0e",
+          "multiplier": "3925771fd2c5ef441041edba79e4b065fbfc779f8097becdc4882e127f94d883",
+          "w_scale": "1f77ea9eff8f862831e223f29b4ce41180ac04553754389212c28bf808d6bbbb",
+          "w_zero_point": "8750732098f47c8aef71b71f290b452fec30c18ff860852af6d286a26c290fb5",
+          "x_scale": "2bf14e785577603fda60476e5e5cfd313b95b39166647c4fa6b0b00fcd6d46b3",
+          "x_zero_point": "65c74c15a686187bb6bbf9958f494fc6b80068034a659a9ad44991b08c58f2d2",
+          "y_scale": "08e21eeb808e4a7f66f95c58d9fc585c31f50045de5d8828c81d7a6d97efb559",
+          "y_zero_point": "2e7d2c03a9507ae265ecf5b5356885a53393a2029d241394997265a1a25aefc6"
+        },
+        "per_slice_used_bytes_for_n1": 157344,
+        "physical_bytes_for_n1": 2517504,
+        "validation": {
+          "per_slice_used_bytes": 157344,
+          "port_count": 12,
+          "region_count": 192,
+          "ring_steps": 16,
+          "slice_count": 16
+        }
+      },
+      "synthetic_roundtrip_batch_size": 1
+    },
+    {
+      "all_batch_ring_logical_bit_exact": true,
+      "batch_roundtrip": {
+        "all_inverse_bit_exact": true,
+        "contract": "w4_conv_batch16_candidate_v1",
+        "inverse_hashes": {
+          "A": "7207c38e1b4a28356fbab170e94b974d682ace8e27d3cd873c25e467c9d74802",
+          "B": "e8d593ccbecbfa5c8b9e8888904c01dda193b73b2544782363754e412d626fb2",
+          "D": "3d5362ca70ea8a1651533a2bfc89f9c5b9ad8502b5bb05e7d08106c69016ed0c",
+          "P": "17b0cd82be6aa61a0366391bbdb759493b9b659edd6e6bf9c4735a4a716b47ba",
+          "bias": "3120ec8a440b7ba9fc91f565be63c37d96460dbce90513f57374805755e8f648",
+          "multiplier": "be84a8fa67272f7a3fffa336bfb85b9778a31175019f8eaf6ebbbe175f0002b0",
+          "w_scale": "3cc665742c1200b6b11a3f77bc3e55da56286bab8cfbb988bf29c2cdce3991ca",
+          "w_zero_point": "e8fcac491700501cb50008cffbb60a5729c41dd542d78cd1fad2a5879f202bcc",
+          "x_scale": "2bf14e785577603fda60476e5e5cfd313b95b39166647c4fa6b0b00fcd6d46b3",
+          "x_zero_point": "65c74c15a686187bb6bbf9958f494fc6b80068034a659a9ad44991b08c58f2d2",
+          "y_scale": "08e21eeb808e4a7f66f95c58d9fc585c31f50045de5d8828c81d7a6d97efb559",
+          "y_zero_point": "2e7d2c03a9507ae265ecf5b5356885a53393a2029d241394997265a1a25aefc6"
+        },
+        "per_slice_used_bytes_for_n1": 4234560,
+        "physical_bytes_for_n1": 67752960,
+        "validation": {
+          "per_slice_used_bytes": 4234560,
+          "port_count": 12,
+          "region_count": 192,
+          "slice_count": 16
+        }
+      },
+      "family": {
+        "activation_shape": [
+          16,
+          64,
+          56,
+          56
+        ],
+        "dilations": [
+          1,
+          1
+        ],
+        "family_id": "conv-family-778f127b6fab",
+        "group": 1,
+        "node_ids": [
+          "node-0003",
+          "node-0006",
+          "node-0010",
+          "node-0014"
+        ],
+        "onnx_names": [
+          "resnetv17_stage1_conv3_fwd_quant",
+          "resnetv17_stage1_conv2_fwd_quant",
+          "resnetv17_stage1_conv6_fwd_quant",
+          "resnetv17_stage1_conv9_fwd_quant"
+        ],
+        "output_shape": [
+          16,
+          256,
+          56,
+          56
+        ],
+        "pads": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "strides": [
+          1,
+          1
+        ],
+        "weight_shape": [
+          256,
+          64,
+          1,
+          1
+        ]
+      },
+      "formal_n16_plans": {
+        "batch": {
+          "c_padded": 64,
+          "capacity_bytes": 25165824,
+          "capacity_margin_bytes": 20931264,
+          "k_padded": 256,
+          "per_slice_used_bytes": 4234560
+        },
+        "ring": {
+          "active_c_slices": 16,
+          "active_k_slices": 16,
+          "all_owner_ranges_exact": true,
+          "all_ring_orders_are_permutations": true,
+          "c_padded": 64,
+          "c_tile": 4,
+          "capacity_bytes": 25165824,
+          "capacity_margin_bytes": 20949744,
+          "k_padded": 256,
+          "k_tile": 16,
+          "per_slice_used_bytes": 4216080
+        }
+      },
+      "logical_hashes": {
+        "A": "7207c38e1b4a28356fbab170e94b974d682ace8e27d3cd873c25e467c9d74802",
+        "B": "e8d593ccbecbfa5c8b9e8888904c01dda193b73b2544782363754e412d626fb2",
+        "D": "3d5362ca70ea8a1651533a2bfc89f9c5b9ad8502b5bb05e7d08106c69016ed0c",
+        "P": "17b0cd82be6aa61a0366391bbdb759493b9b659edd6e6bf9c4735a4a716b47ba",
+        "bias": "3120ec8a440b7ba9fc91f565be63c37d96460dbce90513f57374805755e8f648",
+        "multiplier": "be84a8fa67272f7a3fffa336bfb85b9778a31175019f8eaf6ebbbe175f0002b0",
+        "w_scale": "3cc665742c1200b6b11a3f77bc3e55da56286bab8cfbb988bf29c2cdce3991ca",
+        "w_zero_point": "e8fcac491700501cb50008cffbb60a5729c41dd542d78cd1fad2a5879f202bcc",
+        "x_scale": "2bf14e785577603fda60476e5e5cfd313b95b39166647c4fa6b0b00fcd6d46b3",
+        "x_zero_point": "65c74c15a686187bb6bbf9958f494fc6b80068034a659a9ad44991b08c58f2d2",
+        "y_scale": "08e21eeb808e4a7f66f95c58d9fc585c31f50045de5d8828c81d7a6d97efb559",
+        "y_zero_point": "2e7d2c03a9507ae265ecf5b5356885a53393a2029d241394997265a1a25aefc6"
+      },
+      "ring_roundtrip": {
+        "all_inverse_bit_exact": true,
+        "contract": "w4_conv_ring16_candidate_v1",
+        "inverse_hashes": {
+          "A": "7207c38e1b4a28356fbab170e94b974d682ace8e27d3cd873c25e467c9d74802",
+          "B": "e8d593ccbecbfa5c8b9e8888904c01dda193b73b2544782363754e412d626fb2",
+          "D": "3d5362ca70ea8a1651533a2bfc89f9c5b9ad8502b5bb05e7d08106c69016ed0c",
+          "P": "17b0cd82be6aa61a0366391bbdb759493b9b659edd6e6bf9c4735a4a716b47ba",
+          "bias": "3120ec8a440b7ba9fc91f565be63c37d96460dbce90513f57374805755e8f648",
+          "multiplier": "be84a8fa67272f7a3fffa336bfb85b9778a31175019f8eaf6ebbbe175f0002b0",
+          "w_scale": "3cc665742c1200b6b11a3f77bc3e55da56286bab8cfbb988bf29c2cdce3991ca",
+          "w_zero_point": "e8fcac491700501cb50008cffbb60a5729c41dd542d78cd1fad2a5879f202bcc",
+          "x_scale": "2bf14e785577603fda60476e5e5cfd313b95b39166647c4fa6b0b00fcd6d46b3",
+          "x_zero_point": "65c74c15a686187bb6bbf9958f494fc6b80068034a659a9ad44991b08c58f2d2",
+          "y_scale": "08e21eeb808e4a7f66f95c58d9fc585c31f50045de5d8828c81d7a6d97efb559",
+          "y_zero_point": "2e7d2c03a9507ae265ecf5b5356885a53393a2029d241394997265a1a25aefc6"
+        },
+        "per_slice_used_bytes_for_n1": 264720,
+        "physical_bytes_for_n1": 4235520,
+        "validation": {
+          "per_slice_used_bytes": 264720,
+          "port_count": 12,
+          "region_count": 192,
+          "ring_steps": 16,
+          "slice_count": 16
+        }
+      },
+      "synthetic_roundtrip_batch_size": 1
+    },
+    {
+      "all_batch_ring_logical_bit_exact": true,
+      "batch_roundtrip": {
+        "all_inverse_bit_exact": true,
+        "contract": "w4_conv_batch16_candidate_v1",
+        "inverse_hashes": {
+          "A": "7207c38e1b4a28356fbab170e94b974d682ace8e27d3cd873c25e467c9d74802",
+          "B": "2880bcc8b0029897ae21dae168fdd30d636cac8a95318a1bfa0acebcede4c149",
+          "D": "c73a3f736006021f3e083d09163c4ee2194631e5e0096c08cd48cb1574d7a2ca",
+          "P": "22265751a03102f1326546c5e6f677bad27d9f42f8a81ee9b1f9999c0ace5783",
+          "bias": "a78ded8a6cbd633f1063698597be6a5c3303424a8b90231e552e080fde94b078",
+          "multiplier": "9ccebc4e875256800a85c13bfcb3a087dee293657f5bf08d654822cca55b8db5",
+          "w_scale": "d72bf0420f5f153a9f0b26ea6ead17ad4755acfd5f1f6efd9017a0be91dc9eb3",
+          "w_zero_point": "e4fa3324fc1d013739034c3017d240fa8aa56551717c6b52b95564c8901c2f46",
+          "x_scale": "2bf14e785577603fda60476e5e5cfd313b95b39166647c4fa6b0b00fcd6d46b3",
+          "x_zero_point": "65c74c15a686187bb6bbf9958f494fc6b80068034a659a9ad44991b08c58f2d2",
+          "y_scale": "08e21eeb808e4a7f66f95c58d9fc585c31f50045de5d8828c81d7a6d97efb559",
+          "y_zero_point": "2e7d2c03a9507ae265ecf5b5356885a53393a2029d241394997265a1a25aefc6"
+        },
+        "per_slice_used_bytes_for_n1": 1209216,
+        "physical_bytes_for_n1": 19347456,
+        "validation": {
+          "per_slice_used_bytes": 1209216,
+          "port_count": 12,
+          "region_count": 192,
+          "slice_count": 16
+        }
+      },
+      "family": {
+        "activation_shape": [
+          16,
+          64,
+          56,
+          56
+        ],
+        "dilations": [
+          1,
+          1
+        ],
+        "family_id": "conv-family-e5c807e68a18",
+        "group": 1,
+        "node_ids": [
+          "node-0004"
+        ],
+        "onnx_names": [
+          "fused resnetv17_stage1_conv0_fwd_quant"
+        ],
+        "output_shape": [
+          16,
+          64,
+          56,
+          56
+        ],
+        "pads": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "strides": [
+          1,
+          1
+        ],
+        "weight_shape": [
+          64,
+          64,
+          1,
+          1
+        ]
+      },
+      "formal_n16_plans": {
+        "batch": {
+          "c_padded": 64,
+          "capacity_bytes": 25165824,
+          "capacity_margin_bytes": 23956608,
+          "k_padded": 64,
+          "per_slice_used_bytes": 1209216
+        },
+        "ring": {
+          "active_c_slices": 16,
+          "active_k_slices": 16,
+          "all_owner_ranges_exact": true,
+          "all_ring_orders_are_permutations": true,
+          "c_padded": 64,
+          "c_tile": 4,
+          "capacity_bytes": 25165824,
+          "capacity_margin_bytes": 23961216,
+          "k_padded": 64,
+          "k_tile": 4,
+          "per_slice_used_bytes": 1204608
+        }
+      },
+      "logical_hashes": {
+        "A": "7207c38e1b4a28356fbab170e94b974d682ace8e27d3cd873c25e467c9d74802",
+        "B": "2880bcc8b0029897ae21dae168fdd30d636cac8a95318a1bfa0acebcede4c149",
+        "D": "c73a3f736006021f3e083d09163c4ee2194631e5e0096c08cd48cb1574d7a2ca",
+        "P": "22265751a03102f1326546c5e6f677bad27d9f42f8a81ee9b1f9999c0ace5783",
+        "bias": "a78ded8a6cbd633f1063698597be6a5c3303424a8b90231e552e080fde94b078",
+        "multiplier": "9ccebc4e875256800a85c13bfcb3a087dee293657f5bf08d654822cca55b8db5",
+        "w_scale": "d72bf0420f5f153a9f0b26ea6ead17ad4755acfd5f1f6efd9017a0be91dc9eb3",
+        "w_zero_point": "e4fa3324fc1d013739034c3017d240fa8aa56551717c6b52b95564c8901c2f46",
+        "x_scale": "2bf14e785577603fda60476e5e5cfd313b95b39166647c4fa6b0b00fcd6d46b3",
+        "x_zero_point": "65c74c15a686187bb6bbf9958f494fc6b80068034a659a9ad44991b08c58f2d2",
+        "y_scale": "08e21eeb808e4a7f66f95c58d9fc585c31f50045de5d8828c81d7a6d97efb559",
+        "y_zero_point": "2e7d2c03a9507ae265ecf5b5356885a53393a2029d241394997265a1a25aefc6"
+      },
+      "ring_roundtrip": {
+        "all_inverse_bit_exact": true,
+        "contract": "w4_conv_ring16_candidate_v1",
+        "inverse_hashes": {
+          "A": "7207c38e1b4a28356fbab170e94b974d682ace8e27d3cd873c25e467c9d74802",
+          "B": "2880bcc8b0029897ae21dae168fdd30d636cac8a95318a1bfa0acebcede4c149",
+          "D": "c73a3f736006021f3e083d09163c4ee2194631e5e0096c08cd48cb1574d7a2ca",
+          "P": "22265751a03102f1326546c5e6f677bad27d9f42f8a81ee9b1f9999c0ace5783",
+          "bias": "a78ded8a6cbd633f1063698597be6a5c3303424a8b90231e552e080fde94b078",
+          "multiplier": "9ccebc4e875256800a85c13bfcb3a087dee293657f5bf08d654822cca55b8db5",
+          "w_scale": "d72bf0420f5f153a9f0b26ea6ead17ad4755acfd5f1f6efd9017a0be91dc9eb3",
+          "w_zero_point": "e4fa3324fc1d013739034c3017d240fa8aa56551717c6b52b95564c8901c2f46",
+          "x_scale": "2bf14e785577603fda60476e5e5cfd313b95b39166647c4fa6b0b00fcd6d46b3",
+          "x_zero_point": "65c74c15a686187bb6bbf9958f494fc6b80068034a659a9ad44991b08c58f2d2",
+          "y_scale": "08e21eeb808e4a7f66f95c58d9fc585c31f50045de5d8828c81d7a6d97efb559",
+          "y_zero_point": "2e7d2c03a9507ae265ecf5b5356885a53393a2029d241394997265a1a25aefc6"
+        },
+        "per_slice_used_bytes_for_n1": 75648,
+        "physical_bytes_for_n1": 1210368,
+        "validation": {
+          "per_slice_used_bytes": 75648,
+          "port_count": 12,
+          "region_count": 192,
+          "ring_steps": 16,
+          "slice_count": 16
+        }
+      },
+      "synthetic_roundtrip_batch_size": 1
+    },
+    {
+      "all_batch_ring_logical_bit_exact": true,
+      "batch_roundtrip": {
+        "all_inverse_bit_exact": true,
+        "contract": "w4_conv_batch16_candidate_v1",
+        "inverse_hashes": {
+          "A": "7207c38e1b4a28356fbab170e94b974d682ace8e27d3cd873c25e467c9d74802",
+          "B": "2bdd28b675e5a85f3d169bddd2e6a9089bc259f190bc773d2a62b8e882d27e7c",
+          "D": "c73a3f736006021f3e083d09163c4ee2194631e5e0096c08cd48cb1574d7a2ca",
+          "P": "22265751a03102f1326546c5e6f677bad27d9f42f8a81ee9b1f9999c0ace5783",
+          "bias": "a78ded8a6cbd633f1063698597be6a5c3303424a8b90231e552e080fde94b078",
+          "multiplier": "9ccebc4e875256800a85c13bfcb3a087dee293657f5bf08d654822cca55b8db5",
+          "w_scale": "d72bf0420f5f153a9f0b26ea6ead17ad4755acfd5f1f6efd9017a0be91dc9eb3",
+          "w_zero_point": "e4fa3324fc1d013739034c3017d240fa8aa56551717c6b52b95564c8901c2f46",
+          "x_scale": "2bf14e785577603fda60476e5e5cfd313b95b39166647c4fa6b0b00fcd6d46b3",
+          "x_zero_point": "65c74c15a686187bb6bbf9958f494fc6b80068034a659a9ad44991b08c58f2d2",
+          "y_scale": "08e21eeb808e4a7f66f95c58d9fc585c31f50045de5d8828c81d7a6d97efb559",
+          "y_zero_point": "2e7d2c03a9507ae265ecf5b5356885a53393a2029d241394997265a1a25aefc6"
+        },
+        "per_slice_used_bytes_for_n1": 1241984,
+        "physical_bytes_for_n1": 19871744,
+        "validation": {
+          "per_slice_used_bytes": 1241984,
+          "port_count": 12,
+          "region_count": 192,
+          "slice_count": 16
+        }
+      },
+      "family": {
+        "activation_shape": [
+          16,
+          64,
+          56,
+          56
+        ],
+        "dilations": [
+          1,
+          1
+        ],
+        "family_id": "conv-family-ac3447161e97",
+        "group": 1,
+        "node_ids": [
+          "node-0005",
+          "node-0009",
+          "node-0013"
+        ],
+        "onnx_names": [
+          "fused resnetv17_stage1_conv1_fwd_quant",
+          "fused resnetv17_stage1_conv5_fwd_quant",
+          "fused resnetv17_stage1_conv8_fwd_quant"
+        ],
+        "output_shape": [
+          16,
+          64,
+          56,
+          56
+        ],
+        "pads": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "strides": [
+          1,
+          1
+        ],
+        "weight_shape": [
+          64,
+          64,
+          3,
+          3
+        ]
+      },
+      "formal_n16_plans": {
+        "batch": {
+          "c_padded": 64,
+          "capacity_bytes": 25165824,
+          "capacity_margin_bytes": 23923840,
+          "k_padded": 64,
+          "per_slice_used_bytes": 1241984
+        },
+        "ring": {
+          "active_c_slices": 16,
+          "active_k_slices": 16,
+          "all_owner_ranges_exact": true,
+          "all_ring_orders_are_permutations": true,
+          "c_padded": 64,
+          "c_tile": 4,
+          "capacity_bytes": 25165824,
+          "capacity_margin_bytes": 23959168,
+          "k_padded": 64,
+          "k_tile": 4,
+          "per_slice_used_bytes": 1206656
+        }
+      },
+      "logical_hashes": {
+        "A": "7207c38e1b4a28356fbab170e94b974d682ace8e27d3cd873c25e467c9d74802",
+        "B": "2bdd28b675e5a85f3d169bddd2e6a9089bc259f190bc773d2a62b8e882d27e7c",
+        "D": "c73a3f736006021f3e083d09163c4ee2194631e5e0096c08cd48cb1574d7a2ca",
+        "P": "22265751a03102f1326546c5e6f677bad27d9f42f8a81ee9b1f9999c0ace5783",
+        "bias": "a78ded8a6cbd633f1063698597be6a5c3303424a8b90231e552e080fde94b078",
+        "multiplier": "9ccebc4e875256800a85c13bfcb3a087dee293657f5bf08d654822cca55b8db5",
+        "w_scale": "d72bf0420f5f153a9f0b26ea6ead17ad4755acfd5f1f6efd9017a0be91dc9eb3",
+        "w_zero_point": "e4fa3324fc1d013739034c3017d240fa8aa56551717c6b52b95564c8901c2f46",
+        "x_scale": "2bf14e785577603fda60476e5e5cfd313b95b39166647c4fa6b0b00fcd6d46b3",
+        "x_zero_point": "65c74c15a686187bb6bbf9958f494fc6b80068034a659a9ad44991b08c58f2d2",
+        "y_scale": "08e21eeb808e4a7f66f95c58d9fc585c31f50045de5d8828c81d7a6d97efb559",
+        "y_zero_point": "2e7d2c03a9507ae265ecf5b5356885a53393a2029d241394997265a1a25aefc6"
+      },
+      "ring_roundtrip": {
+        "all_inverse_bit_exact": true,
+        "contract": "w4_conv_ring16_candidate_v1",
+        "inverse_hashes": {
+          "A": "7207c38e1b4a28356fbab170e94b974d682ace8e27d3cd873c25e467c9d74802",
+          "B": "2bdd28b675e5a85f3d169bddd2e6a9089bc259f190bc773d2a62b8e882d27e7c",
+          "D": "c73a3f736006021f3e083d09163c4ee2194631e5e0096c08cd48cb1574d7a2ca",
+          "P": "22265751a03102f1326546c5e6f677bad27d9f42f8a81ee9b1f9999c0ace5783",
+          "bias": "a78ded8a6cbd633f1063698597be6a5c3303424a8b90231e552e080fde94b078",
+          "multiplier": "9ccebc4e875256800a85c13bfcb3a087dee293657f5bf08d654822cca55b8db5",
+          "w_scale": "d72bf0420f5f153a9f0b26ea6ead17ad4755acfd5f1f6efd9017a0be91dc9eb3",
+          "w_zero_point": "e4fa3324fc1d013739034c3017d240fa8aa56551717c6b52b95564c8901c2f46",
+          "x_scale": "2bf14e785577603fda60476e5e5cfd313b95b39166647c4fa6b0b00fcd6d46b3",
+          "x_zero_point": "65c74c15a686187bb6bbf9958f494fc6b80068034a659a9ad44991b08c58f2d2",
+          "y_scale": "08e21eeb808e4a7f66f95c58d9fc585c31f50045de5d8828c81d7a6d97efb559",
+          "y_zero_point": "2e7d2c03a9507ae265ecf5b5356885a53393a2029d241394997265a1a25aefc6"
+        },
+        "per_slice_used_bytes_for_n1": 77696,
+        "physical_bytes_for_n1": 1243136,
+        "validation": {
+          "per_slice_used_bytes": 77696,
+          "port_count": 12,
+          "region_count": 192,
+          "ring_steps": 16,
+          "slice_count": 16
+        }
+      },
+      "synthetic_roundtrip_batch_size": 1
+    }
+  ],
+  "formal_plan_batch_size": 16,
+  "max_batch_per_slice": {
+    "bytes": 4441472,
+    "capacity_bytes": 25165824,
+    "family_id": "conv-family-a3194a82fe78"
+  },
+  "max_ring_per_slice": {
+    "bytes": 4820160,
+    "capacity_bytes": 25165824,
+    "family_id": "conv-family-a3194a82fe78"
+  },
+  "model_graph": {
+    "path": "artifacts/w3/model_graph.json",
+    "sha256": "f030c5d4e43f63fbbcce771e4c4ea9e88b042be0a2c988e7f51de2c0e17ac410"
+  },
+  "model_sha256": "c234f30975989788b4405f25253275aae247ab6dbdd34aaa69ab0a59ff76f6d0",
+  "roundtrip_batch_size": 1,
+  "schema_version": "0.1"
+}

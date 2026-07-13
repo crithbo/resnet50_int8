@@ -1,0 +1,390 @@
+{
+  "current_gate_eligible": false,
+  "slice_count": 16,
+  "status": "superseded_by_adr_007",
+  "superseded_by": "ADR-007",
+  "target_family": "legacy16",
+  "all_batch_inverse_bit_exact": true,
+  "all_batch_ring_logical_bit_exact": true,
+  "all_ring_inverse_bit_exact": true,
+  "comparisons": {
+    "tensor-3a42964541a66d45": {
+      "batch_inverse_sha256": "f5a5fd42d16a20302798ef6ed309979b43003d2320d9f0e8ea9831a92759fb4b",
+      "batch_ring_bit_exact": true,
+      "dtype": "int8",
+      "logical_sha256": "f5a5fd42d16a20302798ef6ed309979b43003d2320d9f0e8ea9831a92759fb4b",
+      "ring_inverse_sha256": "f5a5fd42d16a20302798ef6ed309979b43003d2320d9f0e8ea9831a92759fb4b",
+      "shape": [
+        64
+      ]
+    },
+    "tensor-3f3181c9a6f928a5": {
+      "batch_inverse_sha256": "a1aac7487d3e8f919770415333ea8456ee152f1a343819888671a4395e2e7d02",
+      "batch_ring_bit_exact": true,
+      "dtype": "float32",
+      "logical_sha256": "a1aac7487d3e8f919770415333ea8456ee152f1a343819888671a4395e2e7d02",
+      "ring_inverse_sha256": "a1aac7487d3e8f919770415333ea8456ee152f1a343819888671a4395e2e7d02",
+      "shape": [
+        1
+      ]
+    },
+    "tensor-583ab37c0ae58e5d": {
+      "batch_inverse_sha256": "9fa7dbdfbc2db700a773672ea82d509c87d55982a97b9b6fa90d59d23e07262c",
+      "batch_ring_bit_exact": true,
+      "dtype": "int8",
+      "logical_sha256": "9fa7dbdfbc2db700a773672ea82d509c87d55982a97b9b6fa90d59d23e07262c",
+      "ring_inverse_sha256": "9fa7dbdfbc2db700a773672ea82d509c87d55982a97b9b6fa90d59d23e07262c",
+      "shape": [
+        64,
+        3,
+        7,
+        7
+      ]
+    },
+    "tensor-65fe804af253d161": {
+      "batch_inverse_sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d",
+      "batch_ring_bit_exact": true,
+      "dtype": "uint8",
+      "logical_sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d",
+      "ring_inverse_sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d",
+      "shape": [
+        1
+      ]
+    },
+    "tensor-a60f1132af1aa3d0": {
+      "batch_inverse_sha256": "0f1ff45affa4dff39df5e5255aa8008653e30e39b8c76cb3f1f0e7e779d618f9",
+      "batch_ring_bit_exact": true,
+      "dtype": "uint8",
+      "logical_sha256": "0f1ff45affa4dff39df5e5255aa8008653e30e39b8c76cb3f1f0e7e779d618f9",
+      "ring_inverse_sha256": "0f1ff45affa4dff39df5e5255aa8008653e30e39b8c76cb3f1f0e7e779d618f9",
+      "shape": [
+        16,
+        3,
+        224,
+        224
+      ]
+    },
+    "tensor-c3e3eaf52407b04d": {
+      "batch_inverse_sha256": "454349e422f05297191ead13e21d3db520e5abef52055e4964b82fb213f593a1",
+      "batch_ring_bit_exact": true,
+      "dtype": "uint8",
+      "logical_sha256": "454349e422f05297191ead13e21d3db520e5abef52055e4964b82fb213f593a1",
+      "ring_inverse_sha256": "454349e422f05297191ead13e21d3db520e5abef52055e4964b82fb213f593a1",
+      "shape": [
+        1
+      ]
+    },
+    "tensor-de84039d7825997b": {
+      "batch_inverse_sha256": "33709f9d70d44902a7c2c90b768d8b6480936387a3040a547903060cb34032d2",
+      "batch_ring_bit_exact": true,
+      "dtype": "int32",
+      "logical_sha256": "33709f9d70d44902a7c2c90b768d8b6480936387a3040a547903060cb34032d2",
+      "ring_inverse_sha256": "33709f9d70d44902a7c2c90b768d8b6480936387a3040a547903060cb34032d2",
+      "shape": [
+        64
+      ]
+    },
+    "tensor-e2b841fe976590e8": {
+      "batch_inverse_sha256": "d9468250febc0f3c2ed9ccf357096a2849f4ab3b0e3ac8d2ca4fa45c319eb5fd",
+      "batch_ring_bit_exact": true,
+      "dtype": "float32",
+      "logical_sha256": "d9468250febc0f3c2ed9ccf357096a2849f4ab3b0e3ac8d2ca4fa45c319eb5fd",
+      "ring_inverse_sha256": "d9468250febc0f3c2ed9ccf357096a2849f4ab3b0e3ac8d2ca4fa45c319eb5fd",
+      "shape": [
+        1
+      ]
+    },
+    "tensor-f022e423d4847a51": {
+      "batch_inverse_sha256": "0f5578672e26a0d7cc202f939da32ad31501fba57eec097fa43d24773eea4de5",
+      "batch_ring_bit_exact": true,
+      "dtype": "float32",
+      "logical_sha256": "0f5578672e26a0d7cc202f939da32ad31501fba57eec097fa43d24773eea4de5",
+      "ring_inverse_sha256": "0f5578672e26a0d7cc202f939da32ad31501fba57eec097fa43d24773eea4de5",
+      "shape": [
+        64
+      ]
+    },
+    "tensor-f6c1a8fb6fd529e8": {
+      "batch_inverse_sha256": "d60d9524c0aa95e634274f95a7d0e51ccf649e5705cf875c57d84f246c749606",
+      "batch_ring_bit_exact": true,
+      "dtype": "uint8",
+      "logical_sha256": "d60d9524c0aa95e634274f95a7d0e51ccf649e5705cf875c57d84f246c749606",
+      "ring_inverse_sha256": "d60d9524c0aa95e634274f95a7d0e51ccf649e5705cf875c57d84f246c749606",
+      "shape": [
+        16,
+        64,
+        112,
+        112
+      ]
+    },
+    "tensor-internal-node-0001-accumulate": {
+      "batch_inverse_sha256": "c5aae211a58493c08dc79db2ae5df123d1b08e237af5776f6e4602ac2d97199a",
+      "batch_ring_bit_exact": true,
+      "dtype": "int32",
+      "logical_sha256": "c5aae211a58493c08dc79db2ae5df123d1b08e237af5776f6e4602ac2d97199a",
+      "ring_inverse_sha256": "c5aae211a58493c08dc79db2ae5df123d1b08e237af5776f6e4602ac2d97199a",
+      "shape": [
+        16,
+        64,
+        112,
+        112
+      ]
+    },
+    "tensor-internal-node-0001-multiplier": {
+      "batch_inverse_sha256": "7ed3f7e123f3f68c86a141ea0fa562a694ed8bfd4a5014907f8e551ff76e9790",
+      "batch_ring_bit_exact": true,
+      "dtype": "float32",
+      "logical_sha256": "7ed3f7e123f3f68c86a141ea0fa562a694ed8bfd4a5014907f8e551ff76e9790",
+      "ring_inverse_sha256": "7ed3f7e123f3f68c86a141ea0fa562a694ed8bfd4a5014907f8e551ff76e9790",
+      "shape": [
+        64
+      ]
+    }
+  },
+  "model_sha256": "c234f30975989788b4405f25253275aae247ab6dbdd34aaa69ab0a59ff76f6d0",
+  "node_id": "node-0001",
+  "onnx_name": "fused resnetv17_conv0_fwd_quant",
+  "profiles": {
+    "w4_conv_batch16_candidate_v1": {
+      "layout_record_count": 12,
+      "logical_physical_bytes": 71063552,
+      "per_slice_used_bytes": 4441472,
+      "slice_topology": "batch_parallel_one_item_per_slice",
+      "status": "candidate",
+      "validation": {
+        "per_slice_used_bytes": 4441472,
+        "port_count": 12,
+        "region_count": 192,
+        "slice_count": 16
+      }
+    },
+    "w4_conv_ring16_candidate_v1": {
+      "c_padded": 16,
+      "c_tile": 1,
+      "k_padded": 64,
+      "k_tile": 4,
+      "layout_record_count": 12,
+      "logical_physical_bytes": 77122560,
+      "output_channel_0_ring_steps": [
+        {
+          "activation_slice": 0,
+          "channel_range": [
+            0,
+            1
+          ],
+          "has_data": true,
+          "k_owner_slice": 0,
+          "last": false,
+          "output_channel": 0,
+          "ring_step": 0
+        },
+        {
+          "activation_slice": 1,
+          "channel_range": [
+            1,
+            2
+          ],
+          "has_data": true,
+          "k_owner_slice": 0,
+          "last": false,
+          "output_channel": 0,
+          "ring_step": 1
+        },
+        {
+          "activation_slice": 2,
+          "channel_range": [
+            2,
+            3
+          ],
+          "has_data": true,
+          "k_owner_slice": 0,
+          "last": false,
+          "output_channel": 0,
+          "ring_step": 2
+        },
+        {
+          "activation_slice": 3,
+          "channel_range": [
+            3,
+            3
+          ],
+          "has_data": false,
+          "k_owner_slice": 0,
+          "last": false,
+          "output_channel": 0,
+          "ring_step": 3
+        },
+        {
+          "activation_slice": 4,
+          "channel_range": [
+            3,
+            3
+          ],
+          "has_data": false,
+          "k_owner_slice": 0,
+          "last": false,
+          "output_channel": 0,
+          "ring_step": 4
+        },
+        {
+          "activation_slice": 5,
+          "channel_range": [
+            3,
+            3
+          ],
+          "has_data": false,
+          "k_owner_slice": 0,
+          "last": false,
+          "output_channel": 0,
+          "ring_step": 5
+        },
+        {
+          "activation_slice": 6,
+          "channel_range": [
+            3,
+            3
+          ],
+          "has_data": false,
+          "k_owner_slice": 0,
+          "last": false,
+          "output_channel": 0,
+          "ring_step": 6
+        },
+        {
+          "activation_slice": 7,
+          "channel_range": [
+            3,
+            3
+          ],
+          "has_data": false,
+          "k_owner_slice": 0,
+          "last": false,
+          "output_channel": 0,
+          "ring_step": 7
+        },
+        {
+          "activation_slice": 8,
+          "channel_range": [
+            3,
+            3
+          ],
+          "has_data": false,
+          "k_owner_slice": 0,
+          "last": false,
+          "output_channel": 0,
+          "ring_step": 8
+        },
+        {
+          "activation_slice": 9,
+          "channel_range": [
+            3,
+            3
+          ],
+          "has_data": false,
+          "k_owner_slice": 0,
+          "last": false,
+          "output_channel": 0,
+          "ring_step": 9
+        },
+        {
+          "activation_slice": 10,
+          "channel_range": [
+            3,
+            3
+          ],
+          "has_data": false,
+          "k_owner_slice": 0,
+          "last": false,
+          "output_channel": 0,
+          "ring_step": 10
+        },
+        {
+          "activation_slice": 11,
+          "channel_range": [
+            3,
+            3
+          ],
+          "has_data": false,
+          "k_owner_slice": 0,
+          "last": false,
+          "output_channel": 0,
+          "ring_step": 11
+        },
+        {
+          "activation_slice": 12,
+          "channel_range": [
+            3,
+            3
+          ],
+          "has_data": false,
+          "k_owner_slice": 0,
+          "last": false,
+          "output_channel": 0,
+          "ring_step": 12
+        },
+        {
+          "activation_slice": 13,
+          "channel_range": [
+            3,
+            3
+          ],
+          "has_data": false,
+          "k_owner_slice": 0,
+          "last": false,
+          "output_channel": 0,
+          "ring_step": 13
+        },
+        {
+          "activation_slice": 14,
+          "channel_range": [
+            3,
+            3
+          ],
+          "has_data": false,
+          "k_owner_slice": 0,
+          "last": false,
+          "output_channel": 0,
+          "ring_step": 14
+        },
+        {
+          "activation_slice": 15,
+          "channel_range": [
+            3,
+            3
+          ],
+          "has_data": false,
+          "k_owner_slice": 0,
+          "last": true,
+          "output_channel": 0,
+          "ring_step": 15
+        }
+      ],
+      "per_slice_used_bytes": 4820160,
+      "slice_topology": "ring_C_activation_K_output_partition",
+      "status": "candidate",
+      "validation": {
+        "per_slice_used_bytes": 4820160,
+        "port_count": 12,
+        "region_count": 192,
+        "ring_steps": 16,
+        "slice_count": 16
+      }
+    }
+  },
+  "schema_version": "0.1",
+  "slice_capacity_bytes": 25165824,
+  "source_files": {
+    "accumulator": {
+      "path": "artifacts/w3/subop_batch16/tensors/tensor-internal-node-0001-accumulate.npy",
+      "sha256": "6af20386adf711089302791015f41cfc5ddfa89a92ddb042677b8db341d3d21c"
+    },
+    "activation": {
+      "path": "artifacts/w3/golden_batch16/tensors/tensor-a60f1132af1aa3d0.npy",
+      "sha256": "963f2c0edbcd5a2ef946a8a4757773b37cfbc8a50b0f35727b0a22eaf20f470a"
+    },
+    "output": {
+      "path": "artifacts/w3/golden_batch16/tensors/tensor-f6c1a8fb6fd529e8.npy",
+      "sha256": "db55178510d91ed87faf9a3884c5e0b79685f6dd2c97561dc53f00a40a1b376f"
+    }
+  }
+}

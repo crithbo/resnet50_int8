@@ -1,0 +1,190 @@
+{
+  "current_gate_eligible": false,
+  "slice_count": 16,
+  "status": "superseded_by_adr_007",
+  "superseded_by": "ADR-007",
+  "target_family": "legacy16",
+  "all_inverse_bit_exact": true,
+  "attributes": {
+    "dilations": [
+      1,
+      1
+    ],
+    "group": 1,
+    "pads": [
+      3,
+      3,
+      3,
+      3
+    ],
+    "strides": [
+      2,
+      2
+    ]
+  },
+  "c_padded": 8,
+  "comparisons": {
+    "tensor-3a42964541a66d45": {
+      "bit_exact": true,
+      "dtype": "int8",
+      "element_bytes_sha256": "f5a5fd42d16a20302798ef6ed309979b43003d2320d9f0e8ea9831a92759fb4b",
+      "inverse_element_bytes_sha256": "f5a5fd42d16a20302798ef6ed309979b43003d2320d9f0e8ea9831a92759fb4b",
+      "onnx_name": "ConvBnFusion_W_resnetv17_conv0_weight_zero_point",
+      "shape": [
+        64
+      ]
+    },
+    "tensor-3f3181c9a6f928a5": {
+      "bit_exact": true,
+      "dtype": "float32",
+      "element_bytes_sha256": "a1aac7487d3e8f919770415333ea8456ee152f1a343819888671a4395e2e7d02",
+      "inverse_element_bytes_sha256": "a1aac7487d3e8f919770415333ea8456ee152f1a343819888671a4395e2e7d02",
+      "onnx_name": "resnetv17_relu0_fwd_scale",
+      "shape": [
+        1
+      ]
+    },
+    "tensor-583ab37c0ae58e5d": {
+      "bit_exact": true,
+      "dtype": "int8",
+      "element_bytes_sha256": "9fa7dbdfbc2db700a773672ea82d509c87d55982a97b9b6fa90d59d23e07262c",
+      "inverse_element_bytes_sha256": "9fa7dbdfbc2db700a773672ea82d509c87d55982a97b9b6fa90d59d23e07262c",
+      "onnx_name": "ConvBnFusion_W_resnetv17_conv0_weight_quantized",
+      "shape": [
+        64,
+        3,
+        7,
+        7
+      ]
+    },
+    "tensor-65fe804af253d161": {
+      "bit_exact": true,
+      "dtype": "uint8",
+      "element_bytes_sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d",
+      "inverse_element_bytes_sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d",
+      "onnx_name": "resnetv17_relu0_fwd_zero_point",
+      "shape": [
+        1
+      ]
+    },
+    "tensor-a60f1132af1aa3d0": {
+      "bit_exact": true,
+      "dtype": "uint8",
+      "element_bytes_sha256": "0f1ff45affa4dff39df5e5255aa8008653e30e39b8c76cb3f1f0e7e779d618f9",
+      "inverse_element_bytes_sha256": "0f1ff45affa4dff39df5e5255aa8008653e30e39b8c76cb3f1f0e7e779d618f9",
+      "onnx_name": "data_quantized",
+      "shape": [
+        16,
+        3,
+        224,
+        224
+      ]
+    },
+    "tensor-c3e3eaf52407b04d": {
+      "bit_exact": true,
+      "dtype": "uint8",
+      "element_bytes_sha256": "454349e422f05297191ead13e21d3db520e5abef52055e4964b82fb213f593a1",
+      "inverse_element_bytes_sha256": "454349e422f05297191ead13e21d3db520e5abef52055e4964b82fb213f593a1",
+      "onnx_name": "data_zero_point",
+      "shape": [
+        1
+      ]
+    },
+    "tensor-de84039d7825997b": {
+      "bit_exact": true,
+      "dtype": "int32",
+      "element_bytes_sha256": "33709f9d70d44902a7c2c90b768d8b6480936387a3040a547903060cb34032d2",
+      "inverse_element_bytes_sha256": "33709f9d70d44902a7c2c90b768d8b6480936387a3040a547903060cb34032d2",
+      "onnx_name": "ConvBnFusion_BN_B_resnetv17_batchnorm0_beta_quantized",
+      "shape": [
+        64
+      ]
+    },
+    "tensor-e2b841fe976590e8": {
+      "bit_exact": true,
+      "dtype": "float32",
+      "element_bytes_sha256": "d9468250febc0f3c2ed9ccf357096a2849f4ab3b0e3ac8d2ca4fa45c319eb5fd",
+      "inverse_element_bytes_sha256": "d9468250febc0f3c2ed9ccf357096a2849f4ab3b0e3ac8d2ca4fa45c319eb5fd",
+      "onnx_name": "data_scale",
+      "shape": [
+        1
+      ]
+    },
+    "tensor-f022e423d4847a51": {
+      "bit_exact": true,
+      "dtype": "float32",
+      "element_bytes_sha256": "0f5578672e26a0d7cc202f939da32ad31501fba57eec097fa43d24773eea4de5",
+      "inverse_element_bytes_sha256": "0f5578672e26a0d7cc202f939da32ad31501fba57eec097fa43d24773eea4de5",
+      "onnx_name": "ConvBnFusion_W_resnetv17_conv0_weight_scale",
+      "shape": [
+        64
+      ]
+    },
+    "tensor-f6c1a8fb6fd529e8": {
+      "bit_exact": true,
+      "dtype": "uint8",
+      "element_bytes_sha256": "d60d9524c0aa95e634274f95a7d0e51ccf649e5705cf875c57d84f246c749606",
+      "inverse_element_bytes_sha256": "d60d9524c0aa95e634274f95a7d0e51ccf649e5705cf875c57d84f246c749606",
+      "onnx_name": "resnetv17_relu0_fwd_quantized",
+      "shape": [
+        16,
+        64,
+        112,
+        112
+      ]
+    },
+    "tensor-internal-node-0001-accumulate": {
+      "bit_exact": true,
+      "dtype": "int32",
+      "element_bytes_sha256": "c5aae211a58493c08dc79db2ae5df123d1b08e237af5776f6e4602ac2d97199a",
+      "inverse_element_bytes_sha256": "c5aae211a58493c08dc79db2ae5df123d1b08e237af5776f6e4602ac2d97199a",
+      "onnx_name": null,
+      "shape": [
+        16,
+        64,
+        112,
+        112
+      ]
+    },
+    "tensor-internal-node-0001-multiplier": {
+      "bit_exact": true,
+      "dtype": "float32",
+      "element_bytes_sha256": "7ed3f7e123f3f68c86a141ea0fa562a694ed8bfd4a5014907f8e551ff76e9790",
+      "inverse_element_bytes_sha256": "7ed3f7e123f3f68c86a141ea0fa562a694ed8bfd4a5014907f8e551ff76e9790",
+      "shape": [
+        64
+      ]
+    }
+  },
+  "contract": "w4_conv_batch16_candidate_v1",
+  "k_padded": 64,
+  "layout_record_count": 12,
+  "logical_physical_bytes": 71063552,
+  "model_sha256": "c234f30975989788b4405f25253275aae247ab6dbdd34aaa69ab0a59ff76f6d0",
+  "node_id": "node-0001",
+  "onnx_name": "fused resnetv17_conv0_fwd_quant",
+  "per_slice_used_bytes": 4441472,
+  "schema_version": "0.1",
+  "slice_capacity_bytes": 25165824,
+  "source_files": {
+    "accumulator": {
+      "path": "artifacts/w3/subop_batch16/tensors/tensor-internal-node-0001-accumulate.npy",
+      "sha256": "6af20386adf711089302791015f41cfc5ddfa89a92ddb042677b8db341d3d21c"
+    },
+    "activation": {
+      "path": "artifacts/w3/golden_batch16/tensors/tensor-a60f1132af1aa3d0.npy",
+      "sha256": "963f2c0edbcd5a2ef946a8a4757773b37cfbc8a50b0f35727b0a22eaf20f470a"
+    },
+    "output": {
+      "path": "artifacts/w3/golden_batch16/tensors/tensor-f6c1a8fb6fd529e8.npy",
+      "sha256": "db55178510d91ed87faf9a3884c5e0b79685f6dd2c97561dc53f00a40a1b376f"
+    }
+  },
+  "legacy_generation_status": "candidate",
+  "validation": {
+    "per_slice_used_bytes": 4441472,
+    "port_count": 12,
+    "region_count": 192,
+    "slice_count": 16
+  }
+}

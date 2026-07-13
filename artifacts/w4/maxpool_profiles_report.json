@@ -1,0 +1,130 @@
+{
+  "current_gate_eligible": false,
+  "slice_count": 16,
+  "status": "superseded_by_adr_007",
+  "superseded_by": "ADR-007",
+  "target_family": "legacy16",
+  "all_conv_d_maxpool_a_zero_copy": true,
+  "all_profiles_inverse_bit_exact": true,
+  "all_profiles_logical_bit_exact": true,
+  "attributes": {
+    "auto_pad": "NOTSET",
+    "ceil_mode": 0,
+    "kernel_shape": [
+      3,
+      3
+    ],
+    "pads": [
+      1,
+      1,
+      1,
+      1
+    ],
+    "storage_order": 0,
+    "strides": [
+      2,
+      2
+    ]
+  },
+  "logical_input_sha256": "d60d9524c0aa95e634274f95a7d0e51ccf649e5705cf875c57d84f246c749606",
+  "logical_output_sha256": "e0e9a33d50f65c9a3a19f98926adb7767b07edc5783a5297ffbc73bec7368323",
+  "model_sha256": "c234f30975989788b4405f25253275aae247ab6dbdd34aaa69ab0a59ff76f6d0",
+  "node_id": "node-0002",
+  "onnx_name": "resnetv17_pool0_fwd",
+  "profiles": {
+    "batch": {
+      "all_inverse_bit_exact": true,
+      "conv_contract": "w4_conv_batch16_candidate_v1",
+      "input_inverse_sha256": "d60d9524c0aa95e634274f95a7d0e51ccf649e5705cf875c57d84f246c749606",
+      "layout_record_count": 2,
+      "logical_physical_bytes": 16056320,
+      "output_inverse_sha256": "e0e9a33d50f65c9a3a19f98926adb7767b07edc5783a5297ffbc73bec7368323",
+      "per_slice_used_bytes": 4642176,
+      "pool_contract": "w4_maxpool_batch16_candidate_v1",
+      "validation": {
+        "per_slice_used_bytes": 4642176,
+        "region_count": 32,
+        "slice_count": 16
+      },
+      "zero_copy_alias": {
+        "all_physical_bytes_equal": true,
+        "base_addresses": [
+          3638656,
+          28804480,
+          53970304,
+          79136128,
+          104301952,
+          129467776,
+          154633600,
+          179799424,
+          204965248,
+          230131072,
+          255296896,
+          280462720,
+          305628544,
+          330794368,
+          355960192,
+          381126016
+        ],
+        "compatible": true,
+        "consumer_contract": "w4_maxpool_batch16_candidate_v1",
+        "producer_contract": "w4_conv_batch16_candidate_v1",
+        "shared_tensor_id": "tensor-f6c1a8fb6fd529e8",
+        "slice_count": 16
+      }
+    },
+    "channel": {
+      "all_inverse_bit_exact": true,
+      "conv_contract": "w4_conv_ring16_candidate_v1",
+      "input_inverse_sha256": "d60d9524c0aa95e634274f95a7d0e51ccf649e5705cf875c57d84f246c749606",
+      "layout_record_count": 2,
+      "logical_physical_bytes": 16056320,
+      "output_inverse_sha256": "e0e9a33d50f65c9a3a19f98926adb7767b07edc5783a5297ffbc73bec7368323",
+      "per_slice_used_bytes": 5020864,
+      "pool_contract": "w4_maxpool_channel16_candidate_v1",
+      "validation": {
+        "per_slice_used_bytes": 5020864,
+        "region_count": 32,
+        "slice_count": 16
+      },
+      "zero_copy_alias": {
+        "all_physical_bytes_equal": true,
+        "base_addresses": [
+          4017344,
+          29183168,
+          54348992,
+          79514816,
+          104680640,
+          129846464,
+          155012288,
+          180178112,
+          205343936,
+          230509760,
+          255675584,
+          280841408,
+          306007232,
+          331173056,
+          356338880,
+          381504704
+        ],
+        "compatible": true,
+        "consumer_contract": "w4_maxpool_channel16_candidate_v1",
+        "producer_contract": "w4_conv_ring16_candidate_v1",
+        "shared_tensor_id": "tensor-f6c1a8fb6fd529e8",
+        "slice_count": 16
+      }
+    }
+  },
+  "schema_version": "0.1",
+  "source_files": {
+    "input": {
+      "path": "artifacts/w3/golden_batch16/tensors/tensor-f6c1a8fb6fd529e8.npy",
+      "sha256": "db55178510d91ed87faf9a3884c5e0b79685f6dd2c97561dc53f00a40a1b376f"
+    },
+    "output": {
+      "path": "artifacts/w3/golden_batch16/tensors/tensor-8d2f28c80ac24676.npy",
+      "sha256": "e4039c779c0083ff3cbe76845b4ba313e9b2e095e4faa72d329cbfa04f6cae1b"
+    }
+  },
+  "spatial_padding_value": 0
+}

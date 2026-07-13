@@ -19,6 +19,11 @@ from resnet50_pipeline.avgpool16_layout import (
     GlobalAveragePoolChannel16PhysicalLayout,
 )
 from resnet50_pipeline.hashing import sha256_file
+from resnet50_pipeline.w4_evidence import (
+    add_legacy16_cli_guard,
+    annotate_legacy16_report,
+    resolve_legacy16_output,
+)
 from verify_w4_add_layout import _load_case as load_add_case
 from verify_w4_conv0_layout import _array_hash
 
@@ -247,21 +252,20 @@ def verify(project_root: Path) -> dict[str, Any]:
 
 def main() -> int:
     parser = argparse.ArgumentParser(
-        description="Verify W4 GlobalAveragePool layouts from existing W3 evidence"
+        description="[LEGACY16] Verify superseded GlobalAveragePool layouts"
     )
     parser.add_argument(
         "--project-root", type=Path, default=Path(__file__).resolve().parents[1]
     )
     parser.add_argument("--output", type=Path)
+    add_legacy16_cli_guard(parser)
     args = parser.parse_args()
-    report = verify(args.project_root)
+    output = resolve_legacy16_output(args.project_root, args.output)
+    report = annotate_legacy16_report(verify(args.project_root))
     encoded = json.dumps(report, ensure_ascii=False, indent=2, sort_keys=True) + "\n"
-    if args.output is not None:
-        output = args.output
-        if not output.is_absolute():
-            output = args.project_root / output
+    if output is not None:
         output.parent.mkdir(parents=True, exist_ok=True)
-        output.write_text(encoded, encoding="utf-8")
+        output.write_bytes(encoded.encode("utf-8"))
     print(encoded, end="")
     return 0
 

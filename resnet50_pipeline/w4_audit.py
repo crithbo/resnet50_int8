@@ -597,6 +597,12 @@ def audit_w4_gate(
     return {
         "schema_version": "0.2",
         "audit_id": "w4_28_g4_gate_fail_closed_v1",
+        "target_family": CURRENT_TARGET_FAMILY,
+        "slice_count": CURRENT_TARGET_SLICE_COUNT,
+        "architecture_id": architecture["target"]["architecture_id"],
+        "architecture_sha256": sha256_file(architecture_path),
+        "profile_ids": sorted(architecture["target"]["profiles"]["candidates"]),
+        "current_gate_eligible": g4_passed,
         "model_sha256": catalog["model_sha256"],
         "scope": "Current 28-slice G4 decision with legacy16 evidence isolated",
         "node_coverage": {

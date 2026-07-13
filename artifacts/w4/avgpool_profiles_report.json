@@ -1,4 +1,9 @@
 {
+  "current_gate_eligible": false,
+  "slice_count": 16,
+  "status": "superseded_by_adr_007",
+  "superseded_by": "ADR-007",
+  "target_family": "legacy16",
   "all_add_d_to_pool_a_exact_alias": true,
   "all_pool_d_to_flatten_zero_copy": true,
   "all_profiles_inverse_bit_exact": true,

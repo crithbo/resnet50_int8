@@ -96,7 +96,12 @@
     "slice_count": 16,
     "status": "superseded_by_adr_007",
     "current_gate_eligible": false,
-    "note": "Physical signatures, modulo-ring assumptions, capacity and cost claims below are historical evidence only."
+    "note": "Physical signatures, modulo-ring assumptions, capacity and cost claims below are historical evidence only.",
+    "evidence_index": {
+      "path": "artifacts/w4/legacy16_index.json",
+      "size_bytes": 2499,
+      "sha256": "69aba8760ce3250b5a826a03babbfa37e986d4ec563c8770ba95bcd351d08a15"
+    }
   },
   "legacy_layouts": {
     "w4_batch_slice_candidate_v1": {
@@ -129,7 +134,8 @@
       "implementation": "resnet50_pipeline/conv16_layout.py",
       "formal_conv0_report": {
         "path": "artifacts/w4/conv0_batch16_report.json",
-        "sha256": "c91ae0ddbc17b41121d832a16d4a3de3706a9eaccfc59faf834de45b9e6f23b5",
+        "sha256": "a2ed9e6c4c6b66d47b4f90f29eef048878bba41e4fdec12edb46b8e3ff212fb8",
+        "size_bytes": 6267,
         "all_inverse_bit_exact": true
       }
     },
@@ -147,7 +153,8 @@
       "implementation": "resnet50_pipeline/conv16_ring_layout.py",
       "formal_conv0_profile_comparison": {
         "path": "artifacts/w4/conv0_profiles_report.json",
-        "sha256": "11ba322444c624a5ab1f6b4f7797b96b84eb45692d6b2c0b92eb1e44105f4e67",
+        "sha256": "1d56fad355fa8592e0bdf742a28324a5b43abbf3ff70ba4a6a27a0fa147635eb",
+        "size_bytes": 11608,
         "batch_inverse_bit_exact": true,
         "ring_inverse_bit_exact": true,
         "batch_ring_logical_bit_exact": true
@@ -278,10 +285,13 @@
   },
   "legacy_evidence": {
     "w4_conv_shape_coverage_v1": {
-      "status": "candidate_software_evidence",
+      "status": "superseded_by_adr_007",
+      "target_family": "legacy16",
+      "slice_count": 16,
+      "current_gate_eligible": false,
       "path": "artifacts/w4/conv_shape_coverage.json",
-      "sha256": "307f54bd55330270de1cb90fe42a8ee4433d6de66e23f9291c46148f1d2b30b3",
-      "size_bytes": 116635,
+      "sha256": "89887948a158f2660e02bcd3e9d411ca42a2e7b86bc05a44fe71e7105da21ea8",
+      "size_bytes": 113988,
       "formal_conv_nodes": 53,
       "stable_shape_families": 20,
       "formal_plan_batch_size": 16,
@@ -297,10 +307,13 @@
       "slice_capacity_bytes": 25165824
     },
     "w4_maxpool_profiles_v1": {
-      "status": "candidate_software_evidence",
+      "status": "superseded_by_adr_007",
+      "target_family": "legacy16",
+      "slice_count": 16,
+      "current_gate_eligible": false,
       "path": "artifacts/w4/maxpool_profiles_report.json",
-      "sha256": "97373125f62ba29c47981bb7e05e1ccd3862060f6275fe4ee34418b6c16f9cfc",
-      "size_bytes": 3882,
+      "sha256": "1b9a9085f89cce57c329bc1c308dd28319e28a9d04d282a60e49f86b121bf97b",
+      "size_bytes": 3910,
       "formal_node_id": "node-0002",
       "formal_input_shape": [16, 64, 112, 112],
       "formal_output_shape": [16, 64, 56, 56],
@@ -312,10 +325,13 @@
       "slice_capacity_bytes": 25165824
     },
     "w4_qlinearadd_profiles_v1": {
-      "status": "candidate_software_evidence",
+      "status": "superseded_by_adr_007",
+      "target_family": "legacy16",
+      "slice_count": 16,
+      "current_gate_eligible": false,
       "path": "artifacts/w4/add_profiles_report.json",
-      "sha256": "9769589a14cc281968925e49645715010db634a8f722093e3ba106d47ae03108",
-      "size_bytes": 74305,
+      "sha256": "502b34dfbbc0f38d7ea5b1d7dc46e709b3f2676463109b59f67d68e29dadc3b9",
+      "size_bytes": 72046,
       "formal_add_nodes": 17,
       "stable_shape_broadcast_families": 5,
       "residual_branch_inputs": 32,
@@ -333,10 +349,13 @@
       "simultaneous_two_input_alias_deferred_to": "W7 memory allocation"
     },
     "w4_globalavgpool_profiles_v1": {
-      "status": "candidate_software_evidence",
+      "status": "superseded_by_adr_007",
+      "target_family": "legacy16",
+      "slice_count": 16,
+      "current_gate_eligible": false,
       "path": "artifacts/w4/avgpool_profiles_report.json",
-      "sha256": "cb8ccd709616a851bed109a2a47a70706f9c8ecc0ba76f47eafa0ba3fbb4d3f8",
-      "size_bytes": 13910,
+      "sha256": "0b9aaabe7e9b68651a630b2196c49ced5673f08c03b5690dab3d4aabe2c04bf2",
+      "size_bytes": 13625,
       "formal_node_id": "node-0071",
       "formal_input_shape": [16, 2048, 7, 7],
       "formal_sum_shape": [16, 2048, 1, 1],
@@ -353,10 +372,13 @@
       "slice_capacity_bytes": 25165824
     },
     "w4_qlinearmatmul_profiles_v1": {
-      "status": "candidate_software_evidence",
+      "status": "superseded_by_adr_007",
+      "target_family": "legacy16",
+      "slice_count": 16,
+      "current_gate_eligible": false,
       "path": "artifacts/w4/matmul_profiles_report.json",
-      "sha256": "c561f4f23e5f5f7e1e5c5a556237fef4266b2b3a99f62ababc0f205a36e565ea",
-      "size_bytes": 16816,
+      "sha256": "380a900f6974b3d925252463fb768ceec79843dc50819fe2a5359820844c77a4",
+      "size_bytes": 16505,
       "formal_node_id": "node-0075",
       "formal_activation_shape": [16, 2048],
       "formal_weight_shape": [2048, 1000],
@@ -383,10 +405,13 @@
       "slice_capacity_bytes": 25165824
     },
     "w4_network_candidate_dry_run_v1": {
-      "status": "candidate_software_evidence",
+      "status": "superseded_by_adr_007",
+      "target_family": "legacy16",
+      "slice_count": 16,
+      "current_gate_eligible": false,
       "path": "artifacts/w4/network_candidate_dry_run.json",
-      "sha256": "852ea566112a92fd1965b6a2c2525449462e2b716db0941b368f87abc5d1eb18",
-      "size_bytes": 615520,
+      "sha256": "efcc3f921c6d4f8488ebe90716119a1461c5f13c50dccc5ea120ae47c394076f",
+      "size_bytes": 596856,
       "runtime_edges_per_profile": 93,
       "profiles": [
         "batch",
@@ -396,10 +421,13 @@
       "w5_artifacts_generated": false
     },
     "w4_g4_gate_audit_v1": {
-      "status": "candidate_software_evidence",
+      "status": "superseded_by_adr_007",
+      "target_family": "legacy16",
+      "slice_count": 16,
+      "current_gate_eligible": false,
       "path": "artifacts/w4/g4_gate_audit.json",
-      "sha256": "c4679a1bc44d0eac35de3035a4627895223140c22f560dcf19d21a06b37a298e",
-      "size_bytes": 103311,
+      "sha256": "b0d5fc55e164250b4729cc0228d39d050ffcf5d2b235256e404e1a2aa73c0546",
+      "size_bytes": 99993,
       "formal_nodes_covered": 78,
       "runtime_tensor_edges_audited": 93,
       "quantized_edges_with_exact_qparam_identity": 91,

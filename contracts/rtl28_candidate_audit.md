@@ -98,6 +98,6 @@ register arbiter 把 `(addr - 0)[31:28] == 8` 的访问送到寄存器，其余�
 
 ## 5. 交接检查与非声明
 
-开始时工作树为 clean。`tools/sync_repositories.py verify` 因独立 worktree 缺 `CGRA_SIM` 而失败；全量 unittest 运行 63 tests、16 errors，原因是独立 worktree 缺 `onnx`、`CGRA_SIM`、`NDPFuncModel` 和 `artifacts/w3/model_graph.json`。依协调要求没有同步/安装、没有读取或重算 W3。
+以下环境结果是本审计最初在隔离worktree中的历史观察，不是当前Local健康状态，也不是RTL证据结论：开始时工作树为clean；`tools/sync_repositories.py verify`因该worktree缺`CGRA_SIM`而失败；当时全量unittest运行63 tests、16 errors，原因是缺`onnx`、三个参考仓和`artifacts/w3/model_graph.json`。依协调要求当时没有同步/安装、没有读取或重算W3。后续Local环境恢复、C0合同迁移和当前全量回归结果以`.agents/history.md`为准，不应把这组历史错误数抄成现状。
 
 本次不修 RTL、不生成 W5 JSON/bitstream、不创建正式批准文件、不声明 G1/G4、clean elaboration、数值正确性或性能通过。

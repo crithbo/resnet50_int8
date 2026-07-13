@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import re
 import subprocess
@@ -10,8 +11,9 @@ from pathlib import Path
 from typing import Any, Sequence
 
 
-LOCK_VERSION = "0.2"
+LOCK_VERSION = "0.3"
 COMMIT_RE = re.compile(r"^[0-9a-f]{40}$")
+SHA256_RE = re.compile(r"^[0-9a-f]{64}$")
 REQUIRED_FIELDS = {
     "name",
     "path",
@@ -21,6 +23,15 @@ REQUIRED_FIELDS = {
     "commit",
     "dirty",
     "dirty_paths",
+}
+REQUIRED_EVIDENCE_FIELDS = {
+    "name",
+    "path",
+    "source_repository",
+    "source_commit",
+    "sha256",
+    "size_bytes",
+    "status",
 }
 
 
@@ -35,6 +46,22 @@ class RepositoryState:
     head: str
     dirty_paths: tuple[str, ...]
     remotes: tuple[str, ...]
+
+
+@dataclass(frozen=True)
+class ExternalEvidenceState:
+    name: str
+    path: Path
+    source_repository: str
+    source_commit: str
+    sha256: str
+    size_bytes: int
+
+
+@dataclass(frozen=True)
+class RepositoryLock:
+    repositories: tuple[dict[str, Any], ...]
+    external_evidence: tuple[dict[str, Any], ...]
 
 
 def _git(cwd: Path, *args: str, check: bool = True) -> subprocess.CompletedProcess[str]:
@@ -63,6 +90,25 @@ def _target_path(root: Path, value: str) -> Path:
     ):
         raise RepositoryLockError(f"repository path must be one direct child of root: {value}")
     return root.resolve() / relative
+
+
+def _evidence_path(root: Path, value: str) -> Path:
+    relative = Path(value)
+    if (
+        not value
+        or relative.is_absolute()
+        or any(part in {"", ".", ".."} for part in relative.parts)
+    ):
+        raise RepositoryLockError(f"external evidence path must stay under root: {value}")
+    resolved_root = root.resolve()
+    target = (resolved_root / relative).resolve()
+    try:
+        target.relative_to(resolved_root)
+    except ValueError as error:
+        raise RepositoryLockError(
+            f"external evidence path must stay under root: {value}"
+        ) from error
+    return target
 
 
 def _source_checkout_root(root: Path) -> Path:
@@ -105,7 +151,7 @@ def _verification_target_path(root: Path, value: str) -> Path:
     return resolved_target
 
 
-def load_lock(path: Path) -> list[dict[str, Any]]:
+def load_lock_document(path: Path) -> RepositoryLock:
     try:
         document = json.loads(path.read_text(encoding="utf-8"))
     except (OSError, json.JSONDecodeError) as error:
@@ -114,6 +160,8 @@ def load_lock(path: Path) -> list[dict[str, Any]]:
         raise RepositoryLockError(
             f"unsupported repository lock version: {document.get('schema_version')!r}"
         )
+    if set(document) != {"schema_version", "repositories", "external_evidence"}:
+        raise RepositoryLockError("repository lock root fields do not match schema 0.3")
     repositories = document.get("repositories")
     if not isinstance(repositories, list) or not repositories:
         raise RepositoryLockError("repositories must be a non-empty list")
@@ -121,7 +169,7 @@ def load_lock(path: Path) -> list[dict[str, Any]]:
     paths: set[str] = set()
     for index, repository in enumerate(repositories):
         if not isinstance(repository, dict) or set(repository) != REQUIRED_FIELDS:
-            raise RepositoryLockError(f"repository[{index}] fields do not match schema 0.2")
+            raise RepositoryLockError(f"repository[{index}] fields do not match schema 0.3")
         name = repository["name"]
         relative_path = repository["path"]
         if not isinstance(name, str) or not name:
@@ -148,7 +196,107 @@ def load_lock(path: Path) -> list[dict[str, Any]]:
             raise RepositoryLockError(f"{name}.dirty_paths contains an invalid path")
         if repository["dirty"] != bool(dirty_paths):
             raise RepositoryLockError(f"{name} dirty flag and dirty_paths disagree")
-    return repositories
+    external_evidence = document.get("external_evidence")
+    if not isinstance(external_evidence, list) or not external_evidence:
+        raise RepositoryLockError("external_evidence must be a non-empty list")
+    evidence_names: set[str] = set()
+    evidence_paths: set[str] = set()
+    for index, evidence in enumerate(external_evidence):
+        if not isinstance(evidence, dict) or set(evidence) != REQUIRED_EVIDENCE_FIELDS:
+            raise RepositoryLockError(
+                f"external_evidence[{index}] fields do not match schema 0.3"
+            )
+        name = evidence["name"]
+        relative_path = evidence["path"]
+        if not isinstance(name, str) or not name:
+            raise RepositoryLockError(f"external_evidence[{index}] has invalid name")
+        if not isinstance(relative_path, str):
+            raise RepositoryLockError(f"{name}.path must be a relative string")
+        if name in evidence_names or relative_path in evidence_paths:
+            raise RepositoryLockError(
+                f"duplicate external evidence name/path: {name}/{relative_path}"
+            )
+        evidence_names.add(name)
+        evidence_paths.add(relative_path)
+        _evidence_path(path.parent, relative_path)
+        if (
+            not isinstance(evidence["source_repository"], str)
+            or not evidence["source_repository"]
+        ):
+            raise RepositoryLockError(f"{name}.source_repository must be non-empty")
+        if (
+            not isinstance(evidence["source_commit"], str)
+            or not COMMIT_RE.fullmatch(evidence["source_commit"])
+        ):
+            raise RepositoryLockError(f"{name}.source_commit must be a full lowercase SHA-1")
+        if (
+            not isinstance(evidence["sha256"], str)
+            or not SHA256_RE.fullmatch(evidence["sha256"])
+        ):
+            raise RepositoryLockError(f"{name}.sha256 must be a full lowercase SHA-256")
+        if not isinstance(evidence["size_bytes"], int) or evidence["size_bytes"] <= 0:
+            raise RepositoryLockError(f"{name}.size_bytes must be positive")
+        if evidence["status"] != "candidate_unapproved":
+            raise RepositoryLockError(f"{name}.status must remain candidate_unapproved")
+    return RepositoryLock(tuple(repositories), tuple(external_evidence))
+
+
+def load_lock(path: Path) -> list[dict[str, Any]]:
+    return list(load_lock_document(path).repositories)
+
+
+def verify_external_evidence(
+    root: Path, evidence: dict[str, Any]
+) -> ExternalEvidenceState:
+    target = _evidence_path(root, evidence["path"])
+    if not target.is_file():
+        raise RepositoryLockError(f"{evidence['name']} is missing: {target}")
+    size_bytes = target.stat().st_size
+    if size_bytes != evidence["size_bytes"]:
+        raise RepositoryLockError(
+            f"{evidence['name']} size mismatch: {size_bytes} != {evidence['size_bytes']}"
+        )
+    sha256 = hashlib.sha256(target.read_bytes()).hexdigest()
+    if sha256 != evidence["sha256"]:
+        raise RepositoryLockError(
+            f"{evidence['name']} SHA-256 mismatch: {sha256} != {evidence['sha256']}"
+        )
+    try:
+        snapshot = json.loads(target.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as error:
+        raise RepositoryLockError(
+            f"cannot read external evidence snapshot {target}: {error}"
+        ) from error
+    source = snapshot.get("source")
+    if not isinstance(source, dict):
+        raise RepositoryLockError(f"{evidence['name']} has no embedded source identity")
+    if (
+        source.get("repository") != evidence["source_repository"]
+        or source.get("commit") != evidence["source_commit"]
+        or source.get("commit_required_for_all_evidence") is not True
+    ):
+        raise RepositoryLockError(
+            f"{evidence['name']} embedded source repository/commit mismatch"
+        )
+    if snapshot.get("status") != evidence["status"]:
+        raise RepositoryLockError(f"{evidence['name']} embedded status mismatch")
+    approval = snapshot.get("approval")
+    if (
+        not isinstance(approval, dict)
+        or approval.get("approved") is not False
+        or approval.get("approval_artifact_created") is not False
+    ):
+        raise RepositoryLockError(
+            f"{evidence['name']} must remain non-approval candidate evidence"
+        )
+    return ExternalEvidenceState(
+        evidence["name"],
+        target,
+        evidence["source_repository"],
+        evidence["source_commit"],
+        sha256,
+        size_bytes,
+    )
 
 
 def _dirty_paths(path: Path) -> tuple[str, ...]:
@@ -273,10 +421,30 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser.add_argument("command", choices=("verify", "sync"))
     parser.add_argument("--root", type=Path, default=Path(__file__).resolve().parents[1])
     parser.add_argument("--repo", action="append", default=[], help="repository name")
+    parser.add_argument(
+        "--evidence-only",
+        action="store_true",
+        help="verify tracked external evidence without requiring repository checkouts",
+    )
     args = parser.parse_args(argv)
+    if args.evidence_only and args.command != "verify":
+        parser.error("--evidence-only is valid only with verify")
+    if args.evidence_only and args.repo:
+        parser.error("--evidence-only cannot be combined with --repo")
     root = args.root.resolve()
     try:
-        repositories = _select(load_lock(root / "repos.lock.json"), args.repo)
+        lock = load_lock_document(root / "repos.lock.json")
+        for evidence in lock.external_evidence:
+            state = verify_external_evidence(root, evidence)
+            print(
+                f"[ok] evidence {state.name} {state.source_commit} "
+                f"sha256={state.sha256} {state.path}"
+            )
+        repositories = (
+            []
+            if args.evidence_only
+            else _select(list(lock.repositories), args.repo)
+        )
         for repository in repositories:
             state = (
                 verify_repository(root, repository)

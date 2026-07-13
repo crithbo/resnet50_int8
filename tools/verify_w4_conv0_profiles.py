@@ -10,6 +10,11 @@ import numpy as np
 from resnet50_pipeline.conv16_layout import ConvBatch16PhysicalLayout
 from resnet50_pipeline.conv16_ring_layout import ConvRing16PhysicalLayout
 from resnet50_pipeline.hashing import sha256_file
+from resnet50_pipeline.w4_evidence import (
+    add_legacy16_cli_guard,
+    annotate_legacy16_report,
+    resolve_legacy16_output,
+)
 from verify_w4_conv0_layout import _array_hash, load_formal_conv0_case
 
 
@@ -111,21 +116,20 @@ def verify_profiles(project_root: Path) -> dict[str, Any]:
 
 def main() -> int:
     parser = argparse.ArgumentParser(
-        description="Verify W4 Conv0 batch16 and ring16 relayout profiles"
+        description="[LEGACY16] Verify superseded Conv0 batch16/ring16 profiles"
     )
     parser.add_argument(
         "--project-root", type=Path, default=Path(__file__).resolve().parents[1]
     )
     parser.add_argument("--output", type=Path)
+    add_legacy16_cli_guard(parser)
     args = parser.parse_args()
-    report = verify_profiles(args.project_root)
+    output = resolve_legacy16_output(args.project_root, args.output)
+    report = annotate_legacy16_report(verify_profiles(args.project_root))
     encoded = json.dumps(report, ensure_ascii=False, indent=2, sort_keys=True) + "\n"
-    if args.output is not None:
-        output = args.output
-        if not output.is_absolute():
-            output = args.project_root / output
+    if output is not None:
         output.parent.mkdir(parents=True, exist_ok=True)
-        output.write_text(encoded, encoding="utf-8")
+        output.write_bytes(encoded.encode("utf-8"))
     print(encoded, end="")
     return 0
 

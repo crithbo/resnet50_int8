@@ -10,6 +10,7 @@ from resnet50_pipeline.w4_audit import (
     _current_target_evidence_status,
     audit_w4_gate,
 )
+from resnet50_pipeline.hashing import sha256_file
 from tests.hardware_approval_fixture import valid_hardware_approval
 
 
@@ -17,6 +18,12 @@ class W4GateAuditTests(unittest.TestCase):
     def test_full_coverage_transitions_and_expected_external_block(self) -> None:
         root = Path(__file__).resolve().parents[1]
         report = audit_w4_gate(root)
+        self.assertEqual(report["target_family"], "rtl28")
+        self.assertEqual(report["slice_count"], 28)
+        self.assertEqual(
+            report["architecture_sha256"],
+            sha256_file(root / "contracts/architecture.json"),
+        )
         self.assertEqual(report["node_coverage"]["formal_node_count"], 78)
         self.assertTrue(report["node_coverage"]["all_formal_nodes_covered"])
         self.assertEqual(report["transition_audit"]["runtime_tensor_edge_count"], 93)
