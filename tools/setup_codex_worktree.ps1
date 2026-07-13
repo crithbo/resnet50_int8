@@ -87,6 +87,14 @@ if (-not (Test-SamePath -Left $sourceRoot -Right $reportedSource)) {
 }
 
 $isLocalCheckout = Test-SamePath -Left $worktree -Right $sourceRoot
+if (-not $isLocalCheckout) {
+    throw (
+        "managed worktree dependency setup is disabled: the former junction " +
+        "sharing design allowed host cleanup to erase Local .venv/reference " +
+        "repositories; run dependency-backed tasks in the Local checkout"
+    )
+}
+
 $lockPath = Join-Path $sourceRoot "repos.lock.json"
 if (-not (Test-Path -LiteralPath $lockPath -PathType Leaf)) {
     throw "repository lock is missing: $lockPath"
@@ -138,51 +146,9 @@ foreach ($repository in $repositoryLock.repositories) {
 
 foreach ($specification in $shareSpecifications) {
     $sourcePath = Resolve-FullPath -Path (Join-Path $sourceRoot $specification.relative_path)
-    $destinationPath = Join-Path $worktree $specification.relative_path
-
-    if ($isLocalCheckout) {
-        $sharedPaths.Add([pscustomobject]@{
-            name = $specification.name
-            status = "source"
-            path = $sourcePath
-            expected_commit = $specification.expected_commit
-        })
-        continue
-    }
-
-    if (Test-Path -LiteralPath $destinationPath) {
-        $destinationItem = Get-Item -Force -LiteralPath $destinationPath
-        $isReparsePoint = (
-            $destinationItem.Attributes -band [IO.FileAttributes]::ReparsePoint
-        ) -ne 0
-        if (-not $isReparsePoint) {
-            throw "worktree path exists and is not a junction: $destinationPath"
-        }
-        $linkTargets = @($destinationItem.Target)
-        if ($linkTargets.Count -ne 1) {
-            throw "worktree junction does not have exactly one target: $destinationPath"
-        }
-        $linkTarget = [string]$linkTargets[0]
-        if (-not [IO.Path]::IsPathRooted($linkTarget)) {
-            $linkTarget = Join-Path (Split-Path -Parent $destinationPath) $linkTarget
-        }
-        $resolvedLinkTarget = Resolve-FullPath -Path $linkTarget
-        if (-not (Test-SamePath -Left $resolvedLinkTarget -Right $sourcePath)) {
-            throw "worktree junction points to the wrong source: $destinationPath"
-        }
-        $status = "linked"
-    }
-    elseif ($CheckOnly) {
-        $status = "would_link"
-    }
-    else {
-        New-Item -ItemType Junction -Path $destinationPath -Target $sourcePath | Out-Null
-        $status = "linked"
-    }
-
     $sharedPaths.Add([pscustomobject]@{
         name = $specification.name
-        status = $status
+        status = "source"
         path = $sourcePath
         expected_commit = $specification.expected_commit
     })

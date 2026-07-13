@@ -45,7 +45,7 @@
 - 每完成一个阶段，更新本文件的状态，并在 `history.md` 追加记录；凡形成Git提交，台账必须包含仓库、完整hash、父提交、范围、验证结果和精确回退位置。
 - Git按改动规模分级：不改变行为、接口、schema/合同、layout/qparams、依赖锁或产物hash的微小文字/注释/格式修正不单独提交；范围明确且可聚焦验证的较小代码、测试、规则或文档语义改动做本地原子提交；阶段门、跨模块/跨仓重大集成、关键硬件合同、重要恢复检查点，或操作者明确要求时，才批量推送到操作者控制的GitHub仓库或fork并核对远端hash。微小改动可以合并进下一次相关本地提交，但必须在任务报告中说明。
 - 尽量只保留必要工作树，不为备份额外创建clone/worktree/zip。冗余副本只有在无唯一未提交内容、全部需保留提交已推送、恢复路径验证通过且操作者批准具体绝对路径后才能删除；所有提交历史保留，不通过reset/rebase/filter/强推或裁剪历史释放空间。
-- 并行协作采用“Local集中集成+worktree独立代码”模式：Codex桌面宿主按`.worktreeinclude`复制W3目录第一层2个小JSON，另2个嵌套manifest以固定hash base64快照纳入Git并由setup在worktree内恢复；`tools/setup_codex_worktree.ps1`只读共享`.venv`和三个锁定参考仓并校验4项metadata，再跑聚焦测试。正式W3 tensor、整网报告和全量回归只在Local执行。项目配置使用自动审批reviewer而非全权限；达到本地提交门槛的任务只在结束时集中一次Git写操作，纯微小改动不强制单独提交。
+- 并行协作采用“Local集中集成+tracked-only worktree”模式：managed worktree只使用Git跟踪文件和`.worktreeinclude`交付的小型固定元数据，禁止通过junction/symlink共享Local `.venv`、三个参考仓或产物。需要这些依赖、正式W3 tensor、整网报告或全量回归的任务只在Local执行；setup对非Local调用硬失败。项目配置使用自动审批reviewer而非全权限；达到本地提交门槛的任务只在结束时集中一次Git写操作，纯微小改动不强制单独提交。
 - 当前冗余 `artifacts/smoke/NDPFuncModel` worktree已按批准删除；主仓 `main` 与NDP `conv_func` 已推送到各自Private仓并通过GitHub完整commit页面核验。CGRA的4项状态已证明仅是Windows权限位噪声，现已干净并锁定正式upstream，无需Private镜像。
 
 ## 当前总体状态
@@ -373,7 +373,7 @@ W1的模型子任务已完成，但G1尚未通过；architecture/quantization/ba
 
 | ID | 优先级/阶段 | 已确认问题 | 计划修改 | 完成判据 | 状态 |
 |---|---|---|---|---|---|
-| ENV-01 | P0/C0前 | 根目录`.venv`和三个参考仓目录目前均为空，不是可用junction/Git worktree；既往“环境已准备”记录不再代表当前现场 | 先溯源目录为何丢失；按`requirements-resnet50.lock.txt`、`repos.lock.json`和setup/sync合同恢复或重新定位，只处理环境和三个小仓，不碰W3正式tensor | Python入口存在；三仓HEAD/dirty匹配lock；setup/verify聚焦测试与根测试可运行；记录恢复来源和hash | 待执行 |
+| ENV-01 | P0/C0前 | 已定位为commit `29da593...`引入的managed-worktree junction设计在宿主回收时穿透目标；Local四目录于16:25依次被清空 | 已解除全部残留junction，仅从13:00的项目ZIP选择性恢复`.venv`和三个参考仓；setup已改为非Local fail-closed，不覆盖主仓/`.git`/W3 | Python 3.12.13与`pip check`通过；三仓HEAD/dirty匹配lock；根测试通过；恢复来源、hash和事故边界已记录 | 已完成 |
 | C0-01 | P0/立即 | `w4_audit.py`仍消费旧16布局/报告，两个关键criteria无条件为True；一个结构合法的旧批准同时满足三项硬件门，现有测试要求它打开W5 | 先将现行G4改为fail-closed；结构validator与G4授权分离；合成fixture、旧16证据、缺28布局、缺clean elaboration任一存在都不得授权W5 | 即使传入合成“valid approval”，在28算子证据/93边/成本/clean elaboration不齐时仍`G4=not_passed`、`w5_authorized=false`；移除无条件True | 待执行 |
 | C0-02 | P0 | `contracts/architecture.json`仍把16 slice、15次邻传、旧NDP内存/address order和旧W4 layouts/reports放在现行`known/candidate`空间 | 升级architecture合同；登记28 slice、SA 8×8、GA 4×4、28-bit mask、显式HIGH/LOW拓扑与两个profile ID；将RTL静态证据标`candidate_unapproved`，未由RTL批准的address order继续标候选；旧16条目移入`legacy_layouts/legacy_evidence`并禁止G4消费 | 当前target机器可读且唯一指向RTL28；旧16布局不能被approval选择；真正未知与已静态确认但未批准字段分开 | 待执行 |
 | C0-03 | P0 | `hardware_approval.schema.json`、`hardware_approval.py`和fixture固定16 slice、旧`batch/ring_channel/mixed`及旧layout ID；真实28批准反而无法通过 | schema与手写validator同步迁移到28；profile使用`profile28.py`精确ID，不接受含混`mixed`；审批必须交叉校验architecture版本、RTL commit、拓扑、SA/GA、DRAM、mask、布局状态和证据摘要 | 28结构fixture仅通过结构验证；16 fixture明确失败；schema和手写validator一致性回归通过；不生成真实`hardware_approval.json` | 待执行 |

@@ -78,7 +78,8 @@ class CodexWorktreeEnvironmentTests(unittest.TestCase):
             encoding="utf-8"
         )
         self.assertNotIn("Copy-Item", script)
-        self.assertIn("$destinationItem.Target", script)
+        self.assertNotIn("New-Item -ItemType Junction", script)
+        self.assertIn("managed worktree dependency setup is disabled", script)
         self.assertIn("worktree metadata is missing; check .worktreeinclude", script)
 
     @unittest.skipUnless(sys.platform == "win32", "PowerShell setup is Windows-only")
@@ -101,7 +102,11 @@ class CodexWorktreeEnvironmentTests(unittest.TestCase):
             text=True,
             encoding="utf-8",
         )
-        self.assertEqual(completed.returncode, 0, completed.stderr)
+        if completed.returncode != 0:
+            self.assertIn(
+                "managed worktree dependency setup is disabled", completed.stderr
+            )
+            return
         report = json.loads(completed.stdout)
         self.assertEqual(report["schema_version"], "1.0")
         self.assertTrue(report["check_only"])
@@ -110,22 +115,11 @@ class CodexWorktreeEnvironmentTests(unittest.TestCase):
             [item["name"] for item in report["shared_paths"]],
             [".venv", "CGRA_SIM", "ndp-sim-ref", "NDPFuncModel"],
         )
-        if report["mode"] == "local":
-            self.assertTrue(
-                all(item["status"] == "source" for item in report["shared_paths"])
-            )
-            self.assertTrue(
-                all(item["status"] == "source" for item in report["metadata"])
-            )
-        else:
-            self.assertEqual(report["mode"], "worktree")
-            self.assertTrue(
-                all(item["status"] == "linked" for item in report["shared_paths"])
-            )
-            self.assertEqual(
-                [item["status"] for item in report["metadata"]],
-                ["included", "included", "restored", "restored"],
-            )
+        self.assertEqual(report["mode"], "local")
+        self.assertTrue(
+            all(item["status"] == "source" for item in report["shared_paths"])
+        )
+        self.assertTrue(all(item["status"] == "source" for item in report["metadata"]))
 
 
 if __name__ == "__main__":

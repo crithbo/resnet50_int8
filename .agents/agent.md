@@ -14,7 +14,7 @@
 - **下一主线**：先单线程把`architecture.json`、硬件批准schema/validator和测试从旧16-slice现行口径迁移到28-slice candidate，同时显式保留旧证据为legacy；再实现Quantize/Dequantize/View公共布局。公共合同冻结后按依赖和文件冲突决定算子分波并行，最后回Local统一重审93条边和成本；不重跑约951 MB的W3产物，除非合同/hash/回归明确失效。
 - **当前外部阻塞**：正式模型和固定输入基线已经自行取得；剩余外部阻塞为目标commit的clean elaboration/顶层命名闭合、正式端口layout、INT8 SA/GA/qparams硬件约定、目标emulator关系、硬件加载与dump协议。
 - **禁止误用**：NDPFuncModel 当前 `extracted_*.npy` 和 `verify_pe` psum 不是可信 golden；42个 JSON也不等于 ResNet算子配置已完成；bitstream生成成功不等于数值正确。
-- **接手检查**：Local主工作区依次运行`git status --short`、`.venv\Scripts\python.exe tools\sync_repositories.py verify`、`.venv\Scripts\python.exe -m unittest discover -s tests -v`；预期根工作树干净、三参考仓匹配lock、登记的全量测试全部通过。Codex worktree先运行`powershell -NoProfile -ExecutionPolicy Bypass -File tools\setup_codex_worktree.ps1`，再做status/verify和本任务聚焦测试；完整W3回归统一回到Local执行。
+- **接手检查**：Local主工作区依次运行`git status --short`、`.venv\Scripts\python.exe tools\sync_repositories.py verify`、`.venv\Scripts\python.exe -m unittest discover -s tests -v`；预期根工作树干净、三参考仓匹配lock、登记的全量测试全部通过。2026-07-13已确认managed worktree回收会穿透依赖junction清空Local目标，因此setup对非Local工作树硬失败；依赖`.venv`、三个参考仓或正式W3的任务统一回Local，直到有隔离且通过“销毁安全”验证的新方案。
 
 下一步任务和验收条件只以 `.agents/plan.md` 为准；本文件后半部分是查代码时使用的详细地图，不需要接手时从头逐行阅读。
 
@@ -47,10 +47,10 @@
 - 每个新工作包开工前必须先判断是否适合并行，不为了“看起来更快”强行拆分。只有共享合同/API已经冻结、子任务没有前后依赖、主要修改文件互不重叠、各自能独立测试和形成可集成提交时，才采用并行worktree；满足条件时优先并行以缩短等待时间。
 - 以下情况默认单线程：修改同一schema/contract/公共基类；下游必须读取上游刚确定的layout、qparams或地址规则；需要正式W3数据、整网93边、全量回归或最终集成；仍等待同一项硬件裁决；拆分后会重复实现或产生多套真值。单线程不是保守停滞，而是避免并行返工。
 - 并行任务开始前由Local主任务冻结基线commit、公共接口、允许修改的文件集合和验收命令；子任务不得自行编辑共享`.agents`、全局合同或其他任务文件。Local负责按依赖顺序集成、解决接口问题、统一更新合同/文档、执行全量测试并判断是否开启下一并行波次。
-- 只读全项目审查优先在Local任务执行；互不重叠的代码实现放独立Codex worktree。整网93边、正式W3输入、全量回归和最终集成只在Local主工作区执行。
+- 只读全项目审查优先在Local任务执行；只依赖Git跟踪文件且互不重叠的代码实现才可放独立Codex worktree。任何需要`.venv`、三个参考仓、正式W3或其他Local-only内容的任务均回Local；整网93边、正式W3输入、全量回归和最终集成只在Local主工作区执行。
 - Codex worktree只天然包含Git跟踪文件。根目录`.worktreeinclude`只复制W3目录第一层的2个小型JSON；桌面宿主当前不能可靠复制更深的ignored路径，因此2个manifest以固定hash的base64快照纳入Git，由setup在worktree内部恢复到原路径。禁止加入W3 `.npy`、整个`artifacts/`、`.venv`或三个参考仓，避免每个worktree重复约951 MB或更多数据。
-- 新worktree创建后先运行`tools/setup_codex_worktree.ps1`。脚本不联网、不安装、不覆盖现有文件；它从Git common directory定位Local源，只在源`.venv`存在、三个参考仓干净且HEAD匹配`repos.lock.json`时，为`.venv`和三个参考仓建立junction。脚本校验2个included JSON及2个tracked snapshot的固定大小与SHA-256，只在worktree内部恢复缺失manifest，不跨工作区复制W3 tensor。
-- setup脚本建立的参考仓和`.venv`视为只读共享依赖；并行任务不得在junction内修改、安装包、切分支或生成产物。必须修改参考仓时改用独立正式工作树并单独提交。
+- `tools/setup_codex_worktree.ps1`只保留Local环境/元数据自检；非Local调用会在任何恢复或链接动作前硬失败。禁止再把Local `.venv`、参考仓或产物以junction/symlink挂入managed worktree；“只读约定”不能约束桌面宿主的回收器。
+- 必须修改参考仓时使用独立、可恢复的正式Git工作树并单独提交；不得把Local源目录作为临时worktree清理范围内的链接目标。
 - 项目级`.codex/config.toml`使用`approval_policy="on-request"`、`approvals_reviewer="auto_review"`和`workspace-write`；不使用`danger-full-access`。安全操作可自动审查，破坏性、越界写入和不在计划内的网络操作仍需人工许可。
 - 并行任务达到“较小改动”本地提交门槛时，只在结束时集中执行一次Git暂存/提交，避免重复权限请求；纯微小改动不强制单独提交。已提交任务报告完整commit、父commit、文件、聚焦测试和回退命令，由Local集成任务统一登记`history.md`并跑全量测试。
 
