@@ -23,6 +23,7 @@
 - `.agents/agent.md`：默认入口。记录项目背景、当前状态、关键路径、工作原则和风险点。
 - `.agents/plan.md`：唯一权威实施计划。记录端到端阶段、已有/缺失状态、难度、方案、依赖和验收门槛。
 - `.agents/history.md`：历史日志。记录已经做过的操作、发现、产物和阻塞点。
+- `.agents/经验.md`：Codex managed worktree 的可复用经验、失败路径、全局/项目级配置边界和下一项目实施检查表。
 - `.agents/rules/算子配置规则.md`：从模型计算到单算子JSON、bitstream、`model_execplan`和数值验证的工作规则，以及对当前DeepSeek资料的反向审核结论。
 - `contracts/`：W1开始建立的版本化事实/候选契约；当前包含模型基线、量化语义和仍待批准的架构字段。
 - `.agents/decisions/`：关键选择的ADR；ADR-007是当前28-slice RTL/profile权威裁决，ADR-002/003/005已标为旧16-slice历史，ADR-004/006继续有效。
