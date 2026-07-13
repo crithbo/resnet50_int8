@@ -502,3 +502,12 @@
 - `.agents/agent.md`、`.agents/plan.md`、本文件顶部现行总则和`.agents/经验.md`已同步；经验文档额外给出微小/较小/重大的判定标准、交接例外和云端验收要求。旧history条目继续作为当时事实，不再覆盖2026-07-13现行规则。
 - 本次自身属于较小规则改动，只提交本地Git，没有推送GitHub。验证使用`git diff --check`和现行文档旧口径冲突检索；未运行代码测试，未触碰W3产物。
 - 精确回退：revert `c7e077d82a6a2e5f8a067ae13c4b2c69471549d1`；上一根仓恢复点为`834b54ca7056f54b4a2d4a2745f3ae02e059bce0`。
+
+## 2026-07-13：W4-28下一阶段与并行判定计划
+
+- 根仓提交 `1fdff87bdcfb1c424e217fbc51230e54ed44fe2d`，父提交 `9a11be90867d55805ae06585be390e13b06a9444`，`docs: plan W4-28 contract migration and parallel waves`。
+- `agent.md`新增现行并行判定规则：只有共享合同/API冻结、无前后依赖、主要文件不重叠且可独立测试/提交时才并行；共享schema/contract/公共基类、producer-consumer依赖、正式W3/93边/全量集成和同一硬件裁决默认单线程。Local负责冻结基线/接口/文件范围并顺序集成。
+- 审查确认`architecture.json`仍把slice写为16，`hardware_approval.schema.json`、`hardware_approval.py`和fixture也硬编码16；因此下一执行包C0必须先单线程迁移整条机器合同/批准校验链到28-slice candidate，并显式保留旧16证据为legacy。C1再单线程冻结Quantize/Dequantize/View公共布局。
+- 只有C0/C1全量回归通过才开启并行门P4；建议第一波三个互不编辑共享文件的任务为Conv、MaxPool/GAP、MatMul/head。之后Local顺序集成并实现依赖producer布局的QLinearAdd，最终单线程重跑28-slice transition、93边、91 qparam链、16残差Add、生命周期/alias和成本报告。
+- 当前仍为`G4=not_passed`、`w5_authorized=false`；本步骤只修改规则和计划，没有生成28-slice算子layout、批准合同或W5产物。验证：`git diff --check`通过，旧“直接从Quantize开始”口径已从现行摘要/队列替换；未运行代码测试，未触碰W3产物。
+- 精确回退：revert `1fdff87bdcfb1c424e217fbc51230e54ed44fe2d`；上一根仓恢复点为`9a11be90867d55805ae06585be390e13b06a9444`。
