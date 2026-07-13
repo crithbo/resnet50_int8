@@ -33,10 +33,18 @@ class CodexWorktreeEnvironmentTests(unittest.TestCase):
             [
                 "artifacts/w3/legacy77_mapping.json",
                 "artifacts/w3/model_graph.json",
+                "artifacts/w3/**/manifest.json",
+            ],
+        )
+        manifests = sorted((ROOT / "artifacts" / "w3").glob("**/manifest.json"))
+        self.assertEqual(
+            [path.relative_to(ROOT).as_posix() for path in manifests],
+            [
                 "artifacts/w3/golden_batch16/manifest.json",
                 "artifacts/w3/subop_batch16/manifest.json",
             ],
         )
+        self.assertLess(sum(path.stat().st_size for path in manifests), 256 * 1024)
         self.assertFalse(any(".npy" in entry for entry in entries))
         self.assertFalse(any(entry in {".venv", "artifacts"} for entry in entries))
 
