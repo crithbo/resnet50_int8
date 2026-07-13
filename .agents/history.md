@@ -511,3 +511,13 @@
 - 只有C0/C1全量回归通过才开启并行门P4；建议第一波三个互不编辑共享文件的任务为Conv、MaxPool/GAP、MatMul/head。之后Local顺序集成并实现依赖producer布局的QLinearAdd，最终单线程重跑28-slice transition、93边、91 qparam链、16残差Add、生命周期/alias和成本报告。
 - 当前仍为`G4=not_passed`、`w5_authorized=false`；本步骤只修改规则和计划，没有生成28-slice算子layout、批准合同或W5产物。验证：`git diff --check`通过，旧“直接从Quantize开始”口径已从现行摘要/队列替换；未运行代码测试，未触碰W3产物。
 - 精确回退：revert `1fdff87bdcfb1c424e217fbc51230e54ed44fe2d`；上一根仓恢复点为`9a11be90867d55805ae06585be390e13b06a9444`。
+
+## 2026-07-13：16→28方案切换全工作文件夹遗留审计
+
+- 根仓提交 `37109ca25086bd39b318ebdc839c329323102583`，父提交 `4b2d4cebf93410a9a51f897f23e80325799e3834`，`docs: audit stale W4 plan content`。三路只读复核现行文档/ADR、合同/schema/代码/测试、W4小报告/工具/恢复配置；主线程交叉核对后把14组修改项、明确保留项、执行顺序和验收条件写入`plan.md`。没有读取或重跑W3 `.npy`大产物。
+- 最高风险不是文字残留，而是活动机器路径：`architecture.json`仍把旧16-slice条目放在现行candidate空间，批准schema/validator只接受16，`w4_audit.py`继续消费旧报告且存在无条件True，测试还要求虚构旧批准直接打开G4/W5。计划因此改为先fail-closed，再迁移architecture/approval/contract validator和legacy证据空间；合成fixture以后只能测结构，永远不能授权W5。
+- 旧16报告、通用名称工具、默认`DramGeometry()`、公共layout导出和network dry-run均列入分阶段隔离/重建清单；模型`batch16`、W3冻结产物、W0 mock16、W2 1/4-slice fixture、明确命名的`*16_layout`回归和已标历史ADR继续保留，不做机械16→28替换。
+- 文档漂移已列入C0同批清理：ADR-004旧三条件门、`agent.md`错误下一步/参考工具权威性、算子规则把W3写成未完成、阶段I把通用比较器写成不存在。`plan.md`自身的并行门、28资源候选、阶段A和比较器状态已同步纠正。
+- 现场新增独立环境阻断：Local根目录`.venv`、`CGRA_SIM`、`ndp-sim-ref`、`NDPFuncModel`均为空目录，与先前验收记录不一致。ENV-01被置于C0之前；只恢复Python和三个锁定参考仓，不触碰W3正式tensor。由于当前无可用项目Python，本轮只执行`git diff --check`和文本冲突检索，没有运行unittest。
+- 当前仍为`G4=not_passed`、`w5_authorized=false`，没有生成正式W5 JSON/bitstream。下一原子步骤是ENV-01环境溯源/恢复；随后单线程执行C0-01现行G4 fail-closed，不直接开始28-slice算子layout。
+- 精确回退：revert `37109ca25086bd39b318ebdc839c329323102583`；上一根仓恢复点为`4b2d4cebf93410a9a51f897f23e80325799e3834`。
