@@ -41,6 +41,11 @@ from .simple16_layout import (
     QuantizeLinearPhysicalLayout as LegacyQuantizeLinearPhysicalLayout,
     ZeroCopyViewLayout as LegacyZeroCopyViewLayout,
 )
+from .target_config_audit import (
+    OFFICIAL_CONFIG_COMMIT,
+    OFFICIAL_CONFIG_REPOSITORY,
+    OFFICIAL_CONFIG_SLICE_COUNT,
+)
 from .w4_evidence import architecture_evidence_basis_sha256
 from .w4_profiles import PROFILE_POLICIES
 
@@ -634,6 +639,91 @@ def _current_target_evidence_status(
     }
 
 
+def _target_config_toolchain_status(root: Path) -> dict[str, Any]:
+    backend_path = root / "contracts" / "backend.json"
+    reasons: list[str] = []
+    try:
+        backend = _load_json(backend_path)
+        record = backend.get("backends", {}).get("target_config_toolchain", {})
+    except (OSError, json.JSONDecodeError):
+        record = {}
+        reasons.append("backend_contract_missing_or_invalid")
+    expected = {
+        "status": "approved_configuration_source",
+        "approved": True,
+        "source_repository": OFFICIAL_CONFIG_REPOSITORY,
+        "source_commit": OFFICIAL_CONFIG_COMMIT,
+        "slice_count": OFFICIAL_CONFIG_SLICE_COUNT,
+        "authoritative_paths": ["jsons", "bitstream", "model_execplan"],
+        "is_target_configuration_source": True,
+        "can_encode_bitstream": True,
+        "can_generate_execplan": True,
+        "can_execute_numerical_model": False,
+        "maxpool_encoder_probe_validated": True,
+        "resnet50_operator_coverage_complete": False,
+    }
+    for field, value in expected.items():
+        if record.get(field) != value:
+            reasons.append(f"backend_field_mismatch:{field}")
+
+    audit_path = root / str(record.get("audit_path", ""))
+    audit: dict[str, Any] = {}
+    if not audit_path.is_file():
+        reasons.append("authority_audit_missing")
+    else:
+        if audit_path.stat().st_size != record.get("audit_size_bytes"):
+            reasons.append("authority_audit_size_mismatch")
+        if sha256_file(audit_path) != record.get("audit_sha256"):
+            reasons.append("authority_audit_hash_mismatch")
+        try:
+            audit = _load_json(audit_path)
+        except (OSError, json.JSONDecodeError):
+            reasons.append("authority_audit_invalid_json")
+    if audit:
+        semantic_checks = {
+            "audit_status": audit.get("status") == "configuration_source_verified",
+            "source_repository": audit.get("source", {}).get("repository")
+            == OFFICIAL_CONFIG_REPOSITORY,
+            "source_commit": audit.get("source", {}).get("commit")
+            == OFFICIAL_CONFIG_COMMIT,
+            "slice_count": audit.get("source", {}).get("slice_count")
+            == OFFICIAL_CONFIG_SLICE_COUNT,
+            "register_map_alignment": audit.get("register_map_audit", {}).get(
+                "declared_width_alignment_status"
+            )
+            == "passed",
+            "maxpool_determinism": audit.get("maxpool_probe", {})
+            .get("determinism", {})
+            .get("status")
+            == "passed",
+            "maxpool_sensitivity": audit.get("maxpool_probe", {})
+            .get("differential_sensitivity", {})
+            .get("status")
+            == "passed",
+            "maxpool_fail_closed": audit.get("maxpool_probe", {})
+            .get("fail_closed", {})
+            .get("status")
+            == "passed",
+        }
+        reasons.extend(
+            f"authority_audit_semantic_mismatch:{name}"
+            for name, passed in semantic_checks.items()
+            if not passed
+        )
+    return {
+        "version_frozen": not reasons,
+        "source_repository": record.get("source_repository"),
+        "source_commit": record.get("source_commit"),
+        "audit_path": record.get("audit_path"),
+        "audit_sha256": record.get("audit_sha256"),
+        "can_execute_numerical_model": record.get("can_execute_numerical_model"),
+        "resnet50_operator_coverage_complete": record.get(
+            "resnet50_operator_coverage_complete"
+        ),
+        "reasons": reasons,
+    }
+
+
 def audit_w4_gate(
     project_root: Path, hardware_approval_path: Path | None = None
 ) -> dict[str, Any]:
@@ -681,6 +771,7 @@ def audit_w4_gate(
     network_report = report_payloads["w4_network_candidate_dry_run_v1"]
     network_profiles = network_report["profiles"]
     hardware_approval = _hardware_approval_status(root, hardware_approval_path)
+    target_config_toolchain = _target_config_toolchain_status(root)
     legacy16_evidence = _legacy16_evidence_status(
         report_payloads, network_profiles
     )
@@ -764,8 +855,8 @@ def audit_w4_gate(
         "approved_target_profile_exists": current_target_evidence[
             "hardware_approval_current_gate_eligible"
         ],
-        "target_rtl_isa_register_map_version_frozen": current_target_evidence[
-            "hardware_approval_current_gate_eligible"
+        "target_rtl_isa_register_map_version_frozen": target_config_toolchain[
+            "version_frozen"
         ],
         "approved_physical_layout_contract_exists": current_target_evidence[
             "hardware_approval_current_gate_eligible"
@@ -830,6 +921,7 @@ def audit_w4_gate(
             for profile_name, profile in network_profiles.items()
         },
         "hardware_approval": hardware_approval,
+        "target_config_toolchain": target_config_toolchain,
         "legacy16_evidence": legacy16_evidence,
         "current_target_evidence": current_target_evidence,
         "reusable_criteria": reusable_criteria,

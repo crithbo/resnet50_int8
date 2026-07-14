@@ -102,14 +102,24 @@ class W4GateAuditTests(unittest.TestCase):
         self.assertFalse(report["gate_decision"]["w5_authorized"])
         self.assertEqual(report["gate_decision"]["legacy16_software_evidence"], "pass")
         self.assertFalse(report["legacy16_evidence"]["current_gate_eligible"])
+        self.assertTrue(report["target_config_toolchain"]["version_frozen"])
+        self.assertFalse(
+            report["target_config_toolchain"]["can_execute_numerical_model"]
+        )
+        self.assertTrue(
+            report["gate_criteria"]["target_rtl_isa_register_map_version_frozen"]
+        )
         self.assertTrue(
             {
                 "target28_operator_layout_evidence_complete",
                 "target28_clean_elaboration_approved",
                 "approved_target_profile_exists",
-                "target_rtl_isa_register_map_version_frozen",
                 "approved_physical_layout_contract_exists",
             }.issubset(report["gate_decision"]["blocking_criteria"])
+        )
+        self.assertNotIn(
+            "target_rtl_isa_register_map_version_frozen",
+            report["gate_decision"]["blocking_criteria"],
         )
         self.assertNotIn(
             "target28_all_93_edges_physically_verified",
