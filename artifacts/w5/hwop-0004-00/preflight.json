@@ -1,0 +1,574 @@
+{
+  "deepseek_target_simulator_entry": {
+    "authoritative_paths": [
+      "jsons",
+      "bitstream",
+      "model_execplan"
+    ],
+    "bitstream_only_driver": {
+      "entrypoint": "run_all_slices.py",
+      "entrypoint_sha256": "a7c82762212d25ac73ac6fa6a9c9758d639b623ad5b82553e70b65422bb2a491",
+      "executes_numerical_model": false,
+      "invoked_program": "bitstream/main.py"
+    },
+    "manual_path_probe": {
+      "command": "Get-Command *emulator*,*simulator* -ErrorAction SilentlyContinue",
+      "evidence_scope": "2026-07-14 Local workspace",
+      "observed_result": "NO_EMULATOR_OR_SIMULATOR_COMMAND_ON_PATH"
+    },
+    "packager": {
+      "command": ".\\.venv\\Scripts\\python.exe main.py <operator_graph.json> --export-emulator",
+      "entrypoint": "model_execplan/main.py",
+      "entrypoint_sha256": "661623ebf37f0c2fe31a530fc53c756e58408000a371d7cc528301314a4dac7e",
+      "executes_numerical_model": false,
+      "function": "write_emulator_bundle",
+      "function_source": "model_execplan/src/execution_plan_generator/output_writer.py",
+      "function_source_sha256": "383f39f2e61900d1e4dddcffa90faff80bc315266f77350c597b8eecc60a23aa",
+      "inputs": [
+        "operator graph JSON",
+        "per-slice matrix_*.bin payloads"
+      ],
+      "outputs": [
+        "patched operator JSON",
+        "dram_data.bin"
+      ],
+      "working_directory": "ndp-sim-ref/model_execplan"
+    },
+    "project_root": "resnet50_int8",
+    "search_scope": [
+      "locked ndp-sim-ref source call sites",
+      "contracts/backend.json",
+      "contracts/target_config_authority_audit.json"
+    ],
+    "source_commit": "e299b2804448242d1589b3e58ed7c5a9a5eca09f",
+    "source_repository": "https://github.com/uSFrances/ndp-sim.git",
+    "status": "missing_from_current_workspace",
+    "target_runner": {
+      "command": null,
+      "exit_code_contract": null,
+      "input_package": null,
+      "physical_d_output_format": null,
+      "version": null
+    },
+    "w6_blocker": "B_TARGET_SIMULATOR_ENTRY",
+    "workspace_contract": {
+      "approved": false,
+      "implementation_available": false,
+      "status": "unapproved_missing_authoritative_binding"
+    }
+  },
+  "field_provenance": [
+    {
+      "dtype": "uint8",
+      "identity_sha256": "e4039c779c0083ff3cbe76845b4ba313e9b2e095e4faa72d329cbfa04f6cae1b",
+      "kind": "intermediate",
+      "onnx_name": "resnetv17_pool0_fwd_quantized",
+      "payload_sha256": "e0e9a33d50f65c9a3a19f98926adb7767b07edc5783a5297ffbc73bec7368323",
+      "payload_source": "artifacts/w3/golden_batch16",
+      "port": "A",
+      "shape": [
+        16,
+        64,
+        56,
+        56
+      ],
+      "tensor_id": "tensor-8d2f28c80ac24676",
+      "verified": true
+    },
+    {
+      "dtype": "int8",
+      "identity_sha256": "ff6ee89cbc889e0708d483f22b2a8f0e09f2cde13f65dcac061eb30551f68b48",
+      "kind": "initializer",
+      "onnx_name": "ConvBnFusion_W_resnetv17_stage1_conv0_weight_quantized",
+      "payload_sha256": "ff6ee89cbc889e0708d483f22b2a8f0e09f2cde13f65dcac061eb30551f68b48",
+      "payload_source": "formal ONNX initializer",
+      "port": "B",
+      "shape": [
+        64,
+        64,
+        1,
+        1
+      ],
+      "tensor_id": "tensor-56b60866ff5ecb4a",
+      "verified": true
+    },
+    {
+      "dtype": "int32",
+      "identity_sha256": "40bc2a3acbd553ffc067ea1c7b1c31cb59f18fca30451f55809ff76d2594bc0b",
+      "kind": "initializer",
+      "onnx_name": "ConvBnFusion_BN_B_resnetv17_stage1_batchnorm0_beta_quantized",
+      "payload_sha256": "40bc2a3acbd553ffc067ea1c7b1c31cb59f18fca30451f55809ff76d2594bc0b",
+      "payload_source": "formal ONNX initializer",
+      "port": "bias",
+      "shape": [
+        64
+      ],
+      "tensor_id": "tensor-d72c70cfb6839a45",
+      "verified": true
+    },
+    {
+      "dtype": "float32",
+      "identity_sha256": "3abf120f4bc983427b0f9699d55fcfbc648a8884501832dbe874b3828968e9b9",
+      "kind": "initializer",
+      "onnx_name": "ConvBnFusion_W_resnetv17_stage1_conv0_weight_scale",
+      "payload_sha256": "3abf120f4bc983427b0f9699d55fcfbc648a8884501832dbe874b3828968e9b9",
+      "payload_source": "formal ONNX initializer",
+      "port": "w_scale",
+      "shape": [
+        64
+      ],
+      "tensor_id": "tensor-ccb710ab9b9bc00c",
+      "verified": true
+    },
+    {
+      "dtype": "int8",
+      "identity_sha256": "f5a5fd42d16a20302798ef6ed309979b43003d2320d9f0e8ea9831a92759fb4b",
+      "kind": "initializer",
+      "onnx_name": "ConvBnFusion_W_resnetv17_stage1_conv0_weight_zero_point",
+      "payload_sha256": "f5a5fd42d16a20302798ef6ed309979b43003d2320d9f0e8ea9831a92759fb4b",
+      "payload_source": "formal ONNX initializer",
+      "port": "w_zero_point",
+      "shape": [
+        64
+      ],
+      "tensor_id": "tensor-705bc355ebf7bbd5",
+      "verified": true
+    },
+    {
+      "dtype": "float32",
+      "identity_sha256": "a1aac7487d3e8f919770415333ea8456ee152f1a343819888671a4395e2e7d02",
+      "kind": "initializer",
+      "onnx_name": "resnetv17_relu0_fwd_scale",
+      "payload_sha256": "a1aac7487d3e8f919770415333ea8456ee152f1a343819888671a4395e2e7d02",
+      "payload_source": "formal ONNX initializer",
+      "port": "x_scale",
+      "shape": [
+        1
+      ],
+      "tensor_id": "tensor-3f3181c9a6f928a5",
+      "verified": true
+    },
+    {
+      "dtype": "uint8",
+      "identity_sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d",
+      "kind": "initializer",
+      "onnx_name": "resnetv17_relu0_fwd_zero_point",
+      "payload_sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d",
+      "payload_source": "formal ONNX initializer",
+      "port": "x_zero_point",
+      "shape": [
+        1
+      ],
+      "tensor_id": "tensor-65fe804af253d161",
+      "verified": true
+    },
+    {
+      "dtype": "float32",
+      "identity_sha256": "9879e417a260e24ba16504cc33214bae92cfc35e5d12f85ba808d40c93a725e0",
+      "kind": "initializer",
+      "onnx_name": "resnetv17_stage1_relu0_fwd_scale",
+      "payload_sha256": "9879e417a260e24ba16504cc33214bae92cfc35e5d12f85ba808d40c93a725e0",
+      "payload_source": "formal ONNX initializer",
+      "port": "y_scale",
+      "shape": [
+        1
+      ],
+      "tensor_id": "tensor-92e50ed8fd15d492",
+      "verified": true
+    },
+    {
+      "dtype": "uint8",
+      "identity_sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d",
+      "kind": "initializer",
+      "onnx_name": "resnetv17_stage1_relu0_fwd_zero_point",
+      "payload_sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d",
+      "payload_source": "formal ONNX initializer",
+      "port": "y_zero_point",
+      "shape": [
+        1
+      ],
+      "tensor_id": "tensor-40fa0d7c5fec6f1c",
+      "verified": true
+    },
+    {
+      "dtype": "int32",
+      "identity_sha256": "32de6ea94086ce09da37b4f3c5b12ee51275c7b0f6d7b4a9875b0b9900ca25ac",
+      "kind": "lowering_internal",
+      "onnx_name": null,
+      "payload_sha256": "1ec864892d82279beff561927500f55ebec636daf2fb7c624a1e153dd5e17532",
+      "payload_source": "artifacts/w3/subop_batch16",
+      "port": "P",
+      "shape": [
+        16,
+        64,
+        56,
+        56
+      ],
+      "tensor_id": "tensor-internal-node-0004-accumulate",
+      "verified": true
+    },
+    {
+      "dtype": "uint8",
+      "identity_sha256": "b4a4fa9ca2f1384ede29a1c29ba15e21626ccb3f0d3387160942bc58d65f0899",
+      "kind": "intermediate",
+      "onnx_name": "resnetv17_stage1_relu0_fwd_quantized",
+      "payload_sha256": "2793bbe64e2b3289657f1c77bad61ebc54a4672791093d5c19a66ca742e7376e",
+      "payload_source": "artifacts/w3/golden_batch16",
+      "port": "D",
+      "shape": [
+        16,
+        64,
+        56,
+        56
+      ],
+      "tensor_id": "tensor-78b29737ada5ce7a",
+      "verified": true
+    }
+  ],
+  "first_tile_golden_preflight": {
+    "comparisons": {
+      "D": {
+        "dtype": "uint8",
+        "element_count": 150528,
+        "first_coordinate_address": 753872,
+        "mismatch_count": 0,
+        "physical_base_address": 753872,
+        "physical_base_address_hex": "0x000b80d0",
+        "physical_sha256": "451722908ce30aa5356b7e28616bf2edbe0a8e820ef9f6c651760076ba2500ef",
+        "recomputed_sha256": "69504516a9711df10094824e19ff2eaba1c91f7b5f84ba1434fa6244a50de543",
+        "w3_sha256": "69504516a9711df10094824e19ff2eaba1c91f7b5f84ba1434fa6244a50de543"
+      },
+      "P": {
+        "dtype": "int32",
+        "element_count": 150528,
+        "first_coordinate_address": 151760,
+        "mismatch_count": 0,
+        "physical_base_address": 151760,
+        "physical_base_address_hex": "0x000250d0",
+        "physical_sha256": "684f4de9c4919252ae7b8fb808480f70dfc2d75f9088d9897a3a80a68c8b2a53",
+        "recomputed_sha256": "0dd77f3455333293d28cbe5f2991f74bac453115ec091b3669426904d051b1f1",
+        "w3_sha256": "0dd77f3455333293d28cbe5f2991f74bac453115ec091b3669426904d051b1f1"
+      }
+    },
+    "destination_slice": 0,
+    "group_id": 0,
+    "high_ring_owners": [
+      0,
+      2,
+      3,
+      1
+    ],
+    "k_lifecycle": [
+      {
+        "bias_action": "initialize_before_segment",
+        "channel_count": 16,
+        "channel_start": 0,
+        "int8_pair_count_per_output": 8,
+        "logical_psum_sha256": "103865c8df8223dd8293fec2989e89d54ccf93c24ec60299f032b27da1e99685",
+        "maximum": 25539,
+        "minimum": -1161963,
+        "owner_step": 0,
+        "phase": "first",
+        "psum_action": "persist_int32",
+        "source_slice": 0
+      },
+      {
+        "bias_action": "preserve",
+        "channel_count": 16,
+        "channel_start": 48,
+        "int8_pair_count_per_output": 8,
+        "logical_psum_sha256": "39ba1f807ec4abe81366d9a912a960b192a3c3725ab99d6f9ec40488ced6febf",
+        "maximum": 25838,
+        "minimum": -1161345,
+        "owner_step": 3,
+        "phase": "middle",
+        "psum_action": "persist_int32",
+        "source_slice": 1
+      },
+      {
+        "bias_action": "preserve",
+        "channel_count": 16,
+        "channel_start": 32,
+        "int8_pair_count_per_output": 8,
+        "logical_psum_sha256": "88b0bbdfa39c3d42cde715cfab1c5094b3f75284a93f7cd2ea0730566b24e545",
+        "maximum": 25596,
+        "minimum": -1153368,
+        "owner_step": 2,
+        "phase": "middle",
+        "psum_action": "persist_int32",
+        "source_slice": 3
+      },
+      {
+        "bias_action": "preserve",
+        "channel_count": 16,
+        "channel_start": 16,
+        "int8_pair_count_per_output": 8,
+        "logical_psum_sha256": "0dd77f3455333293d28cbe5f2991f74bac453115ec091b3669426904d051b1f1",
+        "maximum": 28579,
+        "minimum": -1148879,
+        "owner_step": 1,
+        "phase": "last",
+        "psum_action": "requantize_after_segment",
+        "source_slice": 2
+      }
+    ],
+    "logical_im2col_projection": {
+      "K": 64,
+      "M": 9408,
+      "N": 16
+    },
+    "logical_ranges": {
+      "C": [
+        0,
+        64
+      ],
+      "H": [
+        0,
+        56
+      ],
+      "K": [
+        0,
+        16
+      ],
+      "N": [
+        0,
+        3
+      ],
+      "W": [
+        0,
+        56
+      ]
+    },
+    "physical_shape": [
+      3,
+      56,
+      56,
+      16
+    ],
+    "reduction_traversal": [
+      0,
+      1,
+      3,
+      2
+    ],
+    "requant": {
+      "multiplier_dtype": "float32",
+      "multiplier_sha256": "97d44311e5637cff36f10b82fa252ac2c6553523275cd69a33a85b5f2876eb90",
+      "multiplier_shape": [
+        16
+      ],
+      "output_zero_point": 0,
+      "rounding": "nearest_even_numpy_rint_golden",
+      "saturation": "uint8_[0,255]",
+      "target_encoding_status": "unresolved"
+    },
+    "status": "golden_and_physical_preflight_passed",
+    "target_simulator_comparison_status": "not_run_missing_runner",
+    "tile_id": "node-0004-group0-k000-015-n000-002"
+  },
+  "gate_state": {
+    "g5_passed": false,
+    "g5_preflight": "blocked",
+    "g6_passed": false,
+    "g8_passed": false,
+    "golden_tile_status": "passed",
+    "next_required_evidence": [
+      "authoritative target numerical simulator command/version/input/D format",
+      "approved INT8 Conv JSON template or field-level register contract",
+      "approved bias/psum/requant/qparam transport and unique-flush semantics"
+    ],
+    "stop_expansion": true,
+    "target_simulator_numerical_status": "not_run",
+    "w5_started": true,
+    "whole_network_generation_allowed": false
+  },
+  "logical_instance": {
+    "activation_shape": [
+      16,
+      64,
+      56,
+      56
+    ],
+    "attributes": {
+      "auto_pad": "NOTSET",
+      "dilations": [
+        1,
+        1
+      ],
+      "group": 1,
+      "kernel_shape": [
+        1,
+        1
+      ],
+      "pads": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "strides": [
+        1,
+        1
+      ]
+    },
+    "dtype_path": [
+      "uint8_A",
+      "int8_B",
+      "int32_bias_and_P",
+      "uint8_D"
+    ],
+    "output_shape": [
+      16,
+      64,
+      56,
+      56
+    ],
+    "parameter_transport": "lossless_into_preflight_only",
+    "per_channel_axis": 0,
+    "weight_shape": [
+      64,
+      64,
+      1,
+      1
+    ]
+  },
+  "physical_preflight": {
+    "address_scope": "W4 per-operator physical placeholder; W7 address plan not assigned",
+    "c_padded": 64,
+    "c_tile": 16,
+    "communication_domain": "high4",
+    "instruction_mask": "0b1111111111111111111111111111",
+    "k_tile": 16,
+    "layout_id": "w4_conv_group4x7_28_candidate_v1",
+    "layout_validation": {
+      "per_slice_used_bytes": 904400,
+      "physical_bytes": 25323200,
+      "port_count": 11,
+      "profile_id": "w4_group4x7_batch_channel28_candidate_v1",
+      "region_count": 308,
+      "semantic_tail_elements": 3010560,
+      "slice_count": 28,
+      "target_family": "rtl28"
+    },
+    "per_slice_capacity_bytes": 25165824,
+    "per_slice_used_bytes": 904400,
+    "profile_id": "w4_deepseek_hybrid28_resnet50_v1",
+    "runtime_layout_contract": "w4_conv_group4x7_28_candidate_v1",
+    "slice_count": 28,
+    "status": "passed",
+    "storage_sample_count": 3
+  },
+  "report_kind": "w5_first_real_conv_preflight",
+  "schema_version": "0.1",
+  "selection": {
+    "hw_op_ids": [
+      "hwop-0004-00",
+      "hwop-0004-01"
+    ],
+    "node_id": "node-0004",
+    "onnx_name": "fused resnetv17_stage1_conv0_fwd_quant",
+    "onnx_op_type": "QLinearConv",
+    "reason": "first real 1x1 stride-1 Conv recommended by W5 handoff"
+  },
+  "source_identity": {
+    "backend_contract_path": "contracts/backend.json",
+    "backend_contract_sha256": "91f5cde26ce2dc4c4901c0d20cdbff7cc791ad9217629436515f1e0c0d14193d",
+    "hardware_approval_path": "contracts/hardware_approval.json",
+    "hardware_approval_sha256": "963b64087351a45d54f52a86fe3536804e4f24427c94ee912c521b3a93fe159b",
+    "model_sha256": "c234f30975989788b4405f25253275aae247ab6dbdd34aaa69ab0a59ff76f6d0",
+    "target_config_authority_path": "contracts/target_config_authority_audit.json",
+    "target_config_authority_sha256": "b81436245886aaca2c6e2ab26f52d6c70810daa18c835cb6f08ce683f4ffa8d3",
+    "target_config_commit": "e299b2804448242d1589b3e58ed7c5a9a5eca09f",
+    "typed_contract_path": "contracts/typed_config_parameter_contract.json",
+    "typed_contract_sha256": "abbc87b0b13c92611a90fe1767b32b15fe9c49f23bee616ca2bb51219dd181bd"
+  },
+  "status": "g5_preflight_blocked_before_target_json",
+  "target_configuration": {
+    "bitstream_generated": false,
+    "legacy_generator_probe": {
+      "can_serve_as_target_template": false,
+      "files": [
+        {
+          "path": "config/config_generator_ver2.py",
+          "sha256": "28db2dddd5452723401a5a88a7f8c31bf5c0d25eb627425efd7e25e63550fd97"
+        },
+        {
+          "path": "config/config_nse.py",
+          "sha256": "a0c92813a00b304d005b1a4cac74d9b316fa26703d324927d600899c2ce037c0"
+        },
+        {
+          "path": "config/utils/config_parameters.py",
+          "sha256": "16aea0b1b14ec928ec6c643d0b2b1babdb40035ce132b8e0fe68e82e48058d8a"
+        }
+      ],
+      "interpretation": "shape/stream hints may be reviewed, but old16 hardcoded fields cannot authorize a target JSON or bitstream",
+      "missing_for_w5": [
+        "28-slice target JSON field mapping",
+        "nonzero INT32 bias load/enable semantics",
+        "first/middle/last-K persistent INT32 psum semantics",
+        "typed x/w/y qparam transport",
+        "per-channel nearest-even UINT8 requant and saturation"
+      ],
+      "observed": {
+        "hardcoded_activation_base": "0x10_0000",
+        "hardcoded_weight_base": "0x20_0000",
+        "requant_reference_present": false,
+        "sa_bias_enable": 0,
+        "sa_int8_selector": 0,
+        "slice_count": 16,
+        "typed_scale_reference_present": false,
+        "typed_zero_point_reference_present": false
+      },
+      "status": "legacy16_reference_only"
+    },
+    "mapping_review_generated": false,
+    "official_json_inventory_count": 42,
+    "official_named_conv_template_count": 0,
+    "patched_json_generated": false,
+    "unknown_fields_rejected": true,
+    "unresolved_target_bindings": [
+      {
+        "blocker": "B_CONV_TEMPLATE_ABSENT",
+        "fields": [
+          "CONFIG",
+          "dram_loop_configs",
+          "lc_pe_configs"
+        ],
+        "reason": "locked target source has zero named Conv templates"
+      },
+      {
+        "blocker": "B_CONV_INT8_SA",
+        "fields": [
+          "special_array.mode",
+          "special_array.data_type"
+        ],
+        "reason": "no approved UINT8xINT8-to-INT32 SA field encoding"
+      },
+      {
+        "blocker": "B_CONV_BIAS_PSUM",
+        "fields": [
+          "buffer_config",
+          "stream_engine",
+          "special_array"
+        ],
+        "reason": "first/middle/last-K bias and persistent INT32 psum storage are unbound"
+      },
+      {
+        "blocker": "B_REQUANT_TARGET_NUMERICS",
+        "fields": [
+          "general_array",
+          "stream_engine"
+        ],
+        "reason": "per-channel multiplier encoding, nearest-even, saturation and unique flush are unbound"
+      },
+      {
+        "blocker": "B_EXECPLAN_TYPED_TRANSPORT",
+        "fields": [
+          "OperatorSpec",
+          "control_registers"
+        ],
+        "reason": "official execplan has no typed qparam/constants transport"
+      }
+    ]
+  }
+}

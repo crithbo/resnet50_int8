@@ -52,8 +52,8 @@
 
 - **已通过**：W0/G0集成骨架，W2/G2小Conv候选软件纵向闭环，W3/G3正式图/lowering/全节点与subop golden。
 - **部分通过**：W1已冻结正式候选模型、固定输入、预处理和软件量化事实；目标RTL已选`Trassic2.0_RTL@e3bdebba...`和28-slice。ADR-008按操作者确认，把`ndp-sim-ref@e299b280...`的JSON/bitstream/model_execplan固定为正式硬件配置来源；ADR-009进一步把已完成DeepSeek整网调试记录为具名硬件基线，并明确不声称新的clean elaboration日志。W4物理profile/layout已经批准；INT8 SA/psum/requant、sum跨slice/完成协议、目标数值模拟器和板级协议仍分别留在后续阶段。
-- **当前主线**：W4-28 C0-C7、DeepSeek基线继承、七族通信域绑定、93边/成本重审和G4闭环均已完成。批准profile为`w4_deepseek_hybrid28_resnet50_v1`：一个全28-bit启动mask并行覆盖七个HIGH组，七族分别使用`local`或`HIGH-4`，当前没有LOW-28族。G4=`passed`、`w5_authorized=true`；现在进入W5，从最小真实INT8 Conv模板和真实qparams绑定开始。
-- **当前边界**：W2已证明小合成Conv的golden=NDP functional model，并新增RTL28 Conv物理布局到该功能模型的candidate-only直接探针；后者不是目标simulator、未执行目标JSON/ISA/RTL，也不构成G6证据。W3公式重放仍属于golden侧。W4通过只批准物理载体与布局合同，不表示任何正式ResNet算子已经达到golden=target simulator=hardware。
+- **当前主线**：W4/G4已闭环，W5首个真实Conv包已开始并在停止条件处收敛。`node-0004`/`hwop-0004-00~01`的真实1×1、stride-1实例已绑定正式A/B/bias/per-channel qparams；group0、K0～15、N0～2的HIGH-4 tile完成四段K生命周期，150,528个INT32 P和150,528个UINT8 D均与W3 golden及W4 physical bytes bit-exact。锁定配置仓没有Conv JSON或数值runner，旧生成器又固定16 slice、bias=0且无typed requant，因此当前状态为`G5-preflight blocked before target JSON`，不是G5/G6通过。
+- **当前边界**：DeepSeek `model_execplan -e`只执行`write_emulator_bundle()`并输出patched JSON与`dram_data.bin`，仓内没有后续消费者，本机PATH也没有emulator/simulator命令；目标runner的命令、版本、退出码和D格式均缺失。W2 NDP functional adapter、W3公式重放和本次真实tile golden/physical preflight都不是目标JSON/bitstream simulator。按首包停止条件，禁止猜测旧16-slice位义、生成target JSON/bitstream或横向扩展整网。
 
 ### 接手进度总表
 
@@ -64,7 +64,7 @@
 | W2 | G2通过 | 1/4-slice小Conv候选layout和NDP functional数值闭环；RTL28 Conv到该功能模型的candidate-only探针 | 作为W4/W6前置fixture，不外推为目标simulator或硬件规格 |
 | W3 | G3通过 | 78节点、133 hw_op、79 runtime tensor、55内部tensor、旧77映射 | 不重跑大artifact，除非hash/合同失效 |
 | W4 | G4通过 | C0-C7、DeepSeek公共物理合同、ResNet差异合同、混合28-slice profile、七族layout/domain、93边/成本和具名批准均闭环 | 不重开；版本或合同hash变化时自动重审 |
-| W5～W9 | W5已获授权但尚未通过，其余未通过 | W9通用比较器基础设施已前置完成；其余仅有参考框架或mock接口 | W5先做最小真实INT8 Conv模板与真实qparams绑定 |
+| W5～W9 | W5已开始但G5-preflight阻塞，其余未通过 | 首个真实1×1 Conv的typed参数、HIGH-4物理tile与golden P/D已闭合；target Conv JSON/bitstream和simulator均缺失 | 等待权威Conv字段/runner资料后只恢复该tile；不扩整网 |
 
 ### 当前可立即执行队列
 
@@ -79,7 +79,8 @@
 9. 【已完成】C6用两个共享Local子任务隔离审计6个GEMM/GEMV与11个sum族模板；主任务完成公共报告0.4、backend fail-closed绑定和确定性复核。未生成正式W5实例。
 10. 【已完成】C7单线程建立W3 hw_op/tensor/qparams到正式配置字段的typed参数合同、provenance和严格失败测试；覆盖78节点/133 hw_op、491个initializer参数引用和三态字段解析，只定义参数映射，没有生成patched JSON、bitstream或execplan。
 11. 【已完成】按ADR-009完成最小DeepSeek基线继承闭环：schema 0.3不再强迫全网group/global二选一；公共物理合同与ResNet W4差异合同均按本地证据hash验证；七族绑定到`local`或`HIGH-4`，LOW-28只保留为未选替代；没有伪造elaboration日志。全量G4审计12/12为true，阻塞列表为空，正式结束W4。
-12. 【下一步/单线程】按`.agents/W5_HANDOFF.md`进入W5首个INT8 Conv纵向闭环：先沿DeepSeek链定位真正消费目标JSON/bitstream并导出D的数值模拟器入口；再优先选择`hwop-0004-00`这类真实1×1/stride1实例或经审查更合适的最简单真实Conv tile，从C7 typed合同取activation/weight/bias/qparams，建立SA+stream+buffer、INT32 psum、requant、padding/tail和溢出拒绝。固定环境下JSON/bitstream逐字节复现属于G5配置证据；同一physical输入经目标模拟器得到的logical P/D与W3 golden bit-exact才属于G6数值证据。只做一个实例；模拟器入口缺失时停止横向扩展，不提前生成整网W5。
+12. 【部分完成/按停止条件阻塞】已定位DeepSeek链：`model_execplan/main.py -e`只打包patched JSON与`dram_data.bin`，`run_all_slices.py`只调用bitstream编码器；没有数值runner、退出码/D dump接口或Conv JSON。首例固定为`node-0004`/`hwop-0004-00~01`，真实typed参数无损进入preflight；group0/K0～15/N0～2 tile的四段K psum、nearest-even requant、W3 logical P/D与W4 physical P/D均bit-exact，证据见`artifacts/w5/hwop-0004-00/preflight.json`。未生成patched target JSON、bitstream或mapping review，G5/G6均未通过。
+13. 【下一步/单线程/需外部权威证据】取得并版本锁定两组资料后才恢复同一tile：一是实际消费当前JSON/bitstream的target simulator命令、版本、输入包、退出码和physical D格式；二是28-slice INT8 Conv的LC/stream/buffer/SA/GA字段合同，至少覆盖nonzero INT32 bias、首/中/末K psum、per-channel requant、nearest-even、UINT8 saturation和唯一flush。恢复后先生成并重复编码这一份tile，做字段round-trip/范围/溢出/unknown-field拒绝，再用同一physical bundle跑target simulator；在此之前不实现猜测性解释器、不生成整网W5、不宣称G5/G6/G8通过。
 
 Local执行环境已从事故前ZIP选择性恢复并重新验收：Python 3.12.13、`pip check`、三个锁定参考仓和根测试均通过；没有恢复任何managed-worktree junction。后续依赖任务可使用Local主任务或共享目录协作子任务，独立managed worktree仍只允许tracked-only工作。
 
@@ -445,6 +446,8 @@ W1的模型、RTL、正式配置来源和W4物理基线子任务已完成，但G
 
 ### W5：逐算子JSON和bitstream【难度：很高】
 
+**当前首包状态（2026-07-14）：已开始，停在G5-preflight阻塞。** 三条接手检查全部通过（根仓clean、四项lock匹配、238/238测试通过）。真实`node-0004` 1×1 Conv的字段级tensor/qparam provenance、W4 HIGH-4物理计划和首tile四段K生命周期已经登记；独立重算P/D与W3 golden及physical bytes均零差异。配置权威仓42个JSON中具名Conv模板数为0；`config_generator_ver2.py/config_nse.py`只提供`SLICE_NUM=16`、bias关闭的旧硬编码提示；DeepSeek emulator导出只有bundle、没有执行器。因此本包严格未写target JSON/bitstream，当前报告状态为`g5_preflight_blocked_before_target_json`。
+
 0. 首个实例开工前沿DeepSeek已完成工程定位实际JSON/bitstream→数值执行→D dump入口，区分真正runner与只生成emulator bundle的打包脚本。入口缺失不阻止一个实例的配置preflight，但会阻止横向扩展和G6结论。
 1. 建立 operator family→模板选择表，区分SA/GA、local/ring和首/中/末tile。
 2. 实现字段级shape/qparams patch，不做文本字符串替换。
@@ -468,7 +471,7 @@ W1的模型、RTL、正式配置来源和W4物理基线子任务已完成，但G
 
 验收门 G6：每个hw_op的golden=simulator；整数bit-exact，浮点按manifest tolerance；重复运行稳定。
 
-当前前置进度（2026-07-14）：`NdpRtl28FunctionalAdapter`已证明RTL28 Conv物理bundle可在保留slice owner/offset的可逆shadow几何中进入既有NDP functional model，group4x7实际覆盖七个HIGH环，global profile覆盖显式LOW代表路径，并返回int32 accumulator、UINT8 D和inverse logical D。该adapter自描述为`candidate_only`，没有读取目标JSON、执行目标ISA/RTL或取得target simulator版本，因此`target_simulator_validated=false`、`g6_validated=false`；它只降低后续W6接线风险，不改变G6。
+当前前置进度（2026-07-14）：`NdpRtl28FunctionalAdapter`已证明RTL28 Conv物理bundle可在保留slice owner/offset的可逆shadow几何中进入既有NDP functional model，group4x7实际覆盖七个HIGH环，global profile覆盖显式LOW代表路径，并返回int32 accumulator、UINT8 D和inverse logical D。W5首例又证明正式`node-0004`首个HIGH-4 tile的真实typed A/B/bias/qparams、四段INT32生命周期、W3 P/D与W4 physical bytes一致，但没有执行目标JSON/ISA。仓内外均未取得target simulator入口，明确登记`B_TARGET_SIMULATOR_ENTRY`；因此`target_simulator_validated=false`、`g6_validated=false`，不能进入网络execplan。
 
 ### W7：网络execplan和数据包【难度：高】
 
