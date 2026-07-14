@@ -32,6 +32,7 @@ class Rtl28LegacyIsolationTests(unittest.TestCase):
                 "MaxPoolPhysicalLayout",
                 "GlobalAveragePoolPhysicalLayout",
                 "QLinearMatMulPhysicalLayout",
+                "QLinearAddPhysicalLayout",
             }.issubset(exported)
         )
 
@@ -50,6 +51,7 @@ class Rtl28LegacyIsolationTests(unittest.TestCase):
             "resnet50_pipeline/conv28_layout.py",
             "resnet50_pipeline/pool28_layout.py",
             "resnet50_pipeline/matmul28_layout.py",
+            "resnet50_pipeline/add28_layout.py",
         ):
             source = (ROOT / relative_path).read_text(encoding="utf-8")
             self.assertNotIn("LEGACY_DRAM_GEOMETRY16", source, relative_path)

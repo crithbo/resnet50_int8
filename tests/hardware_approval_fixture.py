@@ -21,8 +21,8 @@ def valid_hardware_approval(
 ) -> dict[str, Any]:
     """Return structurally valid synthetic RTL28 approval data for negative gate tests.
 
-    The fixture proves schema/validator behavior only.  Its planned layout IDs and
-    synthetic evidence never make it current-gate eligible.
+    The fixture proves schema/validator behavior only.  Its synthetic evidence
+    never makes it current-gate eligible.
     """
 
     physical_object = {

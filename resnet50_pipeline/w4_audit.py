@@ -9,6 +9,7 @@ from .add16_layout import (
     QLinearAddBatch16PhysicalLayout,
     QLinearAddChannel16PhysicalLayout,
 )
+from .add28_layout import QLinearAddPhysicalLayout
 from .avgpool16_layout import (
     GlobalAveragePoolBatch16PhysicalLayout,
     GlobalAveragePoolChannel16PhysicalLayout,
@@ -125,6 +126,16 @@ def _plugin_interfaces() -> list[dict[str, Any]]:
         ("w4_conv_global_ring28_candidate_v1", "rtl28", QLinearConvPhysicalLayout),
         ("w4_maxpool_group4x7_28_candidate_v1", "rtl28", MaxPoolPhysicalLayout),
         ("w4_maxpool_global_ring28_candidate_v1", "rtl28", MaxPoolPhysicalLayout),
+        (
+            "w4_qlinearadd_group4x7_28_candidate_v1",
+            "rtl28",
+            QLinearAddPhysicalLayout,
+        ),
+        (
+            "w4_qlinearadd_global_ring28_candidate_v1",
+            "rtl28",
+            QLinearAddPhysicalLayout,
+        ),
         (
             "w4_globalavgpool_group4x7_28_candidate_v1",
             "rtl28",

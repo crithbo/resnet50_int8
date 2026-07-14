@@ -42,19 +42,27 @@ class W4GateAuditTests(unittest.TestCase):
         self.assertEqual(
             report["gate_decision"]["software_candidate_readiness"], "fail"
         )
-        self.assertEqual(report["candidate_layouts"]["count"], 12)
+        self.assertEqual(report["candidate_layouts"]["count"], 14)
         self.assertEqual(
             report["current_target_evidence"]["layout_evidence_families"],
-            ["conv", "global_average_pool", "matmul", "maxpool", "simple", "view"],
+            [
+                "add",
+                "conv",
+                "global_average_pool",
+                "matmul",
+                "maxpool",
+                "simple",
+                "view",
+            ],
         )
         current_interfaces = [
             item
             for item in report["plugin_interfaces"]
             if item["target_family"] == "rtl28"
         ]
-        self.assertEqual(len(current_interfaces), 14)
+        self.assertEqual(len(current_interfaces), 16)
         self.assertTrue(all(item["interface_complete"] for item in current_interfaces))
-        self.assertFalse(
+        self.assertTrue(
             report["current_target_evidence"]["registered_layout_evidence_complete"]
         )
         self.assertTrue(
@@ -109,7 +117,7 @@ class W4GateAuditTests(unittest.TestCase):
             "hardware_approval_not_gate_authority_eligible",
             report["hardware_approval"]["current_gate_eligibility_reasons"],
         )
-        self.assertIn(
+        self.assertNotIn(
             "target28_operator_layout_evidence_incomplete",
             report["hardware_approval"]["current_gate_eligibility_reasons"],
         )

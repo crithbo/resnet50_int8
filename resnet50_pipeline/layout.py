@@ -46,6 +46,11 @@ from .simple_layout import (  # noqa: E402  (keeps the protocol definitions firs
     ZeroCopyViewLayout,
     ZeroCopyViewProof,
 )
+from .add28_layout import (  # noqa: E402
+    ADD28_LAYOUT_IDS,
+    Add28PhysicalBundle,
+    QLinearAddPhysicalLayout,
+)
 from .conv28_layout import (  # noqa: E402
     CONV28_LAYOUT_IDS,
     Conv28PhysicalBundle,
@@ -65,6 +70,8 @@ from .pool28_layout import (  # noqa: E402
     PoolPhysicalBundle,
 )
 __all__ = [
+    "ADD28_LAYOUT_IDS",
+    "Add28PhysicalBundle",
     "CONV28_LAYOUT_IDS",
     "Conv28PhysicalBundle",
     "Conv28PhysicalPlan",
@@ -80,6 +87,7 @@ __all__ = [
     "PoolPhysicalBundle",
     "QuantizeLinearPhysicalLayout",
     "QLinearConvPhysicalLayout",
+    "QLinearAddPhysicalLayout",
     "QLinearMatMulPhysicalLayout",
     "Rtl28PhysicalBundle",
     "Rtl28PhysicalRegion",

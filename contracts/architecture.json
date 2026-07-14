@@ -59,10 +59,7 @@
     "bytes_per_slice_formula": "bank_count * row_count * col_count * subword_bytes",
     "address_order": "slice_owner, local_bank, row, column, byte_offset"
   },
-  "planned_layouts": {
-    "w4_qlinearadd_group4x7_28_candidate_v1": {"target_family": "rtl28", "slice_count": 28, "operator_family": "add", "status": "planned", "current_gate_eligible": false},
-    "w4_qlinearadd_global_ring28_candidate_v1": {"target_family": "rtl28", "slice_count": 28, "operator_family": "add", "status": "planned", "current_gate_eligible": false}
-  },
+  "planned_layouts": {},
   "candidate_layouts": {
     "w4_simple_group4x7_28_candidate_v1": {
       "target_family": "rtl28",
@@ -177,6 +174,40 @@
       "packing": "NHWC-local, little-endian and 16-byte aligned; spatial padding is distinct from channel tails",
       "window": "kernel coordinates are resolved without materializing im2col and preserve Conv-D to MaxPool-A byte compatibility",
       "implementation": "resnet50_pipeline/pool28_layout.py"
+    },
+    "w4_qlinearadd_group4x7_28_candidate_v1": {
+      "target_family": "rtl28",
+      "slice_count": 28,
+      "operator_family": "add",
+      "profile_id": "w4_group4x7_batch_channel28_candidate_v1",
+      "status": "candidate",
+      "current_gate_eligible": true,
+      "scope": "QLinearAdd reversible group4x7 software layout; not hardware-approved",
+      "mapping": "same-shape A/B/D share sample groups and per-HIGH-ring feature owners; dense [N,F]+[F] B follows feature owners and is replicated across seven groups",
+      "qparams": "A, B and Y retain six independent scalar qparam ports replicated on all 28 slices",
+      "broadcast": "only equal rank-2/rank-4 and dense [N,F]+[F] are accepted; all other broadcasting fails closed",
+      "tails": "A/B/D use their independent a_zero_point/b_zero_point/y_zero_point tails",
+      "alias": "A and B may alias exact producer D bytes only at identical per-slice bases; any overlap between simultaneously live A/B ranges is rejected",
+      "geometry_status": "candidate_unapproved",
+      "address_order_status": "candidate_unapproved",
+      "implementation": "resnet50_pipeline/add28_layout.py"
+    },
+    "w4_qlinearadd_global_ring28_candidate_v1": {
+      "target_family": "rtl28",
+      "slice_count": 28,
+      "operator_family": "add",
+      "profile_id": "w4_global_ring28_candidate_v1",
+      "status": "candidate",
+      "current_gate_eligible": true,
+      "scope": "QLinearAdd reversible LOW-ring software layout; not hardware-approved",
+      "mapping": "same-shape A/B/D retain all 16 samples and share explicit LOW-ring feature owners; dense [F] B follows the same feature ownership",
+      "qparams": "A, B and Y retain six independent scalar qparam ports replicated on all 28 slices",
+      "broadcast": "only equal rank-2/rank-4 and dense [N,F]+[F] are accepted; all other broadcasting fails closed",
+      "tails": "A/B/D use their independent a_zero_point/b_zero_point/y_zero_point tails",
+      "alias": "A and B may alias exact producer D bytes only at identical per-slice bases; any overlap between simultaneously live A/B ranges is rejected",
+      "geometry_status": "candidate_unapproved",
+      "address_order_status": "candidate_unapproved",
+      "implementation": "resnet50_pipeline/add28_layout.py"
     },
     "w4_globalavgpool_group4x7_28_candidate_v1": {
       "target_family": "rtl28",

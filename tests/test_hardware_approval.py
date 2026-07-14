@@ -26,7 +26,7 @@ class HardwareApprovalTests(unittest.TestCase):
             (root / "contracts/architecture.json").read_text(encoding="utf-8")
         )
 
-    def test_valid_rtl28_structure_passes_without_layout_gate_evidence(self) -> None:
+    def test_valid_rtl28_structure_sees_complete_candidate_layout_registry(self) -> None:
         approval = valid_hardware_approval()
         approval["physical_objects"]["qparams"]["owner"] = "configuration registers"
         approval["physical_objects"]["qparams"]["address_unit"] = "register field"
@@ -37,7 +37,7 @@ class HardwareApprovalTests(unittest.TestCase):
         )
         self.assertEqual(result["slice_count"], 28)
         self.assertTrue(result["clean_elaboration_approved"])
-        self.assertFalse(result["layout_evidence_complete"])
+        self.assertTrue(result["layout_evidence_complete"])
 
     def test_missing_runtime_dump_fails(self) -> None:
         approval = valid_hardware_approval()

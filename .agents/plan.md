@@ -52,7 +52,7 @@
 
 - **已通过**：W0/G0集成骨架，W2/G2小Conv候选软件纵向闭环，W3/G3正式图/lowering/全节点与subop golden。
 - **部分通过**：W1已冻结正式候选模型、固定输入、预处理和软件量化事实；目标RTL候选已选`Trassic2.0_RTL@e3bdebba...`和28-slice。candidate审计已固定权威top/filelist、命令/WREG、HIGH/LOW、DRAM、SA/GA及运行接口的静态证据，但clean elaboration、正式端口layout、量化/requant、JSON/emulator和板级协议未批准，所以G1仍未通过。
-- **当前主线**：ADR-007已由操作者采用。旧16-slice W4的12个candidate、93边审计和成本报告已隔离为历史证据；审计框架、生命周期/alias算法和逻辑比较器继续复用。C0/C1以及C2第一波Conv、Pool（MaxPool+GAP）、MatMul正逆物理布局已完成主任务串行集成，现有12个RTL28 candidate layout覆盖simple、view、conv、maxpool、global_average_pool、matmul六个家族，167项根测试通过。下一步按依赖关系单线程实现QLinearAdd，再做RTL28整网C3审计。G4=`not_passed`、`w5_authorized=false`；不生成正式W5 JSON/bitstream。
+- **当前主线**：ADR-007已由操作者采用。旧16-slice W4的12个candidate、93边审计和成本报告已隔离为历史证据；审计框架、生命周期/alias算法和逻辑比较器继续复用。C0/C1及C2逐算子布局已完成：14个RTL28 candidate layout覆盖simple、view、conv、maxpool、add、global_average_pool、matmul七个家族；QLinearAdd的双残差分支、六个独立qparam端口、正式广播范围、D布局和双输入同时活跃alias约束已有确定性回归，根仓176项测试通过。下一步单线程进入RTL28整网C3审计。G4=`not_passed`、`w5_authorized=false`；不生成正式W5 JSON/bitstream。
 - **当前边界**：W2只证明小合成Conv的golden=NDP functional model；W3公式重放仍属于golden侧。当前没有任何正式ResNet算子达到golden=target simulator=hardware。
 
 ### 接手进度总表
@@ -63,15 +63,15 @@
 | W1 | G1未通过 | 模型、固定输入、预处理、ONNX量化事实；已选28-slice RTL并完成必要candidate静态审计 | 补clean elaboration、量化/端口/固件/板级批准合同 |
 | W2 | G2通过 | 1/4-slice小Conv候选layout和NDP functional数值闭环 | 作为W4 fixture，不外推为硬件规格 |
 | W3 | G3通过 | 78节点、133 hw_op、79 runtime tensor、55内部tensor、旧77映射 | 不重跑大artifact，除非hash/合同失效 |
-| W4 | 旧16-slice readiness历史通过；28-slice重开/G4未通过 | C0/C1及C2第一波完成；12个RTL28 candidate覆盖除Add外的六个家族，正逆布局、容量、tail与候选报告已回归 | 单线程实现Add，再重审RTL28 93边/成本；不进W5 |
+| W4 | 旧16-slice readiness历史通过；28-slice重开/G4未通过 | C0/C1/C2逐算子布局完成；14个RTL28 candidate覆盖七个家族，正逆布局、容量、tail、广播与alias负例已回归 | 单线程重审RTL28 93边/成本/生命周期；不进W5 |
 | W5～W9 | 未通过 | W9通用比较器基础设施已前置完成；其余仅有参考框架或mock接口 | 等待对应前置门和真实结果通过 |
 
 ### 当前可立即执行队列
 
 1. 【已完成】终审16-slice泄漏：current layout registry只含RTL28/28，公共layout不导出旧16类；旧通用`conv_coverage.py`、`network_dry_run.py`和`w4_profiles.py`显式标为legacy16-only并由自动回归约束。
 2. 【已完成】按P4使用三个共享Local协作子任务，严格隔离Conv、MaxPool+GAP、MatMul的实现/测试/候选报告文件；子任务未编辑公共合同、`.agents`或Git。
-3. 【已完成】Local主任务依次复核三路结果，统一更新公共`layout.py`、`architecture.json`、coverage和G4插件登记；12个candidate/2个planned合同通过，167项根测试通过。
-4. 【下一步】单线程实现QLinearAdd的双残差分支、各自qparams、广播、D布局和双输入同时活跃的地址约束；随后进入C3，重新生成RTL28 transition、93边、91 qparam链、16个残差Add、生命周期/alias和性能成本报告。
+3. 【已完成】Local主任务依次复核三路结果，统一更新公共`layout.py`、`architecture.json`、coverage和G4插件登记；随后单线程完成QLinearAdd，当前为14个candidate/0个planned，七个必需布局家族均已登记。
+4. 【下一步】进入C3，重新生成RTL28 transition、93边、91 qparam链、16个残差Add、生命周期/alias和性能成本报告；仍不读取W3大tensor、不生成正式W5产物。
 5. 可独立推进W1的clean elaboration、量化/端口/固件/板级批准合同；没有approved合同不得宣布G4/G5通过。若模型、预处理、量化公式或lowering变化，先列出全部失效manifest/hash和下游产物。
 
 Local执行环境已从事故前ZIP选择性恢复并重新验收：Python 3.12.13、`pip check`、三个锁定参考仓和根测试均通过；没有恢复任何managed-worktree junction。后续依赖任务可使用Local主任务或共享目录协作子任务，独立managed worktree仍只允许tracked-only工作。
@@ -363,7 +363,7 @@ W1的模型子任务已完成，但G1尚未通过；architecture/quantization/ba
 
 ### W4：逐算子28-slice relayout与性能profile【难度：高】
 
-当前状态（2026-07-13）：ADR-007已采用，旧16-slice W4物理候选全部失效为历史参考。W4按新目标重开；W0～W3不重做，旧93边集合、生命周期/alias算法和逻辑比较器复用，旧物理签名、容量与ring成本不复用。真实`topology28`和`profile28`调度底座、C0-01～07机器合同/legacy隔离、C1公共geometry与Quantize/Dequantize/View，以及C2第一波Conv、MaxPool、GAP、MatMul正逆布局已经完成；167项根测试通过。现行G4、architecture/approval/backend合同、九份旧报告、旧生成器和RTL external evidence继续fail-closed。当前12个candidate layout覆盖simple、view、conv、maxpool、global_average_pool、matmul六个家族，只有QLinearAdd的两个profile仍为planned；RTL28 93边/成本、正式硬件批准和clean elaboration仍缺，因此G4未通过且W5未授权。下一步依赖已冻结的producer布局，单线程实现QLinearAdd。
+当前状态（2026-07-14）：ADR-007已采用，旧16-slice W4物理候选全部失效为历史参考。W4按新目标重开；W0～W3不重做，旧93边集合、生命周期/alias算法和逻辑比较器复用，旧物理签名、容量与ring成本不复用。真实`topology28`和`profile28`调度底座、C0-01～07机器合同/legacy隔离、C1公共geometry与Quantize/Dequantize/View，以及C2的Conv、MaxPool、GAP、MatMul、QLinearAdd两profile正逆布局已经完成，176项根测试通过。现行G4、architecture/approval/backend合同、九份旧报告、旧生成器和RTL external evidence继续fail-closed。当前14个candidate layout覆盖七个必需家族，planned registry为空；RTL28 93边/成本、正式硬件批准和clean elaboration仍缺，因此G4未通过且W5未授权。下一步单线程进入C3整网审计。
 
 #### 方案切换遗留修改清单（2026-07-13全工作文件夹复审）
 
@@ -382,6 +382,7 @@ W1的模型子任务已完成，但G1尚未通过；architecture/quantization/ba
 | C1-01 | P1/C1 | `memory.py`无参数`DramGeometry()`静默默认16并固化旧address order；新代码易误用 | 已分离显式`TARGET_DRAM_GEOMETRY28`与`LEGACY_DRAM_GEOMETRY16`，并禁止无参构造；未批准地址解释保持candidate | current 28路径不存在隐式16默认；旧16回归显式申请legacy几何；141项根测试通过 | 已完成 |
 | C1-02 | P1/C1 | `simple_layout.py`名称通用但硬要求16；`layout.py`公共入口仍正常导出所有旧16类 | 已用28公共Quantize/Dequantize/View实现替换current导出；旧实现迁至`simple16_layout.py`，明确只作历史回归 | current registry/public API只暴露28合同；旧测试继续在legacy suite通过；4个layout由planned转candidate | 已完成 |
 | C2-01 | P1/C2 | Conv、MaxPool/GAP、MatMul仍只有旧16实现或W2小fixture，无法表达七个HIGH小环和LOW大环 | 三个共享Local子任务按互不重叠文件并行实现，主任务逐项复核并串行登记公共API/合同；8个layout由planned转candidate | 两profile正逆bit-exact、tail/对齐/容量/显式owner/transition负例通过；公共registry只剩Add；167项根测试通过 | 已完成 |
+| C2-02 | P1/C2 | QLinearAdd仍缺RTL28双分支布局，不能验证残差owner、独立qparams、广播和双输入生命周期 | 主任务单线程实现两profile；只支持同shape rank-2/rank-4及`[N,F]+[F]`，其他广播fail-closed；A/B精确alias分别验证且同时活跃范围不得重叠 | 17个正式Add shape均可规划；Conv/既有Add/MatMul D兼容证明、双alias冲突与非冲突负例、正逆/tail/破坏性测试通过；2个layout转candidate | 已完成 |
 | C3-01 | P1/C3 | `w4_profiles.py`和`network_dry_run.py`仍把16同时当batch、slice/owner和ring步数，无法表达`[3,3,2,2,2,2,2]`与GAP后唯一转换 | 等28 producer/consumer layout冻结后重写profile transition、93边、生命周期/alias与成本审计，不机械改名旧公式 | 报告以28真实owner/HIGH/LOW计算，区分模型batch16与slice28；旧网络报告只作legacy | 待执行 |
 | DOC-01 | P1/C0同批 | `agent.md`曾混写旧main缺陷、参考工具权威性和错误下一步 | 摘要/优先级已改为C0完成→C1；明确ndp-sim只作框架参考、NDPFuncModel仅W2 backend，并区分上游固定入口与W2修复 | `agent.md`摘要、当前优先级和详细地图已一致 | 已完成 |
 | DOC-02 | P1/C0同批 | 算子规则曾把W3全节点golden/manifest、ResNet lowerer和旧一sample一slice写成当前待办 | 相关段已标W1/W3前历史；当前事实为W3 79 runtime+55 internal/78节点与W2五层链已过，缺口改为28 physical、JSON实例/execplan adapter、target sim/hw | 不再诱导重跑W3或恢复旧16调度，旧脚本缺陷仍保留为历史证据 | 已完成 |
@@ -399,7 +400,7 @@ W1的模型子任务已完成，但G1尚未通过；architecture/quantization/ba
 2. Quantize/Dequantize/View：建立七batch group、环内C/F owner、zero-copy和FP32/UINT8 packing规则。【C1已完成；group4x7与global LOW两个profile共4个candidate layout】
 3. Conv：主体profile使用七小环；每组负责`[3,3,2,2,2,2,2]`个样本，activation按C owner环行4步/3 hop，weight在七组复制并按K owner分片，bias/qparams/P/D跟随K owner。【C2第一波已完成group4x7与global LOW候选】
 4. MaxPool：保持batch group和channel owner，窗口/padding/tail在本地完成。【C2第一波已完成两profile候选】
-5. QLinearAdd：两残差分支必须具有相同batch group、C/K owner、物理轴和tail；A/B各自qparams保持独立，双分支地址同时活跃时不得冲突。
+5. QLinearAdd：两残差分支必须具有相同batch group、C/K owner和物理轴；A/B/D分别使用自身zero point tail，六个qparam端口保持独立，双分支地址同时活跃时不得冲突。【C2已完成两profile候选；正式范围为同shape rank-2/rank-4与dense `[N,F]+[F]`】
 6. GlobalAveragePool：每个channel owner本地完成H×W centered sum/requant，不做不必要的跨组归约。【C2第一波已完成两profile候选】
 7. MatMul/dense：先实现七小环一致profile；另实现`w4_global_ring28_candidate_v1`代表层，优先比较GAP后`[16,2048]×[2048,1000]`。【C2第一波已完成两profile候选及显式转换分类】
 8. transition：不得在残差块内切profile；第一版整网最多允许一次小环→大环显式转换，优先放在GAP后，只有总成本/实测占优才启用。
@@ -418,7 +419,7 @@ W1的模型子任务已完成，但G1尚未通过；architecture/quantization/ba
 
 **并行判定门P4，2026-07-13已通过并完成第一波。** 三个共享Local协作子任务分别只修改Conv、Pool、MatMul的独立实现/测试/候选报告文件，未触碰`.agents`、公共合同、共享geometry/profile/topology或Git；主任务按Conv→Pool→MatMul顺序复核后串行集成公共API、合同和门审计。该隔离方式有效，未发生交叉覆盖。
 
-**W4-28C2：第一波已完成，Add待单线程完成。** Conv、MaxPool/GAP、MatMul分别提供group4x7和global LOW的forward/inverse/explain/validate、正式shape容量计划、tail/对齐破坏性负例和小型确定候选报告；主任务已把8个布局登记为current candidate并跑过167项全量测试。下一步不再并行拆分，直接实现依赖这些producer布局的QLinearAdd，验证两残差分支独立qparams、owner/tail兼容、广播和同时活跃地址。
+**W4-28C2：逐算子布局已完成。** Conv、MaxPool/GAP、MatMul、QLinearAdd分别提供group4x7和global LOW的forward/inverse/explain/validate、正式shape容量计划、tail/对齐破坏性负例和小型确定候选报告。Add额外冻结六个独立qparam端口、三种语义tail、正式广播白名单，以及A/B同时活跃时逐slice地址区间不能重叠；默认两个Conv D即使字节兼容，只要地址相撞也会拒绝双alias。14个布局均为current candidate但仍未硬件批准；根仓176项全量测试通过。
 
 **W4-28C3：整网审计，单线程。** 在Local统一实现允许的profile transition，重跑新28-slice的93边、91条qparam链、16个残差Add、生命周期/alias和成本报告；报告包含lane利用率、hop字节、weight复制、容量、3/2 barrier尾部和转换成本，不宣称cycle。最后接入版本化硬件批准与clean elaboration证据重新审G4；未满足全部五项门槛时继续停在W4。
 
@@ -613,7 +614,7 @@ W0实现前还需把以上补充转成可执行的schema字段、测试用例和
 
 目标：把 raw tensor 转成 simulator/hardware 使用的物理格式，并能无损逆变换回来。
 
-状态：旧16-slice逐算子candidate已被ADR-007判定为目标失效。当前28-slice已完成除QLinearAdd外六个家族的两profile软件candidate；Add、RTL28整网物理审计和硬件批准仍待完成。
+状态：旧16-slice逐算子candidate已被ADR-007判定为目标失效。当前28-slice已完成七个家族的两profile软件candidate；RTL28整网物理审计和硬件批准仍待完成。
 
 难度：高。主要风险是正式 layout 未确认、Conv weight/im2col、尾块和不同算子间 layout 衔接。
 
@@ -631,9 +632,9 @@ W0实现前还需把以上补充转成可执行的schema字段、测试用例和
 | QuantizeLinear | FP32输入、scale/zp、七batch group的UINT8输出及逆变换 | C1两profile candidate已完成 |
 | QLinearConv | activation、OIHW weight、bias、scale/zp、最终int32 P和D；逐K-tile边界在W5细化 | C2两profile candidate已完成 |
 | MaxPool | UINT8 activation、padding/tail、保持group/channel owner的D | C2两profile candidate已完成 |
-| QLinearAdd | 两残差输入、各自qparams、owner兼容、广播和UINT8 D | 28-slice需重建；双alias地址待W7 |
+| QLinearAdd | 两残差输入、各自qparams、owner兼容、广播和UINT8 D | C2两profile candidate已完成；双alias范围冲突已fail-closed，整网地址分配在C3复核 |
 | QLinearGlobalAveragePool | activation、owner-local int32 sum、requant参数和D | C2两profile candidate已完成 |
-| QLinearMatMul / dense Add | feature、weight、qparams、最终int32 P和D；dense bias属于后继Add | MatMul两profile candidate已完成；dense Add待本轮Add |
+| QLinearMatMul / dense Add | feature、weight、qparams、最终int32 P和D；dense bias属于后继Add | MatMul及dense Add两profile candidate均已完成 |
 | DequantizeLinear | UINT8输入、scale/zp和FP32 D | C1两profile candidate已完成 |
 | Flatten/View | 证明物理零拷贝，或实现显式forward/inverse重排 | C1两profile zero-copy candidate已完成 |
 
