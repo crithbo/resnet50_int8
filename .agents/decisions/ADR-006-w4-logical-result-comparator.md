@@ -29,4 +29,4 @@
 - 本工作没有读取或重算约951 MB的W3 golden，只用小型临时tensor做回归。
 - 本工作没有生成正式W5 JSON、bitstream、execplan、DDR地址或硬件执行包。
 - 当前没有目标simulator/hardware逻辑输出，因此只批准“比较工具就绪”，不批准任何真实三方一致结论。
-- G4现按ADR-007重建28-slice布局与性能候选；比较器继续有效，但就绪只新增一个软件criteria，不会自动授权W5。
+- 比较器本身从未授权W5；W5授权来自后续ADR-009的物理合同与G4 v2闭环。当前W4 inverse layout已经批准，但仍没有目标simulator/hardware结果，因此比较器只保持“工具就绪”，尚无G6/G8或真实三方通过结论。

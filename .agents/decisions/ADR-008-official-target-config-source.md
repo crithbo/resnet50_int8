@@ -11,9 +11,9 @@
 2. `model_execplan/config/register_map_with_groups1.csv`用于解释JSON字段的寄存器/端口语义；实际字段排列遵循同一commit中`register_mapping.py`已经实现的规则：读取`Nbit`宽度前缀并按行累加，不使用CSV内不可靠的`[high:low]`说明文字直接排位。
 3. 每个ResNet算子在形成正式W5实例前，必须依次通过：结构/资源/字段范围前置校验、JSON→编码类→寄存器CSV字段追踪、固定进程哈希和seed的两次bitstream复现、相关字段差分敏感性、非法字段fail-closed。未通过的模板不能因CLI退出0而放行。
 4. 官方底层`Bit`会按字段宽度取模；根项目必须在调用官方编码器前拒绝溢出，不能修改或猜测官方JSON后继续静默截断。
-5. 本决定消除“目标JSON/bitstream配置来源和版本未知”这一项，但不改变G4门：clean elaboration、批准物理layout/profile、数值requant/qparams、目标数值模拟器以及板级load/start/wait/dump仍需各自证据。
+5. 本决定只消除“目标JSON/bitstream配置来源和版本未知”这一项。采用当时它不改变G4；后续ADR-009已经批准W4物理layout/profile并关闭G4。数值requant/qparams、目标数值模拟器以及板级load/start/wait/dump仍分别属于W5/W6/W8。
 
-## MaxPool首条验证结果
+## 采用时的MaxPool首条验证结果（历史起点）
 
 - 42个静态JSON均可读取，其中7个是ResNet或共享候选模板、35个以DeepSeek/Transformer为主；没有文件名或静态模板明确表示Conv。
 - 正式MaxPool模板`jsons/maxpool_config_16_112_112_stride2_padding1.json`通过结构、20 LC/10 LC-PE/5 buffer loop/4读1写stream/6 buffer/4×4 GA等资源上限和字段范围检查。
@@ -28,18 +28,18 @@
 
 旧参数镜像、16-slice文件和活动配置链仍不得混用；本纠正不表示所有42个模板、ResNet全部算子、shape handler、qparams或地址规划已经正确。
 
-## 明确不宣称
+## 本ADR采用时明确不宣称
 
 - MaxPool bitstream复现不等于MaxPool数值结果正确。
 - 正式配置来源不等于`model_execplan`已有完整ResNet handler；当前仍没有命名Conv模板。
-- 本决定不批准W4 candidate物理布局，不使`hardware_approval.json`出现，也不使G1/G4通过。
-- 本决定不生成正式W5 JSON/bitstream、execplan、Bank_data或板卡包。
+- 本决定自身不批准W4 candidate物理布局，也不单独使G1/G4通过；后来的W4批准来自ADR-009及其引用合同，不能反向归因给本ADR。
+- 本决定采用时没有生成正式W5 JSON/bitstream、execplan、Bank_data或板卡包。当前W5虽已获授权，仍尚未开始首个正式实例。
 
 ## 后续顺序
 
 以下是本ADR刚采用时的历史顺序；其中模板审计和typed参数合同已完成，W4/G4也已由ADR-009关闭。尚未完成的数值模拟器与板级协议继续属于W6/W8。
 
-1. 先把同一审计扩展到另一个MaxPool模板、AvgPool、Quantize、Add/Dequantize、GEMV/MatMul和sum模板，形成可复用字段规则。
-2. 从W3稳定`hw_op_id`和qparams建立ResNet参数化adapter；没有现成Conv模板时，先以SA/stream/buffer正式字段组合出最小候选，并继续保持非正式W5状态。
-3. 目标数值模拟器能执行同一配置后，先完成一个MaxPool或Quantize的golden=simulator，再扩大算子覆盖。
-4. 收到clean elaboration、物理layout/profile及板级协议后重审G4；只有门通过才生成正式W5实例。
+1. 【已完成】把同一审计扩展到另一个MaxPool模板、AvgPool、Quantize、Add/Dequantize、GEMV/MatMul和sum模板，形成可复用字段规则。
+2. 【已完成W4参数合同】从W3稳定`hw_op_id`和qparams建立typed参数合同；尚未生成正式ResNet实例。
+3. 【当前W5】先沿DeepSeek链定位真正消费目标JSON/bitstream并导出D的数值模拟器入口，再以一个真实1×1 Conv建立SA/stream/buffer、typed qparams、bias/psum/requant最小配置。
+4. 第一份配置形成后立即用目标模拟器比较golden的INT32 P和UINT8 D；配置确定性属于G5，数值一致属于G6。板级协议继续在W8独立验收。

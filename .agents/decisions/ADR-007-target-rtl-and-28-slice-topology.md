@@ -18,7 +18,7 @@
 - `master`与`dc`的活动`NDP_Parameters.svh`、`NDP_Top.sv`、主filelist以及SA/GA计算阵列语义一致，均为28-slice。
 - `master`更新，且在活动路径增加或修订neighbor buffer bank mask、基于真实slice启动的remote flag清理、AXI写地址/数据解耦及PHY/APB配置，因此在功能完整性相近时选择最新`master`。
 - `xilinx`分支为旧16-slice版本，文件和功能覆盖明显较少；其综合脚本仍含工艺库、时钟等TODO，不作为目标版本。
-- 目标commit仍不是“已验证可构建”的批准版本：当前`NDP_Top.sv`声明模块`NDP_Top_new`，而部分lint脚本仍指定`NDP_Top`；仓库只有旧的失败lint摘要，没有本项目可重放的clean elaboration/bitstream证据。因此W1/G1仍需补编译与接口合同。
+- 本ADR采用时，目标commit仍没有本项目可重放的clean elaboration证据：`NDP_Top.sv`声明模块`NDP_Top_new`，部分lint脚本却仍指定`NDP_Top`。ADR-009后来以操作者对已完成DeepSeek整网硬件基线的具名确认关闭W4，并明确`clean_elaboration_claimed=false`；新的elaboration日志仍可补作RTL诊断，但不再回退G4。
 
 ## 物理拓扑
 
@@ -74,7 +74,7 @@ G5: N[12:14]  G6: N[14:16]
 - `ADR-003`、`ADR-005`及`artifacts/w4/*16*`/旧双profile报告只保留历史；其93条边集合、生命周期/alias算法和报告schema可复用，物理数值不可复用。
 - `ADR-004`的版本化批准机制继续使用，但批准合同必须描述28-slice和真实物理环。
 - `ADR-006`的逻辑结果比较器与slice数无关，继续使用。
-- 旧`config/utils/config_parameters*.py`的16-slice镜像只作历史字段线索。后续ADR-008已根据操作者确认，把`ndp-sim-ref@e299b280...`的JSON/bitstream/model_execplan链升级为正式硬件配置来源，并完成MaxPool首条逐字段审计；这不反向批准本ADR中的物理layout、RTL clean elaboration或数值执行。
+- 旧`config/utils/config_parameters*.py`的16-slice镜像只作历史字段线索。后续ADR-008把`ndp-sim-ref@e299b280...`的JSON/bitstream/model_execplan链升级为正式硬件配置来源，C4～C6已完成Pool、GA、SA和sum族静态审计；ADR-009另行批准W4物理layout。以上仍不批准W5 INT8数值执行、目标simulator或板级运行。
 
 ## 2026-07-13提出的新G4门（历史，现由ADR-009覆盖）
 

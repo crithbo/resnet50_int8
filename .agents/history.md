@@ -1,10 +1,10 @@
 # ResNet50 INT8 工作日志
 
-最后更新：2026-07-13
+最后更新：2026-07-14
 
-本文件只保留已经发生的关键决策、验证和状态变化。当前任务看 `.agents/plan.md`，代码和仓库细节看 `.agents/agent.md`，单算子推导看 `.agents/rules/算子配置规则.md`。
+本文件只保留已经发生的关键决策、验证和状态变化。W5新对话先看`.agents/W5_HANDOFF.md`，当前任务看`.agents/plan.md`，W4错误追溯先看`.agents/W4_ARCHIVE.md`，代码和仓库细节看`.agents/agent.md`，单算子推导看`.agents/rules/算子配置规则.md`。
 
-> 当前口径提示（2026-07-13）：ADR-007已经把目标切换并固定为28-slice RTL候选及七个4-slice小环主profile。本文此前关于16-slice W4布局、ring/channel成本和G4审计的条目均为历史证据，不再代表当前物理方案；W0～W3及约951 MB golden仍有效，28-slice W4已重开，G4未通过且W5未授权。
+> 当前口径提示（2026-07-14）：ADR-009已经完成DeepSeek公共物理基线继承，正式profile为`w4_deepseek_hybrid28_resnet50_v1`，G4 v2的12项条件全部为true，W4结束且W5已授权；同时`clean_elaboration_claimed=false`，尚无目标simulator、硬件或三方数值通过。本文旧条目中的16-slice方案、group/global二选一、“等待clean elaboration”“G4未通过”“下一步C8”等均是当时事实，不能作为当前任务。W4业务闭环为`952a96b...`，精确追溯见`.agents/W4_ARCHIVE.md`。
 
 ## Git提交、GitHub备份与本地空间规则（2026-07-13现行修正）
 
