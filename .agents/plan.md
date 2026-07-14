@@ -430,6 +430,10 @@ W1的模型子任务已完成，但G1尚未通过；architecture/quantization/ba
 
 **W4-28C4：正式配置来源冻结与Pool族三模板前置审计已完成。** ADR-008和backend 0.2把`ndp-sim-ref@e299b280...`固定为正式JSON/bitstream/execplan配置来源，但明确不升级为数值模拟器或硬件backend。审计盘点42个JSON（7个ResNet/共享、35个DeepSeek/Transformer、0个命名Conv），验证两个MaxPool和一个AvgPool的结构/资源/字段范围，按正式`register_mapping.py`的“宽度前缀+行顺序”规则证明10类模块与编码器总宽对齐；固定进程哈希/UTF-8/seed后每个模板两次全部输出一致，地址差分敏感且溢出fail-closed。两个MaxPool的16个shape/调度差异和2个planner地址差异已完整归因；AvgPool只完成uint8→int32 sum，除法/requant仍缺。该步骤只生成`contracts/target_config_authority_audit.json`，不生成正式W5配置，不改变G4/W5状态。
 
+**W4-28C5：Quant与Add-Dequant公共GA crosswalk已单线程完成。** `quant_from_buffer_int32MN_uint8MN`已证明是INT32累加结果到UINT8的requant候选，而不是ONNX FP32 `QuantizeLinear`直连模板：八路GA均执行`int32→fp32`、乘固定0.06375、加入编码后为`0x4b400040`的FP32魔数、再以`int32_sub`减raw `0x4b400000`，由此静态样例导出输出zero point 64；RTL静态证据确认末端负数夹0、超8位夹255，但nearest-even只确认到魔数配方，尚无目标数值执行。`add_dequant_uint8CWH_uint8CWH_fp32CWH`两路均为`uint8→fp32`，静态计算`(A*1+1)+(B*1+1)`并输出FP32，不读取`y_scale/y_zero_point`，因此不是完整QLinearAdd或QLinearAdd+Dequantize融合。锁定ONNX中的2个Quantize、2个Dequantize和17个QLinearAdd标量qparams已只读提取，三个直接匹配计数均为0；正式常量注入规则冻结为Quant的multiplier/魔数zero-point patch和Add-Dequant两支独立`scale`、`-zero_point*scale` patch。现有execplan handler只修改5/8个shape与stream-stride字段，`OperatorSpec`没有typed qparams，仍是进入正式配置前必须补的缺口。两模板均通过结构、确定性、GA constant差分敏感性和溢出fail-closed；报告保持数值未验证，不授权W5。
+
+**W4-28C6下一候选波次：GEMV/MatMul与sum组配置审计，尚未开始。** 公共GA字段、constant编码、dtype转换、preflight和报告语义已经稳定，两个算子组主要模板与测试文件可隔离，适合采用两个共享Local并行子任务；主任务继续单线程持有公共crosswalk、合同/backend、权威报告生成、`.agents`与Git集成。并行A只审计GEMV/MatMul的SA/GA边界、INT8缺口、bias/psum/requant和shape联动；并行B只审计local/remote/summac/sum-rec的归约轴、跨slice流、输出dtype与完成事件。两组都只生成临时审计结果，不得生成正式W5实例；主任务串行复核后才决定是否把结论写入公共合同。
+
 ### W5：逐算子JSON和bitstream【难度：很高】
 
 1. 建立 operator family→模板选择表，区分SA/GA、local/ring和首/中/末tile。

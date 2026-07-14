@@ -1,10 +1,13 @@
 from __future__ import annotations
 
+import ast
 import csv
 import hashlib
 import json
+import math
 import os
 import re
+import struct
 import subprocess
 import sys
 import tempfile
@@ -21,6 +24,16 @@ OFFICIAL_CONFIG_SLICE_COUNT = 28
 MAXPOOL_TEMPLATE = "maxpool_config_16_112_112_stride2_padding1.json"
 SECOND_MAXPOOL_TEMPLATE = "maxpool_config_16_16_16_stride2_padding1.json"
 AVGPOOL_TEMPLATE = "avgpool_config_2048_7_7.json"
+QUANT_TEMPLATE = "quant_from_buffer_int32MN_uint8MN.json"
+ADD_DEQUANT_TEMPLATE = "add_dequant_uint8CWH_uint8CWH_fp32CWH.json"
+
+_FP32_ROUND_MAGIC = 12_582_912.0
+_FP32_ROUND_MAGIC_BITS = 0x4B400000
+_QUANT_MAC_PES = ("PE00", "PE02", "PE10", "PE12", "PE20", "PE22", "PE30", "PE32")
+_QUANT_SUB_PES = ("PE01", "PE03", "PE11", "PE13", "PE21", "PE23", "PE31", "PE33")
+_ADD_DEQUANT_A_PES = ("PE00", "PE02", "PE20", "PE22")
+_ADD_DEQUANT_B_PES = ("PE01", "PE03", "PE21", "PE23")
+_ADD_DEQUANT_SUM_PES = ("PE10", "PE12", "PE30", "PE32")
 
 _RESOURCE_PATTERNS = {
     "dram_loop_configs": (re.compile(r"LC\d+$"), 20),
@@ -169,11 +182,24 @@ def _validate_loop_port(
     if isinstance(src_id, int):
         _uint(src_id, src_width, f"{path}.src_id")
     constant = port["constant"]
-    if isinstance(constant, int) and not isinstance(constant, bool):
+    if isinstance(constant, bool):
+        raise TargetConfigAuditError(f"{path}.constant must be a finite numeric value")
+    if isinstance(constant, int):
         if not -(1 << (constant_width - 1)) <= constant < 1 << constant_width:
             raise TargetConfigAuditError(
                 f"{path}.constant={constant} exceeds the {constant_width}-bit encoded field"
             )
+    elif isinstance(constant, float):
+        if not math.isfinite(constant):
+            raise TargetConfigAuditError(f"{path}.constant must be finite")
+        try:
+            struct.pack("<f", constant)
+        except OverflowError as error:
+            raise TargetConfigAuditError(
+                f"{path}.constant cannot be represented as fp32"
+            ) from error
+    elif constant is not None:
+        raise TargetConfigAuditError(f"{path}.constant must be numeric or null")
 
 
 def _validate_pool_stream(value: Any, path: str) -> str:
@@ -257,13 +283,13 @@ def _validate_pool_stream(value: Any, path: str) -> str:
     return mode
 
 
-def _validate_pool_template(
+def _validate_ga_template(
     config: dict[str, Any],
     *,
     label: str,
     allowed_ga_opcodes: set[str],
 ) -> dict[str, Any]:
-    """Validate a Pool-family template before invoking its wrapping encoder."""
+    """Validate a GA template before invoking the wrapping official encoder."""
 
     expected_top = {
         "CONFIG",
@@ -383,7 +409,12 @@ def _validate_pool_template(
                 f"general_array.PE_array.{name} must use one of "
                 f"{sorted(allowed_ga_opcodes)}"
             )
-        _uint(pe.get("transout_last_index"), 4, f"general_array.PE_array.{name}.transout_last_index")
+        _uint(
+            pe.get("transout_last_index"),
+            4,
+            f"general_array.PE_array.{name}.transout_last_index",
+            nullable=True,
+        )
         for index in range(3):
             _validate_loop_port(
                 pe.get(f"inport{index}"),
@@ -414,7 +445,7 @@ def _validate_pool_template(
 def validate_maxpool_template(config: dict[str, Any]) -> dict[str, Any]:
     """Validate an official MaxPool template before encoding."""
 
-    return _validate_pool_template(
+    return _validate_ga_template(
         config,
         label="maxpool",
         allowed_ga_opcodes={"int8_max"},
@@ -424,7 +455,7 @@ def validate_maxpool_template(config: dict[str, Any]) -> dict[str, Any]:
 def validate_avgpool_template(config: dict[str, Any]) -> dict[str, Any]:
     """Validate the official AvgPool reduction template before encoding."""
 
-    return _validate_pool_template(
+    return _validate_ga_template(
         config,
         label="avgpool",
         allowed_ga_opcodes={"int32_sum"},
@@ -442,6 +473,177 @@ def _expect_fields(
             raise TargetConfigAuditError(
                 f"{path}.{field}={actual!r}, expected {wanted!r} from Pool linkage"
             )
+
+
+def _flag(value: Any) -> bool:
+    if value in (True, "true"):
+        return True
+    if value in (False, "false"):
+        return False
+    raise TargetConfigAuditError(f"invalid boolean flag: {value!r}")
+
+
+def _expect_port_role(
+    port: dict[str, Any],
+    *,
+    src_id: Any,
+    mode: str | None,
+    path: str,
+) -> None:
+    if port.get("src_id") != src_id or port.get("mode") != mode:
+        raise TargetConfigAuditError(
+            f"{path} source/mode differs from the audited GA topology"
+        )
+
+
+def validate_quant_template(config: dict[str, Any]) -> dict[str, Any]:
+    """Validate the INT32-buffer-to-UINT8 GA requant template topology."""
+
+    structural = _validate_ga_template(
+        config,
+        label="quant_from_buffer",
+        allowed_ga_opcodes={"mac", "int32_sub"},
+    )
+    ga = config["general_array"]
+    inports = ga["inport"]
+    if set(inports) != {"inport0", "inport1", "inport2"}:
+        raise TargetConfigAuditError("quant template must expose three GA inport records")
+    for name, record in inports.items():
+        conversions = {
+            field: _flag(record[field])
+            for field in (
+                "fp16tofp32",
+                "bf16tofp32",
+                "int32tofp32",
+                "uint8tofp32",
+                "uint8toint32",
+            )
+        }
+        expected = {
+            "fp16tofp32": False,
+            "bf16tofp32": False,
+            "int32tofp32": name == "inport0",
+            "uint8tofp32": False,
+            "uint8toint32": False,
+        }
+        if conversions != expected:
+            raise TargetConfigAuditError(f"quant {name} conversion route differs")
+    if inports["inport0"]["mask"] != [1] * 8:
+        raise TargetConfigAuditError("quant input lane mask must expose eight INT32 lanes")
+    outport = ga["outport"]
+    if (
+        outport["mask"] != [1] * 8
+        or outport["src_id"] != 1
+        or _flag(outport["fp32tofp16"])
+        or _flag(outport["fp32tobf16"])
+        or not _flag(outport["int32touint8"])
+    ):
+        raise TargetConfigAuditError("quant output route must clamp INT32 to eight UINT8 lanes")
+
+    pes = ga["PE_array"]
+    if set(pes) != set(_QUANT_MAC_PES) | set(_QUANT_SUB_PES):
+        raise TargetConfigAuditError("quant template must use the audited 8 MAC + 8 INT32_SUB topology")
+    for mac_name, sub_name in zip(_QUANT_MAC_PES, _QUANT_SUB_PES, strict=True):
+        mac = pes[mac_name]
+        sub = pes[sub_name]
+        if mac["alu_opcode"] != "mac" or sub["alu_opcode"] != "int32_sub":
+            raise TargetConfigAuditError("quant GA opcode pairing differs")
+        _expect_port_role(
+            mac["inport0"], src_id=0, mode="buffer", path=f"quant.{mac_name}.inport0"
+        )
+        _expect_port_role(
+            mac["inport1"], src_id=None, mode="constant", path=f"quant.{mac_name}.inport1"
+        )
+        _expect_port_role(
+            mac["inport2"], src_id=None, mode="constant", path=f"quant.{mac_name}.inport2"
+        )
+        _expect_port_role(
+            sub["inport0"],
+            src_id=f"GA_PE.{mac_name}",
+            mode="buffer",
+            path=f"quant.{sub_name}.inport0",
+        )
+        _expect_port_role(
+            sub["inport1"], src_id=None, mode="constant", path=f"quant.{sub_name}.inport1"
+        )
+    return {
+        **structural,
+        "stage_scope": "int32_input_to_uint8_requant_candidate",
+        "ga_topology": "8x(mac_then_int32_sub)",
+    }
+
+
+def validate_add_dequant_template(config: dict[str, Any]) -> dict[str, Any]:
+    """Validate the two-branch UINT8-to-FP32 affine-add GA topology."""
+
+    structural = _validate_ga_template(
+        config,
+        label="add_dequant",
+        allowed_ga_opcodes={"mac", "add"},
+    )
+    ga = config["general_array"]
+    inports = ga["inport"]
+    active_mask = [1, 0, 1, 0, 1, 0, 1, 0]
+    for name in ("inport0", "inport1"):
+        record = inports[name]
+        if record["mask"] != active_mask or not _flag(record["uint8tofp32"]):
+            raise TargetConfigAuditError(f"add-dequant {name} must convert four UINT8 lanes to FP32")
+        if any(
+            _flag(record[field])
+            for field in ("fp16tofp32", "bf16tofp32", "int32tofp32", "uint8toint32")
+        ):
+            raise TargetConfigAuditError(f"add-dequant {name} enables an unexpected conversion")
+    outport = ga["outport"]
+    if (
+        outport["mask"] != [0, 1, 0, 1, 0, 1, 0, 1]
+        or outport["src_id"] != 0
+        or any(
+            _flag(outport[field])
+            for field in ("fp32tofp16", "fp32tobf16", "int32touint8")
+        )
+    ):
+        raise TargetConfigAuditError("add-dequant output route must remain FP32")
+
+    pes = ga["PE_array"]
+    expected_pes = set(_ADD_DEQUANT_A_PES) | set(_ADD_DEQUANT_B_PES) | set(_ADD_DEQUANT_SUM_PES)
+    if set(pes) != expected_pes:
+        raise TargetConfigAuditError("add-dequant template must use the audited 8 MAC + 4 ADD topology")
+    for name in _ADD_DEQUANT_A_PES:
+        pe = pes[name]
+        if pe["alu_opcode"] != "mac":
+            raise TargetConfigAuditError(f"add-dequant {name} must be MAC")
+        _expect_port_role(pe["inport0"], src_id=0, mode="buffer", path=f"add_dequant.{name}.inport0")
+        _expect_port_role(pe["inport1"], src_id=None, mode="constant", path=f"add_dequant.{name}.inport1")
+        _expect_port_role(pe["inport2"], src_id=None, mode="constant", path=f"add_dequant.{name}.inport2")
+    for name in _ADD_DEQUANT_B_PES:
+        pe = pes[name]
+        if pe["alu_opcode"] != "mac":
+            raise TargetConfigAuditError(f"add-dequant {name} must be MAC")
+        _expect_port_role(pe["inport0"], src_id=None, mode="constant", path=f"add_dequant.{name}.inport0")
+        _expect_port_role(pe["inport1"], src_id=0, mode="buffer", path=f"add_dequant.{name}.inport1")
+        _expect_port_role(pe["inport2"], src_id=None, mode="constant", path=f"add_dequant.{name}.inport2")
+    sum_sources = {
+        "PE10": ("GA_PE.PE01", "GA_PE.PE00"),
+        "PE12": ("GA_PE.PE03", "GA_PE.PE02"),
+        "PE30": ("GA_PE.PE21", "GA_PE.PE20"),
+        "PE32": ("GA_PE.PE23", "GA_PE.PE22"),
+    }
+    for name, sources in sum_sources.items():
+        pe = pes[name]
+        if pe["alu_opcode"] != "add":
+            raise TargetConfigAuditError(f"add-dequant {name} must be ADD")
+        for index, source in enumerate(sources):
+            _expect_port_role(
+                pe[f"inport{index}"],
+                src_id=source,
+                mode="buffer",
+                path=f"add_dequant.{name}.inport{index}",
+            )
+    return {
+        **structural,
+        "stage_scope": "two_uint8_inputs_to_fp32_affine_sum_only",
+        "ga_topology": "4x(two_branch_mac_then_add)",
+    }
 
 
 def _active_ga_pe_names(config: dict[str, Any]) -> list[str]:
@@ -960,6 +1162,366 @@ def extract_pool_family_linkage(
     }
 
 
+def _fp32(value: float) -> float:
+    return struct.unpack("<f", struct.pack("<f", float(value)))[0]
+
+
+def _fp32_bits(value: float) -> int:
+    return struct.unpack("<I", struct.pack("<f", float(value)))[0]
+
+
+def quant_requant_constant_patch(
+    *,
+    multiplier: float,
+    output_zero_point: int,
+) -> dict[str, float | int]:
+    """Return semantic constant patches without emitting a W5 JSON instance."""
+
+    if not math.isfinite(multiplier) or multiplier <= 0:
+        raise TargetConfigAuditError("requant multiplier must be finite and positive")
+    _uint(output_zero_point, 8, "output_zero_point")
+    multiplier_fp32 = _fp32(multiplier)
+    magic_addend = _fp32(_FP32_ROUND_MAGIC + output_zero_point)
+    patch: dict[str, float | int] = {}
+    for mac_name, sub_name in zip(_QUANT_MAC_PES, _QUANT_SUB_PES, strict=True):
+        patch[f"general_array.PE_array.{mac_name}.inport1.constant"] = multiplier_fp32
+        patch[f"general_array.PE_array.{mac_name}.inport2.constant"] = magic_addend
+        patch[f"general_array.PE_array.{sub_name}.inport1.constant"] = _FP32_ROUND_MAGIC_BITS
+    return patch
+
+
+def add_dequant_constant_patch(
+    *,
+    a_scale: float,
+    a_zero_point: int,
+    b_scale: float,
+    b_zero_point: int,
+) -> dict[str, float | int]:
+    """Return patches for `(A-zA)*sA + (B-zB)*sB` with FP32 output."""
+
+    for name, scale in (("a_scale", a_scale), ("b_scale", b_scale)):
+        if not math.isfinite(scale) or scale <= 0:
+            raise TargetConfigAuditError(f"{name} must be finite and positive")
+    _uint(a_zero_point, 8, "a_zero_point")
+    _uint(b_zero_point, 8, "b_zero_point")
+    a_scale_fp32 = _fp32(a_scale)
+    b_scale_fp32 = _fp32(b_scale)
+    a_offset_fp32 = _fp32(-a_zero_point * a_scale_fp32)
+    b_offset_fp32 = _fp32(-b_zero_point * b_scale_fp32)
+    patch: dict[str, float | int] = {}
+    for name in _ADD_DEQUANT_A_PES:
+        patch[f"general_array.PE_array.{name}.inport1.constant"] = a_scale_fp32
+        patch[f"general_array.PE_array.{name}.inport2.constant"] = a_offset_fp32
+    for name in _ADD_DEQUANT_B_PES:
+        patch[f"general_array.PE_array.{name}.inport0.constant"] = b_scale_fp32
+        patch[f"general_array.PE_array.{name}.inport2.constant"] = b_offset_fp32
+    return patch
+
+
+def extract_ga_quant_add_crosswalk(
+    quant: dict[str, Any],
+    add_dequant: dict[str, Any],
+) -> dict[str, Any]:
+    """Extract the evidence-bounded dtype, constant, and qparam GA crosswalk."""
+
+    quant_structural = validate_quant_template(quant)
+    add_structural = validate_add_dequant_template(add_dequant)
+    quant_pes = quant["general_array"]["PE_array"]
+    multipliers = {quant_pes[name]["inport1"]["constant"] for name in _QUANT_MAC_PES}
+    addends = {quant_pes[name]["inport2"]["constant"] for name in _QUANT_MAC_PES}
+    subtracts = {quant_pes[name]["inport1"]["constant"] for name in _QUANT_SUB_PES}
+    if len(multipliers) != 1 or len(addends) != 1 or subtracts != {_FP32_ROUND_MAGIC_BITS}:
+        raise TargetConfigAuditError("quant template lanes do not share one audited constant recipe")
+    multiplier = float(next(iter(multipliers)))
+    addend_literal = float(next(iter(addends)))
+    addend_encoded_bits = _fp32_bits(addend_literal)
+    addend_encoded_value = struct.unpack("<f", struct.pack("<I", addend_encoded_bits))[0]
+    output_zero_point = int(addend_encoded_value - _FP32_ROUND_MAGIC)
+    if not 0 <= output_zero_point <= 255:
+        raise TargetConfigAuditError("quant magic addend does not encode a UINT8 zero point")
+
+    add_pes = add_dequant["general_array"]["PE_array"]
+    a_scales = {add_pes[name]["inport1"]["constant"] for name in _ADD_DEQUANT_A_PES}
+    a_offsets = {add_pes[name]["inport2"]["constant"] for name in _ADD_DEQUANT_A_PES}
+    b_scales = {add_pes[name]["inport0"]["constant"] for name in _ADD_DEQUANT_B_PES}
+    b_offsets = {add_pes[name]["inport2"]["constant"] for name in _ADD_DEQUANT_B_PES}
+    if any(len(values) != 1 for values in (a_scales, a_offsets, b_scales, b_offsets)):
+        raise TargetConfigAuditError("add-dequant branch constants differ between lanes")
+    a_scale = float(next(iter(a_scales)))
+    a_offset = float(next(iter(a_offsets)))
+    b_scale = float(next(iter(b_scales)))
+    b_offset = float(next(iter(b_offsets)))
+
+    return {
+        "status": "passed",
+        "rule_scope": "two_official_static_ga_templates_at_locked_commit",
+        "shared_chain": ["shape", "LC", "stream", "buffer", "GA"],
+        "quant_from_buffer": {
+            "structural_validation": quant_structural,
+            "declared_dtype_path": ["int32_buffer", "fp32_mac", "int32_sub", "uint8_D"],
+            "fixed_constants": {
+                "multiplier_literal": multiplier,
+                "multiplier_fp32_bits": f"0x{_fp32_bits(multiplier):08x}",
+                "magic_addend_literal": addend_literal,
+                "magic_addend_encoded_fp32": addend_encoded_value,
+                "magic_addend_fp32_bits": f"0x{addend_encoded_bits:08x}",
+                "magic_subtract_raw_int32": _FP32_ROUND_MAGIC_BITS,
+                "magic_subtract_hex": f"0x{_FP32_ROUND_MAGIC_BITS:08x}",
+                "derived_output_zero_point": output_zero_point,
+            },
+            "inferred_recipe": "clamp_uint8(round_fp32_even(int32_input*multiplier)+output_zero_point)",
+            "rounding": {
+                "status": "recipe_identified_but_not_target_executed",
+                "intended_mode": "nearest_even_via_fp32_magic_add_and_raw_int32_subtract",
+                "caveat": "bit pattern proves the compiler recipe; target GA FP32 execution has no numerical replay in the available toolchain",
+            },
+            "saturation": {
+                "status": "rtl_static_semantics_identified",
+                "rule": "negative_to_0; any_bit_30_through_8_to_255; otherwise_low_8_bits",
+                "evidence": "contracts/rtl28_candidate_audit.json:EV_GA_CLAMP",
+            },
+            "formal_qparam_patch": {
+                "multiplier": "patch all eight MAC inport1 constants as fp32",
+                "output_zero_point": "encode as fp32(12582912 + y_zero_point) in all eight MAC inport2 constants",
+                "round_magic": "keep all eight INT32_SUB inport1 constants fixed at raw 0x4b400000",
+                "transport": "per-operator or per-output-channel-tile constant patch followed by official encoding",
+            },
+            "direct_onnx_quantize_linear_compatible": False,
+            "compatibility_reason": "template input is INT32 and consumes a requant multiplier; ONNX QuantizeLinear input is FP32 and consumes 1/y_scale",
+        },
+        "add_dequant": {
+            "structural_validation": add_structural,
+            "declared_dtype_path": ["uint8_A", "uint8_B", "two_fp32_affine_branches", "fp32_add", "fp32_D"],
+            "fixed_constants": {
+                "a_scale": a_scale,
+                "a_offset": a_offset,
+                "b_scale": b_scale,
+                "b_offset": b_offset,
+            },
+            "static_formula": f"(A*{a_scale}+{a_offset}) + (B*{b_scale}+{b_offset})",
+            "formal_fp32_formula": "(A-a_zero_point)*a_scale + (B-b_zero_point)*b_scale",
+            "formal_qparam_patch": {
+                "a_scale": "patch A-branch MAC multiplier constants",
+                "a_zero_point": "derive A-branch offset=-a_zero_point*a_scale",
+                "b_scale": "patch B-branch MAC multiplier constants",
+                "b_zero_point": "derive B-branch offset=-b_zero_point*b_scale",
+                "y_scale_and_y_zero_point": "not consumed because this template writes FP32",
+            },
+            "rounding": "none_in_template",
+            "saturation": "none_in_template",
+            "output_dtype": "fp32",
+            "complete_qlinearadd_compatible": False,
+            "compatibility_reason": "QLinearAdd requires y_scale/y_zero_point, nearest-even and UINT8 saturation; all are absent",
+        },
+        "formal_configuration_rule": {
+            "source_of_truth": "locked ONNX scalar initializers carried by an extended execution-plan operator schema",
+            "derivation": "derive constants from named qparams, validate fp32 encoding and lane replication, then patch an isolated template copy",
+            "forbidden": [
+                "reuse static sample constants as ResNet defaults",
+                "place floating-point qparams in the current integer-only/absent OperatorSpec params",
+                "treat successful bitstream encoding as numerical validation",
+            ],
+        },
+        "limits": [
+            "no target numerical simulator output",
+            "no hardware output",
+            "quant rounding recipe still requires target execution confirmation",
+            "add-dequant is not a complete QLinearAdd or QLinearAdd-plus-Dequantize fusion",
+        ],
+    }
+
+
+def audit_resnet_scalar_qparams(
+    model_path: Path,
+    *,
+    expected_sha256: str,
+) -> dict[str, Any]:
+    """Read only scalar ONNX initializers; never load W3 tensor payloads."""
+
+    if sha256_file(model_path) != expected_sha256:
+        raise TargetConfigAuditError("reference ONNX hash differs from the W3 model graph")
+    try:
+        import onnx
+        from onnx import numpy_helper
+    except ImportError as error:
+        raise TargetConfigAuditError("onnx is required to audit formal scalar qparams") from error
+
+    model = onnx.load(model_path, load_external_data=False)
+    initializers = {
+        initializer.name: numpy_helper.to_array(initializer)
+        for initializer in model.graph.initializer
+    }
+    positions = {
+        "QuantizeLinear": {"y_scale": 1, "y_zero_point": 2},
+        "DequantizeLinear": {"x_scale": 1, "x_zero_point": 2},
+        "QLinearAdd": {
+            "a_scale": 1,
+            "a_zero_point": 2,
+            "b_scale": 4,
+            "b_zero_point": 5,
+            "y_scale": 6,
+            "y_zero_point": 7,
+        },
+    }
+    records: list[dict[str, Any]] = []
+    for index, node in enumerate(model.graph.node):
+        if node.op_type not in positions:
+            continue
+        qparams: dict[str, Any] = {}
+        qparam_sources: dict[str, str] = {}
+        for field, input_index in positions[node.op_type].items():
+            source = node.input[input_index]
+            if source not in initializers or initializers[source].size != 1:
+                raise TargetConfigAuditError(
+                    f"{node.name}.{field} must be a scalar initializer"
+                )
+            value = initializers[source].reshape(-1)[0]
+            qparams[field] = float(value) if "scale" in field else int(value)
+            qparam_sources[field] = source
+        if any(
+            not math.isfinite(value) or value <= 0
+            for field, value in qparams.items()
+            if "scale" in field
+        ):
+            raise TargetConfigAuditError(f"{node.name} contains an invalid scale")
+        for field, value in qparams.items():
+            if "zero_point" in field:
+                _uint(value, 8, f"{node.name}.{field}")
+        records.append(
+            {
+                "graph_index": index,
+                "name": node.name,
+                "op_type": node.op_type,
+                "qparams": qparams,
+                "qparam_sources": qparam_sources,
+            }
+        )
+
+    counts = {
+        op_type: sum(record["op_type"] == op_type for record in records)
+        for op_type in positions
+    }
+    if counts != {"QuantizeLinear": 2, "DequantizeLinear": 2, "QLinearAdd": 17}:
+        raise TargetConfigAuditError(f"formal ResNet qparam operator counts differ: {counts}")
+    scales = [
+        value
+        for record in records
+        for field, value in record["qparams"].items()
+        if "scale" in field
+    ]
+    zero_points = [
+        value
+        for record in records
+        for field, value in record["qparams"].items()
+        if "zero_point" in field
+    ]
+    quant_records = [record for record in records if record["op_type"] == "QuantizeLinear"]
+    dequant_records = [
+        record for record in records if record["op_type"] == "DequantizeLinear"
+    ]
+    add_records = [record for record in records if record["op_type"] == "QLinearAdd"]
+    add_branch_matches = sum(
+        scale == 1.0 and _fp32(-zero_point * scale) == 1.0
+        for record in add_records
+        for scale, zero_point in (
+            (record["qparams"]["a_scale"], record["qparams"]["a_zero_point"]),
+            (record["qparams"]["b_scale"], record["qparams"]["b_zero_point"]),
+        )
+    )
+    return {
+        "status": "passed",
+        "source": {
+            "path": "artifacts/reference_model/resnet50-v1-12-int8.onnx",
+            "sha256": expected_sha256,
+            "read_scope": "ONNX scalar initializers only; no W3 NPY payloads",
+        },
+        "operator_counts": counts,
+        "scale_range": [min(scales), max(scales)],
+        "zero_point_range": [min(zero_points), max(zero_points)],
+        "records": records,
+        "static_template_comparison": {
+            "quant_template_multiplier": 0.06375,
+            "quant_template_output_zero_point": 64,
+            "quantize_linear_required_reciprocal_scales": [
+                1.0 / record["qparams"]["y_scale"] for record in quant_records
+            ],
+            "quantize_linear_output_zero_points": [
+                record["qparams"]["y_zero_point"] for record in quant_records
+            ],
+            "quantize_linear_direct_match_count": 0,
+            "dequantize_linear_scales": [
+                record["qparams"]["x_scale"] for record in dequant_records
+            ],
+            "dequantize_linear_zero_points": [
+                record["qparams"]["x_zero_point"] for record in dequant_records
+            ],
+            "dequantize_linear_fixed_branch_match_count": sum(
+                record["qparams"]["x_scale"] == 1.0
+                and _fp32(
+                    -record["qparams"]["x_zero_point"]
+                    * record["qparams"]["x_scale"]
+                )
+                == 1.0
+                for record in dequant_records
+            ),
+            "add_dequant_fixed_branch_scale": 1.0,
+            "add_dequant_fixed_branch_offset": 1.0,
+            "qlinearadd_branch_affine_match_count": add_branch_matches,
+            "qlinearadd_branch_count": 2 * len(add_records),
+            "qlinearadd_y_qparams_consumed_by_template": False,
+        },
+    }
+
+
+def audit_execplan_qparam_binding(source_root: Path) -> dict[str, Any]:
+    """Prove that current handlers patch shape/stride fields but no GA qparams."""
+
+    path = source_root / "model_execplan" / "src" / "execution_plan_generator" / "control_registers.py"
+    tree = ast.parse(path.read_text(encoding="utf-8"), filename=str(path))
+    function_names = {
+        "quant_from_buffer": "_compute_quant_from_buffer_int32MN_uint8MN_control_register_updates",
+        "add_dequant": "_compute_add_dequant_uint8CWH_uint8CWH_fp32CWH_control_register_updates",
+    }
+    fields: dict[str, list[str]] = {}
+    for label, function_name in function_names.items():
+        function = next(
+            (
+                node
+                for node in tree.body
+                if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef))
+                and node.name == function_name
+            ),
+            None,
+        )
+        if function is None:
+            raise TargetConfigAuditError(f"execplan handler is missing: {function_name}")
+        keys: set[str] = set()
+        for node in ast.walk(function):
+            if isinstance(node, ast.Return) and isinstance(node.value, ast.Dict):
+                for key in node.value.keys:
+                    if isinstance(key, ast.Constant) and isinstance(key.value, str):
+                        keys.add(key.value)
+        fields[label] = sorted(keys)
+    expected_counts = {"quant_from_buffer": 5, "add_dequant": 8}
+    if {name: len(value) for name, value in fields.items()} != expected_counts:
+        raise TargetConfigAuditError("execplan control-register handler fields differ")
+    if any(
+        "general_array" in field or "constant" in field
+        for values in fields.values()
+        for field in values
+    ):
+        raise TargetConfigAuditError("execplan handler unexpectedly writes a GA qparam constant")
+    return {
+        "status": "gap_confirmed",
+        "path": "model_execplan/src/execution_plan_generator/control_registers.py",
+        "sha256": sha256_file(path),
+        "handler_fields": fields,
+        "current_binding": "shape_and_stream_stride_only",
+        "ga_constant_qparams_patched": False,
+        "required_change": "extend OperatorSpec with typed scalar qparams and patch validated GA constant fields before encoding",
+    }
+
+
 def inventory_templates(source_root: Path) -> dict[str, Any]:
     json_root = source_root / "jsons"
     paths = sorted(json_root.glob("*.json"))
@@ -1209,11 +1771,13 @@ def _audit_template_encoder(
     source_root: Path,
     template_name: str,
     validator: Callable[[dict[str, Any]], dict[str, Any]],
+    *,
+    differential_mutation: Callable[[dict[str, Any]], tuple[str, Any, Any]] | None = None,
 ) -> dict[str, Any]:
     template_path = source_root / "jsons" / template_name
     config = json.loads(template_path.read_text(encoding="utf-8"))
     validation = validator(config)
-    with tempfile.TemporaryDirectory(prefix="rtl28-pool-audit-") as temp_text:
+    with tempfile.TemporaryDirectory(prefix="rtl28-ga-audit-") as temp_text:
         temp = Path(temp_text)
         baseline_a = _run_encoder(source_root, template_path, temp / "baseline-a")
         baseline_b = _run_encoder(source_root, template_path, temp / "baseline-b")
@@ -1221,11 +1785,17 @@ def _audit_template_encoder(
             raise TargetConfigAuditError("official encoder outputs are not deterministic")
 
         changed = deepcopy(config)
-        old_address = _base_address(
-            changed["stream_engine"]["stream0"]["base_addr"],
-            "stream_engine.stream0.base_addr",
-        )
-        changed["stream_engine"]["stream0"]["base_addr"] = old_address + 16
+        if differential_mutation is None:
+            old_address = _base_address(
+                changed["stream_engine"]["stream0"]["base_addr"],
+                "stream_engine.stream0.base_addr",
+            )
+            changed["stream_engine"]["stream0"]["base_addr"] = old_address + 16
+            changed_field = "stream_engine.stream0.base_addr"
+            original_value: Any = old_address
+            modified_value: Any = old_address + 16
+        else:
+            changed_field, original_value, modified_value = differential_mutation(changed)
         validator(changed)
         changed_path = temp / f"changed-{Path(template_name).stem}.json"
         changed_path.write_text(json.dumps(changed, ensure_ascii=False, sort_keys=True), encoding="utf-8")
@@ -1262,9 +1832,9 @@ def _audit_template_encoder(
         },
         "differential_sensitivity": {
             "status": "passed",
-            "field": "stream_engine.stream0.base_addr",
-            "original": old_address,
-            "modified": old_address + 16,
+            "field": changed_field,
+            "original": original_value,
+            "modified": modified_value,
             "baseline_128b_sha256": baseline_hash,
             "modified_128b_sha256": changed_hash,
         },
@@ -1274,6 +1844,22 @@ def _audit_template_encoder(
             "rejection": overflow_rejection,
         },
     }
+
+
+def _mutate_quant_multiplier(config: dict[str, Any]) -> tuple[str, Any, Any]:
+    path = "general_array.PE_array.PE00.inport1.constant"
+    port = config["general_array"]["PE_array"]["PE00"]["inport1"]
+    original = port["constant"]
+    port["constant"] = 0.125
+    return path, original, port["constant"]
+
+
+def _mutate_add_dequant_scale(config: dict[str, Any]) -> tuple[str, Any, Any]:
+    path = "general_array.PE_array.PE00.inport1.constant"
+    port = config["general_array"]["PE_array"]["PE00"]["inport1"]
+    original = port["constant"]
+    port["constant"] = 2.0
+    return path, original, port["constant"]
 
 
 def audit_maxpool_encoder(source_root: Path) -> dict[str, Any]:
@@ -1335,6 +1921,63 @@ def audit_pool_family(
     }
 
 
+def audit_ga_quant_add(
+    source_root: Path,
+    *,
+    model_path: Path,
+    model_sha256: str,
+) -> dict[str, Any]:
+    """Audit the common GA crosswalk while keeping numerical gates fail-closed."""
+
+    json_root = source_root / "jsons"
+    quant = json.loads((json_root / QUANT_TEMPLATE).read_text(encoding="utf-8"))
+    add_dequant = json.loads(
+        (json_root / ADD_DEQUANT_TEMPLATE).read_text(encoding="utf-8")
+    )
+    crosswalk = extract_ga_quant_add_crosswalk(quant, add_dequant)
+    probes = {
+        QUANT_TEMPLATE: _audit_template_encoder(
+            source_root,
+            QUANT_TEMPLATE,
+            validate_quant_template,
+            differential_mutation=_mutate_quant_multiplier,
+        ),
+        ADD_DEQUANT_TEMPLATE: _audit_template_encoder(
+            source_root,
+            ADD_DEQUANT_TEMPLATE,
+            validate_add_dequant_template,
+            differential_mutation=_mutate_add_dequant_scale,
+        ),
+    }
+    for template_name, probe in probes.items():
+        if (
+            probe.get("determinism", {}).get("status") != "passed"
+            or probe.get("differential_sensitivity", {}).get("status") != "passed"
+            or probe.get("fail_closed", {}).get("status") != "passed"
+        ):
+            raise TargetConfigAuditError(f"GA encoder probe did not pass: {template_name}")
+    return {
+        "status": "passed_with_numerical_gaps",
+        "template_count": 2,
+        "crosswalk": crosswalk,
+        "resnet_scalar_qparams": audit_resnet_scalar_qparams(
+            model_path,
+            expected_sha256=model_sha256,
+        ),
+        "execplan_qparam_binding": audit_execplan_qparam_binding(source_root),
+        "encoder_probes": probes,
+        "numerical_scope": {
+            "status": "not_validated",
+            "quant_rounding_recipe": "identified_not_target_executed",
+            "quant_uint8_saturation": "rtl_static_semantics_identified",
+            "add_dequant_fp32_affine_sum": "constants_patchable_not_target_executed",
+            "complete_qlinearadd": "absent",
+            "target_simulator_outputs": "unavailable",
+            "hardware_outputs": "unavailable",
+        },
+    }
+
+
 def build_authority_report(source_root: Path) -> dict[str, Any]:
     resolved = source_root.resolve()
     git = subprocess.run(
@@ -1378,8 +2021,19 @@ def build_authority_report(source_root: Path) -> dict[str, Any]:
         source_root,
         first_maxpool_probe=maxpool_probe,
     )
+    project_root = source_root.parent
+    model_graph_path = project_root / "artifacts" / "w3" / "model_graph.json"
+    model_graph = json.loads(model_graph_path.read_text(encoding="utf-8"))
+    ga_quant_add_probe = audit_ga_quant_add(
+        source_root,
+        model_path=project_root
+        / "artifacts"
+        / "reference_model"
+        / "resnet50-v1-12-int8.onnx",
+        model_sha256=model_graph["model_sha256"],
+    )
     return {
-        "schema_version": "0.2",
+        "schema_version": "0.3",
         "report_kind": "official_target_config_authority_audit",
         "status": "configuration_source_verified",
         "source": {
@@ -1410,12 +2064,15 @@ def build_authority_report(source_root: Path) -> dict[str, Any]:
                 "golden_simulator_hardware_equality",
                 "uint8_maxpool_comparison_semantics",
                 "qlinear_global_average_pool_requantization",
+                "quant_rounding_target_execution",
+                "complete_qlinearadd_from_add_dequant_template",
             ],
         },
         "inventory": inventory_templates(source_root),
         "register_map_audit": audit_register_map(source_root),
         "maxpool_probe": maxpool_probe,
         "pool_family_probe": pool_family_probe,
+        "ga_quant_add_probe": ga_quant_add_probe,
         "encoder_safety_findings": [
             "The official Bit type masks values modulo field width; the project preflight must reject overflow before encoding.",
             "A fixed mapper seed alone is insufficient across fresh Python processes; PYTHONHASHSEED=0 is required.",

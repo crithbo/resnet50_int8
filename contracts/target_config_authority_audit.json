@@ -12,7 +12,9 @@
       "board_load_start_wait_dump_protocol",
       "golden_simulator_hardware_equality",
       "uint8_maxpool_comparison_semantics",
-      "qlinear_global_average_pool_requantization"
+      "qlinear_global_average_pool_requantization",
+      "quant_rounding_target_execution",
+      "complete_qlinearadd_from_add_dequant_template"
     ]
   },
   "encoder_safety_findings": [
@@ -20,6 +22,967 @@
     "A fixed mapper seed alone is insufficient across fresh Python processes; PYTHONHASHSEED=0 is required.",
     "PYTHONUTF8=1 is required on Windows so diagnostic symbols do not fail under a GBK console."
   ],
+  "ga_quant_add_probe": {
+    "crosswalk": {
+      "add_dequant": {
+        "compatibility_reason": "QLinearAdd requires y_scale/y_zero_point, nearest-even and UINT8 saturation; all are absent",
+        "complete_qlinearadd_compatible": false,
+        "declared_dtype_path": [
+          "uint8_A",
+          "uint8_B",
+          "two_fp32_affine_branches",
+          "fp32_add",
+          "fp32_D"
+        ],
+        "fixed_constants": {
+          "a_offset": 1.0,
+          "a_scale": 1.0,
+          "b_offset": 1.0,
+          "b_scale": 1.0
+        },
+        "formal_fp32_formula": "(A-a_zero_point)*a_scale + (B-b_zero_point)*b_scale",
+        "formal_qparam_patch": {
+          "a_scale": "patch A-branch MAC multiplier constants",
+          "a_zero_point": "derive A-branch offset=-a_zero_point*a_scale",
+          "b_scale": "patch B-branch MAC multiplier constants",
+          "b_zero_point": "derive B-branch offset=-b_zero_point*b_scale",
+          "y_scale_and_y_zero_point": "not consumed because this template writes FP32"
+        },
+        "output_dtype": "fp32",
+        "rounding": "none_in_template",
+        "saturation": "none_in_template",
+        "static_formula": "(A*1.0+1.0) + (B*1.0+1.0)",
+        "structural_validation": {
+          "config_mask": "11011101",
+          "field_routes": {
+            "buffer_config": {
+              "encoder_class": "BufferConfig",
+              "resource_count": 6,
+              "source": "bitstream/config/buffer.py"
+            },
+            "buffer_loop_configs": {
+              "encoder_class": "BufferRowLCConfig+BufferColLCConfig",
+              "resource_count": 5,
+              "source": "bitstream/config/loop.py"
+            },
+            "dram_loop_configs": {
+              "encoder_class": "DramLoopControlConfig",
+              "resource_count": 20,
+              "source": "bitstream/config/loop.py"
+            },
+            "general_array.PE_array": {
+              "encoder_class": "GAPEConfig",
+              "resource_count": 16,
+              "source": "bitstream/config/general.py"
+            },
+            "general_array.inport": {
+              "encoder_class": "GAInportConfig",
+              "resource_count": 3,
+              "source": "bitstream/config/general.py"
+            },
+            "general_array.outport": {
+              "encoder_class": "GAOutportConfig",
+              "resource_count": 1,
+              "source": "bitstream/config/general.py"
+            },
+            "lc_pe_configs": {
+              "encoder_class": "LCPEConfig",
+              "resource_count": 10,
+              "source": "bitstream/config/loop.py"
+            },
+            "stream_engine": {
+              "encoder_class": "ReadStreamEngineConfig+WriteStreamEngineConfig",
+              "resource_count": "4 read + 1 write",
+              "source": "bitstream/config/stream.py"
+            }
+          },
+          "ga_opcodes": [
+            "add",
+            "mac"
+          ],
+          "ga_topology": "4x(two_branch_mac_then_add)",
+          "resources": {
+            "buffer_loop_groups": 3,
+            "buffers": 3,
+            "dram_loops": 5,
+            "ga_inports": 3,
+            "ga_pes": 12,
+            "loop_pes": 3,
+            "read_streams": 2,
+            "write_streams": 1
+          },
+          "stage_scope": "two_uint8_inputs_to_fp32_affine_sum_only",
+          "status": "valid",
+          "validation_scope": "structure_resources_field_ranges_and_routes_only"
+        }
+      },
+      "formal_configuration_rule": {
+        "derivation": "derive constants from named qparams, validate fp32 encoding and lane replication, then patch an isolated template copy",
+        "forbidden": [
+          "reuse static sample constants as ResNet defaults",
+          "place floating-point qparams in the current integer-only/absent OperatorSpec params",
+          "treat successful bitstream encoding as numerical validation"
+        ],
+        "source_of_truth": "locked ONNX scalar initializers carried by an extended execution-plan operator schema"
+      },
+      "limits": [
+        "no target numerical simulator output",
+        "no hardware output",
+        "quant rounding recipe still requires target execution confirmation",
+        "add-dequant is not a complete QLinearAdd or QLinearAdd-plus-Dequantize fusion"
+      ],
+      "quant_from_buffer": {
+        "compatibility_reason": "template input is INT32 and consumes a requant multiplier; ONNX QuantizeLinear input is FP32 and consumes 1/y_scale",
+        "declared_dtype_path": [
+          "int32_buffer",
+          "fp32_mac",
+          "int32_sub",
+          "uint8_D"
+        ],
+        "direct_onnx_quantize_linear_compatible": false,
+        "fixed_constants": {
+          "derived_output_zero_point": 64,
+          "magic_addend_encoded_fp32": 12582976.0,
+          "magic_addend_fp32_bits": "0x4b400040",
+          "magic_addend_literal": 12582975.75,
+          "magic_subtract_hex": "0x4b400000",
+          "magic_subtract_raw_int32": 1262485504,
+          "multiplier_fp32_bits": "0x3d828f5c",
+          "multiplier_literal": 0.06375
+        },
+        "formal_qparam_patch": {
+          "multiplier": "patch all eight MAC inport1 constants as fp32",
+          "output_zero_point": "encode as fp32(12582912 + y_zero_point) in all eight MAC inport2 constants",
+          "round_magic": "keep all eight INT32_SUB inport1 constants fixed at raw 0x4b400000",
+          "transport": "per-operator or per-output-channel-tile constant patch followed by official encoding"
+        },
+        "inferred_recipe": "clamp_uint8(round_fp32_even(int32_input*multiplier)+output_zero_point)",
+        "rounding": {
+          "caveat": "bit pattern proves the compiler recipe; target GA FP32 execution has no numerical replay in the available toolchain",
+          "intended_mode": "nearest_even_via_fp32_magic_add_and_raw_int32_subtract",
+          "status": "recipe_identified_but_not_target_executed"
+        },
+        "saturation": {
+          "evidence": "contracts/rtl28_candidate_audit.json:EV_GA_CLAMP",
+          "rule": "negative_to_0; any_bit_30_through_8_to_255; otherwise_low_8_bits",
+          "status": "rtl_static_semantics_identified"
+        },
+        "structural_validation": {
+          "config_mask": "11011101",
+          "field_routes": {
+            "buffer_config": {
+              "encoder_class": "BufferConfig",
+              "resource_count": 6,
+              "source": "bitstream/config/buffer.py"
+            },
+            "buffer_loop_configs": {
+              "encoder_class": "BufferRowLCConfig+BufferColLCConfig",
+              "resource_count": 5,
+              "source": "bitstream/config/loop.py"
+            },
+            "dram_loop_configs": {
+              "encoder_class": "DramLoopControlConfig",
+              "resource_count": 20,
+              "source": "bitstream/config/loop.py"
+            },
+            "general_array.PE_array": {
+              "encoder_class": "GAPEConfig",
+              "resource_count": 16,
+              "source": "bitstream/config/general.py"
+            },
+            "general_array.inport": {
+              "encoder_class": "GAInportConfig",
+              "resource_count": 3,
+              "source": "bitstream/config/general.py"
+            },
+            "general_array.outport": {
+              "encoder_class": "GAOutportConfig",
+              "resource_count": 1,
+              "source": "bitstream/config/general.py"
+            },
+            "lc_pe_configs": {
+              "encoder_class": "LCPEConfig",
+              "resource_count": 10,
+              "source": "bitstream/config/loop.py"
+            },
+            "stream_engine": {
+              "encoder_class": "ReadStreamEngineConfig+WriteStreamEngineConfig",
+              "resource_count": "4 read + 1 write",
+              "source": "bitstream/config/stream.py"
+            }
+          },
+          "ga_opcodes": [
+            "int32_sub",
+            "mac"
+          ],
+          "ga_topology": "8x(mac_then_int32_sub)",
+          "resources": {
+            "buffer_loop_groups": 2,
+            "buffers": 2,
+            "dram_loops": 3,
+            "ga_inports": 3,
+            "ga_pes": 16,
+            "loop_pes": 3,
+            "read_streams": 1,
+            "write_streams": 1
+          },
+          "stage_scope": "int32_input_to_uint8_requant_candidate",
+          "status": "valid",
+          "validation_scope": "structure_resources_field_ranges_and_routes_only"
+        }
+      },
+      "rule_scope": "two_official_static_ga_templates_at_locked_commit",
+      "shared_chain": [
+        "shape",
+        "LC",
+        "stream",
+        "buffer",
+        "GA"
+      ],
+      "status": "passed"
+    },
+    "encoder_probes": {
+      "add_dequant_uint8CWH_uint8CWH_fp32CWH.json": {
+        "determinism": {
+          "environment": {
+            "PYTHONHASHSEED": "0",
+            "PYTHONUTF8": "1"
+          },
+          "heuristic_iterations": 10000,
+          "heuristic_restarts": 10,
+          "outputs": {
+            "add_dequant_uint8CWH_uint8CWH_fp32CWH_bitstream_128b.bin": {
+              "sha256": "3f350bbc2d8be73237af594466bb0473026a5b4f829cfe1c0766fa7d96c0e0a3",
+              "size_bytes": 4680
+            },
+            "add_dequant_uint8CWH_uint8CWH_fp32CWH_bitstream_64b.bin": {
+              "sha256": "d896f88a57af657f6b6bea9cba91cdf8d55335b048d9153db0fb50bc635bc038",
+              "size_bytes": 4686
+            },
+            "detailed_dump.txt": {
+              "sha256": "3553c6abb9facd2ed3f5c628d40137d817adb50046a55723b92a4cf1004a3d4d",
+              "size_bytes": 45138
+            },
+            "mapping_review.json": {
+              "sha256": "3b53a2aab0832af75b31e0735df39d3917ade26dcf698d91ca7305312064d8db",
+              "size_bytes": 6967
+            },
+            "modules_dump_128b.bin": {
+              "sha256": "3f350bbc2d8be73237af594466bb0473026a5b4f829cfe1c0766fa7d96c0e0a3",
+              "size_bytes": 4680
+            },
+            "modules_dump_64b.bin": {
+              "sha256": "d896f88a57af657f6b6bea9cba91cdf8d55335b048d9153db0fb50bc635bc038",
+              "size_bytes": 4686
+            },
+            "parsed_bitstream.txt": {
+              "sha256": "faad04b8a286f2852f0cdec18bdcbcd6dbc22ea05d0b5a132ce4f083a8d7be31",
+              "size_bytes": 5102
+            }
+          },
+          "run_count": 2,
+          "seed": 42,
+          "status": "passed"
+        },
+        "differential_sensitivity": {
+          "baseline_128b_sha256": "3f350bbc2d8be73237af594466bb0473026a5b4f829cfe1c0766fa7d96c0e0a3",
+          "field": "general_array.PE_array.PE00.inport1.constant",
+          "modified": 2.0,
+          "modified_128b_sha256": "0fca3891bccc8e77f8995675a0f197e10ee56264f55655a28f51d5a2bece3303",
+          "original": 1,
+          "status": "passed"
+        },
+        "fail_closed": {
+          "mutation": "dram_loop_configs.LC1.end=131072",
+          "rejection": "dram_loop_configs.LC1.end=131072 exceeds unsigned 17-bit range; refusing silent truncation",
+          "status": "passed"
+        },
+        "preflight_validation": {
+          "config_mask": "11011101",
+          "field_routes": {
+            "buffer_config": {
+              "encoder_class": "BufferConfig",
+              "resource_count": 6,
+              "source": "bitstream/config/buffer.py"
+            },
+            "buffer_loop_configs": {
+              "encoder_class": "BufferRowLCConfig+BufferColLCConfig",
+              "resource_count": 5,
+              "source": "bitstream/config/loop.py"
+            },
+            "dram_loop_configs": {
+              "encoder_class": "DramLoopControlConfig",
+              "resource_count": 20,
+              "source": "bitstream/config/loop.py"
+            },
+            "general_array.PE_array": {
+              "encoder_class": "GAPEConfig",
+              "resource_count": 16,
+              "source": "bitstream/config/general.py"
+            },
+            "general_array.inport": {
+              "encoder_class": "GAInportConfig",
+              "resource_count": 3,
+              "source": "bitstream/config/general.py"
+            },
+            "general_array.outport": {
+              "encoder_class": "GAOutportConfig",
+              "resource_count": 1,
+              "source": "bitstream/config/general.py"
+            },
+            "lc_pe_configs": {
+              "encoder_class": "LCPEConfig",
+              "resource_count": 10,
+              "source": "bitstream/config/loop.py"
+            },
+            "stream_engine": {
+              "encoder_class": "ReadStreamEngineConfig+WriteStreamEngineConfig",
+              "resource_count": "4 read + 1 write",
+              "source": "bitstream/config/stream.py"
+            }
+          },
+          "ga_opcodes": [
+            "add",
+            "mac"
+          ],
+          "ga_topology": "4x(two_branch_mac_then_add)",
+          "resources": {
+            "buffer_loop_groups": 3,
+            "buffers": 3,
+            "dram_loops": 5,
+            "ga_inports": 3,
+            "ga_pes": 12,
+            "loop_pes": 3,
+            "read_streams": 2,
+            "write_streams": 1
+          },
+          "stage_scope": "two_uint8_inputs_to_fp32_affine_sum_only",
+          "status": "valid",
+          "validation_scope": "structure_resources_field_ranges_and_routes_only"
+        },
+        "template_path": "jsons/add_dequant_uint8CWH_uint8CWH_fp32CWH.json",
+        "template_sha256": "15f5321ab57cb73ca2f650693859657759f834389677451a9a89e66217e9e6da"
+      },
+      "quant_from_buffer_int32MN_uint8MN.json": {
+        "determinism": {
+          "environment": {
+            "PYTHONHASHSEED": "0",
+            "PYTHONUTF8": "1"
+          },
+          "heuristic_iterations": 10000,
+          "heuristic_restarts": 10,
+          "outputs": {
+            "detailed_dump.txt": {
+              "sha256": "6edc00d65d95eb819c3b23b59fad73994b6ddd7d0f62617287ff296de4c94523",
+              "size_bytes": 45960
+            },
+            "mapping_review.json": {
+              "sha256": "2aa0ab876e3de9fd0a52bf65ff4111467aa0f57b64d0a8e167d957199556159b",
+              "size_bytes": 5454
+            },
+            "modules_dump_128b.bin": {
+              "sha256": "85880ee66b853369f67114df32d006873fadf03193d4558e016c707ed9da04cf",
+              "size_bytes": 4420
+            },
+            "modules_dump_64b.bin": {
+              "sha256": "3e433c01402776e363184376e51f63284b54c46c2e70ddb5f4d2d68eeaa76955",
+              "size_bytes": 4488
+            },
+            "parsed_bitstream.txt": {
+              "sha256": "aed47ddf58e8c4754f8b50d49d62d1bac6c4d8e7cc5b581d16ef0edefb21d6be",
+              "size_bytes": 4916
+            },
+            "quant_from_buffer_int32MN_uint8MN_bitstream_128b.bin": {
+              "sha256": "85880ee66b853369f67114df32d006873fadf03193d4558e016c707ed9da04cf",
+              "size_bytes": 4420
+            },
+            "quant_from_buffer_int32MN_uint8MN_bitstream_64b.bin": {
+              "sha256": "3e433c01402776e363184376e51f63284b54c46c2e70ddb5f4d2d68eeaa76955",
+              "size_bytes": 4488
+            }
+          },
+          "run_count": 2,
+          "seed": 42,
+          "status": "passed"
+        },
+        "differential_sensitivity": {
+          "baseline_128b_sha256": "85880ee66b853369f67114df32d006873fadf03193d4558e016c707ed9da04cf",
+          "field": "general_array.PE_array.PE00.inport1.constant",
+          "modified": 0.125,
+          "modified_128b_sha256": "bc0d52a32f6331945f9b00d4a711482a9c89f656cf82e585343494244619dea0",
+          "original": 0.06375,
+          "status": "passed"
+        },
+        "fail_closed": {
+          "mutation": "dram_loop_configs.LC1.end=131072",
+          "rejection": "dram_loop_configs.LC1.end=131072 exceeds unsigned 17-bit range; refusing silent truncation",
+          "status": "passed"
+        },
+        "preflight_validation": {
+          "config_mask": "11011101",
+          "field_routes": {
+            "buffer_config": {
+              "encoder_class": "BufferConfig",
+              "resource_count": 6,
+              "source": "bitstream/config/buffer.py"
+            },
+            "buffer_loop_configs": {
+              "encoder_class": "BufferRowLCConfig+BufferColLCConfig",
+              "resource_count": 5,
+              "source": "bitstream/config/loop.py"
+            },
+            "dram_loop_configs": {
+              "encoder_class": "DramLoopControlConfig",
+              "resource_count": 20,
+              "source": "bitstream/config/loop.py"
+            },
+            "general_array.PE_array": {
+              "encoder_class": "GAPEConfig",
+              "resource_count": 16,
+              "source": "bitstream/config/general.py"
+            },
+            "general_array.inport": {
+              "encoder_class": "GAInportConfig",
+              "resource_count": 3,
+              "source": "bitstream/config/general.py"
+            },
+            "general_array.outport": {
+              "encoder_class": "GAOutportConfig",
+              "resource_count": 1,
+              "source": "bitstream/config/general.py"
+            },
+            "lc_pe_configs": {
+              "encoder_class": "LCPEConfig",
+              "resource_count": 10,
+              "source": "bitstream/config/loop.py"
+            },
+            "stream_engine": {
+              "encoder_class": "ReadStreamEngineConfig+WriteStreamEngineConfig",
+              "resource_count": "4 read + 1 write",
+              "source": "bitstream/config/stream.py"
+            }
+          },
+          "ga_opcodes": [
+            "int32_sub",
+            "mac"
+          ],
+          "ga_topology": "8x(mac_then_int32_sub)",
+          "resources": {
+            "buffer_loop_groups": 2,
+            "buffers": 2,
+            "dram_loops": 3,
+            "ga_inports": 3,
+            "ga_pes": 16,
+            "loop_pes": 3,
+            "read_streams": 1,
+            "write_streams": 1
+          },
+          "stage_scope": "int32_input_to_uint8_requant_candidate",
+          "status": "valid",
+          "validation_scope": "structure_resources_field_ranges_and_routes_only"
+        },
+        "template_path": "jsons/quant_from_buffer_int32MN_uint8MN.json",
+        "template_sha256": "db638f0640e74217e80e61350a2fe400f7b495e2201f17c39915328cdd455ba2"
+      }
+    },
+    "execplan_qparam_binding": {
+      "current_binding": "shape_and_stream_stride_only",
+      "ga_constant_qparams_patched": false,
+      "handler_fields": {
+        "add_dequant": [
+          "iga_lc0.dram_loop_configs.end",
+          "iga_lc1.dram_loop_configs.end",
+          "iga_lc2.dram_loop_configs.end",
+          "iga_lc3.dram_loop_configs.end",
+          "iga_lc4.dram_loop_configs.end",
+          "rd_stream0.stream_engine.stream.dim_stride",
+          "rd_stream1.stream_engine.stream.dim_stride",
+          "wr_stream.stream_engine.stream.dim_stride"
+        ],
+        "quant_from_buffer": [
+          "iga_lc0.dram_loop_configs.end",
+          "iga_lc1.dram_loop_configs.end",
+          "iga_lc2.dram_loop_configs.end",
+          "rd_stream0.stream_engine.stream.dim_stride",
+          "wr_stream.stream_engine.stream.dim_stride"
+        ]
+      },
+      "path": "model_execplan/src/execution_plan_generator/control_registers.py",
+      "required_change": "extend OperatorSpec with typed scalar qparams and patch validated GA constant fields before encoding",
+      "sha256": "8be7f21d8058ba3eaf45e55256c9237325c55f45d43c9e7b1ba8c3a54f7456d1",
+      "status": "gap_confirmed"
+    },
+    "numerical_scope": {
+      "add_dequant_fp32_affine_sum": "constants_patchable_not_target_executed",
+      "complete_qlinearadd": "absent",
+      "hardware_outputs": "unavailable",
+      "quant_rounding_recipe": "identified_not_target_executed",
+      "quant_uint8_saturation": "rtl_static_semantics_identified",
+      "status": "not_validated",
+      "target_simulator_outputs": "unavailable"
+    },
+    "resnet_scalar_qparams": {
+      "operator_counts": {
+        "DequantizeLinear": 2,
+        "QLinearAdd": 17,
+        "QuantizeLinear": 2
+      },
+      "records": [
+        {
+          "graph_index": 0,
+          "name": "data_QuantizeLinear",
+          "op_type": "QuantizeLinear",
+          "qparam_sources": {
+            "y_scale": "data_scale",
+            "y_zero_point": "data_zero_point"
+          },
+          "qparams": {
+            "y_scale": 0.01865844801068306,
+            "y_zero_point": 114
+          }
+        },
+        {
+          "graph_index": 7,
+          "name": "resnetv17_stage1__plus0_quant",
+          "op_type": "QLinearAdd",
+          "qparam_sources": {
+            "a_scale": "resnetv17_stage1_batchnorm2_fwd_scale",
+            "a_zero_point": "resnetv17_stage1_batchnorm2_fwd_zero_point",
+            "b_scale": "resnetv17_stage1_batchnorm3_fwd_scale",
+            "b_zero_point": "resnetv17_stage1_batchnorm3_fwd_zero_point",
+            "y_scale": "resnetv17_stage1__plus0_scale",
+            "y_zero_point": "resnetv17_stage1__plus0_zero_point"
+          },
+          "qparams": {
+            "a_scale": 0.017621304839849472,
+            "a_zero_point": 84,
+            "b_scale": 0.03495480865240097,
+            "b_zero_point": 150,
+            "y_scale": 0.01425931230187416,
+            "y_zero_point": 0
+          }
+        },
+        {
+          "graph_index": 11,
+          "name": "resnetv17_stage1__plus1_quant",
+          "op_type": "QLinearAdd",
+          "qparam_sources": {
+            "a_scale": "resnetv17_stage1_batchnorm6_fwd_scale",
+            "a_zero_point": "resnetv17_stage1_batchnorm6_fwd_zero_point",
+            "b_scale": "resnetv17_stage1__plus0_scale",
+            "b_zero_point": "resnetv17_stage1__plus0_zero_point",
+            "y_scale": "resnetv17_stage1__plus1_scale",
+            "y_zero_point": "resnetv17_stage1__plus1_zero_point"
+          },
+          "qparams": {
+            "a_scale": 0.016991248354315758,
+            "a_zero_point": 112,
+            "b_scale": 0.01425931230187416,
+            "b_zero_point": 0,
+            "y_scale": 0.014427377842366695,
+            "y_zero_point": 0
+          }
+        },
+        {
+          "graph_index": 15,
+          "name": "resnetv17_stage1__plus2_quant",
+          "op_type": "QLinearAdd",
+          "qparam_sources": {
+            "a_scale": "resnetv17_stage1_batchnorm9_fwd_scale",
+            "a_zero_point": "resnetv17_stage1_batchnorm9_fwd_zero_point",
+            "b_scale": "resnetv17_stage1__plus1_scale",
+            "b_zero_point": "resnetv17_stage1__plus1_zero_point",
+            "y_scale": "resnetv17_stage1__plus2_scale",
+            "y_zero_point": "resnetv17_stage1__plus2_zero_point"
+          },
+          "qparams": {
+            "a_scale": 0.018783707171678543,
+            "a_zero_point": 123,
+            "b_scale": 0.014427377842366695,
+            "b_zero_point": 0,
+            "y_scale": 0.014805714599788189,
+            "y_zero_point": 0
+          }
+        },
+        {
+          "graph_index": 20,
+          "name": "resnetv17_stage2__plus0_quant",
+          "op_type": "QLinearAdd",
+          "qparam_sources": {
+            "a_scale": "resnetv17_stage2_batchnorm2_fwd_scale",
+            "a_zero_point": "resnetv17_stage2_batchnorm2_fwd_zero_point",
+            "b_scale": "resnetv17_stage2_batchnorm3_fwd_scale",
+            "b_zero_point": "resnetv17_stage2_batchnorm3_fwd_zero_point",
+            "y_scale": "resnetv17_stage2__plus0_scale",
+            "y_zero_point": "resnetv17_stage2__plus0_zero_point"
+          },
+          "qparams": {
+            "a_scale": 0.019939938560128212,
+            "a_zero_point": 156,
+            "b_scale": 0.016671551391482353,
+            "b_zero_point": 124,
+            "y_scale": 0.008694733493030071,
+            "y_zero_point": 0
+          }
+        },
+        {
+          "graph_index": 24,
+          "name": "resnetv17_stage2__plus1_quant",
+          "op_type": "QLinearAdd",
+          "qparam_sources": {
+            "a_scale": "resnetv17_stage2_batchnorm6_fwd_scale",
+            "a_zero_point": "resnetv17_stage2_batchnorm6_fwd_zero_point",
+            "b_scale": "resnetv17_stage2__plus0_scale",
+            "b_zero_point": "resnetv17_stage2__plus0_zero_point",
+            "y_scale": "resnetv17_stage2__plus1_scale",
+            "y_zero_point": "resnetv17_stage2__plus1_zero_point"
+          },
+          "qparams": {
+            "a_scale": 0.023087255656719208,
+            "a_zero_point": 154,
+            "b_scale": 0.008694733493030071,
+            "b_zero_point": 0,
+            "y_scale": 0.011835342273116112,
+            "y_zero_point": 0
+          }
+        },
+        {
+          "graph_index": 28,
+          "name": "resnetv17_stage2__plus2_quant",
+          "op_type": "QLinearAdd",
+          "qparam_sources": {
+            "a_scale": "resnetv17_stage2_batchnorm9_fwd_scale",
+            "a_zero_point": "resnetv17_stage2_batchnorm9_fwd_zero_point",
+            "b_scale": "resnetv17_stage2__plus1_scale",
+            "b_zero_point": "resnetv17_stage2__plus1_zero_point",
+            "y_scale": "resnetv17_stage2__plus2_scale",
+            "y_zero_point": "resnetv17_stage2__plus2_zero_point"
+          },
+          "qparams": {
+            "a_scale": 0.01324511505663395,
+            "a_zero_point": 124,
+            "b_scale": 0.011835342273116112,
+            "b_zero_point": 0,
+            "y_scale": 0.011792764067649841,
+            "y_zero_point": 0
+          }
+        },
+        {
+          "graph_index": 32,
+          "name": "resnetv17_stage2__plus3_quant",
+          "op_type": "QLinearAdd",
+          "qparam_sources": {
+            "a_scale": "resnetv17_stage2_batchnorm12_fwd_scale",
+            "a_zero_point": "resnetv17_stage2_batchnorm12_fwd_zero_point",
+            "b_scale": "resnetv17_stage2__plus2_scale",
+            "b_zero_point": "resnetv17_stage2__plus2_zero_point",
+            "y_scale": "resnetv17_stage2__plus3_scale",
+            "y_zero_point": "resnetv17_stage2__plus3_zero_point"
+          },
+          "qparams": {
+            "a_scale": 0.019605262205004692,
+            "a_zero_point": 144,
+            "b_scale": 0.011792764067649841,
+            "b_zero_point": 0,
+            "y_scale": 0.01573503389954567,
+            "y_zero_point": 0
+          }
+        },
+        {
+          "graph_index": 37,
+          "name": "resnetv17_stage3__plus0_quant",
+          "op_type": "QLinearAdd",
+          "qparam_sources": {
+            "a_scale": "resnetv17_stage3_batchnorm2_fwd_scale",
+            "a_zero_point": "resnetv17_stage3_batchnorm2_fwd_zero_point",
+            "b_scale": "resnetv17_stage3_batchnorm3_fwd_scale",
+            "b_zero_point": "resnetv17_stage3_batchnorm3_fwd_zero_point",
+            "y_scale": "resnetv17_stage3__plus0_scale",
+            "y_zero_point": "resnetv17_stage3__plus0_zero_point"
+          },
+          "qparams": {
+            "a_scale": 0.01066542323678732,
+            "a_zero_point": 147,
+            "b_scale": 0.01947449892759323,
+            "b_zero_point": 110,
+            "y_scale": 0.011919273994863033,
+            "y_zero_point": 0
+          }
+        },
+        {
+          "graph_index": 41,
+          "name": "resnetv17_stage3__plus1_quant",
+          "op_type": "QLinearAdd",
+          "qparam_sources": {
+            "a_scale": "resnetv17_stage3_batchnorm6_fwd_scale",
+            "a_zero_point": "resnetv17_stage3_batchnorm6_fwd_zero_point",
+            "b_scale": "resnetv17_stage3__plus0_scale",
+            "b_zero_point": "resnetv17_stage3__plus0_zero_point",
+            "y_scale": "resnetv17_stage3__plus1_scale",
+            "y_zero_point": "resnetv17_stage3__plus1_zero_point"
+          },
+          "qparams": {
+            "a_scale": 0.012592853978276253,
+            "a_zero_point": 157,
+            "b_scale": 0.011919273994863033,
+            "b_zero_point": 0,
+            "y_scale": 0.011873038485646248,
+            "y_zero_point": 0
+          }
+        },
+        {
+          "graph_index": 45,
+          "name": "resnetv17_stage3__plus2_quant",
+          "op_type": "QLinearAdd",
+          "qparam_sources": {
+            "a_scale": "resnetv17_stage3_batchnorm9_fwd_scale",
+            "a_zero_point": "resnetv17_stage3_batchnorm9_fwd_zero_point",
+            "b_scale": "resnetv17_stage3__plus1_scale",
+            "b_zero_point": "resnetv17_stage3__plus1_zero_point",
+            "y_scale": "resnetv17_stage3__plus2_scale",
+            "y_zero_point": "resnetv17_stage3__plus2_zero_point"
+          },
+          "qparams": {
+            "a_scale": 0.012322057038545609,
+            "a_zero_point": 144,
+            "b_scale": 0.011873038485646248,
+            "b_zero_point": 0,
+            "y_scale": 0.01140904612839222,
+            "y_zero_point": 0
+          }
+        },
+        {
+          "graph_index": 49,
+          "name": "resnetv17_stage3__plus3_quant",
+          "op_type": "QLinearAdd",
+          "qparam_sources": {
+            "a_scale": "resnetv17_stage3_batchnorm12_fwd_scale",
+            "a_zero_point": "resnetv17_stage3_batchnorm12_fwd_zero_point",
+            "b_scale": "resnetv17_stage3__plus2_scale",
+            "b_zero_point": "resnetv17_stage3__plus2_zero_point",
+            "y_scale": "resnetv17_stage3__plus3_scale",
+            "y_zero_point": "resnetv17_stage3__plus3_zero_point"
+          },
+          "qparams": {
+            "a_scale": 0.011461053043603897,
+            "a_zero_point": 124,
+            "b_scale": 0.01140904612839222,
+            "b_zero_point": 0,
+            "y_scale": 0.012888875789940357,
+            "y_zero_point": 0
+          }
+        },
+        {
+          "graph_index": 53,
+          "name": "resnetv17_stage3__plus4_quant",
+          "op_type": "QLinearAdd",
+          "qparam_sources": {
+            "a_scale": "resnetv17_stage3_batchnorm15_fwd_scale",
+            "a_zero_point": "resnetv17_stage3_batchnorm15_fwd_zero_point",
+            "b_scale": "resnetv17_stage3__plus3_scale",
+            "b_zero_point": "resnetv17_stage3__plus3_zero_point",
+            "y_scale": "resnetv17_stage3__plus4_scale",
+            "y_zero_point": "resnetv17_stage3__plus4_zero_point"
+          },
+          "qparams": {
+            "a_scale": 0.01509744394570589,
+            "a_zero_point": 148,
+            "b_scale": 0.012888875789940357,
+            "b_zero_point": 0,
+            "y_scale": 0.01232454925775528,
+            "y_zero_point": 0
+          }
+        },
+        {
+          "graph_index": 57,
+          "name": "resnetv17_stage3__plus5_quant",
+          "op_type": "QLinearAdd",
+          "qparam_sources": {
+            "a_scale": "resnetv17_stage3_batchnorm18_fwd_scale",
+            "a_zero_point": "resnetv17_stage3_batchnorm18_fwd_zero_point",
+            "b_scale": "resnetv17_stage3__plus4_scale",
+            "b_zero_point": "resnetv17_stage3__plus4_zero_point",
+            "y_scale": "resnetv17_stage3__plus5_scale",
+            "y_zero_point": "resnetv17_stage3__plus5_zero_point"
+          },
+          "qparams": {
+            "a_scale": 0.016510406509041786,
+            "a_zero_point": 100,
+            "b_scale": 0.01232454925775528,
+            "b_zero_point": 0,
+            "y_scale": 0.01624034345149994,
+            "y_zero_point": 0
+          }
+        },
+        {
+          "graph_index": 62,
+          "name": "resnetv17_stage4__plus0_quant",
+          "op_type": "QLinearAdd",
+          "qparam_sources": {
+            "a_scale": "resnetv17_stage4_batchnorm2_fwd_scale",
+            "a_zero_point": "resnetv17_stage4_batchnorm2_fwd_zero_point",
+            "b_scale": "resnetv17_stage4_batchnorm3_fwd_scale",
+            "b_zero_point": "resnetv17_stage4_batchnorm3_fwd_zero_point",
+            "y_scale": "resnetv17_stage4__plus0_scale",
+            "y_zero_point": "resnetv17_stage4__plus0_zero_point"
+          },
+          "qparams": {
+            "a_scale": 0.015612360090017319,
+            "a_zero_point": 118,
+            "b_scale": 0.014416606165468693,
+            "b_zero_point": 131,
+            "y_scale": 0.011931343004107475,
+            "y_zero_point": 0
+          }
+        },
+        {
+          "graph_index": 66,
+          "name": "resnetv17_stage4__plus1_quant",
+          "op_type": "QLinearAdd",
+          "qparam_sources": {
+            "a_scale": "resnetv17_stage4_batchnorm6_fwd_scale",
+            "a_zero_point": "resnetv17_stage4_batchnorm6_fwd_zero_point",
+            "b_scale": "resnetv17_stage4__plus0_scale",
+            "b_zero_point": "resnetv17_stage4__plus0_zero_point",
+            "y_scale": "resnetv17_stage4__plus1_scale",
+            "y_zero_point": "resnetv17_stage4__plus1_zero_point"
+          },
+          "qparams": {
+            "a_scale": 0.040103670209646225,
+            "a_zero_point": 111,
+            "b_scale": 0.011931343004107475,
+            "b_zero_point": 0,
+            "y_scale": 0.028477856889367104,
+            "y_zero_point": 0
+          }
+        },
+        {
+          "graph_index": 70,
+          "name": "resnetv17_stage4__plus2_quant",
+          "op_type": "QLinearAdd",
+          "qparam_sources": {
+            "a_scale": "resnetv17_stage4_batchnorm9_fwd_scale",
+            "a_zero_point": "resnetv17_stage4_batchnorm9_fwd_zero_point",
+            "b_scale": "resnetv17_stage4__plus1_scale",
+            "b_zero_point": "resnetv17_stage4__plus1_zero_point",
+            "y_scale": "resnetv17_stage4__plus2_scale",
+            "y_zero_point": "resnetv17_stage4__plus2_zero_point"
+          },
+          "qparams": {
+            "a_scale": 0.08235790580511093,
+            "a_zero_point": 74,
+            "b_scale": 0.028477856889367104,
+            "b_zero_point": 0,
+            "y_scale": 0.0757506787776947,
+            "y_zero_point": 0
+          }
+        },
+        {
+          "graph_index": 72,
+          "name": "resnetv17_pool1_fwd_DequantizeLinear",
+          "op_type": "DequantizeLinear",
+          "qparam_sources": {
+            "x_scale": "resnetv17_pool1_fwd_scale",
+            "x_zero_point": "resnetv17_pool1_fwd_zero_point"
+          },
+          "qparams": {
+            "x_scale": 0.02335735410451889,
+            "x_zero_point": 0
+          }
+        },
+        {
+          "graph_index": 74,
+          "name": "flatten_473_QuantizeLinear",
+          "op_type": "QuantizeLinear",
+          "qparam_sources": {
+            "y_scale": "flatten_473_scale",
+            "y_zero_point": "flatten_473_zero_point"
+          },
+          "qparams": {
+            "y_scale": 0.02335735410451889,
+            "y_zero_point": 0
+          }
+        },
+        {
+          "graph_index": 76,
+          "name": "resnetv17_dense0_fwd_Add_quant",
+          "op_type": "QLinearAdd",
+          "qparam_sources": {
+            "a_scale": "resnetv17_dense0_fwd_MatMul_scale",
+            "a_zero_point": "resnetv17_dense0_fwd_MatMul_zero_point",
+            "b_scale": "resnetv17_dense0_bias_scale",
+            "b_zero_point": "resnetv17_dense0_bias_zero_point",
+            "y_scale": "resnetv17_dense0_fwd_scale",
+            "y_zero_point": "resnetv17_dense0_fwd_zero_point"
+          },
+          "qparams": {
+            "a_scale": 0.12644046545028687,
+            "a_zero_point": 60,
+            "b_scale": 0.0003060092858504504,
+            "b_zero_point": 123,
+            "y_scale": 0.12635107338428497,
+            "y_zero_point": 60
+          }
+        },
+        {
+          "graph_index": 77,
+          "name": "resnetv17_dense0_fwd_DequantizeLinear",
+          "op_type": "DequantizeLinear",
+          "qparam_sources": {
+            "x_scale": "resnetv17_dense0_fwd_scale",
+            "x_zero_point": "resnetv17_dense0_fwd_zero_point"
+          },
+          "qparams": {
+            "x_scale": 0.12635107338428497,
+            "x_zero_point": 60
+          }
+        }
+      ],
+      "scale_range": [
+        0.0003060092858504504,
+        0.12644046545028687
+      ],
+      "source": {
+        "path": "artifacts/reference_model/resnet50-v1-12-int8.onnx",
+        "read_scope": "ONNX scalar initializers only; no W3 NPY payloads",
+        "sha256": "c234f30975989788b4405f25253275aae247ab6dbdd34aaa69ab0a59ff76f6d0"
+      },
+      "static_template_comparison": {
+        "add_dequant_fixed_branch_offset": 1.0,
+        "add_dequant_fixed_branch_scale": 1.0,
+        "dequantize_linear_fixed_branch_match_count": 0,
+        "dequantize_linear_scales": [
+          0.02335735410451889,
+          0.12635107338428497
+        ],
+        "dequantize_linear_zero_points": [
+          0,
+          60
+        ],
+        "qlinearadd_branch_affine_match_count": 0,
+        "qlinearadd_branch_count": 34,
+        "qlinearadd_y_qparams_consumed_by_template": false,
+        "quant_template_multiplier": 0.06375,
+        "quant_template_output_zero_point": 64,
+        "quantize_linear_direct_match_count": 0,
+        "quantize_linear_output_zero_points": [
+          114,
+          0
+        ],
+        "quantize_linear_required_reciprocal_scales": [
+          53.59502566491281,
+          42.81306844624719
+        ]
+      },
+      "status": "passed",
+      "zero_point_range": [
+        0,
+        157
+      ]
+    },
+    "status": "passed_with_numerical_gaps",
+    "template_count": 2
+  },
   "inventory": {
     "deepseek_transformer_count": 35,
     "json_count": 42,
@@ -2862,7 +3825,7 @@
     "size_bytes": 14788
   },
   "report_kind": "official_target_config_authority_audit",
-  "schema_version": "0.2",
+  "schema_version": "0.3",
   "source": {
     "authoritative_paths": [
       "jsons",

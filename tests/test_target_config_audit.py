@@ -6,19 +6,29 @@ from copy import deepcopy
 from pathlib import Path
 
 from resnet50_pipeline.target_config_audit import (
+    ADD_DEQUANT_TEMPLATE,
     AVGPOOL_TEMPLATE,
     MAXPOOL_TEMPLATE,
+    QUANT_TEMPLATE,
     SECOND_MAXPOOL_TEMPLATE,
     TargetConfigAuditError,
+    add_dequant_constant_patch,
+    audit_execplan_qparam_binding,
+    audit_ga_quant_add,
     audit_register_map,
     audit_maxpool_encoder,
     audit_pool_family,
+    audit_resnet_scalar_qparams,
+    extract_ga_quant_add_crosswalk,
     extract_pool_family_linkage,
     inventory_templates,
+    quant_requant_constant_patch,
+    validate_add_dequant_template,
     validate_avgpool_shape_linkage,
     validate_avgpool_template,
     validate_maxpool_shape_linkage,
     validate_maxpool_template,
+    validate_quant_template,
 )
 
 
@@ -35,6 +45,15 @@ class TargetConfigAuditTests(unittest.TestCase):
         )
         cls.avgpool = json.loads(
             (SOURCE / "jsons" / AVGPOOL_TEMPLATE).read_text(encoding="utf-8")
+        )
+        cls.quant = json.loads(
+            (SOURCE / "jsons" / QUANT_TEMPLATE).read_text(encoding="utf-8")
+        )
+        cls.add_dequant = json.loads(
+            (SOURCE / "jsons" / ADD_DEQUANT_TEMPLATE).read_text(encoding="utf-8")
+        )
+        cls.model_graph = json.loads(
+            (ROOT / "artifacts" / "w3" / "model_graph.json").read_text(encoding="utf-8")
         )
 
     def test_official_inventory_is_complete_and_exposes_conv_gap(self) -> None:
@@ -172,6 +191,121 @@ class TargetConfigAuditTests(unittest.TestCase):
                 channels=2048,
                 height=7,
                 width=7,
+            )
+
+    def test_quant_and_add_dequant_crosswalk_exposes_exact_dtype_and_constant_recipe(self) -> None:
+        quant = validate_quant_template(self.quant)
+        add_dequant = validate_add_dequant_template(self.add_dequant)
+        crosswalk = extract_ga_quant_add_crosswalk(self.quant, self.add_dequant)
+
+        self.assertEqual(quant["ga_topology"], "8x(mac_then_int32_sub)")
+        self.assertEqual(add_dequant["ga_topology"], "4x(two_branch_mac_then_add)")
+        quant_crosswalk = crosswalk["quant_from_buffer"]
+        self.assertEqual(
+            quant_crosswalk["declared_dtype_path"],
+            ["int32_buffer", "fp32_mac", "int32_sub", "uint8_D"],
+        )
+        self.assertEqual(quant_crosswalk["fixed_constants"]["magic_addend_fp32_bits"], "0x4b400040")
+        self.assertEqual(quant_crosswalk["fixed_constants"]["derived_output_zero_point"], 64)
+        self.assertEqual(quant_crosswalk["saturation"]["status"], "rtl_static_semantics_identified")
+        self.assertFalse(quant_crosswalk["direct_onnx_quantize_linear_compatible"])
+        add_crosswalk = crosswalk["add_dequant"]
+        self.assertEqual(add_crosswalk["static_formula"], "(A*1.0+1.0) + (B*1.0+1.0)")
+        self.assertEqual(add_crosswalk["output_dtype"], "fp32")
+        self.assertFalse(add_crosswalk["complete_qlinearadd_compatible"])
+
+    def test_semantic_qparam_patch_maps_replicate_all_ga_lanes(self) -> None:
+        quant_patch = quant_requant_constant_patch(
+            multiplier=0.125,
+            output_zero_point=114,
+        )
+        self.assertEqual(len(quant_patch), 24)
+        self.assertEqual(
+            quant_patch["general_array.PE_array.PE00.inport2.constant"],
+            12_583_026.0,
+        )
+        self.assertEqual(
+            quant_patch["general_array.PE_array.PE33.inport1.constant"],
+            0x4B400000,
+        )
+        add_patch = add_dequant_constant_patch(
+            a_scale=0.25,
+            a_zero_point=8,
+            b_scale=0.5,
+            b_zero_point=3,
+        )
+        self.assertEqual(len(add_patch), 16)
+        self.assertEqual(add_patch["general_array.PE_array.PE00.inport2.constant"], -2.0)
+        self.assertEqual(add_patch["general_array.PE_array.PE01.inport2.constant"], -1.5)
+
+    def test_real_resnet_scalar_qparams_do_not_match_static_template_samples(self) -> None:
+        report = audit_resnet_scalar_qparams(
+            ROOT / "artifacts" / "reference_model" / "resnet50-v1-12-int8.onnx",
+            expected_sha256=self.model_graph["model_sha256"],
+        )
+        self.assertEqual(
+            report["operator_counts"],
+            {"QuantizeLinear": 2, "DequantizeLinear": 2, "QLinearAdd": 17},
+        )
+        comparison = report["static_template_comparison"]
+        self.assertEqual(comparison["quantize_linear_output_zero_points"], [114, 0])
+        self.assertEqual(comparison["quantize_linear_direct_match_count"], 0)
+        self.assertEqual(
+            comparison["dequantize_linear_zero_points"],
+            [0, 60],
+        )
+        self.assertEqual(comparison["dequantize_linear_fixed_branch_match_count"], 0)
+        self.assertEqual(comparison["qlinearadd_branch_affine_match_count"], 0)
+        self.assertEqual(comparison["qlinearadd_branch_count"], 34)
+        self.assertFalse(comparison["qlinearadd_y_qparams_consumed_by_template"])
+
+    def test_execplan_handlers_confirm_qparam_binding_gap(self) -> None:
+        report = audit_execplan_qparam_binding(SOURCE)
+        self.assertEqual(report["status"], "gap_confirmed")
+        self.assertEqual(report["current_binding"], "shape_and_stream_stride_only")
+        self.assertEqual(len(report["handler_fields"]["quant_from_buffer"]), 5)
+        self.assertEqual(len(report["handler_fields"]["add_dequant"]), 8)
+        self.assertFalse(report["ga_constant_qparams_patched"])
+
+    def test_quant_and_add_dequant_encoders_are_constant_sensitive_and_fail_closed(self) -> None:
+        report = audit_ga_quant_add(
+            SOURCE,
+            model_path=ROOT / "artifacts" / "reference_model" / "resnet50-v1-12-int8.onnx",
+            model_sha256=self.model_graph["model_sha256"],
+        )
+        self.assertEqual(report["status"], "passed_with_numerical_gaps")
+        self.assertEqual(report["template_count"], 2)
+        for template_name in (QUANT_TEMPLATE, ADD_DEQUANT_TEMPLATE):
+            probe = report["encoder_probes"][template_name]
+            self.assertEqual(probe["determinism"]["status"], "passed")
+            self.assertEqual(probe["differential_sensitivity"]["status"], "passed")
+            self.assertIn("constant", probe["differential_sensitivity"]["field"])
+            self.assertNotEqual(
+                probe["differential_sensitivity"]["baseline_128b_sha256"],
+                probe["differential_sensitivity"]["modified_128b_sha256"],
+            )
+            self.assertEqual(probe["fail_closed"]["status"], "passed")
+        self.assertEqual(report["numerical_scope"]["status"], "not_validated")
+
+    def test_ga_qparam_and_conversion_mutations_fail_closed(self) -> None:
+        bad_quant = deepcopy(self.quant)
+        bad_quant["general_array"]["inport"]["inport0"]["int32tofp32"] = "false"
+        with self.assertRaisesRegex(TargetConfigAuditError, "conversion route"):
+            validate_quant_template(bad_quant)
+
+        bad_add = deepcopy(self.add_dequant)
+        bad_add["general_array"]["outport"]["int32touint8"] = "true"
+        with self.assertRaisesRegex(TargetConfigAuditError, "remain FP32"):
+            validate_add_dequant_template(bad_add)
+
+        with self.assertRaisesRegex(TargetConfigAuditError, "unsigned 8-bit"):
+            quant_requant_constant_patch(multiplier=0.5, output_zero_point=256)
+        with self.assertRaisesRegex(TargetConfigAuditError, "finite and positive"):
+            add_dequant_constant_patch(
+                a_scale=float("nan"),
+                a_zero_point=0,
+                b_scale=1.0,
+                b_zero_point=0,
             )
 
 

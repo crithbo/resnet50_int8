@@ -26,10 +26,12 @@ from .profile28 import (
     SUPPORTED_PROFILES,
 )
 from .target_config_audit import (
+    ADD_DEQUANT_TEMPLATE,
     AVGPOOL_TEMPLATE,
     OFFICIAL_CONFIG_COMMIT,
     OFFICIAL_CONFIG_REPOSITORY,
     OFFICIAL_CONFIG_SLICE_COUNT,
+    QUANT_TEMPLATE,
     SECOND_MAXPOOL_TEMPLATE,
 )
 from .topology28 import HIGH_RING_OWNERS, LOW_RING_OWNERS
@@ -599,6 +601,7 @@ def validate_backend_contract(
         "can_execute_numerical_model": False,
         "maxpool_encoder_probe_validated": True,
         "pool_family_encoder_probe_validated": True,
+        "ga_quant_add_dequant_probe_validated": True,
         "resnet50_operator_coverage_complete": False,
     }
     for field, expected in expected_config_toolchain.items():
@@ -610,9 +613,12 @@ def validate_backend_contract(
         "not_target_numerical_simulator",
         "not_hardware_execution",
         "resnet_operator_coverage_incomplete",
-        "pool_family_probe_only",
+        "pool_quant_add_dequant_probe_only",
         "avgpool_requantization_absent",
         "uint8_maxpool_semantics_unresolved",
+        "quant_rounding_target_execution_unconfirmed",
+        "add_dequant_qlinearadd_requantization_absent",
+        "execplan_qparam_binding_absent",
         "does_not_approve_rtl_or_layout",
     }:
         raise ContractError("target configuration source limitations must remain fail-closed")
@@ -641,7 +647,7 @@ def validate_backend_contract(
         except json.JSONDecodeError as error:
             raise ContractError("target configuration authority audit is invalid JSON") from error
         if (
-            audit.get("schema_version") != "0.2"
+            audit.get("schema_version") != "0.3"
             or audit.get("status") != "configuration_source_verified"
             or audit.get("source", {}).get("repository") != OFFICIAL_CONFIG_REPOSITORY
             or audit.get("source", {}).get("commit") != OFFICIAL_CONFIG_COMMIT
@@ -703,6 +709,50 @@ def validate_backend_contract(
             .get("fail_closed", {})
             .get("status")
             != "passed"
+            or audit.get("ga_quant_add_probe", {}).get("status")
+            != "passed_with_numerical_gaps"
+            or audit.get("ga_quant_add_probe", {}).get("template_count") != 2
+            or audit.get("ga_quant_add_probe", {}).get("crosswalk", {}).get("status")
+            != "passed"
+            or audit.get("ga_quant_add_probe", {})
+            .get("resnet_scalar_qparams", {})
+            .get("operator_counts")
+            != {"QuantizeLinear": 2, "DequantizeLinear": 2, "QLinearAdd": 17}
+            or audit.get("ga_quant_add_probe", {})
+            .get("resnet_scalar_qparams", {})
+            .get("static_template_comparison", {})
+            .get("quantize_linear_direct_match_count")
+            != 0
+            or audit.get("ga_quant_add_probe", {})
+            .get("resnet_scalar_qparams", {})
+            .get("static_template_comparison", {})
+            .get("dequantize_linear_fixed_branch_match_count")
+            != 0
+            or audit.get("ga_quant_add_probe", {})
+            .get("resnet_scalar_qparams", {})
+            .get("static_template_comparison", {})
+            .get("qlinearadd_branch_affine_match_count")
+            != 0
+            or audit.get("ga_quant_add_probe", {})
+            .get("execplan_qparam_binding", {})
+            .get("status")
+            != "gap_confirmed"
+            or audit.get("ga_quant_add_probe", {})
+            .get("execplan_qparam_binding", {})
+            .get("ga_constant_qparams_patched")
+            is not False
+            or audit.get("ga_quant_add_probe", {}).get("numerical_scope", {}).get("status")
+            != "not_validated"
+            or any(
+                audit.get("ga_quant_add_probe", {})
+                .get("encoder_probes", {})
+                .get(template_name, {})
+                .get(probe_name, {})
+                .get("status")
+                != "passed"
+                for template_name in (QUANT_TEMPLATE, ADD_DEQUANT_TEMPLATE)
+                for probe_name in ("determinism", "differential_sensitivity", "fail_closed")
+            )
         ):
             raise ContractError("target configuration authority audit semantics are invalid")
 

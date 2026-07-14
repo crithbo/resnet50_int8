@@ -42,10 +42,12 @@ from .simple16_layout import (
     ZeroCopyViewLayout as LegacyZeroCopyViewLayout,
 )
 from .target_config_audit import (
+    ADD_DEQUANT_TEMPLATE,
     AVGPOOL_TEMPLATE,
     OFFICIAL_CONFIG_COMMIT,
     OFFICIAL_CONFIG_REPOSITORY,
     OFFICIAL_CONFIG_SLICE_COUNT,
+    QUANT_TEMPLATE,
     SECOND_MAXPOOL_TEMPLATE,
 )
 from .w4_evidence import architecture_evidence_basis_sha256
@@ -663,6 +665,7 @@ def _target_config_toolchain_status(root: Path) -> dict[str, Any]:
         "can_execute_numerical_model": False,
         "maxpool_encoder_probe_validated": True,
         "pool_family_encoder_probe_validated": True,
+        "ga_quant_add_dequant_probe_validated": True,
         "resnet50_operator_coverage_complete": False,
     }
     for field, value in expected.items():
@@ -684,7 +687,7 @@ def _target_config_toolchain_status(root: Path) -> dict[str, Any]:
             reasons.append("authority_audit_invalid_json")
     if audit:
         semantic_checks = {
-            "audit_schema": audit.get("schema_version") == "0.2",
+            "audit_schema": audit.get("schema_version") == "0.3",
             "audit_status": audit.get("status") == "configuration_source_verified",
             "source_repository": audit.get("source", {}).get("repository")
             == OFFICIAL_CONFIG_REPOSITORY,
@@ -764,6 +767,61 @@ def _target_config_toolchain_status(root: Path) -> dict[str, Any]:
             .get("numerical_scope", {})
             .get("status")
             == "not_validated",
+            "ga_quant_add_status": audit.get("ga_quant_add_probe", {}).get("status")
+            == "passed_with_numerical_gaps",
+            "ga_quant_add_crosswalk": audit.get("ga_quant_add_probe", {})
+            .get("crosswalk", {})
+            .get("status")
+            == "passed",
+            "ga_resnet_qparam_counts": audit.get("ga_quant_add_probe", {})
+            .get("resnet_scalar_qparams", {})
+            .get("operator_counts")
+            == {"QuantizeLinear": 2, "DequantizeLinear": 2, "QLinearAdd": 17},
+            "ga_static_constants_do_not_match_resnet": audit.get("ga_quant_add_probe", {})
+            .get("resnet_scalar_qparams", {})
+            .get("static_template_comparison", {})
+            .get("quantize_linear_direct_match_count")
+            == 0
+            and audit.get("ga_quant_add_probe", {})
+            .get("resnet_scalar_qparams", {})
+            .get("static_template_comparison", {})
+            .get("dequantize_linear_fixed_branch_match_count")
+            == 0
+            and audit.get("ga_quant_add_probe", {})
+            .get("resnet_scalar_qparams", {})
+            .get("static_template_comparison", {})
+            .get("qlinearadd_branch_affine_match_count")
+            == 0,
+            "ga_execplan_qparam_gap": audit.get("ga_quant_add_probe", {})
+            .get("execplan_qparam_binding", {})
+            .get("status")
+            == "gap_confirmed"
+            and audit.get("ga_quant_add_probe", {})
+            .get("execplan_qparam_binding", {})
+            .get("ga_constant_qparams_patched")
+            is False,
+            "ga_numerical_scope_fail_closed": audit.get("ga_quant_add_probe", {})
+            .get("numerical_scope", {})
+            .get("status")
+            == "not_validated",
+            "quant_encoder_probe": all(
+                audit.get("ga_quant_add_probe", {})
+                .get("encoder_probes", {})
+                .get(QUANT_TEMPLATE, {})
+                .get(probe_name, {})
+                .get("status")
+                == "passed"
+                for probe_name in ("determinism", "differential_sensitivity", "fail_closed")
+            ),
+            "add_dequant_encoder_probe": all(
+                audit.get("ga_quant_add_probe", {})
+                .get("encoder_probes", {})
+                .get(ADD_DEQUANT_TEMPLATE, {})
+                .get(probe_name, {})
+                .get("status")
+                == "passed"
+                for probe_name in ("determinism", "differential_sensitivity", "fail_closed")
+            ),
         }
         reasons.extend(
             f"authority_audit_semantic_mismatch:{name}"
@@ -779,6 +837,9 @@ def _target_config_toolchain_status(root: Path) -> dict[str, Any]:
         "can_execute_numerical_model": record.get("can_execute_numerical_model"),
         "pool_family_encoder_probe_validated": record.get(
             "pool_family_encoder_probe_validated"
+        ),
+        "ga_quant_add_dequant_probe_validated": record.get(
+            "ga_quant_add_dequant_probe_validated"
         ),
         "resnet50_operator_coverage_complete": record.get(
             "resnet50_operator_coverage_complete"
