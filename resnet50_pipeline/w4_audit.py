@@ -41,6 +41,7 @@ from .simple16_layout import (
     QuantizeLinearPhysicalLayout as LegacyQuantizeLinearPhysicalLayout,
     ZeroCopyViewLayout as LegacyZeroCopyViewLayout,
 )
+from .w4_evidence import architecture_evidence_basis_sha256
 from .w4_profiles import PROFILE_POLICIES
 
 
@@ -104,6 +105,84 @@ def _artifact_check(root: Path, record: dict[str, Any]) -> dict[str, Any]:
         "actual_size_bytes": actual_size,
         "size_match": expected_size is None or actual_size == expected_size,
     }
+
+
+def _current_evidence_artifact_checks(
+    root: Path, architecture: dict[str, Any]
+) -> dict[str, dict[str, Any]]:
+    basis_sha256 = architecture_evidence_basis_sha256(architecture)
+    checks: dict[str, dict[str, Any]] = {}
+    for evidence_id, record in architecture.get("candidate_evidence", {}).items():
+        if record.get("current_gate_eligible") is not True:
+            continue
+        path = root / record.get("path", "")
+        present = path.is_file()
+        actual_size = path.stat().st_size if present else None
+        actual_sha256 = sha256_file(path) if present else None
+        payload: dict[str, Any] = {}
+        parse_valid = False
+        if present:
+            try:
+                payload = _load_json(path)
+                parse_valid = isinstance(payload, dict)
+            except (json.JSONDecodeError, OSError):
+                pass
+        common_semantics_match = bool(
+            parse_valid
+            and record.get("architecture_basis_sha256") == basis_sha256
+            and payload.get("architecture_basis_sha256") == basis_sha256
+            and payload.get("evidence_kind") == record.get("evidence_kind")
+            and payload.get("target_family") == CURRENT_TARGET_FAMILY
+            and payload.get("slice_count") == CURRENT_TARGET_SLICE_COUNT
+            and payload.get("status") == "candidate_software_evidence"
+            and payload.get("current_gate_eligible") is True
+            and payload.get("all_scenarios_pass") is True
+            and payload.get("hardware_approval") is False
+            and payload.get("g4_passed") is False
+            and payload.get("w5_authorized") is False
+        )
+        if record.get("evidence_kind") == "network_physical_edge_audit":
+            kind_semantics_match = bool(
+                record.get("edge_count") == payload.get("edge_count") == 93
+                and record.get("qparam_edge_count")
+                == payload.get("qparam_edge_count")
+                == 91
+                and record.get("residual_add_count")
+                == payload.get("residual_add_count")
+                == 16
+            )
+        elif record.get("evidence_kind") == "network_profile_cost":
+            kind_semantics_match = bool(
+                record.get("scenario_count") == payload.get("scenario_count") == 2
+            )
+        else:
+            kind_semantics_match = False
+        sha256_match = actual_sha256 == record.get("sha256")
+        size_match = actual_size == record.get("size_bytes")
+        checks[evidence_id] = {
+            "path": record.get("path"),
+            "present": present,
+            "expected_sha256": record.get("sha256"),
+            "actual_sha256": actual_sha256,
+            "sha256_match": sha256_match,
+            "expected_size_bytes": record.get("size_bytes"),
+            "actual_size_bytes": actual_size,
+            "size_match": size_match,
+            "parse_valid": parse_valid,
+            "architecture_basis_match": record.get(
+                "architecture_basis_sha256"
+            )
+            == basis_sha256,
+            "semantics_match": common_semantics_match and kind_semantics_match,
+            "usable": bool(
+                present
+                and sha256_match
+                and size_match
+                and common_semantics_match
+                and kind_semantics_match
+            ),
+        }
+    return checks
 
 
 def _plugin_interfaces() -> list[dict[str, Any]]:
@@ -449,7 +528,9 @@ def _legacy16_evidence_status(
 
 
 def _current_target_evidence_status(
-    architecture: dict[str, Any], hardware_approval: dict[str, Any]
+    architecture: dict[str, Any],
+    hardware_approval: dict[str, Any],
+    evidence_artifact_checks: dict[str, dict[str, Any]] | None = None,
 ) -> dict[str, Any]:
     declared_slice_count = architecture.get("target", {}).get("slice_count")
     target_layouts = {
@@ -483,11 +564,19 @@ def _current_target_evidence_status(
     edge_evidence_complete = any(
         record.get("evidence_kind") == "network_physical_edge_audit"
         and record.get("edge_count") == 93
-        for record in target_reports.values()
+        and (
+            evidence_artifact_checks is None
+            or evidence_artifact_checks.get(report_id, {}).get("usable") is True
+        )
+        for report_id, record in target_reports.items()
     )
     cost_evidence_complete = any(
         record.get("evidence_kind") == "network_profile_cost"
-        for record in target_reports.values()
+        and (
+            evidence_artifact_checks is None
+            or evidence_artifact_checks.get(report_id, {}).get("usable") is True
+        )
+        for report_id, record in target_reports.items()
     )
     clean_elaboration_approved = bool(
         hardware_approval.get("clean_elaboration_approved", False)
@@ -595,8 +684,11 @@ def audit_w4_gate(
     legacy16_evidence = _legacy16_evidence_status(
         report_payloads, network_profiles
     )
+    current_evidence_artifacts = _current_evidence_artifact_checks(
+        root, architecture
+    )
     current_target_evidence = _current_target_evidence_status(
-        architecture, hardware_approval
+        architecture, hardware_approval, current_evidence_artifacts
     )
     hardware_approval["current_gate_eligible"] = current_target_evidence[
         "hardware_approval_current_gate_eligible"
@@ -710,6 +802,7 @@ def audit_w4_gate(
         "plugin_interfaces": interfaces,
         "logical_result_comparator": comparison_interface,
         "evidence_artifacts": artifact_checks,
+        "current_evidence_artifacts": current_evidence_artifacts,
         "transition_audit": transitions,
         "candidate_network_dry_run_summary": {
             profile_name: {

@@ -12,6 +12,7 @@ from resnet50_pipeline.errors import ContractError
 from resnet50_pipeline.w4_evidence import (
     LEGACY16_METADATA,
     annotate_legacy16_report,
+    architecture_evidence_basis_sha256,
     canonical_json_bytes,
     current_evidence_path,
     resolve_current_output,
@@ -34,6 +35,21 @@ LEGACY16_TOOLS = (
 
 
 class W4EvidenceTests(unittest.TestCase):
+    def test_architecture_basis_excludes_only_current_eligible_evidence(self) -> None:
+        architecture = json.loads(
+            (ROOT / "contracts/architecture.json").read_text(encoding="utf-8")
+        )
+        basis = architecture_evidence_basis_sha256(architecture)
+        architecture["candidate_evidence"]["new-current-record"] = {
+            "current_gate_eligible": True,
+            "sha256": "f" * 64,
+        }
+        self.assertEqual(architecture_evidence_basis_sha256(architecture), basis)
+        architecture["candidate_layouts"]["w4_simple_group4x7_28_candidate_v1"][
+            "packing"
+        ] += "; changed"
+        self.assertNotEqual(architecture_evidence_basis_sha256(architecture), basis)
+
     def test_project_legacy16_index_covers_exactly_nine_immutable_reports(self) -> None:
         index = json.loads(
             (ROOT / "artifacts/w4/legacy16_index.json").read_text(encoding="utf-8")

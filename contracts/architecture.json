@@ -467,6 +467,40 @@
       "sha256": "69505a527a53c25b0bb828b192aba991fba78e838a2429f9cb99d251b8a815aa",
       "size_bytes": 20794,
       "clean_elaboration": false
+    },
+    "w4_rtl28_network_physical_edges_v1": {
+      "target_family": "rtl28",
+      "slice_count": 28,
+      "status": "candidate_software_evidence",
+      "current_gate_eligible": true,
+      "evidence_kind": "network_physical_edge_audit",
+      "architecture_basis_sha256": "c5d57f5a2a5a684f6175a43dbd8b860494be6a930573ebbcc61c47c763e45543",
+      "path": "artifacts/w4/rtl28/c5d57f5a2a5a684f6175a43dbd8b860494be6a930573ebbcc61c47c763e45543/network-physical-edge-audit-75c9c2f94b04e1d7ecb1b945cd1efd48d8016642cc058f268c4e74fdffcc1a02.json",
+      "sha256": "75c9c2f94b04e1d7ecb1b945cd1efd48d8016642cc058f268c4e74fdffcc1a02",
+      "size_bytes": 2205439,
+      "all_scenarios_pass": true,
+      "hardware_approval": false,
+      "g4_passed": false,
+      "w5_authorized": false,
+      "edge_count": 93,
+      "qparam_edge_count": 91,
+      "residual_add_count": 16
+    },
+    "w4_rtl28_network_profile_cost_v1": {
+      "target_family": "rtl28",
+      "slice_count": 28,
+      "status": "candidate_software_evidence",
+      "current_gate_eligible": true,
+      "evidence_kind": "network_profile_cost",
+      "architecture_basis_sha256": "c5d57f5a2a5a684f6175a43dbd8b860494be6a930573ebbcc61c47c763e45543",
+      "path": "artifacts/w4/rtl28/c5d57f5a2a5a684f6175a43dbd8b860494be6a930573ebbcc61c47c763e45543/network-profile-cost-a8d795b58e31bfa70f931218ea27bd1aa4700d247c7ef357cb1c84b969087c3c.json",
+      "sha256": "a8d795b58e31bfa70f931218ea27bd1aa4700d247c7ef357cb1c84b969087c3c",
+      "size_bytes": 152987,
+      "all_scenarios_pass": true,
+      "hardware_approval": false,
+      "g4_passed": false,
+      "w5_authorized": false,
+      "scenario_count": 2
     }
   },
   "legacy_evidence": {

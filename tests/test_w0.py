@@ -105,10 +105,22 @@ class W0PipelineTests(unittest.TestCase):
                 destination = root / relative_path
                 destination.parent.mkdir(parents=True, exist_ok=True)
                 destination.write_bytes(source.read_bytes())
+            architecture = json.loads(
+                (root / "contracts/architecture.json").read_text(encoding="utf-8")
+            )
+            for record in architecture["candidate_evidence"].values():
+                if record.get("current_gate_eligible") is not True:
+                    continue
+                source = PROJECT_ROOT / record["path"]
+                destination = root / record["path"]
+                destination.parent.mkdir(parents=True, exist_ok=True)
+                destination.write_bytes(source.read_bytes())
             first = execute_mock_run(root, Path(directory) / "out", MockBackend())
-            path = root / "contracts" / "architecture.json"
+            path = root / "contracts" / "quantization.json"
             value = json.loads(path.read_text(encoding="utf-8"))
-            value["unresolved"].append("cache-key regression fixture revision")
+            value["hardware_unresolved"].append(
+                "cache-key regression fixture revision"
+            )
             path.write_text(json.dumps(value), encoding="utf-8")
             second = execute_mock_run(root, Path(directory) / "out", MockBackend())
             self.assertNotEqual(first.cache_key, second.cache_key)

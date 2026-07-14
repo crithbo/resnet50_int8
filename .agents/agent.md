@@ -1,6 +1,6 @@
 # ResNet50 INT8 项目入口与代码地图
 
-最后更新：2026-07-13
+最后更新：2026-07-14
 
 本文件是新会话进入本项目时的默认入口，记录最终目标、当前闭环状态、协作规则、仓库基线和代码地图。唯一权威执行计划见 `.agents/plan.md`，已经发生的事实见 `.agents/history.md`。
 
@@ -9,9 +9,9 @@
 - **最终验收**：正式 ResNet50 INT8 ONNX→逐节点/硬件原子算子 golden→28-slice relayout→JSON/bitstream→目标 simulator→execplan/Bank_data→RTL/硬件→三方逐算子和整网一致，并以真实cycle/带宽证据选择性能profile。
 - **W3业务封版检查点**：`35a4fde106d102b0e165e7eb13d60f7dd980db71`；W0/G0、W2/G2、W3/G3已通过，W1只完成模型/输入/软件量化事实，G1因目标硬件合同缺失尚未通过。交接文档可能有后续纯文档提交，当前恢复点以`git rev-parse HEAD`和`history.md`精确台账为准。
 - **三个仓库分工**：`CGRA_SIM` 给软件/QNN语义和旧 ResNet 计划；`ndp-sim-ref` 只给 JSON、bitstream、relayout/execplan 的参考框架，尚未获批为目标工具；`NDPFuncModel` 只给W2 Conv功能数据通路，不是目标backend。根集成层已经统一W3图/lowering/golden身份，但配置、simulator、execplan和hardware尚未接入同一manifest。
-- **当前成果**：正式图含78节点/617张量，lower为133个语义hw_op；保存79个运行时tensor和55个INT32内部tensor，全部78节点独立公式重放匹配ORT，旧77原语已逐项映射。W4-28的C0/C1/C2逐算子布局已完成：14个RTL28 candidate layout覆盖Quantize/Dequantize/View、Conv、MaxPool、QLinearAdd、GAP和MatMul；Add已验证双残差分支、六个独立qparam端口、正式广播白名单、D布局和同时活跃alias冲突，根仓176项测试通过。旧16-slice布局、93边和成本只作历史证据，比较器和审计框架继续复用。
+- **当前成果**：正式图含78节点/617张量，lower为133个语义hw_op；保存79个运行时tensor和55个INT32内部tensor，全部78节点独立公式重放匹配ORT，旧77原语已逐项映射。W4-28的C0/C1/C2/C3软件候选工作已完成：14个RTL28 candidate layout覆盖全部七族；两种整网调度完成93边、91 qparam链、16残差Add和79 tensor生命周期/alias审计，并生成lane/hop/复制/容量/barrier/转换静态成本。两份current软件证据已内容寻址登记，根仓190/190全量回归通过；旧16-slice物理证据只作历史参考。
 - **当前硬件裁决**：目标为28-slice，RTL候选固定`Trassic2.0_RTL@e3bdebba95dec36ee8eba43caa92a326a88392cd`；主体采用七个4-slice小环的batch/channel混合profile，28-slice大环只作代表层性能候选。W4按该方案重开，G4仍未通过，`w5_authorized=false`。
-- **下一主线**：单线程进入W4-28C3，统一重审RTL28 93条边、91条qparam链、16个残差Add、生命周期/alias和两个profile成本；不重跑约951 MB的W3产物，除非合同/hash/回归明确失效。不生成正式W5 JSON/bitstream，且在批准合同和全部当前证据齐全前不宣称G4通过。
+- **下一主线**：等待三类外部责任方返回批准请求包所需的原始证据与签署合同；收到后单线程执行approved合同导入、版本/hash/权威性检查和G4自动重审。等待期间不重复C3、不重跑约951 MB的W3产物；不生成正式W5 JSON/bitstream，且在批准合同和全部当前证据齐全前不宣称G4通过。
 - **当前外部阻塞**：正式模型和固定输入基线已经自行取得；剩余外部阻塞为目标commit的clean elaboration/顶层命名闭合、正式端口layout、INT8 SA/GA/qparams硬件约定、目标emulator关系、硬件加载与dump协议。
 - **禁止误用**：NDPFuncModel 当前 `extracted_*.npy` 和 `verify_pe` psum 不是可信 golden；42个 JSON也不等于 ResNet算子配置已完成；bitstream生成成功不等于数值正确。
 - **接手检查**：Local主工作区依次运行`git status --short`、`.venv\Scripts\python.exe tools\sync_repositories.py verify`、`.venv\Scripts\python.exe -m unittest discover -s tests -v`；fresh checkout可先用`verify --evidence-only`只核对tracked RTL28审计快照。预期根工作树干净、三参考仓匹配lock、RTL28 external evidence匹配hash、登记的全量测试全部通过。2026-07-13已确认managed worktree回收会穿透依赖junction清空Local目标，因此setup对非Local工作树硬失败；依赖`.venv`、三个参考仓或正式W3的任务统一回Local，直到有隔离且通过“销毁安全”验证的新方案。
@@ -37,6 +37,7 @@
 - 如果发现当前计划不合理、信息不足，或者有明显更好的方案，应先说明判断依据并询问操作者是否更改方案；不要明知方案有问题还继续执行。
 - 局部实现细节可以在不改变总体路线的前提下直接做更稳妥的调整，但完成后要说明调整内容。
 - 每完成一个明确子任务后，需要向操作者说明：完成了什么、如何验证、还剩什么风险，并同步更新 `plan.md` 和 `history.md`。
+- 每次运行、工作包或对话任务结束前，必须根据实际代码、验证结果和`.agents/plan.md`做一次收尾分析，并在最终报告中单列“当前完成位置”和“下一步建议”：明确本轮完成的是哪个W/C/G步骤，区分已完成、部分完成、阻塞和未开始，说明验证与门状态是否变化以及工作树中不属于本轮的改动；下一步建议必须给出按依赖排序的最小原子工作包、选择理由、前置条件、适合单线程还是并行、验收标准和禁止越界事项。即使本轮只是检查、暂停、失败或等待外部信息，也不能省略这两项；不得把candidate登记完整误写成门已通过。
 - 不要回退或覆盖已有未提交修改，除非操作者明确要求。
 - Git采用三级规则：不改变行为、接口、schema/合同、layout/qparams、依赖锁或产物hash的错字、措辞、注释、空白等微小改动，不单独提交，可随下一次相关提交合并；范围明确且可聚焦验证的较小代码、测试、规则或文档语义改动，只做本地原子Git提交；阶段门通过、跨模块/跨仓重大集成、关键硬件合同、重要恢复检查点，或操作者明确要求时，才把相关本地提交批量推送GitHub并核对远端hash。凡形成提交，都必须在 `.agents/history.md` 台账记录仓库、完整hash、父提交、范围、验证和精确回退点；微小未提交改动在任务报告中列明。大模型、运行产物、trace和其他可再生大文件不得进入普通Git历史。
 - 永久保留的是提交，不是副本：尽量只保留完成工作所需的一份工作树，不为备份额外创建clone/worktree/zip；主仓和修改过的子仓提交在history登记后推送到操作者控制的GitHub仓库/fork。冗余副本仅在无唯一未提交内容、远端hash已核对且操作者批准具体路径后删除；不得通过改写或裁剪提交历史节省空间。

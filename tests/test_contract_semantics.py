@@ -64,6 +64,17 @@ class ContractSemanticTests(unittest.TestCase):
                 for record in architecture["candidate_layouts"].values()
             )
         )
+        self.assertEqual(len(architecture["candidate_evidence"]), 3)
+        self.assertTrue(
+            architecture["candidate_evidence"][
+                "w4_rtl28_network_physical_edges_v1"
+            ]["current_gate_eligible"]
+        )
+        self.assertTrue(
+            architecture["candidate_evidence"][
+                "w4_rtl28_network_profile_cost_v1"
+            ]["current_gate_eligible"]
+        )
 
     def test_layout_cannot_be_both_planned_and_candidate(self) -> None:
         value = deepcopy(self.architecture)
@@ -143,6 +154,22 @@ class ContractSemanticTests(unittest.TestCase):
         value["backends"]["rtl28_candidate_evidence"]["snapshot_sha256"] = "0" * 64
         with self.assertRaisesRegex(ContractError, "differs from locked evidence"):
             validate_backend_contract(value, self.architecture)
+
+    def test_current_network_evidence_metrics_fail_closed(self) -> None:
+        value = deepcopy(self.architecture)
+        value["candidate_evidence"]["w4_rtl28_network_physical_edges_v1"][
+            "edge_count"
+        ] = 92
+        with self.assertRaisesRegex(ContractError, "edge_count must be 93"):
+            validate_architecture_contract(value)
+
+    def test_current_network_evidence_path_and_hash_are_bound(self) -> None:
+        value = deepcopy(self.architecture)
+        value["candidate_evidence"]["w4_rtl28_network_profile_cost_v1"][
+            "sha256"
+        ] = "0" * 64
+        with self.assertRaisesRegex(ContractError, "path must be"):
+            validate_architecture_contract(value, ROOT / "contracts")
 
 
 if __name__ == "__main__":

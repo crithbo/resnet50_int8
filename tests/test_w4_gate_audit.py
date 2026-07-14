@@ -66,6 +66,19 @@ class W4GateAuditTests(unittest.TestCase):
             report["current_target_evidence"]["registered_layout_evidence_complete"]
         )
         self.assertTrue(
+            report["current_target_evidence"]["network_93_edge_evidence_complete"]
+        )
+        self.assertTrue(
+            report["current_target_evidence"]["profile_cost_evidence_complete"]
+        )
+        self.assertEqual(len(report["current_evidence_artifacts"]), 2)
+        self.assertTrue(
+            all(
+                item["usable"]
+                for item in report["current_evidence_artifacts"].values()
+            )
+        )
+        self.assertTrue(
             report["legacy16_evidence"]["criteria"][
                 "all_93_edges_physically_verified"
             ]
@@ -92,13 +105,19 @@ class W4GateAuditTests(unittest.TestCase):
         self.assertTrue(
             {
                 "target28_operator_layout_evidence_complete",
-                "target28_all_93_edges_physically_verified",
-                "target28_profile_cost_evidence_complete",
                 "target28_clean_elaboration_approved",
                 "approved_target_profile_exists",
                 "target_rtl_isa_register_map_version_frozen",
                 "approved_physical_layout_contract_exists",
             }.issubset(report["gate_decision"]["blocking_criteria"])
+        )
+        self.assertNotIn(
+            "target28_all_93_edges_physically_verified",
+            report["gate_decision"]["blocking_criteria"],
+        )
+        self.assertNotIn(
+            "target28_profile_cost_evidence_complete",
+            report["gate_decision"]["blocking_criteria"],
         )
 
     def test_valid_rtl28_hardware_approval_fixture_is_structure_only(self) -> None:

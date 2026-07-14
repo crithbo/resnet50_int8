@@ -26,7 +26,7 @@ from .profile28 import (
     SUPPORTED_PROFILES,
 )
 from .topology28 import HIGH_RING_OWNERS, LOW_RING_OWNERS
-from .w4_evidence import LEGACY16_METADATA
+from .w4_evidence import LEGACY16_METADATA, architecture_evidence_basis_sha256
 
 ALLOWED_CONTRACT_STATUSES = {
     "candidate",
@@ -39,6 +39,23 @@ SUPPORTED_CONTRACT_SCHEMA_VERSIONS = {
     "architecture": {TARGET_ARCHITECTURE_SCHEMA_VERSION},
     "quantization": {"0.1"},
     "backend": {"0.1"},
+}
+
+CURRENT_W4_EVIDENCE_REQUIREMENTS = {
+    "w4_rtl28_network_physical_edges_v1": {
+        "evidence_kind": "network_physical_edge_audit",
+        "path_kind": "network-physical-edge-audit",
+        "metric_fields": {
+            "edge_count": 93,
+            "qparam_edge_count": 91,
+            "residual_add_count": 16,
+        },
+    },
+    "w4_rtl28_network_profile_cost_v1": {
+        "evidence_kind": "network_profile_cost",
+        "path_kind": "network-profile-cost",
+        "metric_fields": {"scenario_count": 2},
+    },
 }
 
 
@@ -75,6 +92,131 @@ def _validate_layout_registry(
             )
 
 
+def _validate_current_w4_evidence(
+    architecture: dict[str, Any], root: Path | None
+) -> None:
+    registry = architecture["candidate_evidence"]
+    basis_sha256 = architecture_evidence_basis_sha256(architecture)
+    for evidence_id, requirement in CURRENT_W4_EVIDENCE_REQUIREMENTS.items():
+        record = registry.get(evidence_id)
+        if not isinstance(record, dict):
+            raise ContractError(f"candidate_evidence must register {evidence_id}")
+        expected_fields = {
+            "target_family",
+            "slice_count",
+            "status",
+            "current_gate_eligible",
+            "evidence_kind",
+            "architecture_basis_sha256",
+            "path",
+            "sha256",
+            "size_bytes",
+            "all_scenarios_pass",
+            "hardware_approval",
+            "g4_passed",
+            "w5_authorized",
+            *requirement["metric_fields"],
+        }
+        _require_keys(record, expected_fields, f"candidate_evidence.{evidence_id}")
+        expected_values = {
+            "target_family": TARGET_FAMILY,
+            "slice_count": TARGET_SLICE_COUNT,
+            "status": "candidate_software_evidence",
+            "current_gate_eligible": True,
+            "evidence_kind": requirement["evidence_kind"],
+            "architecture_basis_sha256": basis_sha256,
+            "all_scenarios_pass": True,
+            "hardware_approval": False,
+            "g4_passed": False,
+            "w5_authorized": False,
+            **requirement["metric_fields"],
+        }
+        for field, expected in expected_values.items():
+            if record.get(field) != expected:
+                raise ContractError(
+                    f"candidate_evidence.{evidence_id}.{field} must be {expected!r}"
+                )
+        digest = record["sha256"]
+        if not isinstance(digest, str) or len(digest) != 64 or any(
+            character not in "0123456789abcdef" for character in digest
+        ):
+            raise ContractError(
+                f"candidate_evidence.{evidence_id}.sha256 must be lowercase SHA-256"
+            )
+        if not isinstance(record["size_bytes"], int) or record["size_bytes"] <= 0:
+            raise ContractError(
+                f"candidate_evidence.{evidence_id}.size_bytes must be positive"
+            )
+        expected_path = (
+            f"artifacts/w4/rtl28/{basis_sha256}/"
+            f"{requirement['path_kind']}-{digest}.json"
+        )
+        if record["path"] != expected_path:
+            raise ContractError(
+                f"candidate_evidence.{evidence_id}.path must be {expected_path}"
+            )
+        if root is None:
+            continue
+        path = root.parent / expected_path
+        if not path.is_file():
+            raise ContractError(f"registered RTL28 W4 evidence is missing: {path}")
+        if path.stat().st_size != record["size_bytes"]:
+            raise ContractError(f"RTL28 W4 evidence size mismatch: {evidence_id}")
+        if sha256_file(path) != digest:
+            raise ContractError(f"RTL28 W4 evidence hash mismatch: {evidence_id}")
+        try:
+            report = json.loads(path.read_text(encoding="utf-8"))
+        except json.JSONDecodeError as error:
+            raise ContractError(
+                f"RTL28 W4 evidence is invalid JSON: {evidence_id}"
+            ) from error
+        for field, expected in expected_values.items():
+            if report.get(field) != expected:
+                raise ContractError(
+                    f"RTL28 W4 evidence {evidence_id}.{field} must be {expected!r}"
+                )
+        scenarios = report.get("scenarios")
+        if not isinstance(scenarios, dict) or set(scenarios) != {
+            "group4x7_only",
+            "group4x7_to_global_head",
+        }:
+            raise ContractError(
+                f"RTL28 W4 evidence {evidence_id} must contain both scenarios"
+            )
+        if requirement["evidence_kind"] == "network_physical_edge_audit":
+            for scenario_id, scenario in scenarios.items():
+                transition = scenario.get("transition_audit", {})
+                memory = scenario.get("memory_lifecycle", {})
+                if (
+                    transition.get("edge_count") != 93
+                    or transition.get("qparam_edge_count") != 91
+                    or transition.get("residual_add_count") != 16
+                    or transition.get("all_qparam_identities_exact") is not True
+                    or transition.get("all_residual_adds_compatible") is not True
+                    or transition.get("all_edge_policies_verified") is not True
+                    or memory.get("runtime_tensor_count") != 79
+                    or len(memory.get("alias_edge_checks", ())) != 93
+                    or len(memory.get("residual_branch_checks", ())) != 16
+                    or memory.get("all_allocations_fit") is not True
+                    or memory.get("all_lifetime_overlaps_address_disjoint") is not True
+                    or memory.get("all_alias_actions_conflict_free") is not True
+                    or memory.get(
+                        "all_residual_branches_distinct_live_and_disjoint"
+                    )
+                    is not True
+                ):
+                    raise ContractError(
+                        f"RTL28 edge evidence scenario failed: {scenario_id}"
+                    )
+        else:
+            for scenario_id, scenario in scenarios.items():
+                if (
+                    scenario.get("node_count") != 78
+                    or scenario.get("all_standalone_node_plans_fit") is not True
+                ):
+                    raise ContractError(
+                        f"RTL28 cost evidence scenario failed: {scenario_id}"
+                    )
 def validate_architecture_contract(value: dict[str, Any], root: Path | None = None) -> None:
     required_root = {
         "schema_version",
@@ -343,6 +485,8 @@ def validate_architecture_contract(value: dict[str, Any], root: Path | None = No
             raise ContractError("registered RTL28 evidence size mismatch")
         if sha256_file(evidence_path) != rtl_evidence["sha256"]:
             raise ContractError("registered RTL28 evidence hash mismatch")
+
+    _validate_current_w4_evidence(value, root)
 
     unresolved = value["unresolved"]
     if not isinstance(unresolved, list) or not unresolved or any(

@@ -73,6 +73,30 @@ def canonical_json_bytes(report: dict[str, Any]) -> bytes:
     ).encode("utf-8")
 
 
+def architecture_evidence_basis_sha256(architecture: dict[str, Any]) -> str:
+    """Hash architecture semantics without self-referential current evidence.
+
+    Current, gate-eligible software evidence records contain their own content
+    hashes and paths.  Excluding only those records gives them a stable basis
+    digest while keeping target geometry, profiles, layouts, legacy locks, and
+    gate-ineligible RTL evidence inside the hash boundary.
+    """
+
+    if not isinstance(architecture, dict):
+        raise ContractError("architecture evidence basis must be an object")
+    basis = json.loads(json.dumps(architecture))
+    candidate_evidence = basis.get("candidate_evidence")
+    if not isinstance(candidate_evidence, dict):
+        raise ContractError("architecture candidate_evidence must be an object")
+    basis["candidate_evidence"] = {
+        evidence_id: record
+        for evidence_id, record in candidate_evidence.items()
+        if not isinstance(record, dict)
+        or record.get("current_gate_eligible") is not True
+    }
+    return hashlib.sha256(canonical_json_bytes(basis)).hexdigest()
+
+
 def current_evidence_path(
     project_root: Path,
     architecture_sha256: str,
