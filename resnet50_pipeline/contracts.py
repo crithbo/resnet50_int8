@@ -25,6 +25,11 @@ from .profile28 import (
     GROUP_SAMPLE_COUNTS,
     SUPPORTED_PROFILES,
 )
+from .target_config_audit import (
+    OFFICIAL_CONFIG_COMMIT,
+    OFFICIAL_CONFIG_REPOSITORY,
+    OFFICIAL_CONFIG_SLICE_COUNT,
+)
 from .topology28 import HIGH_RING_OWNERS, LOW_RING_OWNERS
 from .w4_evidence import LEGACY16_METADATA, architecture_evidence_basis_sha256
 
@@ -38,7 +43,7 @@ ALLOWED_CONTRACT_STATUSES = {
 SUPPORTED_CONTRACT_SCHEMA_VERSIONS = {
     "architecture": {TARGET_ARCHITECTURE_SCHEMA_VERSION},
     "quantization": {"0.1"},
-    "backend": {"0.1"},
+    "backend": {"0.2"},
 }
 
 CURRENT_W4_EVIDENCE_REQUIREMENTS = {
@@ -510,6 +515,7 @@ def validate_backend_contract(
         "mock",
         "ndp_conv_functional",
         "rtl28_candidate_evidence",
+        "target_config_toolchain",
         "target_simulator",
         "target_hardware",
     }
@@ -571,6 +577,77 @@ def validate_backend_contract(
         snapshot_path = root.parent / rtl["snapshot_path"]
         if not snapshot_path.is_file() or sha256_file(snapshot_path) != rtl["snapshot_sha256"]:
             raise ContractError("backend RTL28 evidence snapshot is missing or hash-mismatched")
+
+    config_toolchain = backends["target_config_toolchain"]
+    if not isinstance(config_toolchain, dict):
+        raise ContractError("backend.target_config_toolchain must be an object")
+    expected_config_toolchain = {
+        "status": "approved_configuration_source",
+        "role": "official_target_json_bitstream_execplan_configuration_source",
+        "approved": True,
+        "authority_basis": "operator_confirmed_2026-07-14",
+        "source_repository": OFFICIAL_CONFIG_REPOSITORY,
+        "source_commit": OFFICIAL_CONFIG_COMMIT,
+        "architecture_id": TARGET_ARCHITECTURE_ID,
+        "slice_count": OFFICIAL_CONFIG_SLICE_COUNT,
+        "authoritative_paths": ["jsons", "bitstream", "model_execplan"],
+        "is_target_configuration_source": True,
+        "can_encode_bitstream": True,
+        "can_generate_execplan": True,
+        "can_execute_numerical_model": False,
+        "maxpool_encoder_probe_validated": True,
+        "resnet50_operator_coverage_complete": False,
+    }
+    for field, expected in expected_config_toolchain.items():
+        if config_toolchain.get(field) != expected:
+            raise ContractError(
+                f"backend.target_config_toolchain.{field} differs from the approved configuration source"
+            )
+    if set(config_toolchain.get("limitations", [])) != {
+        "not_target_numerical_simulator",
+        "not_hardware_execution",
+        "resnet_operator_coverage_incomplete",
+        "maxpool_probe_only",
+        "does_not_approve_rtl_or_layout",
+    }:
+        raise ContractError("target configuration source limitations must remain fail-closed")
+    audit_identity = {
+        field: config_toolchain.get(field)
+        for field in ("audit_path", "audit_sha256", "audit_size_bytes")
+    }
+    if (
+        not isinstance(audit_identity["audit_path"], str)
+        or not isinstance(audit_identity["audit_sha256"], str)
+        or len(audit_identity["audit_sha256"]) != 64
+        or not isinstance(audit_identity["audit_size_bytes"], int)
+        or audit_identity["audit_size_bytes"] <= 0
+    ):
+        raise ContractError("target configuration audit identity is invalid")
+    if root is not None:
+        audit_path = root.parent / audit_identity["audit_path"]
+        if not audit_path.is_file():
+            raise ContractError("target configuration authority audit is missing")
+        if audit_path.stat().st_size != audit_identity["audit_size_bytes"]:
+            raise ContractError("target configuration authority audit size mismatch")
+        if sha256_file(audit_path) != audit_identity["audit_sha256"]:
+            raise ContractError("target configuration authority audit hash mismatch")
+        try:
+            audit = json.loads(audit_path.read_text(encoding="utf-8"))
+        except json.JSONDecodeError as error:
+            raise ContractError("target configuration authority audit is invalid JSON") from error
+        if (
+            audit.get("status") != "configuration_source_verified"
+            or audit.get("source", {}).get("repository") != OFFICIAL_CONFIG_REPOSITORY
+            or audit.get("source", {}).get("commit") != OFFICIAL_CONFIG_COMMIT
+            or audit.get("source", {}).get("slice_count") != OFFICIAL_CONFIG_SLICE_COUNT
+            or audit.get("inventory", {}).get("json_count") != 42
+            or audit.get("inventory", {}).get("named_conv_template_count") != 0
+            or audit.get("register_map_audit", {}).get("declared_width_alignment_status") != "passed"
+            or audit.get("maxpool_probe", {}).get("determinism", {}).get("status") != "passed"
+            or audit.get("maxpool_probe", {}).get("differential_sensitivity", {}).get("status") != "passed"
+            or audit.get("maxpool_probe", {}).get("fail_closed", {}).get("status") != "passed"
+        ):
+            raise ContractError("target configuration authority audit semantics are invalid")
 
     simulator = backends["target_simulator"]
     if not isinstance(simulator, dict):

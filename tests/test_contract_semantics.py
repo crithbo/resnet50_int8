@@ -31,7 +31,7 @@ class ContractSemanticTests(unittest.TestCase):
         contracts = load_contracts(ROOT / "contracts")
         self.assertEqual(contracts.documents["architecture"]["schema_version"], "0.2")
         self.assertEqual(SUPPORTED_CONTRACT_SCHEMA_VERSIONS["architecture"], {"0.2"})
-        self.assertEqual(SUPPORTED_CONTRACT_SCHEMA_VERSIONS["backend"], {"0.1"})
+        self.assertEqual(SUPPORTED_CONTRACT_SCHEMA_VERSIONS["backend"], {"0.2"})
         self.assertEqual(SUPPORTED_CONTRACT_SCHEMA_VERSIONS["quantization"], {"0.1"})
         architecture = contracts.documents["architecture"]
         self.assertEqual(len(architecture["candidate_layouts"]), 14)
@@ -154,6 +154,24 @@ class ContractSemanticTests(unittest.TestCase):
         value["backends"]["rtl28_candidate_evidence"]["snapshot_sha256"] = "0" * 64
         with self.assertRaisesRegex(ContractError, "differs from locked evidence"):
             validate_backend_contract(value, self.architecture)
+
+    def test_target_config_source_is_version_and_scope_bound(self) -> None:
+        value = deepcopy(self.backend)
+        value["backends"]["target_config_toolchain"]["source_commit"] = "0" * 40
+        with self.assertRaisesRegex(ContractError, "approved configuration source"):
+            validate_backend_contract(value, self.architecture)
+
+    def test_target_config_source_does_not_become_numerical_simulator(self) -> None:
+        value = deepcopy(self.backend)
+        value["backends"]["target_config_toolchain"]["can_execute_numerical_model"] = True
+        with self.assertRaisesRegex(ContractError, "approved configuration source"):
+            validate_backend_contract(value, self.architecture)
+
+    def test_target_config_authority_audit_hash_is_bound(self) -> None:
+        value = deepcopy(self.backend)
+        value["backends"]["target_config_toolchain"]["audit_sha256"] = "0" * 64
+        with self.assertRaisesRegex(ContractError, "audit hash mismatch"):
+            validate_backend_contract(value, self.architecture, ROOT / "contracts")
 
     def test_current_network_evidence_metrics_fail_closed(self) -> None:
         value = deepcopy(self.architecture)

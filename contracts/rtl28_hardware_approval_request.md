@@ -2,6 +2,8 @@
 
 状态：`approval_request`，不是批准文件。请三类责任方分别答复下述 `APR_*` 项，并由最终硬件权威合并签署；未明确答复、`TBD`、口头确认或仅引用本项目 candidate 均不视为批准。
 
+2026-07-14补充：操作者已确认`ndp-sim-ref@e299b2804448242d1589b3e58ed7c5a9a5eca09f`的`jsons/`、`bitstream/`和`model_execplan/`是正式硬件配置来源，见ADR-008及`contracts/target_config_authority_audit.json`。因此不再请求责任方重新选择“目标JSON/bitstream来源版本”。下述APR仍有效，因为该确认没有提供clean elaboration、INT8 A/B与qparams数值证据、批准物理layout/profile、目标数值模拟器或板级load/start/wait/dump协议；不得把配置来源确认当成八项硬件批准。
+
 ## 1. 固定审查对象与回复规则
 
 本请求只适用于以下唯一目标，不接受从其他分支或旧 16-slice 文件混选结论：

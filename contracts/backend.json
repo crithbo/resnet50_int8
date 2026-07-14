@@ -1,5 +1,5 @@
 {
-  "schema_version": "0.1",
+  "schema_version": "0.2",
   "contract_type": "backend",
   "status": "candidate",
   "backends": {
@@ -38,6 +38,27 @@
       "can_execute": false,
       "limitations": ["candidate_unapproved", "not_cleanly_elaborated", "not_target_simulator", "not_hardware_approval"]
     },
+    "target_config_toolchain": {
+      "status": "approved_configuration_source",
+      "role": "official_target_json_bitstream_execplan_configuration_source",
+      "approved": true,
+      "authority_basis": "operator_confirmed_2026-07-14",
+      "source_repository": "https://github.com/uSFrances/ndp-sim.git",
+      "source_commit": "e299b2804448242d1589b3e58ed7c5a9a5eca09f",
+      "architecture_id": "trassic2_rtl28_candidate_v1",
+      "slice_count": 28,
+      "authoritative_paths": ["jsons", "bitstream", "model_execplan"],
+      "audit_path": "contracts/target_config_authority_audit.json",
+      "audit_sha256": "fee1faa7b4b32f8bf98140d72f1f2e5800e8ebecc8955bc860663adddfa1cca2",
+      "audit_size_bytes": 66103,
+      "is_target_configuration_source": true,
+      "can_encode_bitstream": true,
+      "can_generate_execplan": true,
+      "can_execute_numerical_model": false,
+      "maxpool_encoder_probe_validated": true,
+      "resnet50_operator_coverage_complete": false,
+      "limitations": ["not_target_numerical_simulator", "not_hardware_execution", "resnet_operator_coverage_incomplete", "maxpool_probe_only", "does_not_approve_rtl_or_layout"]
+    },
     "target_simulator": {
       "status": "unapproved_missing_authoritative_binding",
       "approved": false,
@@ -53,7 +74,7 @@
   },
   "unresolved": [
     "authoritative target simulator command and version",
-    "target JSON/bitstream compatibility version",
+    "ResNet50 INT8 per-operator configuration derivation and numerical validation",
     "hardware load/start/wait/error/dump protocol"
   ]
 }

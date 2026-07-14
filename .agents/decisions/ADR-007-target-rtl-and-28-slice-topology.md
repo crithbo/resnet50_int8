@@ -72,7 +72,7 @@ G5: N[12:14]  G6: N[14:16]
 - `ADR-003`、`ADR-005`及`artifacts/w4/*16*`/旧双profile报告只保留历史；其93条边集合、生命周期/alias算法和报告schema可复用，物理数值不可复用。
 - `ADR-004`的版本化批准机制继续使用，但批准合同必须描述28-slice和真实物理环。
 - `ADR-006`的逻辑结果比较器与slice数无关，继续使用。
-- 旧`config/utils/config_parameters*.py`的16-slice镜像只作历史字段线索；`model_execplan`现有28-bit mask、28个slave和128-bit指令框架是更接近目标的起点，仍需逐字段对照目标commit。
+- 旧`config/utils/config_parameters*.py`的16-slice镜像只作历史字段线索。后续ADR-008已根据操作者确认，把`ndp-sim-ref@e299b280...`的JSON/bitstream/model_execplan链升级为正式硬件配置来源，并完成MaxPool首条逐字段审计；这不反向批准本ADR中的物理layout、RTL clean elaboration或数值执行。
 
 ## 新G4门
 

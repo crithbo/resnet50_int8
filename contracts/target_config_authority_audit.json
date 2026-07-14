@@ -1,0 +1,2026 @@
+{
+  "authority_scope": {
+    "approved_for": [
+      "target_json_configuration_format",
+      "target_bitstream_encoding_and_mapping",
+      "target_execplan_configuration_chain"
+    ],
+    "not_proven_by_this_audit": [
+      "target_simulator_numerical_correctness",
+      "resnet50_operator_coverage",
+      "clean_rtl_elaboration",
+      "board_load_start_wait_dump_protocol",
+      "golden_simulator_hardware_equality"
+    ]
+  },
+  "encoder_safety_findings": [
+    "The official Bit type masks values modulo field width; the project preflight must reject overflow before encoding.",
+    "A fixed mapper seed alone is insufficient across fresh Python processes; PYTHONHASHSEED=0 is required.",
+    "PYTHONUTF8=1 is required on Windows so diagnostic symbols do not fail under a GBK console."
+  ],
+  "inventory": {
+    "deepseek_transformer_count": 35,
+    "json_count": 42,
+    "named_conv_template_count": 0,
+    "resnet_or_shared_count": 7,
+    "templates": [
+      {
+        "classification": "resnet_or_shared",
+        "path": "jsons/add_dequant_uint8CWH_uint8CWH_fp32CWH.json",
+        "sha256": "15f5321ab57cb73ca2f650693859657759f834389677451a9a89e66217e9e6da",
+        "size_bytes": 19573,
+        "top_level_groups": [
+          "CONFIG",
+          "buffer_config",
+          "buffer_loop_configs",
+          "dram_loop_configs",
+          "general_array",
+          "lc_pe_configs",
+          "stream_engine"
+        ]
+      },
+      {
+        "classification": "resnet_or_shared",
+        "path": "jsons/avgpool_config_2048_7_7.json",
+        "sha256": "a3d19c7b1759eb40b66a6b786234865b61917e9cf74822a62dd469729c2497c5",
+        "size_bytes": 13417,
+        "top_level_groups": [
+          "CONFIG",
+          "buffer_config",
+          "buffer_loop_configs",
+          "dram_loop_configs",
+          "general_array",
+          "lc_pe_configs",
+          "stream_engine"
+        ]
+      },
+      {
+        "classification": "deepseek_transformer",
+        "path": "jsons/decode_add_fp16N_fp32N_fp32N.json",
+        "sha256": "ef4e3f51f86d87b37bb827d88b9a99837aa4770216539386ae56ec118c9e7dba",
+        "size_bytes": 18788,
+        "top_level_groups": [
+          "CONFIG",
+          "buffer_config",
+          "buffer_loop_configs",
+          "dram_loop_configs",
+          "general_array",
+          "stream_engine"
+        ]
+      },
+      {
+        "classification": "deepseek_transformer",
+        "path": "jsons/decode_gemv_local.json",
+        "sha256": "87fc60851d463ca555b796adb8d49fd445a43a0a8cb4d302fd6cb5b414cd808e",
+        "size_bytes": 25784,
+        "top_level_groups": [
+          "CONFIG",
+          "buffer_config",
+          "buffer_loop_configs",
+          "dram_loop_configs",
+          "gemv_shape",
+          "general_array",
+          "lc_pe_configs",
+          "special_array",
+          "stream_engine"
+        ]
+      },
+      {
+        "classification": "deepseek_transformer",
+        "path": "jsons/decode_gemv_ring.json",
+        "sha256": "1c5e2909dc486f1e4c712c0577bdeb69bee65f3269111bdd64f4a071cc574c1f",
+        "size_bytes": 26173,
+        "top_level_groups": [
+          "CONFIG",
+          "buffer_config",
+          "buffer_loop_configs",
+          "dram_loop_configs",
+          "gemv_shape",
+          "general_array",
+          "lc_pe_configs",
+          "n2n",
+          "special_array",
+          "stream_engine"
+        ]
+      },
+      {
+        "classification": "deepseek_transformer",
+        "path": "jsons/decode_mac_SFU_fp32N_fp32N.json",
+        "sha256": "11dd50c1e9f428b97ad27f8bfdbe8f4773bf0b121eea6a06aa2a368ca5eb031f",
+        "size_bytes": 8821,
+        "top_level_groups": [
+          "CONFIG",
+          "buffer_config",
+          "buffer_loop_configs",
+          "dram_loop_configs",
+          "general_array",
+          "lc_pe_configs",
+          "stream_engine"
+        ]
+      },
+      {
+        "classification": "deepseek_transformer",
+        "path": "jsons/decode_max_fp32N_fp32N.json",
+        "sha256": "ab73710698892ed8e1062e4b5ac66fe310f99609dac89ea96ce8fa6e4bd3a1c2",
+        "size_bytes": 8337,
+        "top_level_groups": [
+          "CONFIG",
+          "buffer_config",
+          "buffer_loop_configs",
+          "dram_loop_configs",
+          "general_array",
+          "lc_pe_configs",
+          "stream_engine"
+        ]
+      },
+      {
+        "classification": "deepseek_transformer",
+        "path": "jsons/decode_mul_fp32N_fp32N_fp16N.json",
+        "sha256": "80918555f06896a7af9c0e9a352ae19f986cf1a3383659503916196bff6d6570",
+        "size_bytes": 18585,
+        "top_level_groups": [
+          "CONFIG",
+          "buffer_config",
+          "buffer_loop_configs",
+          "dram_loop_configs",
+          "general_array",
+          "stream_engine"
+        ]
+      },
+      {
+        "classification": "deepseek_transformer",
+        "path": "jsons/decode_remote_sum_fp32N_fp32N.json",
+        "sha256": "5886828fe28930d72b6bcbef17c4da4c88a0c9da5301dfc15e16f5437747edc1",
+        "size_bytes": 8426,
+        "top_level_groups": [
+          "CONFIG",
+          "buffer_config",
+          "buffer_loop_configs",
+          "dram_loop_configs",
+          "general_array",
+          "lc_pe_configs",
+          "stream_engine"
+        ]
+      },
+      {
+        "classification": "deepseek_transformer",
+        "path": "jsons/decode_sum_rec_fp32N_fp32N.json",
+        "sha256": "310befa14072caf43d233ab7d3e892e187de94b64de8e77bef26696cec13ab30",
+        "size_bytes": 9009,
+        "top_level_groups": [
+          "CONFIG",
+          "buffer_config",
+          "buffer_loop_configs",
+          "dram_loop_configs",
+          "general_array",
+          "lc_pe_configs",
+          "stream_engine"
+        ]
+      },
+      {
+        "classification": "deepseek_transformer",
+        "path": "jsons/decode_summac_fp16N_fp32N.json",
+        "sha256": "c2aafcb6fb3ca9a49ddea6114b93aef63b589cb851b9c557af5844c086218121",
+        "size_bytes": 9981,
+        "top_level_groups": [
+          "CONFIG",
+          "buffer_config",
+          "buffer_loop_configs",
+          "dram_loop_configs",
+          "general_array",
+          "lc_pe_configs",
+          "stream_engine"
+        ]
+      },
+      {
+        "classification": "deepseek_transformer",
+        "path": "jsons/decode_summac_fp32N_fp32N.json",
+        "sha256": "7f7387dd21bb422a906a2cd71c332ff0e57ce8e42ed148a50d1713f37f95f8f3",
+        "size_bytes": 9103,
+        "top_level_groups": [
+          "CONFIG",
+          "buffer_config",
+          "buffer_loop_configs",
+          "dram_loop_configs",
+          "general_array",
+          "lc_pe_configs",
+          "stream_engine"
+        ]
+      },
+      {
+        "classification": "resnet_or_shared",
+        "path": "jsons/gemv_config_local_M1N128K32.json",
+        "sha256": "f5dc25654b28dbabff87df6b2efad3793b869c807bf75b30f5442614f8084ee3",
+        "size_bytes": 16967,
+        "top_level_groups": [
+          "CONFIG",
+          "buffer_config",
+          "buffer_loop_configs",
+          "dram_loop_configs",
+          "gemv_shape",
+          "lc_pe_configs",
+          "special_array",
+          "stream_engine"
+        ]
+      },
+      {
+        "classification": "resnet_or_shared",
+        "path": "jsons/maxpool_config_16_112_112_stride2_padding1.json",
+        "sha256": "a0091f3fae223abd5225c54b833cf3bb578b3fea6b202883c5cbf4be50d60cb1",
+        "size_bytes": 19762,
+        "top_level_groups": [
+          "CONFIG",
+          "buffer_config",
+          "buffer_loop_configs",
+          "dram_loop_configs",
+          "general_array",
+          "lc_pe_configs",
+          "stream_engine"
+        ]
+      },
+      {
+        "classification": "resnet_or_shared",
+        "path": "jsons/maxpool_config_16_16_16_stride2_padding1.json",
+        "sha256": "624d675ddde6f386474289d473d1c69559691794f3c1ea775dfc99325cc8f072",
+        "size_bytes": 19819,
+        "top_level_groups": [
+          "CONFIG",
+          "buffer_config",
+          "buffer_loop_configs",
+          "dram_loop_configs",
+          "general_array",
+          "lc_pe_configs",
+          "stream_engine"
+        ]
+      },
+      {
+        "classification": "deepseek_transformer",
+        "path": "jsons/prefill_add_fp16MN_fp32N_fp32MN.json",
+        "sha256": "5fb8d26190f3c808444929fbfd6e3fa05ff3747335c7a29af0cdedd69204c3fa",
+        "size_bytes": 20531,
+        "top_level_groups": [
+          "CONFIG",
+          "buffer_config",
+          "buffer_loop_configs",
+          "dram_loop_configs",
+          "general_array",
+          "lc_pe_configs",
+          "mul_shape",
+          "stream_engine"
+        ]
+      },
+      {
+        "classification": "deepseek_transformer",
+        "path": "jsons/prefill_add_fp32MN_fp16MN_fp32MN.json",
+        "sha256": "b0de8e8d36f4db22ebad825a4c3d220d9c21a3ed47d75773902d8a302365d602",
+        "size_bytes": 16251,
+        "top_level_groups": [
+          "CONFIG",
+          "buffer_config",
+          "buffer_loop_configs",
+          "dram_loop_configs",
+          "general_array",
+          "lc_pe_configs",
+          "stream_engine"
+        ]
+      },
+      {
+        "classification": "deepseek_transformer",
+        "path": "jsons/prefill_add_fp32MN_fp32MN_fp16MN.json",
+        "sha256": "14c6394c39ced9ad465902ed7f747c729c61e64174dee1c5a7a5a3953f78cb5e",
+        "size_bytes": 16251,
+        "top_level_groups": [
+          "CONFIG",
+          "buffer_config",
+          "buffer_loop_configs",
+          "dram_loop_configs",
+          "general_array",
+          "lc_pe_configs",
+          "stream_engine"
+        ]
+      },
+      {
+        "classification": "deepseek_transformer",
+        "path": "jsons/prefill_add_fp32MN_fp32MN_fp32MN.json",
+        "sha256": "d78e184c92f3f88875f8ef6caea13d88e8e35f514226e893bb6078ed2f4e4a85",
+        "size_bytes": 16255,
+        "top_level_groups": [
+          "CONFIG",
+          "buffer_config",
+          "buffer_loop_configs",
+          "dram_loop_configs",
+          "general_array",
+          "lc_pe_configs",
+          "stream_engine"
+        ]
+      },
+      {
+        "classification": "deepseek_transformer",
+        "path": "jsons/prefill_add_V_fp16MN_fp32N_fp16MN.json",
+        "sha256": "6b30203fc2302de480da5c12e520bd134d35c76cde63a4fa3c02deb7e3b9bf4f",
+        "size_bytes": 21142,
+        "top_level_groups": [
+          "CONFIG",
+          "buffer_config",
+          "buffer_loop_configs",
+          "dram_loop_configs",
+          "general_array",
+          "lc_pe_configs",
+          "stream_engine"
+        ]
+      },
+      {
+        "classification": "deepseek_transformer",
+        "path": "jsons/prefill_gemm_local.json",
+        "sha256": "9d0f72bc1a32f5b3fb2fff44c7fe4585adfb00d393ccf38bffb9f2e239f2761e",
+        "size_bytes": 20243,
+        "top_level_groups": [
+          "CONFIG",
+          "buffer_config",
+          "buffer_loop_configs",
+          "dram_loop_configs",
+          "gemm_shape",
+          "lc_pe_configs",
+          "special_array",
+          "stream_engine"
+        ]
+      },
+      {
+        "classification": "deepseek_transformer",
+        "path": "jsons/prefill_gemm_local_qkt.json",
+        "sha256": "e2b4f2e8e119fa29b3a4202b4476f838fd071e106322809745169ee70cef4de6",
+        "size_bytes": 20242,
+        "top_level_groups": [
+          "CONFIG",
+          "buffer_config",
+          "buffer_loop_configs",
+          "dram_loop_configs",
+          "gemm_shape",
+          "lc_pe_configs",
+          "special_array",
+          "stream_engine"
+        ]
+      },
+      {
+        "classification": "deepseek_transformer",
+        "path": "jsons/prefill_gemm_ring_4slice.json",
+        "sha256": "6a2ca9f2edd2e9c7b8ebbb558a84dd23c8e583781f8a8ac01c213b78c6737e91",
+        "size_bytes": 20430,
+        "top_level_groups": [
+          "CONFIG",
+          "buffer_config",
+          "buffer_loop_configs",
+          "dram_loop_configs",
+          "gemm_shape",
+          "lc_pe_configs",
+          "n2n",
+          "special_array",
+          "stream_engine"
+        ]
+      },
+      {
+        "classification": "deepseek_transformer",
+        "path": "jsons/prefill_mac_fp32MN_fp32MN_fp32MN.json",
+        "sha256": "32521b8ed33e020019258911542929e1220c3326510fb6f7ce4867b6d09536a9",
+        "size_bytes": 16364,
+        "top_level_groups": [
+          "CONFIG",
+          "buffer_config",
+          "buffer_loop_configs",
+          "dram_loop_configs",
+          "general_array",
+          "lc_pe_configs",
+          "stream_engine"
+        ]
+      },
+      {
+        "classification": "deepseek_transformer",
+        "path": "jsons/prefill_mac_SFU_fp32MN_fp32MN.json",
+        "sha256": "f6fa1fccd55df2728ec855a0097918dca35a89002e32ac93c4b3e60a9058696d",
+        "size_bytes": 19424,
+        "top_level_groups": [
+          "CONFIG",
+          "buffer_config",
+          "buffer_loop_configs",
+          "dram_loop_configs",
+          "general_array",
+          "lc_pe_configs",
+          "stream_engine"
+        ]
+      },
+      {
+        "classification": "deepseek_transformer",
+        "path": "jsons/prefill_max_fp32MN_fp32MN.json",
+        "sha256": "2d20d87f5bbd14546c346bb54e1200ffd07299c193aded766dbeb59ea704921b",
+        "size_bytes": 13577,
+        "top_level_groups": [
+          "CONFIG",
+          "buffer_config",
+          "buffer_loop_configs",
+          "dram_loop_configs",
+          "general_array",
+          "lc_pe_configs",
+          "stream_engine"
+        ]
+      },
+      {
+        "classification": "deepseek_transformer",
+        "path": "jsons/prefill_mul_fp32MN_fp16MN_fp16MN.json",
+        "sha256": "c089a9bad3cce8d5f1a2a62b48ea57e557a32a1834b3ba34019ddefdadeca217",
+        "size_bytes": 16250,
+        "top_level_groups": [
+          "CONFIG",
+          "buffer_config",
+          "buffer_loop_configs",
+          "dram_loop_configs",
+          "general_array",
+          "lc_pe_configs",
+          "stream_engine"
+        ]
+      },
+      {
+        "classification": "deepseek_transformer",
+        "path": "jsons/prefill_mul_fp32MN_fp32M_fp16MN.json",
+        "sha256": "31d4369b393a39435349adb687a1a0dab63835f3a5f246f02e40a2af5f8923de",
+        "size_bytes": 16004,
+        "top_level_groups": [
+          "CONFIG",
+          "buffer_config",
+          "buffer_loop_configs",
+          "dram_loop_configs",
+          "general_array",
+          "lc_pe_configs",
+          "stream_engine"
+        ]
+      },
+      {
+        "classification": "deepseek_transformer",
+        "path": "jsons/prefill_mul_fp32MN_fp32M_fp32MN.json",
+        "sha256": "db66d5e8da6146eb743fe1006a6248daf040ba937d713a99f961c591325a272f",
+        "size_bytes": 14789,
+        "top_level_groups": [
+          "CONFIG",
+          "buffer_config",
+          "buffer_loop_configs",
+          "dram_loop_configs",
+          "general_array",
+          "lc_pe_configs",
+          "stream_engine"
+        ]
+      },
+      {
+        "classification": "deepseek_transformer",
+        "path": "jsons/prefill_mul_fp32MN_fp32MN_fp32MN.json",
+        "sha256": "b3eaafdd63d40c7506341c1c72abf120ca3d2feea93092fcd6933efa1274ed7e",
+        "size_bytes": 16252,
+        "top_level_groups": [
+          "CONFIG",
+          "buffer_config",
+          "buffer_loop_configs",
+          "dram_loop_configs",
+          "general_array",
+          "lc_pe_configs",
+          "stream_engine"
+        ]
+      },
+      {
+        "classification": "deepseek_transformer",
+        "path": "jsons/prefill_mul_fp32MN_fp32N_fp16MN.json",
+        "sha256": "52824ac873d7d571c8d4294c754b31e9967cded83fe7faa6f48a5deb5ee21959",
+        "size_bytes": 20124,
+        "top_level_groups": [
+          "CONFIG",
+          "buffer_config",
+          "buffer_loop_configs",
+          "dram_loop_configs",
+          "general_array",
+          "lc_pe_configs",
+          "mul_shape",
+          "stream_engine"
+        ]
+      },
+      {
+        "classification": "deepseek_transformer",
+        "path": "jsons/prefill_remote_max_fp32MN_fp32MN.json",
+        "sha256": "c18b4aac7970f4b061afac85fbf588a136187861e614efdf3c9de4bea18850b8",
+        "size_bytes": 13667,
+        "top_level_groups": [
+          "CONFIG",
+          "buffer_config",
+          "buffer_loop_configs",
+          "dram_loop_configs",
+          "general_array",
+          "lc_pe_configs",
+          "stream_engine"
+        ]
+      },
+      {
+        "classification": "deepseek_transformer",
+        "path": "jsons/prefill_remote_sum_4slice_fp16MN_fp32MN.json",
+        "sha256": "9ebaec3af598ebf8a25ef9664e5517a6c107ce48416fc0ac76e05b9b6578c37c",
+        "size_bytes": 20674,
+        "top_level_groups": [
+          "CONFIG",
+          "buffer_config",
+          "buffer_loop_configs",
+          "dram_loop_configs",
+          "general_array",
+          "lc_pe_configs",
+          "stream_engine"
+        ]
+      },
+      {
+        "classification": "deepseek_transformer",
+        "path": "jsons/prefill_remote_sum_4slice_fp32MN_fp32MN.json",
+        "sha256": "86930ae15d348b433eef49aef78878874ca809b39fe0bad09a1072f04e07afda",
+        "size_bytes": 13666,
+        "top_level_groups": [
+          "CONFIG",
+          "buffer_config",
+          "buffer_loop_configs",
+          "dram_loop_configs",
+          "general_array",
+          "lc_pe_configs",
+          "stream_engine"
+        ]
+      },
+      {
+        "classification": "deepseek_transformer",
+        "path": "jsons/prefill_remote_sum_fp32MN_fp32MN.json",
+        "sha256": "44382b0405fc3192172f3ab6e4fb81dbd29701a7c8e16715d2a186743ef60708",
+        "size_bytes": 13667,
+        "top_level_groups": [
+          "CONFIG",
+          "buffer_config",
+          "buffer_loop_configs",
+          "dram_loop_configs",
+          "general_array",
+          "lc_pe_configs",
+          "stream_engine"
+        ]
+      },
+      {
+        "classification": "deepseek_transformer",
+        "path": "jsons/prefill_silu_fp16MN_fp32MN.json",
+        "sha256": "f7b31dcba036f3adeca906cf5ea55429dedf42d10593820af2f38824c4ebd349",
+        "size_bytes": 14107,
+        "top_level_groups": [
+          "CONFIG",
+          "buffer_config",
+          "buffer_loop_configs",
+          "dram_loop_configs",
+          "general_array",
+          "lc_pe_configs",
+          "stream_engine"
+        ]
+      },
+      {
+        "classification": "deepseek_transformer",
+        "path": "jsons/prefill_sub_SFU_fp32MN_fp32M_fp32MN.json",
+        "sha256": "80707633b4a74619bdd588877455edb24e743091344f673873fa606feede7e77",
+        "size_bytes": 22689,
+        "top_level_groups": [
+          "CONFIG",
+          "buffer_config",
+          "buffer_loop_configs",
+          "dram_loop_configs",
+          "general_array",
+          "lc_pe_configs",
+          "stream_engine"
+        ]
+      },
+      {
+        "classification": "deepseek_transformer",
+        "path": "jsons/prefill_sum_rec_fp32MN_fp32MN.json",
+        "sha256": "33f1332d15a659d3be5244b293edd341bd12a22c4427b2d16b1efcddd57c6522",
+        "size_bytes": 19521,
+        "top_level_groups": [
+          "CONFIG",
+          "buffer_config",
+          "buffer_loop_configs",
+          "dram_loop_configs",
+          "general_array",
+          "lc_pe_configs",
+          "stream_engine"
+        ]
+      },
+      {
+        "classification": "deepseek_transformer",
+        "path": "jsons/prefill_summac_fp16MN_fp32MN.json",
+        "sha256": "da91862f510562dbc30af72f4722f4645ae4b2c6086fe9689db730a5973984f7",
+        "size_bytes": 20611,
+        "top_level_groups": [
+          "CONFIG",
+          "buffer_config",
+          "buffer_loop_configs",
+          "dram_loop_configs",
+          "general_array",
+          "lc_pe_configs",
+          "stream_engine"
+        ]
+      },
+      {
+        "classification": "deepseek_transformer",
+        "path": "jsons/prefill_summac_fp32MN_fp32MN.json",
+        "sha256": "bcbf94fc07e9610d98ebfcd11c0264a8f935b2020d06eda7e3131f271d2075ae",
+        "size_bytes": 19729,
+        "top_level_groups": [
+          "CONFIG",
+          "buffer_config",
+          "buffer_loop_configs",
+          "dram_loop_configs",
+          "general_array",
+          "lc_pe_configs",
+          "stream_engine"
+        ]
+      },
+      {
+        "classification": "resnet_or_shared",
+        "path": "jsons/quant_from_buffer_int32MN_uint8MN.json",
+        "sha256": "db638f0640e74217e80e61350a2fe400f7b495e2201f17c39915328cdd455ba2",
+        "size_bytes": 20366,
+        "top_level_groups": [
+          "CONFIG",
+          "buffer_config",
+          "buffer_loop_configs",
+          "dram_loop_configs",
+          "general_array",
+          "lc_pe_configs",
+          "stream_engine"
+        ]
+      },
+      {
+        "classification": "resnet_or_shared",
+        "path": "jsons/sum_config_32_32.json",
+        "sha256": "dbcf087129e5746ed5ebd2b847d224bec83c034c8d652fd1b88cead6fefe5a6d",
+        "size_bytes": 12902,
+        "top_level_groups": [
+          "CONFIG",
+          "buffer_config",
+          "buffer_loop_configs",
+          "dram_loop_configs",
+          "general_array",
+          "lc_pe_configs",
+          "stream_engine"
+        ]
+      }
+    ]
+  },
+  "maxpool_probe": {
+    "determinism": {
+      "environment": {
+        "PYTHONHASHSEED": "0",
+        "PYTHONUTF8": "1"
+      },
+      "heuristic_iterations": 10000,
+      "heuristic_restarts": 10,
+      "outputs": {
+        "detailed_dump.txt": {
+          "sha256": "c526bcc12c85fc93556bffadb10c83b7f176c47db64a9f45c344365ee9d1f8bb",
+          "size_bytes": 39665
+        },
+        "mapping_review.json": {
+          "sha256": "fc2ad22ed7b3b042ff6400fde7588bac070504955960ccef975863a73d6fe598",
+          "size_bytes": 6103
+        },
+        "maxpool_config_16_112_112_stride2_padding1_bitstream_128b.bin": {
+          "sha256": "2e4096f261adb67296116929d94b691b7e27bf3ff2d327a4bb9db8b017900353",
+          "size_bytes": 3900
+        },
+        "maxpool_config_16_112_112_stride2_padding1_bitstream_64b.bin": {
+          "sha256": "b48ef216346cc630da777c253825751de68d725ba7a613e2df3f646335033a99",
+          "size_bytes": 3894
+        },
+        "modules_dump_128b.bin": {
+          "sha256": "2e4096f261adb67296116929d94b691b7e27bf3ff2d327a4bb9db8b017900353",
+          "size_bytes": 3900
+        },
+        "modules_dump_64b.bin": {
+          "sha256": "b48ef216346cc630da777c253825751de68d725ba7a613e2df3f646335033a99",
+          "size_bytes": 3894
+        },
+        "parsed_bitstream.txt": {
+          "sha256": "811d262dfaa9b64b15f89102f6f5944acf9c251f539d007985bacf3c9ba557d5",
+          "size_bytes": 4331
+        }
+      },
+      "run_count": 2,
+      "seed": 42,
+      "status": "passed"
+    },
+    "differential_sensitivity": {
+      "baseline_128b_sha256": "2e4096f261adb67296116929d94b691b7e27bf3ff2d327a4bb9db8b017900353",
+      "field": "stream_engine.stream0.base_addr",
+      "modified": 1040,
+      "modified_128b_sha256": "a35fd35fbc33fa85a506df733e9c0a012c79d6fd52ee3eb3b888aa144a0d7d36",
+      "original": 1024,
+      "status": "passed"
+    },
+    "fail_closed": {
+      "mutation": "dram_loop_configs.LC1.end=131072",
+      "rejection": "dram_loop_configs.LC1.end=131072 exceeds unsigned 17-bit range; refusing silent truncation",
+      "status": "passed"
+    },
+    "preflight_validation": {
+      "config_mask": "11011101",
+      "field_routes": {
+        "buffer_config": {
+          "encoder_class": "BufferConfig",
+          "resource_count": 6,
+          "source": "bitstream/config/buffer.py"
+        },
+        "buffer_loop_configs": {
+          "encoder_class": "BufferRowLCConfig+BufferColLCConfig",
+          "resource_count": 5,
+          "source": "bitstream/config/loop.py"
+        },
+        "dram_loop_configs": {
+          "encoder_class": "DramLoopControlConfig",
+          "resource_count": 20,
+          "source": "bitstream/config/loop.py"
+        },
+        "general_array.PE_array": {
+          "encoder_class": "GAPEConfig",
+          "resource_count": 16,
+          "source": "bitstream/config/general.py"
+        },
+        "general_array.inport": {
+          "encoder_class": "GAInportConfig",
+          "resource_count": 3,
+          "source": "bitstream/config/general.py"
+        },
+        "general_array.outport": {
+          "encoder_class": "GAOutportConfig",
+          "resource_count": 1,
+          "source": "bitstream/config/general.py"
+        },
+        "lc_pe_configs": {
+          "encoder_class": "LCPEConfig",
+          "resource_count": 10,
+          "source": "bitstream/config/loop.py"
+        },
+        "stream_engine": {
+          "encoder_class": "ReadStreamEngineConfig+WriteStreamEngineConfig",
+          "resource_count": "4 read + 1 write",
+          "source": "bitstream/config/stream.py"
+        }
+      },
+      "resources": {
+        "buffer_loop_groups": 2,
+        "buffers": 2,
+        "dram_loops": 8,
+        "ga_inports": 3,
+        "ga_pes": 8,
+        "loop_pes": 6,
+        "read_streams": 1,
+        "write_streams": 1
+      },
+      "status": "valid"
+    },
+    "template_path": "jsons/maxpool_config_16_112_112_stride2_padding1.json",
+    "template_sha256": "a0091f3fae223abd5225c54b833cf3bb578b3fea6b202883c5cbf4be50d60cb1"
+  },
+  "register_map_audit": {
+    "annotation_range_mismatch_count": 13,
+    "annotation_range_mismatches": [
+      {
+        "annotated_width": 4,
+        "annotation": "8bit[3:0]",
+        "config_name": "config[use+update]",
+        "declared_width": 8,
+        "group": "CONFIG",
+        "line": 2,
+        "module": "CONFIG"
+      },
+      {
+        "annotated_width": 13,
+        "annotation": "17bit[42:30]",
+        "config_name": "dram_loop_configs.start",
+        "declared_width": 17,
+        "group": "IGA",
+        "line": 5,
+        "module": "20 *DRAM LC"
+      },
+      {
+        "annotated_width": 13,
+        "annotation": "17bit[29:17]",
+        "config_name": "dram_loop_configs.stride",
+        "declared_width": 17,
+        "group": "IGA",
+        "line": 6,
+        "module": "20 *DRAM LC"
+      },
+      {
+        "annotated_width": 13,
+        "annotation": "17bit[16:4]",
+        "config_name": "dram_loop_configs.end",
+        "declared_width": 17,
+        "group": "IGA",
+        "line": 7,
+        "module": "20 *DRAM LC"
+      },
+      {
+        "annotated_width": 12,
+        "annotation": "16bit[35:24]",
+        "config_name": "lc_pe_configs.inport2.constant",
+        "declared_width": 16,
+        "group": "IGA",
+        "line": 29,
+        "module": "10*LC PE"
+      },
+      {
+        "annotated_width": 12,
+        "annotation": "16bit[23:12]",
+        "config_name": "lc_pe_configs.inport1.constant",
+        "declared_width": 16,
+        "group": "IGA",
+        "line": 30,
+        "module": "10*LC PE"
+      },
+      {
+        "annotated_width": 12,
+        "annotation": "16bit[11:0]",
+        "config_name": "lc_pe_configs.inport0.constant",
+        "declared_width": 16,
+        "group": "IGA",
+        "line": 31,
+        "module": "10*LC PE"
+      },
+      {
+        "annotated_width": 29,
+        "annotation": "30bit[440:412]",
+        "config_name": "stream_engine.stream.base_addr",
+        "declared_width": 30,
+        "group": "LSU",
+        "line": 40,
+        "module": "4*Read Memory Stream Engine"
+      },
+      {
+        "annotated_width": 64,
+        "annotation": "130bit[310:247]",
+        "config_name": "stream_engine.stream.address_remapping",
+        "declared_width": 130,
+        "group": "LSU",
+        "line": 45,
+        "module": "4*Read Memory Stream Engine"
+      },
+      {
+        "annotated_width": 29,
+        "annotation": "30bit[278:250]",
+        "config_name": "stream_engine.stream.base_addr",
+        "declared_width": 30,
+        "group": "LSU",
+        "line": 64,
+        "module": "1*Write Memory Stream Engine"
+      },
+      {
+        "annotated_width": 64,
+        "annotation": "130bit[148:85]",
+        "config_name": "stream_engine.stream.address_remapping",
+        "declared_width": 130,
+        "group": "LSU",
+        "line": 69,
+        "module": "1*Write Memory Stream Engine"
+      },
+      {
+        "annotated_width": 4,
+        "annotation": "5bit[15:12]",
+        "config_name": "buffer_config.buffer.buffer_nbr_cnt",
+        "declared_width": 5,
+        "group": "LSU",
+        "line": 81,
+        "module": "6*Buffer_Manager_Cluster"
+      },
+      {
+        "annotated_width": 2,
+        "annotation": "4bit[10:9]",
+        "config_name": "buffer_config.buffer.buffer_life_time",
+        "declared_width": 4,
+        "group": "LSU",
+        "line": 83,
+        "module": "6*Buffer_Manager_Cluster"
+      }
+    ],
+    "consumer_rule": "model_execplan register_mapping.py uses declared width prefixes and row order; bracketed ranges are intentionally not used for field placement",
+    "declared_width_alignment_status": "passed",
+    "maxpool_module_alignment": [
+      {
+        "aligned": true,
+        "declared_field_bits": 60,
+        "encoder_bits": 60,
+        "encoder_padding_bits": 0,
+        "group": "IGA",
+        "module": "20 *DRAM LC"
+      },
+      {
+        "aligned": true,
+        "declared_field_bits": 17,
+        "encoder_bits": 17,
+        "encoder_padding_bits": 0,
+        "group": "IGA",
+        "module": "5*BUFFER ROW LC"
+      },
+      {
+        "aligned": true,
+        "declared_field_bits": 26,
+        "encoder_bits": 26,
+        "encoder_padding_bits": 0,
+        "group": "IGA",
+        "module": "5*BUFFER COL LC"
+      },
+      {
+        "aligned": true,
+        "declared_field_bits": 80,
+        "encoder_bits": 96,
+        "encoder_padding_bits": 16,
+        "group": "IGA",
+        "module": "10*LC PE"
+      },
+      {
+        "aligned": true,
+        "declared_field_bits": 580,
+        "encoder_bits": 580,
+        "encoder_padding_bits": 0,
+        "group": "LSU",
+        "module": "4*Read Memory Stream Engine"
+      },
+      {
+        "aligned": true,
+        "declared_field_bits": 493,
+        "encoder_bits": 496,
+        "encoder_padding_bits": 3,
+        "group": "LSU",
+        "module": "1*Write Memory Stream Engine"
+      },
+      {
+        "aligned": true,
+        "declared_field_bits": 26,
+        "encoder_bits": 26,
+        "encoder_padding_bits": 0,
+        "group": "LSU",
+        "module": "6*Buffer_Manager_Cluster"
+      },
+      {
+        "aligned": true,
+        "declared_field_bits": 132,
+        "encoder_bits": 144,
+        "encoder_padding_bits": 12,
+        "group": "GA",
+        "module": "16*PE"
+      },
+      {
+        "aligned": true,
+        "declared_field_bits": 20,
+        "encoder_bits": 20,
+        "encoder_padding_bits": 0,
+        "group": "GA",
+        "module": "3*Inport"
+      },
+      {
+        "aligned": true,
+        "declared_field_bits": 12,
+        "encoder_bits": 12,
+        "encoder_padding_bits": 0,
+        "group": "GA",
+        "module": "1*Outport"
+      }
+    ],
+    "maxpool_semantic_field_rows": 105,
+    "official_consumer_probe": {
+      "field_binding_count": 739,
+      "sample_binding_widths": {
+        "buffer_manager_cluster0.buffer_config.buffer.buffer_life_time": 4,
+        "ga_inport_group0.general_array.inport.mask": 8,
+        "ga_pe0.general_array.PE_array.PE.alu_opcode": 5,
+        "iga_lc0.dram_loop_configs.start": 17,
+        "rd_stream0.stream_engine.stream.base_addr": 30
+      }
+    },
+    "parsed_field_rows": 133,
+    "path": "model_execplan/config/register_map_with_groups1.csv",
+    "semantics": [
+      {
+        "config_name": "dram_loop_configs.src_id",
+        "declared_width": 4,
+        "group": "IGA",
+        "hardware_port": "iga_lc_src_id",
+        "line": 3,
+        "meaning": "接哪个DRAM_LC",
+        "module": "20 *DRAM LC"
+      },
+      {
+        "config_name": "dram_loop_configs.outmost_loop",
+        "declared_width": 1,
+        "group": "IGA",
+        "hardware_port": "iga_lc_outmost_loop",
+        "line": 4,
+        "meaning": "inport=null时outmost_loop设为1",
+        "module": "20 *DRAM LC"
+      },
+      {
+        "config_name": "dram_loop_configs.start",
+        "declared_width": 17,
+        "group": "IGA",
+        "hardware_port": "iga_lc_initial_value",
+        "line": 5,
+        "meaning": "可以是正负,LC的start值",
+        "module": "20 *DRAM LC"
+      },
+      {
+        "config_name": "dram_loop_configs.stride",
+        "declared_width": 17,
+        "group": "IGA",
+        "hardware_port": "iga_lc_stride_value",
+        "line": 6,
+        "meaning": "LC的stride值",
+        "module": "20 *DRAM LC"
+      },
+      {
+        "config_name": "dram_loop_configs.end",
+        "declared_width": 17,
+        "group": "IGA",
+        "hardware_port": "iga_lc_end_value",
+        "line": 7,
+        "meaning": "LC的end值",
+        "module": "20 *DRAM LC"
+      },
+      {
+        "config_name": "dram_loop_configs.last_index",
+        "declared_width": 4,
+        "group": "IGA",
+        "hardware_port": "iga_lc_index",
+        "line": 8,
+        "meaning": "LC的last_index",
+        "module": "20 *DRAM LC"
+      },
+      {
+        "config_name": "buffer_loop_configs.ROW_LC.src_id",
+        "declared_width": 4,
+        "group": "IGA",
+        "hardware_port": "iga_row_lc_src_id",
+        "line": 9,
+        "meaning": "ROW_LC的输入可以是COL_LC也可以是DRAM LC",
+        "module": "5*BUFFER ROW LC"
+      },
+      {
+        "config_name": "buffer_loop_configs.ROW_LC.start",
+        "declared_width": 3,
+        "group": "IGA",
+        "hardware_port": "iga_row_lc_initial_value",
+        "line": 10,
+        "meaning": null,
+        "module": "5*BUFFER ROW LC"
+      },
+      {
+        "config_name": "buffer_loop_configs.ROW_LC.stride",
+        "declared_width": 3,
+        "group": "IGA",
+        "hardware_port": "iga_row_lc_stride_value",
+        "line": 11,
+        "meaning": null,
+        "module": "5*BUFFER ROW LC"
+      },
+      {
+        "config_name": "buffer_loop_configs.ROW_LC.end",
+        "declared_width": 3,
+        "group": "IGA",
+        "hardware_port": "iga_row_lc_end_value",
+        "line": 12,
+        "meaning": null,
+        "module": "5*BUFFER ROW LC"
+      },
+      {
+        "config_name": "buffer_loop_configs.ROW_LC.last_index",
+        "declared_width": 4,
+        "group": "IGA",
+        "hardware_port": "iga_row_lc_index",
+        "line": 13,
+        "meaning": null,
+        "module": "5*BUFFER ROW LC"
+      },
+      {
+        "config_name": "buffer_loop_configs.COL_LC.src_id",
+        "declared_width": 4,
+        "group": "IGA",
+        "hardware_port": "iga_col_lc_src_id",
+        "line": 14,
+        "meaning": "COL_LC的输入可以是ROW_LC也可以是DRAM LC",
+        "module": "5*BUFFER COL LC"
+      },
+      {
+        "config_name": "buffer_loop_configs.COL_LC.start",
+        "declared_width": 6,
+        "group": "IGA",
+        "hardware_port": "iga_col_lc_initial_value",
+        "line": 15,
+        "meaning": null,
+        "module": "5*BUFFER COL LC"
+      },
+      {
+        "config_name": "buffer_loop_configs.COL_LC.stride",
+        "declared_width": 6,
+        "group": "IGA",
+        "hardware_port": "iga_col_lc_stride_value",
+        "line": 16,
+        "meaning": null,
+        "module": "5*BUFFER COL LC"
+      },
+      {
+        "config_name": "buffer_loop_configs.COL_LC.end",
+        "declared_width": 6,
+        "group": "IGA",
+        "hardware_port": "iga_col_lc_end_value",
+        "line": 17,
+        "meaning": null,
+        "module": "5*BUFFER COL LC"
+      },
+      {
+        "config_name": "buffer_loop_configs.COL_LC.last_index",
+        "declared_width": 4,
+        "group": "IGA",
+        "hardware_port": "iga_col_lc_index",
+        "line": 18,
+        "meaning": null,
+        "module": "5*BUFFER COL LC"
+      },
+      {
+        "config_name": "lc_pe_configs.alu_opcode",
+        "declared_width": 2,
+        "group": "IGA",
+        "hardware_port": "iga_pe_alu_opcode",
+        "line": 19,
+        "meaning": "add、mul、mac",
+        "module": "10*LC PE"
+      },
+      {
+        "config_name": "lc_pe_configs.inport2.src_id",
+        "declared_width": 4,
+        "group": "IGA",
+        "hardware_port": "iga_pe_src_id_2",
+        "line": 20,
+        "meaning": "LC_PE的输入可以是DRAM LC也可以是LC_PE",
+        "module": "10*LC PE"
+      },
+      {
+        "config_name": "lc_pe_configs.inport2.keep_last_index",
+        "declared_width": 4,
+        "group": "IGA",
+        "hardware_port": "iga_pe_keep_last_index_2",
+        "line": 21,
+        "meaning": "当这个端口配置为keep时，keep_last_index表示哪一个LC循环结束后，端口接入新的值，当mode配置为keep时该值有效",
+        "module": "10*LC PE"
+      },
+      {
+        "config_name": "lc_pe_configs.inport2.mode",
+        "declared_width": 2,
+        "group": "IGA",
+        "hardware_port": "iga_pe_inport_mode_2",
+        "line": 22,
+        "meaning": "null, buffer, keep，constant",
+        "module": "10*LC PE"
+      },
+      {
+        "config_name": "lc_pe_configs.inport1.src_id",
+        "declared_width": 4,
+        "group": "IGA",
+        "hardware_port": "iga_pe_src_id_1",
+        "line": 23,
+        "meaning": null,
+        "module": "10*LC PE"
+      },
+      {
+        "config_name": "lc_pe_configs.inport1.keep_last_index",
+        "declared_width": 4,
+        "group": "IGA",
+        "hardware_port": "iga_pe_keep_last_index_1",
+        "line": 24,
+        "meaning": null,
+        "module": "10*LC PE"
+      },
+      {
+        "config_name": "lc_pe_configs.inport1.mode",
+        "declared_width": 2,
+        "group": "IGA",
+        "hardware_port": "iga_pe_inport_mode_1",
+        "line": 25,
+        "meaning": null,
+        "module": "10*LC PE"
+      },
+      {
+        "config_name": "lc_pe_configs.inport0.src_id",
+        "declared_width": 4,
+        "group": "IGA",
+        "hardware_port": "iga_pe_src_id_0",
+        "line": 26,
+        "meaning": null,
+        "module": "10*LC PE"
+      },
+      {
+        "config_name": "lc_pe_configs.inport0.keep_last_index",
+        "declared_width": 4,
+        "group": "IGA",
+        "hardware_port": "iga_pe_keep_last_index_0",
+        "line": 27,
+        "meaning": null,
+        "module": "10*LC PE"
+      },
+      {
+        "config_name": "lc_pe_configs.inport0.mode",
+        "declared_width": 2,
+        "group": "IGA",
+        "hardware_port": "iga_pe_inport_mode_0",
+        "line": 28,
+        "meaning": null,
+        "module": "10*LC PE"
+      },
+      {
+        "config_name": "lc_pe_configs.inport2.constant",
+        "declared_width": 16,
+        "group": "IGA",
+        "hardware_port": "iga_pe_constant_2",
+        "line": 29,
+        "meaning": "当mode配置为constant时该值有效",
+        "module": "10*LC PE"
+      },
+      {
+        "config_name": "lc_pe_configs.inport1.constant",
+        "declared_width": 16,
+        "group": "IGA",
+        "hardware_port": "iga_pe_constant_1",
+        "line": 30,
+        "meaning": null,
+        "module": "10*LC PE"
+      },
+      {
+        "config_name": "lc_pe_configs.inport0.constant",
+        "declared_width": 16,
+        "group": "IGA",
+        "hardware_port": "iga_pe_constant_0",
+        "line": 31,
+        "meaning": null,
+        "module": "10*LC PE"
+      },
+      {
+        "config_name": "stream_engine.stream.mem_idx_mode",
+        "declared_width": 6,
+        "group": "LSU",
+        "hardware_port": "mse_mem_idx_mode*3",
+        "line": 32,
+        "meaning": "[port2,port1,port0]：高->低；keep、buffer、null、constant",
+        "module": "4*Read Memory Stream Engine"
+      },
+      {
+        "config_name": "stream_engine.stream.mem_idx_keep_last_index",
+        "declared_width": 12,
+        "group": "LSU",
+        "hardware_port": "mse_mem_idx_keep_last_index*3",
+        "line": 33,
+        "meaning": "[port2,port1,port0]：DRAM AG的3个port各自所需的last index",
+        "module": "4*Read Memory Stream Engine"
+      },
+      {
+        "config_name": "stream_engine.stream.idx",
+        "declared_width": 15,
+        "group": "LSU",
+        "hardware_port": "mem_inport_src_id*3",
+        "line": 34,
+        "meaning": "[port2,port1,port0]：来自哪个LC_PE或DRAM_LC",
+        "module": "4*Read Memory Stream Engine"
+      },
+      {
+        "config_name": "stream_engine.stream.mem_idx_constant",
+        "declared_width": 24,
+        "group": "LSU",
+        "hardware_port": "mse_mem_idx_constant*3",
+        "line": 35,
+        "meaning": "[port2,port1,port0]：当mode配为constant时该值有效",
+        "module": "4*Read Memory Stream Engine"
+      },
+      {
+        "config_name": "stream_engine.stream.buf_idx_mode",
+        "declared_width": 2,
+        "group": "LSU",
+        "hardware_port": "mse_buf_idx_mode*2",
+        "line": 36,
+        "meaning": "[row,col]：keep或buffer",
+        "module": "4*Read Memory Stream Engine"
+      },
+      {
+        "config_name": "stream_engine.stream.buf_idx_keep_last_index",
+        "declared_width": 8,
+        "group": "LSU",
+        "hardware_port": "mse_buf_idx_keep_last_index*2",
+        "line": 37,
+        "meaning": "[row,col]：buffer AG的2个port各自所需的last index",
+        "module": "4*Read Memory Stream Engine"
+      },
+      {
+        "config_name": "stream_engine.stream.ping_pong",
+        "declared_width": 1,
+        "group": "LSU",
+        "hardware_port": "mse_pingpong_enable",
+        "line": 38,
+        "meaning": "ping-pong使能",
+        "module": "4*Read Memory Stream Engine"
+      },
+      {
+        "config_name": "stream_engine.stream.pingpong_last_index",
+        "declared_width": 4,
+        "group": "LSU",
+        "hardware_port": "mse_pingpong_last_index",
+        "line": 39,
+        "meaning": "切换pingpong所需的last_index，last_index对应的lc循环结束就切换pingpong",
+        "module": "4*Read Memory Stream Engine"
+      },
+      {
+        "config_name": "stream_engine.stream.base_addr",
+        "declared_width": 30,
+        "group": "LSU",
+        "hardware_port": "mse_stream_base_addr",
+        "line": 40,
+        "meaning": "基地址",
+        "module": "4*Read Memory Stream Engine"
+      },
+      {
+        "config_name": "stream_engine.stream.idx_size",
+        "declared_width": 24,
+        "group": "LSU",
+        "hardware_port": "mse_transaction_layout_size*3",
+        "line": 41,
+        "meaning": "[port2,port1,port0]：idx2_size、idx1_size、idx0_size 真实值减1",
+        "module": "4*Read Memory Stream Engine"
+      },
+      {
+        "config_name": "stream_engine.stream.dim_stride",
+        "declared_width": 60,
+        "group": "LSU",
+        "hardware_port": "mse_transaction_mult*3",
+        "line": 44,
+        "meaning": "[port2,port1,port0]：idx2_stride、idx1_stride、idx0_stride",
+        "module": "4*Read Memory Stream Engine"
+      },
+      {
+        "config_name": "stream_engine.stream.address_remapping",
+        "declared_width": 130,
+        "group": "LSU",
+        "hardware_port": "mse_map_matrix_b",
+        "line": 45,
+        "meaning": "地址重映射表/掩码，低->高（第一行在左）",
+        "module": "4*Read Memory Stream Engine"
+      },
+      {
+        "config_name": "stream_engine.stream.padding_reg_value",
+        "declared_width": 8,
+        "group": "LSU",
+        "hardware_port": "mse_padding_reg_value",
+        "line": 46,
+        "meaning": "padding填充值",
+        "module": "4*Read Memory Stream Engine"
+      },
+      {
+        "config_name": "stream_engine.stream.padding_enable",
+        "declared_width": 3,
+        "group": "LSU",
+        "hardware_port": "mse_padding_valid*3",
+        "line": 47,
+        "meaning": "[port2,port1,port0]：idx_padding使能,置为1的话使能的输入端口padding",
+        "module": "4*Read Memory Stream Engine"
+      },
+      {
+        "config_name": "stream_engine.stream.idx_padding_range.low_bound",
+        "declared_width": 36,
+        "group": "LSU",
+        "hardware_port": "mse_padding_low_bound*3",
+        "line": 48,
+        "meaning": "[port2,port1,port0]：idx0、idx1、idx2 padding低位界",
+        "module": "4*Read Memory Stream Engine"
+      },
+      {
+        "config_name": "stream_engine.stream.idx_padding_range.up_bound",
+        "declared_width": 36,
+        "group": "LSU",
+        "hardware_port": "mse_padding_up_bound*3",
+        "line": 49,
+        "meaning": "[port2,port1,port0]：idx0、idx1、idx2 padding高位界",
+        "module": "4*Read Memory Stream Engine"
+      },
+      {
+        "config_name": "stream_engine.stream.tailing_enable",
+        "declared_width": 3,
+        "group": "LSU",
+        "hardware_port": "mse_branch_valid*3",
+        "line": 50,
+        "meaning": "[port2,port1,port0]：idx_tailing使能,置为1的话使能的输入端口tailing",
+        "module": "4*Read Memory Stream Engine"
+      },
+      {
+        "config_name": "stream_engine.stream.idx_tailing_range.low",
+        "declared_width": 36,
+        "group": "LSU",
+        "hardware_port": "mse_branch_low_bound*3",
+        "line": 51,
+        "meaning": "[port2,port1,port0]：idx0、idx1、idex2 有效上边界",
+        "module": "4*Read Memory Stream Engine"
+      },
+      {
+        "config_name": "stream_engine.stream.idx_tailing_range.up",
+        "declared_width": 36,
+        "group": "LSU",
+        "hardware_port": "mse_branch_up_bound*3",
+        "line": 52,
+        "meaning": "[port2,port1,port0]：idx0、idx1、idex2 有效下边界",
+        "module": "4*Read Memory Stream Engine"
+      },
+      {
+        "config_name": "stream_engine.stream.buf_spatial_stride",
+        "declared_width": 80,
+        "group": "LSU",
+        "hardware_port": "mse_buf_spatial_stride*16",
+        "line": 53,
+        "meaning": "buffer ag展开的多路offset，低位地址->高地址",
+        "module": "4*Read Memory Stream Engine"
+      },
+      {
+        "config_name": "stream_engine.stream.buf_spatial_size",
+        "declared_width": 5,
+        "group": "LSU",
+        "hardware_port": "mse_buf_spatial_size",
+        "line": 54,
+        "meaning": "buffer ag需要展开的地址个数",
+        "module": "4*Read Memory Stream Engine"
+      },
+      {
+        "config_name": "stream_engine.stream.buf_full_last_index",
+        "declared_width": 4,
+        "group": "LSU",
+        "hardware_port": "mse_buf_full_last_index",
+        "line": 55,
+        "meaning": "buffer满的last_index",
+        "module": "4*Read Memory Stream Engine"
+      },
+      {
+        "config_name": "stream_engine.stream.mem_idx_mode",
+        "declared_width": 6,
+        "group": "LSU",
+        "hardware_port": "mse_mem_idx_mode*3",
+        "line": 56,
+        "meaning": null,
+        "module": "1*Write Memory Stream Engine"
+      },
+      {
+        "config_name": "stream_engine.stream.mem_idx_keep_last_index",
+        "declared_width": 12,
+        "group": "LSU",
+        "hardware_port": "mse_mem_idx_keep_last_index*3",
+        "line": 57,
+        "meaning": "DRAM AG的3个port各自所需的last index",
+        "module": "1*Write Memory Stream Engine"
+      },
+      {
+        "config_name": "stream_engine.stream.idx",
+        "declared_width": 15,
+        "group": "LSU",
+        "hardware_port": "mem_inport_src_id*3",
+        "line": 58,
+        "meaning": null,
+        "module": "1*Write Memory Stream Engine"
+      },
+      {
+        "config_name": "stream_engine.stream.mem_idx_constant",
+        "declared_width": 24,
+        "group": "LSU",
+        "hardware_port": "mse_mem_idx_constant*3",
+        "line": 59,
+        "meaning": null,
+        "module": "1*Write Memory Stream Engine"
+      },
+      {
+        "config_name": "stream_engine.stream.buf_idx_mode",
+        "declared_width": 2,
+        "group": "LSU",
+        "hardware_port": "mse_buf_idx_mode*2",
+        "line": 60,
+        "meaning": null,
+        "module": "1*Write Memory Stream Engine"
+      },
+      {
+        "config_name": "stream_engine.stream.buf_idx_keep_last_index",
+        "declared_width": 8,
+        "group": "LSU",
+        "hardware_port": "mse_buf_idx_keep_last_index*2",
+        "line": 61,
+        "meaning": "buffer AG的2个port各自所需的last index",
+        "module": "1*Write Memory Stream Engine"
+      },
+      {
+        "config_name": "stream_engine.stream.ping_pong",
+        "declared_width": 1,
+        "group": "LSU",
+        "hardware_port": "mse_pingpong_enable",
+        "line": 62,
+        "meaning": "ping-pong使能",
+        "module": "1*Write Memory Stream Engine"
+      },
+      {
+        "config_name": "stream_engine.stream.pingpong_last_index",
+        "declared_width": 4,
+        "group": "LSU",
+        "hardware_port": "mse_pingpong_last_index",
+        "line": 63,
+        "meaning": "切换pingpong所需的last_index",
+        "module": "1*Write Memory Stream Engine"
+      },
+      {
+        "config_name": "stream_engine.stream.base_addr",
+        "declared_width": 30,
+        "group": "LSU",
+        "hardware_port": "mse_stream_base_addr",
+        "line": 64,
+        "meaning": "基地址",
+        "module": "1*Write Memory Stream Engine"
+      },
+      {
+        "config_name": "stream_engine.stream.idx_size",
+        "declared_width": 24,
+        "group": "LSU",
+        "hardware_port": "mse_transaction_layout_size*3",
+        "line": 65,
+        "meaning": "idx0_size、idx1_size、idx2_size，实际值减1",
+        "module": "1*Write Memory Stream Engine"
+      },
+      {
+        "config_name": "stream_engine.stream.dim_stride",
+        "declared_width": 60,
+        "group": "LSU",
+        "hardware_port": "mse_transaction_mult*3",
+        "line": 68,
+        "meaning": "idx0_stride、idx1_stride、idx2_stride",
+        "module": "1*Write Memory Stream Engine"
+      },
+      {
+        "config_name": "stream_engine.stream.address_remapping",
+        "declared_width": 130,
+        "group": "LSU",
+        "hardware_port": "mse_map_matrix_b",
+        "line": 69,
+        "meaning": "地址重映射表/掩码",
+        "module": "1*Write Memory Stream Engine"
+      },
+      {
+        "config_name": "stream_engine.stream.tailing_enable",
+        "declared_width": 3,
+        "group": "LSU",
+        "hardware_port": "mse_branch_valid*3",
+        "line": 70,
+        "meaning": null,
+        "module": "1*Write Memory Stream Engine"
+      },
+      {
+        "config_name": "stream_engine.stream.idx_tailing_range.low",
+        "declared_width": 36,
+        "group": "LSU",
+        "hardware_port": "mse_branch_low_bound*3",
+        "line": 71,
+        "meaning": null,
+        "module": "1*Write Memory Stream Engine"
+      },
+      {
+        "config_name": "stream_engine.stream.idx_tailing_range.up",
+        "declared_width": 36,
+        "group": "LSU",
+        "hardware_port": "mse_branch_up_bound*3",
+        "line": 72,
+        "meaning": null,
+        "module": "1*Write Memory Stream Engine"
+      },
+      {
+        "config_name": "stream_engine.stream.buf_spatial_stride",
+        "declared_width": 80,
+        "group": "LSU",
+        "hardware_port": "mse_buf_spatial_stride*16",
+        "line": 73,
+        "meaning": "buffer ag展开的多路offset",
+        "module": "1*Write Memory Stream Engine"
+      },
+      {
+        "config_name": "stream_engine.stream.buf_spatial_size",
+        "declared_width": 5,
+        "group": "LSU",
+        "hardware_port": "mse_buf_spatial_size",
+        "line": 74,
+        "meaning": "buffer ag需要展开的地址个数",
+        "module": "1*Write Memory Stream Engine"
+      },
+      {
+        "config_name": "buffer_config.buffer.dst_port",
+        "declared_width": 1,
+        "group": "LSU",
+        "hardware_port": "buf_src_id",
+        "line": 79,
+        "meaning": "\"0\" mans SpecArray,\"1\" means GeneArray",
+        "module": "6*Buffer_Manager_Cluster"
+      },
+      {
+        "config_name": "buffer_config.buffer.buf_full_last_index",
+        "declared_width": 4,
+        "group": "LSU",
+        "hardware_port": "buf_full_last_index",
+        "line": 80,
+        "meaning": "buffer满的last_index",
+        "module": "6*Buffer_Manager_Cluster"
+      },
+      {
+        "config_name": "buffer_config.buffer.buffer_nbr_cnt",
+        "declared_width": 5,
+        "group": "LSU",
+        "hardware_port": "buffer_nbr_cnt",
+        "line": 81,
+        "meaning": "neighbor一次循环传数的数字减一，按目前的配置就是配成27或者3，前者对应neigbor大环，后者对应neighbor小环",
+        "module": "6*Buffer_Manager_Cluster"
+      },
+      {
+        "config_name": "buffer_config.buffer.nbr_enable",
+        "declared_width": 1,
+        "group": "LSU",
+        "hardware_port": "buf_nbr_enable",
+        "line": 82,
+        "meaning": "buffer是否参与n2n",
+        "module": "6*Buffer_Manager_Cluster"
+      },
+      {
+        "config_name": "buffer_config.buffer.buffer_life_time",
+        "declared_width": 4,
+        "group": "LSU",
+        "hardware_port": "buffer_life_time",
+        "line": 83,
+        "meaning": "buffer被复用多少次",
+        "module": "6*Buffer_Manager_Cluster"
+      },
+      {
+        "config_name": "buffer_config.buffer.mode",
+        "declared_width": 1,
+        "group": "LSU",
+        "hardware_port": "buffer_mode",
+        "line": 84,
+        "meaning": "0:for(life)for(row) ,1:for(row)for(life)",
+        "module": "6*Buffer_Manager_Cluster"
+      },
+      {
+        "config_name": "buffer_config.buffer.mask",
+        "declared_width": 8,
+        "group": "LSU",
+        "hardware_port": "buffer_mask",
+        "line": 85,
+        "meaning": "buffer一行为256bit，按照32bit为粒度的8个元素的mask",
+        "module": "6*Buffer_Manager_Cluster"
+      },
+      {
+        "config_name": "buffer_config.buffer.buf_end_row_addr",
+        "declared_width": 2,
+        "group": "LSU",
+        "hardware_port": null,
+        "line": 86,
+        "meaning": null,
+        "module": "6*Buffer_Manager_Cluster"
+      },
+      {
+        "config_name": "general_array.PE_array.PE.alu_opcode",
+        "declared_width": 5,
+        "group": "GA",
+        "hardware_port": "ga_pe_alu_opcode",
+        "line": 106,
+        "meaning": "ga的操作数",
+        "module": "16*PE"
+      },
+      {
+        "config_name": "general_array.PE_array.PE.transout_last_index",
+        "declared_width": 4,
+        "group": "GA",
+        "hardware_port": "ga_pe_transout_last_index",
+        "line": 107,
+        "meaning": "ga PE哪个循环结束 输入结束",
+        "module": "16*PE"
+      },
+      {
+        "config_name": "general_array.PE_array.PE.inport2.src_id",
+        "declared_width": 3,
+        "group": "GA",
+        "hardware_port": "ga_pe_src_id_2",
+        "line": 108,
+        "meaning": "配0表示来自buffer，配1-5表示来自周围的5个PE",
+        "module": "16*PE"
+      },
+      {
+        "config_name": "general_array.PE_array.PE.inport2.keep_last_index",
+        "declared_width": 4,
+        "group": "GA",
+        "hardware_port": "ga_pe_keep_last_index_2",
+        "line": 109,
+        "meaning": "当mode配置为keep时该值有效",
+        "module": "16*PE"
+      },
+      {
+        "config_name": "general_array.PE_array.PE.inport2.mode",
+        "declared_width": 2,
+        "group": "GA",
+        "hardware_port": "ga_pe_inport_mode_2",
+        "line": 110,
+        "meaning": "keep、buffer、null、constant",
+        "module": "16*PE"
+      },
+      {
+        "config_name": "general_array.PE_array.PE.inport1.src_id",
+        "declared_width": 3,
+        "group": "GA",
+        "hardware_port": "ga_pe_src_id_1",
+        "line": 111,
+        "meaning": null,
+        "module": "16*PE"
+      },
+      {
+        "config_name": "general_array.PE_array.PE.inport1.keep_last_index",
+        "declared_width": 4,
+        "group": "GA",
+        "hardware_port": "ga_pe_keep_last_index_1",
+        "line": 112,
+        "meaning": null,
+        "module": "16*PE"
+      },
+      {
+        "config_name": "general_array.PE_array.PE.inport1.mode",
+        "declared_width": 2,
+        "group": "GA",
+        "hardware_port": "ga_pe_inport_mode_1",
+        "line": 113,
+        "meaning": null,
+        "module": "16*PE"
+      },
+      {
+        "config_name": "general_array.PE_array.PE.inport0.src_id",
+        "declared_width": 3,
+        "group": "GA",
+        "hardware_port": "ga_pe_src_id_0",
+        "line": 114,
+        "meaning": null,
+        "module": "16*PE"
+      },
+      {
+        "config_name": "general_array.PE_array.PE.inport0.keep_last_index",
+        "declared_width": 4,
+        "group": "GA",
+        "hardware_port": "ga_pe_keep_last_index_0",
+        "line": 115,
+        "meaning": null,
+        "module": "16*PE"
+      },
+      {
+        "config_name": "general_array.PE_array.PE.inport0.mode",
+        "declared_width": 2,
+        "group": "GA",
+        "hardware_port": "ga_pe_inport_mode_0",
+        "line": 116,
+        "meaning": null,
+        "module": "16*PE"
+      },
+      {
+        "config_name": "general_array.PE_array.PE.inport2.constant",
+        "declared_width": 32,
+        "group": "GA",
+        "hardware_port": "ga_pe_constant_2",
+        "line": 117,
+        "meaning": "当mode配置为constant时该值有效",
+        "module": "16*PE"
+      },
+      {
+        "config_name": "general_array.PE_array.PE.inport1.constant",
+        "declared_width": 32,
+        "group": "GA",
+        "hardware_port": "ga_pe_constant_1",
+        "line": 118,
+        "meaning": null,
+        "module": "16*PE"
+      },
+      {
+        "config_name": "general_array.PE_array.PE.inport0.constant",
+        "declared_width": 32,
+        "group": "GA",
+        "hardware_port": "ga_pe_constant_0",
+        "line": 119,
+        "meaning": null,
+        "module": "16*PE"
+      },
+      {
+        "config_name": "general_array.inport.mask",
+        "declared_width": 8,
+        "group": "GA",
+        "hardware_port": "ga_inport_mask",
+        "line": 120,
+        "meaning": null,
+        "module": "3*Inport"
+      },
+      {
+        "config_name": "general_array.inport.src_id",
+        "declared_width": 1,
+        "group": "GA",
+        "hardware_port": "ga_inport_src_id",
+        "line": 121,
+        "meaning": "0表示来自buffer，1表示来自专用阵列",
+        "module": "3*Inport"
+      },
+      {
+        "config_name": "general_array.inport.pingpong",
+        "declared_width": 1,
+        "group": "GA",
+        "hardware_port": "ga_inport_pingpong_en",
+        "line": 122,
+        "meaning": null,
+        "module": "3*Inport"
+      },
+      {
+        "config_name": "general_array.inport.pingpong_last_index",
+        "declared_width": 4,
+        "group": "GA",
+        "hardware_port": "ga_inport_pingpong_last_index",
+        "line": 123,
+        "meaning": null,
+        "module": "3*Inport"
+      },
+      {
+        "config_name": "general_array.inport.nbr_enable",
+        "declared_width": 1,
+        "group": "GA",
+        "hardware_port": "ga_inport_nbr_enable",
+        "line": 124,
+        "meaning": null,
+        "module": "3*Inport"
+      },
+      {
+        "config_name": "general_array.inport.fp16to32",
+        "declared_width": 1,
+        "group": "GA",
+        "hardware_port": "ga_inport_fp16to32",
+        "line": 125,
+        "meaning": null,
+        "module": "3*Inport"
+      },
+      {
+        "config_name": "general_array.inport.bf16to32",
+        "declared_width": 1,
+        "group": "GA",
+        "hardware_port": "ga_inport_bf16to32",
+        "line": 126,
+        "meaning": null,
+        "module": "3*Inport"
+      },
+      {
+        "config_name": "general_array.inport.int32tofp",
+        "declared_width": 1,
+        "group": "GA",
+        "hardware_port": "ga_inport_int32tofp32",
+        "line": 127,
+        "meaning": null,
+        "module": "3*Inport"
+      },
+      {
+        "config_name": "general_array.inport.uint8tofp",
+        "declared_width": 1,
+        "group": "GA",
+        "hardware_port": "ga_inport_uint8tofp32",
+        "line": 128,
+        "meaning": null,
+        "module": "3*Inport"
+      },
+      {
+        "config_name": "general_array.inport.uint8to32",
+        "declared_width": 1,
+        "group": "GA",
+        "hardware_port": "ga_inport_uint8toint32",
+        "line": 129,
+        "meaning": null,
+        "module": "3*Inport"
+      },
+      {
+        "config_name": "general_array.outport.mask",
+        "declared_width": 8,
+        "group": "GA",
+        "hardware_port": "ga_outport_mask",
+        "line": 130,
+        "meaning": null,
+        "module": "1*Outport"
+      },
+      {
+        "config_name": "general_array.outport.src_id",
+        "declared_width": 1,
+        "group": "GA",
+        "hardware_port": "ga_outport_src_id",
+        "line": 131,
+        "meaning": null,
+        "module": "1*Outport"
+      },
+      {
+        "config_name": "general_array.outport.fp32tofp16",
+        "declared_width": 1,
+        "group": "GA",
+        "hardware_port": "ga_outport_fp32tofp16",
+        "line": 132,
+        "meaning": null,
+        "module": "1*Outport"
+      },
+      {
+        "config_name": "general_array.outport.fp32tobf16",
+        "declared_width": 1,
+        "group": "GA",
+        "hardware_port": "ga_outport_fp32tobf16",
+        "line": 133,
+        "meaning": null,
+        "module": "1*Outport"
+      },
+      {
+        "config_name": "general_array.outport.int32touint8",
+        "declared_width": 1,
+        "group": "GA",
+        "hardware_port": "ga_outport_int32to8",
+        "line": 134,
+        "meaning": null,
+        "module": "1*Outport"
+      }
+    ],
+    "sha256": "006ca83f282a9d61e2003466a7f75d190452a504466f60f7e70240932ae4ffdc",
+    "size_bytes": 14788
+  },
+  "report_kind": "official_target_config_authority_audit",
+  "schema_version": "0.1",
+  "source": {
+    "authoritative_paths": [
+      "jsons",
+      "bitstream",
+      "model_execplan"
+    ],
+    "commit": "e299b2804448242d1589b3e58ed7c5a9a5eca09f",
+    "implementation_files": [
+      {
+        "path": "bitstream/main.py",
+        "sha256": "32f3452fae24b933576e93b9607651bfbfcb4705e6781fe3f14ecbe675d4e63c",
+        "size_bytes": 13403
+      },
+      {
+        "path": "bitstream/parse.py",
+        "sha256": "a6bd0f9dc288b518389a677570cf34a08ebec72a430e9a85c085570d3be869f0",
+        "size_bytes": 22540
+      },
+      {
+        "path": "bitstream/bit.py",
+        "sha256": "6ba6b9b3a0a8f4baed9daa89af8c781db92a3f84b575a1e97126e7a5c9029fad",
+        "size_bytes": 8145
+      },
+      {
+        "path": "bitstream/config/loop.py",
+        "sha256": "7a25a5e6e29e35ce07c437a6e44ac654cda0dcc110fda1ba82cdeacb0b12aa35",
+        "size_bytes": 13871
+      },
+      {
+        "path": "bitstream/config/stream.py",
+        "sha256": "00e0610719670f24e22139ee0a3a453ae6e90f90e5d572f578c5f489f5a813d1",
+        "size_bytes": 14083
+      },
+      {
+        "path": "bitstream/config/buffer.py",
+        "sha256": "39b6c32786ca83a1ffd247a99dafea2f966aa1c490ef587fa1594759456355a4",
+        "size_bytes": 1847
+      },
+      {
+        "path": "bitstream/config/general.py",
+        "sha256": "eb9d5ee9ef273182e05b718aca378f87d0a1ccb5366ae463d8482c8c94c3482f",
+        "size_bytes": 11738
+      },
+      {
+        "path": "model_execplan/README.md",
+        "sha256": "992360e8cfc1a15d03abbbb70047de86548e07518e329248d17c61c130b9b11f",
+        "size_bytes": 40935
+      },
+      {
+        "path": "model_execplan/config/register_map_with_groups1.csv",
+        "sha256": "006ca83f282a9d61e2003466a7f75d190452a504466f60f7e70240932ae4ffdc",
+        "size_bytes": 14788
+      },
+      {
+        "path": "model_execplan/config/config_output.csv",
+        "sha256": "bf991706fe9a2a05a2e2e74ecb31e25c88107db9e077dbd1d99c9bae7c063032",
+        "size_bytes": 8463
+      },
+      {
+        "path": "model_execplan/src/execution_plan_generator/register_mapping.py",
+        "sha256": "1e792768915a5473fbe4c7a98b3655e907dcc2c1802595a3fc2b3feb16bd97d4",
+        "size_bytes": 14791
+      },
+      {
+        "path": "model_execplan/src/execution_plan_generator/control_registers.py",
+        "sha256": "8be7f21d8058ba3eaf45e55256c9237325c55f45d43c9e7b1ba8c3a54f7456d1",
+        "size_bytes": 70594
+      }
+    ],
+    "repository": "https://github.com/uSFrances/ndp-sim.git",
+    "slice_count": 28
+  },
+  "status": "configuration_source_verified"
+}

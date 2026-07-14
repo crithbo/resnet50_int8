@@ -8,11 +8,11 @@
 
 - **最终验收**：正式 ResNet50 INT8 ONNX→逐节点/硬件原子算子 golden→28-slice relayout→JSON/bitstream→目标 simulator→execplan/Bank_data→RTL/硬件→三方逐算子和整网一致，并以真实cycle/带宽证据选择性能profile。
 - **W3业务封版检查点**：`35a4fde106d102b0e165e7eb13d60f7dd980db71`；W0/G0、W2/G2、W3/G3已通过，W1只完成模型/输入/软件量化事实，G1因目标硬件合同缺失尚未通过。交接文档可能有后续纯文档提交，当前恢复点以`git rev-parse HEAD`和`history.md`精确台账为准。
-- **三个仓库分工**：`CGRA_SIM` 给软件/QNN语义和旧 ResNet 计划；`ndp-sim-ref` 只给 JSON、bitstream、relayout/execplan 的参考框架，尚未获批为目标工具；`NDPFuncModel` 只给W2 Conv功能数据通路，不是目标backend。根集成层已经统一W3图/lowering/golden身份，但配置、simulator、execplan和hardware尚未接入同一manifest。
-- **当前成果**：正式图含78节点/617张量，lower为133个语义hw_op；保存79个运行时tensor和55个INT32内部tensor，全部78节点独立公式重放匹配ORT，旧77原语已逐项映射。W4-28的C0/C1/C2/C3软件候选工作已完成：14个RTL28 candidate layout覆盖全部七族；两种整网调度完成93边、91 qparam链、16残差Add和79 tensor生命周期/alias审计，并生成lane/hop/复制/容量/barrier/转换静态成本。两份current软件证据已内容寻址登记，根仓190/190全量回归通过；旧16-slice物理证据只作历史参考。
+- **三个仓库分工**：`CGRA_SIM`给软件/QNN语义和旧ResNet计划；ADR-008已按操作者确认，把`ndp-sim-ref@e299b280...`的`jsons/`、`bitstream/`和`model_execplan/`固定为正式28-slice硬件配置来源；`NDPFuncModel`只给W2 Conv功能数据通路，不是目标数值backend。配置来源正式不代表数值模拟器或硬件结果已通过。
+- **当前成果**：正式图含78节点/617张量，lower为133个语义hw_op；保存79个运行时tensor和55个INT32内部tensor，全部78节点独立公式重放匹配ORT，旧77原语已逐项映射。W4-28的C0/C1/C2/C3软件候选工作已完成：14个RTL28 candidate layout覆盖全部七族；两种整网调度完成93边、91 qparam链、16残差Add和79 tensor生命周期/alias审计，并生成静态成本。新增配置权威审计盘点42个JSON、三向对照MaxPool字段、验证固定环境下bitstream确定性/差分敏感性/溢出拒绝；旧16-slice物理证据只作历史参考。
 - **当前硬件裁决**：目标为28-slice，RTL候选固定`Trassic2.0_RTL@e3bdebba95dec36ee8eba43caa92a326a88392cd`；主体采用七个4-slice小环的batch/channel混合profile，28-slice大环只作代表层性能候选。W4按该方案重开，G4仍未通过，`w5_authorized=false`。
-- **下一主线**：等待三类外部责任方返回批准请求包所需的原始证据与签署合同；收到后单线程执行approved合同导入、版本/hash/权威性检查和G4自动重审。等待期间不重复C3、不重跑约951 MB的W3产物；不生成正式W5 JSON/bitstream，且在批准合同和全部当前证据齐全前不宣称G4通过。
-- **当前外部阻塞**：正式模型和固定输入基线已经自行取得；剩余外部阻塞为目标commit的clean elaboration/顶层命名闭合、正式端口layout、INT8 SA/GA/qparams硬件约定、目标emulator关系、硬件加载与dump协议。
+- **下一主线**：等待硬件批准期间，按ADR-008把MaxPool验证方法扩到其余6类ResNet/共享模板，再建立W3 hw_op/qparams到正式配置字段的参数化adapter；没有G4授权时只产生审计临时产物，不生成正式W5网络JSON/bitstream。外部证据收到后仍单线程执行批准合同导入和G4重审。
+- **当前外部阻塞**：正式配置来源版本不再是阻塞；剩余外部阻塞为目标commit的clean elaboration/顶层命名闭合、批准端口layout/profile、INT8 Conv/requant/qparams数值约定、目标数值模拟器入口、6144/8192 row地址裁决及硬件加载/dump协议。
 - **禁止误用**：NDPFuncModel 当前 `extracted_*.npy` 和 `verify_pe` psum 不是可信 golden；42个 JSON也不等于 ResNet算子配置已完成；bitstream生成成功不等于数值正确。
 - **接手检查**：Local主工作区依次运行`git status --short`、`.venv\Scripts\python.exe tools\sync_repositories.py verify`、`.venv\Scripts\python.exe -m unittest discover -s tests -v`；fresh checkout可先用`verify --evidence-only`只核对tracked RTL28审计快照。预期根工作树干净、三参考仓匹配lock、RTL28 external evidence匹配hash、登记的全量测试全部通过。2026-07-13已确认managed worktree回收会穿透依赖junction清空Local目标，因此setup对非Local工作树硬失败；依赖`.venv`、三个参考仓或正式W3的任务统一回Local，直到有隔离且通过“销毁安全”验证的新方案。
 
@@ -26,7 +26,7 @@
 - `.agents/经验.md`：Codex managed worktree 的可复用经验、失败路径、全局/项目级配置边界和下一项目实施检查表。
 - `.agents/rules/算子配置规则.md`：从模型计算到单算子JSON、bitstream、`model_execplan`和数值验证的工作规则，以及对当前DeepSeek资料的反向审核结论。
 - `contracts/`：W1开始建立的版本化事实/候选契约；当前包含模型基线、量化语义和仍待批准的架构字段。
-- `.agents/decisions/`：关键选择的ADR；ADR-007是当前28-slice RTL/profile权威裁决，ADR-002/003/005已标为旧16-slice历史，ADR-004/006继续有效。
+- `.agents/decisions/`：关键选择的ADR；ADR-007是当前28-slice RTL/profile裁决，ADR-008固定正式配置来源和逐算子审计边界；ADR-002/003/005已标为旧16-slice历史，ADR-004/006继续有效。
 
 推进任务时，先读本文件；真正开始分析或实现前，再读 `plan.md`；需要追溯之前为什么这么做时，再读 `history.md`。
 
@@ -66,7 +66,7 @@
 
 - “每个算子”包含 ONNX 模型节点和 lowering 后的硬件原子算子；一个 QLinearConv 可能对应多个 K-tile 配置/执行实例。
 - 目标硬件已由操作者确认是28个slice；当前物理拓扑和资源事实以ADR-007锁定的`Trassic2.0_RTL@e3bdebba...`活动RTL为准，旧16-slice参数镜像和W4候选不得再作为目标真值。
-- `CGRA_SIM` 的旧 `.cu` 功能模拟链和 `ndp-sim-ref` 的 JSON/bitstream 链彼此独立；前者是语义参考，不能代替目标 JSON 模拟器。
+- `CGRA_SIM`的旧`.cu`功能模拟链和正式`ndp-sim-ref` JSON/bitstream配置链彼此独立；前者是语义参考，后者当前也没有被证明是目标数值模拟器。
 - bitstream 生成成功只证明编码/placement 通过，不证明数值正确；单算子至少达到 golden=simulator，最终必须达到三方一致。
 - 详细阶段、难度和验收门槛以 `.agents/plan.md` 为准；`.agents/rules/算子配置规则.md` 约束每个配置和跨阶段产物怎样推导与验收。
 
@@ -107,7 +107,7 @@ resnet50_int8/
     rules/                # 详细推导与验收规则
     decisions/            # ADR和外部批准结论
   CGRA_SIM/               # 软件/QNN语义与旧ResNet参考
-  ndp-sim-ref/            # 目标JSON/bitstream/execplan参考
+  ndp-sim-ref/            # ADR-008固定的正式JSON/bitstream/execplan配置来源
   NDPFuncModel/           # Conv功能模型和旧配置参考
 ```
 
@@ -145,7 +145,7 @@ resnet50_int8/
 9. **逐门推进**：W0~W9是执行顺序、G0~G9是验收门；无subop golden不验JSON，无simulator通过不进硬件，单算子未三方一致不扩整网。
 10. **禁止伪证据**：当前NDP `.npy`/psum trace、旧ADD伪代码、FP16 SA JSON和bitstream生成成功都不能替代数值验收。
 
-`resnet50_pipeline/`、CLI、manifest、contract/backend、artifact、cache/resume、schema、mock fixture和测试已经建立；W0/G0、W2/G2和W3/G3均已通过。接手者不得重做W2/W3，除非合同/hash/回归失败；下一业务阶段是W4。
+`resnet50_pipeline/`、CLI、manifest、contract/backend、artifact、cache/resume、schema、mock fixture和测试已经建立；W0/G0、W2/G2和W3/G3均已通过，W4-28 C0～C3软件候选也已完成。接手者不得重做W2/W3或C3，除非合同/hash/回归失败；当前是在G4未通过边界继续做配置规则前置审计。
 
 ## 仓库和恢复检查点
 
@@ -153,7 +153,7 @@ resnet50_int8/
 |---|---|---|
 | 根集成仓 | W3业务封版`35a4fde106d102b0e165e7eb13d60f7dd980db71`；当前文档HEAD见Git | Private `crithbo/resnet50_int8`，W0～W3代码、合同和文档 |
 | `CGRA_SIM` | `53c41e02c294bcc54379e686dc9d25bbb93919fa` | 公开upstream，QNN语义和旧ResNet参考 |
-| `ndp-sim-ref` | `e299b2804448242d1589b3e58ed7c5a9a5eca09f` | 公开upstream，JSON/bitstream/execplan参考 |
+| `ndp-sim-ref` | `e299b2804448242d1589b3e58ed7c5a9a5eca09f` | 公开upstream；ADR-008确认的正式JSON/bitstream/execplan配置来源 |
 | `NDPFuncModel` | `conv_func@35eab40e5314bf603481dd6268bc96ab2ca514a6` | Private `crithbo/NDPFuncModel-private`，W2修复后的Conv功能模型 |
 
 `repos.lock.json`是三个参考仓的恢复真值，也是RTL28静态审计快照的离线校验真值；用`tools/sync_repositories.py verify`统一核验，用`verify --evidence-only`在fresh checkout只验tracked证据，用显式`sync --repo <name>`恢复缺失参考仓。当前四个代码工作树均应干净。正式模型、`.venv`和W3大产物不在普通Git提交中；C0登记的九份小型legacy16 W4报告例外，已按hash跟踪以保证合同可复核。
@@ -301,7 +301,7 @@ CGRA_SIM/testing/resnet-50-int8/
 - **模型和golden——W3/G3已通过**：模型/input/hash和ORT设置已锁定；正式保存79个运行时tensor和55个lowering内部INT32 tensor，全部78节点由独立公式重放并匹配ORT。旧`golden.py`的30个唯一检查点只保留为历史参考。
 - **lowering和身份映射——W3语义层已完成**：78个ONNX节点稳定lower为133个语义hw_op；旧77模型级原语已逐项映射，Flatten明确为zero-copy。JSON实例、逐K-tile和execplan身份在W4/W5/W7继续扩展，不得说成W3尚未实现。
 - **数据变换——RTL28 C1已完成/其余W4继续**：C1已提供Quantize、Dequantize和singleton-spatial View在group4x7/LOW两个profile上的正逆、坐标解释与验证；旧综合审计虽覆盖78/78节点、93条runtime边和91条量化qparam链，但旧物理签名、成本和容量仍已过时。新W4还必须完成Conv、Pool、Add、GAP、MatMul以及新93边、生命周期/alias和性能成本；G4=`not_passed`、`w5_authorized=false`。
-- **单算子配置——部分已有**：42 个静态 JSON 中只有 MaxPool、sum 型 AvgPool、固定样例 quant、fp32 输出 add-dequant 可局部参考；6 个 SA JSON 全是 FP16、bias=0；没有核心 INT8 Conv/MatMul。
+- **单算子配置——来源已正式、覆盖仍不完整**：42个静态JSON属于正式配置来源；MaxPool首条字段/bitstream审计已通过，另有sum型AvgPool、固定样例quant、fp32输出add-dequant和GEMV模板待逐项验证。6个SA JSON全是FP16、bias=0，仍没有命名INT8 Conv/MatMul模板。
 - **W2/G2小Conv软件闭环已通过**：`NDPFuncModel@35eab40` 的参数化runner在同一fixture上完成1/4-slice全部84坐标，实际经过DRAM、input Buffer、SpecialPEA、ActivationUnit、output Buffer和DRAM；NumPy、im2col、ORT、CGRA QNN rounding与NDP的accumulator/D一致，physical D可inverse且全部物理字节可解释。该结论不批准旧固定主入口、目标JSON或硬件layout；C0/C1已冻结RTL28机器合同和公共布局，下一Conv算子波次再把该fixture能力组合进七个真实小环。
 - **execplan——28-slice框架已有/ResNet适配没有**：可规划28个slave、28-bit mask、地址、bitstream、指令和Bank_data；schema仍缺numeric attributes，旧配置镜像与目标RTL存在版本冲突，bitstream失败后部分路径还会继续。
 - **RTL/硬件——外部阻塞**：没有完整 runner/testbench、加载/启动/完成/dump 协议或逐算子 checkpoint 入口。
