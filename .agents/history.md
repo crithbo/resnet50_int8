@@ -639,3 +639,8 @@
 - 验证：配置审计6/6、合同/审计聚焦23/23、根仓全量199/199通过；`py_compile`、`git diff --check`、合同校验、报告重复生成和仓库lock校验通过。全量只保留既有NumPy标量转换DeprecationWarning。没有读取或重跑约951 MB W3 tensor，没有生成正式W5网络JSON/bitstream、execplan/Bank_data、目标模拟器或硬件结果。
 - 当前完成位置：W4-28 C4的“正式配置来源冻结+MaxPool第一条方法闭环”完成；原“目标JSON/bitstream来源版本未知”阻塞消除。G1/G4仍未通过、`w5_authorized=false`，因为clean elaboration、批准物理layout/profile、INT8 requant/qparams数值合同、目标数值模拟器、6144/8192 row地址裁决和板级load/start/wait/dump仍缺。
 - 下一步建议：单线程先把同一审计扩展到第二个MaxPool和AvgPool，借此抽取Pool共享shape→LC/stream/buffer/GA规则；公共crosswalk稳定后，再评估并行Quantize/Add-Dequant与GEMV/sum两组。只生成小型审计/hash并保持preflight身份；禁止生成正式W5实例或宣称任何数值/硬件门通过。精确回退：revert `543bb59254f27b8560d93728ca65fed1f1c00121`；上一恢复点为`4ab95323e75fc8e751ec805d4e0591107a6615dc`。
+
+## 2026-07-14：G4门读取正式配置源合同
+
+- 根仓提交`3407a20c86fcf8ea72add5d115fed66d7f7d4c86`，父提交`7cb8ff1c61a5373bb0fd7f8f6de6aaedb41ad666`，`fix: bind g4 to official config source`。收尾审计发现backend已冻结正式配置源，但G4仍把`target_rtl_isa_register_map_version_frozen`机械绑定到尚不存在的完整hardware approval，导致口径不一致；现改为逐项校验backend来源/commit/能力边界、内容寻址审计hash/size及MaxPool/register-map语义后单独判定。
+- 验证后该项由false变为true且无失败原因；G4阻塞项从5项减为4项：批准算子物理layout证据、clean elaboration、批准target profile、批准物理layout合同。`g4_status=not_passed`、`w5_authorized=false`保持不变，target config仍明确`can_execute_numerical_model=false`、ResNet覆盖未完成。W4门聚焦4/4、根仓全量199/199通过；精确回退：revert `3407a20c86fcf8ea72add5d115fed66d7f7d4c86`，其父恢复点为`7cb8ff1c61a5373bb0fd7f8f6de6aaedb41ad666`。
