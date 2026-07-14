@@ -1,0 +1,112 @@
+{
+  "schema_version": "0.1",
+  "contract_type": "resnet50_rtl28_w4_physical_delta",
+  "contract_id": "resnet50-rtl28-w4-deepseek-hybrid-delta-v1",
+  "status": "approved_for_w4_physical_layout",
+  "network_profile": "w4_deepseek_hybrid28_resnet50_v1",
+  "instruction_mask": "0b1111111111111111111111111111",
+  "batch_group_sample_counts": [3, 3, 2, 2, 2, 2, 2],
+  "transition_policy": "no network-wide layout transition; LOW-28 remains reserved for a future operator that proves a cross-group dependency",
+  "selected_low28_families": [],
+  "operator_bindings": {
+    "simple": {
+      "layout_id": "w4_simple_group4x7_28_candidate_v1",
+      "communication_domain": "local"
+    },
+    "view": {
+      "layout_id": "w4_zero_copy_view_group4x7_28_candidate_v1",
+      "communication_domain": "local"
+    },
+    "conv": {
+      "layout_id": "w4_conv_group4x7_28_candidate_v1",
+      "communication_domain": "high4"
+    },
+    "maxpool": {
+      "layout_id": "w4_maxpool_group4x7_28_candidate_v1",
+      "communication_domain": "local"
+    },
+    "add": {
+      "layout_id": "w4_qlinearadd_group4x7_28_candidate_v1",
+      "communication_domain": "local"
+    },
+    "global_average_pool": {
+      "layout_id": "w4_globalavgpool_group4x7_28_candidate_v1",
+      "communication_domain": "local"
+    },
+    "matmul": {
+      "layout_id": "w4_qlinearmatmul_group4x7_28_candidate_v1",
+      "communication_domain": "high4"
+    }
+  },
+  "physical_objects": {
+    "activation": {
+      "owner": "batch group and HIGH-ring feature owner",
+      "axis_order": "family-specific N-spatial-feature-local order",
+      "alignment_bytes": 16,
+      "tail_rule": "input zero point or typed zero according to the consuming port",
+      "address_unit": "byte"
+    },
+    "weight": {
+      "owner": "output-feature owner inside each HIGH ring and replicated across seven batch groups",
+      "axis_order": "Conv RSKC-local or MatMul KO-local",
+      "alignment_bytes": 16,
+      "tail_rule": "per-output-channel weight zero point; current model value is zero",
+      "address_unit": "byte"
+    },
+    "bias": {
+      "owner": "same output-feature owner as weight and output",
+      "axis_order": "output-feature-local INT32",
+      "alignment_bytes": 16,
+      "tail_rule": "zero",
+      "address_unit": "byte"
+    },
+    "qparams": {
+      "owner": "scalar values replicate to all 28 slices; per-channel values follow output-feature ownership",
+      "axis_order": "scalar or output-feature-local typed value",
+      "alignment_bytes": 16,
+      "tail_rule": "scalar replica equality and per-channel semantic padding",
+      "address_unit": "byte_or_future_typed_config_field"
+    },
+    "psum": {
+      "owner": "output-feature owner inside the active HIGH ring",
+      "axis_order": "logical output order with INT32 elements",
+      "alignment_bytes": 16,
+      "tail_rule": "zero",
+      "address_unit": "byte"
+    },
+    "output": {
+      "owner": "batch group and output-feature owner preserved across local successors",
+      "axis_order": "family-specific N-spatial-feature-local order",
+      "alignment_bytes": 16,
+      "tail_rule": "output zero point for UINT8 or typed zero for wider outputs",
+      "address_unit": "byte"
+    }
+  },
+  "approved_w4_claims": [
+    "all seven operator families have reversible 28-slice physical interfaces",
+    "all 93 runtime edges, 91 qparam chains and 16 residual adds have software physical compatibility evidence",
+    "the selected profile uses one full 28-bit mask with local or HIGH-4 family-scoped communication",
+    "no ResNet50 family currently requires LOW-28 or a post-GAP network-wide relayout"
+  ],
+  "deferred_to_w5": [
+    "int8_conv_sa_bias_psum_requant_configuration",
+    "int8_matmul_tail_psum_requant_configuration",
+    "typed_qparams_to_register_or_stream_binding",
+    "maxpool_uint8_and_quant_rounding_target_execution",
+    "global_average_pool_division_and_requant_configuration"
+  ],
+  "evidence": [
+    {
+      "path": "contracts/typed_config_parameter_contract.json",
+      "sha256": "abbc87b0b13c92611a90fe1767b32b15fe9c49f23bee616ca2bb51219dd181bd"
+    },
+    {
+      "path": "contracts/target_config_authority_audit.json",
+      "sha256": "b81436245886aaca2c6e2ab26f52d6c70810daa18c835cb6f08ce683f4ffa8d3"
+    },
+    {
+      "path": "contracts/rtl28_candidate_audit.json",
+      "sha256": "69505a527a53c25b0bb828b192aba991fba78e838a2429f9cb99d251b8a815aa"
+    }
+  ]
+}

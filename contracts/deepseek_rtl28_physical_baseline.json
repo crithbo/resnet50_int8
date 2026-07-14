@@ -1,0 +1,77 @@
+{
+  "schema_version": "0.1",
+  "contract_type": "deepseek_rtl28_physical_baseline",
+  "contract_id": "deepseek-rtl28-physical-baseline-e299b280-v1",
+  "status": "approved_as_inherited_w4_baseline",
+  "source": {
+    "repository": "https://github.com/uSFrances/ndp-sim.git",
+    "commit": "e299b2804448242d1589b3e58ed7c5a9a5eca09f",
+    "role": "completed DeepSeek full-network configuration and execplan method inherited by ResNet50"
+  },
+  "execution_model": {
+    "slice_count": 28,
+    "instruction_mask": "0b1111111111111111111111111111",
+    "instruction_mask_semantics": "one full-mask network operation launches all seven independent HIGH-4 groups concurrently",
+    "high_ring_count": 7,
+    "high_ring_size": 4,
+    "low_ring_size": 28,
+    "low_ring_policy": "operator_scoped_only_when_cross_group_transport_is_required",
+    "deepseek_layer0_operator_count": 43,
+    "deepseek_ring4_gemm_count": 7,
+    "deepseek_remote_sum4_count": 1,
+    "deepseek_remote_sum28_count": 3,
+    "deepseek_local_gemm_count": 2
+  },
+  "physical_conventions": {
+    "address_unit": "byte",
+    "minimum_alignment_bytes": 16,
+    "slice_address_field_bits": 5,
+    "bank_address_field_bits": 2,
+    "row_address_field_bits": 13,
+    "column_address_field_bits": 6,
+    "subword_address_field_bits": 4,
+    "same_tensor_cross_slice_rule": "same local bank/row/column/byte offset; only the slice owner field differs",
+    "upstream_tensor_reuse": "consumer reuses the producer output allocation unless an explicit relayout is declared",
+    "config_placement": "configuration payloads follow tensor allocations and start at a bank-row boundary",
+    "address_remapping_entry_count": 26,
+    "physical_record_bits": 128,
+    "endianness": "little_endian_within_element_and_128bit_record"
+  },
+  "w4_scope": [
+    "28-slice launch and HIGH-4/LOW-28 transport selection",
+    "byte addressing, alignment, allocation reuse and address remapping conventions",
+    "physical carrier inherited by ResNet50 W4 layouts"
+  ],
+  "w5_exclusions": [
+    "ResNet50 UINT8 activation and INT8 weight numerical configuration",
+    "INT32 psum overflow and first/middle/last K-tile control",
+    "per-layer and per-channel qparam register encoding",
+    "target numerical simulator and hardware result equivalence"
+  ],
+  "evidence": [
+    {
+      "path": "ndp-sim-ref/model_execplan/README.md",
+      "sha256": "992360e8cfc1a15d03abbbb70047de86548e07518e329248d17c61c130b9b11f"
+    },
+    {
+      "path": "ndp-sim-ref/address_remapping/examples/graphs/layer0/layer0_0612.json",
+      "sha256": "ba27b898609a3296bd3e2d2d513ff23b54ffde33781b896f982e8e564795ec9b"
+    },
+    {
+      "path": "ndp-sim-ref/model_execplan/config/operator_base_info.json",
+      "sha256": "9dd7292540a1ee2a1fd53612f52b0ddfac468b646df54e8728ee9201146c8050"
+    },
+    {
+      "path": "ndp-sim-ref/model_execplan/config/register_map_with_groups1.csv",
+      "sha256": "006ca83f282a9d61e2003466a7f75d190452a504466f60f7e70240932ae4ffdc"
+    },
+    {
+      "path": "ndp-sim-ref/address_remapping/examples/graphs/ring_gemm/ring_gemm_bias.json",
+      "sha256": "f14921ea51e3be5b3be59e1ee24c6a5b884069a9ab279a02ea1b0b146d04a1cd"
+    },
+    {
+      "path": "ndp-sim-ref/address_remapping/examples/graphs/ring_gemm/ring_gemm_bias_28slices.json",
+      "sha256": "52c1d6ab541d2d4464158e9b9931021dd48b0059c337fac91d26fd90daf427bf"
+    }
+  ]
+}

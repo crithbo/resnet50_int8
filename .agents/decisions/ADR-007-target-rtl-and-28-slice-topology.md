@@ -1,7 +1,9 @@
 # ADR-007：锁定目标RTL并重建28-slice性能布局
 
-状态：已由操作者采用（adopted）；RTL目标为candidate，W4按新方案重开，G4未通过、W5未授权
+状态：已由操作者采用（adopted）；RTL版本和物理拓扑继续有效，旧整网profile选择已由ADR-009取代
 日期：2026-07-13
+
+2026-07-14更新：ADR-009把两个layout候选重新解释为物理实现/成本证据，而不是全网group/global二选一；正式profile改为全28-bit mask加算子级`local/HIGH-4/LOW-28`通信域。当前七族只选`local`或`HIGH-4`，G4已通过、W5已授权。下文第3～4项保留为方案演进历史。
 
 ## 决定
 
@@ -74,7 +76,7 @@ G5: N[12:14]  G6: N[14:16]
 - `ADR-006`的逻辑结果比较器与slice数无关，继续使用。
 - 旧`config/utils/config_parameters*.py`的16-slice镜像只作历史字段线索。后续ADR-008已根据操作者确认，把`ndp-sim-ref@e299b280...`的JSON/bitstream/model_execplan链升级为正式硬件配置来源，并完成MaxPool首条逐字段审计；这不反向批准本ADR中的物理layout、RTL clean elaboration或数值执行。
 
-## 新G4门
+## 2026-07-13提出的新G4门（历史，现由ADR-009覆盖）
 
 G4只有在以下条件全部满足后才可通过：
 
@@ -85,3 +87,5 @@ G4只有在以下条件全部满足后才可通过：
 5. 目标RTL/ISA/register-map、端口layout和运行协议形成带版本合同；目标顶层能在权威工具链clean elaboration。
 
 在此之前`g4_status=not_passed`、`w5_authorized=false`，不得生成正式W5 JSON/bitstream或宣称硬件profile已批准。
+
+2026-07-14现状：ADR-009以具名DeepSeek基线替代第5项的clean-elaboration前置，并采用全28-bit mask加算子级通信域；其余布局、93边、成本和版本检查均通过，当前G4通过。

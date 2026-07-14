@@ -51,9 +51,9 @@
 ## 当前总体状态
 
 - **已通过**：W0/G0集成骨架，W2/G2小Conv候选软件纵向闭环，W3/G3正式图/lowering/全节点与subop golden。
-- **部分通过**：W1已冻结正式候选模型、固定输入、预处理和软件量化事实；目标RTL候选已选`Trassic2.0_RTL@e3bdebba...`和28-slice。ADR-008又按操作者确认，把`ndp-sim-ref@e299b280...`的JSON/bitstream/model_execplan固定为正式硬件配置来源；Pool、Quant/Add-Dequant、GEMM/GEMV和sum族静态模板的字段/寄存器/bitstream候选审计已完成。clean elaboration、批准端口layout/profile、INT8 SA/psum/requant、sum跨slice/完成协议、目标数值模拟器和板级协议仍未完成，所以G1/G4仍未通过。
-- **当前主线**：ADR-007/008均已采用。W4-28 C0-C7软件候选、静态配置审计和typed参数合同已经完成；配置来源未知以及W3参数身份未绑定这两个软件问题已消除。所有输出仍保持audit/preflight/formula-only身份，不生成正式W5网络JSON/bitstream。G4=`not_passed`、`w5_authorized=false`。
-- **当前边界**：W2已证明小合成Conv的golden=NDP functional model，并新增RTL28 Conv物理布局到该功能模型的candidate-only直接探针；后者不是目标simulator、未执行目标JSON/ISA/RTL，也不构成G6证据。W3公式重放仍属于golden侧。当前没有任何正式ResNet算子达到golden=target simulator=hardware。
+- **部分通过**：W1已冻结正式候选模型、固定输入、预处理和软件量化事实；目标RTL已选`Trassic2.0_RTL@e3bdebba...`和28-slice。ADR-008按操作者确认，把`ndp-sim-ref@e299b280...`的JSON/bitstream/model_execplan固定为正式硬件配置来源；ADR-009进一步把已完成DeepSeek整网调试记录为具名硬件基线，并明确不声称新的clean elaboration日志。W4物理profile/layout已经批准；INT8 SA/psum/requant、sum跨slice/完成协议、目标数值模拟器和板级协议仍分别留在后续阶段。
+- **当前主线**：W4-28 C0-C7、DeepSeek基线继承、七族通信域绑定、93边/成本重审和G4闭环均已完成。批准profile为`w4_deepseek_hybrid28_resnet50_v1`：一个全28-bit启动mask并行覆盖七个HIGH组，七族分别使用`local`或`HIGH-4`，当前没有LOW-28族。G4=`passed`、`w5_authorized=true`；现在进入W5，从最小真实INT8 Conv模板和真实qparams绑定开始。
+- **当前边界**：W2已证明小合成Conv的golden=NDP functional model，并新增RTL28 Conv物理布局到该功能模型的candidate-only直接探针；后者不是目标simulator、未执行目标JSON/ISA/RTL，也不构成G6证据。W3公式重放仍属于golden侧。W4通过只批准物理载体与布局合同，不表示任何正式ResNet算子已经达到golden=target simulator=hardware。
 
 ### 接手进度总表
 
@@ -63,8 +63,8 @@
 | W1 | G1未通过 | 模型/输入/量化事实、28-slice RTL候选；正式JSON/bitstream/execplan配置来源已固定 | 收集clean elaboration、量化/端口/布局/固件/板级原始证据和签署合同 |
 | W2 | G2通过 | 1/4-slice小Conv候选layout和NDP functional数值闭环；RTL28 Conv到该功能模型的candidate-only探针 | 作为W4/W6前置fixture，不外推为目标simulator或硬件规格 |
 | W3 | G3通过 | 78节点、133 hw_op、79 runtime tensor、55内部tensor、旧77映射 | 不重跑大artifact，除非hash/合同失效 |
-| W4 | 旧16-slice readiness历史通过；28-slice软件候选完成/G4未通过 | C0-C7完成；正式配置源、各静态模板审计和78节点/133 hw_op typed参数合同均已冻结 | 可继续做整网typed qparam连续性与阻塞归并；等待硬件证据后重审G4，不生成正式W5产物 |
-| W5～W9 | 未通过 | W9通用比较器基础设施已前置完成；其余仅有参考框架或mock接口 | 等待对应前置门和真实结果通过 |
+| W4 | G4通过 | C0-C7、DeepSeek公共物理合同、ResNet差异合同、混合28-slice profile、七族layout/domain、93边/成本和具名批准均闭环 | 不重开；版本或合同hash变化时自动重审 |
+| W5～W9 | W5已获授权但尚未通过，其余未通过 | W9通用比较器基础设施已前置完成；其余仅有参考框架或mock接口 | W5先做最小真实INT8 Conv模板与真实qparams绑定 |
 
 ### 当前可立即执行队列
 
@@ -78,8 +78,8 @@
 8. 【已完成】C5单线程审计Quant与Add-Dequant；确认静态constant与正式ResNet qparams直接匹配数均为0，现有handler没有typed qparam通道，目标数值rounding和完整QLinearAdd仍未闭环。
 9. 【已完成】C6用两个共享Local子任务隔离审计6个GEMM/GEMV与11个sum族模板；主任务完成公共报告0.4、backend fail-closed绑定和确定性复核。未生成正式W5实例。
 10. 【已完成】C7单线程建立W3 hw_op/tensor/qparams到正式配置字段的typed参数合同、provenance和严格失败测试；覆盖78节点/133 hw_op、491个initializer参数引用和三态字段解析，只定义参数映射，没有生成patched JSON、bitstream或execplan。
-11. 【下一步/可本地继续】若继续等待硬件，C8单线程建立93条整网runtime边的typed qparam连续性与配置依赖审计：把producer输出量化域、MaxPool/View透明传递和consumer各输入分支逐边闭合，并把重复的实例级阻塞归并到最小硬件批准问题；仍不生成正式W5实例。该工作只消费C3/C7稳定身份，不预设尚未批准的寄存器位义，后续硬件裁决不会要求推倒重做。
-12. 【并行外部等待】W1批准请求包继续收集clean elaboration、量化/端口/布局、目标数值模拟器和板级协议；收到后按approved合同导入、版本检查和G4自动重审流程验收。没有approved合同不得宣布G1/G4/G5通过。
+11. 【已完成】按ADR-009完成最小DeepSeek基线继承闭环：schema 0.3不再强迫全网group/global二选一；公共物理合同与ResNet W4差异合同均按本地证据hash验证；七族绑定到`local`或`HIGH-4`，LOW-28只保留为未选替代；没有伪造elaboration日志。全量G4审计12/12为true，阻塞列表为空，正式结束W4。
+12. 【下一步/单线程】进入W5 INT8 Conv最小模板：选一个真实ResNet Conv `hw_op_id`，从C7 typed合同取真实activation/weight/bias/qparams，建立SA+stream+buffer最小配置，显式处理bias、INT32 psum、requant、padding/tail和溢出拒绝；固定seed后JSON/bitstream逐字节复现，字段均可回溯。只做一个实例，不提前生成整网W5，不宣称目标数值或硬件结果通过。
 
 Local执行环境已从事故前ZIP选择性恢复并重新验收：Python 3.12.13、`pip check`、三个锁定参考仓和根测试均通过；没有恢复任何managed-worktree junction。后续依赖任务可使用Local主任务或共享目录协作子任务，独立managed worktree仍只允许tracked-only工作。
 
@@ -313,7 +313,7 @@ artifacts/<run_id>/
 ### W1：冻结外部规格【与W0并行，难度：外部阻塞】
 
 1. 取得正式ONNX、固定输入和预处理。
-2. 冻结28-slice RTL/ISA/寄存器/JSON版本；当前候选固定`Trassic2.0_RTL@e3bdebba95dec36ee8eba43caa92a326a88392cd`。
+2. 冻结28-slice RTL/ISA/寄存器/JSON版本；当前W4物理基线固定`Trassic2.0_RTL@e3bdebba95dec36ee8eba43caa92a326a88392cd`。
 3. 确认正式layout、SA/GA、bias/psum/requant语义。
 4. 取得目标emulator和硬件load/start/wait/dump协议。
 5. 记录来源、负责人、版本和hash；未确认项不得填默认值冒充批准规则。
@@ -371,7 +371,7 @@ W1的模型子任务已完成，但G1尚未通过；architecture/quantization/ba
 
 ### W4：逐算子28-slice relayout与性能profile【难度：高】
 
-当前状态（2026-07-14）：ADR-007/008已采用，旧16-slice W4物理候选全部失效为历史参考。W4-28 C0～C3软件候选已完成，C4又固定正式配置源并完成Pool族三个模板的字段/bitstream/联动审计；W0～W3不重做。真实`topology28`/`profile28`调度底座、七族14个两profile正逆布局、两种整网候选调度的93边/91 qparam链/16残差Add/79 tensor生命周期和静态成本均已完成。现行G4仍等待正式硬件批准、clean elaboration、批准物理layout/profile及INT8数值/板级裁决，因此G4未通过且W5未授权。
+当前状态（2026-07-14）：ADR-009已在ADR-007/008基础上完成DeepSeek基线继承。W4-28 C0～C7、七族14个正逆布局实现、93边/91 qparam链/16残差Add/79 tensor生命周期与成本审计全部保留；其中七个group4x7布局由混合profile选中并批准，七个LOW-28布局只作未选替代。G4 v2的12项条件全部为true、阻塞列表为空，W4结束且W5已授权。该批准不声称clean elaboration日志，也不批准W5数值、W6 simulator、W7整网地址或W8板级协议。
 
 #### 方案切换遗留修改清单（2026-07-13全工作文件夹复审）
 
@@ -394,12 +394,12 @@ W1的模型子任务已完成，但G1尚未通过；architecture/quantization/ba
 | C3-01 | P1/C3 | 旧`w4_profiles.py`和`network_dry_run.py`把16同时当batch、slice/owner和ring步数，无法表达`[3,3,2,2,2,2,2]`与head唯一转换 | 已新增独立RTL28审计器，直接消费冻结的小型W3图目录和现行28布局API；覆盖两调度、93边、生命周期/alias与静态成本，不机械改名旧公式 | 报告以28真实owner/HIGH/LOW计算；79 tensor和全部边无冲突；证据内容寻址且G4只放行软件两项 | 已完成 |
 | DOC-01 | P1/C0同批 | `agent.md`曾混写旧main缺陷、参考工具权威性和错误下一步 | 摘要/优先级已改为C0完成→C1；明确ndp-sim只作框架参考、NDPFuncModel仅W2 backend，并区分上游固定入口与W2修复 | `agent.md`摘要、当前优先级和详细地图已一致 | 已完成 |
 | DOC-02 | P1/C0同批 | 算子规则曾把W3全节点golden/manifest、ResNet lowerer和旧一sample一slice写成当前待办 | 相关段已标W1/W3前历史；当前事实为W3 79 runtime+55 internal/78节点与W2五层链已过，缺口改为28 physical、JSON实例/execplan adapter、target sim/hw | 不再诱导重跑W3或恢复旧16调度，旧脚本缺陷仍保留为历史证据 | 已完成 |
-| DOC-03 | P1/C0同批 | ADR-004曾写有效批准加旧W4回归即可开G4并称software readiness通过 | 已增加ADR-007/C0覆盖：批准结构只是门的一部分，current布局/93边/成本/clean elaboration缺一不可 | ADR-004与现行G4代码/测试一致，当前readiness仍fail | 已完成 |
+| DOC-03 | P1/C0同批 | ADR-004曾写有效批准加旧W4回归即可开G4并称software readiness通过 | ADR-007/C0先封住旧16误放行，ADR-009最终改为具名DeepSeek硬件基线+引用合同hash+current布局/93边/成本共同放行，不要求伪造elaboration日志 | ADR-004已标明由ADR-009覆盖；现行G4测试区分真实具名合同与合成fixture | 已完成 |
 | DOC-04 | P2 | RTL审计文档早期worktree错误数和coverage目标身份容易被当现状 | 已把63 tests/16 errors标为隔离worktree历史观察；coverage新增target/profile/legacy superseded列；W0/W3段落改为历史/完成态 | 当前状态与历史快照可直接区分且未改写history事实 | 已完成 |
 
 明确不修改/不重算：`golden_batch16`、`subop_batch16`、W3 metadata中的16是模型batch size；`profile28.py`的`BATCH_SIZE=16`及七组`[3,3,2,2,2,2,2]`正确；W0 mock的16只保留在`approved_for_w0_only` scope；`conv16_*`、`maxpool16`、`add16`、`avgpool16`、`matmul16`及明确命名测试作为legacy算法证据保留；W2的1/4-slice fixture继续作为软件基线；ADR-002/003/005和`history.md`已标历史的旧结论不改写；没有发现误生成的正式W5 JSON/bitstream。
 
-执行顺序固定为：`ENV-01 → C0-01 → C0-02/03/04 → C0-05/06/07 + DOC-01/02/03/04 → C1-01/02 → 既定算子波次 → C3-01`。其中C0共享同一真值链，默认单线程；只有合同/API冻结且文件不重叠后才按P4并行。C0整体验收还必须满足：旧16 approval/layout/report无法进入current gate；合成fixture永不授权W5；缺真实approval或clean elaboration时继续`G4=not_passed`；所有小型合同/证据可从fresh checkout复核；根测试通过；全程不读取或重跑W3大tensor。
+以下执行顺序与C0验收条件记录当时的迁移过程，不再是当前待办：`ENV-01 → C0-01 → C0-02/03/04 → C0-05/06/07 + DOC-01/02/03/04 → C1-01/02 → 既定算子波次 → C3-01`。最终口径是旧16 approval/layout/report不能进入current gate、合成fixture永不授权W5、具名审批必须验证ADR与两层物理合同hash、所有小型合同/证据可从fresh checkout复核，且全程不读取或重跑W3大tensor。
 
 实施顺序：
 
@@ -411,15 +411,17 @@ W1的模型子任务已完成，但G1尚未通过；architecture/quantization/ba
 5. QLinearAdd：两残差分支必须具有相同batch group、C/K owner和物理轴；A/B/D分别使用自身zero point tail，六个qparam端口保持独立，双分支地址同时活跃时不得冲突。【C2已完成两profile候选；正式范围为同shape rank-2/rank-4与dense `[N,F]+[F]`】
 6. GlobalAveragePool：每个channel owner本地完成H×W centered sum/requant，不做不必要的跨组归约。【C2第一波已完成两profile候选】
 7. MatMul/dense：先实现七小环一致profile；另实现`w4_global_ring28_candidate_v1`代表层，优先比较GAP后`[16,2048]×[2048,1000]`。【C2第一波已完成两profile候选及显式转换分类】
-8. transition：不得在残差块内切profile；第一版整网最多允许一次小环→大环显式转换，优先放在GAP后，只有总成本/实测占优才启用。
+8. transition：残差块内切profile继续禁止。旧“GAP后最多一次小环→大环”只保留为成本比较场景；ADR-009正式profile不做整网转换，未来只有某个算子证明跨组依赖时才可单独选择LOW-28。
 
 每个插件必须同时实现`forward()`、`inverse()`、`explain_coordinate()`和`validate()`。layout描述必须给出逻辑坐标→物理slice/ring step/bank/byte address公式、padding/tail来源、lane端序和逆公式。
 
 性能报告至少包含SA有效lane比例、activation字节×hop、weight复制倍数、每slice/整机DDR占用、3/2样本组barrier尾部、transition读写量和估算来源；估算不得标为cycle。确认per-slice queue/barrier语义后，可增加异步wavefront候选。
 
-验收门 G4：最小shape、真实ResNet shape和tail shape均raw→physical→raw bit-exact；新93边、91量化链和16个残差Add重新通过物理兼容、生命周期和alias审计；HIGH/LOW映射匹配RTL；目标commit完成权威clean elaboration并形成带版本layout/ISA合同。未全部满足前G4=`not_passed`、W5未授权。
+验收门 G4【2026-07-14通过】：最小shape、真实ResNet shape和tail shape均raw→physical→raw bit-exact；93边、91量化链和16个残差Add通过物理兼容、生命周期和alias审计；HIGH/LOW映射匹配锁定RTL；DeepSeek公共物理基线、ResNet W4差异、版本化ISA/register-map和七族profile/layout绑定均由具名合同及hash验证。门明确记录`clean_elaboration_claimed=false`；没有把W5数值或W8运行证据混入W4。
 
 #### W4-28下一执行包与并行波次
+
+本节C0～C7各段保留“该子步骤刚完成时”的历史门状态；其“仍停在W4/不改变G4”字样均已由上面的ADR-009闭环状态取代，不能再解释为当前阻塞。
 
 **W4-28C0：机器合同迁移与legacy隔离，已完成。** ENV-01、现行G4 fail-closed、architecture/approval/backend合同、fixture、旧报告索引、旧工具guard、RTL external evidence lock和文档清理已经统一为28-slice candidate口径。当前满足：目标slice为28；固定`Trassic2.0_RTL@e3bdebba...`candidate来源；HIGH/LOW映射和两个profile ID可机器读取；旧16-slice证据显式legacy且不能被新批准合同选择或工具覆盖；28结构fixture不能授权G4；缺少28算子证据、真实批准或clean elaboration时仍为`G4=not_passed`、`w5_authorized=false`。
 
@@ -439,7 +441,7 @@ W1的模型子任务已完成，但G1尚未通过；architecture/quantization/ba
 
 **W4-28C7：typed配置参数合同已单线程完成。** `contracts/typed_config_parameter_contract.json`把锁定ONNX、W3 model graph、batch16 runtime manifest、subop manifest和lowering逐项绑定到78节点/133个语义`hw_op`；只读取三个小型W3 JSON和ONNX initializer，没有读取约951 MB `.npy`。合同保存491个initializer参数引用，其中438个scale/zero-point和53个bias；159个per-channel原始参数保留元素数、axis、精确字节hash和范围，绝不隐式压成scalar；另生成94个float32/int32公式参数。757个字段绑定逐项标为`derived`、`approval_required`或`rejected`，且三态全部固定`formal_target_write_allowed=false`；缺INT8 SA、tail、psum、requant、typed execplan transport、sum完成协议和批准layout时严格拒绝。backend按path/size/SHA-256绑定该合同，G4审计同步验证其语义和配置权威报告身份。该步骤没有复制静态样例constant，没有生成patched JSON、bitstream、execplan/Bank_data或任何正式W5实例，G4/W5状态不变。
 
-**W4-28C8下一候选工作包：整网typed qparam连续性与批准问题归并，尚未开始。** 只基于C3的93边/91 qparam链和C7的精确参数身份，验证每条producer→consumer边的量化域是否连续，显式处理QLinearAdd双分支、MaxPool/View透明传递、GAP/MatMul head边界，并将数百个实例级`approval_required/rejected`记录归并到可外发的最小硬件问题及受影响`hw_op`集合。该包不得猜测寄存器位义，不生成正式配置；如果硬件证据先到，则优先导入approved合同并重审G4，而不是继续C8。
+**W4-28 DeepSeek基线继承闭环：已完成，原C8候选取消。** schema 0.3不再强迫全网group/global二选一；操作者确认作为具名基线决定写入ADR-009但不伪造elaboration日志；公共物理合同、ResNet差异合同和七族`local/HIGH-4`绑定均已验证。93边和成本证据按新architecture basis重新内容寻址，G4通过。原C8的typed qparam连续性不再作为W4等待工作，真正的实例qparams→寄存器/stream绑定直接在W5最小Conv中完成。
 
 ### W5：逐算子JSON和bitstream【难度：很高】
 
@@ -580,7 +582,7 @@ W0实现前还需把以上补充转成可执行的schema字段、测试用例和
 - 硬件/RTL 接口至少能完成一次加载和 dump，或明确记录外部负责人和阻塞状态。
 - 架构参数不再从冲突的旧文件中混选。
 
-当前状态：模型、固定图片、暂定预处理、batch=16输入和ORT输出已建立可重放hash基线，W3已基于它通过G3。28-slice RTL候选commit和物理环已选定；ADR-008已固定正式JSON/bitstream/execplan配置来源，原“JSON来源/版本未知”不再阻塞。W1仍未通过G1，因为clean elaboration、批准layout/profile、INT8 requant/qparams、目标数值模拟器和硬件接口没有approved合同；这些继续与本地配置审计并行推进。
+当前状态：模型、固定图片、暂定预处理、batch=16输入和ORT输出已建立可重放hash基线，W3已基于它通过G3。28-slice RTL、物理环、正式JSON/bitstream/execplan来源以及W4 layout/profile均已冻结。W1的历史G1口径不用于回退已通过的G4；INT8 requant/qparams、目标数值模拟器和硬件接口按现行W0～W9阶段分别在W5/W6/W8闭环。
 
 ## 阶段 B：建立统一图、lowering 和产物契约
 
@@ -634,7 +636,7 @@ W0实现前还需把以上补充转成可执行的schema字段、测试用例和
 
 目标：把 raw tensor 转成 simulator/hardware 使用的物理格式，并能无损逆变换回来。
 
-状态：旧16-slice逐算子candidate已被ADR-007判定为目标失效。当前28-slice已完成七个家族的两profile软件candidate；RTL28整网物理审计和硬件批准仍待完成。
+状态：旧16-slice逐算子candidate已被ADR-007判定为目标失效。当前28-slice七族正逆布局、整网物理审计、DeepSeek继承profile与W4物理批准均已完成；七个LOW-28实现仅作未选替代。
 
 难度：高。主要风险是正式 layout 未确认、Conv weight/im2col、尾块和不同算子间 layout 衔接。
 
@@ -666,7 +668,7 @@ W0实现前还需把以上补充转成可执行的schema字段、测试用例和
 - 每个 slice 的元素归属、复制规则、padding 区和 128-bit 行内顺序可由 manifest 验证。
 - 上一算子 D 与下一算子 A 的物理布局不一致时，明确由 remapping、后继 stream 还是显式 relayout 解决。
 
-当前状态：W2语义保持冻结；旧`artifacts/w4/g4_gate_audit.json`及配套报告已在ADR-003/005标为历史16-slice证据。ADR-007已经给出目标版本和软件profile方向，因此不再等待旧拓扑裁决；当前直接实现28-slice W4并生成新版本报告。G4未通过且W5未授权，旧candidate不得原地改写为新profile。
+当前状态：W2语义保持冻结；旧`artifacts/w4/g4_gate_audit.json`及配套报告已在ADR-003/005标为历史16-slice证据。当前G4 v2按ADR-009、schema 0.3和内容寻址RTL28报告通过，W5已授权；旧candidate和历史成本报告仍不得原地改写成新profile事实。
 
 ## 阶段 E：完成 ResNet 单算子 JSON 和数值参数化
 
@@ -690,7 +692,7 @@ W0实现前还需把以上补充转成可执行的schema字段、测试用例和
 - 改变 shape/qparams 后，所有相关 loop/stride/constant 都被 patch，不存在 unresolved control。
 - bitstream 成功之外，还必须通过阶段 F 的目标模拟器数值测试。
 
-当前状态：42个JSON已被确认为正式配置来源；两个MaxPool、sum型AvgPool、Quant/Add-Dequant、6个SA GEMM/GEMV以及11个sum族模板均已完成结构/寄存器/bitstream候选审计。AvgPool仍缺除法/requant，Quant/Add-Dequant仍缺正式qparams transport与完整UINT8算子闭环；6个SA JSON全是FP16、bias=0，GEMM/GEMV缺INT8/tail/psum/requant；remote-sum模板不含跨slice传输，完成协议与一个4-slice metadata冲突仍未解决。`NDPFuncModel`只证明Conv数据通路原型存在；正式JSON adapter、typed qparams schema和参数化入口尚未完成，也未生成正式W5配置。
+当前状态：42个JSON已被确认为正式配置来源；两个MaxPool、sum型AvgPool、Quant/Add-Dequant、6个SA GEMM/GEMV以及11个sum族模板均已完成结构/寄存器/bitstream候选审计。C7 typed参数合同已经覆盖78节点/133 hw_op及真实qparams身份，但尚未实现其到正式JSON/execplan字段的写入。AvgPool仍缺除法/requant，Quant/Add-Dequant仍缺正式qparams transport与完整UINT8算子闭环；6个SA JSON全是FP16、bias=0，GEMM/GEMV缺INT8/tail/psum/requant；remote-sum模板不含跨slice传输，完成协议与一个4-slice metadata冲突仍未解决。`NDPFuncModel`只证明Conv数据通路原型存在；尚未生成正式W5配置。
 
 ## 阶段 F：接通目标 JSON/bitstream 数值模拟器
 
@@ -809,7 +811,7 @@ W0实现前还需把以上补充转成可执行的schema字段、测试用例和
 
 需要统一向学长或硬件侧确认/索取：
 
-1. 对已选`Trassic2.0_RTL@e3bdebba...`提供clean elaboration原始日志和依赖闭合；正式配置源/CSV已由ADR-008固定，仍需裁决其8192-row地址规划与活动RTL候选6144-row物理容量的关系。
+1. W5优先审核我们生成的最小INT8 Conv候选配置；新的clean elaboration日志只作为额外RTL诊断资料，不再是W4/G4前置。地址规划统一以已继承的6144-row逻辑容量为硬上限，任何旧8192-row planner输出必须在W7重排或失败，不能反向改写W4几何。
 2. 审核我们后续生成的最小INT8 Conv候选配置，确认activation/weight/bias/qparams/psum/D正式物理layout、PEA物理A/B端口、requant/rounding/saturation和writeback语义。模型语义已确定为UINT8 activation×INT8 weight×INT32 bias，不再询问ONNX数学类型。
 3. 确认逐层qparams由constant patch、tensor stream、control write还是逐层静态JSON传递；若已有批准样例，请提供对应配置和目标版本。
 4. 确认 `NDPFuncModel/conv_func` 是否为认可的Conv emulator，以及是否已有官方JSON/bitstream或非Conv emulator。`conv_config` URL、原 `hex_data` 和预期D只作为兼容性资料，可选提供。

@@ -58,11 +58,16 @@ class ContractSemanticTests(unittest.TestCase):
             },
             set(),
         )
-        self.assertTrue(
-            all(
+        self.assertEqual(
+            sum(
                 record["current_gate_eligible"]
                 for record in architecture["candidate_layouts"].values()
-            )
+            ),
+            7,
+        )
+        self.assertEqual(
+            sum(record["status"] == "approved" for record in architecture["candidate_layouts"].values()),
+            7,
         )
         self.assertEqual(len(architecture["candidate_evidence"]), 3)
         self.assertTrue(
@@ -90,7 +95,7 @@ class ContractSemanticTests(unittest.TestCase):
     def test_old16_active_target_fails(self) -> None:
         value = deepcopy(self.architecture)
         value["target"]["slice_count"] = 16
-        with self.assertRaisesRegex(ContractError, "current RTL28 candidate"):
+        with self.assertRaisesRegex(ContractError, "approved RTL28 W4 baseline"):
             validate_architecture_contract(value)
 
     def test_arithmetic_or_corrupt_topology_fails(self) -> None:
@@ -133,8 +138,8 @@ class ContractSemanticTests(unittest.TestCase):
 
     def test_ambiguous_profile_name_fails(self) -> None:
         value = deepcopy(self.architecture)
-        value["target"]["profiles"]["candidates"] = ["mixed"]
-        with self.assertRaisesRegex(ContractError, "exact profile28 IDs"):
+        value["target"]["profiles"]["approved"] = ["mixed"]
+        with self.assertRaisesRegex(ContractError, "DeepSeek hybrid28"):
             validate_architecture_contract(value)
 
     def test_backend_keeps_ndpfuncmodel_as_w2_reference_only(self) -> None:

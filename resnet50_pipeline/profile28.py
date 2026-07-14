@@ -17,6 +17,10 @@ BATCH_SIZE: Final = 16
 GROUP_COUNT: Final = 7
 GROUP_SAMPLE_COUNTS: Final = (3, 3, 2, 2, 2, 2, 2)
 
+# The two IDs below describe reversible software layout alternatives.  They are
+# intentionally retained for W4 regression and cost comparison, but they are
+# no longer competing network-wide hardware profiles.
+
 GROUP4X7_BATCH_CHANNEL28_PROFILE: Final = (
     "w4_group4x7_batch_channel28_candidate_v1"
 )
@@ -25,6 +29,25 @@ DEFAULT_PROFILE: Final = GROUP4X7_BATCH_CHANNEL28_PROFILE
 SUPPORTED_PROFILES: Final = frozenset(
     {GROUP4X7_BATCH_CHANNEL28_PROFILE, GLOBAL_RING28_PROFILE}
 )
+
+# The approved network policy inherits the completed DeepSeek bring-up method:
+# one 28-bit all-slice launch can execute seven independent HIGH rings, while
+# LOW-28 remains an operator-scoped transport rather than a second whole-network
+# layout.  ResNet50 currently needs no LOW-28 family binding.
+DEEPSEEK_HYBRID28_PROFILE: Final = "w4_deepseek_hybrid28_resnet50_v1"
+DEFAULT_NETWORK_PROFILE: Final = DEEPSEEK_HYBRID28_PROFILE
+SUPPORTED_NETWORK_PROFILES: Final = frozenset({DEEPSEEK_HYBRID28_PROFILE})
+FULL_SLICE_MASK28: Final = (1 << 28) - 1
+OPERATOR_COMMUNICATION_DOMAINS: Final = {
+    "simple": "local",
+    "view": "local",
+    "conv": "high4",
+    "maxpool": "local",
+    "add": "local",
+    "global_average_pool": "local",
+    "matmul": "high4",
+}
+SUPPORTED_COMMUNICATION_DOMAINS: Final = frozenset({"local", "high4", "low28"})
 
 GAP_OPERATOR: Final = "QLinearGlobalAveragePool"
 MATMUL_OPERATOR: Final = "QLinearMatMul"
@@ -77,6 +100,28 @@ def validate_profile_name(profile: object) -> str:
             f"unsupported profile28 candidate {profile!r}; expected one of {supported}"
         )
     return profile
+
+
+def validate_network_profile(profile: object) -> str:
+    """Return the one approved network-wide RTL28 profile or fail closed."""
+
+    if not isinstance(profile, str) or profile not in SUPPORTED_NETWORK_PROFILES:
+        supported = ", ".join(sorted(SUPPORTED_NETWORK_PROFILES))
+        raise ContractError(
+            f"unsupported network profile {profile!r}; expected one of {supported}"
+        )
+    return profile
+
+
+def operator_communication_domain(operator_family: object) -> str:
+    """Return the approved DeepSeek-compatible transport scope for a family."""
+
+    if not isinstance(operator_family, str) or operator_family not in OPERATOR_COMMUNICATION_DOMAINS:
+        raise ContractError(f"unsupported operator family {operator_family!r}")
+    domain = OPERATOR_COMMUNICATION_DOMAINS[operator_family]
+    if domain not in SUPPORTED_COMMUNICATION_DOMAINS:
+        raise AssertionError("frozen operator communication domain is invalid")
+    return domain
 
 
 @dataclass(frozen=True, slots=True)
@@ -315,6 +360,12 @@ __all__ = [
     "GLOBAL_RING28_PROFILE",
     "DEFAULT_PROFILE",
     "SUPPORTED_PROFILES",
+    "DEEPSEEK_HYBRID28_PROFILE",
+    "DEFAULT_NETWORK_PROFILE",
+    "SUPPORTED_NETWORK_PROFILES",
+    "FULL_SLICE_MASK28",
+    "OPERATOR_COMMUNICATION_DOMAINS",
+    "SUPPORTED_COMMUNICATION_DOMAINS",
     "GAP_OPERATOR",
     "MATMUL_OPERATOR",
     "GroupSampleRange",
@@ -326,6 +377,8 @@ __all__ = [
     "Profile28Schedule",
     "DEFAULT_PROFILE28_SCHEDULE",
     "validate_profile_name",
+    "validate_network_profile",
+    "operator_communication_domain",
     "group_to_sample_range",
     "sample_to_group",
 ]

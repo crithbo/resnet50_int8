@@ -2,7 +2,9 @@
 
 状态：`approval_request`，不是批准文件。请三类责任方分别答复下述 `APR_*` 项，并由最终硬件权威合并签署；未明确答复、`TBD`、口头确认或仅引用本项目 candidate 均不视为批准。
 
-2026-07-14补充：操作者已确认`ndp-sim-ref@e299b2804448242d1589b3e58ed7c5a9a5eca09f`的`jsons/`、`bitstream/`和`model_execplan/`是正式硬件配置来源，见ADR-008及`contracts/target_config_authority_audit.json`。因此不再请求责任方重新选择“目标JSON/bitstream来源版本”。下述APR仍有效，因为该确认没有提供clean elaboration、INT8 A/B与qparams数值证据、批准物理layout/profile、目标数值模拟器或板级load/start/wait/dump协议；不得把配置来源确认当成八项硬件批准。
+2026-07-14状态更新：本请求包的W4 profile/layout/硬件基线部分已由操作者的具名DeepSeek继承决定关闭，见ADR-009、`contracts/deepseek_rtl28_physical_baseline.json`、`contracts/resnet50_rtl28_w4_delta.json`和schema 0.3批准合同。项目明确没有获得或伪造新的clean elaboration日志。下文八项请求保留为历史审查清单；其中INT8数值字段转入W5，目标数值模拟器转入W6，地址/板级协议转入W7/W8，不再作为W4/G4阻塞项，也不得用W4批准声称这些后续项已经通过。
+
+2026-07-14早期补充（已由上方状态更新取代）：操作者已确认`ndp-sim-ref@e299b2804448242d1589b3e58ed7c5a9a5eca09f`的`jsons/`、`bitstream/`和`model_execplan/`是正式硬件配置来源，见ADR-008及`contracts/target_config_authority_audit.json`。当时其余APR仍被视为W4请求；现在应按上方说明分别路由到W5/W6/W7/W8。
 
 ## 1. 固定审查对象与回复规则
 
@@ -101,9 +103,9 @@ vcs -full64 -sverilog -top NDP_Top_new -f NDP_Top_filelist.f -l vcs_elab.log
 - 现有证据：`EV_GLOBAL_REGS`、`EV_EXEC_FINISH` 固定了可见状态；`EV_SEM_FSM` 显示 BARR 没有执行状态。RTL 没有给出 host timeout/error policy。
 - 必须返回：wait/status/error 状态机规范、timeout 数值及单位、失败注入和恢复日志、barrier 裁决、签署决定及全部 SHA-256。
 
-## 5. 如何回填现有 `hardware_approval` 合同
+## 5. 历史0.2回填说明（已由schema 0.3与ADR-009取代）
 
-三方答复验收后，由有权承担最终批准责任的人合并为 `contracts/hardware_approval.json`。不要让项目开发者代写“示例批准”。该 JSON 必须严格符合 schema 0.2，且不允许额外字段：
+以下内容保留旧请求包的可追溯性，不再用于生成现行合同。现行`contracts/hardware_approval.json`必须符合schema 0.3，并按具名基线决定与两层物理合同hash验证；旧schema 0.2字段表不得复制回当前文件：
 
 | schema 字段 | 回填来源 |
 | --- | --- |

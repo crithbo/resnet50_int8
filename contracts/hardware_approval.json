@@ -1,0 +1,116 @@
+{
+  "schema_version": "0.3",
+  "contract_type": "w4_hardware_baseline_approval",
+  "status": "approved",
+  "approval_scope": "w4_profile_and_physical_layout_only",
+  "approval_id": "w4-deepseek-inherited-rtl28-20260714",
+  "authority": {
+    "kind": "project_operator",
+    "authority_id": "resnet50_int8_project_operator",
+    "role": "project operator and known-good hardware baseline authority",
+    "recorded_at": "2026-07-14"
+  },
+  "target_version": {
+    "repository": "https://github.com/xlsjdjdk/Trassic2.0_RTL",
+    "rtl_commit": "e3bdebba95dec36ee8eba43caa92a326a88392cd",
+    "top_module": "NDP_Top_new",
+    "filelist": "code/NDP_rtl/filelists/NDP_Top_filelist.f",
+    "architecture_id": "trassic2_rtl28_candidate_v1",
+    "architecture_schema_version": "0.2",
+    "isa_version": "trassic2-command64-rtl-e3bdebba-v1",
+    "register_map_version": "ndp-sim-register-map-groups1-006ca83f-v1",
+    "config_repository": "https://github.com/uSFrances/ndp-sim.git",
+    "config_commit": "e299b2804448242d1589b3e58ed7c5a9a5eca09f"
+  },
+  "baseline_confirmation": {
+    "status": "operator_confirmed_known_good",
+    "basis": "operator_statement_and_completed_deepseek_bringup",
+    "inherited_project": "deepseek_full_network",
+    "elaboration_log_claimed": false,
+    "decision_uri": ".agents/decisions/ADR-009-deepseek-baseline-inheritance.md",
+    "decision_sha256": "bb17837e6878ab9f78676870c46e10ad73f495540b8a21ce984fbb85c00063a1"
+  },
+  "architecture": {
+    "target_family": "rtl28",
+    "slice_count": 28,
+    "topology_id": "rtl28_high7x4_low28_e3bdebba",
+    "specialized_array": {"rows": 8, "cols": 8},
+    "general_array": {"rows": 4, "cols": 4},
+    "instruction_mask_bits": 28,
+    "dram": {
+      "bank_count": 4,
+      "row_count": 6144,
+      "col_count": 64,
+      "subword_bytes": 16,
+      "address_unit": "byte",
+      "address_order": "slice_owner, local_bank, row, column, byte_offset"
+    }
+  },
+  "network_profile": "w4_deepseek_hybrid28_resnet50_v1",
+  "operator_bindings": {
+    "simple": {
+      "layout_id": "w4_simple_group4x7_28_candidate_v1",
+      "communication_domain": "local"
+    },
+    "view": {
+      "layout_id": "w4_zero_copy_view_group4x7_28_candidate_v1",
+      "communication_domain": "local"
+    },
+    "conv": {
+      "layout_id": "w4_conv_group4x7_28_candidate_v1",
+      "communication_domain": "high4"
+    },
+    "maxpool": {
+      "layout_id": "w4_maxpool_group4x7_28_candidate_v1",
+      "communication_domain": "local"
+    },
+    "add": {
+      "layout_id": "w4_qlinearadd_group4x7_28_candidate_v1",
+      "communication_domain": "local"
+    },
+    "global_average_pool": {
+      "layout_id": "w4_globalavgpool_group4x7_28_candidate_v1",
+      "communication_domain": "local"
+    },
+    "matmul": {
+      "layout_id": "w4_qlinearmatmul_group4x7_28_candidate_v1",
+      "communication_domain": "high4"
+    }
+  },
+  "contract_layers": {
+    "common_baseline": {
+      "contract_id": "deepseek-rtl28-physical-baseline-e299b280-v1",
+      "path": "contracts/deepseek_rtl28_physical_baseline.json",
+      "sha256": "8dbbb440e782e9c43d6e9bb954f93eea74b43406ecd7846124bc39bc46ff6c64"
+    },
+    "resnet_delta": {
+      "contract_id": "resnet50-rtl28-w4-deepseek-hybrid-delta-v1",
+      "path": "contracts/resnet50_rtl28_w4_delta.json",
+      "sha256": "cd7a3483f515f2d12c7b8d5dddbef38fc5495c21606b378250a1ff2f0b2efe6f"
+    }
+  },
+  "deferred_to_w5": [
+    "int8_conv_sa_bias_psum_requant_configuration",
+    "int8_matmul_tail_psum_requant_configuration",
+    "typed_qparams_to_register_or_stream_binding",
+    "target_numerical_simulator_execution",
+    "hardware_runtime_load_wait_dump_protocol"
+  ],
+  "evidence": [
+    {
+      "kind": "named_baseline_decision",
+      "uri": ".agents/decisions/ADR-009-deepseek-baseline-inheritance.md",
+      "sha256": "bb17837e6878ab9f78676870c46e10ad73f495540b8a21ce984fbb85c00063a1"
+    },
+    {
+      "kind": "deepseek_common_physical_contract",
+      "uri": "contracts/deepseek_rtl28_physical_baseline.json",
+      "sha256": "8dbbb440e782e9c43d6e9bb954f93eea74b43406ecd7846124bc39bc46ff6c64"
+    },
+    {
+      "kind": "resnet50_w4_delta_contract",
+      "uri": "contracts/resnet50_rtl28_w4_delta.json",
+      "sha256": "cd7a3483f515f2d12c7b8d5dddbef38fc5495c21606b378250a1ff2f0b2efe6f"
+    }
+  ]
+}

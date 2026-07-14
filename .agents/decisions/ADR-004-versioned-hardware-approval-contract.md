@@ -1,7 +1,9 @@
 # ADR-004：用版本化硬件批准合同自动重审G4
 
-状态：已采用；门禁解释已由ADR-007与W4-28 C0覆盖更新，仍等待硬件侧真实批准
+状态：已采用；审批入口继续有效，原“clean elaboration必须作为G4事实”的口径已由ADR-009取代
 日期：2026-07-12
+
+2026-07-14更新：操作者以具名项目权威确认已完成DeepSeek整网调试所用硬件基线正确，schema 0.3据此只批准W4 profile和物理layout，不伪造elaboration日志，也不提前批准W5数值或W8运行协议。当前事实以ADR-009和`contracts/hardware_approval.json`为准；下文保留为旧审批设计历史。
 
 ## 决定
 
@@ -31,6 +33,8 @@
 
 该工作只定义真实硬件信息的接收、校验、版本追踪和门禁，不预先选择算法、tile、地址或bitstream。硬件定型后只需填入获批事实并重跑审计；如果硬件版本以后变化，则提交新的批准合同和证据，旧合同仍可用于复现旧结果。
 
-## 当前结论
+## 2026-07-12当时结论
 
 仓库中没有`contracts/hardware_approval.json`。C0已把schema/validator迁移到0.2/RTL28并把旧16报告隔离为legacy；当前`software_candidate_readiness=fail`、G4未通过、W5未授权，因为28算子layout、28物理93边、28 profile成本和clean elaboration/正式批准仍缺失。不得将测试fixture当作真实批准记录复制进合同目录。
+
+2026-07-14现状：schema 0.3和具名`contracts/hardware_approval.json`已由ADR-009落地；引用ADR及两层物理合同的hash校验通过，G4通过。合成fixture仍永远不能授权W5。

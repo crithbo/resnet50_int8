@@ -1,37 +1,39 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://github.com/crithbo/resnet50_int8/schemas/hardware_approval.schema.json",
-  "title": "Versioned Trassic2 RTL28 hardware approval contract",
+  "title": "W4 DeepSeek-inherited Trassic2 RTL28 physical baseline approval",
   "type": "object",
   "additionalProperties": false,
   "required": [
-    "schema_version", "contract_type", "status", "approval_id", "authority",
-    "target_version", "clean_elaboration", "architecture", "network_profile",
-    "operator_layouts", "physical_objects", "numeric_semantics", "isa",
-    "runtime_protocol", "evidence"
+    "schema_version", "contract_type", "status", "approval_scope", "approval_id",
+    "authority", "target_version", "baseline_confirmation", "architecture",
+    "network_profile", "operator_bindings", "contract_layers", "deferred_to_w5",
+    "evidence"
   ],
   "properties": {
-    "schema_version": {"const": "0.2"},
-    "contract_type": {"const": "hardware_approval"},
+    "schema_version": {"const": "0.3"},
+    "contract_type": {"const": "w4_hardware_baseline_approval"},
     "status": {"const": "approved"},
+    "approval_scope": {"const": "w4_profile_and_physical_layout_only"},
     "approval_id": {"type": "string", "minLength": 1},
     "authority": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["name", "organization", "approved_at"],
+      "required": ["kind", "authority_id", "role", "recorded_at"],
       "properties": {
-        "name": {"type": "string", "minLength": 1},
-        "organization": {"type": "string", "minLength": 1},
-        "approved_at": {"type": "string", "format": "date"}
+        "kind": {"enum": ["project_operator", "synthetic_fixture"]},
+        "authority_id": {"type": "string", "minLength": 1},
+        "role": {"type": "string", "minLength": 1},
+        "recorded_at": {"type": "string", "format": "date"}
       }
     },
     "target_version": {
       "type": "object",
       "additionalProperties": false,
       "required": [
-        "repository", "rtl_commit", "top_module", "filelist",
-        "architecture_id", "architecture_schema_version", "isa_version",
-        "register_map_version"
+        "repository", "rtl_commit", "top_module", "filelist", "architecture_id",
+        "architecture_schema_version", "isa_version", "register_map_version",
+        "config_repository", "config_commit"
       ],
       "properties": {
         "repository": {"const": "https://github.com/xlsjdjdk/Trassic2.0_RTL"},
@@ -40,40 +42,26 @@
         "filelist": {"const": "code/NDP_rtl/filelists/NDP_Top_filelist.f"},
         "architecture_id": {"const": "trassic2_rtl28_candidate_v1"},
         "architecture_schema_version": {"const": "0.2"},
-        "isa_version": {"type": "string", "minLength": 1},
-        "register_map_version": {"type": "string", "minLength": 1}
+        "isa_version": {"const": "trassic2-command64-rtl-e3bdebba-v1"},
+        "register_map_version": {"const": "ndp-sim-register-map-groups1-006ca83f-v1"},
+        "config_repository": {"const": "https://github.com/uSFrances/ndp-sim.git"},
+        "config_commit": {"const": "e299b2804448242d1589b3e58ed7c5a9a5eca09f"}
       }
     },
-    "clean_elaboration": {
+    "baseline_confirmation": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["status", "tool", "tool_version", "log_uri", "log_sha256"],
+      "required": [
+        "status", "basis", "inherited_project", "elaboration_log_claimed",
+        "decision_uri", "decision_sha256"
+      ],
       "properties": {
-        "status": {"const": "approved"},
-        "tool": {"type": "string", "minLength": 1},
-        "tool_version": {"type": "string", "minLength": 1},
-        "log_uri": {"type": "string", "minLength": 1},
-        "log_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
-      }
-    },
-    "network_profile": {
-      "enum": [
-        "w4_group4x7_batch_channel28_candidate_v1",
-        "w4_global_ring28_candidate_v1"
-      ]
-    },
-    "operator_layouts": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": ["simple", "view", "conv", "maxpool", "add", "global_average_pool", "matmul"],
-      "properties": {
-        "simple": {"type": "string", "minLength": 1},
-        "view": {"type": "string", "minLength": 1},
-        "conv": {"type": "string", "minLength": 1},
-        "maxpool": {"type": "string", "minLength": 1},
-        "add": {"type": "string", "minLength": 1},
-        "global_average_pool": {"type": "string", "minLength": 1},
-        "matmul": {"type": "string", "minLength": 1}
+        "status": {"const": "operator_confirmed_known_good"},
+        "basis": {"const": "operator_statement_and_completed_deepseek_bringup"},
+        "inherited_project": {"const": "deepseek_full_network"},
+        "elaboration_log_claimed": {"const": false},
+        "decision_uri": {"const": ".agents/decisions/ADR-009-deepseek-baseline-inheritance.md"},
+        "decision_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
       }
     },
     "architecture": {
@@ -88,14 +76,12 @@
         "slice_count": {"const": 28},
         "topology_id": {"const": "rtl28_high7x4_low28_e3bdebba"},
         "specialized_array": {
-          "type": "object",
-          "additionalProperties": false,
+          "type": "object", "additionalProperties": false,
           "required": ["rows", "cols"],
           "properties": {"rows": {"const": 8}, "cols": {"const": 8}}
         },
         "general_array": {
-          "type": "object",
-          "additionalProperties": false,
+          "type": "object", "additionalProperties": false,
           "required": ["rows", "cols"],
           "properties": {"rows": {"const": 4}, "cols": {"const": 4}}
         },
@@ -103,7 +89,10 @@
         "dram": {
           "type": "object",
           "additionalProperties": false,
-          "required": ["bank_count", "row_count", "col_count", "subword_bytes", "address_unit", "address_order"],
+          "required": [
+            "bank_count", "row_count", "col_count", "subword_bytes",
+            "address_unit", "address_order"
+          ],
           "properties": {
             "bank_count": {"const": 4},
             "row_count": {"const": 6144},
@@ -115,156 +104,98 @@
         }
       }
     },
-    "physical_objects": {
+    "network_profile": {"const": "w4_deepseek_hybrid28_resnet50_v1"},
+    "operator_bindings": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["activation", "weight", "bias", "qparams", "psum", "output"],
+      "required": ["simple", "view", "conv", "maxpool", "add", "global_average_pool", "matmul"],
       "properties": {
-        "activation": {"$ref": "#/$defs/physical_object"},
-        "weight": {"$ref": "#/$defs/physical_object"},
-        "bias": {"$ref": "#/$defs/physical_object"},
-        "qparams": {"$ref": "#/$defs/physical_object"},
-        "psum": {"$ref": "#/$defs/physical_object"},
-        "output": {"$ref": "#/$defs/physical_object"}
+        "simple": {"$ref": "#/$defs/simple_binding"},
+        "view": {"$ref": "#/$defs/view_binding"},
+        "conv": {"$ref": "#/$defs/conv_binding"},
+        "maxpool": {"$ref": "#/$defs/maxpool_binding"},
+        "add": {"$ref": "#/$defs/add_binding"},
+        "global_average_pool": {"$ref": "#/$defs/gap_binding"},
+        "matmul": {"$ref": "#/$defs/matmul_binding"}
       }
     },
-    "numeric_semantics": {
+    "contract_layers": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["accumulator_bits", "overflow", "requant", "qparams_transport", "psum_lifecycle"],
+      "required": ["common_baseline", "resnet_delta"],
       "properties": {
-        "accumulator_bits": {"type": "integer", "minimum": 32},
-        "overflow": {"enum": ["wrap", "saturate", "error"]},
-        "requant": {
-          "type": "object",
-          "additionalProperties": false,
-          "required": ["multiplier_encoding", "rounding", "saturation", "zero_point_stage"],
+        "common_baseline": {
+          "$ref": "#/$defs/contract_reference",
           "properties": {
-            "multiplier_encoding": {"type": "string", "minLength": 1},
-            "rounding": {"const": "nearest_even"},
-            "saturation": {"const": "uint8"},
-            "zero_point_stage": {"type": "string", "minLength": 1}
+            "contract_id": {"const": "deepseek-rtl28-physical-baseline-e299b280-v1"},
+            "path": {"const": "contracts/deepseek_rtl28_physical_baseline.json"}
           }
         },
-        "qparams_transport": {"type": "string", "minLength": 1},
-        "psum_lifecycle": {"type": "string", "minLength": 1}
+        "resnet_delta": {
+          "$ref": "#/$defs/contract_reference",
+          "properties": {
+            "contract_id": {"const": "resnet50-rtl28-w4-deepseek-hybrid-delta-v1"},
+            "path": {"const": "contracts/resnet50_rtl28_w4_delta.json"}
+          }
+        }
       }
     },
-    "isa": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": ["opcodes", "field_widths", "instruction_mask_semantics"],
-      "properties": {
-        "opcodes": {"$ref": "#/$defs/nonnegative_integer_map"},
-        "field_widths": {
-          "type": "object",
-          "minProperties": 1,
-          "required": ["slice_mask"],
-          "properties": {"slice_mask": {"const": 28}},
-          "additionalProperties": {"type": "integer", "minimum": 1}
-        },
-        "instruction_mask_semantics": {"type": "string", "minLength": 1}
-      }
-    },
-    "runtime_protocol": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": ["load_config", "load_data", "start", "wait", "status", "error", "dump"],
-      "properties": {
-        "load_config": {"type": "string", "minLength": 1},
-        "load_data": {"type": "string", "minLength": 1},
-        "start": {"type": "string", "minLength": 1},
-        "wait": {"type": "string", "minLength": 1},
-        "status": {"type": "string", "minLength": 1},
-        "error": {"type": "string", "minLength": 1},
-        "dump": {"type": "string", "minLength": 1}
-      }
+    "deferred_to_w5": {
+      "type": "array",
+      "uniqueItems": true,
+      "minItems": 5,
+      "items": {"type": "string", "minLength": 1},
+      "allOf": [
+        {"contains": {"const": "int8_conv_sa_bias_psum_requant_configuration"}},
+        {"contains": {"const": "int8_matmul_tail_psum_requant_configuration"}},
+        {"contains": {"const": "typed_qparams_to_register_or_stream_binding"}},
+        {"contains": {"const": "target_numerical_simulator_execution"}},
+        {"contains": {"const": "hardware_runtime_load_wait_dump_protocol"}}
+      ]
     },
     "evidence": {
       "type": "array",
-      "minItems": 1,
-      "items": {
-        "type": "object",
-        "additionalProperties": false,
-        "required": ["kind", "uri", "sha256"],
-        "properties": {
-          "kind": {"type": "string", "minLength": 1},
-          "uri": {"type": "string", "minLength": 1},
-          "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
-        }
-      }
+      "minItems": 3,
+      "items": {"$ref": "#/$defs/evidence"}
     }
   },
-  "allOf": [
-    {
-      "if": {
-        "properties": {
-          "network_profile": {"const": "w4_group4x7_batch_channel28_candidate_v1"}
-        },
-        "required": ["network_profile"]
-      },
-      "then": {
-        "properties": {
-          "operator_layouts": {
-            "properties": {
-              "simple": {"const": "w4_simple_group4x7_28_candidate_v1"},
-              "view": {"const": "w4_zero_copy_view_group4x7_28_candidate_v1"},
-              "conv": {"const": "w4_conv_group4x7_28_candidate_v1"},
-              "maxpool": {"const": "w4_maxpool_group4x7_28_candidate_v1"},
-              "add": {"const": "w4_qlinearadd_group4x7_28_candidate_v1"},
-              "global_average_pool": {"const": "w4_globalavgpool_group4x7_28_candidate_v1"},
-              "matmul": {"const": "w4_qlinearmatmul_group4x7_28_candidate_v1"}
-            }
-          }
-        }
-      }
-    },
-    {
-      "if": {
-        "properties": {
-          "network_profile": {"const": "w4_global_ring28_candidate_v1"}
-        },
-        "required": ["network_profile"]
-      },
-      "then": {
-        "properties": {
-          "operator_layouts": {
-            "properties": {
-              "simple": {"const": "w4_simple_global_ring28_candidate_v1"},
-              "view": {"const": "w4_zero_copy_view_global_ring28_candidate_v1"},
-              "conv": {"const": "w4_conv_global_ring28_candidate_v1"},
-              "maxpool": {"const": "w4_maxpool_global_ring28_candidate_v1"},
-              "add": {"const": "w4_qlinearadd_global_ring28_candidate_v1"},
-              "global_average_pool": {"const": "w4_globalavgpool_global_ring28_candidate_v1"},
-              "matmul": {"const": "w4_qlinearmatmul_global_ring28_candidate_v1"}
-            }
-          }
-        }
-      }
-    }
-  ],
   "$defs": {
-    "physical_object": {
+    "contract_reference": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["owner", "axis_order", "alignment_bytes", "tail_rule", "address_unit"],
+      "required": ["contract_id", "path", "sha256"],
       "properties": {
-        "owner": {"type": "string", "minLength": 1},
-        "axis_order": {"type": "string", "minLength": 1},
-        "alignment_bytes": {"type": "integer", "minimum": 1},
-        "tail_rule": {"type": "string", "minLength": 1},
-        "address_unit": {"type": "string", "minLength": 1}
+        "contract_id": {"type": "string", "minLength": 1},
+        "path": {"type": "string", "minLength": 1},
+        "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
       }
     },
-    "nonnegative_integer_map": {
+    "evidence": {
       "type": "object",
-      "minProperties": 1,
-      "additionalProperties": {"type": "integer", "minimum": 0}
+      "additionalProperties": false,
+      "required": ["kind", "uri", "sha256"],
+      "properties": {
+        "kind": {"type": "string", "minLength": 1},
+        "uri": {"type": "string", "minLength": 1},
+        "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      }
     },
-    "positive_integer_map": {
-      "type": "object",
-      "minProperties": 1,
-      "additionalProperties": {"type": "integer", "minimum": 1}
+    "simple_binding": {"$ref": "#/$defs/local_binding", "properties": {"layout_id": {"const": "w4_simple_group4x7_28_candidate_v1"}}},
+    "view_binding": {"$ref": "#/$defs/local_binding", "properties": {"layout_id": {"const": "w4_zero_copy_view_group4x7_28_candidate_v1"}}},
+    "conv_binding": {"$ref": "#/$defs/high4_binding", "properties": {"layout_id": {"const": "w4_conv_group4x7_28_candidate_v1"}}},
+    "maxpool_binding": {"$ref": "#/$defs/local_binding", "properties": {"layout_id": {"const": "w4_maxpool_group4x7_28_candidate_v1"}}},
+    "add_binding": {"$ref": "#/$defs/local_binding", "properties": {"layout_id": {"const": "w4_qlinearadd_group4x7_28_candidate_v1"}}},
+    "gap_binding": {"$ref": "#/$defs/local_binding", "properties": {"layout_id": {"const": "w4_globalavgpool_group4x7_28_candidate_v1"}}},
+    "matmul_binding": {"$ref": "#/$defs/high4_binding", "properties": {"layout_id": {"const": "w4_qlinearmatmul_group4x7_28_candidate_v1"}}},
+    "local_binding": {
+      "type": "object", "additionalProperties": false,
+      "required": ["layout_id", "communication_domain"],
+      "properties": {"layout_id": {"type": "string"}, "communication_domain": {"const": "local"}}
+    },
+    "high4_binding": {
+      "type": "object", "additionalProperties": false,
+      "required": ["layout_id", "communication_domain"],
+      "properties": {"layout_id": {"type": "string"}, "communication_domain": {"const": "high4"}}
     }
   }
 }

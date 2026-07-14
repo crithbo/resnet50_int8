@@ -15,7 +15,7 @@ from tests.hardware_approval_fixture import valid_hardware_approval
 
 
 class W4GateAuditTests(unittest.TestCase):
-    def test_full_coverage_transitions_and_expected_external_block(self) -> None:
+    def test_deepseek_inherited_w4_closure_passes_g4(self) -> None:
         root = Path(__file__).resolve().parents[1]
         report = audit_w4_gate(root)
         self.assertEqual(report["target_family"], "rtl28")
@@ -39,10 +39,9 @@ class W4GateAuditTests(unittest.TestCase):
                 for item in report["evidence_artifacts"].values()
             )
         )
-        self.assertEqual(
-            report["gate_decision"]["software_candidate_readiness"], "fail"
-        )
+        self.assertEqual(report["gate_decision"]["software_candidate_readiness"], "pass")
         self.assertEqual(report["candidate_layouts"]["count"], 14)
+        self.assertEqual(len(report["candidate_layouts"]["approved_layout_ids"]), 7)
         self.assertEqual(
             report["current_target_evidence"]["layout_evidence_families"],
             [
@@ -98,8 +97,8 @@ class W4GateAuditTests(unittest.TestCase):
         self.assertFalse(
             report["logical_result_comparator"]["hardware_results_available"]
         )
-        self.assertEqual(report["gate_decision"]["g4_status"], "not_passed")
-        self.assertFalse(report["gate_decision"]["w5_authorized"])
+        self.assertEqual(report["gate_decision"]["g4_status"], "passed")
+        self.assertTrue(report["gate_decision"]["w5_authorized"])
         self.assertEqual(report["gate_decision"]["legacy16_software_evidence"], "pass")
         self.assertFalse(report["legacy16_evidence"]["current_gate_eligible"])
         self.assertTrue(report["target_config_toolchain"]["version_frozen"])
@@ -133,26 +132,13 @@ class W4GateAuditTests(unittest.TestCase):
         self.assertTrue(
             report["gate_criteria"]["target_rtl_isa_register_map_version_frozen"]
         )
-        self.assertTrue(
-            {
-                "target28_operator_layout_evidence_complete",
-                "target28_clean_elaboration_approved",
-                "approved_target_profile_exists",
-                "approved_physical_layout_contract_exists",
-            }.issubset(report["gate_decision"]["blocking_criteria"])
-        )
-        self.assertNotIn(
-            "target_rtl_isa_register_map_version_frozen",
-            report["gate_decision"]["blocking_criteria"],
-        )
-        self.assertNotIn(
-            "target28_all_93_edges_physically_verified",
-            report["gate_decision"]["blocking_criteria"],
-        )
-        self.assertNotIn(
-            "target28_profile_cost_evidence_complete",
-            report["gate_decision"]["blocking_criteria"],
-        )
+        self.assertEqual(report["gate_decision"]["blocking_criteria"], [])
+        self.assertTrue(report["gate_criteria"]["target28_hardware_baseline_confirmed"])
+        self.assertTrue(report["gate_criteria"]["target28_operator_layout_evidence_complete"])
+        self.assertTrue(report["gate_criteria"]["approved_target_profile_exists"])
+        self.assertTrue(report["gate_criteria"]["approved_physical_layout_contract_exists"])
+        self.assertFalse(report["current_target_evidence"]["clean_elaboration_claimed"])
+        self.assertTrue(report["current_target_evidence"]["referenced_contracts_verified"])
 
     def test_valid_rtl28_hardware_approval_fixture_is_structure_only(self) -> None:
         root = Path(__file__).resolve().parents[1]
@@ -174,9 +160,9 @@ class W4GateAuditTests(unittest.TestCase):
             "target28_operator_layout_evidence_incomplete",
             report["hardware_approval"]["current_gate_eligibility_reasons"],
         )
-        self.assertTrue(
-            report["current_target_evidence"]["clean_elaboration_approved"]
-        )
+        self.assertTrue(report["current_target_evidence"]["hardware_baseline_confirmed"])
+        self.assertFalse(report["current_target_evidence"]["clean_elaboration_claimed"])
+        self.assertFalse(report["current_target_evidence"]["referenced_contracts_verified"])
         self.assertEqual(report["gate_decision"]["g4_status"], "not_passed")
         self.assertFalse(report["gate_decision"]["w5_authorized"])
         self.assertIn(
@@ -195,7 +181,7 @@ class W4GateAuditTests(unittest.TestCase):
         self.assertTrue(report["hardware_approval"]["present"])
         self.assertFalse(report["hardware_approval"]["valid"])
         self.assertIn(
-            "full lowercase Git hash",
+            "target_version.rtl_commit must be",
             report["hardware_approval"]["validation_error"],
         )
         self.assertFalse(report["gate_decision"]["w5_authorized"])
@@ -231,7 +217,9 @@ class W4GateAuditTests(unittest.TestCase):
         }
         approval = {
             "valid": True,
-            "clean_elaboration_approved": True,
+            "hardware_baseline_confirmed": True,
+            "referenced_contracts_verified": True,
+            "gate_authority_eligible": True,
             "layout_evidence_complete": False,
         }
         status = _current_target_evidence_status(architecture, approval)

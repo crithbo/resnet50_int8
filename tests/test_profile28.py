@@ -5,16 +5,21 @@ import unittest
 from resnet50_pipeline.errors import ContractError
 from resnet50_pipeline.profile28 import (
     BATCH16_GROUP_SCHEDULE,
+    DEEPSEEK_HYBRID28_PROFILE,
+    FULL_SLICE_MASK28,
     GLOBAL_RING28_PROFILE,
     GROUP4X7_BATCH_CHANNEL28_PROFILE,
     GROUP_SAMPLE_COUNTS,
     MATMUL_OPERATOR,
+    OPERATOR_COMMUNICATION_DOMAINS,
     BatchGroupSchedule,
     Profile28Schedule,
     ProfileTransition,
     TransitionBoundary,
     group_to_sample_range,
+    operator_communication_domain,
     sample_to_group,
+    validate_network_profile,
     validate_profile_name,
 )
 
@@ -28,6 +33,27 @@ def _allowed_transition() -> ProfileTransition:
 
 
 class Profile28SchedulingTests(unittest.TestCase):
+    def test_deepseek_network_profile_uses_full_mask_and_family_scoped_domains(self) -> None:
+        self.assertEqual(
+            validate_network_profile(DEEPSEEK_HYBRID28_PROFILE),
+            DEEPSEEK_HYBRID28_PROFILE,
+        )
+        self.assertEqual(FULL_SLICE_MASK28, 0x0FFFFFFF)
+        self.assertEqual(
+            {
+                family: operator_communication_domain(family)
+                for family in OPERATOR_COMMUNICATION_DOMAINS
+            },
+            OPERATOR_COMMUNICATION_DOMAINS,
+        )
+        self.assertEqual(
+            {family for family, domain in OPERATOR_COMMUNICATION_DOMAINS.items() if domain == "high4"},
+            {"conv", "matmul"},
+        )
+        self.assertNotIn("low28", OPERATOR_COMMUNICATION_DOMAINS.values())
+        with self.assertRaises(ContractError):
+            validate_network_profile(GLOBAL_RING28_PROFILE)
+
     def test_all_16_samples_are_covered_exactly_once_and_reverse_map(self) -> None:
         ranges = BATCH16_GROUP_SCHEDULE.group_ranges()
         flattened = [sample for item in ranges for sample in item.sample_ids]
@@ -133,3 +159,4 @@ class Profile28SchedulingTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+    OPERATOR_COMMUNICATION_DOMAINS,

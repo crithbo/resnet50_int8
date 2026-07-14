@@ -5,6 +5,8 @@
 
 > 2026-07-13更新：本报告的93条逻辑边集合、生命周期/alias算法可复用；其中bundle字节、15-hop ring流量、每slice高水位和batch/ring物理签名均按旧16-slice布局计算，必须在28-slice新profile实现后重新生成，不得横向外推。
 
+> 2026-07-14更新：RTL28版本已经按新architecture basis内容寻址重生成并用于G4 v2；本文件和旧报告继续只作legacy16历史证据。
+
 ## 决定
 
 在等待正式硬件合同期间，对正式ResNet图执行三项不依赖目标opcode、地址编码或runner的整网静态审计：

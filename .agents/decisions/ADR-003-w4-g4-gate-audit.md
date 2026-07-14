@@ -5,6 +5,8 @@
 
 > 2026-07-13更新：本文件记录的12个W4 candidate、双profile边分类和成本均基于旧16-slice假设。其审计方法、93条边清单和门禁结构可复用，但所有物理结论必须按ADR-007的28-slice拓扑重建。当前G4仍为`not_passed`、W5仍未授权。
 
+> 2026-07-14更新：上述“当前”状态只代表2026-07-13历史时点。RTL28证据已重建并由ADR-009/G4 v2闭环，当前G4通过；本ADR仍不能用于批准28-slice。
+
 ## 决定
 
 W4计划内全部算子族的软件candidate readiness通过，但G4保持未通过，W5不获授权。项目停在W4/G4边界，等待硬件侧给出带版本的正式profile与物理layout批准；不得把任一candidate改写为approved，也不得用candidate直接生成目标INT8 JSON/bitstream。

@@ -4,43 +4,42 @@ from copy import deepcopy
 from typing import Any
 
 from resnet50_pipeline.hardware_approval import (
-    PROFILE_LAYOUTS,
+    APPROVAL_CONTRACT_TYPE,
+    APPROVAL_SCHEMA_VERSION,
+    APPROVAL_SCOPE,
+    EXPECTED_CONTRACT_LAYERS,
+    PROFILE_BINDINGS,
+    REQUIRED_W5_DEFERRALS,
     TARGET_ARCHITECTURE_ID,
     TARGET_ARCHITECTURE_SCHEMA_VERSION,
+    TARGET_CONFIG_COMMIT,
+    TARGET_CONFIG_REPOSITORY,
+    TARGET_DRAM,
     TARGET_FILELIST,
+    TARGET_ISA_VERSION,
+    TARGET_REGISTER_MAP_VERSION,
     TARGET_RTL_COMMIT,
     TARGET_RTL_REPOSITORY,
     TARGET_TOPOLOGY_ID,
     TARGET_TOP_MODULE,
 )
-from resnet50_pipeline.profile28 import GROUP4X7_BATCH_CHANNEL28_PROFILE
+from resnet50_pipeline.profile28 import DEEPSEEK_HYBRID28_PROFILE
 
 
-def valid_hardware_approval(
-    profile: str = GROUP4X7_BATCH_CHANNEL28_PROFILE,
-) -> dict[str, Any]:
-    """Return structurally valid synthetic RTL28 approval data for negative gate tests.
+def valid_hardware_approval() -> dict[str, Any]:
+    """Return a structurally valid synthetic W4 approval for negative gate tests."""
 
-    The fixture proves schema/validator behavior only.  Its synthetic evidence
-    never makes it current-gate eligible.
-    """
-
-    physical_object = {
-        "owner": "slice-local SRAM",
-        "axis_order": "NCHW",
-        "alignment_bytes": 16,
-        "tail_rule": "mask inactive lanes",
-        "address_unit": "byte",
-    }
     return {
-        "schema_version": "0.2",
-        "contract_type": "hardware_approval",
+        "schema_version": APPROVAL_SCHEMA_VERSION,
+        "contract_type": APPROVAL_CONTRACT_TYPE,
         "status": "approved",
+        "approval_scope": APPROVAL_SCOPE,
         "approval_id": "synthetic-rtl28-approval-for-structure-tests-only",
         "authority": {
-            "name": "Hardware Owner",
-            "organization": "Test Organization",
-            "approved_at": "2026-07-13",
+            "kind": "synthetic_fixture",
+            "authority_id": "unit_test_fixture",
+            "role": "validator test only",
+            "recorded_at": "2026-07-14",
         },
         "target_version": {
             "repository": TARGET_RTL_REPOSITORY,
@@ -49,15 +48,18 @@ def valid_hardware_approval(
             "filelist": TARGET_FILELIST,
             "architecture_id": TARGET_ARCHITECTURE_ID,
             "architecture_schema_version": TARGET_ARCHITECTURE_SCHEMA_VERSION,
-            "isa_version": "trassic2-command64-test-v1",
-            "register_map_version": "trassic2-regmap-test-v1",
+            "isa_version": TARGET_ISA_VERSION,
+            "register_map_version": TARGET_REGISTER_MAP_VERSION,
+            "config_repository": TARGET_CONFIG_REPOSITORY,
+            "config_commit": TARGET_CONFIG_COMMIT,
         },
-        "clean_elaboration": {
-            "status": "approved",
-            "tool": "synthetic-test-elaborator",
-            "tool_version": "0.0-test",
-            "log_uri": "fixture://clean-elaboration.log",
-            "log_sha256": "e" * 64,
+        "baseline_confirmation": {
+            "status": "operator_confirmed_known_good",
+            "basis": "operator_statement_and_completed_deepseek_bringup",
+            "inherited_project": "deepseek_full_network",
+            "elaboration_log_claimed": False,
+            "decision_uri": ".agents/decisions/synthetic.md",
+            "decision_sha256": "d" * 64,
         },
         "architecture": {
             "target_family": "rtl28",
@@ -66,73 +68,22 @@ def valid_hardware_approval(
             "specialized_array": {"rows": 8, "cols": 8},
             "general_array": {"rows": 4, "cols": 4},
             "instruction_mask_bits": 28,
-            "dram": {
-                "bank_count": 4,
-                "row_count": 6144,
-                "col_count": 64,
-                "subword_bytes": 16,
-                "address_unit": "byte",
-                "address_order": "slice_owner, local_bank, row, column, byte_offset",
-            },
+            "dram": deepcopy(TARGET_DRAM),
         },
-        "network_profile": profile,
-        "operator_layouts": deepcopy(PROFILE_LAYOUTS[profile]),
-        "physical_objects": {
-            name: deepcopy(physical_object)
-            for name in ("activation", "weight", "bias", "qparams", "psum", "output")
+        "network_profile": DEEPSEEK_HYBRID28_PROFILE,
+        "operator_bindings": deepcopy(PROFILE_BINDINGS[DEEPSEEK_HYBRID28_PROFILE]),
+        "contract_layers": {
+            name: {**deepcopy(identity), "sha256": character * 64}
+            for (name, identity), character in zip(
+                EXPECTED_CONTRACT_LAYERS.items(), ("a", "b"), strict=True
+            )
         },
-        "numeric_semantics": {
-            "accumulator_bits": 32,
-            "overflow": "saturate",
-            "requant": {
-                "multiplier_encoding": "signed fixed-point multiplier plus shift",
-                "rounding": "nearest_even",
-                "saturation": "uint8",
-                "zero_point_stage": "after rounding before saturation",
-            },
-            "qparams_transport": "configuration registers and/or constant streams",
-            "psum_lifecycle": "slice-local until output requantization",
-        },
-        "isa": {
-            "opcodes": {"CFG": 0, "CKEN": 1, "WREG": 4, "CMPT": 5, "BARR": 6, "RST": 7},
-            "field_widths": {
-                "command": 64,
-                "slice_mask": 28,
-                "wreg_slice_id": 5,
-                "wreg_address": 14,
-                "wreg_data": 32,
-            },
-            "instruction_mask_semantics": "one bit per physical slice in bits [30:3]",
-        },
-        "runtime_protocol": {
-            "load_config": "load 128-bit execution beats and referenced 64-bit CFG words",
-            "load_data": "host AXI writes to approved logical DRAM addresses",
-            "start": "write global_sca_start after base and execution length",
-            "wait": "poll fetch finish and intended exec_slice_finish mask",
-            "status": "read global status register",
-            "error": "check overflow, timeout and approved sticky error sources",
-            "dump": "read approved output ranges after completion fence",
-        },
+        "deferred_to_w5": sorted(REQUIRED_W5_DEFERRALS),
         "evidence": [
             {
-                "kind": "clean_elaboration",
-                "uri": "fixture://clean-elaboration.log",
-                "sha256": "e" * 64,
-            },
-            {
-                "kind": "architecture",
-                "uri": f"rtl://Trassic2.0_RTL/commit/{TARGET_RTL_COMMIT}",
-                "sha256": "a" * 64,
-            },
-            {
-                "kind": "physical_layout",
-                "uri": "fixture://rtl28-layout-approval.json",
-                "sha256": "b" * 64,
-            },
-            {
-                "kind": "runtime_protocol",
-                "uri": "fixture://rtl28-runtime-protocol.md",
+                "kind": "synthetic_structure_fixture",
+                "uri": "fixture://w4-approval.json",
                 "sha256": "c" * 64,
-            },
+            }
         ],
     }

@@ -73,16 +73,19 @@
       "implementation_available": false
     },
     "target_hardware": {
-      "status": "unapproved_missing_hardware_approval",
+      "status": "w4_physical_baseline_approved_runtime_pending",
       "approved": false,
       "implementation_available": false,
       "architecture_id": "trassic2_rtl28_candidate_v1",
-      "candidate_evidence_backend": "rtl28_candidate_evidence"
+      "candidate_evidence_backend": "rtl28_candidate_evidence",
+      "w4_physical_baseline_approved": true,
+      "w4_approval_path": "contracts/hardware_approval.json",
+      "w4_approval_sha256": "963b64087351a45d54f52a86fe3536804e4f24427c94ee912c521b3a93fe159b"
     }
   },
   "unresolved": [
     "authoritative target simulator command and version",
-    "hardware-approved target-field binding and numerical validation for the typed ResNet50 parameters",
+    "W5 target-field binding and numerical validation for the typed ResNet50 parameters",
     "hardware load/start/wait/error/dump protocol"
   ]
 }

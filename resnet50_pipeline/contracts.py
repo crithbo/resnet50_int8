@@ -8,6 +8,8 @@ from typing import Any
 from .errors import ContractError
 from .hashing import combined_hash, sha256_file
 from .hardware_approval import (
+    ALTERNATIVE_LAYOUTS,
+    KNOWN_LAYOUT_IDS,
     PROFILE_LAYOUTS,
     TARGET_ARCHITECTURE_ID,
     TARGET_ARCHITECTURE_SCHEMA_VERSION,
@@ -21,8 +23,9 @@ from .hardware_approval import (
     TARGET_TOP_MODULE,
 )
 from .profile28 import (
-    DEFAULT_PROFILE,
+    DEEPSEEK_HYBRID28_PROFILE,
     GROUP_SAMPLE_COUNTS,
+    OPERATOR_COMMUNICATION_DOMAINS,
     SUPPORTED_PROFILES,
 )
 from .target_config_audit import (
@@ -95,7 +98,7 @@ def _validate_layout_registry(
             raise ContractError(
                 f"{location}.{layout_id} must contain {TARGET_SLICE_COUNT} slices"
             )
-        if record.get("operator_family") not in PROFILE_LAYOUTS[DEFAULT_PROFILE]:
+        if record.get("operator_family") not in OPERATOR_COMMUNICATION_DOMAINS:
             raise ContractError(f"{location}.{layout_id} has an unknown operator_family")
         if record.get("status") not in allowed_statuses:
             raise ContractError(f"{location}.{layout_id} has invalid status")
@@ -273,9 +276,9 @@ def validate_architecture_contract(value: dict[str, Any], root: Path | None = No
         target["architecture_id"] != TARGET_ARCHITECTURE_ID
         or target["target_family"] != TARGET_FAMILY
         or target["slice_count"] != TARGET_SLICE_COUNT
-        or target["status"] != "candidate_unapproved"
+        or target["status"] != "approved_for_w4_baseline"
     ):
-        raise ContractError("architecture target identity must be the current RTL28 candidate")
+        raise ContractError("architecture target identity must be the approved RTL28 W4 baseline")
     if target["instruction_mask_bits"] != TARGET_SLICE_COUNT:
         raise ContractError("architecture instruction mask must contain 28 bits")
 
@@ -294,8 +297,8 @@ def validate_architecture_contract(value: dict[str, Any], root: Path | None = No
         or rtl["filelist"] != TARGET_FILELIST
     ):
         raise ContractError("architecture RTL identity is not the selected candidate")
-    if rtl["clean_elaboration_status"] != "blocked_not_clean":
-        raise ContractError("candidate architecture must not claim clean elaboration")
+    if rtl["clean_elaboration_status"] != "operator_confirmed_known_good_no_log_claim":
+        raise ContractError("architecture must record the named baseline without claiming an elaboration log")
 
     arrays = target["arrays"]
     if not isinstance(arrays, dict) or set(arrays) != {"specialized", "general"}:
@@ -306,7 +309,7 @@ def validate_architecture_contract(value: dict[str, Any], root: Path | None = No
         if (
             not isinstance(record, dict)
             or (record.get("rows"), record.get("cols")) != expected
-            or record.get("status") != "candidate_unapproved"
+            or record.get("status") != "approved_by_deepseek_inheritance"
         ):
             raise ContractError(f"architecture {name} array must match RTL evidence")
 
@@ -315,8 +318,8 @@ def validate_architecture_contract(value: dict[str, Any], root: Path | None = No
         raise ContractError("architecture topology must be an object")
     if topology.get("topology_id") != TARGET_TOPOLOGY_ID:
         raise ContractError("architecture topology_id is not the selected RTL28 map")
-    if topology.get("status") != "candidate_unapproved":
-        raise ContractError("architecture topology must remain candidate_unapproved")
+    if topology.get("status") != "approved_by_deepseek_inheritance":
+        raise ContractError("architecture topology must use the inherited DeepSeek baseline")
     if topology.get("high_ring_owners") != [list(item) for item in HIGH_RING_OWNERS]:
         raise ContractError("architecture HIGH topology differs from topology28")
     if topology.get("low_ring_owners") != list(LOW_RING_OWNERS):
@@ -325,10 +328,27 @@ def validate_architecture_contract(value: dict[str, Any], root: Path | None = No
     profiles = target["profiles"]
     if not isinstance(profiles, dict):
         raise ContractError("architecture profiles must be an object")
-    if profiles.get("default") != DEFAULT_PROFILE:
-        raise ContractError("architecture default profile must be the seven-small-ring profile")
-    if set(profiles.get("candidates", [])) != set(SUPPORTED_PROFILES):
-        raise ContractError("architecture profiles must use exact profile28 IDs")
+    expected_profile_fields = {
+        "default",
+        "approved",
+        "physical_layout_alternatives",
+        "instruction_mask",
+        "operator_communication_domains",
+        "batch_group_sample_counts",
+        "transition_policy",
+        "source",
+    }
+    _require_keys(profiles, expected_profile_fields, "architecture.target.profiles")
+    if profiles.get("default") != DEEPSEEK_HYBRID28_PROFILE:
+        raise ContractError("architecture default profile must be the DeepSeek hybrid28 profile")
+    if profiles.get("approved") != [DEEPSEEK_HYBRID28_PROFILE]:
+        raise ContractError("architecture must approve exactly the DeepSeek hybrid28 profile")
+    if set(profiles.get("physical_layout_alternatives", [])) != set(SUPPORTED_PROFILES):
+        raise ContractError("architecture physical alternatives must preserve both RTL28 layouts")
+    if profiles.get("instruction_mask") != "0b1111111111111111111111111111":
+        raise ContractError("architecture network profile must use the full 28-bit instruction mask")
+    if profiles.get("operator_communication_domains") != OPERATOR_COMMUNICATION_DOMAINS:
+        raise ContractError("architecture operator communication domains are invalid")
     if profiles.get("batch_group_sample_counts") != list(GROUP_SAMPLE_COUNTS):
         raise ContractError("architecture batch groups must be [3,3,2,2,2,2,2]")
 
@@ -336,9 +356,9 @@ def validate_architecture_contract(value: dict[str, Any], root: Path | None = No
     if not isinstance(memory, dict):
         raise ContractError("candidate_memory must be an object")
     expected_memory = {
-        "status": "candidate_unapproved",
-        "geometry_status": "candidate_unapproved",
-        "address_order_status": "candidate_unapproved",
+        "status": "approved_for_w4_physical_contract",
+        "geometry_status": "approved_by_deepseek_inheritance",
+        "address_order_status": "approved_by_deepseek_inheritance",
         **TARGET_DRAM,
     }
     for field, expected in expected_memory.items():
@@ -349,9 +369,7 @@ def validate_architecture_contract(value: dict[str, Any], root: Path | None = No
     _validate_layout_registry(
         value["candidate_layouts"], "candidate_layouts", {"candidate", "approved"}
     )
-    expected_layout_ids = {
-        layout for mapping in PROFILE_LAYOUTS.values() for layout in mapping.values()
-    }
+    expected_layout_ids = set(KNOWN_LAYOUT_IDS)
     planned_ids = set(value["planned_layouts"])
     candidate_ids = set(value["candidate_layouts"])
     if planned_ids & candidate_ids:
@@ -369,6 +387,23 @@ def validate_architecture_contract(value: dict[str, Any], root: Path | None = No
             )
             if registry[layout_id]["operator_family"] != family:
                 raise ContractError(f"planned layout family mismatch for {profile}:{family}")
+            record = registry[layout_id]
+            if (
+                record.get("status") != "approved"
+                or record.get("current_gate_eligible") is not True
+                or record.get("network_profile_id") != profile
+                or record.get("communication_domain")
+                != OPERATOR_COMMUNICATION_DOMAINS[family]
+            ):
+                raise ContractError(f"selected layout is not approved for {profile}:{family}")
+    for family, layout_id in ALTERNATIVE_LAYOUTS.items():
+        record = value["candidate_layouts"][layout_id]
+        if (
+            record.get("operator_family") != family
+            or record.get("status") != "candidate"
+            or record.get("current_gate_eligible") is not False
+        ):
+            raise ContractError(f"LOW-28 alternative must remain gate-ineligible: {family}")
 
     fixture_layouts = value["fixture_layouts"]
     if not isinstance(fixture_layouts, dict) or not fixture_layouts:
@@ -893,13 +928,22 @@ def validate_backend_contract(
     if not isinstance(hardware, dict):
         raise ContractError("backend.target_hardware must be an object")
     if (
-        hardware.get("status") != "unapproved_missing_hardware_approval"
+        hardware.get("status") != "w4_physical_baseline_approved_runtime_pending"
         or hardware.get("approved") is not False
         or hardware.get("implementation_available") is not False
         or hardware.get("architecture_id") != TARGET_ARCHITECTURE_ID
         or hardware.get("candidate_evidence_backend") != "rtl28_candidate_evidence"
+        or hardware.get("w4_physical_baseline_approved") is not True
+        or hardware.get("w4_approval_path") != "contracts/hardware_approval.json"
     ):
-        raise ContractError("target hardware must remain explicitly unapproved")
+        raise ContractError("target hardware must separate W4 physical approval from W8 runtime approval")
+    approval_digest = hardware.get("w4_approval_sha256")
+    if not isinstance(approval_digest, str) or len(approval_digest) != 64:
+        raise ContractError("target hardware W4 approval hash must be lowercase SHA-256")
+    if root is not None:
+        approval_path = root.parent / hardware["w4_approval_path"]
+        if not approval_path.is_file() or sha256_file(approval_path) != approval_digest:
+            raise ContractError("target hardware W4 approval file/hash mismatch")
 
     unresolved = value["unresolved"]
     if not isinstance(unresolved, list) or not unresolved or any(

@@ -469,11 +469,8 @@ def _hardware_approval_status(
     result["path"] = display_path
     result["present"] = True
     result["validation_error"] = None
-    result["gate_authority_eligible"] = not str(
-        result.get("approval_id", "")
-    ).startswith("synthetic-")
     result["validation_scope"] = (
-        "authority_and_structure"
+        "authority_structure_and_referenced_contracts"
         if result["gate_authority_eligible"]
         else "structure_only"
     )
@@ -591,8 +588,11 @@ def _current_target_evidence_status(
         )
         for report_id, record in target_reports.items()
     )
-    clean_elaboration_approved = bool(
-        hardware_approval.get("clean_elaboration_approved", False)
+    hardware_baseline_confirmed = bool(
+        hardware_approval.get("hardware_baseline_confirmed", False)
+    )
+    referenced_contracts_verified = bool(
+        hardware_approval.get("referenced_contracts_verified", False)
     )
     gate_authority_eligible = bool(
         hardware_approval.get("gate_authority_eligible", False)
@@ -605,7 +605,8 @@ def _current_target_evidence_status(
         and layout_evidence_complete
         and edge_evidence_complete
         and cost_evidence_complete
-        and clean_elaboration_approved
+        and hardware_baseline_confirmed
+        and referenced_contracts_verified
     )
     reasons = []
     if not hardware_approval.get("valid", False):
@@ -620,8 +621,10 @@ def _current_target_evidence_status(
         reasons.append("target28_network_93_edge_evidence_missing")
     if not cost_evidence_complete:
         reasons.append("target28_profile_cost_evidence_missing")
-    if not clean_elaboration_approved:
-        reasons.append("target28_clean_elaboration_not_approved")
+    if not hardware_baseline_confirmed:
+        reasons.append("target28_hardware_baseline_not_confirmed")
+    if not referenced_contracts_verified:
+        reasons.append("target28_referenced_physical_contracts_not_verified")
     return {
         "target_family": CURRENT_TARGET_FAMILY,
         "slice_count": CURRENT_TARGET_SLICE_COUNT,
@@ -637,7 +640,11 @@ def _current_target_evidence_status(
         "eligible_report_ids": sorted(target_reports),
         "network_93_edge_evidence_complete": edge_evidence_complete,
         "profile_cost_evidence_complete": cost_evidence_complete,
-        "clean_elaboration_approved": clean_elaboration_approved,
+        "hardware_baseline_confirmed": hardware_baseline_confirmed,
+        "clean_elaboration_claimed": bool(
+            hardware_approval.get("clean_elaboration_claimed", False)
+        ),
+        "referenced_contracts_verified": referenced_contracts_verified,
         "hardware_approval_structurally_valid": bool(
             hardware_approval.get("valid", False)
         ),
@@ -1083,8 +1090,8 @@ def audit_w4_gate(
         "target28_profile_cost_evidence_complete": current_target_evidence[
             "profile_cost_evidence_complete"
         ],
-        "target28_clean_elaboration_approved": current_target_evidence[
-            "clean_elaboration_approved"
+        "target28_hardware_baseline_confirmed": current_target_evidence[
+            "hardware_baseline_confirmed"
         ],
         "approved_target_profile_exists": current_target_evidence[
             "hardware_approval_current_gate_eligible"
@@ -1102,12 +1109,12 @@ def audit_w4_gate(
     g4_passed = all(criteria.values())
     return {
         "schema_version": "0.2",
-        "audit_id": "w4_28_g4_gate_fail_closed_v1",
+        "audit_id": "w4_28_g4_deepseek_inherited_v2",
         "target_family": CURRENT_TARGET_FAMILY,
         "slice_count": CURRENT_TARGET_SLICE_COUNT,
         "architecture_id": architecture["target"]["architecture_id"],
         "architecture_sha256": sha256_file(architecture_path),
-        "profile_ids": sorted(architecture["target"]["profiles"]["candidates"]),
+        "profile_ids": sorted(architecture["target"]["profiles"]["approved"]),
         "current_gate_eligible": g4_passed,
         "model_sha256": catalog["model_sha256"],
         "scope": "Current 28-slice G4 decision with legacy16 evidence isolated",
@@ -1178,10 +1185,10 @@ def audit_w4_gate(
         "audit_observations": [
             "The GAP D-to-Flatten proof is a storage-view property; the formal graph edge is GAP-to-Dequantize followed by Dequantize-to-Flatten.",
             "Exact aliases proven on standalone bundles do not allocate simultaneous network-wide bases; W7 owns rebase and overlap decisions.",
-            "The ring/channel candidate requires explicit transitions at batch-simple-operator boundaries, including Quantize-to-MatMul and final channel output to Dequantize.",
+            "The selected DeepSeek-compatible profile keeps one full 28-slice launch mask; local and HIGH-4 are operator communication domains, not network-wide group/global modes.",
             "Final INT32 Conv/MatMul accumulators are covered in W4; per-K-tile physical psum placement remains a target-dependent W5 contract.",
             "The logical result comparator is ready for two-way or three-way reports, but no absent simulator/hardware output is treated as a numerical pass.",
             "Legacy16 layout, edge, capacity, lifetime and cost evidence is diagnostic only and cannot satisfy any current 28-slice G4 criterion.",
-            "A structurally valid hardware approval remains ineligible for G4 until the current 28-slice architecture, operator layouts, 93-edge audit, profile cost evidence and clean elaboration are all present.",
+            "G4 inherits the named known-good DeepSeek hardware baseline without claiming a new clean-elaboration log; W5 numerical configuration and W8 runtime evidence remain separate gates.",
         ],
     }

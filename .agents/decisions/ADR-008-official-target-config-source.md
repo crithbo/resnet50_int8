@@ -3,6 +3,8 @@
 状态：已由操作者采用（adopted）；只批准配置来源，不批准数值模拟器、物理布局、RTL构建或板级运行
 日期：2026-07-14
 
+2026-07-14更新：ADR-009在不改变本ADR配置来源结论的前提下，另行批准DeepSeek公共物理基线与ResNet W4差异layout；它没有批准数值模拟器或板级运行。下文关于G4仍缺物理layout/profile与clean elaboration的描述已过时，当前门状态以ADR-009和G4 v2审计为准。
+
 ## 决定
 
 1. `ndp-sim-ref@e299b2804448242d1589b3e58ed7c5a9a5eca09f`中的`jsons/`、`bitstream/`和`model_execplan/`被确认为正式28-slice硬件配置来源，不再只称为“参考框架”。
@@ -34,6 +36,8 @@
 - 本决定不生成正式W5 JSON/bitstream、execplan、Bank_data或板卡包。
 
 ## 后续顺序
+
+以下是本ADR刚采用时的历史顺序；其中模板审计和typed参数合同已完成，W4/G4也已由ADR-009关闭。尚未完成的数值模拟器与板级协议继续属于W6/W8。
 
 1. 先把同一审计扩展到另一个MaxPool模板、AvgPool、Quantize、Add/Dequantize、GEMV/MatMul和sum模板，形成可复用字段规则。
 2. 从W3稳定`hw_op_id`和qparams建立ResNet参数化adapter；没有现成Conv模板时，先以SA/stream/buffer正式字段组合出最小候选，并继续保持非正式W5状态。
