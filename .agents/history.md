@@ -704,3 +704,13 @@
 - 验证：根仓全量238/238通过，仅保留既有NumPy标量转换DeprecationWarning；审批/合同/G4/W0聚焦40/40通过；`validate-contracts`有效，合同集合digest为`c41d9c0abbb5299d61a14d93c08de949b2ea935fd5a0e38e5dbab3f33655fac9`；RTL28静态证据与CGRA_SIM、ndp-sim-ref、NDPFuncModel四项匹配lock。G4 v2的12/12条件全部为true，阻塞列表为空，`g4_status=passed`、`w5_authorized=true`，同时`clean_elaboration_claimed=false`。
 - 当前完成位置：W4正式结束，G4通过；已批准的是DeepSeek公共物理载体和ResNet W4布局差异，不是INT8数值、目标simulator或板级结果。下一步建议单线程进入W5最小真实INT8 Conv模板：只选一个真实`hw_op_id`，绑定C7真实activation/weight/bias/qparams，补SA/stream/buffer、INT32 psum、requant、padding/tail和溢出拒绝，要求固定seed的JSON/bitstream逐字节复现与字段provenance完整；不得直接生成整网W5或宣称G5/G6/硬件三方通过。
 - 精确回退：先revert本history提交，再revert`952a96b48416ed2ea1bd2d3068a541ab3dd43625`；其父恢复点为`c7eccc5a664d52f8f00695b7427e673b22743f3c`。
+
+## 2026-07-14：W4归档与W5新对话交接重写
+
+- 根仓提交`8e91a5258271bf4d8459ed7f0a4f590c2745b493`，父提交`3b5fff4d2007d2acdd7793bc69988b1d6f98be40`，`docs: prepare W5 handoff and archive W4`；本步骤只整理`.agents`交接与历史边界，没有开始W5实现、生成JSON/bitstream或读取/重跑约951 MB W3 `.npy`。
+- 完整读取并审阅当时`.agents`下13个既有说明文件，补读按`Get-Content.Count`确认的`agent.md`、`plan.md`后半部；新增`.agents/W5_HANDOFF.md`作为新对话第一入口，新增`.agents/W4_ARCHIVE.md`作为本W4对话的错误追溯索引。`history.md`继续保存逐时事实，旧条目中的“G4未通过”“等待clean elaboration”“下一步C8”不再被解释为当前任务。
+- 修正活动文档中的方案漂移：`agent.md`不再把W4写成C8待办或把28-slice layout/inverse比较器写成未实现；`plan.md`把W1未闭合项分流到W5/W6/W7/W8，并把首个W5包改为“先定位DeepSeek真实JSON/bitstream数值执行入口，再做一个真实1×1 Conv配置与golden比较”；算子规则不再限制为临时W4审计；ADR-006～008明确区分采用时历史和ADR-009后的当前状态。
+- 新交接冻结首包为单线程：优先`hwop-0004-00`或经审查更合适的简单真实1×1/stride1 Conv tile，绑定C7真实weight/bias/per-channel qparams；JSON/bitstream确定性属于G5，使用同一physical输入运行目标模拟器并让logical INT32 P/UINT8 D与W3 golden bit-exact属于G6。找不到真正执行目标配置的模拟器时停止横向扩展，不以`NDPFuncModel`、bundle生成或编码成功替代数值验收。
+- 验证：`git diff --check`通过；ADR-009 SHA-256保持`bb17837e6878ab9f78676870c46e10ad73f495540b8a21ce984fbb85c00063a1`并与`hardware_approval.json`引用一致；RTL28证据和CGRA_SIM、ndp-sim-ref、NDPFuncModel四项全部匹配lock；合同digest保持`c41d9c0abbb5299d61a14d93c08de949b2ea935fd5a0e38e5dbab3f33655fac9`；G4为12/12、阻塞0、`w5_authorized=true`、`clean_elaboration_claimed=false`；根仓全量238/238通过。
+- 当前完成位置：W4归档与新对话交接完成，W4/G4状态未改变，W5尚未开始。下一步建议在新对话读取`W5_HANDOFF.md`并执行其中三条无副作用检查，然后按首个真实Conv纵向闭环继续；本W4对话只用于后续追溯W4错误。
+- 精确回退：revert `8e91a5258271bf4d8459ed7f0a4f590c2745b493`；上一恢复点为`3b5fff4d2007d2acdd7793bc69988b1d6f98be40`。该回退只撤销交接文档重写，不撤销W4业务闭环`952a96b...`或任何机器合同。
