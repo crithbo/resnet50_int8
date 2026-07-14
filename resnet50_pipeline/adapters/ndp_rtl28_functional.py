@@ -11,6 +11,7 @@ within-slice offsets remain unchanged and are reversibly mapped below.
 from __future__ import annotations
 
 import math
+import hashlib
 from dataclasses import dataclass, replace
 from pathlib import Path
 
@@ -23,6 +24,7 @@ from ..memory import ByteProvenance, DramGeometry, SparsePhysicalImage
 from ..profile28 import (
     GLOBAL_RING28_PROFILE,
     GROUP4X7_BATCH_CHANNEL28_PROFILE,
+    group_to_sample_range,
     sample_to_group,
 )
 from ..topology28 import Direction, TOPOLOGY28
@@ -112,6 +114,18 @@ class NdpRtl28CoordinateResult:
     physical_probe: NdpPhysicalProbeResult
     address_map: Rtl28ShadowAddressMap
     updated_bundle: Conv28PhysicalBundle
+
+
+@dataclass(frozen=True)
+class NdpTargetConfigConvResult:
+    """Config-bound exact coordinate and bulk-equivalent Conv comparisons."""
+
+    config_sha256: str
+    semantic_contract_sha256: str
+    exact_coordinate: dict[str, object]
+    comparisons: tuple[dict[str, object], ...]
+    physical_probe: NdpPhysicalProbeResult
+    address_map: Rtl28ShadowAddressMap
 
 
 class NdpRtl28FunctionalAdapter:
@@ -542,6 +556,164 @@ class NdpRtl28FunctionalAdapter:
             updated_bundle=replace(bundle, payloads=updated_payloads),
         )
 
+    def run_target_config_qlinear_conv_1x1(
+        self,
+        layout: QLinearConvPhysicalLayout,
+        bundle: Conv28PhysicalBundle,
+        *,
+        config_path: Path,
+        semantic_contract_path: Path,
+    ) -> NdpTargetConfigConvResult:
+        """Bind the real target JSON to one exact and two bulk NDP comparisons."""
+
+        self._require_layout(layout, bundle)
+        if (
+            bundle.plan.activation_shape != (16, 64, 56, 56)
+            or bundle.plan.weight_shape != (64, 64, 1, 1)
+            or bundle.plan.output_shape != (16, 64, 56, 56)
+            or bundle.plan.strides != (1, 1)
+            or bundle.plan.pads != (0, 0, 0, 0)
+            or bundle.plan.dilations != (1, 1)
+        ):
+            raise ValueError("target config adapter accepts only the bound real 1x1 Conv")
+        config_text = config_path.read_text(encoding="utf-8")
+        semantic_text = semantic_contract_path.read_text(encoding="utf-8")
+        config_sha256 = hashlib.sha256(config_text.encode("utf-8")).hexdigest()
+        semantic_sha256 = hashlib.sha256(semantic_text.encode("utf-8")).hexdigest()
+        address_map = self._shadow_map(bundle)
+        physical_bundle = self._physical_probe_bundle(bundle, address_map)
+        exact_plan = self.build_probe_plans(
+            layout,
+            bundle,
+            address_map=address_map,
+            output_coordinates=((0, 0, 0, 0),),
+        )[0]
+
+        def region_descriptor(port: str, slice_id: int) -> dict[str, object]:
+            region = bundle.region(port, slice_id)
+            return {
+                "base": address_map.to_shadow(region.base_address),
+                "physical_shape": list(region.physical_shape),
+                "logical_start": region.logical_start,
+                "logical_count": region.logical_count,
+            }
+
+        groups: list[dict[str, object]] = []
+        for group_id, ring in enumerate(TOPOLOGY28.high_rings):
+            sample_range = group_to_sample_range(group_id)
+            sources = []
+            destinations = []
+            for owner in ring.owners:
+                activation = region_descriptor("A", owner)
+                sources.append(
+                    {
+                        "slice_id": owner,
+                        "activation_base": activation["base"],
+                        "physical_shape": activation["physical_shape"],
+                        "logical_start": activation["logical_start"],
+                        "logical_count": activation["logical_count"],
+                    }
+                )
+                weight = region_descriptor("B", owner)
+                bias = region_descriptor("bias", owner)
+                w_scale = region_descriptor("w_scale", owner)
+                w_zero_point = region_descriptor("w_zero_point", owner)
+                x_scale = region_descriptor("x_scale", owner)
+                x_zero_point = region_descriptor("x_zero_point", owner)
+                y_scale = region_descriptor("y_scale", owner)
+                y_zero_point = region_descriptor("y_zero_point", owner)
+                accumulator = region_descriptor("P", owner)
+                output = region_descriptor("D", owner)
+                destinations.append(
+                    {
+                        "slice_id": owner,
+                        "logical_start": weight["logical_start"],
+                        "logical_count": weight["logical_count"],
+                        "weight_base": weight["base"],
+                        "weight_physical_shape": weight["physical_shape"],
+                        "bias_base": bias["base"],
+                        "bias_physical_shape": bias["physical_shape"],
+                        "w_scale_base": w_scale["base"],
+                        "w_scale_physical_shape": w_scale["physical_shape"],
+                        "w_zero_point_base": w_zero_point["base"],
+                        "w_zero_point_physical_shape": w_zero_point["physical_shape"],
+                        "x_scale_base": x_scale["base"],
+                        "x_zero_point_base": x_zero_point["base"],
+                        "y_scale_base": y_scale["base"],
+                        "y_zero_point_base": y_zero_point["base"],
+                        "accumulator_base": accumulator["base"],
+                        "output_base": output["base"],
+                        "output_physical_shape": output["physical_shape"],
+                    }
+                )
+            groups.append(
+                {
+                    "group_id": group_id,
+                    "owners": list(ring.owners),
+                    "sample_range": [sample_range.start, sample_range.stop],
+                    "sources": sources,
+                    "destinations": destinations,
+                }
+            )
+        bulk_job = {
+            "name": "hwop-0004_target_config_full",
+            "profile_id": bundle.plan.profile_id,
+            "activation_shape": list(bundle.plan.activation_shape),
+            "weight_shape": list(bundle.plan.weight_shape),
+            "output_shape": list(bundle.plan.output_shape),
+            "strides": list(bundle.plan.strides),
+            "pads": list(bundle.plan.pads),
+            "dilations": list(bundle.plan.dilations),
+            "groups": groups,
+            "comparison_scopes": [
+                {
+                    "name": "single_coordinate",
+                    "ranges": {"n": [0, 1], "k": [0, 1], "h": [0, 1], "w": [0, 1]},
+                },
+                {
+                    "name": "first_tile",
+                    "ranges": {"n": [0, 3], "k": [0, 16], "h": [0, 56], "w": [0, 56]},
+                },
+                {
+                    "name": "full_operator",
+                    "ranges": {"n": [0, 16], "k": [0, 64], "h": [0, 56], "w": [0, 56]},
+                },
+            ],
+        }
+        physical_probe = self._ndp.probe_physical_bundle(
+            physical_bundle,
+            int8_dot_probes=(exact_plan.probe,),
+            target_config_binding={
+                "config_text": config_text,
+                "config_sha256": config_sha256,
+                "semantic_contract_text": semantic_text,
+                "semantic_contract_sha256": semantic_sha256,
+            },
+            int8_conv_1x1_jobs=(bulk_job,),
+        )
+        exact = physical_probe.int8_dot_probes[0]
+        bulk = physical_probe.int8_conv_1x1_jobs[0]
+        comparisons = tuple(bulk["comparisons"])
+        single = comparisons[0]
+        expected_p = int(layout.inverse_port(bundle, "P")[0, 0, 0, 0])
+        expected_d = int(layout.inverse_port(bundle, "D")[0, 0, 0, 0])
+        if (
+            exact.get("logical_output_coordinate") != [0, 0, 0, 0]
+            or int(exact["accumulator"]) != expected_p
+            or int(exact["output_after"]) != expected_d
+            or single["P"]["mismatch_count"] != 0
+            or single["D"]["mismatch_count"] != 0
+        ):
+            raise PipelineError("target config exact/bulk single-coordinate closure differs")
+        return NdpTargetConfigConvResult(
+            config_sha256=config_sha256,
+            semantic_contract_sha256=semantic_sha256,
+            exact_coordinate=exact,
+            comparisons=comparisons,
+            physical_probe=physical_probe,
+            address_map=address_map,
+        )
+
     def run_qlinear_conv(
         self,
         layout: QLinearConvPhysicalLayout,
@@ -607,6 +779,7 @@ __all__ = [
     "NdpRtl28CoordinateResult",
     "NdpRtl28ConvResult",
     "NdpRtl28FunctionalAdapter",
+    "NdpTargetConfigConvResult",
     "Rtl28ConvProbePlan",
     "Rtl28ShadowAddressMap",
 ]

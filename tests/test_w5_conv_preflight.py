@@ -63,19 +63,22 @@ class W5FirstConvPreflightTests(unittest.TestCase):
         simulator = self.report["deepseek_target_simulator_entry"]
         self.assertEqual(
             simulator["status"],
-            "operator_confirmed_conv_backend_adapter_pending",
+            "operator_confirmed_conv_backend_config_bound_candidate",
         )
         self.assertFalse(simulator["packager"]["executes_numerical_model"])
         self.assertTrue(simulator["target_runner"]["command"])
-        self.assertFalse(simulator["target_runner"]["config_adapter_available"])
+        self.assertTrue(simulator["target_runner"]["config_adapter_available"])
+        self.assertTrue(simulator["target_runner"]["consumes_target_json"])
+        self.assertFalse(simulator["target_runner"]["consumes_target_bitstream"])
         target = self.report["target_configuration"]
         self.assertEqual(target["official_named_conv_template_count"], 0)
-        self.assertEqual(target["candidate_named_conv_template_count"], 1)
+        self.assertEqual(target["candidate_named_conv_template_count"], 2)
         self.assertTrue(target["candidate_json_encoded"])
         self.assertTrue(target["candidate_bitstream_generated"])
         self.assertTrue(target["candidate_mapping_review_generated"])
-        self.assertFalse(target["real_1x1_patched_json_generated"])
-        self.assertFalse(target["real_1x1_bitstream_generated"])
+        self.assertTrue(target["real_1x1_patched_json_generated"])
+        self.assertTrue(target["real_1x1_bitstream_generated"])
+        self.assertTrue(target["real_1x1_mapping_review_generated"])
         self.assertEqual(
             target["operator_candidate"]["placement"]["constraint_cost"], 0
         )
@@ -87,9 +90,8 @@ class W5FirstConvPreflightTests(unittest.TestCase):
         self.assertEqual(
             {item["blocker"] for item in target["unresolved_target_bindings"]},
             {
-                "B_CONV_CANDIDATE_SHAPE_LOWERING",
-                "B_CONV_SIMULATOR_CONFIG_ADAPTER",
-                "B_CONV_SA_PSUM_BINDING",
+                "B_CONV_TARGET_EXECUTION_SEMANTICS",
+                "B_N2N_TARGET_SELECTOR",
                 "B_REQUANT_TARGET_NUMERICS",
                 "B_EXECPLAN_TYPED_TRANSPORT",
             },
@@ -107,13 +109,33 @@ class W5FirstConvPreflightTests(unittest.TestCase):
         self.assertEqual(result["accumulator"]["mismatch_count"], 0)
         self.assertEqual(result["output"]["mismatch_count"], 0)
         self.assertEqual(
-            result["config_link_status"], "not_run_target_json_adapter_missing"
+            result["config_link_status"], "target_json_consumed_and_validated"
         )
+
+    def test_target_config_compares_coordinate_tile_and_full_operator(self) -> None:
+        result = self.report["ndp_target_config_comparison"]
+        self.assertEqual(result["status"], "passed_with_execution_boundary")
+        self.assertTrue(result["not_cycle_accurate_lc_interpretation"])
+        comparisons = result["ordered_comparisons"]
+        self.assertEqual(
+            [item["name"] for item in comparisons],
+            ["single_coordinate", "first_tile", "full_operator"],
+        )
+        self.assertEqual(
+            [item["P"]["element_count"] for item in comparisons],
+            [1, 150528, 3211264],
+        )
+        for item in comparisons:
+            for port in ("P", "D"):
+                self.assertEqual(item[port]["mismatch_count"], 0)
+                self.assertEqual(
+                    item[port]["actual_sha256"], item[port]["golden_sha256"]
+                )
 
     def test_validator_rejects_target_json_or_gate_overclaim(self) -> None:
         changed = deepcopy(self.report)
-        changed["target_configuration"]["real_1x1_patched_json_generated"] = True
-        with self.assertRaisesRegex(W5ConvPreflightError, "exceeded evidence"):
+        changed["target_configuration"]["real_1x1_bitstream_generated"] = False
+        with self.assertRaisesRegex(W5ConvPreflightError, "evidence differs"):
             validate_w5_first_conv_preflight(changed)
 
         changed = deepcopy(self.report)

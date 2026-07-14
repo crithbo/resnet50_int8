@@ -570,16 +570,19 @@ def validate_backend_contract(
         raise ContractError("backend.ndp_conv_functional must be an object")
     if (
         ndp.get("status") != "operator_confirmed_conv_simulator_component"
-        or ndp.get("role") != "conv_functional_simulator_config_adapter_pending"
+        or ndp.get("role")
+        != "conv_functional_simulator_with_real_1x1_target_json_adapter"
         or ndp.get("source_repository")
         != "https://github.com/runoobb/NDPFuncModel.git"
         or ndp.get("source_commit")
-        != "35eab40e5314bf603481dd6268bc96ab2ca514a6"
+        != "e4454f7e12aa38ca94af07e017ae0928b9c839eb"
         or ndp.get("is_target_backend") is not False
         or ndp.get("identity_confirmed") is not True
         or ndp.get("entrypoint") != "tools/physical_image_probe.py"
-        or ndp.get("consumes_target_json_or_bitstream") is not False
-        or ndp.get("config_adapter_available") is not False
+        or ndp.get("consumes_target_json_or_bitstream") is not True
+        or ndp.get("consumes_target_json") is not True
+        or ndp.get("consumes_target_bitstream") is not False
+        or ndp.get("config_adapter_available") is not True
         or ndp.get("slice_counts") != [1, 4, 28]
     ):
         raise ContractError(
@@ -587,8 +590,10 @@ def validate_backend_contract(
         )
     ndp_limitations = set(ndp.get("limitations", []))
     if not {
-        "not_target_json_or_bitstream",
-        "not_config_bound_target_runner",
+        "real_1x1_config_only",
+        "not_cycle_accurate_lc_stream_buffer_interpreter",
+        "not_bitstream_interpreter",
+        "bulk_tile_and_full_use_physical_dram_equivalent_kernel",
         "not_target_hardware",
         "not_hardware_approved",
     }.issubset(ndp_limitations):
@@ -927,7 +932,7 @@ def validate_backend_contract(
         raise ContractError("backend.target_simulator must be an object")
     if (
         simulator.get("status")
-        != "operator_confirmed_conv_backend_adapter_pending"
+        != "operator_confirmed_conv_backend_config_bound_candidate"
         or simulator.get("approved") is not False
         or simulator.get("identity_confirmed") is not True
         or simulator.get("implementation_available") is not True
@@ -935,13 +940,15 @@ def validate_backend_contract(
         or simulator.get("supported_ops") != ["QLinearConv"]
         or simulator.get("entrypoint")
         != "NDPFuncModel/tools/physical_image_probe.py"
-        or simulator.get("consumes_target_json_or_bitstream") is not False
-        or simulator.get("config_adapter_available") is not False
+        or simulator.get("consumes_target_json_or_bitstream") is not True
+        or simulator.get("consumes_target_json") is not True
+        or simulator.get("consumes_target_bitstream") is not False
+        or simulator.get("config_adapter_available") is not True
         or simulator.get("can_dump_physical_output") is not True
         or simulator.get("g6_ready") is not False
     ):
         raise ContractError(
-            "target simulator must preserve confirmed identity and pending adapter"
+            "target simulator must preserve the config-bound candidate boundary"
         )
     hardware = backends["target_hardware"]
     if not isinstance(hardware, dict):

@@ -23,6 +23,8 @@ class NdpPhysicalProbeResult:
     total_bytes: int
     regions: tuple[dict[str, Any], ...]
     int8_dot_probes: tuple[dict[str, Any], ...]
+    target_config_binding: dict[str, Any] | None = None
+    int8_conv_1x1_jobs: tuple[dict[str, Any], ...] = ()
 
 
 @dataclass(frozen=True)
@@ -68,10 +70,15 @@ class NdpFunctionalAdapter:
         bundle: ConvPhysicalBundle,
         *,
         int8_dot_probes: tuple[NdpInt8DotProbe, ...] = (),
+        target_config_binding: dict[str, Any] | None = None,
+        int8_conv_1x1_jobs: tuple[dict[str, Any], ...] = (),
     ) -> NdpPhysicalProbeResult:
         geometry = bundle.geometry
+        if int8_conv_1x1_jobs and target_config_binding is None:
+            raise ValueError("bulk Conv jobs require a target config binding")
+        schema_version = "0.2" if target_config_binding is not None else "0.1"
         request = {
-            "schema_version": "0.1",
+            "schema_version": schema_version,
             "geometry": {
                 "slice_count": geometry.slice_count,
                 "bank_count": geometry.bank_count,
@@ -82,6 +89,9 @@ class NdpFunctionalAdapter:
             "regions": [],
             "int8_dot_probes": [],
         }
+        if target_config_binding is not None:
+            request["target_config_binding"] = target_config_binding
+            request["int8_conv_1x1_jobs"] = list(int8_conv_1x1_jobs)
         expected: dict[tuple[str, int], str] = {}
         for region in bundle.regions:
             payload = bundle.image.read(region.base_address, region.size_bytes)
@@ -220,7 +230,7 @@ class NdpFunctionalAdapter:
             response = json.loads(completed.stdout)
         except json.JSONDecodeError as error:
             raise PipelineError("NDP physical-image probe returned invalid JSON") from error
-        if response.get("schema_version") != "0.1":
+        if response.get("schema_version") != schema_version:
             raise PipelineError("NDP physical-image probe returned an unsupported schema")
         if int(response.get("total_bytes", -1)) != geometry.total_bytes:
             raise PipelineError("NDP physical-image probe returned the wrong DRAM capacity")
@@ -302,11 +312,43 @@ class NdpFunctionalAdapter:
             seen_dots.add(name)
         for output_address, value in pending_writes.items():
             bundle.image.overwrite(output_address, bytes([value]))
+        returned_binding = response.get("target_config_binding")
+        bulk_response = response.get("int8_conv_1x1_jobs", [])
+        if target_config_binding is None:
+            if returned_binding is not None or bulk_response:
+                raise PipelineError("NDP probe returned an unexpected target config result")
+        else:
+            if (
+                not isinstance(returned_binding, dict)
+                or returned_binding.get("status") != "validated"
+                or returned_binding.get("config_sha256")
+                != target_config_binding.get("config_sha256")
+                or returned_binding.get("semantic_contract_sha256")
+                != target_config_binding.get("semantic_contract_sha256")
+            ):
+                raise PipelineError("NDP target config binding validation differs")
+            requested_names = [item.get("name") for item in int8_conv_1x1_jobs]
+            returned_names = [item.get("name") for item in bulk_response]
+            if returned_names != requested_names:
+                raise PipelineError("NDP bulk Conv job order differs")
+            for job in bulk_response:
+                if job.get("status") != "passed":
+                    raise PipelineError(f"NDP bulk Conv mismatch: {job.get('name')}")
+                for comparison in job.get("comparisons", []):
+                    if any(
+                        comparison.get(port, {}).get("mismatch_count") != 0
+                        for port in ("P", "D")
+                    ):
+                        raise PipelineError(
+                            f"NDP bulk Conv comparison differs: {comparison.get('name')}"
+                        )
         return NdpPhysicalProbeResult(
             per_slice=int(response["per_slice"]),
             total_bytes=int(response["total_bytes"]),
             regions=tuple(response["regions"]),
             int8_dot_probes=tuple(dot_response),
+            target_config_binding=returned_binding,
+            int8_conv_1x1_jobs=tuple(bulk_response),
         )
 
     @staticmethod

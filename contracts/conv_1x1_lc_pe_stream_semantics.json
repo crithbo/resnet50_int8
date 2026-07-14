@@ -1,0 +1,123 @@
+{
+  "schema_version": "0.1",
+  "contract_type": "conv_1x1_lc_pe_stream_semantics",
+  "status": "official_encoder_passed_adapter_semantics_candidate",
+  "authority_order": [
+    "ndp-sim-ref encoder consumers and register map",
+    "officially encoded conv_1x1_real.json",
+    "NDPFuncModel request execution",
+    "senior pseudocode",
+    "derived operator configuration rules"
+  ],
+  "instance": {
+    "node_id": "node-0004",
+    "hw_op_ids": ["hwop-0004-00", "hwop-0004-01"],
+    "activation_shape": [16, 64, 56, 56],
+    "weight_shape": [64, 64, 1, 1],
+    "output_shape": [16, 64, 56, 56],
+    "strides": [1, 1],
+    "pads": [0, 0, 0, 0],
+    "dilations": [1, 1],
+    "group": 1,
+    "static_json_scope": "one-sample accumulation microprogram; batch-16 and seven HIGH-4 groups are request-adapter scheduling"
+  },
+  "port_semantics": {
+    "target_A": {"logical_role": "weight", "project_port": "B", "dtype": "int8"},
+    "target_B": {"logical_role": "activation", "project_port": "A", "dtype": "uint8"},
+    "target_C": {"logical_role": "bias", "project_port": "bias", "dtype": "int32"},
+    "target_D": {"logical_role": "accumulator_writeback", "project_port": "P", "dtype": "int32"},
+    "logical_D": {"logical_role": "requantized_output", "project_port": "D", "dtype": "uint8", "encoding_status": "not represented by this SA-only JSON; executed by the bound NDP ActivationUnit candidate"}
+  },
+  "lc_semantics": [
+    {"lc": "LC0", "symbol": "k_block", "range": [0, 2, 1], "formula": "K/32", "placement_replica": "LC13"},
+    {"lc": "LC1", "symbol": "q", "range": [0, 56, 1], "formula": "Q", "placement_replica": "LC14"},
+    {"lc": "LC2", "symbol": "p_block", "range": [0, 2, 1], "formula": "ceil(P/32)", "placement_replica": "LC15"},
+    {"lc": "LC3", "symbol": "c_shared", "range": [0, 4, 1], "formula": "C/16"},
+    {"lc": "LC4", "symbol": "s", "range": [0, 1, 1], "formula": "S"},
+    {"lc": "LC5", "symbol": "r", "range": [0, 1, 1], "formula": "R"},
+    {"lc": "LC6", "symbol": "c_weight", "range": [0, 4, 1], "formula": "C/16"},
+    {"lc": "LC7", "symbol": "s_weight", "range": [0, 1, 1], "formula": "S"},
+    {"lc": "LC8", "symbol": "r_activation", "range": [0, 1, 1], "formula": "R"},
+    {"lc": "LC9", "symbol": "k_reg", "range": [0, 4, 1], "formula": "32/(4*2)"},
+    {"lc": "LC10", "symbol": "p_reg", "range": [0, 4, 1], "formula": "32/8"},
+    {"lc": "LC11", "symbol": "p_pe", "range": [0, 8, 4], "formula": "two offsets 0 and 4"},
+    {"lc": "LC12", "symbol": "k_pe", "range": [0, 2, 1], "formula": "two K offsets"},
+    {"lc": "LC13", "symbol": "k_block_replica", "range": [0, 2, 1], "formula": "placement-only replica of LC0"},
+    {"lc": "LC14", "symbol": "q_replica", "range": [0, 56, 1], "formula": "placement-only replica of LC1"},
+    {"lc": "LC15", "symbol": "p_block_replica", "range": [0, 2, 1], "formula": "placement-only replica of LC2"}
+  ],
+  "lc_pe_contract": {
+    "mac_formula": "inport0 * inport1 + inport2",
+    "encoding_evidence": "official consumer maps mac to opcode 2; arithmetic formula remains adapter semantics rather than cycle-accurate RTL proof",
+    "pes": [
+      {"pe": "PE0", "result": "rs", "formula": "s*1+r", "sources": ["LC4", "constant:1", "LC5"]},
+      {"pe": "PE1", "result": "h", "formula": "p_block*32+r", "sources": ["LC2", "constant:32", "LC8"]},
+      {"pe": "PE2", "result": "w", "formula": "s*1+q", "sources": ["LC7", "constant:1", "LC1"]},
+      {"pe": "PE3", "result": "p_inner", "formula": "p_reg*8+p_pe", "sources": ["LC10", "constant:8", "LC11"]},
+      {"pe": "PE4", "result": "p", "formula": "p_block_replica*32+p_inner", "sources": ["LC15", "constant:32", "PE3"]},
+      {"pe": "PE5", "result": "k_inner", "formula": "k_reg*2+k_pe", "sources": ["LC9", "constant:2", "LC12"]},
+      {"pe": "PE6", "result": "k", "formula": "k_block_replica*32+k_inner", "sources": ["LC13", "constant:32", "PE5"]}
+    ],
+    "eliminated_pseudocode_pe": "c_shared*4+c_weight is represented by stream transaction/spatial axes; it is not allocated as an eighth LC-PE"
+  },
+  "stream_semantics": [
+    {"stream": "stream0", "target": "A", "role": "weight_read", "idx_order_port2_to_port0": ["c_shared", "k_block", "rs"], "idx_size_minus_one": [3, 31, 0], "byte_stride": [128, 2048, 128], "tail": null},
+    {"stream": "stream1", "target": "B", "role": "activation_read", "idx_order_port2_to_port0": ["c_weight", "w", "h"], "idx_size_minus_one": [3, 0, 0], "byte_stride": [12544, 4, 224], "tail": {"axis": "h", "inclusive_valid_range": [0, 55]}},
+    {"stream": "stream2", "target": "D", "role": "int32_accumulator_write", "idx_order_port2_to_port0": ["k", "q", "p"], "idx_size_minus_one": [3, 0, 0], "byte_stride": [12544, 4, 224], "tail": {"axis": "p", "inclusive_valid_range": [0, 55]}},
+    {"stream": "stream3", "target": "C", "role": "int32_bias_read", "idx_order_port2_to_port0": ["k_block_replica", null, null], "idx_size_minus_one": [127, null, null], "byte_stride": [128, null, null], "tail": null}
+  ],
+  "ring_semantics": {
+    "domain": "HIGH-4",
+    "mem_loop": 4,
+    "transfers": 3,
+    "example_group0_owners": [0, 2, 3, 1],
+    "example_destination0_prev_traversal": [0, 1, 3, 2],
+    "selector_encoding_status": "src_slice_sel/dst_slice_sel are encoded as 0, but the legacy register-map phrase 'jump 4 slices' does not prove the active RTL28 lookup-table topology"
+  },
+  "resolved_pseudocode_conflicts": [
+    "top-level q and k_block labels/ranges were swapped",
+    "R/S loops and rs multiplier were changed from 3x3 to 1x1",
+    "PE2 now computes q+s rather than q*s",
+    "output p_inner uses multiplier 8 rather than 4",
+    "three affine output-address operations use mac rather than mul",
+    "final K uses k_block replica LC13 rather than p_block replica LC15",
+    "activation and output stream h/w and p/q axes were reordered to match byte strides",
+    "N2N mem_loop changed from legacy 16 to HIGH-4 value 4",
+    "target A/B role reversal is explicit in the adapter"
+  ],
+  "config": {
+    "path": "conv_1x1_real.json",
+    "sha256": "e3e985c8a06e2ff2c672c4a96c04055ebf6c835836c0e589cc265e72cc236037",
+    "generator": "tools/generate_conv_1x1_real.py",
+    "source": "conv_full.json"
+  },
+  "official_encoder": {
+    "repository_commit": "e299b2804448242d1589b3e58ed7c5a9a5eca09f",
+    "mapping_cache_key": "66245288c5ee2398",
+    "connection_count": 46,
+    "constraint_cost": 0,
+    "repeat_count": 2,
+    "repeat_outputs_identical": true,
+    "outputs": {
+      "mapping_review.json": {"size_bytes": 9705, "sha256": "2088dd033e7b92c17bd82b065611015a49ef968fccf86c67269e8b911e3ad272"},
+      "parsed_bitstream.txt": {"size_bytes": 5032, "sha256": "17441e46e9d6c20adb9c340a8bbb7d4339f9ed3de5c9a4194d39b41916e9cc2a"},
+      "modules_dump_64b.bin": {"size_bytes": 4620, "sha256": "3d5c677437175042fde9e4726b44ce4ecba8e6e20ded5a8f0f267c5548db7e83"},
+      "modules_dump_128b.bin": {"size_bytes": 4550, "sha256": "074a0787ae774f9cfaf45df158cb8b7b6c02e0920b8199ed5e4864fea3d33744"},
+      "detailed_dump.txt": {"size_bytes": 42403, "sha256": "c5f10e7355f407bf92084e8e04a803703250b5f6575acb7282c85d50ddd06382"}
+    }
+  },
+  "evidence_boundaries": {
+    "proven": [
+      "all declared fields are accepted by the official parser/encoder",
+      "16 of 20 LC and 7 of 10 LC-PE fit with zero placement violations",
+      "INT8 SA, bias enable, HIGH-4 loop count and corrected loop/PE/stream fields are present in deterministic bitstream"
+    ],
+    "not_proven": [
+      "cycle-accurate execution of LC/stream/buffer fields by active RTL",
+      "src_slice_sel/dst_slice_sel mapping to the active RTL28 HIGH lookup tables",
+      "hardware INT32 P writeback packing and unique flush",
+      "per-channel requant multiplier/rounding/saturation encoding in this SA-only JSON",
+      "execplan typed qparam transport"
+    ]
+  }
+}

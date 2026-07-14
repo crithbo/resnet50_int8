@@ -144,7 +144,7 @@ class ContractSemanticTests(unittest.TestCase):
 
     def test_backend_keeps_ndpfuncmodel_config_adapter_boundary(self) -> None:
         value = deepcopy(self.backend)
-        value["backends"]["ndp_conv_functional"]["config_adapter_available"] = True
+        value["backends"]["ndp_conv_functional"]["config_adapter_available"] = False
         with self.assertRaisesRegex(ContractError, "identity/config-adapter boundary"):
             validate_backend_contract(value, self.architecture)
 
