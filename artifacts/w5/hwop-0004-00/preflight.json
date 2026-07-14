@@ -11,8 +11,17 @@
       "executes_numerical_model": false,
       "invoked_program": "bitstream/main.py"
     },
+    "hardware_json_execution_capability": {
+      "confirmation_date": "2026-07-14",
+      "confirmed": true,
+      "exact_new_conv_1x1_hardware_run": "deferred_by_operator",
+      "former_blocker": "B_CONV_TARGET_EXECUTION_SEMANTICS",
+      "scope": "previous DeepSeek operator JSONs on the target hardware",
+      "status": "operator_confirmed"
+    },
     "identity_basis": {
       "bitstream_execution_verified": false,
+      "deepseek_json_hardware_execution_confirmed": true,
       "local_entrypoint_verified": true,
       "operator_confirmation": "NDPFuncModel conv_func is the Conv simulator",
       "target_json_binding_verified": true
@@ -62,7 +71,6 @@
       "version": "e4454f7e12aa38ca94af07e017ae0928b9c839eb",
       "working_directory": "NDPFuncModel"
     },
-    "w6_blocker": "B_CONV_TARGET_EXECUTION_SEMANTICS",
     "workspace_contract": {
       "approved": false,
       "backend": "ndp_conv_functional",
@@ -393,15 +401,16 @@
   },
   "gate_state": {
     "conv_simulator_component_status": "single_coordinate_exact_and_bulk_equivalent_passed",
+    "exact_new_json_hardware_validation": "deferred_by_operator_not_a_current_configuration_blocker",
     "g5_passed": false,
     "g5_preflight": "accumulate_config_encoded",
     "g6_passed": false,
     "g8_passed": false,
     "golden_tile_status": "passed",
     "next_required_evidence": [
-      "obtain or implement cycle-accurate LC/stream/buffer/bitstream execution semantics",
-      "bind active RTL28 N2N selector values to HIGH lookup-table routing",
-      "bind target requant/qparam transport and unique-flush semantics"
+      "resolve the candidate selector-0 tuple against the executable DeepSeek HIGH-4 selector-1 reference",
+      "parameterize the executable DeepSeek requant path with the real 64-channel Conv qparams and unique final flush",
+      "carry the same typed qparams through official execplan generation"
     ],
     "stop_expansion": true,
     "target_simulator_numerical_status": "config_bound_single_tile_full_pd_passed_with_execution_boundary",
@@ -683,7 +692,7 @@
     ],
     "request_schema": "0.2",
     "semantic_contract_path": "contracts/conv_1x1_lc_pe_stream_semantics.json",
-    "semantic_contract_sha256": "ab6107ffc3b0379bd97c2e8b61db382d9c747737750b03c186cb28ffa9cac13c",
+    "semantic_contract_sha256": "ef747ed72f97c64c89487622a03a7013fcb38370ce73e96fa2b67f4bd7d18c54",
     "status": "passed_with_execution_boundary",
     "target_config_binding": {
       "config_sha256": "e3e985c8a06e2ff2c672c4a96c04055ebf6c835836c0e589cc265e72cc236037",
@@ -718,7 +727,7 @@
           "project_port": "P"
         }
       },
-      "semantic_contract_sha256": "ab6107ffc3b0379bd97c2e8b61db382d9c747737750b03c186cb28ffa9cac13c",
+      "semantic_contract_sha256": "ef747ed72f97c64c89487622a03a7013fcb38370ce73e96fa2b67f4bd7d18c54",
       "status": "validated",
       "stream_targets": [
         "A",
@@ -755,7 +764,7 @@
     "storage_sample_count": 3
   },
   "report_kind": "w5_first_real_conv_preflight",
-  "schema_version": "0.3",
+  "schema_version": "0.4",
   "selection": {
     "hw_op_ids": [
       "hwop-0004-00",
@@ -768,7 +777,7 @@
   },
   "source_identity": {
     "backend_contract_path": "contracts/backend.json",
-    "backend_contract_sha256": "293f7d63853048af7383709b23e19dafb149f80d82b2ff6617c5d2e67b7ad294",
+    "backend_contract_sha256": "591b7b7e425346e1c1c28a5fd0f7aa38a6b5ce54cdf913f75c690aaf08063e02",
     "hardware_approval_path": "contracts/hardware_approval.json",
     "hardware_approval_sha256": "963b64087351a45d54f52a86fe3536804e4f24427c94ee912c521b3a93fe159b",
     "model_sha256": "c234f30975989788b4405f25253275aae247ab6dbdd34aaa69ab0a59ff76f6d0",
@@ -822,6 +831,45 @@
         "typed_zero_point_reference_present": false
       },
       "status": "legacy16_reference_only"
+    },
+    "n2n_selector_crosscheck": {
+      "candidate": {
+        "dst_slice_sel": 0,
+        "mem_loop": 4,
+        "path": "conv_1x1_real.json",
+        "ping_pong": 0,
+        "sha256": "e3e985c8a06e2ff2c672c4a96c04055ebf6c835836c0e589cc265e72cc236037",
+        "src_slice_sel": 0
+      },
+      "execplan_binding": {
+        "path": "ndp-sim-ref/model_execplan/src/execution_plan_generator/control_registers.py",
+        "rule": "selector=1 when the slice ratio is not 28; otherwise selector=0",
+        "sha256": "8be7f21d8058ba3eaf45e55256c9237325c55f45d43c9e7b1ba8c3a54f7456d1"
+      },
+      "executable_high4_reference": {
+        "dst_slice_sel": 1,
+        "mem_loop": 4,
+        "path": "ndp-sim-ref/jsons/prefill_gemm_ring_4slice.json",
+        "ping_pong": 1,
+        "sha256": "6a2ca9f2edd2e9c7b8ebbb558a84dd23c8e583781f8a8ac01c213b78c6737e91",
+        "src_slice_sel": 1
+      },
+      "executable_low28_reference": {
+        "dst_slice_sel": 0,
+        "mem_loop": 28,
+        "path": "ndp-sim-ref/jsons/decode_gemv_ring.json",
+        "ping_pong": 1,
+        "sha256": "1c5e2909dc486f1e4c712c0577bdeb69bee65f3269111bdd64f4a071cc574c1f",
+        "src_slice_sel": 0
+      },
+      "register_semantics": {
+        "path": "ndp-sim-ref/model_execplan/config/register_map_with_groups1.csv",
+        "selector_0": "non-jump/28-slice route",
+        "selector_1": "jump-4/HIGH route",
+        "sha256": "006ca83f282a9d61e2003466a7f75d190452a504466f60f7e70240932ae4ffdc"
+      },
+      "required_resolution": "adjudicate candidate src/dst selector 0 against the executable HIGH-4 value 1; ping_pong remains a separate dataflow choice",
+      "status": "candidate_conflicts_with_executable_high4_reference"
     },
     "official_json_inventory_count": 42,
     "official_named_conv_template_count": 0,
@@ -916,25 +964,23 @@
     "real_1x1_mapping_review_generated": true,
     "real_1x1_patched_json_generated": true,
     "real_1x1_semantic_contract": "contracts/conv_1x1_lc_pe_stream_semantics.json",
+    "resolved_target_capabilities": [
+      {
+        "boundary": "the exact new Conv 1x1 hardware run is deferred and is not required for the current two-party numerical closure",
+        "former_blocker": "B_CONV_TARGET_EXECUTION_SEMANTICS",
+        "scope": "previous DeepSeek operator JSONs execute on target hardware",
+        "status": "operator_confirmed_platform_capability"
+      }
+    ],
     "unknown_fields_rejected": true,
     "unresolved_target_bindings": [
-      {
-        "blocker": "B_CONV_TARGET_EXECUTION_SEMANTICS",
-        "fields": [
-          "dram_loop_configs",
-          "stream_engine",
-          "buffer_config",
-          "special_array"
-        ],
-        "reason": "the adapter validates target JSON and executes its bound Conv semantics, but NDPFuncModel is not a cycle-accurate LC/stream/buffer/bitstream interpreter and unique hardware P flush remains unproved"
-      },
       {
         "blocker": "B_N2N_TARGET_SELECTOR",
         "fields": [
           "n2n.src_slice_sel",
           "n2n.dst_slice_sel"
         ],
-        "reason": "the formal encoder accepts selector 0 and the adapter uses the approved RTL28 lookup-table traversal, but the legacy register-map phrase does not prove their hardware correspondence"
+        "reason": "the candidate uses mem_loop=4 with selectors 0, while the executable DeepSeek HIGH-4 reference and execplan rule use selectors 1; the 28-slice reference uses selectors 0"
       },
       {
         "blocker": "B_REQUANT_TARGET_NUMERICS",
@@ -942,7 +988,7 @@
           "general_array",
           "stream_engine"
         ],
-        "reason": "per-channel multiplier encoding, nearest-even, saturation and unique flush are unbound"
+        "reason": "DeepSeek Quant JSON hardware execution is confirmed, but this Conv still lacks real 64-channel multiplier/qparam parameterization, final-reduction binding and unique UINT8 flush"
       },
       {
         "blocker": "B_EXECPLAN_TYPED_TRANSPORT",

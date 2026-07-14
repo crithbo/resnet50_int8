@@ -954,9 +954,16 @@ def validate_backend_contract(
     if not isinstance(hardware, dict):
         raise ContractError("backend.target_hardware must be an object")
     if (
-        hardware.get("status") != "w4_physical_baseline_approved_runtime_pending"
+        hardware.get("status")
+        != "operator_confirmed_deepseek_json_execution_runtime_interface_deferred"
         or hardware.get("approved") is not False
-        or hardware.get("implementation_available") is not False
+        or hardware.get("implementation_available") is not True
+        or hardware.get("deepseek_json_execution_confirmed") is not True
+        or hardware.get("confirmation_basis") != "operator_confirmed_2026-07-14"
+        or hardware.get("runtime_interface_available_to_project") is not False
+        or hardware.get("exact_conv_1x1_candidate_executed") is not False
+        or hardware.get("exact_candidate_validation_status")
+        != "deferred_by_operator"
         or hardware.get("architecture_id") != TARGET_ARCHITECTURE_ID
         or hardware.get("candidate_evidence_backend") != "rtl28_candidate_evidence"
         or hardware.get("w4_physical_baseline_approved") is not True
@@ -976,6 +983,14 @@ def validate_backend_contract(
         not isinstance(item, str) or not item for item in unresolved
     ):
         raise ContractError("backend unresolved list must contain explicit blockers")
+    expected_unresolved = {
+        "real Conv HIGH-4 N2N selector binding: candidate selector 0 conflicts with executable four-slice reference selector 1",
+        "real per-channel Conv requant parameterization and unique-flush binding",
+        "execplan typed qparam transport",
+        "hardware load/start/wait/error/dump protocol for later exact-candidate validation",
+    }
+    if set(unresolved) != expected_unresolved:
+        raise ContractError("backend unresolved list differs from the current blocker set")
 
 
 @dataclass(frozen=True)

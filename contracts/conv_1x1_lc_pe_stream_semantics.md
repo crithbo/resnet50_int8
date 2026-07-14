@@ -2,7 +2,7 @@
 
 适用实例：`node-0004`，`[16,64,56,56] × [64,64,1,1] -> [16,64,56,56]`。静态 JSON 表达单样本 SA 累加微程序；batch-16、七个 HIGH-4 组和每组 3/2 个样本由 target request adapter 调度。
 
-证据优先级为正式编码消费代码/寄存器表、可重复编码的新 JSON、NDPFuncModel request 执行、学长伪代码、旧规则文档。编码成功只证明字段和 placement，不自动证明逐周期硬件语义。
+操作者已确认先前DeepSeek算子JSON可以被目标硬件执行，因此平台JSON执行能力不再是阻塞。具体字段裁决的证据优先级仍为正式编码消费代码/寄存器表、已知可执行DeepSeek JSON、可重复编码的新JSON、NDPFuncModel request执行、学长伪代码、旧规则文档。
 
 ## LC 对照
 
@@ -46,8 +46,8 @@ target 字母沿用伪代码而不是项目逻辑端口：target A=weight，targ
 | stream2 | D / INT32 P write | `[k,q,p]` | `[3,0,0]` | `[12544,4,224]` | p 有效 `[0,55]` |
 | stream3 | C / INT32 bias read | `[k_block_replica,null,null]` | `[127,null,null]` | `[128,null,null]` | 无 |
 
-N2N `mem_loop` 从 16 改为 4；四步含本地步和三次传输。group0 的物理环为 `[0,2,3,1]`，destination 0 的 PREV 遍历为 `[0,1,3,2]`。`src/dst_slice_sel=0` 已编码，但旧寄存器表的“是否跳 4 slice”描述不能证明其与活动 RTL28 lookup-table 的对应关系。
+N2N `mem_loop` 从16改为4；四步含本地步和三次传输。group0物理环为`[0,2,3,1]`，destination 0的PREV遍历为`[0,1,3,2]`。但当前候选编码`src/dst_slice_sel=0`，已知可执行的`prefill_gemm_ring_4slice.json`在`mem_loop=4`时使用selector 1，`decode_gemv_ring.json`只在`mem_loop=28`时使用selector 0；register map与execplan也把1绑定到jump-4/HIGH路径。因此当前`mem_loop=4 + selector=0`不是已批准规则，而是待修正/裁决的明确配置冲突。`ping_pong`仍需按Conv数据流单独判断，不能随selector机械复制。
 
 ## 结论边界
 
-`conv_1x1_real.json` 已由正式 encoder 两次解析、placement、生成 bitstream，46 条连接、constraint cost 0，两个输出目录逐文件 SHA-256 一致。它批准了字段可编码性和本轮适配语义输入；仍未批准活动 RTL 的逐周期 LC/stream 执行、N2N selector、P 唯一 flush、硬件 requant 编码或 execplan typed qparam transport。
+`conv_1x1_real.json`已由正式encoder两次解析、placement、生成bitstream，46条连接、constraint cost 0，两个输出目录逐文件SHA-256一致。目标平台执行DeepSeek JSON的通用能力已经确认；本候选仍有HIGH-4 selector冲突、真实per-channel requant/唯一flush和execplan typed qparam transport三项配置阻塞。该候选的硬件实跑与P/D dump按操作者决定延期，不再作为当前配置工作的前置阻塞。

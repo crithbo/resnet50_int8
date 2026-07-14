@@ -154,6 +154,13 @@ class ContractSemanticTests(unittest.TestCase):
         with self.assertRaisesRegex(ContractError, "target hardware"):
             validate_backend_contract(value, self.architecture)
 
+    def test_backend_preserves_operator_confirmed_json_execution_boundary(self) -> None:
+        value = deepcopy(self.backend)
+        hardware = value["backends"]["target_hardware"]
+        hardware["deepseek_json_execution_confirmed"] = False
+        with self.assertRaisesRegex(ContractError, "target hardware"):
+            validate_backend_contract(value, self.architecture)
+
     def test_backend_candidate_evidence_hash_must_match_architecture(self) -> None:
         value = deepcopy(self.backend)
         value["backends"]["rtl28_candidate_evidence"]["snapshot_sha256"] = "0" * 64

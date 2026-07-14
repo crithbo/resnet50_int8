@@ -21,7 +21,7 @@ from .topology28 import Direction, TOPOLOGY28
 from .typed_config_parameters import validate_typed_config_parameter_contract
 
 
-SCHEMA_VERSION = "0.3"
+SCHEMA_VERSION = "0.4"
 REPORT_KIND = "w5_first_real_conv_preflight"
 SELECTED_NODE_ID = "node-0004"
 ACCUMULATE_HW_OP_ID = "hwop-0004-00"
@@ -182,6 +182,7 @@ def _simulator_entry_probe(
     target = backend.get("backends", {}).get("target_simulator", {})
     ndp = backend.get("backends", {}).get("ndp_conv_functional", {})
     config_backend = backend.get("backends", {}).get("target_config_toolchain", {})
+    hardware = backend.get("backends", {}).get("target_hardware", {})
     main_path = source_root / "model_execplan" / "main.py"
     writer_path = (
         source_root
@@ -218,6 +219,9 @@ def _simulator_entry_probe(
         or not simulator_path.is_file()
         or config_backend.get("can_execute_numerical_model") is not False
         or inventory.get("named_conv_template_count") != 0
+        or hardware.get("deepseek_json_execution_confirmed") is not True
+        or hardware.get("exact_candidate_validation_status")
+        != "deferred_by_operator"
     ):
         raise W5ConvPreflightError("Conv simulator identity/config-adapter boundary differs")
     return {
@@ -265,7 +269,14 @@ def _simulator_entry_probe(
             "config_adapter_available": True,
         },
         "workspace_contract": target,
-        "w6_blocker": "B_CONV_TARGET_EXECUTION_SEMANTICS",
+        "hardware_json_execution_capability": {
+            "status": "operator_confirmed",
+            "confirmed": True,
+            "scope": "previous DeepSeek operator JSONs on the target hardware",
+            "confirmation_date": "2026-07-14",
+            "former_blocker": "B_CONV_TARGET_EXECUTION_SEMANTICS",
+            "exact_new_conv_1x1_hardware_run": "deferred_by_operator",
+        },
         "search_scope": [
             "locked ndp-sim-ref source call sites",
             "contracts/backend.json",
@@ -273,11 +284,93 @@ def _simulator_entry_probe(
         ],
         "identity_basis": {
             "operator_confirmation": "NDPFuncModel conv_func is the Conv simulator",
+            "deepseek_json_hardware_execution_confirmed": True,
             "local_entrypoint_verified": True,
             "target_json_binding_verified": True,
             "bitstream_execution_verified": False,
         },
         "project_root": project_root.name,
+    }
+
+
+def _n2n_selector_crosscheck(project_root: Path, source_root: Path) -> dict[str, Any]:
+    """Compare the candidate selector tuple with executable DeepSeek references."""
+
+    candidate_path = project_root / "conv_1x1_real.json"
+    high4_path = source_root / "jsons" / "prefill_gemm_ring_4slice.json"
+    low28_path = source_root / "jsons" / "decode_gemv_ring.json"
+    register_path = (
+        source_root / "model_execplan" / "config" / "register_map_with_groups1.csv"
+    )
+    controls_path = (
+        source_root
+        / "model_execplan"
+        / "src"
+        / "execution_plan_generator"
+        / "control_registers.py"
+    )
+
+    def one_stream(path: Path) -> dict[str, int]:
+        neighbors = list(_load_json(path).get("n2n", {}).values())
+        if len(neighbors) != 1:
+            raise W5ConvPreflightError(f"expected one N2N stream in {path}")
+        return {
+            key: int(neighbors[0][key])
+            for key in ("mem_loop", "src_slice_sel", "dst_slice_sel", "ping_pong")
+        }
+
+    candidate = one_stream(candidate_path)
+    high4 = one_stream(high4_path)
+    low28 = one_stream(low28_path)
+    register_text = register_path.read_text(encoding="utf-8")
+    controls_text = controls_path.read_text(encoding="utf-8")
+    if (
+        candidate != {
+            "mem_loop": 4,
+            "src_slice_sel": 0,
+            "dst_slice_sel": 0,
+            "ping_pong": 0,
+        }
+        or high4["mem_loop"] != 4
+        or high4["src_slice_sel"] != 1
+        or high4["dst_slice_sel"] != 1
+        or low28["mem_loop"] != 28
+        or low28["src_slice_sel"] != 0
+        or low28["dst_slice_sel"] != 0
+        or "1表示跳4个slice，0表示不跳" not in register_text
+        or '"se_nse0.n2n.src_slice_sel": 1 if' not in controls_text
+        or "(b_k // a_k) != 28" not in controls_text
+    ):
+        raise W5ConvPreflightError("DeepSeek N2N selector crosscheck differs")
+    return {
+        "status": "candidate_conflicts_with_executable_high4_reference",
+        "candidate": {
+            "path": "conv_1x1_real.json",
+            "sha256": sha256_file(candidate_path),
+            **candidate,
+        },
+        "executable_high4_reference": {
+            "path": "ndp-sim-ref/jsons/prefill_gemm_ring_4slice.json",
+            "sha256": sha256_file(high4_path),
+            **high4,
+        },
+        "executable_low28_reference": {
+            "path": "ndp-sim-ref/jsons/decode_gemv_ring.json",
+            "sha256": sha256_file(low28_path),
+            **low28,
+        },
+        "register_semantics": {
+            "path": "ndp-sim-ref/model_execplan/config/register_map_with_groups1.csv",
+            "sha256": sha256_file(register_path),
+            "selector_1": "jump-4/HIGH route",
+            "selector_0": "non-jump/28-slice route",
+        },
+        "execplan_binding": {
+            "path": "ndp-sim-ref/model_execplan/src/execution_plan_generator/control_registers.py",
+            "sha256": sha256_file(controls_path),
+            "rule": "selector=1 when the slice ratio is not 28; otherwise selector=0",
+        },
+        "required_resolution": "adjudicate candidate src/dst selector 0 against the executable HIGH-4 value 1; ping_pong remains a separate dataflow choice",
     }
 
 
@@ -849,6 +942,7 @@ def build_w5_first_conv_preflight(
     authority = _load_json(authority_path)
     backend = _load_json(backend_path)
     simulator_probe = _simulator_entry_probe(root, source, authority, backend)
+    n2n_selector_crosscheck = _n2n_selector_crosscheck(root, source)
     legacy_generator_probe = _legacy_conv_generator_probe(source)
     operator_candidate = _operator_conv_candidate_probe(root)
     tile = _compare_tile(values, layout, bundle)
@@ -935,21 +1029,25 @@ def build_w5_first_conv_preflight(
             "config_adapter_available": True,
             "unknown_fields_rejected": True,
             "legacy_generator_probe": legacy_generator_probe,
-            "unresolved_target_bindings": [
+            "resolved_target_capabilities": [
                 {
-                    "blocker": "B_CONV_TARGET_EXECUTION_SEMANTICS",
-                    "fields": ["dram_loop_configs", "stream_engine", "buffer_config", "special_array"],
-                    "reason": "the adapter validates target JSON and executes its bound Conv semantics, but NDPFuncModel is not a cycle-accurate LC/stream/buffer/bitstream interpreter and unique hardware P flush remains unproved",
-                },
+                    "former_blocker": "B_CONV_TARGET_EXECUTION_SEMANTICS",
+                    "status": "operator_confirmed_platform_capability",
+                    "scope": "previous DeepSeek operator JSONs execute on target hardware",
+                    "boundary": "the exact new Conv 1x1 hardware run is deferred and is not required for the current two-party numerical closure",
+                }
+            ],
+            "n2n_selector_crosscheck": n2n_selector_crosscheck,
+            "unresolved_target_bindings": [
                 {
                     "blocker": "B_N2N_TARGET_SELECTOR",
                     "fields": ["n2n.src_slice_sel", "n2n.dst_slice_sel"],
-                    "reason": "the formal encoder accepts selector 0 and the adapter uses the approved RTL28 lookup-table traversal, but the legacy register-map phrase does not prove their hardware correspondence",
+                    "reason": "the candidate uses mem_loop=4 with selectors 0, while the executable DeepSeek HIGH-4 reference and execplan rule use selectors 1; the 28-slice reference uses selectors 0",
                 },
                 {
                     "blocker": "B_REQUANT_TARGET_NUMERICS",
                     "fields": ["general_array", "stream_engine"],
-                    "reason": "per-channel multiplier encoding, nearest-even, saturation and unique flush are unbound",
+                    "reason": "DeepSeek Quant JSON hardware execution is confirmed, but this Conv still lacks real 64-channel multiplier/qparam parameterization, final-reduction binding and unique UINT8 flush",
                 },
                 {
                     "blocker": "B_EXECPLAN_TYPED_TRANSPORT",
@@ -970,10 +1068,11 @@ def build_w5_first_conv_preflight(
             "stop_expansion": True,
             "whole_network_generation_allowed": False,
             "next_required_evidence": [
-                "obtain or implement cycle-accurate LC/stream/buffer/bitstream execution semantics",
-                "bind active RTL28 N2N selector values to HIGH lookup-table routing",
-                "bind target requant/qparam transport and unique-flush semantics",
+                "resolve the candidate selector-0 tuple against the executable DeepSeek HIGH-4 selector-1 reference",
+                "parameterize the executable DeepSeek requant path with the real 64-channel Conv qparams and unique final flush",
+                "carry the same typed qparams through official execplan generation",
             ],
+            "exact_new_json_hardware_validation": "deferred_by_operator_not_a_current_configuration_blocker",
         },
     }
     validate_w5_first_conv_preflight(report)
@@ -1011,13 +1110,28 @@ def validate_w5_first_conv_preflight(value: dict[str, Any]) -> None:
         item.get("blocker") for item in target.get("unresolved_target_bindings", [])
     }
     required = {
-        "B_CONV_TARGET_EXECUTION_SEMANTICS",
         "B_N2N_TARGET_SELECTOR",
         "B_REQUANT_TARGET_NUMERICS",
         "B_EXECPLAN_TYPED_TRANSPORT",
     }
     if blocker_ids != required:
         raise W5ConvPreflightError("W5 Conv blocker set differs")
+    resolved = target.get("resolved_target_capabilities", [])
+    n2n = target.get("n2n_selector_crosscheck", {})
+    if (
+        len(resolved) != 1
+        or resolved[0].get("former_blocker")
+        != "B_CONV_TARGET_EXECUTION_SEMANTICS"
+        or resolved[0].get("status")
+        != "operator_confirmed_platform_capability"
+        or n2n.get("status")
+        != "candidate_conflicts_with_executable_high4_reference"
+        or n2n.get("candidate", {}).get("mem_loop") != 4
+        or n2n.get("candidate", {}).get("src_slice_sel") != 0
+        or n2n.get("executable_high4_reference", {}).get("src_slice_sel") != 1
+        or n2n.get("executable_low28_reference", {}).get("mem_loop") != 28
+    ):
+        raise W5ConvPreflightError("W5 Conv resolved capability/N2N crosscheck differs")
     tile = value.get("first_tile_golden_preflight", {})
     comparisons = tile.get("comparisons", {})
     if (
@@ -1039,6 +1153,12 @@ def validate_w5_first_conv_preflight(value: dict[str, Any]) -> None:
         or simulator.get("target_runner", {}).get("consumes_target_bitstream")
         is not False
         or simulator.get("packager", {}).get("executes_numerical_model") is not False
+        or simulator.get("hardware_json_execution_capability", {}).get("confirmed")
+        is not True
+        or simulator.get("hardware_json_execution_capability", {}).get(
+            "former_blocker"
+        )
+        != "B_CONV_TARGET_EXECUTION_SEMANTICS"
     ):
         raise W5ConvPreflightError("target simulator identity/adapter boundary differs")
     ndp_coordinate = value.get("ndp_conv_simulator_first_coordinate", {})
@@ -1074,6 +1194,8 @@ def validate_w5_first_conv_preflight(value: dict[str, Any]) -> None:
         or gate.get("g6_passed") is not False
         or gate.get("stop_expansion") is not True
         or gate.get("whole_network_generation_allowed") is not False
+        or gate.get("exact_new_json_hardware_validation")
+        != "deferred_by_operator_not_a_current_configuration_blocker"
     ):
         raise W5ConvPreflightError("W5 Conv gate state overclaims completion")
     # Ensure the public report remains deterministic JSON data.

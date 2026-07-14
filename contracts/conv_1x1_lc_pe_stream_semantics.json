@@ -3,6 +3,7 @@
   "contract_type": "conv_1x1_lc_pe_stream_semantics",
   "status": "official_encoder_passed_adapter_semantics_candidate",
   "authority_order": [
+    "operator confirmation that previous DeepSeek operator JSONs execute on target hardware",
     "ndp-sim-ref encoder consumers and register map",
     "officially encoded conv_1x1_real.json",
     "NDPFuncModel request execution",
@@ -72,7 +73,12 @@
     "transfers": 3,
     "example_group0_owners": [0, 2, 3, 1],
     "example_destination0_prev_traversal": [0, 1, 3, 2],
-    "selector_encoding_status": "src_slice_sel/dst_slice_sel are encoded as 0, but the legacy register-map phrase 'jump 4 slices' does not prove the active RTL28 lookup-table topology"
+    "selector_encoding_status": "unresolved candidate conflict: this mem_loop=4 candidate encodes src/dst selector 0, while executable prefill_gemm_ring_4slice encodes 1 and executable decode_gemv_ring uses selector 0 with mem_loop=28",
+    "selector_reference": {
+      "high4": {"path": "ndp-sim-ref/jsons/prefill_gemm_ring_4slice.json", "mem_loop": 4, "src_slice_sel": 1, "dst_slice_sel": 1},
+      "low28": {"path": "ndp-sim-ref/jsons/decode_gemv_ring.json", "mem_loop": 28, "src_slice_sel": 0, "dst_slice_sel": 0},
+      "register_rule": "1 selects the jump-4/HIGH route; 0 selects the non-jump/28-slice route"
+    }
   },
   "resolved_pseudocode_conflicts": [
     "top-level q and k_block labels/ranges were swapped",
@@ -108,13 +114,14 @@
   },
   "evidence_boundaries": {
     "proven": [
+      "the target hardware platform executes previous DeepSeek operator JSONs by operator confirmation",
       "all declared fields are accepted by the official parser/encoder",
       "16 of 20 LC and 7 of 10 LC-PE fit with zero placement violations",
       "INT8 SA, bias enable, HIGH-4 loop count and corrected loop/PE/stream fields are present in deterministic bitstream"
     ],
     "not_proven": [
-      "cycle-accurate execution of LC/stream/buffer fields by active RTL",
-      "src_slice_sel/dst_slice_sel mapping to the active RTL28 HIGH lookup tables",
+      "exact hardware execution and P/D dump for this new Conv 1x1 candidate (deferred by operator, not a current configuration blocker)",
+      "the candidate src_slice_sel/dst_slice_sel value 0 for HIGH-4; executable DeepSeek references instead select 1",
       "hardware INT32 P writeback packing and unique flush",
       "per-channel requant multiplier/rounding/saturation encoding in this SA-only JSON",
       "execplan typed qparam transport"

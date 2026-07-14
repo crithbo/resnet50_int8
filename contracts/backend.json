@@ -91,9 +91,15 @@
       "g6_ready": false
     },
     "target_hardware": {
-      "status": "w4_physical_baseline_approved_runtime_pending",
+      "status": "operator_confirmed_deepseek_json_execution_runtime_interface_deferred",
       "approved": false,
-      "implementation_available": false,
+      "implementation_available": true,
+      "deepseek_json_execution_confirmed": true,
+      "confirmation_basis": "operator_confirmed_2026-07-14",
+      "confirmation_scope": "previous DeepSeek operator JSONs execute on target hardware",
+      "runtime_interface_available_to_project": false,
+      "exact_conv_1x1_candidate_executed": false,
+      "exact_candidate_validation_status": "deferred_by_operator",
       "architecture_id": "trassic2_rtl28_candidate_v1",
       "candidate_evidence_backend": "rtl28_candidate_evidence",
       "w4_physical_baseline_approved": true,
@@ -102,9 +108,9 @@
     }
   },
   "unresolved": [
-    "cycle-accurate LC/stream/buffer or bitstream execution for Conv",
-    "active RTL28 N2N selector binding and hardware requant/unique-flush semantics",
+    "real Conv HIGH-4 N2N selector binding: candidate selector 0 conflicts with executable four-slice reference selector 1",
+    "real per-channel Conv requant parameterization and unique-flush binding",
     "execplan typed qparam transport",
-    "hardware load/start/wait/error/dump protocol"
+    "hardware load/start/wait/error/dump protocol for later exact-candidate validation"
   ]
 }
