@@ -173,6 +173,14 @@ class ContractSemanticTests(unittest.TestCase):
         with self.assertRaisesRegex(ContractError, "audit hash mismatch"):
             validate_backend_contract(value, self.architecture, ROOT / "contracts")
 
+    def test_target_config_source_requires_pool_family_probe(self) -> None:
+        value = deepcopy(self.backend)
+        value["backends"]["target_config_toolchain"][
+            "pool_family_encoder_probe_validated"
+        ] = False
+        with self.assertRaisesRegex(ContractError, "approved configuration source"):
+            validate_backend_contract(value, self.architecture)
+
     def test_current_network_evidence_metrics_fail_closed(self) -> None:
         value = deepcopy(self.architecture)
         value["candidate_evidence"]["w4_rtl28_network_physical_edges_v1"][

@@ -21,7 +21,7 @@ def main() -> int:
         print(payload, end="")
     else:
         args.output.parent.mkdir(parents=True, exist_ok=True)
-        args.output.write_text(payload, encoding="utf-8")
+        args.output.write_bytes(payload.encode("utf-8"))
         print(args.output)
     return 0
 

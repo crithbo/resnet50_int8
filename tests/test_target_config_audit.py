@@ -6,11 +6,18 @@ from copy import deepcopy
 from pathlib import Path
 
 from resnet50_pipeline.target_config_audit import (
+    AVGPOOL_TEMPLATE,
     MAXPOOL_TEMPLATE,
+    SECOND_MAXPOOL_TEMPLATE,
     TargetConfigAuditError,
     audit_register_map,
     audit_maxpool_encoder,
+    audit_pool_family,
+    extract_pool_family_linkage,
     inventory_templates,
+    validate_avgpool_shape_linkage,
+    validate_avgpool_template,
+    validate_maxpool_shape_linkage,
     validate_maxpool_template,
 )
 
@@ -23,6 +30,12 @@ class TargetConfigAuditTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         cls.template = json.loads((SOURCE / "jsons" / MAXPOOL_TEMPLATE).read_text(encoding="utf-8"))
+        cls.second_maxpool = json.loads(
+            (SOURCE / "jsons" / SECOND_MAXPOOL_TEMPLATE).read_text(encoding="utf-8")
+        )
+        cls.avgpool = json.loads(
+            (SOURCE / "jsons" / AVGPOOL_TEMPLATE).read_text(encoding="utf-8")
+        )
 
     def test_official_inventory_is_complete_and_exposes_conv_gap(self) -> None:
         inventory = inventory_templates(SOURCE)
@@ -75,6 +88,91 @@ class TargetConfigAuditTests(unittest.TestCase):
             report["differential_sensitivity"]["modified_128b_sha256"],
         )
         self.assertEqual(report["fail_closed"]["status"], "passed")
+
+    def test_second_maxpool_accepts_official_binary_addresses_and_links_shape(self) -> None:
+        structural = validate_maxpool_template(self.second_maxpool)
+        linkage = validate_maxpool_shape_linkage(
+            self.second_maxpool,
+            channels=16,
+            height=16,
+            width=16,
+        )
+        self.assertEqual(structural["ga_opcodes"], ["int8_max"])
+        self.assertEqual(linkage["shape"]["output_height"], 8)
+        self.assertEqual(linkage["stream_formulas"]["read_dim_stride_bytes"], [4, 64, 1024])
+        self.assertTrue(linkage["buffer_schedule"]["collapsed_single_width_tile"])
+        self.assertEqual(linkage["buffer_schedule"]["a_buffer_full_last_index"], 5)
+        self.assertEqual(linkage["base_addresses"]["rule"], "planner_owned_and_not_inferred_from_shape")
+
+    def test_avgpool_links_shape_to_int32_sum_but_not_requantization(self) -> None:
+        structural = validate_avgpool_template(self.avgpool)
+        linkage = validate_avgpool_shape_linkage(
+            self.avgpool,
+            channels=2048,
+            height=7,
+            width=7,
+        )
+        self.assertEqual(structural["resources"]["dram_loops"], 3)
+        self.assertEqual(structural["ga_opcodes"], ["int32_sum"])
+        self.assertEqual(linkage["shape"]["reduction_elements"], 49)
+        self.assertEqual(linkage["shape"]["padded_reduction_elements"], 56)
+        self.assertEqual(linkage["ga"]["input_conversion"], "uint8_to_int32")
+        self.assertEqual(linkage["stage_scope"], "uint8_input_to_int32_spatial_sum_only")
+        self.assertIn("x_scale/y_scale requantization", linkage["not_proven"])
+
+    def test_pool_family_delta_and_shared_chain_are_fully_accounted(self) -> None:
+        linkage = extract_pool_family_linkage(
+            self.template,
+            self.second_maxpool,
+            self.avgpool,
+        )
+        self.assertEqual(linkage["status"], "passed")
+        self.assertEqual(linkage["maxpool_template_delta"]["changed_leaf_count"], 18)
+        self.assertEqual(linkage["maxpool_template_delta"]["unexpected_paths"], [])
+        self.assertEqual(
+            [stage["stage"] for stage in linkage["shared_chain"]],
+            ["shape", "LC", "stream", "buffer", "GA"],
+        )
+        self.assertIn(
+            "stream_engine.stream1.base_addr",
+            linkage["maxpool_template_delta"]["planner_owned_paths"],
+        )
+
+    def test_second_maxpool_and_avgpool_encoders_are_reproducible_sensitive_and_safe(self) -> None:
+        report = audit_pool_family(SOURCE)
+        self.assertEqual(report["status"], "passed")
+        self.assertEqual(report["template_count"], 3)
+        for template_name in (SECOND_MAXPOOL_TEMPLATE, AVGPOOL_TEMPLATE):
+            probe = report["encoder_probes"][template_name]
+            self.assertEqual(probe["determinism"]["status"], "passed")
+            self.assertEqual(probe["differential_sensitivity"]["status"], "passed")
+            self.assertNotEqual(
+                probe["differential_sensitivity"]["baseline_128b_sha256"],
+                probe["differential_sensitivity"]["modified_128b_sha256"],
+            )
+            self.assertEqual(probe["fail_closed"]["status"], "passed")
+        self.assertEqual(report["numerical_scope"]["status"], "not_validated")
+
+    def test_pool_linkage_mutations_fail_closed(self) -> None:
+        bad_address = deepcopy(self.second_maxpool)
+        bad_address["stream_engine"]["stream0"]["base_addr"] = "0b101"
+        with self.assertRaisesRegex(TargetConfigAuditError, "exactly 30 binary bits"):
+            validate_maxpool_template(bad_address)
+
+        bad_avg_opcode = deepcopy(self.avgpool)
+        bad_avg_opcode["general_array"]["PE_array"]["PE00"]["alu_opcode"] = "int8_max"
+        with self.assertRaisesRegex(TargetConfigAuditError, "must use one of"):
+            validate_avgpool_template(bad_avg_opcode)
+
+        bad_avg_conversion = deepcopy(self.avgpool)
+        bad_avg_conversion["general_array"]["inport"]["inport0"]["uint8toint32"] = "false"
+        with self.assertRaisesRegex(TargetConfigAuditError, "Pool linkage"):
+            validate_avgpool_shape_linkage(
+                bad_avg_conversion,
+                channels=2048,
+                height=7,
+                width=7,
+            )
 
 
 if __name__ == "__main__":

@@ -42,9 +42,11 @@ from .simple16_layout import (
     ZeroCopyViewLayout as LegacyZeroCopyViewLayout,
 )
 from .target_config_audit import (
+    AVGPOOL_TEMPLATE,
     OFFICIAL_CONFIG_COMMIT,
     OFFICIAL_CONFIG_REPOSITORY,
     OFFICIAL_CONFIG_SLICE_COUNT,
+    SECOND_MAXPOOL_TEMPLATE,
 )
 from .w4_evidence import architecture_evidence_basis_sha256
 from .w4_profiles import PROFILE_POLICIES
@@ -660,6 +662,7 @@ def _target_config_toolchain_status(root: Path) -> dict[str, Any]:
         "can_generate_execplan": True,
         "can_execute_numerical_model": False,
         "maxpool_encoder_probe_validated": True,
+        "pool_family_encoder_probe_validated": True,
         "resnet50_operator_coverage_complete": False,
     }
     for field, value in expected.items():
@@ -681,6 +684,7 @@ def _target_config_toolchain_status(root: Path) -> dict[str, Any]:
             reasons.append("authority_audit_invalid_json")
     if audit:
         semantic_checks = {
+            "audit_schema": audit.get("schema_version") == "0.2",
             "audit_status": audit.get("status") == "configuration_source_verified",
             "source_repository": audit.get("source", {}).get("repository")
             == OFFICIAL_CONFIG_REPOSITORY,
@@ -704,6 +708,62 @@ def _target_config_toolchain_status(root: Path) -> dict[str, Any]:
             .get("fail_closed", {})
             .get("status")
             == "passed",
+            "pool_family_status": audit.get("pool_family_probe", {}).get("status")
+            == "passed",
+            "pool_family_linkage": audit.get("pool_family_probe", {})
+            .get("linkage", {})
+            .get("status")
+            == "passed",
+            "maxpool_delta_explained": audit.get("pool_family_probe", {})
+            .get("linkage", {})
+            .get("maxpool_template_delta", {})
+            .get("status")
+            == "fully_explained"
+            and audit.get("pool_family_probe", {})
+            .get("linkage", {})
+            .get("maxpool_template_delta", {})
+            .get("unexpected_paths")
+            == [],
+            "second_maxpool_determinism": audit.get("pool_family_probe", {})
+            .get("encoder_probes", {})
+            .get(SECOND_MAXPOOL_TEMPLATE, {})
+            .get("determinism", {})
+            .get("status")
+            == "passed",
+            "second_maxpool_sensitivity": audit.get("pool_family_probe", {})
+            .get("encoder_probes", {})
+            .get(SECOND_MAXPOOL_TEMPLATE, {})
+            .get("differential_sensitivity", {})
+            .get("status")
+            == "passed",
+            "second_maxpool_fail_closed": audit.get("pool_family_probe", {})
+            .get("encoder_probes", {})
+            .get(SECOND_MAXPOOL_TEMPLATE, {})
+            .get("fail_closed", {})
+            .get("status")
+            == "passed",
+            "avgpool_determinism": audit.get("pool_family_probe", {})
+            .get("encoder_probes", {})
+            .get(AVGPOOL_TEMPLATE, {})
+            .get("determinism", {})
+            .get("status")
+            == "passed",
+            "avgpool_sensitivity": audit.get("pool_family_probe", {})
+            .get("encoder_probes", {})
+            .get(AVGPOOL_TEMPLATE, {})
+            .get("differential_sensitivity", {})
+            .get("status")
+            == "passed",
+            "avgpool_fail_closed": audit.get("pool_family_probe", {})
+            .get("encoder_probes", {})
+            .get(AVGPOOL_TEMPLATE, {})
+            .get("fail_closed", {})
+            .get("status")
+            == "passed",
+            "pool_numerical_scope_fail_closed": audit.get("pool_family_probe", {})
+            .get("numerical_scope", {})
+            .get("status")
+            == "not_validated",
         }
         reasons.extend(
             f"authority_audit_semantic_mismatch:{name}"
@@ -717,6 +777,9 @@ def _target_config_toolchain_status(root: Path) -> dict[str, Any]:
         "audit_path": record.get("audit_path"),
         "audit_sha256": record.get("audit_sha256"),
         "can_execute_numerical_model": record.get("can_execute_numerical_model"),
+        "pool_family_encoder_probe_validated": record.get(
+            "pool_family_encoder_probe_validated"
+        ),
         "resnet50_operator_coverage_complete": record.get(
             "resnet50_operator_coverage_complete"
         ),

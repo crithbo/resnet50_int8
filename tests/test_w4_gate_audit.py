@@ -107,6 +107,11 @@ class W4GateAuditTests(unittest.TestCase):
             report["target_config_toolchain"]["can_execute_numerical_model"]
         )
         self.assertTrue(
+            report["target_config_toolchain"][
+                "pool_family_encoder_probe_validated"
+            ]
+        )
+        self.assertTrue(
             report["gate_criteria"]["target_rtl_isa_register_map_version_frozen"]
         )
         self.assertTrue(

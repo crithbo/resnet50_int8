@@ -51,8 +51,8 @@
 ## 当前总体状态
 
 - **已通过**：W0/G0集成骨架，W2/G2小Conv候选软件纵向闭环，W3/G3正式图/lowering/全节点与subop golden。
-- **部分通过**：W1已冻结正式候选模型、固定输入、预处理和软件量化事实；目标RTL候选已选`Trassic2.0_RTL@e3bdebba...`和28-slice。ADR-008又按操作者确认，把`ndp-sim-ref@e299b280...`的JSON/bitstream/model_execplan固定为正式硬件配置来源，并用MaxPool完成首条字段/寄存器/bitstream审计。clean elaboration、批准端口layout/profile、量化/requant数值约定、目标数值模拟器和板级协议仍未完成，所以G1仍未通过。
-- **当前主线**：ADR-007/008均已采用。C0/C1/C2/C3软件候选审计已经完成；配置来源未知这一阻塞已消除。等待硬件期间进入W4/G4边界的C4前置工作：先把MaxPool已验证的方法扩展到其余ResNet/共享模板，再建立W3 hw_op/qparams到正式配置字段的参数化adapter。所有输出保持audit/preflight身份，不生成正式W5网络JSON/bitstream。G4=`not_passed`、`w5_authorized=false`。
+- **部分通过**：W1已冻结正式候选模型、固定输入、预处理和软件量化事实；目标RTL候选已选`Trassic2.0_RTL@e3bdebba...`和28-slice。ADR-008又按操作者确认，把`ndp-sim-ref@e299b280...`的JSON/bitstream/model_execplan固定为正式硬件配置来源；Pool族三个模板的字段/寄存器/bitstream审计已完成。clean elaboration、批准端口layout/profile、量化/requant数值约定、目标数值模拟器和板级协议仍未完成，所以G1仍未通过。
+- **当前主线**：ADR-007/008均已采用。C0/C1/C2/C3软件候选审计已经完成；配置来源未知这一阻塞已消除。等待硬件期间继续W4/G4边界的C4前置工作：Pool族审计已完成，下一原子包审计Quantize与Add-Dequant，并继续建立W3 hw_op/qparams到正式配置字段的参数化adapter。所有输出保持audit/preflight身份，不生成正式W5网络JSON/bitstream。G4=`not_passed`、`w5_authorized=false`。
 - **当前边界**：W2已证明小合成Conv的golden=NDP functional model，并新增RTL28 Conv物理布局到该功能模型的candidate-only直接探针；后者不是目标simulator、未执行目标JSON/ISA/RTL，也不构成G6证据。W3公式重放仍属于golden侧。当前没有任何正式ResNet算子达到golden=target simulator=hardware。
 
 ### 接手进度总表
@@ -63,7 +63,7 @@
 | W1 | G1未通过 | 模型/输入/量化事实、28-slice RTL候选；正式JSON/bitstream/execplan配置来源已固定 | 收集clean elaboration、量化/端口/布局/固件/板级原始证据和签署合同 |
 | W2 | G2通过 | 1/4-slice小Conv候选layout和NDP functional数值闭环；RTL28 Conv到该功能模型的candidate-only探针 | 作为W4/W6前置fixture，不外推为目标simulator或硬件规格 |
 | W3 | G3通过 | 78节点、133 hw_op、79 runtime tensor、55内部tensor、旧77映射 | 不重跑大artifact，除非hash/合同失效 |
-| W4 | 旧16-slice readiness历史通过；28-slice软件候选完成/G4未通过 | C0/C1/C2/C3完成；C4已完成正式配置源冻结和MaxPool首条审计 | 继续其余共享模板审计；等待硬件证据后重审G4，不生成正式W5产物 |
+| W4 | 旧16-slice readiness历史通过；28-slice软件候选完成/G4未通过 | C0/C1/C2/C3完成；C4已完成正式配置源冻结和Pool族三模板审计 | 继续Quantize/Add-Dequant等共享模板审计；等待硬件证据后重审G4，不生成正式W5产物 |
 | W5～W9 | 未通过 | W9通用比较器基础设施已前置完成；其余仅有参考框架或mock接口 | 等待对应前置门和真实结果通过 |
 
 ### 当前可立即执行队列
@@ -74,8 +74,9 @@
 4. 【并行完成】新增RTL28 Conv→NDP functional candidate探针，在紧凑可逆shadow几何中保留真实slice owner/offset，实际遍历七个HIGH小环和代表性LOW大环；显式标记`candidate_only`、`target_simulator_validated=false`、`g6_validated=false`。
 5. 【已完成】C3建立两种可执行候选调度：全网group4x7，以及仅在Quantize→MatMul head边界发生一次group4x7→global转换；重新生成并登记93边、91 qparam链、16个残差Add、79 tensor生命周期/alias和静态成本证据。没有读取W3大tensor或生成正式W5产物。
 6. 【已完成】ADR-008冻结正式配置来源；盘点42个JSON，三向对照MaxPool JSON→`FIELD_MAP`→register CSV，纠正旧规则对CSV方括号范围的误读。固定`PYTHONHASHSEED=0`/UTF-8/seed后两次bitstream逐字节一致，地址字段差分会改变bitstream，17-bit溢出在编码前失败。
-7. 【下一步/可本地继续】单线程把同一审计扩展到第二个MaxPool、AvgPool、Quantize、Add/Dequantize、GEMV/MatMul和sum模板，先冻结通用字段schema和CSV crosswalk，再按算子分组决定是否并行。只保存小型审计报告/hash，不生成正式W5实例。
-8. 【并行外部等待】W1批准请求包继续收集clean elaboration、量化/端口/布局、目标数值模拟器和板级协议；收到后按approved合同导入、版本检查和G4自动重审流程验收。没有approved合同不得宣布G1/G4/G5通过。
+7. 【已完成】单线程把同一审计扩展到第二个MaxPool和AvgPool，确认三模板共用shape→LC→stream→buffer→GA五段链；两个MaxPool的18项差异全部归因，AvgPool明确只到int32 sum，未包含除法/requant。三模板均通过确定性、地址差分和溢出拒绝。
+8. 【下一步/可本地继续】单线程审计Quantize与Add-Dequant两个GA模板，重点确认输入dtype转换、固定常量与真实ResNet qparams之间的缺口；公共GA crosswalk稳定后，再评估是否并行GEMV/MatMul与sum组。只保存小型审计报告/hash，不生成正式W5实例。
+9. 【并行外部等待】W1批准请求包继续收集clean elaboration、量化/端口/布局、目标数值模拟器和板级协议；收到后按approved合同导入、版本检查和G4自动重审流程验收。没有approved合同不得宣布G1/G4/G5通过。
 
 Local执行环境已从事故前ZIP选择性恢复并重新验收：Python 3.12.13、`pip check`、三个锁定参考仓和根测试均通过；没有恢复任何managed-worktree junction。后续依赖任务可使用Local主任务或共享目录协作子任务，独立managed worktree仍只允许tracked-only工作。
 
@@ -367,7 +368,7 @@ W1的模型子任务已完成，但G1尚未通过；architecture/quantization/ba
 
 ### W4：逐算子28-slice relayout与性能profile【难度：高】
 
-当前状态（2026-07-14）：ADR-007/008已采用，旧16-slice W4物理候选全部失效为历史参考。W4-28 C0～C3软件候选已完成，C4又固定正式配置源并完成MaxPool首条字段/bitstream审计；W0～W3不重做。真实`topology28`/`profile28`调度底座、七族14个两profile正逆布局、两种整网候选调度的93边/91 qparam链/16残差Add/79 tensor生命周期和静态成本均已完成。现行G4仍等待正式硬件批准、clean elaboration、批准物理layout/profile及INT8数值/板级裁决，因此G4未通过且W5未授权。
+当前状态（2026-07-14）：ADR-007/008已采用，旧16-slice W4物理候选全部失效为历史参考。W4-28 C0～C3软件候选已完成，C4又固定正式配置源并完成Pool族三个模板的字段/bitstream/联动审计；W0～W3不重做。真实`topology28`/`profile28`调度底座、七族14个两profile正逆布局、两种整网候选调度的93边/91 qparam链/16残差Add/79 tensor生命周期和静态成本均已完成。现行G4仍等待正式硬件批准、clean elaboration、批准物理layout/profile及INT8数值/板级裁决，因此G4未通过且W5未授权。
 
 #### 方案切换遗留修改清单（2026-07-13全工作文件夹复审）
 
@@ -427,7 +428,7 @@ W1的模型子任务已完成，但G1尚未通过；architecture/quantization/ba
 
 **W4-28C3：整网审计已单线程完成。** Local审计器只读取小型W3图目录，实际调用冻结的28布局计划API，为全网group4x7和head切global两种调度生成逐slice物理签名。两者均覆盖93边、91条qparam链、16个残差Add和79个运行时tensor；前者0次转换，后者只在UINT8 Quantize→MatMul发生1次显式转换，残差块内不切profile。生命周期采用确定性16-byte first-fit候选，全部同时活跃范围无冲突；报告包含lane利用率、hop字节、weight/broadcast复制、容量、3/2 barrier尾部和转换读写量，明确不宣称cycle。edge/cost两份报告登记为current软件证据，因此G4中的93边与成本两项为真；正式硬件批准、clean elaboration、ISA/register-map及物理layout仍未满足，继续停在W4。
 
-**W4-28C4：正式配置来源冻结与MaxPool首条前置审计已完成。** ADR-008和backend 0.2把`ndp-sim-ref@e299b280...`固定为正式JSON/bitstream/execplan配置来源，但明确不升级为数值模拟器或硬件backend。审计盘点42个JSON（7个ResNet/共享、35个DeepSeek/Transformer、0个命名Conv），验证MaxPool结构/资源/字段范围，按正式`register_mapping.py`的“宽度前缀+行顺序”规则证明10类模块与编码器总宽对齐；固定进程哈希/UTF-8/seed后两次全部输出一致，地址差分敏感且溢出fail-closed。该步骤只生成`contracts/target_config_authority_audit.json`，不生成正式W5配置，不改变G4/W5状态。
+**W4-28C4：正式配置来源冻结与Pool族三模板前置审计已完成。** ADR-008和backend 0.2把`ndp-sim-ref@e299b280...`固定为正式JSON/bitstream/execplan配置来源，但明确不升级为数值模拟器或硬件backend。审计盘点42个JSON（7个ResNet/共享、35个DeepSeek/Transformer、0个命名Conv），验证两个MaxPool和一个AvgPool的结构/资源/字段范围，按正式`register_mapping.py`的“宽度前缀+行顺序”规则证明10类模块与编码器总宽对齐；固定进程哈希/UTF-8/seed后每个模板两次全部输出一致，地址差分敏感且溢出fail-closed。两个MaxPool的16个shape/调度差异和2个planner地址差异已完整归因；AvgPool只完成uint8→int32 sum，除法/requant仍缺。该步骤只生成`contracts/target_config_authority_audit.json`，不生成正式W5配置，不改变G4/W5状态。
 
 ### W5：逐算子JSON和bitstream【难度：很高】
 
@@ -678,7 +679,7 @@ W0实现前还需把以上补充转成可执行的schema字段、测试用例和
 - 改变 shape/qparams 后，所有相关 loop/stride/constant 都被 patch，不存在 unresolved control。
 - bitstream 成功之外，还必须通过阶段 F 的目标模拟器数值测试。
 
-当前状态：42个JSON已被确认为正式配置来源，其中MaxPool首条结构/寄存器/bitstream审计通过；sum型AvgPool、固定样例quant、fp32输出add-dequant、GEMV和sum模板仍待相同审计。6个SA JSON全是FP16、bias=0，当前没有命名INT8 Conv模板。`NDPFuncModel`证明Conv数据通路原型存在，但还没有正式JSON adapter、qparams schema或参数化入口；尚未生成正式W5配置。
+当前状态：42个JSON已被确认为正式配置来源，其中两个MaxPool和sum型AvgPool的结构/寄存器/bitstream审计通过；AvgPool的除法/requant、固定样例quant、fp32输出add-dequant、GEMV和sum模板仍待继续审计。6个SA JSON全是FP16、bias=0，当前没有命名INT8 Conv模板。`NDPFuncModel`证明Conv数据通路原型存在，但还没有正式JSON adapter、qparams schema或参数化入口；尚未生成正式W5配置。
 
 ## 阶段 F：接通目标 JSON/bitstream 数值模拟器
 

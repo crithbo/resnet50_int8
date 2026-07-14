@@ -26,9 +26,11 @@ from .profile28 import (
     SUPPORTED_PROFILES,
 )
 from .target_config_audit import (
+    AVGPOOL_TEMPLATE,
     OFFICIAL_CONFIG_COMMIT,
     OFFICIAL_CONFIG_REPOSITORY,
     OFFICIAL_CONFIG_SLICE_COUNT,
+    SECOND_MAXPOOL_TEMPLATE,
 )
 from .topology28 import HIGH_RING_OWNERS, LOW_RING_OWNERS
 from .w4_evidence import LEGACY16_METADATA, architecture_evidence_basis_sha256
@@ -596,6 +598,7 @@ def validate_backend_contract(
         "can_generate_execplan": True,
         "can_execute_numerical_model": False,
         "maxpool_encoder_probe_validated": True,
+        "pool_family_encoder_probe_validated": True,
         "resnet50_operator_coverage_complete": False,
     }
     for field, expected in expected_config_toolchain.items():
@@ -607,7 +610,9 @@ def validate_backend_contract(
         "not_target_numerical_simulator",
         "not_hardware_execution",
         "resnet_operator_coverage_incomplete",
-        "maxpool_probe_only",
+        "pool_family_probe_only",
+        "avgpool_requantization_absent",
+        "uint8_maxpool_semantics_unresolved",
         "does_not_approve_rtl_or_layout",
     }:
         raise ContractError("target configuration source limitations must remain fail-closed")
@@ -636,7 +641,8 @@ def validate_backend_contract(
         except json.JSONDecodeError as error:
             raise ContractError("target configuration authority audit is invalid JSON") from error
         if (
-            audit.get("status") != "configuration_source_verified"
+            audit.get("schema_version") != "0.2"
+            or audit.get("status") != "configuration_source_verified"
             or audit.get("source", {}).get("repository") != OFFICIAL_CONFIG_REPOSITORY
             or audit.get("source", {}).get("commit") != OFFICIAL_CONFIG_COMMIT
             or audit.get("source", {}).get("slice_count") != OFFICIAL_CONFIG_SLICE_COUNT
@@ -646,6 +652,57 @@ def validate_backend_contract(
             or audit.get("maxpool_probe", {}).get("determinism", {}).get("status") != "passed"
             or audit.get("maxpool_probe", {}).get("differential_sensitivity", {}).get("status") != "passed"
             or audit.get("maxpool_probe", {}).get("fail_closed", {}).get("status") != "passed"
+            or audit.get("pool_family_probe", {}).get("status") != "passed"
+            or audit.get("pool_family_probe", {}).get("template_count") != 3
+            or audit.get("pool_family_probe", {}).get("linkage", {}).get("status") != "passed"
+            or audit.get("pool_family_probe", {})
+            .get("linkage", {})
+            .get("maxpool_template_delta", {})
+            .get("status")
+            != "fully_explained"
+            or audit.get("pool_family_probe", {})
+            .get("linkage", {})
+            .get("maxpool_template_delta", {})
+            .get("unexpected_paths")
+            != []
+            or audit.get("pool_family_probe", {}).get("numerical_scope", {}).get("status")
+            != "not_validated"
+            or audit.get("pool_family_probe", {})
+            .get("encoder_probes", {})
+            .get(SECOND_MAXPOOL_TEMPLATE, {})
+            .get("determinism", {})
+            .get("status")
+            != "passed"
+            or audit.get("pool_family_probe", {})
+            .get("encoder_probes", {})
+            .get(SECOND_MAXPOOL_TEMPLATE, {})
+            .get("differential_sensitivity", {})
+            .get("status")
+            != "passed"
+            or audit.get("pool_family_probe", {})
+            .get("encoder_probes", {})
+            .get(SECOND_MAXPOOL_TEMPLATE, {})
+            .get("fail_closed", {})
+            .get("status")
+            != "passed"
+            or audit.get("pool_family_probe", {})
+            .get("encoder_probes", {})
+            .get(AVGPOOL_TEMPLATE, {})
+            .get("determinism", {})
+            .get("status")
+            != "passed"
+            or audit.get("pool_family_probe", {})
+            .get("encoder_probes", {})
+            .get(AVGPOOL_TEMPLATE, {})
+            .get("differential_sensitivity", {})
+            .get("status")
+            != "passed"
+            or audit.get("pool_family_probe", {})
+            .get("encoder_probes", {})
+            .get(AVGPOOL_TEMPLATE, {})
+            .get("fail_closed", {})
+            .get("status")
+            != "passed"
         ):
             raise ContractError("target configuration authority audit semantics are invalid")
 

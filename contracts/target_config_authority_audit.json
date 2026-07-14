@@ -10,7 +10,9 @@
       "resnet50_operator_coverage",
       "clean_rtl_elaboration",
       "board_load_start_wait_dump_protocol",
-      "golden_simulator_hardware_equality"
+      "golden_simulator_hardware_equality",
+      "uint8_maxpool_comparison_semantics",
+      "qlinear_global_average_pool_requantization"
     ]
   },
   "encoder_safety_findings": [
@@ -765,6 +767,9 @@
           "source": "bitstream/config/stream.py"
         }
       },
+      "ga_opcodes": [
+        "int8_max"
+      ],
       "resources": {
         "buffer_loop_groups": 2,
         "buffers": 2,
@@ -775,10 +780,918 @@
         "read_streams": 1,
         "write_streams": 1
       },
-      "status": "valid"
+      "status": "valid",
+      "validation_scope": "structure_resources_field_ranges_and_routes_only"
     },
     "template_path": "jsons/maxpool_config_16_112_112_stride2_padding1.json",
     "template_sha256": "a0091f3fae223abd5225c54b833cf3bb578b3fea6b202883c5cbf4be50d60cb1"
+  },
+  "pool_family_probe": {
+    "encoder_probes": {
+      "avgpool_config_2048_7_7.json": {
+        "determinism": {
+          "environment": {
+            "PYTHONHASHSEED": "0",
+            "PYTHONUTF8": "1"
+          },
+          "heuristic_iterations": 10000,
+          "heuristic_restarts": 10,
+          "outputs": {
+            "avgpool_config_2048_7_7_bitstream_128b.bin": {
+              "sha256": "a9c20dc9050cda992c1ca759b4575c12eec33846cb1b33f079158db9f68c73bd",
+              "size_bytes": 3120
+            },
+            "avgpool_config_2048_7_7_bitstream_64b.bin": {
+              "sha256": "b27418a8e77efb5bba6e54b04025a387f881dbb279bc1fa79227227e28ac48d1",
+              "size_bytes": 3168
+            },
+            "detailed_dump.txt": {
+              "sha256": "1e62aeac269ce3900c6d0b1b1aeed9a04e41d1a8de7ae79d7c6c9f99f2e0ddbf",
+              "size_bytes": 30775
+            },
+            "mapping_review.json": {
+              "sha256": "c1550dc5fd7f1bdd0851f0dc1c1e450b3f582166e40ac7e665cf0e4f5c9e3c5f",
+              "size_bytes": 3323
+            },
+            "modules_dump_128b.bin": {
+              "sha256": "a9c20dc9050cda992c1ca759b4575c12eec33846cb1b33f079158db9f68c73bd",
+              "size_bytes": 3120
+            },
+            "modules_dump_64b.bin": {
+              "sha256": "b27418a8e77efb5bba6e54b04025a387f881dbb279bc1fa79227227e28ac48d1",
+              "size_bytes": 3168
+            },
+            "parsed_bitstream.txt": {
+              "sha256": "18de7570121efef7718025c6dadc94586f0cddd425258151e6c705b5b31378b0",
+              "size_bytes": 3634
+            }
+          },
+          "run_count": 2,
+          "seed": 42,
+          "status": "passed"
+        },
+        "differential_sensitivity": {
+          "baseline_128b_sha256": "a9c20dc9050cda992c1ca759b4575c12eec33846cb1b33f079158db9f68c73bd",
+          "field": "stream_engine.stream0.base_addr",
+          "modified": 16,
+          "modified_128b_sha256": "d76340833baf06e57f2b5784306b7102f47e45da2d8437445db70fc472557ac9",
+          "original": 0,
+          "status": "passed"
+        },
+        "fail_closed": {
+          "mutation": "dram_loop_configs.LC1.end=131072",
+          "rejection": "dram_loop_configs.LC1.end=131072 exceeds unsigned 17-bit range; refusing silent truncation",
+          "status": "passed"
+        },
+        "preflight_validation": {
+          "config_mask": "11011101",
+          "field_routes": {
+            "buffer_config": {
+              "encoder_class": "BufferConfig",
+              "resource_count": 6,
+              "source": "bitstream/config/buffer.py"
+            },
+            "buffer_loop_configs": {
+              "encoder_class": "BufferRowLCConfig+BufferColLCConfig",
+              "resource_count": 5,
+              "source": "bitstream/config/loop.py"
+            },
+            "dram_loop_configs": {
+              "encoder_class": "DramLoopControlConfig",
+              "resource_count": 20,
+              "source": "bitstream/config/loop.py"
+            },
+            "general_array.PE_array": {
+              "encoder_class": "GAPEConfig",
+              "resource_count": 16,
+              "source": "bitstream/config/general.py"
+            },
+            "general_array.inport": {
+              "encoder_class": "GAInportConfig",
+              "resource_count": 3,
+              "source": "bitstream/config/general.py"
+            },
+            "general_array.outport": {
+              "encoder_class": "GAOutportConfig",
+              "resource_count": 1,
+              "source": "bitstream/config/general.py"
+            },
+            "lc_pe_configs": {
+              "encoder_class": "LCPEConfig",
+              "resource_count": 10,
+              "source": "bitstream/config/loop.py"
+            },
+            "stream_engine": {
+              "encoder_class": "ReadStreamEngineConfig+WriteStreamEngineConfig",
+              "resource_count": "4 read + 1 write",
+              "source": "bitstream/config/stream.py"
+            }
+          },
+          "ga_opcodes": [
+            "int32_sum"
+          ],
+          "resources": {
+            "buffer_loop_groups": 2,
+            "buffers": 2,
+            "dram_loops": 3,
+            "ga_inports": 3,
+            "ga_pes": 8,
+            "loop_pes": 2,
+            "read_streams": 1,
+            "write_streams": 1
+          },
+          "status": "valid",
+          "validation_scope": "structure_resources_field_ranges_and_routes_only"
+        },
+        "template_path": "jsons/avgpool_config_2048_7_7.json",
+        "template_sha256": "a3d19c7b1759eb40b66a6b786234865b61917e9cf74822a62dd469729c2497c5"
+      },
+      "maxpool_config_16_112_112_stride2_padding1.json": {
+        "determinism": {
+          "environment": {
+            "PYTHONHASHSEED": "0",
+            "PYTHONUTF8": "1"
+          },
+          "heuristic_iterations": 10000,
+          "heuristic_restarts": 10,
+          "outputs": {
+            "detailed_dump.txt": {
+              "sha256": "c526bcc12c85fc93556bffadb10c83b7f176c47db64a9f45c344365ee9d1f8bb",
+              "size_bytes": 39665
+            },
+            "mapping_review.json": {
+              "sha256": "fc2ad22ed7b3b042ff6400fde7588bac070504955960ccef975863a73d6fe598",
+              "size_bytes": 6103
+            },
+            "maxpool_config_16_112_112_stride2_padding1_bitstream_128b.bin": {
+              "sha256": "2e4096f261adb67296116929d94b691b7e27bf3ff2d327a4bb9db8b017900353",
+              "size_bytes": 3900
+            },
+            "maxpool_config_16_112_112_stride2_padding1_bitstream_64b.bin": {
+              "sha256": "b48ef216346cc630da777c253825751de68d725ba7a613e2df3f646335033a99",
+              "size_bytes": 3894
+            },
+            "modules_dump_128b.bin": {
+              "sha256": "2e4096f261adb67296116929d94b691b7e27bf3ff2d327a4bb9db8b017900353",
+              "size_bytes": 3900
+            },
+            "modules_dump_64b.bin": {
+              "sha256": "b48ef216346cc630da777c253825751de68d725ba7a613e2df3f646335033a99",
+              "size_bytes": 3894
+            },
+            "parsed_bitstream.txt": {
+              "sha256": "811d262dfaa9b64b15f89102f6f5944acf9c251f539d007985bacf3c9ba557d5",
+              "size_bytes": 4331
+            }
+          },
+          "run_count": 2,
+          "seed": 42,
+          "status": "passed"
+        },
+        "differential_sensitivity": {
+          "baseline_128b_sha256": "2e4096f261adb67296116929d94b691b7e27bf3ff2d327a4bb9db8b017900353",
+          "field": "stream_engine.stream0.base_addr",
+          "modified": 1040,
+          "modified_128b_sha256": "a35fd35fbc33fa85a506df733e9c0a012c79d6fd52ee3eb3b888aa144a0d7d36",
+          "original": 1024,
+          "status": "passed"
+        },
+        "fail_closed": {
+          "mutation": "dram_loop_configs.LC1.end=131072",
+          "rejection": "dram_loop_configs.LC1.end=131072 exceeds unsigned 17-bit range; refusing silent truncation",
+          "status": "passed"
+        },
+        "preflight_validation": {
+          "config_mask": "11011101",
+          "field_routes": {
+            "buffer_config": {
+              "encoder_class": "BufferConfig",
+              "resource_count": 6,
+              "source": "bitstream/config/buffer.py"
+            },
+            "buffer_loop_configs": {
+              "encoder_class": "BufferRowLCConfig+BufferColLCConfig",
+              "resource_count": 5,
+              "source": "bitstream/config/loop.py"
+            },
+            "dram_loop_configs": {
+              "encoder_class": "DramLoopControlConfig",
+              "resource_count": 20,
+              "source": "bitstream/config/loop.py"
+            },
+            "general_array.PE_array": {
+              "encoder_class": "GAPEConfig",
+              "resource_count": 16,
+              "source": "bitstream/config/general.py"
+            },
+            "general_array.inport": {
+              "encoder_class": "GAInportConfig",
+              "resource_count": 3,
+              "source": "bitstream/config/general.py"
+            },
+            "general_array.outport": {
+              "encoder_class": "GAOutportConfig",
+              "resource_count": 1,
+              "source": "bitstream/config/general.py"
+            },
+            "lc_pe_configs": {
+              "encoder_class": "LCPEConfig",
+              "resource_count": 10,
+              "source": "bitstream/config/loop.py"
+            },
+            "stream_engine": {
+              "encoder_class": "ReadStreamEngineConfig+WriteStreamEngineConfig",
+              "resource_count": "4 read + 1 write",
+              "source": "bitstream/config/stream.py"
+            }
+          },
+          "ga_opcodes": [
+            "int8_max"
+          ],
+          "resources": {
+            "buffer_loop_groups": 2,
+            "buffers": 2,
+            "dram_loops": 8,
+            "ga_inports": 3,
+            "ga_pes": 8,
+            "loop_pes": 6,
+            "read_streams": 1,
+            "write_streams": 1
+          },
+          "status": "valid",
+          "validation_scope": "structure_resources_field_ranges_and_routes_only"
+        },
+        "template_path": "jsons/maxpool_config_16_112_112_stride2_padding1.json",
+        "template_sha256": "a0091f3fae223abd5225c54b833cf3bb578b3fea6b202883c5cbf4be50d60cb1"
+      },
+      "maxpool_config_16_16_16_stride2_padding1.json": {
+        "determinism": {
+          "environment": {
+            "PYTHONHASHSEED": "0",
+            "PYTHONUTF8": "1"
+          },
+          "heuristic_iterations": 10000,
+          "heuristic_restarts": 10,
+          "outputs": {
+            "detailed_dump.txt": {
+              "sha256": "71356f414cb8af10fdb75dd16eb170703f43f8ab08301770ab130d982bc060e1",
+              "size_bytes": 39667
+            },
+            "mapping_review.json": {
+              "sha256": "d111756ab2c51aeff771a55a4a3610f4d62ab83ca374c58cd0ad875dc800bc07",
+              "size_bytes": 6107
+            },
+            "maxpool_config_16_16_16_stride2_padding1_bitstream_128b.bin": {
+              "sha256": "4ff6e89b560d84ef4e1757a6994a1a1980e87d41ec347f7cf6b94c8f19f6bcd1",
+              "size_bytes": 3900
+            },
+            "maxpool_config_16_16_16_stride2_padding1_bitstream_64b.bin": {
+              "sha256": "ad9dfb9a6046db07684089fe98c275d817a4b514cad1fed2337de72d3e0068f5",
+              "size_bytes": 3894
+            },
+            "modules_dump_128b.bin": {
+              "sha256": "4ff6e89b560d84ef4e1757a6994a1a1980e87d41ec347f7cf6b94c8f19f6bcd1",
+              "size_bytes": 3900
+            },
+            "modules_dump_64b.bin": {
+              "sha256": "ad9dfb9a6046db07684089fe98c275d817a4b514cad1fed2337de72d3e0068f5",
+              "size_bytes": 3894
+            },
+            "parsed_bitstream.txt": {
+              "sha256": "3e5e627d4966b8f7654b20524e282273d2351d3014e83c1f7d838057ea802128",
+              "size_bytes": 4331
+            }
+          },
+          "run_count": 2,
+          "seed": 42,
+          "status": "passed"
+        },
+        "differential_sensitivity": {
+          "baseline_128b_sha256": "4ff6e89b560d84ef4e1757a6994a1a1980e87d41ec347f7cf6b94c8f19f6bcd1",
+          "field": "stream_engine.stream0.base_addr",
+          "modified": 16,
+          "modified_128b_sha256": "9e7200cd163f551ac0f716e420bd250cf888fc138dfd9e19655c919efcdc9a83",
+          "original": 0,
+          "status": "passed"
+        },
+        "fail_closed": {
+          "mutation": "dram_loop_configs.LC1.end=131072",
+          "rejection": "dram_loop_configs.LC1.end=131072 exceeds unsigned 17-bit range; refusing silent truncation",
+          "status": "passed"
+        },
+        "preflight_validation": {
+          "config_mask": "11011101",
+          "field_routes": {
+            "buffer_config": {
+              "encoder_class": "BufferConfig",
+              "resource_count": 6,
+              "source": "bitstream/config/buffer.py"
+            },
+            "buffer_loop_configs": {
+              "encoder_class": "BufferRowLCConfig+BufferColLCConfig",
+              "resource_count": 5,
+              "source": "bitstream/config/loop.py"
+            },
+            "dram_loop_configs": {
+              "encoder_class": "DramLoopControlConfig",
+              "resource_count": 20,
+              "source": "bitstream/config/loop.py"
+            },
+            "general_array.PE_array": {
+              "encoder_class": "GAPEConfig",
+              "resource_count": 16,
+              "source": "bitstream/config/general.py"
+            },
+            "general_array.inport": {
+              "encoder_class": "GAInportConfig",
+              "resource_count": 3,
+              "source": "bitstream/config/general.py"
+            },
+            "general_array.outport": {
+              "encoder_class": "GAOutportConfig",
+              "resource_count": 1,
+              "source": "bitstream/config/general.py"
+            },
+            "lc_pe_configs": {
+              "encoder_class": "LCPEConfig",
+              "resource_count": 10,
+              "source": "bitstream/config/loop.py"
+            },
+            "stream_engine": {
+              "encoder_class": "ReadStreamEngineConfig+WriteStreamEngineConfig",
+              "resource_count": "4 read + 1 write",
+              "source": "bitstream/config/stream.py"
+            }
+          },
+          "ga_opcodes": [
+            "int8_max"
+          ],
+          "resources": {
+            "buffer_loop_groups": 2,
+            "buffers": 2,
+            "dram_loops": 8,
+            "ga_inports": 3,
+            "ga_pes": 8,
+            "loop_pes": 6,
+            "read_streams": 1,
+            "write_streams": 1
+          },
+          "status": "valid",
+          "validation_scope": "structure_resources_field_ranges_and_routes_only"
+        },
+        "template_path": "jsons/maxpool_config_16_16_16_stride2_padding1.json",
+        "template_sha256": "624d675ddde6f386474289d473d1c69559691794f3c1ea775dfc99325cc8f072"
+      }
+    },
+    "linkage": {
+      "cross_stage_invariants": [
+        "stream target A/D matches buffer-loop target and buffer destination GA",
+        "stream buf_full_last_index and buffer0 buf_full_last_index name the same LC completion event",
+        "buffer and GA masks expose the same eight active 32-bit lanes",
+        "all stream strides are byte strides and transaction sizes are encoded as dimension minus one",
+        "base addresses belong to the memory planner and are not shape formulas"
+      ],
+      "limits": [
+        "MaxPool formulas are exact only for the two covered non-tail templates",
+        "AvgPool shape formula is inferred from one template and must be tested on another shape before parameterization",
+        "AvgPool JSON stops at int32 sum; it is not a complete QLinearGlobalAveragePool",
+        "static encoding and mapping do not prove numerical simulator or hardware behavior"
+      ],
+      "maxpool_template_delta": {
+        "changed_leaf_count": 18,
+        "planner_owned_paths": [
+          "stream_engine.stream0.base_addr",
+          "stream_engine.stream1.base_addr"
+        ],
+        "shape_linked_paths": [
+          "buffer_config.buffer0.buf_full_last_index",
+          "buffer_loop_configs.GROUP0.COL_LC.last_index",
+          "buffer_loop_configs.GROUP0.ROW_LC.last_index",
+          "buffer_loop_configs.GROUP0.ROW_LC.src_id",
+          "dram_loop_configs.LC1.end",
+          "dram_loop_configs.LC2.end",
+          "dram_loop_configs.LC6.end",
+          "dram_loop_configs.LC7.end",
+          "stream_engine.stream0.buf_full_last_index",
+          "stream_engine.stream0.buf_idx_keep_last_index[0]",
+          "stream_engine.stream0.dim_stride[1]",
+          "stream_engine.stream0.dim_stride[2]",
+          "stream_engine.stream0.idx_padding_range.up_bound[0]",
+          "stream_engine.stream0.idx_padding_range.up_bound[1]",
+          "stream_engine.stream1.dim_stride[0]",
+          "stream_engine.stream1.dim_stride[1]"
+        ],
+        "status": "fully_explained",
+        "unexpected_paths": []
+      },
+      "rule_scope": "three_official_static_templates_at_locked_commit",
+      "shared_chain": [
+        {
+          "drives": "logical extents, reduction length, tiling, padding and output shape",
+          "stage": "shape"
+        },
+        {
+          "drives": "nested loop extents, affine LC-PE indices and completion-event last_index values",
+          "stage": "LC"
+        },
+        {
+          "drives": "transaction sizes, byte strides, inclusive valid ranges and buffer lane expansion",
+          "stage": "stream"
+        },
+        {
+          "drives": "A/D row-column coordinates, full events, lifetime, destination and lane masks",
+          "stage": "buffer"
+        },
+        {
+          "drives": "lane placement, dtype conversion, reduction opcode and output event",
+          "stage": "GA"
+        }
+      ],
+      "shared_top_level_groups": [
+        "CONFIG",
+        "buffer_config",
+        "buffer_loop_configs",
+        "dram_loop_configs",
+        "general_array",
+        "lc_pe_configs",
+        "stream_engine"
+      ],
+      "status": "passed",
+      "templates": {
+        "avgpool_config_2048_7_7.json": {
+          "base_addresses": {
+            "read": 0,
+            "rule": "planner_owned_and_not_inferred_from_shape",
+            "write": 25165824
+          },
+          "buffer_schedule": {
+            "read_and_write_buffer_full_last_index": 2,
+            "read_spatial_lane_map": [
+              0,
+              4,
+              8,
+              12,
+              16,
+              20,
+              24,
+              28,
+              1,
+              5,
+              9,
+              13,
+              17,
+              21,
+              25,
+              29
+            ],
+            "write_spatial_lane_map": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13,
+              14,
+              15
+            ]
+          },
+          "ga": {
+            "active_pes": [
+              "PE00",
+              "PE02",
+              "PE10",
+              "PE12",
+              "PE20",
+              "PE22",
+              "PE30",
+              "PE32"
+            ],
+            "input_conversion": "uint8_to_int32",
+            "opcode": "int32_sum",
+            "output_conversion": "none",
+            "transout_last_index": 1
+          },
+          "lc_formulas": {
+            "channel_groups": "LC0.end=C/8",
+            "output_event": "LC2.end=1 under LC0",
+            "spatial_reduction": "LC1.end=round_up(H*W,8), stride=4"
+          },
+          "not_proven": [
+            "AvgPool division by H*W",
+            "x_scale/y_scale requantization",
+            "rounding and uint8 saturation",
+            "other H/W shapes or tail policies",
+            "target simulator or hardware numerical output"
+          ],
+          "rule_strength": "exact_for_one_official_shape_candidate_for_generalization",
+          "shape": {
+            "channels": 2048,
+            "height": 7,
+            "output_shape": [
+              2048,
+              1,
+              1
+            ],
+            "padded_reduction_elements": 56,
+            "reduction_elements": 49,
+            "width": 7
+          },
+          "stage_scope": "uint8_input_to_int32_spatial_sum_only",
+          "status": "passed",
+          "stream_formulas": {
+            "padding_valid_inclusive": [
+              null,
+              [
+                0,
+                48
+              ],
+              null
+            ],
+            "read_dim_stride_bytes": [
+              392,
+              8,
+              null
+            ],
+            "read_transaction_elements_minus_one": [
+              7,
+              3,
+              null
+            ],
+            "write_dim_stride_bytes": [
+              32,
+              null,
+              null
+            ],
+            "write_transaction_elements_minus_one": [
+              31,
+              null,
+              null
+            ]
+          },
+          "structural_validation": {
+            "config_mask": "11011101",
+            "field_routes": {
+              "buffer_config": {
+                "encoder_class": "BufferConfig",
+                "resource_count": 6,
+                "source": "bitstream/config/buffer.py"
+              },
+              "buffer_loop_configs": {
+                "encoder_class": "BufferRowLCConfig+BufferColLCConfig",
+                "resource_count": 5,
+                "source": "bitstream/config/loop.py"
+              },
+              "dram_loop_configs": {
+                "encoder_class": "DramLoopControlConfig",
+                "resource_count": 20,
+                "source": "bitstream/config/loop.py"
+              },
+              "general_array.PE_array": {
+                "encoder_class": "GAPEConfig",
+                "resource_count": 16,
+                "source": "bitstream/config/general.py"
+              },
+              "general_array.inport": {
+                "encoder_class": "GAInportConfig",
+                "resource_count": 3,
+                "source": "bitstream/config/general.py"
+              },
+              "general_array.outport": {
+                "encoder_class": "GAOutportConfig",
+                "resource_count": 1,
+                "source": "bitstream/config/general.py"
+              },
+              "lc_pe_configs": {
+                "encoder_class": "LCPEConfig",
+                "resource_count": 10,
+                "source": "bitstream/config/loop.py"
+              },
+              "stream_engine": {
+                "encoder_class": "ReadStreamEngineConfig+WriteStreamEngineConfig",
+                "resource_count": "4 read + 1 write",
+                "source": "bitstream/config/stream.py"
+              }
+            },
+            "ga_opcodes": [
+              "int32_sum"
+            ],
+            "resources": {
+              "buffer_loop_groups": 2,
+              "buffers": 2,
+              "dram_loops": 3,
+              "ga_inports": 3,
+              "ga_pes": 8,
+              "loop_pes": 2,
+              "read_streams": 1,
+              "write_streams": 1
+            },
+            "status": "valid",
+            "validation_scope": "structure_resources_field_ranges_and_routes_only"
+          }
+        },
+        "maxpool_config_16_112_112_stride2_padding1.json": {
+          "affine_indices": {
+            "input_channel_group": "LC0",
+            "input_col": "LC2*16 + LC4 + LC5",
+            "input_row": "LC1 + LC3"
+          },
+          "base_addresses": {
+            "read": 1024,
+            "rule": "planner_owned_and_not_inferred_from_shape",
+            "write": 201728
+          },
+          "buffer_schedule": {
+            "a_buffer_full_last_index": 6,
+            "a_col_last_index": 7,
+            "a_row_source": "DRAM_LC.LC5",
+            "collapsed_single_width_tile": false
+          },
+          "ga": {
+            "active_pes": [
+              "PE00",
+              "PE02",
+              "PE10",
+              "PE12",
+              "PE20",
+              "PE22",
+              "PE30",
+              "PE32"
+            ],
+            "opcode": "int8_max",
+            "transout_last_index": 3,
+            "uint8toint32": false
+          },
+          "lc_formulas": {
+            "channel_groups": "LC0.end=C/4",
+            "input_row_starts": "LC1=[0,H) step 2",
+            "input_width_tiles": "LC2.end=W/16",
+            "kernel_rows_and_cols": "LC3.end=LC4.end=3",
+            "output_rows": "LC6.end=Hout",
+            "output_width_tiles": "LC7.end=Wout/8",
+            "tile_output_columns": "LC5=[0,16) step 2"
+          },
+          "not_proven": [
+            "uint8 numerical comparison semantics of the symbolic int8_max opcode",
+            "tail or non-divisible width scheduling",
+            "target simulator or hardware numerical output"
+          ],
+          "rule_strength": "exact_for_two_official_non_tail_templates",
+          "shape": {
+            "channels": 16,
+            "height": 112,
+            "kernel": 3,
+            "output_height": 56,
+            "output_width": 56,
+            "padding": 1,
+            "stride": 2,
+            "width": 112
+          },
+          "status": "passed",
+          "stream_formulas": {
+            "padding_valid_inclusive": [
+              [
+                1,
+                112
+              ],
+              [
+                1,
+                112
+              ],
+              null
+            ],
+            "read_dim_stride_bytes": [
+              4,
+              448,
+              50176
+            ],
+            "write_dim_stride_bytes": [
+              12544,
+              224,
+              32
+            ]
+          },
+          "structural_validation": {
+            "config_mask": "11011101",
+            "field_routes": {
+              "buffer_config": {
+                "encoder_class": "BufferConfig",
+                "resource_count": 6,
+                "source": "bitstream/config/buffer.py"
+              },
+              "buffer_loop_configs": {
+                "encoder_class": "BufferRowLCConfig+BufferColLCConfig",
+                "resource_count": 5,
+                "source": "bitstream/config/loop.py"
+              },
+              "dram_loop_configs": {
+                "encoder_class": "DramLoopControlConfig",
+                "resource_count": 20,
+                "source": "bitstream/config/loop.py"
+              },
+              "general_array.PE_array": {
+                "encoder_class": "GAPEConfig",
+                "resource_count": 16,
+                "source": "bitstream/config/general.py"
+              },
+              "general_array.inport": {
+                "encoder_class": "GAInportConfig",
+                "resource_count": 3,
+                "source": "bitstream/config/general.py"
+              },
+              "general_array.outport": {
+                "encoder_class": "GAOutportConfig",
+                "resource_count": 1,
+                "source": "bitstream/config/general.py"
+              },
+              "lc_pe_configs": {
+                "encoder_class": "LCPEConfig",
+                "resource_count": 10,
+                "source": "bitstream/config/loop.py"
+              },
+              "stream_engine": {
+                "encoder_class": "ReadStreamEngineConfig+WriteStreamEngineConfig",
+                "resource_count": "4 read + 1 write",
+                "source": "bitstream/config/stream.py"
+              }
+            },
+            "ga_opcodes": [
+              "int8_max"
+            ],
+            "resources": {
+              "buffer_loop_groups": 2,
+              "buffers": 2,
+              "dram_loops": 8,
+              "ga_inports": 3,
+              "ga_pes": 8,
+              "loop_pes": 6,
+              "read_streams": 1,
+              "write_streams": 1
+            },
+            "status": "valid",
+            "validation_scope": "structure_resources_field_ranges_and_routes_only"
+          }
+        },
+        "maxpool_config_16_16_16_stride2_padding1.json": {
+          "affine_indices": {
+            "input_channel_group": "LC0",
+            "input_col": "LC2*16 + LC4 + LC5",
+            "input_row": "LC1 + LC3"
+          },
+          "base_addresses": {
+            "read": 0,
+            "rule": "planner_owned_and_not_inferred_from_shape",
+            "write": 25165824
+          },
+          "buffer_schedule": {
+            "a_buffer_full_last_index": 5,
+            "a_col_last_index": 6,
+            "a_row_source": "DRAM_LC.LC4",
+            "collapsed_single_width_tile": true
+          },
+          "ga": {
+            "active_pes": [
+              "PE00",
+              "PE02",
+              "PE10",
+              "PE12",
+              "PE20",
+              "PE22",
+              "PE30",
+              "PE32"
+            ],
+            "opcode": "int8_max",
+            "transout_last_index": 3,
+            "uint8toint32": false
+          },
+          "lc_formulas": {
+            "channel_groups": "LC0.end=C/4",
+            "input_row_starts": "LC1=[0,H) step 2",
+            "input_width_tiles": "LC2.end=W/16",
+            "kernel_rows_and_cols": "LC3.end=LC4.end=3",
+            "output_rows": "LC6.end=Hout",
+            "output_width_tiles": "LC7.end=Wout/8",
+            "tile_output_columns": "LC5=[0,16) step 2"
+          },
+          "not_proven": [
+            "uint8 numerical comparison semantics of the symbolic int8_max opcode",
+            "tail or non-divisible width scheduling",
+            "target simulator or hardware numerical output"
+          ],
+          "rule_strength": "exact_for_two_official_non_tail_templates",
+          "shape": {
+            "channels": 16,
+            "height": 16,
+            "kernel": 3,
+            "output_height": 8,
+            "output_width": 8,
+            "padding": 1,
+            "stride": 2,
+            "width": 16
+          },
+          "status": "passed",
+          "stream_formulas": {
+            "padding_valid_inclusive": [
+              [
+                1,
+                16
+              ],
+              [
+                1,
+                16
+              ],
+              null
+            ],
+            "read_dim_stride_bytes": [
+              4,
+              64,
+              1024
+            ],
+            "write_dim_stride_bytes": [
+              256,
+              32,
+              32
+            ]
+          },
+          "structural_validation": {
+            "config_mask": "11011101",
+            "field_routes": {
+              "buffer_config": {
+                "encoder_class": "BufferConfig",
+                "resource_count": 6,
+                "source": "bitstream/config/buffer.py"
+              },
+              "buffer_loop_configs": {
+                "encoder_class": "BufferRowLCConfig+BufferColLCConfig",
+                "resource_count": 5,
+                "source": "bitstream/config/loop.py"
+              },
+              "dram_loop_configs": {
+                "encoder_class": "DramLoopControlConfig",
+                "resource_count": 20,
+                "source": "bitstream/config/loop.py"
+              },
+              "general_array.PE_array": {
+                "encoder_class": "GAPEConfig",
+                "resource_count": 16,
+                "source": "bitstream/config/general.py"
+              },
+              "general_array.inport": {
+                "encoder_class": "GAInportConfig",
+                "resource_count": 3,
+                "source": "bitstream/config/general.py"
+              },
+              "general_array.outport": {
+                "encoder_class": "GAOutportConfig",
+                "resource_count": 1,
+                "source": "bitstream/config/general.py"
+              },
+              "lc_pe_configs": {
+                "encoder_class": "LCPEConfig",
+                "resource_count": 10,
+                "source": "bitstream/config/loop.py"
+              },
+              "stream_engine": {
+                "encoder_class": "ReadStreamEngineConfig+WriteStreamEngineConfig",
+                "resource_count": "4 read + 1 write",
+                "source": "bitstream/config/stream.py"
+              }
+            },
+            "ga_opcodes": [
+              "int8_max"
+            ],
+            "resources": {
+              "buffer_loop_groups": 2,
+              "buffers": 2,
+              "dram_loops": 8,
+              "ga_inports": 3,
+              "ga_pes": 8,
+              "loop_pes": 6,
+              "read_streams": 1,
+              "write_streams": 1
+            },
+            "status": "valid",
+            "validation_scope": "structure_resources_field_ranges_and_routes_only"
+          }
+        }
+      }
+    },
+    "numerical_scope": {
+      "avgpool_requantization": "absent_from_template",
+      "hardware_outputs": "unavailable",
+      "maxpool_unsigned_semantics": "unresolved",
+      "status": "not_validated",
+      "target_simulator_outputs": "unavailable"
+    },
+    "status": "passed",
+    "template_count": 3
   },
   "register_map_audit": {
     "annotation_range_mismatch_count": 13,
@@ -1949,7 +2862,7 @@
     "size_bytes": 14788
   },
   "report_kind": "official_target_config_authority_audit",
-  "schema_version": "0.1",
+  "schema_version": "0.2",
   "source": {
     "authoritative_paths": [
       "jsons",
