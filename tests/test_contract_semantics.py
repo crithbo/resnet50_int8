@@ -189,6 +189,20 @@ class ContractSemanticTests(unittest.TestCase):
         with self.assertRaisesRegex(ContractError, "approved configuration source"):
             validate_backend_contract(value, self.architecture)
 
+    def test_target_config_source_requires_c6_candidate_probes(self) -> None:
+        for field in (
+            "matmul_gemv_config_probe_validated",
+            "sum_family_config_probe_validated",
+        ):
+            with self.subTest(field=field):
+                value = deepcopy(self.backend)
+                value["backends"]["target_config_toolchain"][field] = False
+                with self.assertRaisesRegex(
+                    ContractError,
+                    "approved configuration source",
+                ):
+                    validate_backend_contract(value, self.architecture)
+
     def test_current_network_evidence_metrics_fail_closed(self) -> None:
         value = deepcopy(self.architecture)
         value["candidate_evidence"]["w4_rtl28_network_physical_edges_v1"][

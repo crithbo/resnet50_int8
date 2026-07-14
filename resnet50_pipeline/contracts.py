@@ -602,6 +602,8 @@ def validate_backend_contract(
         "maxpool_encoder_probe_validated": True,
         "pool_family_encoder_probe_validated": True,
         "ga_quant_add_dequant_probe_validated": True,
+        "matmul_gemv_config_probe_validated": True,
+        "sum_family_config_probe_validated": True,
         "resnet50_operator_coverage_complete": False,
     }
     for field, expected in expected_config_toolchain.items():
@@ -613,12 +615,15 @@ def validate_backend_contract(
         "not_target_numerical_simulator",
         "not_hardware_execution",
         "resnet_operator_coverage_incomplete",
-        "pool_quant_add_dequant_probe_only",
+        "audited_static_template_families_only",
         "avgpool_requantization_absent",
         "uint8_maxpool_semantics_unresolved",
         "quant_rounding_target_execution_unconfirmed",
         "add_dequant_qlinearadd_requantization_absent",
         "execplan_qparam_binding_absent",
+        "matmul_int8_psum_requant_tail_absent",
+        "sum_cross_slice_and_completion_unproven",
+        "sum_metadata_conflict_unresolved",
         "does_not_approve_rtl_or_layout",
     }:
         raise ContractError("target configuration source limitations must remain fail-closed")
@@ -647,7 +652,7 @@ def validate_backend_contract(
         except json.JSONDecodeError as error:
             raise ContractError("target configuration authority audit is invalid JSON") from error
         if (
-            audit.get("schema_version") != "0.3"
+            audit.get("schema_version") != "0.4"
             or audit.get("status") != "configuration_source_verified"
             or audit.get("source", {}).get("repository") != OFFICIAL_CONFIG_REPOSITORY
             or audit.get("source", {}).get("commit") != OFFICIAL_CONFIG_COMMIT
@@ -753,6 +758,75 @@ def validate_backend_contract(
                 for template_name in (QUANT_TEMPLATE, ADD_DEQUANT_TEMPLATE)
                 for probe_name in ("determinism", "differential_sensitivity", "fail_closed")
             )
+            or audit.get("matmul_config_probe", {}).get("status")
+            != "candidate_preflight_only"
+            or audit.get("matmul_config_probe", {})
+            .get("inventory", {})
+            .get("candidate_count")
+            != 6
+            or audit.get("matmul_config_probe", {})
+            .get("inventory", {})
+            .get("named_int8_template_count")
+            != 0
+            or audit.get("matmul_config_probe", {})
+            .get("crosswalk", {})
+            .get("handler_binding", {})
+            .get("status")
+            != "partial_binding_only"
+            or audit.get("matmul_config_probe", {})
+            .get("crosswalk", {})
+            .get("resnet_qlinearmatmul_gap", {})
+            .get("complete_compatible_template_exists")
+            is not False
+            or audit.get("matmul_config_probe", {})
+            .get("encoder_probe", {})
+            .get("determinism", {})
+            .get("status")
+            != "passed"
+            or audit.get("matmul_config_probe", {})
+            .get("encoder_probe", {})
+            .get("differential_sensitivity", {})
+            .get("status")
+            != "passed"
+            or audit.get("matmul_config_probe", {})
+            .get("encoder_probe", {})
+            .get("fail_closed", {})
+            .get("status")
+            != "passed"
+            or audit.get("matmul_config_probe", {}).get("numerical_status")
+            != "not_validated"
+            or audit.get("matmul_config_probe", {}).get("no_gate_authority") is not True
+            or audit.get("sum_config_probe", {})
+            .get("authority", {})
+            .get("status")
+            != "candidate_preflight_only"
+            or audit.get("sum_config_probe", {}).get("scope", {}).get("template_count")
+            != 11
+            or audit.get("sum_config_probe", {})
+            .get("handler_gaps", {})
+            .get("fp16_remote_4slice_metadata_conflict")
+            is not True
+            or audit.get("sum_config_probe", {})
+            .get("handler_gaps", {})
+            .get("output_shape_not_used_by_any_sum_handler")
+            is not True
+            or len(audit.get("sum_config_probe", {}).get("encoder_probe", {})) != 11
+            or any(
+                record.get("status") != "encoding_deterministic"
+                or record.get("numerical_status") != "not_validated"
+                or record.get("no_gate_authority") is not True
+                for record in audit.get("sum_config_probe", {})
+                .get("encoder_probe", {})
+                .values()
+            )
+            or audit.get("sum_config_probe", {})
+            .get("authority", {})
+            .get("hardware_status")
+            != "not_validated"
+            or audit.get("sum_config_probe", {})
+            .get("authority", {})
+            .get("no_gate_authority")
+            is not True
         ):
             raise ContractError("target configuration authority audit semantics are invalid")
 

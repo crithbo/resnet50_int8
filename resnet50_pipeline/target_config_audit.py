@@ -1979,6 +1979,13 @@ def audit_ga_quant_add(
 
 
 def build_authority_report(source_root: Path) -> dict[str, Any]:
+    # Imported lazily because the isolated C6 sum audit reuses the common GA
+    # preflight helpers from this module.  Loading it only after this module is
+    # fully initialized avoids a module-import cycle while keeping the C6
+    # implementation independently testable.
+    from .matmul_config_audit import build_matmul_candidate_report
+    from .sum_config_audit import build_sum_config_audit
+
     resolved = source_root.resolve()
     git = subprocess.run(
         ["git", "-c", f"safe.directory={resolved}", "rev-parse", "HEAD"],
@@ -2032,8 +2039,16 @@ def build_authority_report(source_root: Path) -> dict[str, Any]:
         / "resnet50-v1-12-int8.onnx",
         model_sha256=model_graph["model_sha256"],
     )
+    matmul_config_probe = build_matmul_candidate_report(
+        source_root,
+        run_encoder=True,
+    )
+    sum_config_probe = build_sum_config_audit(
+        source_root,
+        run_encoder=True,
+    )
     return {
-        "schema_version": "0.3",
+        "schema_version": "0.4",
         "report_kind": "official_target_config_authority_audit",
         "status": "configuration_source_verified",
         "source": {
@@ -2066,6 +2081,11 @@ def build_authority_report(source_root: Path) -> dict[str, Any]:
                 "qlinear_global_average_pool_requantization",
                 "quant_rounding_target_execution",
                 "complete_qlinearadd_from_add_dequant_template",
+                "int8_qlinearmatmul_configuration",
+                "matmul_tail_qparams_psum_and_requant_lifecycle",
+                "sum_remote_cross_slice_transport",
+                "sum_hardware_completion_protocol",
+                "sum_execplan_metadata_consistency",
             ],
         },
         "inventory": inventory_templates(source_root),
@@ -2073,6 +2093,8 @@ def build_authority_report(source_root: Path) -> dict[str, Any]:
         "maxpool_probe": maxpool_probe,
         "pool_family_probe": pool_family_probe,
         "ga_quant_add_probe": ga_quant_add_probe,
+        "matmul_config_probe": matmul_config_probe,
+        "sum_config_probe": sum_config_probe,
         "encoder_safety_findings": [
             "The official Bit type masks values modulo field width; the project preflight must reject overflow before encoding.",
             "A fixed mapper seed alone is insufficient across fresh Python processes; PYTHONHASHSEED=0 is required.",

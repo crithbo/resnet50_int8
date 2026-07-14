@@ -14,7 +14,12 @@
       "uint8_maxpool_comparison_semantics",
       "qlinear_global_average_pool_requantization",
       "quant_rounding_target_execution",
-      "complete_qlinearadd_from_add_dequant_template"
+      "complete_qlinearadd_from_add_dequant_template",
+      "int8_qlinearmatmul_configuration",
+      "matmul_tail_qparams_psum_and_requant_lifecycle",
+      "sum_remote_cross_slice_transport",
+      "sum_hardware_completion_protocol",
+      "sum_execplan_metadata_consistency"
     ]
   },
   "encoder_safety_findings": [
@@ -1630,6 +1635,1684 @@
         ]
       }
     ]
+  },
+  "matmul_config_probe": {
+    "crosswalk": {
+      "handler_binding": {
+        "handler_count": 5,
+        "handlers": {
+          "decode_gemv_local": {
+            "declared_placeholder": true,
+            "exists": true,
+            "patched_field_count": 4,
+            "patched_fields": [
+              "iga_lc0.dram_loop_configs.end",
+              "iga_lc3.dram_loop_configs.end",
+              "rd_stream1.stream_engine.stream.dim_stride",
+              "rd_stream2.stream_engine.stream.dim_stride"
+            ],
+            "tail_remainder_guard": false,
+            "typed_qparams_consumed": false
+          },
+          "decode_gemv_ring": {
+            "declared_placeholder": true,
+            "exists": true,
+            "patched_field_count": 14,
+            "patched_fields": [
+              "buffer_manager_cluster0.buffer_config.buffer.buffer_nbr_cnt",
+              "buffer_manager_cluster1.buffer_config.buffer.buffer_nbr_cnt",
+              "buffer_manager_cluster2.buffer_config.buffer.buffer_nbr_cnt",
+              "buffer_manager_cluster3.buffer_config.buffer.buffer_nbr_cnt",
+              "buffer_manager_cluster4.buffer_config.buffer.buffer_nbr_cnt",
+              "buffer_manager_cluster5.buffer_config.buffer.buffer_nbr_cnt",
+              "iga_lc0.dram_loop_configs.end",
+              "iga_lc3.dram_loop_configs.end",
+              "iga_lc6.dram_loop_configs.end",
+              "rd_stream1.stream_engine.stream.dim_stride",
+              "rd_stream2.stream_engine.stream.dim_stride",
+              "se_nse0.n2n.dst_slice_sel",
+              "se_nse0.n2n.mem_loop",
+              "se_nse0.n2n.src_slice_sel"
+            ],
+            "tail_remainder_guard": false,
+            "typed_qparams_consumed": false
+          },
+          "prefill_gemm_local": {
+            "declared_placeholder": true,
+            "exists": true,
+            "patched_field_count": 17,
+            "patched_fields": [
+              "iga_col_lc0.buffer_loop_configs.COL_LC.end",
+              "iga_col_lc0.buffer_loop_configs.COL_LC.stride",
+              "iga_col_lc1.buffer_loop_configs.COL_LC.end",
+              "iga_col_lc1.buffer_loop_configs.COL_LC.stride",
+              "iga_col_lc3.buffer_loop_configs.COL_LC.end",
+              "iga_col_lc3.buffer_loop_configs.COL_LC.stride",
+              "iga_lc0.dram_loop_configs.end",
+              "iga_lc1.dram_loop_configs.end",
+              "iga_lc2.dram_loop_configs.end",
+              "iga_lc4.dram_loop_configs.end",
+              "iga_pe0.lc_pe_configs.inport1.constant",
+              "iga_pe1.lc_pe_configs.inport1.constant",
+              "iga_pe3.lc_pe_configs.inport1.constant",
+              "rd_stream0.stream_engine.stream.buf_spatial_stride",
+              "rd_stream1.stream_engine.stream.buf_spatial_stride",
+              "rd_stream2.stream_engine.stream.base_addr",
+              "rd_stream2.stream_engine.stream.buf_spatial_stride"
+            ],
+            "tail_remainder_guard": false,
+            "typed_qparams_consumed": false
+          },
+          "prefill_gemm_local_qkt": {
+            "declared_placeholder": true,
+            "exists": true,
+            "patched_field_count": 17,
+            "patched_fields": [
+              "iga_col_lc0.buffer_loop_configs.COL_LC.end",
+              "iga_col_lc0.buffer_loop_configs.COL_LC.stride",
+              "iga_col_lc1.buffer_loop_configs.COL_LC.end",
+              "iga_col_lc1.buffer_loop_configs.COL_LC.stride",
+              "iga_col_lc3.buffer_loop_configs.COL_LC.end",
+              "iga_col_lc3.buffer_loop_configs.COL_LC.stride",
+              "iga_lc0.dram_loop_configs.end",
+              "iga_lc1.dram_loop_configs.end",
+              "iga_lc2.dram_loop_configs.end",
+              "iga_lc4.dram_loop_configs.end",
+              "iga_pe0.lc_pe_configs.inport1.constant",
+              "iga_pe1.lc_pe_configs.inport1.constant",
+              "iga_pe3.lc_pe_configs.inport1.constant",
+              "rd_stream0.stream_engine.stream.buf_spatial_stride",
+              "rd_stream1.stream_engine.stream.buf_spatial_stride",
+              "rd_stream2.stream_engine.stream.base_addr",
+              "rd_stream2.stream_engine.stream.buf_spatial_stride"
+            ],
+            "tail_remainder_guard": false,
+            "typed_qparams_consumed": false
+          },
+          "prefill_gemm_ring_4slice": {
+            "declared_placeholder": true,
+            "exists": true,
+            "patched_field_count": 27,
+            "patched_fields": [
+              "buffer_manager_cluster0.buffer_config.buffer.buffer_nbr_cnt",
+              "buffer_manager_cluster1.buffer_config.buffer.buffer_nbr_cnt",
+              "buffer_manager_cluster2.buffer_config.buffer.buffer_nbr_cnt",
+              "buffer_manager_cluster3.buffer_config.buffer.buffer_nbr_cnt",
+              "buffer_manager_cluster4.buffer_config.buffer.buffer_nbr_cnt",
+              "buffer_manager_cluster5.buffer_config.buffer.buffer_nbr_cnt",
+              "iga_col_lc0.buffer_loop_configs.COL_LC.end",
+              "iga_col_lc0.buffer_loop_configs.COL_LC.stride",
+              "iga_col_lc1.buffer_loop_configs.COL_LC.end",
+              "iga_col_lc1.buffer_loop_configs.COL_LC.stride",
+              "iga_col_lc3.buffer_loop_configs.COL_LC.end",
+              "iga_col_lc3.buffer_loop_configs.COL_LC.stride",
+              "iga_lc0.dram_loop_configs.end",
+              "iga_lc1.dram_loop_configs.end",
+              "iga_lc2.dram_loop_configs.end",
+              "iga_lc4.dram_loop_configs.end",
+              "iga_pe0.lc_pe_configs.inport1.constant",
+              "iga_pe1.lc_pe_configs.inport1.constant",
+              "iga_pe3.lc_pe_configs.inport1.constant",
+              "rd_stream0.stream_engine.stream.buf_spatial_stride",
+              "rd_stream1.stream_engine.stream.buf_spatial_stride",
+              "rd_stream2.stream_engine.stream.base_addr",
+              "rd_stream2.stream_engine.stream.buf_spatial_stride",
+              "se_nse0.n2n.dst_slice_sel",
+              "se_nse0.n2n.mem_loop",
+              "se_nse0.n2n.src_slice_sel",
+              "special_array0.special_array.outport.mode"
+            ],
+            "tail_remainder_guard": false,
+            "typed_qparams_consumed": false
+          }
+        },
+        "interpretation": "handler existence does not prove complete shape, dtype, tail, qparam, or numerical rules",
+        "operator_base_info_registered_types": [
+          "prefill_gemm_local",
+          "prefill_gemm_ring_4slice"
+        ],
+        "operator_spec_fields": [
+          "op_id",
+          "op_type",
+          "used_slices",
+          "inputs",
+          "output"
+        ],
+        "operator_spec_has_typed_qparams": false,
+        "source": "model_execplan/src/execution_plan_generator/control_registers.py",
+        "source_sha256": "8be7f21d8058ba3eaf45e55256c9237325c55f45d43c9e7b1ba8c3a54f7456d1",
+        "status": "partial_binding_only",
+        "templates_without_registered_operator_type": [
+          "decode_gemv_local.json",
+          "decode_gemv_ring.json",
+          "gemv_config_local_M1N128K32.json",
+          "prefill_gemm_local_qkt.json"
+        ]
+      },
+      "no_gate_authority": true,
+      "numerical_status": "not_validated",
+      "resnet_qlinearmatmul_gap": {
+        "bias": {
+          "fusion_supported": false,
+          "qlinearmatmul_has_bias_input": false,
+          "resnet_dense_bias_location": "following QLinearAdd",
+          "static_sa_bias_enable": 0
+        },
+        "complete_compatible_template_exists": false,
+        "local_gemm_floor_projection": {
+          "K_div_2": 1024,
+          "K_div_4": 512,
+          "M_div_32": 0,
+          "M_remainder_32": 16,
+          "N_div_32": 31,
+          "N_remainder_32": 8
+        },
+        "missing": [
+          "validated INT8 SA template and INT32 accumulator contract",
+          "M=16 and N=1000 tail rules; current floor divisions would omit work",
+          "input zero-point correction for both operands",
+          "typed a/b/y qparams scale and zero-point binding",
+          "external or persistent INT32 psum first/middle/last-K lifecycle",
+          "INT32-to-UINT8 nearest-even requantization and saturation",
+          "numerically validated SA-to-GA requant boundary"
+        ],
+        "onnx_input_contract": [
+          "A",
+          "a_scale",
+          "a_zero_point",
+          "B",
+          "b_scale",
+          "b_zero_point",
+          "y_scale",
+          "y_zero_point"
+        ],
+        "required_dtype_path": [
+          "uint8_A",
+          "uint8_B",
+          "int32_accumulator",
+          "uint8_D"
+        ],
+        "resnet_shape_MNK": [
+          16,
+          1000,
+          2048
+        ],
+        "ring_observation": "N2N moves an SA operand in the static ring candidates; no explicit cross-slice INT32 psum stream is proven",
+        "static_candidate_dtype_path": [
+          "fp16_A",
+          "fp16_B",
+          "unproven_SA_accumulator",
+          "fp16_or_fp32_D"
+        ]
+      },
+      "rule_scope": "six_locked_static_SA_templates",
+      "status": "candidate_preflight_passed",
+      "templates": {
+        "decode_gemv_local.json": {
+          "observed_chain": {
+            "buffer": {
+              "buffer0": {
+                "buf_full_last_index": 5,
+                "buffer_life_time": 1,
+                "dst_port": 0,
+                "mask": [
+                  1,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                "nbr_enable": 0
+              },
+              "buffer1": {
+                "buf_full_last_index": 5,
+                "buffer_life_time": 1,
+                "dst_port": 0,
+                "mask": [
+                  1,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                "nbr_enable": 0
+              },
+              "buffer2": {
+                "buf_full_last_index": 5,
+                "buffer_life_time": 1,
+                "dst_port": 0,
+                "mask": [
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1
+                ],
+                "nbr_enable": 0
+              },
+              "buffer3": {
+                "buf_full_last_index": 5,
+                "buffer_life_time": 1,
+                "dst_port": 0,
+                "mask": [
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1
+                ],
+                "nbr_enable": 0
+              },
+              "buffer4": {
+                "buf_full_last_index": 5,
+                "buffer_life_time": 1,
+                "dst_port": 0,
+                "mask": [
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1
+                ],
+                "nbr_enable": 0
+              },
+              "buffer5": {
+                "buf_full_last_index": 1,
+                "buffer_life_time": 1,
+                "dst_port": 1,
+                "mask": [
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1
+                ],
+                "nbr_enable": 0
+              }
+            },
+            "ga_boundary": "SA_fp32_to_buffer5_to_GA_sum_to_fp16_D",
+            "lc_end": {
+              "LC0": 2,
+              "LC1": 2,
+              "LC2": 1,
+              "LC3": 1,
+              "LC4": 2,
+              "LC5": 4,
+              "LC6": 16
+            },
+            "sa": {
+              "bias_enable": 0,
+              "data_type": "fp16",
+              "inport2_enable": 0,
+              "mode": "gemv",
+              "outport": {
+                "fp32tobf16": "false",
+                "fp32tofp16": "false",
+                "mode": "row"
+              }
+            },
+            "shape_metadata": {
+              "K": 32,
+              "M": 1,
+              "N": 32
+            },
+            "stream": {
+              "stream0": {
+                "buf_spatial_size": 4,
+                "dim_stride": [
+                  4,
+                  null,
+                  null
+                ],
+                "idx_size": [
+                  3,
+                  null,
+                  null
+                ],
+                "mode": "read",
+                "target": "A"
+              },
+              "stream1": {
+                "buf_spatial_size": 16,
+                "dim_stride": [
+                  256,
+                  32,
+                  null
+                ],
+                "idx_size": [
+                  7,
+                  3,
+                  null
+                ],
+                "mode": "read",
+                "target": "B"
+              },
+              "stream2": {
+                "buf_spatial_size": 16,
+                "dim_stride": [
+                  256,
+                  32,
+                  null
+                ],
+                "idx_size": [
+                  7,
+                  3,
+                  null
+                ],
+                "mode": "read",
+                "target": "B'"
+              },
+              "stream3": {
+                "buf_spatial_size": 16,
+                "dim_stride": [
+                  16,
+                  null,
+                  null
+                ],
+                "idx_size": [
+                  15,
+                  null,
+                  null
+                ],
+                "mode": "write",
+                "target": "D"
+              }
+            }
+          },
+          "preflight": {
+            "identity": "locked_static_candidate",
+            "no_gate_authority": true,
+            "numerical_status": "not_validated",
+            "resources": {
+              "buffer_groups": 4,
+              "buffers": 6,
+              "dram_loops": 7,
+              "ga_bridge": true,
+              "lc_pes": 5,
+              "n2n_ring_slices": null,
+              "streams": 4
+            },
+            "sa": {
+              "accumulator_dtype": "not_proven_by_json",
+              "bias_enable": false,
+              "external_psum_input": false,
+              "input_dtype": "fp16",
+              "mode": "gemv",
+              "output_dtype": "fp16",
+              "requant_to_uint8": false
+            },
+            "scope": "structure_ranges_locked_instance_crosswalk_only",
+            "shape": {
+              "K": 32,
+              "M": 1,
+              "N": 32
+            },
+            "shape_metadata_is_encoder_control": false,
+            "status": "passed",
+            "template": "decode_gemv_local.json"
+          },
+          "sha256": "87fc60851d463ca555b796adb8d49fd445a43a0a8cb4d302fd6cb5b414cd808e"
+        },
+        "decode_gemv_ring.json": {
+          "observed_chain": {
+            "buffer": {
+              "buffer0": {
+                "buf_full_last_index": 4,
+                "buffer_life_time": 1,
+                "dst_port": 0,
+                "mask": [
+                  1,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                "nbr_enable": 1
+              },
+              "buffer1": {
+                "buf_full_last_index": 4,
+                "buffer_life_time": 1,
+                "dst_port": 0,
+                "mask": [
+                  1,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                "nbr_enable": 1
+              },
+              "buffer2": {
+                "buf_full_last_index": 5,
+                "buffer_life_time": 1,
+                "dst_port": 0,
+                "mask": [
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1
+                ],
+                "nbr_enable": 0
+              },
+              "buffer3": {
+                "buf_full_last_index": 5,
+                "buffer_life_time": 1,
+                "dst_port": 0,
+                "mask": [
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1
+                ],
+                "nbr_enable": 0
+              },
+              "buffer4": {
+                "buf_full_last_index": 5,
+                "buffer_life_time": 1,
+                "dst_port": 0,
+                "mask": [
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1
+                ],
+                "nbr_enable": 0
+              },
+              "buffer5": {
+                "buf_full_last_index": 1,
+                "buffer_life_time": 1,
+                "dst_port": 1,
+                "mask": [
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1
+                ],
+                "nbr_enable": 0
+              }
+            },
+            "ga_boundary": "SA_fp32_to_buffer5_to_GA_sum_to_fp16_D",
+            "lc_end": {
+              "LC0": 2,
+              "LC1": 2,
+              "LC2": 1,
+              "LC3": 1,
+              "LC4": 2,
+              "LC5": 4,
+              "LC6": 1,
+              "LC7": 4
+            },
+            "sa": {
+              "bias_enable": 0,
+              "data_type": "fp16",
+              "inport2_enable": 0,
+              "mode": "gemv",
+              "outport": {
+                "fp32tobf16": "false",
+                "fp32tofp16": "false",
+                "mode": "row"
+              }
+            },
+            "shape_metadata": {
+              "K": 224,
+              "M": 1,
+              "N": 32
+            },
+            "stream": {
+              "stream0": {
+                "buf_spatial_size": 4,
+                "dim_stride": [
+                  4,
+                  null,
+                  null
+                ],
+                "idx_size": [
+                  3,
+                  null,
+                  null
+                ],
+                "mode": "read",
+                "target": "A"
+              },
+              "stream1": {
+                "buf_spatial_size": 16,
+                "dim_stride": [
+                  256,
+                  32,
+                  null
+                ],
+                "idx_size": [
+                  7,
+                  3,
+                  null
+                ],
+                "mode": "read",
+                "target": "B"
+              },
+              "stream2": {
+                "buf_spatial_size": 16,
+                "dim_stride": [
+                  256,
+                  32,
+                  null
+                ],
+                "idx_size": [
+                  7,
+                  3,
+                  null
+                ],
+                "mode": "read",
+                "target": "B'"
+              },
+              "stream3": {
+                "buf_spatial_size": 16,
+                "dim_stride": [
+                  16,
+                  null,
+                  null
+                ],
+                "idx_size": [
+                  15,
+                  null,
+                  null
+                ],
+                "mode": "write",
+                "target": "D"
+              }
+            }
+          },
+          "preflight": {
+            "identity": "locked_static_candidate",
+            "no_gate_authority": true,
+            "numerical_status": "not_validated",
+            "resources": {
+              "buffer_groups": 4,
+              "buffers": 6,
+              "dram_loops": 8,
+              "ga_bridge": true,
+              "lc_pes": 5,
+              "n2n_ring_slices": 28,
+              "streams": 4
+            },
+            "sa": {
+              "accumulator_dtype": "not_proven_by_json",
+              "bias_enable": false,
+              "external_psum_input": false,
+              "input_dtype": "fp16",
+              "mode": "gemv",
+              "output_dtype": "fp16",
+              "requant_to_uint8": false
+            },
+            "scope": "structure_ranges_locked_instance_crosswalk_only",
+            "shape": {
+              "K": 224,
+              "M": 1,
+              "N": 32
+            },
+            "shape_metadata_is_encoder_control": false,
+            "status": "passed",
+            "template": "decode_gemv_ring.json"
+          },
+          "sha256": "1c5e2909dc486f1e4c712c0577bdeb69bee65f3269111bdd64f4a071cc574c1f"
+        },
+        "gemv_config_local_M1N128K32.json": {
+          "observed_chain": {
+            "buffer": {
+              "buffer0": {
+                "buf_full_last_index": 3,
+                "buffer_life_time": 16,
+                "dst_port": 0,
+                "mask": [
+                  1,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                "nbr_enable": 0
+              },
+              "buffer1": {
+                "buf_full_last_index": 3,
+                "buffer_life_time": 16,
+                "dst_port": 0,
+                "mask": [
+                  1,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                "nbr_enable": 0
+              },
+              "buffer2": {
+                "buf_full_last_index": 3,
+                "buffer_life_time": 1,
+                "dst_port": 0,
+                "mask": [
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1
+                ],
+                "nbr_enable": 0
+              },
+              "buffer3": {
+                "buf_full_last_index": 3,
+                "buffer_life_time": 1,
+                "dst_port": 0,
+                "mask": [
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1
+                ],
+                "nbr_enable": 0
+              },
+              "buffer4": {
+                "buf_full_last_index": 2,
+                "buffer_life_time": 1,
+                "dst_port": 0,
+                "mask": [
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1
+                ],
+                "nbr_enable": 0
+              },
+              "buffer5": {
+                "buf_full_last_index": 2,
+                "buffer_life_time": 1,
+                "dst_port": 0,
+                "mask": [
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1
+                ],
+                "nbr_enable": 0
+              }
+            },
+            "ga_boundary": "direct_SA_to_D",
+            "lc_end": {
+              "LC0": 1,
+              "LC1": 16,
+              "LC2": 1,
+              "LC3": 2,
+              "LC4": 4,
+              "LC5": 2
+            },
+            "sa": {
+              "bias_enable": 0,
+              "data_type": "fp16",
+              "inport2_enable": 0,
+              "mode": "gemv",
+              "outport": {
+                "fp32tobf16": "false",
+                "fp32tofp16": "true",
+                "mode": "row"
+              }
+            },
+            "shape_metadata": {
+              "K": 32,
+              "M": 1,
+              "N": 128
+            },
+            "stream": {
+              "stream0": {
+                "buf_spatial_size": 4,
+                "dim_stride": [
+                  4,
+                  null,
+                  null
+                ],
+                "idx_size": [
+                  3,
+                  null,
+                  null
+                ],
+                "mode": "read",
+                "target": "A"
+              },
+              "stream1": {
+                "buf_spatial_size": 16,
+                "dim_stride": [
+                  256,
+                  32,
+                  null
+                ],
+                "idx_size": [
+                  3,
+                  7,
+                  null
+                ],
+                "mode": "read",
+                "target": "B"
+              },
+              "stream2": {
+                "buf_spatial_size": 16,
+                "dim_stride": [
+                  256,
+                  32,
+                  null
+                ],
+                "idx_size": [
+                  3,
+                  7,
+                  null
+                ],
+                "mode": "read",
+                "target": "B'"
+              },
+              "stream3": {
+                "buf_spatial_size": 16,
+                "dim_stride": [
+                  128,
+                  null,
+                  null
+                ],
+                "idx_size": [
+                  127,
+                  null,
+                  null
+                ],
+                "mode": "write",
+                "target": "D"
+              }
+            }
+          },
+          "preflight": {
+            "identity": "locked_static_candidate",
+            "no_gate_authority": true,
+            "numerical_status": "not_validated",
+            "resources": {
+              "buffer_groups": 4,
+              "buffers": 6,
+              "dram_loops": 6,
+              "ga_bridge": false,
+              "lc_pes": 2,
+              "n2n_ring_slices": null,
+              "streams": 4
+            },
+            "sa": {
+              "accumulator_dtype": "not_proven_by_json",
+              "bias_enable": false,
+              "external_psum_input": false,
+              "input_dtype": "fp16",
+              "mode": "gemv",
+              "output_dtype": "fp16",
+              "requant_to_uint8": false
+            },
+            "scope": "structure_ranges_locked_instance_crosswalk_only",
+            "shape": {
+              "K": 32,
+              "M": 1,
+              "N": 128
+            },
+            "shape_metadata_is_encoder_control": false,
+            "status": "passed",
+            "template": "gemv_config_local_M1N128K32.json"
+          },
+          "sha256": "f5dc25654b28dbabff87df6b2efad3793b869c807bf75b30f5442614f8084ee3"
+        },
+        "prefill_gemm_local.json": {
+          "observed_chain": {
+            "buffer": {
+              "buffer0": {
+                "buf_full_last_index": 3,
+                "buffer_life_time": 4,
+                "dst_port": 0,
+                "mask": [
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1
+                ],
+                "nbr_enable": 0
+              },
+              "buffer1": {
+                "buf_full_last_index": 3,
+                "buffer_life_time": 4,
+                "dst_port": 0,
+                "mask": [
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1
+                ],
+                "nbr_enable": 0
+              },
+              "buffer2": {
+                "buf_full_last_index": 3,
+                "buffer_life_time": 4,
+                "dst_port": 0,
+                "mask": [
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1
+                ],
+                "nbr_enable": 0
+              },
+              "buffer3": {
+                "buf_full_last_index": 3,
+                "buffer_life_time": 4,
+                "dst_port": 0,
+                "mask": [
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1
+                ],
+                "nbr_enable": 0
+              },
+              "buffer4": {
+                "buf_full_last_index": 3,
+                "buffer_life_time": 1,
+                "dst_port": 0,
+                "mask": [
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1
+                ],
+                "nbr_enable": 0
+              },
+              "buffer5": {
+                "buf_full_last_index": 4,
+                "buffer_life_time": 1,
+                "dst_port": 0,
+                "mask": [
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1
+                ],
+                "nbr_enable": 0
+              }
+            },
+            "ga_boundary": "direct_SA_to_D",
+            "lc_end": {
+              "LC0": 2,
+              "LC1": 2,
+              "LC2": 16,
+              "LC3": 4,
+              "LC4": 8,
+              "LC5": 4,
+              "LC6": 4,
+              "LC7": 4
+            },
+            "sa": {
+              "bias_enable": 0,
+              "data_type": "fp16",
+              "inport2_enable": 0,
+              "mode": "gemm",
+              "outport": {
+                "fp32tobf16": "false",
+                "fp32tofp16": "true",
+                "mode": "col"
+              }
+            },
+            "shape_metadata": {
+              "K": 32,
+              "M": 64,
+              "N": 64
+            },
+            "stream": {
+              "stream0": {
+                "buf_spatial_size": 16,
+                "dim_stride": [
+                  32,
+                  128,
+                  null
+                ],
+                "idx_size": [
+                  7,
+                  3,
+                  null
+                ],
+                "mode": "read",
+                "target": "A"
+              },
+              "stream1": {
+                "buf_spatial_size": 16,
+                "dim_stride": [
+                  32,
+                  256,
+                  null
+                ],
+                "idx_size": [
+                  7,
+                  3,
+                  null
+                ],
+                "mode": "read",
+                "target": "B"
+              },
+              "stream2": {
+                "buf_spatial_size": 16,
+                "dim_stride": [
+                  128,
+                  512,
+                  null
+                ],
+                "idx_size": [
+                  15,
+                  7,
+                  null
+                ],
+                "mode": "write",
+                "target": "D"
+              },
+              "stream3": {
+                "buf_spatial_size": 16,
+                "dim_stride": [
+                  32,
+                  256,
+                  null
+                ],
+                "idx_size": [
+                  7,
+                  3,
+                  null
+                ],
+                "mode": "read",
+                "target": "B'"
+              }
+            }
+          },
+          "preflight": {
+            "identity": "locked_static_candidate",
+            "no_gate_authority": true,
+            "numerical_status": "not_validated",
+            "resources": {
+              "buffer_groups": 4,
+              "buffers": 6,
+              "dram_loops": 8,
+              "ga_bridge": false,
+              "lc_pes": 6,
+              "n2n_ring_slices": null,
+              "streams": 4
+            },
+            "sa": {
+              "accumulator_dtype": "not_proven_by_json",
+              "bias_enable": false,
+              "external_psum_input": false,
+              "input_dtype": "fp16",
+              "mode": "gemm",
+              "output_dtype": "fp16",
+              "requant_to_uint8": false
+            },
+            "scope": "structure_ranges_locked_instance_crosswalk_only",
+            "shape": {
+              "K": 32,
+              "M": 64,
+              "N": 64
+            },
+            "shape_metadata_is_encoder_control": false,
+            "status": "passed",
+            "template": "prefill_gemm_local.json"
+          },
+          "sha256": "9d0f72bc1a32f5b3fb2fff44c7fe4585adfb00d393ccf38bffb9f2e239f2761e"
+        },
+        "prefill_gemm_local_qkt.json": {
+          "observed_chain": {
+            "buffer": {
+              "buffer0": {
+                "buf_full_last_index": 3,
+                "buffer_life_time": 4,
+                "dst_port": 0,
+                "mask": [
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1
+                ],
+                "nbr_enable": 0
+              },
+              "buffer1": {
+                "buf_full_last_index": 3,
+                "buffer_life_time": 4,
+                "dst_port": 0,
+                "mask": [
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1
+                ],
+                "nbr_enable": 0
+              },
+              "buffer2": {
+                "buf_full_last_index": 3,
+                "buffer_life_time": 4,
+                "dst_port": 0,
+                "mask": [
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1
+                ],
+                "nbr_enable": 0
+              },
+              "buffer3": {
+                "buf_full_last_index": 3,
+                "buffer_life_time": 4,
+                "dst_port": 0,
+                "mask": [
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1
+                ],
+                "nbr_enable": 0
+              },
+              "buffer4": {
+                "buf_full_last_index": 3,
+                "buffer_life_time": 1,
+                "dst_port": 0,
+                "mask": [
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1
+                ],
+                "nbr_enable": 0
+              },
+              "buffer5": {
+                "buf_full_last_index": 4,
+                "buffer_life_time": 1,
+                "dst_port": 0,
+                "mask": [
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1
+                ],
+                "nbr_enable": 0
+              }
+            },
+            "ga_boundary": "direct_SA_to_D",
+            "lc_end": {
+              "LC0": 1,
+              "LC1": 1,
+              "LC2": 16,
+              "LC3": 4,
+              "LC4": 8,
+              "LC5": 4,
+              "LC6": 8,
+              "LC7": 4
+            },
+            "sa": {
+              "bias_enable": 0,
+              "data_type": "fp16",
+              "inport2_enable": 0,
+              "mode": "gemm",
+              "outport": {
+                "fp32tobf16": "false",
+                "fp32tofp16": "false",
+                "mode": "col"
+              }
+            },
+            "shape_metadata": {
+              "K": 32,
+              "M": 32,
+              "N": 32
+            },
+            "stream": {
+              "stream0": {
+                "buf_spatial_size": 16,
+                "dim_stride": [
+                  32,
+                  128,
+                  null
+                ],
+                "idx_size": [
+                  7,
+                  3,
+                  null
+                ],
+                "mode": "read",
+                "target": "A"
+              },
+              "stream1": {
+                "buf_spatial_size": 16,
+                "dim_stride": [
+                  32,
+                  256,
+                  null
+                ],
+                "idx_size": [
+                  7,
+                  3,
+                  null
+                ],
+                "mode": "read",
+                "target": "B"
+              },
+              "stream2": {
+                "buf_spatial_size": 16,
+                "dim_stride": [
+                  128,
+                  512,
+                  null
+                ],
+                "idx_size": [
+                  31,
+                  3,
+                  null
+                ],
+                "mode": "write",
+                "target": "D"
+              },
+              "stream3": {
+                "buf_spatial_size": 16,
+                "dim_stride": [
+                  32,
+                  256,
+                  null
+                ],
+                "idx_size": [
+                  7,
+                  3,
+                  null
+                ],
+                "mode": "read",
+                "target": "B'"
+              }
+            }
+          },
+          "preflight": {
+            "identity": "locked_static_candidate",
+            "no_gate_authority": true,
+            "numerical_status": "not_validated",
+            "resources": {
+              "buffer_groups": 4,
+              "buffers": 6,
+              "dram_loops": 8,
+              "ga_bridge": false,
+              "lc_pes": 6,
+              "n2n_ring_slices": null,
+              "streams": 4
+            },
+            "sa": {
+              "accumulator_dtype": "not_proven_by_json",
+              "bias_enable": false,
+              "external_psum_input": false,
+              "input_dtype": "fp16",
+              "mode": "gemm",
+              "output_dtype": "fp32",
+              "requant_to_uint8": false
+            },
+            "scope": "structure_ranges_locked_instance_crosswalk_only",
+            "shape": {
+              "K": 32,
+              "M": 32,
+              "N": 32
+            },
+            "shape_metadata_is_encoder_control": false,
+            "status": "passed",
+            "template": "prefill_gemm_local_qkt.json"
+          },
+          "sha256": "e2b4f2e8e119fa29b3a4202b4476f838fd071e106322809745169ee70cef4de6"
+        },
+        "prefill_gemm_ring_4slice.json": {
+          "observed_chain": {
+            "buffer": {
+              "buffer0": {
+                "buf_full_last_index": 3,
+                "buffer_life_time": 4,
+                "dst_port": 0,
+                "mask": [
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1
+                ],
+                "nbr_enable": 1
+              },
+              "buffer1": {
+                "buf_full_last_index": 3,
+                "buffer_life_time": 4,
+                "dst_port": 0,
+                "mask": [
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1
+                ],
+                "nbr_enable": 1
+              },
+              "buffer2": {
+                "buf_full_last_index": 3,
+                "buffer_life_time": 4,
+                "dst_port": 0,
+                "mask": [
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1
+                ],
+                "nbr_enable": 0
+              },
+              "buffer3": {
+                "buf_full_last_index": 3,
+                "buffer_life_time": 4,
+                "dst_port": 0,
+                "mask": [
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1
+                ],
+                "nbr_enable": 0
+              },
+              "buffer4": {
+                "buf_full_last_index": 3,
+                "buffer_life_time": 1,
+                "dst_port": 0,
+                "mask": [
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1
+                ],
+                "nbr_enable": 0
+              },
+              "buffer5": {
+                "buf_full_last_index": 4,
+                "buffer_life_time": 1,
+                "dst_port": 0,
+                "mask": [
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1
+                ],
+                "nbr_enable": 0
+              }
+            },
+            "ga_boundary": "direct_SA_to_D",
+            "lc_end": {
+              "LC0": 2,
+              "LC1": 1,
+              "LC2": 2,
+              "LC3": 4,
+              "LC4": 4,
+              "LC5": 4,
+              "LC6": 4,
+              "LC7": 4
+            },
+            "sa": {
+              "bias_enable": 0,
+              "data_type": "fp16",
+              "inport2_enable": 0,
+              "mode": "gemm",
+              "outport": {
+                "fp32tobf16": "false",
+                "fp32tofp16": "true",
+                "mode": "col"
+              }
+            },
+            "shape_metadata": {
+              "K": 16,
+              "M": 64,
+              "N": 32
+            },
+            "stream": {
+              "stream0": {
+                "buf_spatial_size": 16,
+                "dim_stride": [
+                  32,
+                  128,
+                  null
+                ],
+                "idx_size": [
+                  7,
+                  3,
+                  null
+                ],
+                "mode": "read",
+                "target": "A"
+              },
+              "stream1": {
+                "buf_spatial_size": 16,
+                "dim_stride": [
+                  32,
+                  256,
+                  null
+                ],
+                "idx_size": [
+                  7,
+                  3,
+                  null
+                ],
+                "mode": "read",
+                "target": "B"
+              },
+              "stream2": {
+                "buf_spatial_size": 16,
+                "dim_stride": [
+                  128,
+                  512,
+                  null
+                ],
+                "idx_size": [
+                  15,
+                  7,
+                  null
+                ],
+                "mode": "write",
+                "target": "D"
+              },
+              "stream3": {
+                "buf_spatial_size": 16,
+                "dim_stride": [
+                  32,
+                  256,
+                  null
+                ],
+                "idx_size": [
+                  7,
+                  3,
+                  null
+                ],
+                "mode": "read",
+                "target": "B'"
+              }
+            }
+          },
+          "preflight": {
+            "identity": "locked_static_candidate",
+            "no_gate_authority": true,
+            "numerical_status": "not_validated",
+            "resources": {
+              "buffer_groups": 4,
+              "buffers": 6,
+              "dram_loops": 8,
+              "ga_bridge": false,
+              "lc_pes": 6,
+              "n2n_ring_slices": 4,
+              "streams": 4
+            },
+            "sa": {
+              "accumulator_dtype": "not_proven_by_json",
+              "bias_enable": false,
+              "external_psum_input": false,
+              "input_dtype": "fp16",
+              "mode": "gemm",
+              "output_dtype": "fp16",
+              "requant_to_uint8": false
+            },
+            "scope": "structure_ranges_locked_instance_crosswalk_only",
+            "shape": {
+              "K": 16,
+              "M": 64,
+              "N": 32
+            },
+            "shape_metadata_is_encoder_control": false,
+            "status": "passed",
+            "template": "prefill_gemm_ring_4slice.json"
+          },
+          "sha256": "6a2ca9f2edd2e9c7b8ebbb558a84dd23c8e583781f8a8ac01c213b78c6737e91"
+        }
+      }
+    },
+    "encoder_probe": {
+      "determinism": {
+        "environment": {
+          "PYTHONHASHSEED": "0",
+          "PYTHONUTF8": "1"
+        },
+        "outputs": {
+          "detailed_dump.txt": {
+            "sha256": "a040ab259a319a0125dbc263e8eb1e7c8dd5f968e00649678f5a014fa42faf67",
+            "size_bytes": 27987
+          },
+          "gemv_config_local_M1N128K32_bitstream_128b.bin": {
+            "sha256": "09be719fa52438032322aa60f4c7f598b0ce06153eeb02923489c3cbf0587ec7",
+            "size_bytes": 3380
+          },
+          "gemv_config_local_M1N128K32_bitstream_64b.bin": {
+            "sha256": "2d35829b607dc1a812f8da67c7407498506bdafd0112c1332a14099eb5afbc4e",
+            "size_bytes": 3366
+          },
+          "mapping_review.json": {
+            "sha256": "e5c5fc292ecc4e03ad57303fa3efab61d6769e003bf950e5fe07edad833ee2b3",
+            "size_bytes": 5334
+          },
+          "modules_dump_128b.bin": {
+            "sha256": "09be719fa52438032322aa60f4c7f598b0ce06153eeb02923489c3cbf0587ec7",
+            "size_bytes": 3380
+          },
+          "modules_dump_64b.bin": {
+            "sha256": "2d35829b607dc1a812f8da67c7407498506bdafd0112c1332a14099eb5afbc4e",
+            "size_bytes": 3366
+          },
+          "parsed_bitstream.txt": {
+            "sha256": "6feb6880af5b5e0378577c5a61c7ef1c7fb693c09bf2ddca42c9f2351d41f018",
+            "size_bytes": 3668
+          }
+        },
+        "run_count": 2,
+        "seed": 42,
+        "status": "passed"
+      },
+      "differential_sensitivity": {
+        "baseline_128b_sha256": [
+          "09be719fa52438032322aa60f4c7f598b0ce06153eeb02923489c3cbf0587ec7"
+        ],
+        "field": "stream_engine.stream0.base_addr",
+        "modified": 16,
+        "modified_128b_sha256": [
+          "402c3ae9c46e6e88d656a397146f7a9f4154c5daa4e49a9a3d03338896a88bb0"
+        ],
+        "original": 0,
+        "status": "passed"
+      },
+      "fail_closed": {
+        "rejection": "dram_loop_configs.LC0.end must fit unsigned 17-bit range; refusing silent truncation",
+        "status": "passed"
+      },
+      "no_gate_authority": true,
+      "numerical_status": "not_validated",
+      "preflight": {
+        "identity": "locked_static_candidate",
+        "no_gate_authority": true,
+        "numerical_status": "not_validated",
+        "resources": {
+          "buffer_groups": 4,
+          "buffers": 6,
+          "dram_loops": 6,
+          "ga_bridge": false,
+          "lc_pes": 2,
+          "n2n_ring_slices": null,
+          "streams": 4
+        },
+        "sa": {
+          "accumulator_dtype": "not_proven_by_json",
+          "bias_enable": false,
+          "external_psum_input": false,
+          "input_dtype": "fp16",
+          "mode": "gemv",
+          "output_dtype": "fp16",
+          "requant_to_uint8": false
+        },
+        "scope": "structure_ranges_locked_instance_crosswalk_only",
+        "shape": {
+          "K": 32,
+          "M": 1,
+          "N": 128
+        },
+        "shape_metadata_is_encoder_control": false,
+        "status": "passed",
+        "template": "gemv_config_local_M1N128K32.json"
+      },
+      "status": "candidate_encoder_preflight_passed",
+      "template": "gemv_config_local_M1N128K32.json"
+    },
+    "g4_authorized": false,
+    "inventory": {
+      "all_static_bias_enable": 0,
+      "all_static_data_type": "fp16",
+      "candidate_count": 6,
+      "gemm_count": 3,
+      "gemv_count": 3,
+      "named_int8_template_count": 0,
+      "status": "passed",
+      "templates": [
+        "decode_gemv_local.json",
+        "decode_gemv_ring.json",
+        "gemv_config_local_M1N128K32.json",
+        "prefill_gemm_local.json",
+        "prefill_gemm_local_qkt.json",
+        "prefill_gemm_ring_4slice.json"
+      ]
+    },
+    "no_gate_authority": true,
+    "numerical_status": "not_validated",
+    "report_kind": "w4_28_c6_matmul_candidate_audit",
+    "schema_version": "0.1",
+    "source": {
+      "commit": "e299b2804448242d1589b3e58ed7c5a9a5eca09f",
+      "repository": "ndp-sim-ref"
+    },
+    "status": "candidate_preflight_only",
+    "target_simulator_validated": false,
+    "w5_instance_generated": false
   },
   "maxpool_probe": {
     "determinism": {
@@ -3825,7 +5508,7 @@
     "size_bytes": 14788
   },
   "report_kind": "official_target_config_authority_audit",
-  "schema_version": "0.3",
+  "schema_version": "0.4",
   "source": {
     "authoritative_paths": [
       "jsons",
@@ -3898,5 +5581,1654 @@
     "repository": "https://github.com/uSFrances/ndp-sim.git",
     "slice_count": 28
   },
-  "status": "configuration_source_verified"
+  "status": "configuration_source_verified",
+  "sum_config_probe": {
+    "audit_id": "w4-28-c6-sum-config-candidate",
+    "authority": {
+      "hardware_status": "not_validated",
+      "no_gate_authority": true,
+      "numerical_status": "not_validated",
+      "status": "candidate_preflight_only",
+      "w5_authorized": false
+    },
+    "encoder_probe": {
+      "decode_remote_sum_fp32N_fp32N.json": {
+        "environment": {
+          "PYTHONHASHSEED": "0",
+          "PYTHONUTF8": "1"
+        },
+        "mapper_seed": 42,
+        "meaning": "encoding_and_zero_violation_placement_only",
+        "no_gate_authority": true,
+        "numerical_status": "not_validated",
+        "outputs": {
+          "decode_remote_sum_fp32N_fp32N_bitstream_128b.bin": {
+            "sha256": "f38ee4b9fe2295e2b1c14e8ad31a17c6657e5bd178cf92419b511989a526e1b7",
+            "size_bytes": 2210
+          },
+          "decode_remote_sum_fp32N_fp32N_bitstream_64b.bin": {
+            "sha256": "07fd64a2f3456319a5fff433e28a07f1cf3336f3bbf726e92f8f389c257c8e22",
+            "size_bytes": 2178
+          },
+          "detailed_dump.txt": {
+            "sha256": "eca6adf58b16635614448d837473b7842e656b073379abb2d8ada8c2de033b85",
+            "size_bytes": 19407
+          },
+          "mapping_review.json": {
+            "sha256": "49d097f7ce7dd0d0d87d778ac162aa61bce7284445df5f8f0d3876e57ef12c0a",
+            "size_bytes": 3028
+          },
+          "modules_dump_128b.bin": {
+            "sha256": "f38ee4b9fe2295e2b1c14e8ad31a17c6657e5bd178cf92419b511989a526e1b7",
+            "size_bytes": 2210
+          },
+          "modules_dump_64b.bin": {
+            "sha256": "07fd64a2f3456319a5fff433e28a07f1cf3336f3bbf726e92f8f389c257c8e22",
+            "size_bytes": 2178
+          },
+          "parsed_bitstream.txt": {
+            "sha256": "c500b349caff4a146a8d4493281268109d20e95666c49b1b4fa6be83d2ec1870",
+            "size_bytes": 2659
+          }
+        },
+        "run_count": 2,
+        "status": "encoding_deterministic"
+      },
+      "decode_sum_rec_fp32N_fp32N.json": {
+        "environment": {
+          "PYTHONHASHSEED": "0",
+          "PYTHONUTF8": "1"
+        },
+        "mapper_seed": 42,
+        "meaning": "encoding_and_zero_violation_placement_only",
+        "no_gate_authority": true,
+        "numerical_status": "not_validated",
+        "outputs": {
+          "decode_sum_rec_fp32N_fp32N_bitstream_128b.bin": {
+            "sha256": "abfe51f927ac1846945d319597fd68a029896248eeebbc4904275ff103a9adbf",
+            "size_bytes": 2340
+          },
+          "decode_sum_rec_fp32N_fp32N_bitstream_64b.bin": {
+            "sha256": "1f7c23d04bc87cb8c519324426c1a4ac8fad7f626bcb0498e5c0a237b5c789b5",
+            "size_bytes": 2376
+          },
+          "detailed_dump.txt": {
+            "sha256": "c43d9e9a5c97c71f9f3f45a74debdb3c4b016e2594f3ee612e1929eb6166d9da",
+            "size_bytes": 21065
+          },
+          "mapping_review.json": {
+            "sha256": "807165bb9f509e991e4a3c2d9fe8be3470cc972548b6a778859f848be4b0adad",
+            "size_bytes": 3245
+          },
+          "modules_dump_128b.bin": {
+            "sha256": "abfe51f927ac1846945d319597fd68a029896248eeebbc4904275ff103a9adbf",
+            "size_bytes": 2340
+          },
+          "modules_dump_64b.bin": {
+            "sha256": "1f7c23d04bc87cb8c519324426c1a4ac8fad7f626bcb0498e5c0a237b5c789b5",
+            "size_bytes": 2376
+          },
+          "parsed_bitstream.txt": {
+            "sha256": "fb218ec4b23614a98da7259db5670ea6025d4fdf3db60913373d01e71fcadff4",
+            "size_bytes": 2807
+          }
+        },
+        "run_count": 2,
+        "status": "encoding_deterministic"
+      },
+      "decode_summac_fp16N_fp32N.json": {
+        "environment": {
+          "PYTHONHASHSEED": "0",
+          "PYTHONUTF8": "1"
+        },
+        "mapper_seed": 42,
+        "meaning": "encoding_and_zero_violation_placement_only",
+        "no_gate_authority": true,
+        "numerical_status": "not_validated",
+        "outputs": {
+          "decode_summac_fp16N_fp32N_bitstream_128b.bin": {
+            "sha256": "095a9474bba6b0c2f978730b08d487faaca55fe1259930d03a22f00051e657b6",
+            "size_bytes": 2470
+          },
+          "decode_summac_fp16N_fp32N_bitstream_64b.bin": {
+            "sha256": "c5d62f70738ee980498c038022c57cb4356dfab05bc3a3538e58fbfcc8fedb59",
+            "size_bytes": 2508
+          },
+          "detailed_dump.txt": {
+            "sha256": "66f23f466174568fe3e514d5c336c5dc85b5b254055490906d9bc841bbbb5ec8",
+            "size_bytes": 23108
+          },
+          "mapping_review.json": {
+            "sha256": "b8d12a1d76c5b2d46d48633d0089da559b4739a472bf17a2530049415b8348c0",
+            "size_bytes": 3809
+          },
+          "modules_dump_128b.bin": {
+            "sha256": "095a9474bba6b0c2f978730b08d487faaca55fe1259930d03a22f00051e657b6",
+            "size_bytes": 2470
+          },
+          "modules_dump_64b.bin": {
+            "sha256": "c5d62f70738ee980498c038022c57cb4356dfab05bc3a3538e58fbfcc8fedb59",
+            "size_bytes": 2508
+          },
+          "parsed_bitstream.txt": {
+            "sha256": "e883f0e167e66a92f728c71fcb28cb3139c036ac0bd71cbff4c26f3567dc17af",
+            "size_bytes": 2966
+          }
+        },
+        "run_count": 2,
+        "status": "encoding_deterministic"
+      },
+      "decode_summac_fp32N_fp32N.json": {
+        "environment": {
+          "PYTHONHASHSEED": "0",
+          "PYTHONUTF8": "1"
+        },
+        "mapper_seed": 42,
+        "meaning": "encoding_and_zero_violation_placement_only",
+        "no_gate_authority": true,
+        "numerical_status": "not_validated",
+        "outputs": {
+          "decode_summac_fp32N_fp32N_bitstream_128b.bin": {
+            "sha256": "bcb261d5470798cfbdecfdaaa95e1a0a4b80695047525539ae36b2445602835a",
+            "size_bytes": 2340
+          },
+          "decode_summac_fp32N_fp32N_bitstream_64b.bin": {
+            "sha256": "61a58f2427efa4b61257003915cbe0dc4157491ed71798d8ad00cde19954d91c",
+            "size_bytes": 2376
+          },
+          "detailed_dump.txt": {
+            "sha256": "568f59dcdecd7f82e269b48c046bf472fd29609b88991899361ad012bb00f5d0",
+            "size_bytes": 21067
+          },
+          "mapping_review.json": {
+            "sha256": "807165bb9f509e991e4a3c2d9fe8be3470cc972548b6a778859f848be4b0adad",
+            "size_bytes": 3245
+          },
+          "modules_dump_128b.bin": {
+            "sha256": "bcb261d5470798cfbdecfdaaa95e1a0a4b80695047525539ae36b2445602835a",
+            "size_bytes": 2340
+          },
+          "modules_dump_64b.bin": {
+            "sha256": "61a58f2427efa4b61257003915cbe0dc4157491ed71798d8ad00cde19954d91c",
+            "size_bytes": 2376
+          },
+          "parsed_bitstream.txt": {
+            "sha256": "4954ebd3a31f52d7cf675c29a474884902edf809fc0ac09fa26c282fb6b7cba0",
+            "size_bytes": 2807
+          }
+        },
+        "run_count": 2,
+        "status": "encoding_deterministic"
+      },
+      "prefill_remote_sum_4slice_fp16MN_fp32MN.json": {
+        "environment": {
+          "PYTHONHASHSEED": "0",
+          "PYTHONUTF8": "1"
+        },
+        "mapper_seed": 42,
+        "meaning": "encoding_and_zero_violation_placement_only",
+        "no_gate_authority": true,
+        "numerical_status": "not_validated",
+        "outputs": {
+          "detailed_dump.txt": {
+            "sha256": "3f7468c437eaf90bca1ae9642d72b515d72b01d0fa4af3b074706725c6767b4d",
+            "size_bytes": 47275
+          },
+          "mapping_review.json": {
+            "sha256": "3ed72e43bb5e0f5bc9bec57f6a36a355951f1cf1d910838bde410c2162955263",
+            "size_bytes": 5861
+          },
+          "modules_dump_128b.bin": {
+            "sha256": "49a61c3cf714fc5b5f947895db1918fe3e86a55bccff4bcb3b47821a4644f41c",
+            "size_bytes": 4550
+          },
+          "modules_dump_64b.bin": {
+            "sha256": "f067d447ef035c832995bc75dfb6ecd98b2d83e8ce5b88afedc84c3398f46f94",
+            "size_bytes": 4620
+          },
+          "parsed_bitstream.txt": {
+            "sha256": "85066c1775843ea4d5f3e1b05e8e4f6813966640ccb163d880025fa836af404c",
+            "size_bytes": 5038
+          },
+          "prefill_remote_sum_4slice_fp16MN_fp32MN_bitstream_128b.bin": {
+            "sha256": "49a61c3cf714fc5b5f947895db1918fe3e86a55bccff4bcb3b47821a4644f41c",
+            "size_bytes": 4550
+          },
+          "prefill_remote_sum_4slice_fp16MN_fp32MN_bitstream_64b.bin": {
+            "sha256": "f067d447ef035c832995bc75dfb6ecd98b2d83e8ce5b88afedc84c3398f46f94",
+            "size_bytes": 4620
+          }
+        },
+        "run_count": 2,
+        "status": "encoding_deterministic"
+      },
+      "prefill_remote_sum_4slice_fp32MN_fp32MN.json": {
+        "environment": {
+          "PYTHONHASHSEED": "0",
+          "PYTHONUTF8": "1"
+        },
+        "mapper_seed": 42,
+        "meaning": "encoding_and_zero_violation_placement_only",
+        "no_gate_authority": true,
+        "numerical_status": "not_validated",
+        "outputs": {
+          "detailed_dump.txt": {
+            "sha256": "993aa6ee6777bccd5cdfb7b953e772b695b8cc1bfd225a631b1a7e0296734558",
+            "size_bytes": 31478
+          },
+          "mapping_review.json": {
+            "sha256": "d9d8665e91e56cd19b8c1936ca3890a7927e3d543f7e5d575cadb65620fba04c",
+            "size_bytes": 3541
+          },
+          "modules_dump_128b.bin": {
+            "sha256": "0a7728f73e370927c66f56b01873d08d661366d6f8daf94e0ea11cc97425e2a9",
+            "size_bytes": 3250
+          },
+          "modules_dump_64b.bin": {
+            "sha256": "56fee7279d5e61f20ae8074c433335a2df9acc13e1c0edd7e78206dd0118ccc5",
+            "size_bytes": 3234
+          },
+          "parsed_bitstream.txt": {
+            "sha256": "4d37a1b459ea3051f45df4bfbebcea1ba483232bbf34e42f65c5630d5534d414",
+            "size_bytes": 3695
+          },
+          "prefill_remote_sum_4slice_fp32MN_fp32MN_bitstream_128b.bin": {
+            "sha256": "0a7728f73e370927c66f56b01873d08d661366d6f8daf94e0ea11cc97425e2a9",
+            "size_bytes": 3250
+          },
+          "prefill_remote_sum_4slice_fp32MN_fp32MN_bitstream_64b.bin": {
+            "sha256": "56fee7279d5e61f20ae8074c433335a2df9acc13e1c0edd7e78206dd0118ccc5",
+            "size_bytes": 3234
+          }
+        },
+        "run_count": 2,
+        "status": "encoding_deterministic"
+      },
+      "prefill_remote_sum_fp32MN_fp32MN.json": {
+        "environment": {
+          "PYTHONHASHSEED": "0",
+          "PYTHONUTF8": "1"
+        },
+        "mapper_seed": 42,
+        "meaning": "encoding_and_zero_violation_placement_only",
+        "no_gate_authority": true,
+        "numerical_status": "not_validated",
+        "outputs": {
+          "detailed_dump.txt": {
+            "sha256": "25ae9fb462841422b724469f35ad24edc993503e7461235823cae7cd2b1a02ad",
+            "size_bytes": 31478
+          },
+          "mapping_review.json": {
+            "sha256": "d9d8665e91e56cd19b8c1936ca3890a7927e3d543f7e5d575cadb65620fba04c",
+            "size_bytes": 3541
+          },
+          "modules_dump_128b.bin": {
+            "sha256": "5cdad7d715e356ca2f634f375f8e7df4dc6578fce384c45aad6c9666e17859dd",
+            "size_bytes": 3250
+          },
+          "modules_dump_64b.bin": {
+            "sha256": "94fb0646e1db965427d4a7032325d79e298ec1a85a175090acc4ff51eb8da438",
+            "size_bytes": 3234
+          },
+          "parsed_bitstream.txt": {
+            "sha256": "bdc638ab9873bacf902b8c298dd96e9162deebf83093e9d22bdde44c3ebdaa3b",
+            "size_bytes": 3695
+          },
+          "prefill_remote_sum_fp32MN_fp32MN_bitstream_128b.bin": {
+            "sha256": "5cdad7d715e356ca2f634f375f8e7df4dc6578fce384c45aad6c9666e17859dd",
+            "size_bytes": 3250
+          },
+          "prefill_remote_sum_fp32MN_fp32MN_bitstream_64b.bin": {
+            "sha256": "94fb0646e1db965427d4a7032325d79e298ec1a85a175090acc4ff51eb8da438",
+            "size_bytes": 3234
+          }
+        },
+        "run_count": 2,
+        "status": "encoding_deterministic"
+      },
+      "prefill_sum_rec_fp32MN_fp32MN.json": {
+        "environment": {
+          "PYTHONHASHSEED": "0",
+          "PYTHONUTF8": "1"
+        },
+        "mapper_seed": 42,
+        "meaning": "encoding_and_zero_violation_placement_only",
+        "no_gate_authority": true,
+        "numerical_status": "not_validated",
+        "outputs": {
+          "detailed_dump.txt": {
+            "sha256": "5fe2d750d9639415f0fc837b2ce29b8b80e9868fe7416fe9182c7bb01799bd29",
+            "size_bytes": 45171
+          },
+          "mapping_review.json": {
+            "sha256": "209f7042913205f5b928600c6737f4c144e1493f56a8fdb318448ddf3d7716d6",
+            "size_bytes": 5306
+          },
+          "modules_dump_128b.bin": {
+            "sha256": "78a17676861f2e9f92343249b377220c3fa6d99ad2060085886beb259f5a874a",
+            "size_bytes": 4420
+          },
+          "modules_dump_64b.bin": {
+            "sha256": "e4eddb5ac208ecfd50606c447a929f327b25e49e5b468fffe619437e8c1a403e",
+            "size_bytes": 4422
+          },
+          "parsed_bitstream.txt": {
+            "sha256": "dbc31a97734825c2cf5a2a5426e3255a0164a27987c1f46d64455693be740866",
+            "size_bytes": 4879
+          },
+          "prefill_sum_rec_fp32MN_fp32MN_bitstream_128b.bin": {
+            "sha256": "78a17676861f2e9f92343249b377220c3fa6d99ad2060085886beb259f5a874a",
+            "size_bytes": 4420
+          },
+          "prefill_sum_rec_fp32MN_fp32MN_bitstream_64b.bin": {
+            "sha256": "e4eddb5ac208ecfd50606c447a929f327b25e49e5b468fffe619437e8c1a403e",
+            "size_bytes": 4422
+          }
+        },
+        "run_count": 2,
+        "status": "encoding_deterministic"
+      },
+      "prefill_summac_fp16MN_fp32MN.json": {
+        "environment": {
+          "PYTHONHASHSEED": "0",
+          "PYTHONUTF8": "1"
+        },
+        "mapper_seed": 42,
+        "meaning": "encoding_and_zero_violation_placement_only",
+        "no_gate_authority": true,
+        "numerical_status": "not_validated",
+        "outputs": {
+          "detailed_dump.txt": {
+            "sha256": "b292210568f88f46e97bc954aea0babfe777c087a528c3b5c70a8638f4cb3096",
+            "size_bytes": 47216
+          },
+          "mapping_review.json": {
+            "sha256": "3ed72e43bb5e0f5bc9bec57f6a36a355951f1cf1d910838bde410c2162955263",
+            "size_bytes": 5861
+          },
+          "modules_dump_128b.bin": {
+            "sha256": "c19192bb8507a38f0c19a6a72fdd4953b21508b1096d9cd5be0514e4ee96b2d7",
+            "size_bytes": 4550
+          },
+          "modules_dump_64b.bin": {
+            "sha256": "a734692560a2df55ade41dd91784473c52594ac8be6f64f8c04f8c3b3bf58b4a",
+            "size_bytes": 4620
+          },
+          "parsed_bitstream.txt": {
+            "sha256": "db4ba46cb00ce5b05a803523747aed51b0d91aebbea825eb3fd69fa11b5097bd",
+            "size_bytes": 5038
+          },
+          "prefill_summac_fp16MN_fp32MN_bitstream_128b.bin": {
+            "sha256": "c19192bb8507a38f0c19a6a72fdd4953b21508b1096d9cd5be0514e4ee96b2d7",
+            "size_bytes": 4550
+          },
+          "prefill_summac_fp16MN_fp32MN_bitstream_64b.bin": {
+            "sha256": "a734692560a2df55ade41dd91784473c52594ac8be6f64f8c04f8c3b3bf58b4a",
+            "size_bytes": 4620
+          }
+        },
+        "run_count": 2,
+        "status": "encoding_deterministic"
+      },
+      "prefill_summac_fp32MN_fp32MN.json": {
+        "environment": {
+          "PYTHONHASHSEED": "0",
+          "PYTHONUTF8": "1"
+        },
+        "mapper_seed": 42,
+        "meaning": "encoding_and_zero_violation_placement_only",
+        "no_gate_authority": true,
+        "numerical_status": "not_validated",
+        "outputs": {
+          "detailed_dump.txt": {
+            "sha256": "74c4709a88e6524a8b91ec3c1f09cbddd53b8cbf70f61d81e94c3d847ad3a898",
+            "size_bytes": 45171
+          },
+          "mapping_review.json": {
+            "sha256": "209f7042913205f5b928600c6737f4c144e1493f56a8fdb318448ddf3d7716d6",
+            "size_bytes": 5306
+          },
+          "modules_dump_128b.bin": {
+            "sha256": "28e4afe6b707a284844fe3c18f9b2f547146991193f766656c1ddee22c9f43c2",
+            "size_bytes": 4420
+          },
+          "modules_dump_64b.bin": {
+            "sha256": "b9e688cf431eec511d2f672f2bd8e2ade5874a7fe004f0cb5bc5f5092cdcd1f7",
+            "size_bytes": 4422
+          },
+          "parsed_bitstream.txt": {
+            "sha256": "3253fb58c18a680de956611796c344deffba85e56e142523f59e94e3b0cf85af",
+            "size_bytes": 4879
+          },
+          "prefill_summac_fp32MN_fp32MN_bitstream_128b.bin": {
+            "sha256": "28e4afe6b707a284844fe3c18f9b2f547146991193f766656c1ddee22c9f43c2",
+            "size_bytes": 4420
+          },
+          "prefill_summac_fp32MN_fp32MN_bitstream_64b.bin": {
+            "sha256": "b9e688cf431eec511d2f672f2bd8e2ade5874a7fe004f0cb5bc5f5092cdcd1f7",
+            "size_bytes": 4422
+          }
+        },
+        "run_count": 2,
+        "status": "encoding_deterministic"
+      },
+      "sum_config_32_32.json": {
+        "environment": {
+          "PYTHONHASHSEED": "0",
+          "PYTHONUTF8": "1"
+        },
+        "mapper_seed": 42,
+        "meaning": "encoding_and_zero_violation_placement_only",
+        "no_gate_authority": true,
+        "numerical_status": "not_validated",
+        "outputs": {
+          "detailed_dump.txt": {
+            "sha256": "9c47e9f2a7df77fb5bf9390601ced6090457df5637367c5aad73f3584741bae1",
+            "size_bytes": 30021
+          },
+          "mapping_review.json": {
+            "sha256": "3bfed1bf06800009d74c97e13450915a447d300c80b7523cad14743ef1ed0462",
+            "size_bytes": 3329
+          },
+          "modules_dump_128b.bin": {
+            "sha256": "d39e2299a8fbe5a714cc7c821c3fe6f3d37d754189d308a45e70f3e58c296ac6",
+            "size_bytes": 3120
+          },
+          "modules_dump_64b.bin": {
+            "sha256": "762fbf8cefc65646bb18560e5b0ca0241432a1a76cd84408c7f5b3a56ab6e008",
+            "size_bytes": 3168
+          },
+          "parsed_bitstream.txt": {
+            "sha256": "457586f8db8d236f37e9f5c47265cb2ea60c10346a21a99f3495e82a7a1640ca",
+            "size_bytes": 3597
+          },
+          "sum_config_32_32_bitstream_128b.bin": {
+            "sha256": "d39e2299a8fbe5a714cc7c821c3fe6f3d37d754189d308a45e70f3e58c296ac6",
+            "size_bytes": 3120
+          },
+          "sum_config_32_32_bitstream_64b.bin": {
+            "sha256": "762fbf8cefc65646bb18560e5b0ca0241432a1a76cd84408c7f5b3a56ab6e008",
+            "size_bytes": 3168
+          }
+        },
+        "run_count": 2,
+        "status": "encoding_deterministic"
+      }
+    },
+    "family_conclusions": {
+      "local_sum": "sum_config_32_32 is the only shared/ResNet candidate, but it is FP32-only, unregistered and has no handler",
+      "remote_sum": "28/4-way names describe staged-input reduction; no neighbor/N2N transport is present in the templates",
+      "resnet_gap": "no audited sum template directly implements UINT8 GAP to UINT8; avgpool's INT32 sum still needs division and requant",
+      "sum_rec": "sum feeds REC/SFU for DeepSeek softmax; this is not GAP division/requant",
+      "summac": "mul feeds both summac inputs, forming square accumulation used by DeepSeek RMSNorm"
+    },
+    "handler_gaps": {
+      "decode_templates_missing_base_info": true,
+      "dtype_and_divisibility_preconditions_not_enforced": true,
+      "fp16_remote_4slice_metadata_conflict": true,
+      "output_shape_not_used_by_any_sum_handler": true,
+      "output_stream_buffer_geometry_not_patched": true,
+      "sum_config_missing_handler": true
+    },
+    "negative_preflight": [
+      {
+        "mutation": "17-bit LC overflow",
+        "reason": "dram_loop_configs.LC1.end=131072 exceeds unsigned 17-bit range; refusing silent truncation",
+        "status": "rejected"
+      },
+      {
+        "mutation": "wrong GA opcode",
+        "reason": "general_array.PE_array.PE00 must use one of ['mul', 'rec', 'sum', 'summac']",
+        "status": "rejected"
+      },
+      {
+        "mutation": "unapproved requant output",
+        "reason": "sum_config_32_32.json unexpectedly converts output via ['int32touint8']",
+        "status": "rejected"
+      }
+    ],
+    "schema_version": "0.1",
+    "scope": {
+      "families": [
+        "local_sum",
+        "remote_sum",
+        "sum_rec",
+        "summac"
+      ],
+      "formal_w5_instances_generated": false,
+      "template_count": 11
+    },
+    "templates": [
+      {
+        "base_info": {
+          "conflicts": [],
+          "initial_size": null,
+          "metadata_targets": [],
+          "registered": false,
+          "streamed_targets": [
+            "A",
+            "D"
+          ]
+        },
+        "classification": "deepseek_transformer_static",
+        "completion_events": {
+          "ga_reduction_transout_last_index": 1,
+          "hardware_completion_protocol_validated": false,
+          "input_buffer_col_last_index": 3,
+          "output_buffer_col_last_index": 4,
+          "output_buffer_full_and_row_last_index": 3,
+          "read_and_input_buffer_full_last_index": 2,
+          "scope": "static last_index reference chain only"
+        },
+        "cross_slice": {
+          "buffer_neighbor_enabled": false,
+          "conclusion": "remote template reduces values already staged in A; transport between slices is outside this JSON",
+          "ga_neighbor_enabled": false,
+          "hardware_topology_validated": false,
+          "neighbor_or_n2n_config_present": false,
+          "remote_named": true
+        },
+        "dtype": {
+          "input": "fp32",
+          "output": "fp32_no_outport_conversion",
+          "requant_present": false
+        },
+        "handler": {
+          "docstring": "Placeholder for remote_sum control register logic.",
+          "handler_exists": true,
+          "handler_name": "_compute_decode_remote_sum_fp32N_fp32N_control_register_updates",
+          "update_fields": [
+            "iga_lc0.dram_loop_configs.end",
+            "iga_lc1.dram_loop_configs.end",
+            "rd_stream0.stream_engine.stream.dim_stride"
+          ],
+          "updates_ga_or_requant_fields": false,
+          "updates_output_shape_fields": false,
+          "uses_output_dimensions_in_updates": false
+        },
+        "preflight": {
+          "family": "remote_sum",
+          "ga_opcodes": [
+            "sum"
+          ],
+          "no_gate_authority": true,
+          "numerical_status": "not_validated",
+          "resources": {
+            "buffer_loop_groups": 2,
+            "buffers": 2,
+            "dram_loops": 4,
+            "ga_inports": 3,
+            "ga_pes": 1,
+            "loop_pes": 2,
+            "read_streams": 1,
+            "write_streams": 1
+          },
+          "status": "candidate_preflight_valid"
+        },
+        "reduction": {
+          "axis_evidence": "prefill A[1] staged slice/group dimension; decode axis is unbound",
+          "ga_opcode_counts": {
+            "sum": 1
+          },
+          "ga_reduction_pes": [
+            "PE00"
+          ],
+          "static_dram_lc_ends": {
+            "LC0": 1,
+            "LC1": 28,
+            "LC2": 1,
+            "LC3": 1
+          }
+        },
+        "resnet_gap_relevance": {
+          "candidate_part": false,
+          "direct_gap_template": false,
+          "reason": "template is a DeepSeek FP16/FP32 reduction; no ResNet UINT8/INT32 or requant path"
+        },
+        "sha256": "5886828fe28930d72b6bcbef17c4da4c88a0c9da5301dfc15e16f5437747edc1",
+        "template": "jsons/decode_remote_sum_fp32N_fp32N.json"
+      },
+      {
+        "base_info": {
+          "conflicts": [],
+          "initial_size": null,
+          "metadata_targets": [],
+          "registered": false,
+          "streamed_targets": [
+            "A",
+            "D"
+          ]
+        },
+        "classification": "deepseek_transformer_static",
+        "completion_events": {
+          "ga_reduction_transout_last_index": 1,
+          "hardware_completion_protocol_validated": false,
+          "input_buffer_col_last_index": 3,
+          "output_buffer_col_last_index": 4,
+          "output_buffer_full_and_row_last_index": 3,
+          "read_and_input_buffer_full_last_index": 2,
+          "scope": "static last_index reference chain only"
+        },
+        "cross_slice": {
+          "buffer_neighbor_enabled": false,
+          "conclusion": "no direct cross-slice transport is encoded",
+          "ga_neighbor_enabled": false,
+          "hardware_topology_validated": false,
+          "neighbor_or_n2n_config_present": false,
+          "remote_named": false
+        },
+        "dtype": {
+          "input": "fp32",
+          "output": "fp32_no_outport_conversion",
+          "requant_present": false
+        },
+        "handler": {
+          "docstring": "Example handler for sum_rec operator control-register updates.\n\nThis function is intentionally conservative: it reads shapes and returns no-op\nupdates by default. Replace the returned dict with real register-value logic\nonce sum_rec control rules are finalized.",
+          "handler_exists": true,
+          "handler_name": "_compute_decode_sum_rec_fp32N_fp32N_control_register_updates",
+          "update_fields": [
+            "iga_lc1.dram_loop_configs.end",
+            "rd_stream0.stream_engine.stream.dim_stride"
+          ],
+          "updates_ga_or_requant_fields": false,
+          "updates_output_shape_fields": false,
+          "uses_output_dimensions_in_updates": false
+        },
+        "preflight": {
+          "family": "sum_rec",
+          "ga_opcodes": [
+            "rec",
+            "sum"
+          ],
+          "no_gate_authority": true,
+          "numerical_status": "not_validated",
+          "resources": {
+            "buffer_loop_groups": 2,
+            "buffers": 2,
+            "dram_loops": 4,
+            "ga_inports": 3,
+            "ga_pes": 2,
+            "loop_pes": 2,
+            "read_streams": 1,
+            "write_streams": 1
+          },
+          "status": "candidate_preflight_valid"
+        },
+        "reduction": {
+          "axis_evidence": "prefill softmax graph indicates A[2] reduction followed by reciprocal; decode axis is unbound",
+          "ga_opcode_counts": {
+            "rec": 1,
+            "sum": 1
+          },
+          "ga_reduction_pes": [
+            "PE00"
+          ],
+          "static_dram_lc_ends": {
+            "LC0": 1,
+            "LC1": 32,
+            "LC2": 1,
+            "LC3": 1
+          }
+        },
+        "resnet_gap_relevance": {
+          "candidate_part": false,
+          "direct_gap_template": false,
+          "reason": "template is a DeepSeek FP16/FP32 reduction; no ResNet UINT8/INT32 or requant path"
+        },
+        "sha256": "310befa14072caf43d233ab7d3e892e187de94b64de8e77bef26696cec13ab30",
+        "template": "jsons/decode_sum_rec_fp32N_fp32N.json"
+      },
+      {
+        "base_info": {
+          "conflicts": [],
+          "initial_size": null,
+          "metadata_targets": [],
+          "registered": false,
+          "streamed_targets": [
+            "A",
+            "D"
+          ]
+        },
+        "classification": "deepseek_transformer_static",
+        "completion_events": {
+          "ga_reduction_transout_last_index": 1,
+          "hardware_completion_protocol_validated": false,
+          "input_buffer_col_last_index": 3,
+          "output_buffer_col_last_index": 4,
+          "output_buffer_full_and_row_last_index": 3,
+          "read_and_input_buffer_full_last_index": 2,
+          "scope": "static last_index reference chain only"
+        },
+        "cross_slice": {
+          "buffer_neighbor_enabled": false,
+          "conclusion": "no direct cross-slice transport is encoded",
+          "ga_neighbor_enabled": false,
+          "hardware_topology_validated": false,
+          "neighbor_or_n2n_config_present": false,
+          "remote_named": false
+        },
+        "dtype": {
+          "input": "fp16",
+          "output": "fp32_no_outport_conversion",
+          "requant_present": false
+        },
+        "handler": {
+          "docstring": "Example handler for summac operator control-register updates.\n\nThis function is intentionally conservative: it reads shapes and returns no-op\nupdates by default. Replace the returned dict with real register-value logic\nonce summac control rules are finalized.",
+          "handler_exists": true,
+          "handler_name": "_compute_decode_summac_fp16N_fp32N_control_register_updates",
+          "update_fields": [
+            "iga_lc1.dram_loop_configs.end",
+            "rd_stream0.stream_engine.stream.dim_stride"
+          ],
+          "updates_ga_or_requant_fields": false,
+          "updates_output_shape_fields": false,
+          "uses_output_dimensions_in_updates": false
+        },
+        "preflight": {
+          "family": "summac",
+          "ga_opcodes": [
+            "mul",
+            "summac"
+          ],
+          "no_gate_authority": true,
+          "numerical_status": "not_validated",
+          "resources": {
+            "buffer_loop_groups": 2,
+            "buffers": 2,
+            "dram_loops": 5,
+            "ga_inports": 3,
+            "ga_pes": 2,
+            "loop_pes": 3,
+            "read_streams": 1,
+            "write_streams": 1
+          },
+          "status": "candidate_preflight_valid"
+        },
+        "reduction": {
+          "axis_evidence": "prefill graph indicates A[2] reduction while A[1] is preserved as D[2]; decode axis is unbound",
+          "ga_opcode_counts": {
+            "mul": 1,
+            "summac": 1
+          },
+          "ga_reduction_pes": [
+            "PE01"
+          ],
+          "static_dram_lc_ends": {
+            "LC0": 1,
+            "LC1": 16,
+            "LC2": 2,
+            "LC3": 1,
+            "LC4": 1
+          }
+        },
+        "resnet_gap_relevance": {
+          "candidate_part": false,
+          "direct_gap_template": false,
+          "reason": "template is a DeepSeek FP16/FP32 reduction; no ResNet UINT8/INT32 or requant path"
+        },
+        "sha256": "c2aafcb6fb3ca9a49ddea6114b93aef63b589cb851b9c557af5844c086218121",
+        "template": "jsons/decode_summac_fp16N_fp32N.json"
+      },
+      {
+        "base_info": {
+          "conflicts": [],
+          "initial_size": null,
+          "metadata_targets": [],
+          "registered": false,
+          "streamed_targets": [
+            "A",
+            "D"
+          ]
+        },
+        "classification": "deepseek_transformer_static",
+        "completion_events": {
+          "ga_reduction_transout_last_index": 1,
+          "hardware_completion_protocol_validated": false,
+          "input_buffer_col_last_index": 3,
+          "output_buffer_col_last_index": 4,
+          "output_buffer_full_and_row_last_index": 3,
+          "read_and_input_buffer_full_last_index": 2,
+          "scope": "static last_index reference chain only"
+        },
+        "cross_slice": {
+          "buffer_neighbor_enabled": false,
+          "conclusion": "no direct cross-slice transport is encoded",
+          "ga_neighbor_enabled": false,
+          "hardware_topology_validated": false,
+          "neighbor_or_n2n_config_present": false,
+          "remote_named": false
+        },
+        "dtype": {
+          "input": "fp32",
+          "output": "fp32_no_outport_conversion",
+          "requant_present": false
+        },
+        "handler": {
+          "docstring": "Example handler for summac operator control-register updates.\n\nThis function is intentionally conservative: it reads shapes and returns no-op\nupdates by default. Replace the returned dict with real register-value logic\nonce summac control rules are finalized.",
+          "handler_exists": true,
+          "handler_name": "_compute_decode_summac_fp32N_fp32N_control_register_updates",
+          "update_fields": [
+            "iga_lc1.dram_loop_configs.end",
+            "rd_stream0.stream_engine.stream.dim_stride"
+          ],
+          "updates_ga_or_requant_fields": false,
+          "updates_output_shape_fields": false,
+          "uses_output_dimensions_in_updates": false
+        },
+        "preflight": {
+          "family": "summac",
+          "ga_opcodes": [
+            "mul",
+            "summac"
+          ],
+          "no_gate_authority": true,
+          "numerical_status": "not_validated",
+          "resources": {
+            "buffer_loop_groups": 2,
+            "buffers": 2,
+            "dram_loops": 4,
+            "ga_inports": 3,
+            "ga_pes": 2,
+            "loop_pes": 2,
+            "read_streams": 1,
+            "write_streams": 1
+          },
+          "status": "candidate_preflight_valid"
+        },
+        "reduction": {
+          "axis_evidence": "prefill graph indicates A[2] reduction while A[1] is preserved as D[2]; decode axis is unbound",
+          "ga_opcode_counts": {
+            "mul": 1,
+            "summac": 1
+          },
+          "ga_reduction_pes": [
+            "PE01"
+          ],
+          "static_dram_lc_ends": {
+            "LC0": 1,
+            "LC1": 32,
+            "LC2": 1,
+            "LC3": 1
+          }
+        },
+        "resnet_gap_relevance": {
+          "candidate_part": false,
+          "direct_gap_template": false,
+          "reason": "template is a DeepSeek FP16/FP32 reduction; no ResNet UINT8/INT32 or requant path"
+        },
+        "sha256": "7f7387dd21bb422a906a2cd71c332ff0e57ce8e42ed148a50d1713f37f95f8f3",
+        "template": "jsons/decode_summac_fp32N_fp32N.json"
+      },
+      {
+        "base_info": {
+          "conflicts": [
+            "base-info declares A/B/D all [1,32,16], but JSON streams only A and D and does not describe a 4-to-1 output reduction"
+          ],
+          "initial_size": {
+            "A": [
+              1,
+              32,
+              16
+            ],
+            "B": [
+              1,
+              32,
+              16
+            ],
+            "D": [
+              1,
+              32,
+              16
+            ]
+          },
+          "metadata_targets": [
+            "A",
+            "B",
+            "D"
+          ],
+          "registered": true,
+          "streamed_targets": [
+            "A",
+            "D"
+          ]
+        },
+        "classification": "deepseek_transformer_static",
+        "completion_events": {
+          "ga_reduction_transout_last_index": 1,
+          "hardware_completion_protocol_validated": false,
+          "input_buffer_col_last_index": 3,
+          "output_buffer_col_last_index": 4,
+          "output_buffer_full_and_row_last_index": 3,
+          "read_and_input_buffer_full_last_index": 2,
+          "scope": "static last_index reference chain only"
+        },
+        "cross_slice": {
+          "buffer_neighbor_enabled": false,
+          "conclusion": "remote template reduces values already staged in A; transport between slices is outside this JSON",
+          "ga_neighbor_enabled": false,
+          "hardware_topology_validated": false,
+          "neighbor_or_n2n_config_present": false,
+          "remote_named": true
+        },
+        "dtype": {
+          "input": "fp16",
+          "output": "fp32_no_outport_conversion",
+          "requant_present": false
+        },
+        "handler": {
+          "docstring": "Placeholder for remote_sum_4slice control register logic.",
+          "handler_exists": true,
+          "handler_name": "_compute_prefill_remote_sum_4slice_fp16MN_fp32MN_control_register_updates",
+          "update_fields": [
+            "iga_lc0.dram_loop_configs.end",
+            "iga_lc1.dram_loop_configs.end",
+            "rd_stream0.stream_engine.stream.dim_stride"
+          ],
+          "updates_ga_or_requant_fields": false,
+          "updates_output_shape_fields": false,
+          "uses_output_dimensions_in_updates": false
+        },
+        "preflight": {
+          "family": "remote_sum",
+          "ga_opcodes": [
+            "mul",
+            "sum"
+          ],
+          "no_gate_authority": true,
+          "numerical_status": "not_validated",
+          "resources": {
+            "buffer_loop_groups": 2,
+            "buffers": 2,
+            "dram_loops": 5,
+            "ga_inports": 3,
+            "ga_pes": 16,
+            "loop_pes": 3,
+            "read_streams": 1,
+            "write_streams": 1
+          },
+          "status": "candidate_preflight_valid"
+        },
+        "reduction": {
+          "axis_evidence": "prefill A[1] staged slice/group dimension; decode axis is unbound",
+          "ga_opcode_counts": {
+            "mul": 8,
+            "sum": 8
+          },
+          "ga_reduction_pes": [
+            "PE01",
+            "PE03",
+            "PE11",
+            "PE13",
+            "PE21",
+            "PE23",
+            "PE31",
+            "PE33"
+          ],
+          "static_dram_lc_ends": {
+            "LC0": 4,
+            "LC1": 2,
+            "LC2": 2,
+            "LC3": 1,
+            "LC4": 1
+          }
+        },
+        "resnet_gap_relevance": {
+          "candidate_part": false,
+          "direct_gap_template": false,
+          "reason": "template is a DeepSeek FP16/FP32 reduction; no ResNet UINT8/INT32 or requant path"
+        },
+        "sha256": "9ebaec3af598ebf8a25ef9664e5517a6c107ce48416fc0ac76e05b9b6578c37c",
+        "template": "jsons/prefill_remote_sum_4slice_fp16MN_fp32MN.json"
+      },
+      {
+        "base_info": {
+          "conflicts": [],
+          "initial_size": {
+            "A": [
+              1,
+              4,
+              32
+            ],
+            "D": [
+              1,
+              1,
+              32
+            ]
+          },
+          "metadata_targets": [
+            "A",
+            "D"
+          ],
+          "registered": true,
+          "streamed_targets": [
+            "A",
+            "D"
+          ]
+        },
+        "classification": "deepseek_transformer_static",
+        "completion_events": {
+          "ga_reduction_transout_last_index": 1,
+          "hardware_completion_protocol_validated": false,
+          "input_buffer_col_last_index": 3,
+          "output_buffer_col_last_index": 4,
+          "output_buffer_full_and_row_last_index": 3,
+          "read_and_input_buffer_full_last_index": 2,
+          "scope": "static last_index reference chain only"
+        },
+        "cross_slice": {
+          "buffer_neighbor_enabled": false,
+          "conclusion": "remote template reduces values already staged in A; transport between slices is outside this JSON",
+          "ga_neighbor_enabled": false,
+          "hardware_topology_validated": false,
+          "neighbor_or_n2n_config_present": false,
+          "remote_named": true
+        },
+        "dtype": {
+          "input": "fp32",
+          "output": "fp32_no_outport_conversion",
+          "requant_present": false
+        },
+        "handler": {
+          "docstring": "Placeholder for remote_sum_4slice control register logic.",
+          "handler_exists": true,
+          "handler_name": "_compute_prefill_remote_sum_4slice_fp32MN_fp32MN_control_register_updates",
+          "update_fields": [
+            "iga_lc0.dram_loop_configs.end",
+            "iga_lc1.dram_loop_configs.end",
+            "rd_stream0.stream_engine.stream.dim_stride"
+          ],
+          "updates_ga_or_requant_fields": false,
+          "updates_output_shape_fields": false,
+          "uses_output_dimensions_in_updates": false
+        },
+        "preflight": {
+          "family": "remote_sum",
+          "ga_opcodes": [
+            "sum"
+          ],
+          "no_gate_authority": true,
+          "numerical_status": "not_validated",
+          "resources": {
+            "buffer_loop_groups": 2,
+            "buffers": 2,
+            "dram_loops": 4,
+            "ga_inports": 3,
+            "ga_pes": 8,
+            "loop_pes": 2,
+            "read_streams": 1,
+            "write_streams": 1
+          },
+          "status": "candidate_preflight_valid"
+        },
+        "reduction": {
+          "axis_evidence": "prefill A[1] staged slice/group dimension; decode axis is unbound",
+          "ga_opcode_counts": {
+            "sum": 8
+          },
+          "ga_reduction_pes": [
+            "PE00",
+            "PE02",
+            "PE10",
+            "PE12",
+            "PE20",
+            "PE22",
+            "PE30",
+            "PE32"
+          ],
+          "static_dram_lc_ends": {
+            "LC0": 4,
+            "LC1": 4,
+            "LC2": 1,
+            "LC3": 1
+          }
+        },
+        "resnet_gap_relevance": {
+          "candidate_part": false,
+          "direct_gap_template": false,
+          "reason": "template is a DeepSeek FP16/FP32 reduction; no ResNet UINT8/INT32 or requant path"
+        },
+        "sha256": "86930ae15d348b433eef49aef78878874ca809b39fe0bad09a1072f04e07afda",
+        "template": "jsons/prefill_remote_sum_4slice_fp32MN_fp32MN.json"
+      },
+      {
+        "base_info": {
+          "conflicts": [],
+          "initial_size": {
+            "A": [
+              1,
+              28,
+              32
+            ],
+            "D": [
+              1,
+              1,
+              32
+            ]
+          },
+          "metadata_targets": [
+            "A",
+            "D"
+          ],
+          "registered": true,
+          "streamed_targets": [
+            "A",
+            "D"
+          ]
+        },
+        "classification": "deepseek_transformer_static",
+        "completion_events": {
+          "ga_reduction_transout_last_index": 1,
+          "hardware_completion_protocol_validated": false,
+          "input_buffer_col_last_index": 3,
+          "output_buffer_col_last_index": 4,
+          "output_buffer_full_and_row_last_index": 3,
+          "read_and_input_buffer_full_last_index": 2,
+          "scope": "static last_index reference chain only"
+        },
+        "cross_slice": {
+          "buffer_neighbor_enabled": false,
+          "conclusion": "remote template reduces values already staged in A; transport between slices is outside this JSON",
+          "ga_neighbor_enabled": false,
+          "hardware_topology_validated": false,
+          "neighbor_or_n2n_config_present": false,
+          "remote_named": true
+        },
+        "dtype": {
+          "input": "fp32",
+          "output": "fp32_no_outport_conversion",
+          "requant_present": false
+        },
+        "handler": {
+          "docstring": "Placeholder for remote_sum control register logic.",
+          "handler_exists": true,
+          "handler_name": "_compute_prefill_remote_sum_fp32MN_fp32MN_control_register_updates",
+          "update_fields": [
+            "iga_lc0.dram_loop_configs.end",
+            "iga_lc1.dram_loop_configs.end",
+            "rd_stream0.stream_engine.stream.dim_stride"
+          ],
+          "updates_ga_or_requant_fields": false,
+          "updates_output_shape_fields": false,
+          "uses_output_dimensions_in_updates": false
+        },
+        "preflight": {
+          "family": "remote_sum",
+          "ga_opcodes": [
+            "sum"
+          ],
+          "no_gate_authority": true,
+          "numerical_status": "not_validated",
+          "resources": {
+            "buffer_loop_groups": 2,
+            "buffers": 2,
+            "dram_loops": 4,
+            "ga_inports": 3,
+            "ga_pes": 8,
+            "loop_pes": 2,
+            "read_streams": 1,
+            "write_streams": 1
+          },
+          "status": "candidate_preflight_valid"
+        },
+        "reduction": {
+          "axis_evidence": "prefill A[1] staged slice/group dimension; decode axis is unbound",
+          "ga_opcode_counts": {
+            "sum": 8
+          },
+          "ga_reduction_pes": [
+            "PE00",
+            "PE02",
+            "PE10",
+            "PE12",
+            "PE20",
+            "PE22",
+            "PE30",
+            "PE32"
+          ],
+          "static_dram_lc_ends": {
+            "LC0": 4,
+            "LC1": 28,
+            "LC2": 1,
+            "LC3": 1
+          }
+        },
+        "resnet_gap_relevance": {
+          "candidate_part": false,
+          "direct_gap_template": false,
+          "reason": "template is a DeepSeek FP16/FP32 reduction; no ResNet UINT8/INT32 or requant path"
+        },
+        "sha256": "44382b0405fc3192172f3ab6e4fb81dbd29701a7c8e16715d2a186743ef60708",
+        "template": "jsons/prefill_remote_sum_fp32MN_fp32MN.json"
+      },
+      {
+        "base_info": {
+          "conflicts": [],
+          "initial_size": {
+            "A": [
+              1,
+              32,
+              32
+            ],
+            "D": [
+              1,
+              1,
+              32
+            ]
+          },
+          "metadata_targets": [
+            "A",
+            "D"
+          ],
+          "registered": true,
+          "streamed_targets": [
+            "A",
+            "D"
+          ]
+        },
+        "classification": "deepseek_transformer_static",
+        "completion_events": {
+          "ga_reduction_transout_last_index": 1,
+          "hardware_completion_protocol_validated": false,
+          "input_buffer_col_last_index": 3,
+          "output_buffer_col_last_index": 4,
+          "output_buffer_full_and_row_last_index": 3,
+          "read_and_input_buffer_full_last_index": 2,
+          "scope": "static last_index reference chain only"
+        },
+        "cross_slice": {
+          "buffer_neighbor_enabled": false,
+          "conclusion": "no direct cross-slice transport is encoded",
+          "ga_neighbor_enabled": false,
+          "hardware_topology_validated": false,
+          "neighbor_or_n2n_config_present": false,
+          "remote_named": false
+        },
+        "dtype": {
+          "input": "fp32",
+          "output": "fp32_no_outport_conversion",
+          "requant_present": false
+        },
+        "handler": {
+          "docstring": "Placeholder for sum_rec control register logic.",
+          "handler_exists": true,
+          "handler_name": "_compute_prefill_sum_rec_fp32MN_fp32MN_control_register_updates",
+          "update_fields": [
+            "iga_lc0.dram_loop_configs.end",
+            "iga_lc1.dram_loop_configs.end",
+            "rd_stream0.stream_engine.stream.dim_stride"
+          ],
+          "updates_ga_or_requant_fields": false,
+          "updates_output_shape_fields": false,
+          "uses_output_dimensions_in_updates": false
+        },
+        "preflight": {
+          "family": "sum_rec",
+          "ga_opcodes": [
+            "rec",
+            "sum"
+          ],
+          "no_gate_authority": true,
+          "numerical_status": "not_validated",
+          "resources": {
+            "buffer_loop_groups": 2,
+            "buffers": 2,
+            "dram_loops": 4,
+            "ga_inports": 3,
+            "ga_pes": 16,
+            "loop_pes": 2,
+            "read_streams": 1,
+            "write_streams": 1
+          },
+          "status": "candidate_preflight_valid"
+        },
+        "reduction": {
+          "axis_evidence": "prefill softmax graph indicates A[2] reduction followed by reciprocal; decode axis is unbound",
+          "ga_opcode_counts": {
+            "rec": 8,
+            "sum": 8
+          },
+          "ga_reduction_pes": [
+            "PE00",
+            "PE02",
+            "PE10",
+            "PE12",
+            "PE20",
+            "PE22",
+            "PE30",
+            "PE32"
+          ],
+          "static_dram_lc_ends": {
+            "LC0": 4,
+            "LC1": 32,
+            "LC2": 1,
+            "LC3": 1
+          }
+        },
+        "resnet_gap_relevance": {
+          "candidate_part": false,
+          "direct_gap_template": false,
+          "reason": "template is a DeepSeek FP16/FP32 reduction; no ResNet UINT8/INT32 or requant path"
+        },
+        "sha256": "33f1332d15a659d3be5244b293edd341bd12a22c4427b2d16b1efcddd57c6522",
+        "template": "jsons/prefill_sum_rec_fp32MN_fp32MN.json"
+      },
+      {
+        "base_info": {
+          "conflicts": [],
+          "initial_size": {
+            "A": [
+              1,
+              32,
+              32
+            ],
+            "D": [
+              1,
+              1,
+              32
+            ]
+          },
+          "metadata_targets": [
+            "A",
+            "D"
+          ],
+          "registered": true,
+          "streamed_targets": [
+            "A",
+            "D"
+          ]
+        },
+        "classification": "deepseek_transformer_static",
+        "completion_events": {
+          "ga_reduction_transout_last_index": 1,
+          "hardware_completion_protocol_validated": false,
+          "input_buffer_col_last_index": 3,
+          "output_buffer_col_last_index": 4,
+          "output_buffer_full_and_row_last_index": 3,
+          "read_and_input_buffer_full_last_index": 2,
+          "scope": "static last_index reference chain only"
+        },
+        "cross_slice": {
+          "buffer_neighbor_enabled": false,
+          "conclusion": "no direct cross-slice transport is encoded",
+          "ga_neighbor_enabled": false,
+          "hardware_topology_validated": false,
+          "neighbor_or_n2n_config_present": false,
+          "remote_named": false
+        },
+        "dtype": {
+          "input": "fp16",
+          "output": "fp32_no_outport_conversion",
+          "requant_present": false
+        },
+        "handler": {
+          "docstring": "Placeholder for summac control register logic.",
+          "handler_exists": true,
+          "handler_name": "_compute_prefill_summac_fp16MN_fp32MN_control_register_updates",
+          "update_fields": [
+            "iga_lc0.dram_loop_configs.end",
+            "iga_lc1.dram_loop_configs.end",
+            "rd_stream0.stream_engine.stream.dim_stride"
+          ],
+          "updates_ga_or_requant_fields": false,
+          "updates_output_shape_fields": false,
+          "uses_output_dimensions_in_updates": false
+        },
+        "preflight": {
+          "family": "summac",
+          "ga_opcodes": [
+            "mul",
+            "summac"
+          ],
+          "no_gate_authority": true,
+          "numerical_status": "not_validated",
+          "resources": {
+            "buffer_loop_groups": 2,
+            "buffers": 2,
+            "dram_loops": 5,
+            "ga_inports": 3,
+            "ga_pes": 16,
+            "loop_pes": 3,
+            "read_streams": 1,
+            "write_streams": 1
+          },
+          "status": "candidate_preflight_valid"
+        },
+        "reduction": {
+          "axis_evidence": "prefill graph indicates A[2] reduction while A[1] is preserved as D[2]; decode axis is unbound",
+          "ga_opcode_counts": {
+            "mul": 8,
+            "summac": 8
+          },
+          "ga_reduction_pes": [
+            "PE01",
+            "PE03",
+            "PE11",
+            "PE13",
+            "PE21",
+            "PE23",
+            "PE31",
+            "PE33"
+          ],
+          "static_dram_lc_ends": {
+            "LC0": 4,
+            "LC1": 16,
+            "LC2": 2,
+            "LC3": 1,
+            "LC4": 1
+          }
+        },
+        "resnet_gap_relevance": {
+          "candidate_part": false,
+          "direct_gap_template": false,
+          "reason": "template is a DeepSeek FP16/FP32 reduction; no ResNet UINT8/INT32 or requant path"
+        },
+        "sha256": "da91862f510562dbc30af72f4722f4645ae4b2c6086fe9689db730a5973984f7",
+        "template": "jsons/prefill_summac_fp16MN_fp32MN.json"
+      },
+      {
+        "base_info": {
+          "conflicts": [],
+          "initial_size": {
+            "A": [
+              1,
+              32,
+              32
+            ],
+            "D": [
+              1,
+              1,
+              32
+            ]
+          },
+          "metadata_targets": [
+            "A",
+            "D"
+          ],
+          "registered": true,
+          "streamed_targets": [
+            "A",
+            "D"
+          ]
+        },
+        "classification": "deepseek_transformer_static",
+        "completion_events": {
+          "ga_reduction_transout_last_index": 1,
+          "hardware_completion_protocol_validated": false,
+          "input_buffer_col_last_index": 3,
+          "output_buffer_col_last_index": 4,
+          "output_buffer_full_and_row_last_index": 3,
+          "read_and_input_buffer_full_last_index": 2,
+          "scope": "static last_index reference chain only"
+        },
+        "cross_slice": {
+          "buffer_neighbor_enabled": false,
+          "conclusion": "no direct cross-slice transport is encoded",
+          "ga_neighbor_enabled": false,
+          "hardware_topology_validated": false,
+          "neighbor_or_n2n_config_present": false,
+          "remote_named": false
+        },
+        "dtype": {
+          "input": "fp32",
+          "output": "fp32_no_outport_conversion",
+          "requant_present": false
+        },
+        "handler": {
+          "docstring": "Placeholder for summac control register logic.",
+          "handler_exists": true,
+          "handler_name": "_compute_prefill_summac_fp32MN_fp32MN_control_register_updates",
+          "update_fields": [
+            "iga_lc0.dram_loop_configs.end",
+            "iga_lc1.dram_loop_configs.end",
+            "rd_stream0.stream_engine.stream.dim_stride"
+          ],
+          "updates_ga_or_requant_fields": false,
+          "updates_output_shape_fields": false,
+          "uses_output_dimensions_in_updates": false
+        },
+        "preflight": {
+          "family": "summac",
+          "ga_opcodes": [
+            "mul",
+            "summac"
+          ],
+          "no_gate_authority": true,
+          "numerical_status": "not_validated",
+          "resources": {
+            "buffer_loop_groups": 2,
+            "buffers": 2,
+            "dram_loops": 4,
+            "ga_inports": 3,
+            "ga_pes": 16,
+            "loop_pes": 2,
+            "read_streams": 1,
+            "write_streams": 1
+          },
+          "status": "candidate_preflight_valid"
+        },
+        "reduction": {
+          "axis_evidence": "prefill graph indicates A[2] reduction while A[1] is preserved as D[2]; decode axis is unbound",
+          "ga_opcode_counts": {
+            "mul": 8,
+            "summac": 8
+          },
+          "ga_reduction_pes": [
+            "PE01",
+            "PE03",
+            "PE11",
+            "PE13",
+            "PE21",
+            "PE23",
+            "PE31",
+            "PE33"
+          ],
+          "static_dram_lc_ends": {
+            "LC0": 4,
+            "LC1": 32,
+            "LC2": 1,
+            "LC3": 1
+          }
+        },
+        "resnet_gap_relevance": {
+          "candidate_part": false,
+          "direct_gap_template": false,
+          "reason": "template is a DeepSeek FP16/FP32 reduction; no ResNet UINT8/INT32 or requant path"
+        },
+        "sha256": "bcbf94fc07e9610d98ebfcd11c0264a8f935b2020d06eda7e3131f271d2075ae",
+        "template": "jsons/prefill_summac_fp32MN_fp32MN.json"
+      },
+      {
+        "base_info": {
+          "conflicts": [],
+          "initial_size": null,
+          "metadata_targets": [],
+          "registered": false,
+          "streamed_targets": [
+            "A",
+            "D"
+          ]
+        },
+        "classification": "resnet_or_shared_candidate",
+        "completion_events": {
+          "ga_reduction_transout_last_index": 1,
+          "hardware_completion_protocol_validated": false,
+          "input_buffer_col_last_index": 3,
+          "output_buffer_col_last_index": 4,
+          "output_buffer_full_and_row_last_index": 3,
+          "read_and_input_buffer_full_last_index": 2,
+          "scope": "static last_index reference chain only"
+        },
+        "cross_slice": {
+          "buffer_neighbor_enabled": false,
+          "conclusion": "no direct cross-slice transport is encoded",
+          "ga_neighbor_enabled": false,
+          "hardware_topology_validated": false,
+          "neighbor_or_n2n_config_present": false,
+          "remote_named": false
+        },
+        "dtype": {
+          "input": "fp32_assumed_from_sum_opcode_and_no_conversion",
+          "output": "fp32_no_outport_conversion",
+          "requant_present": false
+        },
+        "handler": {
+          "docstring": null,
+          "handler_exists": false,
+          "handler_name": null,
+          "update_fields": [],
+          "updates_ga_or_requant_fields": false,
+          "updates_output_shape_fields": false,
+          "uses_output_dimensions_in_updates": false
+        },
+        "preflight": {
+          "family": "local_sum",
+          "ga_opcodes": [
+            "sum"
+          ],
+          "no_gate_authority": true,
+          "numerical_status": "not_validated",
+          "resources": {
+            "buffer_loop_groups": 2,
+            "buffers": 2,
+            "dram_loops": 4,
+            "ga_inports": 3,
+            "ga_pes": 8,
+            "loop_pes": 1,
+            "read_streams": 1,
+            "write_streams": 1
+          },
+          "status": "candidate_preflight_valid"
+        },
+        "reduction": {
+          "axis_evidence": "candidate A[1] of a 32x32 matrix; not registered or handler-bound",
+          "ga_opcode_counts": {
+            "sum": 8
+          },
+          "ga_reduction_pes": [
+            "PE00",
+            "PE02",
+            "PE10",
+            "PE12",
+            "PE20",
+            "PE22",
+            "PE30",
+            "PE32"
+          ],
+          "static_dram_lc_ends": {
+            "LC0": 4,
+            "LC1": 32,
+            "LC2": 1,
+            "LC3": 1
+          }
+        },
+        "resnet_gap_relevance": {
+          "candidate_part": true,
+          "direct_gap_template": false,
+          "reason": "shared local FP32 sum may inform a reduction stage, but ResNet GAP needs UINT8/INT32 accumulation, division, qparams, requant and UINT8 output"
+        },
+        "sha256": "dbcf087129e5746ed5ebd2b847d224bec83c034c8d652fd1b88cead6fefe5a6d",
+        "template": "jsons/sum_config_32_32.json"
+      }
+    ]
+  }
 }

@@ -51,8 +51,8 @@
 ## 当前总体状态
 
 - **已通过**：W0/G0集成骨架，W2/G2小Conv候选软件纵向闭环，W3/G3正式图/lowering/全节点与subop golden。
-- **部分通过**：W1已冻结正式候选模型、固定输入、预处理和软件量化事实；目标RTL候选已选`Trassic2.0_RTL@e3bdebba...`和28-slice。ADR-008又按操作者确认，把`ndp-sim-ref@e299b280...`的JSON/bitstream/model_execplan固定为正式硬件配置来源；Pool族三个模板的字段/寄存器/bitstream审计已完成。clean elaboration、批准端口layout/profile、量化/requant数值约定、目标数值模拟器和板级协议仍未完成，所以G1仍未通过。
-- **当前主线**：ADR-007/008均已采用。C0/C1/C2/C3软件候选审计已经完成；配置来源未知这一阻塞已消除。等待硬件期间继续W4/G4边界的C4前置工作：Pool族审计已完成，下一原子包审计Quantize与Add-Dequant，并继续建立W3 hw_op/qparams到正式配置字段的参数化adapter。所有输出保持audit/preflight身份，不生成正式W5网络JSON/bitstream。G4=`not_passed`、`w5_authorized=false`。
+- **部分通过**：W1已冻结正式候选模型、固定输入、预处理和软件量化事实；目标RTL候选已选`Trassic2.0_RTL@e3bdebba...`和28-slice。ADR-008又按操作者确认，把`ndp-sim-ref@e299b280...`的JSON/bitstream/model_execplan固定为正式硬件配置来源；Pool、Quant/Add-Dequant、GEMM/GEMV和sum族静态模板的字段/寄存器/bitstream候选审计已完成。clean elaboration、批准端口layout/profile、INT8 SA/psum/requant、sum跨slice/完成协议、目标数值模拟器和板级协议仍未完成，所以G1/G4仍未通过。
+- **当前主线**：ADR-007/008均已采用。W4-28 C0-C6软件候选与静态配置审计已经完成；配置来源未知这一阻塞已消除。等待硬件期间下一原子包是C7：建立W3 `hw_op`/tensor/qparams到正式配置字段的typed参数合同、provenance和严格失败校验。所有输出保持audit/preflight身份，不生成正式W5网络JSON/bitstream。G4=`not_passed`、`w5_authorized=false`。
 - **当前边界**：W2已证明小合成Conv的golden=NDP functional model，并新增RTL28 Conv物理布局到该功能模型的candidate-only直接探针；后者不是目标simulator、未执行目标JSON/ISA/RTL，也不构成G6证据。W3公式重放仍属于golden侧。当前没有任何正式ResNet算子达到golden=target simulator=hardware。
 
 ### 接手进度总表
@@ -63,7 +63,7 @@
 | W1 | G1未通过 | 模型/输入/量化事实、28-slice RTL候选；正式JSON/bitstream/execplan配置来源已固定 | 收集clean elaboration、量化/端口/布局/固件/板级原始证据和签署合同 |
 | W2 | G2通过 | 1/4-slice小Conv候选layout和NDP functional数值闭环；RTL28 Conv到该功能模型的candidate-only探针 | 作为W4/W6前置fixture，不外推为目标simulator或硬件规格 |
 | W3 | G3通过 | 78节点、133 hw_op、79 runtime tensor、55内部tensor、旧77映射 | 不重跑大artifact，除非hash/合同失效 |
-| W4 | 旧16-slice readiness历史通过；28-slice软件候选完成/G4未通过 | C0/C1/C2/C3完成；C4已完成正式配置源冻结和Pool族三模板审计 | 继续Quantize/Add-Dequant等共享模板审计；等待硬件证据后重审G4，不生成正式W5产物 |
+| W4 | 旧16-slice readiness历史通过；28-slice软件候选完成/G4未通过 | C0-C6完成；正式配置源和Pool、Quant/Add-Dequant、GEMM/GEMV、sum族静态模板均已审计 | 单线程建立typed配置参数合同；等待硬件证据后重审G4，不生成正式W5产物 |
 | W5～W9 | 未通过 | W9通用比较器基础设施已前置完成；其余仅有参考框架或mock接口 | 等待对应前置门和真实结果通过 |
 
 ### 当前可立即执行队列
@@ -75,8 +75,10 @@
 5. 【已完成】C3建立两种可执行候选调度：全网group4x7，以及仅在Quantize→MatMul head边界发生一次group4x7→global转换；重新生成并登记93边、91 qparam链、16个残差Add、79 tensor生命周期/alias和静态成本证据。没有读取W3大tensor或生成正式W5产物。
 6. 【已完成】ADR-008冻结正式配置来源；盘点42个JSON，三向对照MaxPool JSON→`FIELD_MAP`→register CSV，纠正旧规则对CSV方括号范围的误读。固定`PYTHONHASHSEED=0`/UTF-8/seed后两次bitstream逐字节一致，地址字段差分会改变bitstream，17-bit溢出在编码前失败。
 7. 【已完成】单线程把同一审计扩展到第二个MaxPool和AvgPool，确认三模板共用shape→LC→stream→buffer→GA五段链；两个MaxPool的18项差异全部归因，AvgPool明确只到int32 sum，未包含除法/requant。三模板均通过确定性、地址差分和溢出拒绝。
-8. 【下一步/可本地继续】单线程审计Quantize与Add-Dequant两个GA模板，重点确认输入dtype转换、固定常量与真实ResNet qparams之间的缺口；公共GA crosswalk稳定后，再评估是否并行GEMV/MatMul与sum组。只保存小型审计报告/hash，不生成正式W5实例。
-9. 【并行外部等待】W1批准请求包继续收集clean elaboration、量化/端口/布局、目标数值模拟器和板级协议；收到后按approved合同导入、版本检查和G4自动重审流程验收。没有approved合同不得宣布G1/G4/G5通过。
+8. 【已完成】C5单线程审计Quant与Add-Dequant；确认静态constant与正式ResNet qparams直接匹配数均为0，现有handler没有typed qparam通道，目标数值rounding和完整QLinearAdd仍未闭环。
+9. 【已完成】C6用两个共享Local子任务隔离审计6个GEMM/GEMV与11个sum族模板；主任务完成公共报告0.4、backend fail-closed绑定和确定性复核。未生成正式W5实例。
+10. 【下一步/可本地继续】C7单线程建立W3 hw_op/tensor/qparams到正式配置字段的typed参数合同、provenance和严格失败测试；只定义参数映射，不生成patched JSON、bitstream或execplan。
+11. 【并行外部等待】W1批准请求包继续收集clean elaboration、量化/端口/布局、目标数值模拟器和板级协议；收到后按approved合同导入、版本检查和G4自动重审流程验收。没有approved合同不得宣布G1/G4/G5通过。
 
 Local执行环境已从事故前ZIP选择性恢复并重新验收：Python 3.12.13、`pip check`、三个锁定参考仓和根测试均通过；没有恢复任何managed-worktree junction。后续依赖任务可使用Local主任务或共享目录协作子任务，独立managed worktree仍只允许tracked-only工作。
 
@@ -432,7 +434,9 @@ W1的模型子任务已完成，但G1尚未通过；architecture/quantization/ba
 
 **W4-28C5：Quant与Add-Dequant公共GA crosswalk已单线程完成。** `quant_from_buffer_int32MN_uint8MN`已证明是INT32累加结果到UINT8的requant候选，而不是ONNX FP32 `QuantizeLinear`直连模板：八路GA均执行`int32→fp32`、乘固定0.06375、加入编码后为`0x4b400040`的FP32魔数、再以`int32_sub`减raw `0x4b400000`，由此静态样例导出输出zero point 64；RTL静态证据确认末端负数夹0、超8位夹255，但nearest-even只确认到魔数配方，尚无目标数值执行。`add_dequant_uint8CWH_uint8CWH_fp32CWH`两路均为`uint8→fp32`，静态计算`(A*1+1)+(B*1+1)`并输出FP32，不读取`y_scale/y_zero_point`，因此不是完整QLinearAdd或QLinearAdd+Dequantize融合。锁定ONNX中的2个Quantize、2个Dequantize和17个QLinearAdd标量qparams已只读提取，三个直接匹配计数均为0；正式常量注入规则冻结为Quant的multiplier/魔数zero-point patch和Add-Dequant两支独立`scale`、`-zero_point*scale` patch。现有execplan handler只修改5/8个shape与stream-stride字段，`OperatorSpec`没有typed qparams，仍是进入正式配置前必须补的缺口。两模板均通过结构、确定性、GA constant差分敏感性和溢出fail-closed；报告保持数值未验证，不授权W5。
 
-**W4-28C6下一候选波次：GEMV/MatMul与sum组配置审计，尚未开始。** 公共GA字段、constant编码、dtype转换、preflight和报告语义已经稳定，两个算子组主要模板与测试文件可隔离，适合采用两个共享Local并行子任务；主任务继续单线程持有公共crosswalk、合同/backend、权威报告生成、`.agents`与Git集成。并行A只审计GEMV/MatMul的SA/GA边界、INT8缺口、bias/psum/requant和shape联动；并行B只审计local/remote/summac/sum-rec的归约轴、跨slice流、输出dtype与完成事件。两组都只生成临时审计结果，不得生成正式W5实例；主任务串行复核后才决定是否把结论写入公共合同。
+**W4-28C6：GEMV/MatMul与sum组配置审计已完成。** 两个共享Local子任务分别只新增独立实现与测试，公共crosswalk、backend、权威报告、`.agents`和Git由主任务单线程集成。GEMV/MatMul组锁定6个SA模板与5个placeholder handler：全部FP16、`bias_enable=0`，只有decode两模板经GA sum输出FP16；ResNet `M/N/K=16/1000/2048`套入现有local GEMM整块公式会出现`M//32=0`和N余8，且无typed qparams、zero-point correction、外部INT32 psum生命周期、tail或UINT8 requant。sum组锁定11个local/remote/summac/sum-rec模板：全部remote名称模板都没有N2N/neighbor，只能证明对已放入A流的数据归约；静态last-index链不能升级为硬件完成协议；`sum_config_32_32`无base-info/handler/除法/requant，FP16 4-slice remote另有base-info与JSON/handler冲突。代表GEMV以及全部11个sum模板的官方编码均在临时目录中确定复现，但数值、跨slice通信和硬件完成语义仍为`not_validated`。权威报告升至0.4并保持`no_gate_authority=true`；未生成正式W5实例，G4/W5状态不变。
+
+**W4-28C7下一候选工作包：typed配置参数合同，尚未开始。** 单线程建立W3 `hw_op`、tensor、shape、dtype和qparams到正式配置字段的typed参数对象与provenance表，先覆盖Quant/Add-Dequant、Pool、MatMul和sum审计已经明确的“可派生字段/必须外部批准字段/必须拒绝字段”。本包只实现schema、模型事实提取、公式级映射和严格失败测试，不复制静态样例常量，不生成patched JSON、bitstream、execplan或任何正式W5实例。验收要求是78节点/133个语义hw_op身份可绑定、标量与per-channel qparams无隐式丢失、缺INT8 SA/tail/psum/跨slice/完成协议时明确失败、报告确定可复现；公共合同与Git继续由主任务单线程持有。
 
 ### W5：逐算子JSON和bitstream【难度：很高】
 
@@ -683,7 +687,7 @@ W0实现前还需把以上补充转成可执行的schema字段、测试用例和
 - 改变 shape/qparams 后，所有相关 loop/stride/constant 都被 patch，不存在 unresolved control。
 - bitstream 成功之外，还必须通过阶段 F 的目标模拟器数值测试。
 
-当前状态：42个JSON已被确认为正式配置来源，其中两个MaxPool和sum型AvgPool的结构/寄存器/bitstream审计通过；AvgPool的除法/requant、固定样例quant、fp32输出add-dequant、GEMV和sum模板仍待继续审计。6个SA JSON全是FP16、bias=0，当前没有命名INT8 Conv模板。`NDPFuncModel`证明Conv数据通路原型存在，但还没有正式JSON adapter、qparams schema或参数化入口；尚未生成正式W5配置。
+当前状态：42个JSON已被确认为正式配置来源；两个MaxPool、sum型AvgPool、Quant/Add-Dequant、6个SA GEMM/GEMV以及11个sum族模板均已完成结构/寄存器/bitstream候选审计。AvgPool仍缺除法/requant，Quant/Add-Dequant仍缺正式qparams transport与完整UINT8算子闭环；6个SA JSON全是FP16、bias=0，GEMM/GEMV缺INT8/tail/psum/requant；remote-sum模板不含跨slice传输，完成协议与一个4-slice metadata冲突仍未解决。`NDPFuncModel`只证明Conv数据通路原型存在；正式JSON adapter、typed qparams schema和参数化入口尚未完成，也未生成正式W5配置。
 
 ## 阶段 F：接通目标 JSON/bitstream 数值模拟器
 

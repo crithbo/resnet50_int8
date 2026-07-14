@@ -666,6 +666,8 @@ def _target_config_toolchain_status(root: Path) -> dict[str, Any]:
         "maxpool_encoder_probe_validated": True,
         "pool_family_encoder_probe_validated": True,
         "ga_quant_add_dequant_probe_validated": True,
+        "matmul_gemv_config_probe_validated": True,
+        "sum_family_config_probe_validated": True,
         "resnet50_operator_coverage_complete": False,
     }
     for field, value in expected.items():
@@ -687,7 +689,7 @@ def _target_config_toolchain_status(root: Path) -> dict[str, Any]:
             reasons.append("authority_audit_invalid_json")
     if audit:
         semantic_checks = {
-            "audit_schema": audit.get("schema_version") == "0.3",
+            "audit_schema": audit.get("schema_version") == "0.4",
             "audit_status": audit.get("status") == "configuration_source_verified",
             "source_repository": audit.get("source", {}).get("repository")
             == OFFICIAL_CONFIG_REPOSITORY,
@@ -822,6 +824,68 @@ def _target_config_toolchain_status(root: Path) -> dict[str, Any]:
                 == "passed"
                 for probe_name in ("determinism", "differential_sensitivity", "fail_closed")
             ),
+            "matmul_candidate_scope_fail_closed": audit.get(
+                "matmul_config_probe", {}
+            ).get("status")
+            == "candidate_preflight_only"
+            and audit.get("matmul_config_probe", {})
+            .get("inventory", {})
+            .get("candidate_count")
+            == 6
+            and audit.get("matmul_config_probe", {})
+            .get("inventory", {})
+            .get("named_int8_template_count")
+            == 0
+            and audit.get("matmul_config_probe", {})
+            .get("crosswalk", {})
+            .get("resnet_qlinearmatmul_gap", {})
+            .get("complete_compatible_template_exists")
+            is False
+            and audit.get("matmul_config_probe", {}).get("numerical_status")
+            == "not_validated"
+            and audit.get("matmul_config_probe", {}).get("no_gate_authority") is True,
+            "matmul_encoder_probe": all(
+                audit.get("matmul_config_probe", {})
+                .get("encoder_probe", {})
+                .get(probe_name, {})
+                .get("status")
+                == "passed"
+                for probe_name in ("determinism", "differential_sensitivity", "fail_closed")
+            ),
+            "sum_candidate_scope_fail_closed": audit.get("sum_config_probe", {})
+            .get("authority", {})
+            .get("status")
+            == "candidate_preflight_only"
+            and audit.get("sum_config_probe", {}).get("scope", {}).get("template_count")
+            == 11
+            and audit.get("sum_config_probe", {})
+            .get("handler_gaps", {})
+            .get("fp16_remote_4slice_metadata_conflict")
+            is True
+            and audit.get("sum_config_probe", {})
+            .get("handler_gaps", {})
+            .get("output_shape_not_used_by_any_sum_handler")
+            is True
+            and audit.get("sum_config_probe", {})
+            .get("authority", {})
+            .get("hardware_status")
+            == "not_validated"
+            and audit.get("sum_config_probe", {})
+            .get("authority", {})
+            .get("no_gate_authority")
+            is True,
+            "sum_encoder_probe": len(
+                audit.get("sum_config_probe", {}).get("encoder_probe", {})
+            )
+            == 11
+            and all(
+                record.get("status") == "encoding_deterministic"
+                and record.get("numerical_status") == "not_validated"
+                and record.get("no_gate_authority") is True
+                for record in audit.get("sum_config_probe", {})
+                .get("encoder_probe", {})
+                .values()
+            ),
         }
         reasons.extend(
             f"authority_audit_semantic_mismatch:{name}"
@@ -840,6 +904,12 @@ def _target_config_toolchain_status(root: Path) -> dict[str, Any]:
         ),
         "ga_quant_add_dequant_probe_validated": record.get(
             "ga_quant_add_dequant_probe_validated"
+        ),
+        "matmul_gemv_config_probe_validated": record.get(
+            "matmul_gemv_config_probe_validated"
+        ),
+        "sum_family_config_probe_validated": record.get(
+            "sum_family_config_probe_validated"
         ),
         "resnet50_operator_coverage_complete": record.get(
             "resnet50_operator_coverage_complete"

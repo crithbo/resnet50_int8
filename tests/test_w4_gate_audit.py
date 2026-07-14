@@ -112,6 +112,16 @@ class W4GateAuditTests(unittest.TestCase):
             ]
         )
         self.assertTrue(
+            report["target_config_toolchain"][
+                "matmul_gemv_config_probe_validated"
+            ]
+        )
+        self.assertTrue(
+            report["target_config_toolchain"][
+                "sum_family_config_probe_validated"
+            ]
+        )
+        self.assertTrue(
             report["gate_criteria"]["target_rtl_isa_register_map_version_frozen"]
         )
         self.assertTrue(

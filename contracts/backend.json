@@ -49,8 +49,8 @@
       "slice_count": 28,
       "authoritative_paths": ["jsons", "bitstream", "model_execplan"],
       "audit_path": "contracts/target_config_authority_audit.json",
-      "audit_sha256": "6f303218d166117a84cde44afdce0ab6993d672c8f776e8c4cfe47d77d7d495d",
-      "audit_size_bytes": 133659,
+      "audit_sha256": "b81436245886aaca2c6e2ab26f52d6c70810daa18c835cb6f08ce683f4ffa8d3",
+      "audit_size_bytes": 240582,
       "is_target_configuration_source": true,
       "can_encode_bitstream": true,
       "can_generate_execplan": true,
@@ -58,8 +58,10 @@
       "maxpool_encoder_probe_validated": true,
       "pool_family_encoder_probe_validated": true,
       "ga_quant_add_dequant_probe_validated": true,
+      "matmul_gemv_config_probe_validated": true,
+      "sum_family_config_probe_validated": true,
       "resnet50_operator_coverage_complete": false,
-      "limitations": ["not_target_numerical_simulator", "not_hardware_execution", "resnet_operator_coverage_incomplete", "pool_quant_add_dequant_probe_only", "avgpool_requantization_absent", "uint8_maxpool_semantics_unresolved", "quant_rounding_target_execution_unconfirmed", "add_dequant_qlinearadd_requantization_absent", "execplan_qparam_binding_absent", "does_not_approve_rtl_or_layout"]
+      "limitations": ["not_target_numerical_simulator", "not_hardware_execution", "resnet_operator_coverage_incomplete", "audited_static_template_families_only", "avgpool_requantization_absent", "uint8_maxpool_semantics_unresolved", "quant_rounding_target_execution_unconfirmed", "add_dequant_qlinearadd_requantization_absent", "execplan_qparam_binding_absent", "matmul_int8_psum_requant_tail_absent", "sum_cross_slice_and_completion_unproven", "sum_metadata_conflict_unresolved", "does_not_approve_rtl_or_layout"]
     },
     "target_simulator": {
       "status": "unapproved_missing_authoritative_binding",

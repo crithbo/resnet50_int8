@@ -9,10 +9,10 @@
 - **最终验收**：正式 ResNet50 INT8 ONNX→逐节点/硬件原子算子 golden→28-slice relayout→JSON/bitstream→目标 simulator→execplan/Bank_data→RTL/硬件→三方逐算子和整网一致，并以真实cycle/带宽证据选择性能profile。
 - **W3业务封版检查点**：`35a4fde106d102b0e165e7eb13d60f7dd980db71`；W0/G0、W2/G2、W3/G3已通过，W1只完成模型/输入/软件量化事实，G1因目标硬件合同缺失尚未通过。交接文档可能有后续纯文档提交，当前恢复点以`git rev-parse HEAD`和`history.md`精确台账为准。
 - **三个仓库分工**：`CGRA_SIM`给软件/QNN语义和旧ResNet计划；ADR-008已按操作者确认，把`ndp-sim-ref@e299b280...`的`jsons/`、`bitstream/`和`model_execplan/`固定为正式28-slice硬件配置来源；`NDPFuncModel`只给W2 Conv功能数据通路，不是目标数值backend。配置来源正式不代表数值模拟器或硬件结果已通过。
-- **当前成果**：正式图含78节点/617张量，lower为133个语义hw_op；保存79个运行时tensor和55个INT32内部tensor，全部78节点独立公式重放匹配ORT，旧77原语已逐项映射。W4-28的C0/C1/C2/C3软件候选工作已完成：14个RTL28 candidate layout覆盖全部七族；两种整网调度完成93边、91 qparam链、16残差Add和79 tensor生命周期/alias审计，并生成静态成本。配置权威审计盘点42个JSON，已完成Pool三模板以及Quant/Add-Dequant两模板的字段/寄存器/bitstream审计：Quant静态样例是INT32 requant、固定multiplier=0.06375和zero point 64，Add-Dequant静态样例是两支`x*1+1`后输出FP32；它们与正式ResNet标量qparams直接匹配数均为0，现有execplan尚不承载GA qparam constant。旧16-slice物理证据只作历史参考。
+- **当前成果**：正式图含78节点/617张量，lower为133个语义hw_op；保存79个运行时tensor和55个INT32内部tensor，全部78节点独立公式重放匹配ORT，旧77原语已逐项映射。W4-28的C0-C6候选审计均已完成：14个RTL28 candidate layout覆盖全部七族；两种整网调度完成93边、91 qparam链、16残差Add和79 tensor生命周期/alias审计，并生成静态成本。配置权威审计盘点42个JSON，完成Pool三模板、Quant/Add-Dequant两模板、6个SA GEMM/GEMV模板和11个sum族模板的字段/寄存器/bitstream审计。6个SA模板均为FP16且bias关闭，ResNet `M/N/K=16/1000/2048`没有tail、typed qparams、INT32 psum或UINT8 requant闭环；所有remote-sum模板均不含N2N/neighbor，完成事件只确认到静态last-index引用链，且FP16 4-slice remote的base-info与JSON/handler冲突。现有execplan仍不承载GA/SA typed qparams。旧16-slice物理证据只作历史参考。
 - **当前硬件裁决**：目标为28-slice，RTL候选固定`Trassic2.0_RTL@e3bdebba95dec36ee8eba43caa92a326a88392cd`；主体采用七个4-slice小环的batch/channel混合profile，28-slice大环只作代表层性能候选。W4按该方案重开，G4仍未通过，`w5_authorized=false`。
-- **下一主线**：等待硬件批准期间，按ADR-008进入GEMV/MatMul与sum组配置审计。公共GA crosswalk已经冻结，下一波可让两个共享Local子任务分别只写独立实现/测试/临时证据文件；公共crosswalk、合同/backend、权威报告、`.agents`、Git和最终集成继续由主任务单线程负责。随后建立W3 hw_op/qparams到正式配置字段的typed参数化adapter。没有G4授权时只产生审计临时产物，不生成正式W5网络JSON/bitstream；外部证据收到后仍单线程执行批准合同导入和G4重审。
-- **当前外部阻塞**：正式配置来源版本不再是阻塞；剩余外部阻塞为目标commit的clean elaboration/顶层命名闭合、批准端口layout/profile、INT8 Conv/requant/qparams数值约定、目标数值模拟器入口、6144/8192 row地址裁决及硬件加载/dump协议。
+- **下一主线**：等待硬件批准期间，单线程进入W4-28 C7：建立W3 `hw_op`/tensor/qparams到正式配置字段的typed参数合同、provenance和严格失败校验，只定义参数对象与可验证映射，不生成patched JSON、bitstream或正式W5实例。公共crosswalk、合同/backend、权威报告、`.agents`、Git和最终集成继续由主任务单线程负责；外部证据收到后仍单线程执行批准合同导入和G4重审。
+- **当前外部阻塞**：正式配置来源版本不再是阻塞；剩余外部阻塞为目标commit的clean elaboration/顶层命名闭合、批准端口layout/profile、INT8 Conv/MatMul的SA/psum/requant/qparams数值约定、sum跨slice传输与完成协议、目标数值模拟器入口、6144/8192 row地址裁决及硬件加载/dump协议。
 - **禁止误用**：NDPFuncModel 当前 `extracted_*.npy` 和 `verify_pe` psum 不是可信 golden；42个 JSON也不等于 ResNet算子配置已完成；bitstream生成成功不等于数值正确。
 - **接手检查**：Local主工作区依次运行`git status --short`、`.venv\Scripts\python.exe tools\sync_repositories.py verify`、`.venv\Scripts\python.exe -m unittest discover -s tests -v`；fresh checkout可先用`verify --evidence-only`只核对tracked RTL28审计快照。预期根工作树干净、三参考仓匹配lock、RTL28 external evidence匹配hash、登记的全量测试全部通过。2026-07-13已确认managed worktree回收会穿透依赖junction清空Local目标，因此setup对非Local工作树硬失败；依赖`.venv`、三个参考仓或正式W3的任务统一回Local，直到有隔离且通过“销毁安全”验证的新方案。
 
@@ -301,17 +301,17 @@ CGRA_SIM/testing/resnet-50-int8/
 - **模型和golden——W3/G3已通过**：模型/input/hash和ORT设置已锁定；正式保存79个运行时tensor和55个lowering内部INT32 tensor，全部78节点由独立公式重放并匹配ORT。旧`golden.py`的30个唯一检查点只保留为历史参考。
 - **lowering和身份映射——W3语义层已完成**：78个ONNX节点稳定lower为133个语义hw_op；旧77模型级原语已逐项映射，Flatten明确为zero-copy。JSON实例、逐K-tile和execplan身份在W4/W5/W7继续扩展，不得说成W3尚未实现。
 - **数据变换——RTL28 C1/C2/C3软件候选已完成**：Quantize、Dequantize、View、Conv、Pool、Add、GAP和MatMul均有group4x7/LOW两profile正逆候选；新整网审计已覆盖78/78节点、93条runtime边、91条量化qparam链、79 tensor生命周期/alias和静态成本。它们仍是未获硬件批准的candidate，因此G4=`not_passed`、`w5_authorized=false`。
-- **单算子配置——来源已正式、Pool族已审计/覆盖仍不完整**：42个静态JSON属于正式配置来源；两个MaxPool和sum型AvgPool的字段/bitstream审计已通过，Pool五段联动规则已冻结。AvgPool模板只到int32 sum，除法/requant未实现；固定样例quant、fp32输出add-dequant、GEMV和sum模板待逐项验证。6个SA JSON全是FP16、bias=0，仍没有命名INT8 Conv/MatMul模板。
-- **W2/G2小Conv软件闭环已通过**：`NDPFuncModel@35eab40` 的参数化runner在同一fixture上完成1/4-slice全部84坐标，实际经过DRAM、input Buffer、SpecialPEA、ActivationUnit、output Buffer和DRAM；NumPy、im2col、ORT、CGRA QNN rounding与NDP的accumulator/D一致，physical D可inverse且全部物理字节可解释。该结论不批准旧固定主入口、目标JSON或硬件layout；C0/C1已冻结RTL28机器合同和公共布局，下一Conv算子波次再把该fixture能力组合进七个真实小环。
+- **单算子配置——来源已正式、C4-C6静态审计完成/ResNet覆盖仍不完整**：42个静态JSON属于正式配置来源；Pool三模板、Quant/Add-Dequant、6个SA GEMM/GEMV和11个sum族模板的字段/bitstream候选审计已完成。AvgPool仍缺除法/requant，Quant/Add-Dequant仍缺typed qparams和完整UINT8闭环；6个SA模板全是FP16、bias=0，MatMul缺INT8/tail/psum/requant；remote-sum无N2N/neighbor且完成协议未证实。编码确定性不代表数值正确。
+- **W2/G2小Conv软件闭环已通过**：`NDPFuncModel@35eab40` 的参数化runner在同一fixture上完成1/4-slice全部84坐标，实际经过DRAM、input Buffer、SpecialPEA、ActivationUnit、output Buffer和DRAM；NumPy、im2col、ORT、CGRA QNN rounding与NDP的accumulator/D一致，physical D可inverse且全部物理字节可解释。该结论不批准旧固定主入口、目标JSON或硬件layout；C2新增的RTL28→NDP候选探针已覆盖七个HIGH环和代表性LOW路径，但仍是candidate-only，不能升级为目标simulator证据。
 - **execplan——28-slice框架已有/ResNet适配没有**：可规划28个slave、28-bit mask、地址、bitstream、指令和Bank_data；schema仍缺numeric attributes，旧配置镜像与目标RTL存在版本冲突，bitstream失败后部分路径还会继续。
 - **RTL/硬件——外部阻塞**：没有完整 runner/testbench、加载/启动/完成/dump 协议或逐算子 checkpoint 入口。
 - **三方比较——通用逻辑比较器已就绪/真实结果未到位**：根集成层已实现inverse-relayout之后的两方/三方比较、整数bit-exact、浮点显式容差、错误分类、拓扑首错和provenance；旧runner与128-bit物理文件工具仍不能替代它。当前没有目标simulator/hardware逻辑输出，也没有获批inverse layout，因此尚无真实三方通过结论。
 
 ## 当前最高优先级
 
-严格按`.agents/plan.md`的W0→W9工作包和G0→G9验收门推进。W0/G0、W2/G2、W3/G3已经完成；W1已选定目标RTL commit但G1未通过。W4-28的C0机器合同/legacy隔离和C1公共geometry与Quantize/Dequantize/View布局已经完成，P4已允许下一波分文件并行Conv、Pool、MatMul；旧16-slice software readiness不再代表当前进度。下一业务步骤仍属于W4，不进入W5。任何W1～W3修改都必须先说明会使哪些manifest/hash/下游产物失效。
+严格按`.agents/plan.md`的W0→W9工作包和G0→G9验收门推进。W0/G0、W2/G2、W3/G3已经完成；W1已选定目标RTL commit但G1未通过。W4-28 C0-C6候选工作已完成，旧16-slice software readiness不再代表当前进度。下一业务步骤仍属于W4 C7，不进入W5。任何W1～W3修改都必须先说明会使哪些manifest/hash/下游产物失效。
 
-优先推进：按P4边界实现Conv七小环、Pool（MaxPool+GAP）和MatMul七小环/大环候选，主任务只读审阅各任务并顺序集成；若需要修改C1公共API，立即退回单线程。与此同时继续等待`e3bdebba...`的clean elaboration、端口layout、最小INT8 SA+bias+requant、目标emulator以及硬件load/dump批准。旧ONNX、旧16-slice产物、原`hex_data`和`conv_config`均只作兼容性资料。
+优先推进：单线程建立W3 `hw_op`/tensor/qparams到正式配置字段的typed参数合同、字段provenance和fail-closed校验；该包不得生成patched JSON、bitstream或execplan。与此同时继续等待`e3bdebba...`的clean elaboration、端口layout、最小INT8 SA/psum/requant、sum跨slice与完成协议、目标emulator以及硬件load/dump批准。旧ONNX、旧16-slice产物、原`hex_data`和`conv_config`均只作兼容性资料。
 
 配置字段层的Q1~Q4详细背景仍见 `.agents/rules/算子配置规则.md` 第14.3节；端到端外部资料清单以 `plan.md`“当前最高优先级请求”为准。
 
