@@ -142,10 +142,10 @@ class ContractSemanticTests(unittest.TestCase):
         with self.assertRaisesRegex(ContractError, "DeepSeek hybrid28"):
             validate_architecture_contract(value)
 
-    def test_backend_keeps_ndpfuncmodel_as_w2_reference_only(self) -> None:
+    def test_backend_keeps_ndpfuncmodel_config_adapter_boundary(self) -> None:
         value = deepcopy(self.backend)
-        value["backends"]["ndp_conv_functional"]["is_target_backend"] = True
-        with self.assertRaisesRegex(ContractError, "W2-only functional reference"):
+        value["backends"]["ndp_conv_functional"]["config_adapter_available"] = True
+        with self.assertRaisesRegex(ContractError, "identity/config-adapter boundary"):
             validate_backend_contract(value, self.architecture)
 
     def test_backend_cannot_approve_target_hardware(self) -> None:

@@ -1,11 +1,11 @@
 """Fail-closed W5 preflight for the first real ResNet-50 INT8 Conv tile.
 
-The report produced here deliberately stops before target JSON generation.  The
-locked target configuration repository has no Conv template and the workspace
-has no runner that consumes the exported emulator bundle.  What can be proven
-without guessing is still useful: the real model tensors and typed qparams are
-bound, one approved HIGH-4 physical tile is materialized, and its four reduction
-segments are checked against the W3 INT32/UINT8 goldens bit-for-bit.
+The report deliberately stops before real 1x1 target JSON generation.  The
+official repository has no named Conv template, but an operator-provided Conv
+pseudocode config and the operator-confirmed NDPFuncModel Conv simulator are now
+available.  The report keeps their remaining boundary explicit: the config can
+be encoded and the simulator can execute real physical coordinates, while no
+adapter yet makes the simulator consume that target JSON/bitstream.
 """
 
 from __future__ import annotations
@@ -19,6 +19,7 @@ import numpy as np
 import onnx
 from onnx import numpy_helper
 
+from .adapters.ndp_rtl28_functional import NdpRtl28FunctionalAdapter
 from .conv28_layout import QLinearConvPhysicalLayout
 from .golden.qlinear_conv import requantize_uint8
 from .hardware_approval import validate_hardware_approval_file
@@ -28,7 +29,7 @@ from .topology28 import Direction, TOPOLOGY28
 from .typed_config_parameters import validate_typed_config_parameter_contract
 
 
-SCHEMA_VERSION = "0.1"
+SCHEMA_VERSION = "0.2"
 REPORT_KIND = "w5_first_real_conv_preflight"
 SELECTED_NODE_ID = "node-0004"
 ACCUMULATE_HW_OP_ID = "hwop-0004-00"
@@ -187,6 +188,7 @@ def _simulator_entry_probe(
 ) -> dict[str, Any]:
     inventory = authority.get("inventory", {})
     target = backend.get("backends", {}).get("target_simulator", {})
+    ndp = backend.get("backends", {}).get("ndp_conv_functional", {})
     config_backend = backend.get("backends", {}).get("target_config_toolchain", {})
     main_path = source_root / "model_execplan" / "main.py"
     writer_path = (
@@ -197,6 +199,9 @@ def _simulator_entry_probe(
         / "output_writer.py"
     )
     runner_path = source_root / "run_all_slices.py"
+    simulator_path = (
+        project_root / "NDPFuncModel" / "tools" / "physical_image_probe.py"
+    )
     main_text = main_path.read_text(encoding="utf-8")
     writer_text = writer_path.read_text(encoding="utf-8")
     runner_text = runner_path.read_text(encoding="utf-8")
@@ -207,18 +212,22 @@ def _simulator_entry_probe(
     ):
         raise W5ConvPreflightError("DeepSeek packaging call chain differs from the audit")
     if (
-        target
-        != {
-            "status": "unapproved_missing_authoritative_binding",
-            "approved": False,
-            "implementation_available": False,
-        }
+        target.get("status")
+        != "operator_confirmed_conv_backend_adapter_pending"
+        or target.get("approved") is not False
+        or target.get("identity_confirmed") is not True
+        or target.get("implementation_available") is not True
+        or target.get("backend") != "ndp_conv_functional"
+        or target.get("config_adapter_available") is not False
+        or ndp.get("status") != "operator_confirmed_conv_simulator_component"
+        or ndp.get("entrypoint") != "tools/physical_image_probe.py"
+        or not simulator_path.is_file()
         or config_backend.get("can_execute_numerical_model") is not False
         or inventory.get("named_conv_template_count") != 0
     ):
-        raise W5ConvPreflightError("target simulator/Conv inventory is no longer fail-closed")
+        raise W5ConvPreflightError("Conv simulator identity/config-adapter boundary differs")
     return {
-        "status": "missing_from_current_workspace",
+        "status": "operator_confirmed_conv_backend_adapter_pending",
         "source_repository": config_backend["source_repository"],
         "source_commit": config_backend["source_commit"],
         "authoritative_paths": config_backend["authoritative_paths"],
@@ -246,23 +255,30 @@ def _simulator_entry_probe(
             "executes_numerical_model": False,
         },
         "target_runner": {
-            "command": None,
-            "version": None,
-            "input_package": None,
-            "exit_code_contract": None,
-            "physical_d_output_format": None,
+            "command": target["command"],
+            "working_directory": "NDPFuncModel",
+            "entrypoint": target["entrypoint"],
+            "entrypoint_sha256": sha256_file(simulator_path),
+            "version": ndp["source_commit"],
+            "input_package": "physical_image_request schema 0.1",
+            "exit_code_contract": "0 with one JSON object on stdout",
+            "physical_d_output_format": "uint8 DRAM byte plus output_after in JSON",
+            "supported_ops": target["supported_ops"],
+            "can_dump_physical_output": target["can_dump_physical_output"],
+            "consumes_target_json_or_bitstream": False,
+            "config_adapter_available": False,
         },
         "workspace_contract": target,
-        "w6_blocker": "B_TARGET_SIMULATOR_ENTRY",
+        "w6_blocker": "B_CONV_SIMULATOR_CONFIG_ADAPTER",
         "search_scope": [
             "locked ndp-sim-ref source call sites",
             "contracts/backend.json",
             "contracts/target_config_authority_audit.json",
         ],
-        "manual_path_probe": {
-            "command": "Get-Command *emulator*,*simulator* -ErrorAction SilentlyContinue",
-            "observed_result": "NO_EMULATOR_OR_SIMULATOR_COMMAND_ON_PATH",
-            "evidence_scope": "2026-07-14 Local workspace",
+        "identity_basis": {
+            "operator_confirmation": "NDPFuncModel conv_func is the Conv simulator",
+            "local_entrypoint_verified": True,
+            "target_json_binding_verified": False,
         },
         "project_root": project_root.name,
     }
@@ -324,6 +340,86 @@ def _legacy_conv_generator_probe(source_root: Path) -> dict[str, Any]:
             "shape/stream hints may be reviewed, but old16 hardcoded fields cannot "
             "authorize a target JSON or bitstream"
         ),
+    }
+
+
+def _operator_conv_candidate_probe(project_root: Path) -> dict[str, Any]:
+    evidence_path = project_root / "contracts" / "conv_full_encoder_evidence.json"
+    evidence = _load_json(evidence_path)
+    config_path = project_root / evidence["source"]["json_path"]
+    pseudocode_path = project_root / evidence["source"]["pseudocode_path"]
+    if (
+        evidence.get("status")
+        != "official_encoder_passed_candidate_semantics_unvalidated"
+        or sha256_file(config_path) != evidence["source"]["json_sha256"]
+        or sha256_file(pseudocode_path) != evidence["source"]["pseudocode_sha256"]
+        or evidence["placement_repair"].get("constraint_cost") != 0
+        or evidence["placement_repair"].get("connection_count") != 46
+        or evidence["encoder"].get("exit_code") != 0
+        or evidence["encoder"].get("mapping_status") != "zero_violations"
+    ):
+        raise W5ConvPreflightError("operator Conv candidate evidence differs")
+    config = _load_json(config_path)
+    if (
+        config.get("special_array", {}).get("data_type") != "int8"
+        or config.get("special_array", {}).get("bias_enable") != 1
+        or config.get("special_array", {}).get("mode") != "gemm"
+        or len(config.get("dram_loop_configs", {})) != 16
+        or len(config.get("lc_pe_configs", {})) != 7
+    ):
+        raise W5ConvPreflightError("operator Conv candidate fields differ")
+    output_root = project_root / "artifacts" / "w5" / "conv_full_audit" / "accepted"
+    output_paths = {
+        name: output_root / name for name in evidence["encoder"]["outputs"]
+    }
+    if any(path.is_file() for path in output_paths.values()):
+        if not all(path.is_file() for path in output_paths.values()):
+            raise W5ConvPreflightError("official Conv encoder artifacts are partial")
+        for name, path in output_paths.items():
+            record = evidence["encoder"]["outputs"][name]
+            if (
+                path.stat().st_size != record["size_bytes"]
+                or sha256_file(path) != record["sha256"]
+            ):
+                raise W5ConvPreflightError(
+                    f"official Conv encoder artifact differs: {name}"
+                )
+        review = _load_json(output_root / "mapping_review.json")
+        if (
+            review.get("summary", {}).get("connections") != 46
+            or len(review.get("connection_mapping", [])) != 46
+        ):
+            raise W5ConvPreflightError("official Conv mapping review differs")
+    return {
+        "status": evidence["status"],
+        "evidence_path": "contracts/conv_full_encoder_evidence.json",
+        "evidence_sha256": sha256_file(evidence_path),
+        "source": evidence["source"],
+        "deterministic_repairs": evidence["deterministic_repairs"],
+        "placement": {
+            key: evidence["placement_repair"][key]
+            for key in (
+                "method",
+                "mapping_cache_key",
+                "connection_count",
+                "logical_lc_count",
+                "physical_lc_capacity",
+                "logical_lc_pe_count",
+                "physical_lc_pe_capacity",
+                "constraint_cost",
+            )
+        },
+        "encoder": {
+            "repository": evidence["encoder"]["repository"],
+            "commit": evidence["encoder"]["commit"],
+            "entrypoint": evidence["encoder"]["entrypoint"],
+            "command": evidence["encoder"]["command"],
+            "exit_code": evidence["encoder"]["exit_code"],
+            "mapping_status": evidence["encoder"]["mapping_status"],
+            "outputs": evidence["encoder"]["outputs"],
+        },
+        "proven_fields": evidence["proven_fields"],
+        "not_proven": evidence["not_proven"],
     }
 
 
@@ -427,7 +523,7 @@ def _compare_tile(
     d_first = layout.explain_coordinate(bundle, bundle.tensor_ids["D"], (0, 0, 0, 0))[0]
     return {
         "status": "golden_and_physical_preflight_passed",
-        "target_simulator_comparison_status": "not_run_missing_runner",
+        "target_simulator_comparison_status": "not_run_missing_config_adapter",
         "tile_id": "node-0004-group0-k000-015-n000-002",
         "group_id": 0,
         "high_ring_owners": list(ring.owners),
@@ -476,6 +572,75 @@ def _compare_tile(
                 "first_coordinate_address": int(d_first["address"]),
             },
         },
+    }
+
+
+def _compare_ndp_first_coordinate(
+    project_root: Path,
+    values: dict[str, np.ndarray],
+    layout: QLinearConvPhysicalLayout,
+    bundle: Any,
+) -> dict[str, Any]:
+    coordinate = (0, 0, 0, 0)
+    adapter = NdpRtl28FunctionalAdapter(
+        project_root / "NDPFuncModel",
+        timeout_seconds=60,
+    )
+    result = adapter.run_qlinear_conv_coordinates(layout, bundle, (coordinate,))
+    expected_p = int(values["P"][coordinate])
+    expected_d = int(values["D"][coordinate])
+    observed_p = result.accumulators[0]
+    observed_d = result.outputs[0]
+    inverse_d = int(layout.inverse_port(result.updated_bundle, "D")[coordinate])
+    if observed_p != expected_p or observed_d != expected_d or inverse_d != expected_d:
+        raise W5ConvPreflightError("NDPFuncModel first real 1x1 coordinate differs")
+    plan = result.probe_plans[0]
+    probe = result.physical_probe.int8_dot_probes[0]
+    if (
+        plan.source_owners != (0, 1, 3, 2)
+        or plan.destination_owner != 0
+        or len(probe.get("partial_accumulators", [])) != 4
+        or probe.get("execution_path")
+        != [
+            "DRAM",
+            "input_buffer",
+            "SpecialPEA",
+            "ActivationUnit",
+            "output_buffer",
+            "DRAM",
+        ]
+    ):
+        raise W5ConvPreflightError("NDPFuncModel first-coordinate execution path differs")
+    return {
+        "status": "passed",
+        "scope": "one_real_hwop-0004-00_output_coordinate",
+        "coordinate": list(coordinate),
+        "logical_shape": list(bundle.plan.output_shape),
+        "kernel_shape": list(bundle.plan.weight_shape[2:]),
+        "pads": list(bundle.plan.pads),
+        "strides": list(bundle.plan.strides),
+        "dilations": list(bundle.plan.dilations),
+        "simulator": "NDPFuncModel conv_func",
+        "simulator_status": adapter.status,
+        "source_commit": "35eab40e5314bf603481dd6268bc96ab2ca514a6",
+        "destination_slice": plan.destination_owner,
+        "source_owners": list(plan.source_owners),
+        "channel_ranges": [list(value) for value in plan.channel_ranges],
+        "ring_segment_ends": list(plan.probe.ring_segment_ends),
+        "partial_accumulators": list(probe["partial_accumulators"]),
+        "accumulator": {
+            "observed": observed_p,
+            "golden": expected_p,
+            "mismatch_count": 0,
+        },
+        "output": {
+            "observed": observed_d,
+            "golden": expected_d,
+            "inverse_physical_d": inverse_d,
+            "mismatch_count": 0,
+        },
+        "execution_path": probe["execution_path"],
+        "config_link_status": "not_run_target_json_adapter_missing",
     }
 
 
@@ -646,13 +811,15 @@ def build_w5_first_conv_preflight(
     backend = _load_json(backend_path)
     simulator_probe = _simulator_entry_probe(root, source, authority, backend)
     legacy_generator_probe = _legacy_conv_generator_probe(source)
+    operator_candidate = _operator_conv_candidate_probe(root)
     tile = _compare_tile(values, layout, bundle)
+    ndp_coordinate = _compare_ndp_first_coordinate(root, values, layout, bundle)
 
     plan = bundle.plan
     report = {
         "schema_version": SCHEMA_VERSION,
         "report_kind": REPORT_KIND,
-        "status": "g5_preflight_blocked_before_target_json",
+        "status": "g5_candidate_encoded_real_1x1_config_adapter_blocked",
         "selection": {
             "node_id": SELECTED_NODE_ID,
             "onnx_name": accumulate["onnx_name"],
@@ -670,6 +837,12 @@ def build_w5_first_conv_preflight(
             "target_config_authority_sha256": sha256_file(authority_path),
             "backend_contract_path": "contracts/backend.json",
             "backend_contract_sha256": sha256_file(backend_path),
+            "operator_conv_candidate_evidence_path": operator_candidate[
+                "evidence_path"
+            ],
+            "operator_conv_candidate_evidence_sha256": operator_candidate[
+                "evidence_sha256"
+            ],
             "target_config_commit": commit,
         },
         "logical_instance": {
@@ -700,32 +873,37 @@ def build_w5_first_conv_preflight(
             "layout_validation": layout_validation,
         },
         "first_tile_golden_preflight": tile,
+        "ndp_conv_simulator_first_coordinate": ndp_coordinate,
         "deepseek_target_simulator_entry": simulator_probe,
         "target_configuration": {
             "official_json_inventory_count": authority["inventory"]["json_count"],
             "official_named_conv_template_count": authority["inventory"][
                 "named_conv_template_count"
             ],
-            "patched_json_generated": False,
-            "bitstream_generated": False,
-            "mapping_review_generated": False,
+            "candidate_named_conv_template_count": 1,
+            "operator_candidate": operator_candidate,
+            "candidate_json_encoded": True,
+            "candidate_bitstream_generated": True,
+            "candidate_mapping_review_generated": True,
+            "real_1x1_patched_json_generated": False,
+            "real_1x1_bitstream_generated": False,
             "unknown_fields_rejected": True,
             "legacy_generator_probe": legacy_generator_probe,
             "unresolved_target_bindings": [
                 {
-                    "blocker": "B_CONV_TEMPLATE_ABSENT",
-                    "fields": ["CONFIG", "dram_loop_configs", "lc_pe_configs"],
-                    "reason": "locked target source has zero named Conv templates",
+                    "blocker": "B_CONV_CANDIDATE_SHAPE_LOWERING",
+                    "fields": ["dram_loop_configs", "lc_pe_configs", "stream_engine"],
+                    "reason": "encoded candidate declares 3x3 B1 while hwop-0004-00 is 1x1 B16, and pseudocode/JSON loop and PE formulas conflict",
                 },
                 {
-                    "blocker": "B_CONV_INT8_SA",
-                    "fields": ["special_array.mode", "special_array.data_type"],
-                    "reason": "no approved UINT8xINT8-to-INT32 SA field encoding",
+                    "blocker": "B_CONV_SIMULATOR_CONFIG_ADAPTER",
+                    "fields": ["conv_full.json", "physical_image_request"],
+                    "reason": "NDPFuncModel executes real Conv physical coordinates but does not consume ndp-sim target JSON or bitstream",
                 },
                 {
-                    "blocker": "B_CONV_BIAS_PSUM",
+                    "blocker": "B_CONV_SA_PSUM_BINDING",
                     "fields": ["buffer_config", "stream_engine", "special_array"],
-                    "reason": "first/middle/last-K bias and persistent INT32 psum storage are unbound",
+                    "reason": "INT8 and bias bits encode and NDPFuncModel proves four-segment INT32 accumulation, but exact target-config ports, signedness and unique final flush are not bound to that execution",
                 },
                 {
                     "blocker": "B_REQUANT_TARGET_NUMERICS",
@@ -746,13 +924,14 @@ def build_w5_first_conv_preflight(
             "g6_passed": False,
             "g8_passed": False,
             "target_simulator_numerical_status": "not_run",
+            "conv_simulator_component_status": "first_real_coordinate_passed",
             "golden_tile_status": "passed",
             "stop_expansion": True,
             "whole_network_generation_allowed": False,
             "next_required_evidence": [
-                "authoritative target numerical simulator command/version/input/D format",
-                "approved INT8 Conv JSON template or field-level register contract",
-                "approved bias/psum/requant/qparam transport and unique-flush semantics",
+                "derive and encode a semantically consistent hwop-0004-00 1x1 JSON",
+                "bind ndp-sim target JSON/bitstream fields to the NDPFuncModel request",
+                "bind target bias/psum/requant/qparam transport and unique-flush semantics",
             ],
         },
     }
@@ -765,7 +944,7 @@ def validate_w5_first_conv_preflight(value: dict[str, Any]) -> None:
 
     if value.get("schema_version") != SCHEMA_VERSION or value.get("report_kind") != REPORT_KIND:
         raise W5ConvPreflightError("W5 Conv preflight identity differs")
-    if value.get("status") != "g5_preflight_blocked_before_target_json":
+    if value.get("status") != "g5_candidate_encoded_real_1x1_config_adapter_blocked":
         raise W5ConvPreflightError("W5 Conv preflight must remain blocked")
     selection = value.get("selection", {})
     if selection.get("node_id") != SELECTED_NODE_ID or selection.get("hw_op_ids") != [
@@ -776,9 +955,12 @@ def validate_w5_first_conv_preflight(value: dict[str, Any]) -> None:
     target = value.get("target_configuration", {})
     if (
         target.get("official_named_conv_template_count") != 0
-        or target.get("patched_json_generated") is not False
-        or target.get("bitstream_generated") is not False
-        or target.get("mapping_review_generated") is not False
+        or target.get("candidate_named_conv_template_count") != 1
+        or target.get("candidate_json_encoded") is not True
+        or target.get("candidate_bitstream_generated") is not True
+        or target.get("candidate_mapping_review_generated") is not True
+        or target.get("real_1x1_patched_json_generated") is not False
+        or target.get("real_1x1_bitstream_generated") is not False
         or target.get("unknown_fields_rejected") is not True
     ):
         raise W5ConvPreflightError("W5 Conv target configuration exceeded evidence")
@@ -786,9 +968,9 @@ def validate_w5_first_conv_preflight(value: dict[str, Any]) -> None:
         item.get("blocker") for item in target.get("unresolved_target_bindings", [])
     }
     required = {
-        "B_CONV_TEMPLATE_ABSENT",
-        "B_CONV_INT8_SA",
-        "B_CONV_BIAS_PSUM",
+        "B_CONV_CANDIDATE_SHAPE_LOWERING",
+        "B_CONV_SIMULATOR_CONFIG_ADAPTER",
+        "B_CONV_SA_PSUM_BINDING",
         "B_REQUANT_TARGET_NUMERICS",
         "B_EXECPLAN_TYPED_TRANSPORT",
     }
@@ -799,7 +981,7 @@ def validate_w5_first_conv_preflight(value: dict[str, Any]) -> None:
     if (
         tile.get("status") != "golden_and_physical_preflight_passed"
         or tile.get("target_simulator_comparison_status")
-        != "not_run_missing_runner"
+        != "not_run_missing_config_adapter"
         or comparisons.get("P", {}).get("mismatch_count") != 0
         or comparisons.get("D", {}).get("mismatch_count") != 0
         or len(tile.get("k_lifecycle", [])) != 4
@@ -807,11 +989,24 @@ def validate_w5_first_conv_preflight(value: dict[str, Any]) -> None:
         raise W5ConvPreflightError("W5 Conv golden tile evidence differs")
     simulator = value.get("deepseek_target_simulator_entry", {})
     if (
-        simulator.get("status") != "missing_from_current_workspace"
-        or simulator.get("target_runner", {}).get("command") is not None
+        simulator.get("status")
+        != "operator_confirmed_conv_backend_adapter_pending"
+        or not simulator.get("target_runner", {}).get("command")
+        or simulator.get("target_runner", {}).get("config_adapter_available")
+        is not False
         or simulator.get("packager", {}).get("executes_numerical_model") is not False
     ):
-        raise W5ConvPreflightError("target simulator absence is not preserved")
+        raise W5ConvPreflightError("target simulator identity/adapter boundary differs")
+    ndp_coordinate = value.get("ndp_conv_simulator_first_coordinate", {})
+    if (
+        ndp_coordinate.get("status") != "passed"
+        or ndp_coordinate.get("coordinate") != [0, 0, 0, 0]
+        or ndp_coordinate.get("accumulator", {}).get("mismatch_count") != 0
+        or ndp_coordinate.get("output", {}).get("mismatch_count") != 0
+        or ndp_coordinate.get("config_link_status")
+        != "not_run_target_json_adapter_missing"
+    ):
+        raise W5ConvPreflightError("NDP Conv first-coordinate evidence differs")
     gate = value.get("gate_state", {})
     if (
         gate.get("w5_started") is not True

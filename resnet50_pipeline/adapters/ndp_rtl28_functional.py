@@ -101,10 +101,23 @@ class NdpRtl28ConvResult:
     updated_bundle: Conv28PhysicalBundle
 
 
+@dataclass(frozen=True)
+class NdpRtl28CoordinateResult:
+    """Executed coordinate subset from the operator-confirmed Conv simulator."""
+
+    coordinates: tuple[tuple[int, int, int, int], ...]
+    accumulators: tuple[int, ...]
+    outputs: tuple[int, ...]
+    probe_plans: tuple[Rtl28ConvProbePlan, ...]
+    physical_probe: NdpPhysicalProbeResult
+    address_map: Rtl28ShadowAddressMap
+    updated_bundle: Conv28PhysicalBundle
+
+
 class NdpRtl28FunctionalAdapter:
     """Run RTL28 Conv candidate bytes through the existing NDP PE probe."""
 
-    status = "candidate_only"
+    status = "operator_confirmed_conv_simulator_component"
     target_simulator_validated = False
     g6_validated = False
 
@@ -153,10 +166,17 @@ class NdpRtl28FunctionalAdapter:
     def _physical_probe_bundle(
         bundle: Conv28PhysicalBundle,
         address_map: Rtl28ShadowAddressMap,
+        *,
+        include_region_keys: set[tuple[str, int]] | None = None,
     ) -> ConvPhysicalBundle:
         image = SparsePhysicalImage(address_map.shadow_geometry)
         regions: list[PhysicalRegion] = []
         for source in bundle.regions:
+            if (
+                include_region_keys is not None
+                and (source.port, source.slice_id) not in include_region_keys
+            ):
+                continue
             name = _PORT_TO_PROBE_REGION[source.port]
             payload = bundle.read(source.port, source.slice_id)
             provenance = tuple(
@@ -189,7 +209,7 @@ class NdpRtl28FunctionalAdapter:
             regions=tuple(regions),
             metadata={
                 "contract": "candidate_only_rtl28_ndp_shadow_v1",
-                "status": "candidate_only",
+                "status": "operator_confirmed_conv_simulator_component",
                 "profile_id": bundle.plan.profile_id,
                 "target_contract": bundle.plan.contract,
                 "slice_count": bundle.plan.geometry.slice_count,
@@ -264,6 +284,7 @@ class NdpRtl28FunctionalAdapter:
         pads: tuple[int, int, int, int] | None = None,
         dilations: tuple[int, int] | None = None,
         address_map: Rtl28ShadowAddressMap | None = None,
+        output_coordinates: tuple[tuple[int, int, int, int], ...] | None = None,
     ) -> tuple[Rtl28ConvProbePlan, ...]:
         """Build physical PE probes without defining target instruction semantics."""
 
@@ -297,6 +318,31 @@ class NdpRtl28FunctionalAdapter:
         n_count, channels, input_h, input_w = activation.shape
         output_channels, _, kernel_h, kernel_w = weight.shape
         _, _, output_h, output_w = bundle.plan.output_shape
+        selected_coordinates: set[tuple[int, int, int, int]] | None = None
+        selected_nk: set[tuple[int, int]] | None = None
+        if output_coordinates is not None:
+            normalized = tuple(
+                tuple(int(item) for item in value) for value in output_coordinates
+            )
+            if not normalized:
+                raise ValueError("output_coordinates must not be empty")
+            if any(len(value) != 4 for value in normalized):
+                raise ValueError("every output coordinate must have rank four")
+            if len(set(normalized)) != len(normalized):
+                raise ValueError("output_coordinates must be unique")
+            for n, k, oh, ow in normalized:
+                if not (
+                    0 <= n < n_count
+                    and 0 <= k < output_channels
+                    and 0 <= oh < output_h
+                    and 0 <= ow < output_w
+                ):
+                    raise ValueError(
+                        "output coordinate is outside the Conv result: "
+                        f"{(n, k, oh, ow)}"
+                    )
+            selected_coordinates = set(normalized)
+            selected_nk = {(value[0], value[1]) for value in normalized}
         stride_h, stride_w = strides
         dilation_h, dilation_w = dilations
         pad_top, pad_left, _, _ = pads
@@ -305,6 +351,8 @@ class NdpRtl28FunctionalAdapter:
         plans: list[Rtl28ConvProbePlan] = []
         for n in range(n_count):
             for k in range(output_channels):
+                if selected_nk is not None and (n, k) not in selected_nk:
+                    continue
                 ring_kind, group_id, destination, source_owners = self._ring_owners(
                     bundle, n, k
                 )
@@ -321,6 +369,12 @@ class NdpRtl28FunctionalAdapter:
                 )
                 for oh in range(output_h):
                     for ow in range(output_w):
+                        coordinate = (n, k, oh, ow)
+                        if (
+                            selected_coordinates is not None
+                            and coordinate not in selected_coordinates
+                        ):
+                            continue
                         activation_addresses: list[int] = []
                         weight_addresses: list[int] = []
                         branch_mask: list[bool] = []
@@ -377,7 +431,6 @@ class NdpRtl28FunctionalAdapter:
                                 branch_mask.append(True)
                             segment_ends.append(len(activation_addresses))
 
-                        coordinate = (n, k, oh, ow)
                         target_output = self._target_element_address(
                             layout, bundle, "D", coordinate
                         )
@@ -412,7 +465,82 @@ class NdpRtl28FunctionalAdapter:
                                 target_output_address=target_output,
                             )
                         )
+        if selected_coordinates is not None and len(plans) != len(selected_coordinates):
+            raise PipelineError(
+                "RTL28 coordinate selection did not produce every requested probe"
+            )
         return tuple(plans)
+
+    def run_qlinear_conv_coordinates(
+        self,
+        layout: QLinearConvPhysicalLayout,
+        bundle: Conv28PhysicalBundle,
+        output_coordinates: tuple[tuple[int, int, int, int], ...],
+        *,
+        strides: tuple[int, int] | None = None,
+        pads: tuple[int, int, int, int] | None = None,
+        dilations: tuple[int, int] | None = None,
+    ) -> NdpRtl28CoordinateResult:
+        """Execute only selected real output coordinates through NDPFuncModel.
+
+        This is the bounded bridge used for the first real 1x1 Conv closure. It
+        exercises real RTL28 addresses and HIGH/LOW ring segmentation without
+        constructing millions of per-output probes for the whole tensor.
+        """
+
+        self._require_layout(layout, bundle)
+        coordinates = tuple(
+            tuple(int(item) for item in coordinate)
+            for coordinate in output_coordinates
+        )
+        address_map = self._shadow_map(bundle)
+        plans = self.build_probe_plans(
+            layout,
+            bundle,
+            strides=strides,
+            pads=pads,
+            dilations=dilations,
+            address_map=address_map,
+            output_coordinates=coordinates,
+        )
+        included: set[tuple[str, int]] = set()
+        for plan in plans:
+            included.update(("A", owner) for owner in plan.source_owners)
+            included.add(("B", plan.destination_owner))
+            included.add(("D", plan.destination_owner))
+        physical_bundle = self._physical_probe_bundle(
+            bundle,
+            address_map,
+            include_region_keys=included,
+        )
+        physical_probe = self._ndp.probe_physical_bundle(
+            physical_bundle,
+            int8_dot_probes=tuple(plan.probe for plan in plans),
+        )
+        returned: dict[tuple[int, int, int, int], tuple[int, int]] = {}
+        for item in physical_probe.int8_dot_probes:
+            coordinate = tuple(int(value) for value in item["logical_output_coordinate"])
+            if coordinate in returned:
+                raise PipelineError(f"duplicate RTL28 NDP output coordinate {coordinate}")
+            returned[coordinate] = (int(item["accumulator"]), int(item["output_after"]))
+        if set(returned) != set(coordinates):
+            raise PipelineError("RTL28 NDP coordinate probe coverage differs")
+
+        updated_payloads = dict(bundle.payloads)
+        for slice_id in {plan.destination_owner for plan in plans}:
+            region = physical_bundle.region("output", slice_id)
+            updated_payloads[("D", slice_id)] = physical_bundle.image.read(
+                region.base_address, region.size_bytes
+            )
+        return NdpRtl28CoordinateResult(
+            coordinates=coordinates,
+            accumulators=tuple(returned[value][0] for value in coordinates),
+            outputs=tuple(returned[value][1] for value in coordinates),
+            probe_plans=plans,
+            physical_probe=physical_probe,
+            address_map=address_map,
+            updated_bundle=replace(bundle, payloads=updated_payloads),
+        )
 
     def run_qlinear_conv(
         self,
@@ -476,6 +604,7 @@ class NdpRtl28FunctionalAdapter:
 
 
 __all__ = [
+    "NdpRtl28CoordinateResult",
     "NdpRtl28ConvResult",
     "NdpRtl28FunctionalAdapter",
     "Rtl28ConvProbePlan",

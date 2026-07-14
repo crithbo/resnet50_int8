@@ -1,0 +1,107 @@
+{
+  "schema_version": "0.1",
+  "contract_type": "operator_conv_pseudocode_encoder_evidence",
+  "status": "official_encoder_passed_candidate_semantics_unvalidated",
+  "source": {
+    "json_path": "conv_full.json",
+    "json_sha256": "72b81a745694bd90c630d2276339a1e22d9b77f1de808bb670b927953b488949",
+    "pseudocode_path": "conv_full.txt",
+    "pseudocode_sha256": "1b24cc4b70e5becfd3537ae7ae61c10f7f0f8951d2089843e7ff54461b41a635",
+    "provenance": "operator-provided senior-authored untested Conv pseudocode",
+    "declared_shape": {
+      "B": 1,
+      "C": 64,
+      "K": 64,
+      "P": 56,
+      "Q": 56,
+      "R": 3,
+      "S": 3,
+      "pad": 1,
+      "stride": 1,
+      "dilation": 1
+    }
+  },
+  "deterministic_repairs": [
+    "LC_PE.LC8 -> DRAM_LC.LC8",
+    "GROUP2.COL_LC source -> GROUP2.ROW_LC",
+    "GROUP3.COL_LC source -> GROUP3.ROW_LC"
+  ],
+  "placement_repair": {
+    "reason": "fixed A/C and A/D endpoints made shared LC fanout physically contradictory",
+    "method": "duplicate the k-prime/q/p-prime loop-control chain into LC13-LC15 and split remote consumers",
+    "mapping_cache_key": "9cdaec339a4e2f01",
+    "connection_count": 46,
+    "logical_lc_count": 16,
+    "physical_lc_capacity": 20,
+    "logical_lc_pe_count": 7,
+    "physical_lc_pe_capacity": 10,
+    "constraint_cost": 0,
+    "node_to_resource": {
+      "DRAM_LC.LC0": "LC2",
+      "DRAM_LC.LC1": "LC4",
+      "DRAM_LC.LC10": "LC16",
+      "DRAM_LC.LC11": "LC17",
+      "DRAM_LC.LC12": "LC19",
+      "DRAM_LC.LC13": "LC9",
+      "DRAM_LC.LC14": "LC7",
+      "DRAM_LC.LC15": "LC8",
+      "DRAM_LC.LC2": "LC3",
+      "DRAM_LC.LC3": "LC12",
+      "DRAM_LC.LC4": "LC14",
+      "DRAM_LC.LC5": "LC13",
+      "DRAM_LC.LC6": "LC5",
+      "DRAM_LC.LC7": "LC6",
+      "DRAM_LC.LC8": "LC15",
+      "DRAM_LC.LC9": "LC18",
+      "LC_PE.PE0": "PE3",
+      "LC_PE.PE1": "PE4",
+      "LC_PE.PE2": "PE5",
+      "LC_PE.PE3": "PE6",
+      "LC_PE.PE4": "PE7",
+      "LC_PE.PE5": "PE8",
+      "LC_PE.PE6": "PE9"
+    }
+  },
+  "encoder": {
+    "repository": "https://github.com/uSFrances/ndp-sim.git",
+    "commit": "e299b2804448242d1589b3e58ed7c5a9a5eca09f",
+    "entrypoint": "ndp-sim-ref/bitstream/main.py",
+    "command": ".venv/Scripts/python.exe -X utf8 bitstream/main.py -c ../conv_full.json -o ../artifacts/w5/conv_full_audit/accepted --heuristic-iterations 5000 --heuristic-restarts 1 --seed 17 --visualize-placement -q",
+    "exit_code": 0,
+    "mapping_status": "zero_violations",
+    "outputs": {
+      "mapping_review.json": {
+        "size_bytes": 9705,
+        "sha256": "68e03556d6f9b13c881a7d8e715ff2769bdb021444d546c20851345029b99d18"
+      },
+      "parsed_bitstream.txt": {
+        "size_bytes": 5032,
+        "sha256": "e9a668056af903923da573d8c218b1aaa5353f3f2eeb416f41d5fd0ed8b21aa1"
+      },
+      "modules_dump_64b.bin": {
+        "size_bytes": 4620,
+        "sha256": "5171dc60449a4619730c4a8bb8fcb0bead9282b2657d078f2055f1f0f761581f"
+      },
+      "modules_dump_128b.bin": {
+        "size_bytes": 4550,
+        "sha256": "f6991ad5e1da9cc627cf4b16ebd1550d2d9055a1977d5fb519a20fb02983af8c"
+      },
+      "detailed_dump.txt": {
+        "size_bytes": 42402,
+        "sha256": "0cb9aa3648d82017c8c921bf255ca8670243b33ebb16f1a12016f2696f3cdf1b"
+      }
+    }
+  },
+  "proven_fields": {
+    "special_array.data_type": "int8 encoded as 00",
+    "special_array.bias_enable": "1 encoded as 1",
+    "special_array.mode": "gemm",
+    "stream_targets": ["A", "B", "C", "D"]
+  },
+  "not_proven": [
+    "pseudocode-to-JSON loop and PE transcription correctness",
+    "parameterization for real hwop-0004-00 1x1 shape",
+    "target JSON/bitstream consumption by NDPFuncModel",
+    "target requantization and typed execplan transport"
+  ]
+}

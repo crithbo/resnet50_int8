@@ -569,23 +569,30 @@ def validate_backend_contract(
     if not isinstance(ndp, dict):
         raise ContractError("backend.ndp_conv_functional must be an object")
     if (
-        ndp.get("status") != "approved_for_w2_g2_only"
-        or ndp.get("role") != "w2_functional_reference_only"
+        ndp.get("status") != "operator_confirmed_conv_simulator_component"
+        or ndp.get("role") != "conv_functional_simulator_config_adapter_pending"
         or ndp.get("source_repository")
         != "https://github.com/runoobb/NDPFuncModel.git"
         or ndp.get("source_commit")
         != "35eab40e5314bf603481dd6268bc96ab2ca514a6"
         or ndp.get("is_target_backend") is not False
+        or ndp.get("identity_confirmed") is not True
+        or ndp.get("entrypoint") != "tools/physical_image_probe.py"
+        or ndp.get("consumes_target_json_or_bitstream") is not False
+        or ndp.get("config_adapter_available") is not False
+        or ndp.get("slice_counts") != [1, 4, 28]
     ):
-        raise ContractError("NDPFuncModel must remain a W2-only functional reference")
+        raise ContractError(
+            "NDPFuncModel Conv simulator identity/config-adapter boundary differs"
+        )
     ndp_limitations = set(ndp.get("limitations", []))
     if not {
         "not_target_json_or_bitstream",
-        "not_target_simulator",
+        "not_config_bound_target_runner",
         "not_target_hardware",
         "not_hardware_approved",
     }.issubset(ndp_limitations):
-        raise ContractError("NDPFuncModel limitations must exclude every target backend role")
+        raise ContractError("NDPFuncModel limitations must preserve the config/runtime boundary")
 
     architecture_evidence = architecture["candidate_evidence"]["rtl28_static_audit_v1"]
     rtl = backends["rtl28_candidate_evidence"]
@@ -919,11 +926,23 @@ def validate_backend_contract(
     if not isinstance(simulator, dict):
         raise ContractError("backend.target_simulator must be an object")
     if (
-        simulator.get("status") != "unapproved_missing_authoritative_binding"
+        simulator.get("status")
+        != "operator_confirmed_conv_backend_adapter_pending"
         or simulator.get("approved") is not False
-        or simulator.get("implementation_available") is not False
+        or simulator.get("identity_confirmed") is not True
+        or simulator.get("implementation_available") is not True
+        or simulator.get("backend") != "ndp_conv_functional"
+        or simulator.get("supported_ops") != ["QLinearConv"]
+        or simulator.get("entrypoint")
+        != "NDPFuncModel/tools/physical_image_probe.py"
+        or simulator.get("consumes_target_json_or_bitstream") is not False
+        or simulator.get("config_adapter_available") is not False
+        or simulator.get("can_dump_physical_output") is not True
+        or simulator.get("g6_ready") is not False
     ):
-        raise ContractError("target simulator must remain explicitly unapproved")
+        raise ContractError(
+            "target simulator must preserve confirmed identity and pending adapter"
+        )
     hardware = backends["target_hardware"]
     if not isinstance(hardware, dict):
         raise ContractError("backend.target_hardware must be an object")

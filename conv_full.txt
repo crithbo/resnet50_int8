@@ -1,0 +1,76 @@
+B = 1
+C = 64
+K = 64
+P = Q = 56
+R = S = 3
+pad = 1
+stride = 1
+dilation = 1
+
+Input: uint8
+    C4 H C'=C//4 W
+Weights: int8
+    C4 K32 R S C'=C//4 K'=K//32
+bias: int32
+    K32 K'=K//32
+Output: uint8
+    K4 P K'=K//4 Q
+
+H = P + R
+W = Q + S
+
+for q(lc0 0) in range(0, 2, 1):
+    for k(lc1 1) in range(0,56,1):
+        for p'(lc2 2) in range(0,2,1):
+            # reduction
+            for c'_shared(lc3 3) in range(0,4,1):
+                for s(lc4 4) in range(0,3,1):
+                    for r(lc5 5) in range(0,3,1):
+                        # activations uint8
+                        # port2 port1 port0
+                        # h_pad = r + p'*32
+                        # w_pad = s + q
+
+                        pe0 = p'(port0)*32(port1)+r(port2)
+                        pe1 = s(port0) + q(port1)
+                        # c h  w
+                        # 4 32 1
+                        # ag1(c'_in, h_pad, w_pad)
+                        ag1(c'_shared, pe0, pe1)
+                        for row(row1 6) in range(0,4,1):
+                            for col(col1 7) in range(0,32,16):
+                                buf_ag(row,col)
+
+                        for c'_w(lc3 6) in range(0,4,1):
+                            # weights int8
+                            pe2 = s(port0)*3(port1)+r(port2)
+                            pe3 = c'_shared * 4 + c'_w
+                            # port2 port1 port0
+                            # C  K  RS
+                            # 4  32 1
+                            ag0(pe3, k', pe2)
+                            for row(row1 7) in range(0,4,1):
+                                for col(col1 8) in range(0,32,16):
+                                    buf_ag(row,col)
+            # bias int32
+            ag3(k',0,0)
+            for row(row1 3) in range(0,4,1):
+                for col(col1 4) in range(0,32,16):
+                    buf_ag(row, col, offsets)
+            # output
+            for k_reg(lc9 3) in range(0,4,1):
+                for p_reg(lc10 4) in range(0,4,1):
+                    for p_pe(lc11 5) in range(0,8,4):
+                        for k_pe(lc12 6) in range(0,2,1):
+                            # port2 port1 port0
+                            # p = p_pe_reg + p_reg*4 + p'*32
+                            # k = k_pe + k_reg*2 + k'*32
+                            pe4 = p_reg(port0)*4*2(port1) + p_pe(port2)
+                            pe5 = p'(port0)*32(port1) + pe4(port2)
+                            pe6 = k_reg(port0)*2(port1) + k_pe(port2)
+                            pe7 = k'(port0)*8(port1) + pe6(port2)
+                            # K P Q
+                            ag3(pe7, pe5, q)
+                    for row(row3 5) in range(0,2,1):
+                        for col(col3 6) in range(0,32,16):
+                            buf_ag(row, col, offsets(k4p4))

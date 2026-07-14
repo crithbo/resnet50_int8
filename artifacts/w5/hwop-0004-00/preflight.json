@@ -11,10 +11,10 @@
       "executes_numerical_model": false,
       "invoked_program": "bitstream/main.py"
     },
-    "manual_path_probe": {
-      "command": "Get-Command *emulator*,*simulator* -ErrorAction SilentlyContinue",
-      "evidence_scope": "2026-07-14 Local workspace",
-      "observed_result": "NO_EMULATOR_OR_SIMULATOR_COMMAND_ON_PATH"
+    "identity_basis": {
+      "local_entrypoint_verified": true,
+      "operator_confirmation": "NDPFuncModel conv_func is the Conv simulator",
+      "target_json_binding_verified": false
     },
     "packager": {
       "command": ".\\.venv\\Scripts\\python.exe main.py <operator_graph.json> --export-emulator",
@@ -42,19 +42,39 @@
     ],
     "source_commit": "e299b2804448242d1589b3e58ed7c5a9a5eca09f",
     "source_repository": "https://github.com/uSFrances/ndp-sim.git",
-    "status": "missing_from_current_workspace",
+    "status": "operator_confirmed_conv_backend_adapter_pending",
     "target_runner": {
-      "command": null,
-      "exit_code_contract": null,
-      "input_package": null,
-      "physical_d_output_format": null,
-      "version": null
+      "can_dump_physical_output": true,
+      "command": ".venv/Scripts/python.exe -m tools.physical_image_probe <request.json>",
+      "config_adapter_available": false,
+      "consumes_target_json_or_bitstream": false,
+      "entrypoint": "NDPFuncModel/tools/physical_image_probe.py",
+      "entrypoint_sha256": "63b93ccbe4f8a7c35af694c9f6e1d6b4c3ac5b01d7e1e63afc811c55faf33d95",
+      "exit_code_contract": "0 with one JSON object on stdout",
+      "input_package": "physical_image_request schema 0.1",
+      "physical_d_output_format": "uint8 DRAM byte plus output_after in JSON",
+      "supported_ops": [
+        "QLinearConv"
+      ],
+      "version": "35eab40e5314bf603481dd6268bc96ab2ca514a6",
+      "working_directory": "NDPFuncModel"
     },
-    "w6_blocker": "B_TARGET_SIMULATOR_ENTRY",
+    "w6_blocker": "B_CONV_SIMULATOR_CONFIG_ADAPTER",
     "workspace_contract": {
       "approved": false,
-      "implementation_available": false,
-      "status": "unapproved_missing_authoritative_binding"
+      "backend": "ndp_conv_functional",
+      "can_dump_physical_output": true,
+      "command": ".venv/Scripts/python.exe -m tools.physical_image_probe <request.json>",
+      "config_adapter_available": false,
+      "consumes_target_json_or_bitstream": false,
+      "entrypoint": "NDPFuncModel/tools/physical_image_probe.py",
+      "g6_ready": false,
+      "identity_confirmed": true,
+      "implementation_available": true,
+      "status": "operator_confirmed_conv_backend_adapter_pending",
+      "supported_ops": [
+        "QLinearConv"
+      ]
     }
   },
   "field_provenance": [
@@ -363,19 +383,20 @@
       "target_encoding_status": "unresolved"
     },
     "status": "golden_and_physical_preflight_passed",
-    "target_simulator_comparison_status": "not_run_missing_runner",
+    "target_simulator_comparison_status": "not_run_missing_config_adapter",
     "tile_id": "node-0004-group0-k000-015-n000-002"
   },
   "gate_state": {
+    "conv_simulator_component_status": "first_real_coordinate_passed",
     "g5_passed": false,
     "g5_preflight": "blocked",
     "g6_passed": false,
     "g8_passed": false,
     "golden_tile_status": "passed",
     "next_required_evidence": [
-      "authoritative target numerical simulator command/version/input/D format",
-      "approved INT8 Conv JSON template or field-level register contract",
-      "approved bias/psum/requant/qparam transport and unique-flush semantics"
+      "derive and encode a semantically consistent hwop-0004-00 1x1 JSON",
+      "bind ndp-sim target JSON/bitstream fields to the NDPFuncModel request",
+      "bind target bias/psum/requant/qparam transport and unique-flush semantics"
     ],
     "stop_expansion": true,
     "target_simulator_numerical_status": "not_run",
@@ -432,6 +453,100 @@
       1
     ]
   },
+  "ndp_conv_simulator_first_coordinate": {
+    "accumulator": {
+      "golden": 1225,
+      "mismatch_count": 0,
+      "observed": 1225
+    },
+    "channel_ranges": [
+      [
+        0,
+        16
+      ],
+      [
+        48,
+        16
+      ],
+      [
+        32,
+        16
+      ],
+      [
+        16,
+        16
+      ]
+    ],
+    "config_link_status": "not_run_target_json_adapter_missing",
+    "coordinate": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "destination_slice": 0,
+    "dilations": [
+      1,
+      1
+    ],
+    "execution_path": [
+      "DRAM",
+      "input_buffer",
+      "SpecialPEA",
+      "ActivationUnit",
+      "output_buffer",
+      "DRAM"
+    ],
+    "kernel_shape": [
+      1,
+      1
+    ],
+    "logical_shape": [
+      16,
+      64,
+      56,
+      56
+    ],
+    "output": {
+      "golden": 4,
+      "inverse_physical_d": 4,
+      "mismatch_count": 0,
+      "observed": 4
+    },
+    "pads": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "partial_accumulators": [
+      20545,
+      14714,
+      7308,
+      1225
+    ],
+    "ring_segment_ends": [
+      16,
+      32,
+      48,
+      64
+    ],
+    "scope": "one_real_hwop-0004-00_output_coordinate",
+    "simulator": "NDPFuncModel conv_func",
+    "simulator_status": "operator_confirmed_conv_simulator_component",
+    "source_commit": "35eab40e5314bf603481dd6268bc96ab2ca514a6",
+    "source_owners": [
+      0,
+      1,
+      3,
+      2
+    ],
+    "status": "passed",
+    "strides": [
+      1,
+      1
+    ]
+  },
   "physical_preflight": {
     "address_scope": "W4 per-operator physical placeholder; W7 address plan not assigned",
     "c_padded": 64,
@@ -459,7 +574,7 @@
     "storage_sample_count": 3
   },
   "report_kind": "w5_first_real_conv_preflight",
-  "schema_version": "0.1",
+  "schema_version": "0.2",
   "selection": {
     "hw_op_ids": [
       "hwop-0004-00",
@@ -472,19 +587,24 @@
   },
   "source_identity": {
     "backend_contract_path": "contracts/backend.json",
-    "backend_contract_sha256": "91f5cde26ce2dc4c4901c0d20cdbff7cc791ad9217629436515f1e0c0d14193d",
+    "backend_contract_sha256": "c5e43f5fc090c07dcce5e61ef7b5841ae75f31ff87494d35ec846deba23be11a",
     "hardware_approval_path": "contracts/hardware_approval.json",
     "hardware_approval_sha256": "963b64087351a45d54f52a86fe3536804e4f24427c94ee912c521b3a93fe159b",
     "model_sha256": "c234f30975989788b4405f25253275aae247ab6dbdd34aaa69ab0a59ff76f6d0",
+    "operator_conv_candidate_evidence_path": "contracts/conv_full_encoder_evidence.json",
+    "operator_conv_candidate_evidence_sha256": "87cc20cef462ec9becadf38c7399e9c4a9ec7e09a71eec10c2474f82f564bee5",
     "target_config_authority_path": "contracts/target_config_authority_audit.json",
     "target_config_authority_sha256": "b81436245886aaca2c6e2ab26f52d6c70810daa18c835cb6f08ce683f4ffa8d3",
     "target_config_commit": "e299b2804448242d1589b3e58ed7c5a9a5eca09f",
     "typed_contract_path": "contracts/typed_config_parameter_contract.json",
     "typed_contract_sha256": "abbc87b0b13c92611a90fe1767b32b15fe9c49f23bee616ca2bb51219dd181bd"
   },
-  "status": "g5_preflight_blocked_before_target_json",
+  "status": "g5_candidate_encoded_real_1x1_config_adapter_blocked",
   "target_configuration": {
-    "bitstream_generated": false,
+    "candidate_bitstream_generated": true,
+    "candidate_json_encoded": true,
+    "candidate_mapping_review_generated": true,
+    "candidate_named_conv_template_count": 1,
     "legacy_generator_probe": {
       "can_serve_as_target_template": false,
       "files": [
@@ -521,37 +641,123 @@
       },
       "status": "legacy16_reference_only"
     },
-    "mapping_review_generated": false,
     "official_json_inventory_count": 42,
     "official_named_conv_template_count": 0,
-    "patched_json_generated": false,
+    "operator_candidate": {
+      "deterministic_repairs": [
+        "LC_PE.LC8 -> DRAM_LC.LC8",
+        "GROUP2.COL_LC source -> GROUP2.ROW_LC",
+        "GROUP3.COL_LC source -> GROUP3.ROW_LC"
+      ],
+      "encoder": {
+        "command": ".venv/Scripts/python.exe -X utf8 bitstream/main.py -c ../conv_full.json -o ../artifacts/w5/conv_full_audit/accepted --heuristic-iterations 5000 --heuristic-restarts 1 --seed 17 --visualize-placement -q",
+        "commit": "e299b2804448242d1589b3e58ed7c5a9a5eca09f",
+        "entrypoint": "ndp-sim-ref/bitstream/main.py",
+        "exit_code": 0,
+        "mapping_status": "zero_violations",
+        "outputs": {
+          "detailed_dump.txt": {
+            "sha256": "0cb9aa3648d82017c8c921bf255ca8670243b33ebb16f1a12016f2696f3cdf1b",
+            "size_bytes": 42402
+          },
+          "mapping_review.json": {
+            "sha256": "68e03556d6f9b13c881a7d8e715ff2769bdb021444d546c20851345029b99d18",
+            "size_bytes": 9705
+          },
+          "modules_dump_128b.bin": {
+            "sha256": "f6991ad5e1da9cc627cf4b16ebd1550d2d9055a1977d5fb519a20fb02983af8c",
+            "size_bytes": 4550
+          },
+          "modules_dump_64b.bin": {
+            "sha256": "5171dc60449a4619730c4a8bb8fcb0bead9282b2657d078f2055f1f0f761581f",
+            "size_bytes": 4620
+          },
+          "parsed_bitstream.txt": {
+            "sha256": "e9a668056af903923da573d8c218b1aaa5353f3f2eeb416f41d5fd0ed8b21aa1",
+            "size_bytes": 5032
+          }
+        },
+        "repository": "https://github.com/uSFrances/ndp-sim.git"
+      },
+      "evidence_path": "contracts/conv_full_encoder_evidence.json",
+      "evidence_sha256": "87cc20cef462ec9becadf38c7399e9c4a9ec7e09a71eec10c2474f82f564bee5",
+      "not_proven": [
+        "pseudocode-to-JSON loop and PE transcription correctness",
+        "parameterization for real hwop-0004-00 1x1 shape",
+        "target JSON/bitstream consumption by NDPFuncModel",
+        "target requantization and typed execplan transport"
+      ],
+      "placement": {
+        "connection_count": 46,
+        "constraint_cost": 0,
+        "logical_lc_count": 16,
+        "logical_lc_pe_count": 7,
+        "mapping_cache_key": "9cdaec339a4e2f01",
+        "method": "duplicate the k-prime/q/p-prime loop-control chain into LC13-LC15 and split remote consumers",
+        "physical_lc_capacity": 20,
+        "physical_lc_pe_capacity": 10
+      },
+      "proven_fields": {
+        "special_array.bias_enable": "1 encoded as 1",
+        "special_array.data_type": "int8 encoded as 00",
+        "special_array.mode": "gemm",
+        "stream_targets": [
+          "A",
+          "B",
+          "C",
+          "D"
+        ]
+      },
+      "source": {
+        "declared_shape": {
+          "B": 1,
+          "C": 64,
+          "K": 64,
+          "P": 56,
+          "Q": 56,
+          "R": 3,
+          "S": 3,
+          "dilation": 1,
+          "pad": 1,
+          "stride": 1
+        },
+        "json_path": "conv_full.json",
+        "json_sha256": "72b81a745694bd90c630d2276339a1e22d9b77f1de808bb670b927953b488949",
+        "provenance": "operator-provided senior-authored untested Conv pseudocode",
+        "pseudocode_path": "conv_full.txt",
+        "pseudocode_sha256": "1b24cc4b70e5becfd3537ae7ae61c10f7f0f8951d2089843e7ff54461b41a635"
+      },
+      "status": "official_encoder_passed_candidate_semantics_unvalidated"
+    },
+    "real_1x1_bitstream_generated": false,
+    "real_1x1_patched_json_generated": false,
     "unknown_fields_rejected": true,
     "unresolved_target_bindings": [
       {
-        "blocker": "B_CONV_TEMPLATE_ABSENT",
+        "blocker": "B_CONV_CANDIDATE_SHAPE_LOWERING",
         "fields": [
-          "CONFIG",
           "dram_loop_configs",
-          "lc_pe_configs"
+          "lc_pe_configs",
+          "stream_engine"
         ],
-        "reason": "locked target source has zero named Conv templates"
+        "reason": "encoded candidate declares 3x3 B1 while hwop-0004-00 is 1x1 B16, and pseudocode/JSON loop and PE formulas conflict"
       },
       {
-        "blocker": "B_CONV_INT8_SA",
+        "blocker": "B_CONV_SIMULATOR_CONFIG_ADAPTER",
         "fields": [
-          "special_array.mode",
-          "special_array.data_type"
+          "conv_full.json",
+          "physical_image_request"
         ],
-        "reason": "no approved UINT8xINT8-to-INT32 SA field encoding"
+        "reason": "NDPFuncModel executes real Conv physical coordinates but does not consume ndp-sim target JSON or bitstream"
       },
       {
-        "blocker": "B_CONV_BIAS_PSUM",
+        "blocker": "B_CONV_SA_PSUM_BINDING",
         "fields": [
           "buffer_config",
           "stream_engine",
           "special_array"
         ],
-        "reason": "first/middle/last-K bias and persistent INT32 psum storage are unbound"
+        "reason": "INT8 and bias bits encode and NDPFuncModel proves four-segment INT32 accumulation, but exact target-config ports, signedness and unique final flush are not bound to that execution"
       },
       {
         "blocker": "B_REQUANT_TARGET_NUMERICS",

@@ -8,11 +8,11 @@
 
 - **最终验收**：正式 ResNet50 INT8 ONNX→逐节点/硬件原子算子 golden→28-slice relayout→JSON/bitstream→目标 simulator→execplan/Bank_data→RTL/硬件→三方逐算子和整网一致，并以真实cycle/带宽证据选择性能profile。
 - **W3业务封版检查点**：`35a4fde106d102b0e165e7eb13d60f7dd980db71`；W0/G0、W2/G2、W3/G3已通过，W1只完成模型/输入/软件量化事实，G1因目标硬件合同缺失尚未通过。交接文档可能有后续纯文档提交，当前恢复点以`git rev-parse HEAD`和`history.md`精确台账为准。
-- **三个仓库分工**：`CGRA_SIM`给软件/QNN语义和旧ResNet计划；ADR-008已按操作者确认，把`ndp-sim-ref@e299b280...`的`jsons/`、`bitstream/`和`model_execplan/`固定为正式28-slice硬件配置来源；`NDPFuncModel`只给W2 Conv功能数据通路，不是目标数值backend。配置来源正式不代表数值模拟器或硬件结果已通过。
+- **三个仓库分工**：`CGRA_SIM`给软件/QNN语义和旧ResNet计划；ADR-008已按操作者确认，把`ndp-sim-ref@e299b280...`的`jsons/`、`bitstream/`和`model_execplan/`固定为正式28-slice硬件配置来源；操作者已确认`NDPFuncModel/conv_func@35eab40`是Conv数值模拟器组件，根adapter已让一个真实1×1坐标经过其DRAM/Buffer/SpecialPEA/ActivationUnit/writeback并与W3 P/D一致。它仍不消费目标JSON/bitstream，因此当前准确边界是“模拟器身份已确认、配置适配未完成”，不是入口缺失，也不是G6已通过。
 - **当前成果**：正式图含78节点/617张量，lower为133个语义hw_op；保存79个运行时tensor和55个INT32内部tensor，全部78节点独立公式重放匹配ORT，旧77原语已逐项映射。W4-28 C0-C7与DeepSeek基线继承闭环已经完成：保留14个RTL28可逆layout实现，其中七个被`w4_deepseek_hybrid28_resnet50_v1`选中并批准，另七个LOW-28实现仅作gate-ineligible替代证据；93边、91 qparam链、16残差Add、79 tensor生命周期/alias和两种历史成本场景均通过内容寻址复核。配置权威审计盘点42个JSON，完成Pool三模板、Quant/Add-Dequant两模板、6个SA GEMM/GEMV模板和11个sum族模板的字段/寄存器/bitstream审计；C7把78节点/133 hw_op绑定到491个initializer参数引用和94个公式派生参数。旧16-slice物理证据只作历史参考。
 - **当前硬件裁决**：目标为28-slice，RTL固定`Trassic2.0_RTL@e3bdebba95dec36ee8eba43caa92a326a88392cd`，配置基线固定`ndp-sim-ref@e299b280...`。ADR-009记录操作者对已完成DeepSeek整网硬件基线的具名确认；正式profile统一用全28-bit mask并按算子绑定`local`或`HIGH-4`，当前七族均不选择`LOW-28`。该决定没有声称或伪造clean elaboration日志。G4已经通过，`w5_authorized=true`，W4正式结束。
-- **下一主线**：在新的W5对话中单线程完成第一个真实INT8 Conv纵向闭环。先沿DeepSeek工程定位真正消费目标JSON/bitstream并导出D的数值模拟器入口；随后优先选择`hwop-0004-00`这类真实1×1/stride1实例或等价的最简单真实Conv tile，绑定C7真实qparams，完成SA/stream/buffer、bias/INT32 psum、requant与tail。JSON/bitstream确定性属于G5配置门；同一配置跑目标模拟器并与golden的P/D bit-exact才属于G6数值门。模拟器入口缺失时不得横向扩成整网配置。
-- **当前外部阻塞**：W4不再被clean elaboration或全网group/global二选一阻塞。后续仍需逐阶段解决INT8 Conv/MatMul的SA/psum/requant/qparams数值约定、sum跨slice传输与完成协议、目标数值模拟器入口、W7整网地址规划以及W8硬件加载/dump协议；这些分别属于W5/W6/W7/W8，不能倒灌成W4未完成。
+- **下一主线**：继续单线程完成`hwop-0004-00`真实1×1/stride1纵向闭环。学长提供的`conv_full.json/txt`经确定性引用修复和远端LC扇出拆分后，已由正式编码器完成46连接、零违规placement和bitstream；INT8/bias字段编码成立。下一步不是再找模拟器，而是消除伪代码与JSON的循环/PE公式矛盾，把3×3/B1候选参数化为真实1×1/B16，并实现`ndp-sim target JSON/bitstream → NDPFuncModel physical_image_request`适配。同一配置驱动模拟器并让P/D bit-exact后才属于G6。
+- **当前外部阻塞**：W4不再被clean elaboration或全网group/global二选一阻塞，Conv simulator入口也不再缺失。后续仍需逐阶段解决Conv target配置到NDPFuncModel的适配、INT8 Conv/MatMul的SA/psum/requant/qparams目标数值约定、sum跨slice传输与完成协议、W7整网地址规划以及W8硬件加载/dump协议；这些分别属于W5/W6/W7/W8，不能倒灌成W4未完成。
 - **禁止误用**：NDPFuncModel 当前 `extracted_*.npy` 和 `verify_pe` psum 不是可信 golden；42个 JSON也不等于 ResNet算子配置已完成；bitstream生成成功不等于数值正确。
 - **接手检查**：严格按`.agents/W5_HANDOFF.md`的三条无副作用检查执行；fresh checkout可先用`verify --evidence-only`只核对tracked RTL28审计快照。预期根工作树干净、三参考仓匹配lock、RTL28 external evidence匹配hash、登记的全量测试全部通过。2026-07-13已确认managed worktree回收会穿透依赖junction清空Local目标，因此setup对非Local工作树硬失败；依赖`.venv`、三个参考仓或正式W3的任务统一回Local，直到有隔离且通过“销毁安全”验证的新方案。
 
@@ -160,7 +160,7 @@ resnet50_int8/
 
 `repos.lock.json`是三个参考仓的恢复真值，也是RTL28静态审计快照的离线校验真值；用`tools/sync_repositories.py verify`统一核验，用`verify --evidence-only`在fresh checkout只验tracked证据，用显式`sync --repo <name>`恢复缺失参考仓。当前四个代码工作树均应干净。正式模型、`.venv`和W3大产物不在普通Git提交中；C0登记的九份小型legacy16 W4报告例外，已按hash跟踪以保证合同可复核。
 
-NDPFuncModel仍不是目标JSON/bitstream解释器；其`conv_config`缺URL、`graph/`缺源码、`hex_data/`未随仓提供。W2参数化fixture已绕开这些缺失并完成软件验证，但不能据此批准正式硬件接口。
+NDPFuncModel已按操作者确认登记为Conv数值模拟器组件，但仍不是目标JSON/bitstream解释器；其`conv_config`缺URL、`graph/`缺源码、`hex_data/`未随仓提供。W2参数化fixture与RTL28 physical probe已绕开这些固定入口缺失并完成软件验证，当前缺的是正式配置适配而不是组件身份。
 
 ## 本地 Python 环境与已验证入口
 
@@ -296,7 +296,15 @@ CGRA_SIM/testing/resnet-50-int8/
 9. 上游RDAG/WRAG多transaction路径丢弃strided transaction地址；本地 `789d121` 已分离逻辑counter与物理transaction offset，读写AG的跨16-byte边界地址序列对称通过。
 10. `verify_pe` 的 psum 文件在卷积 reduction 前写出，实际只是 bias preload 快照；`extracted_act/weight/bias.npy` 又由缺陷链路生成，均不得作为 Conv golden 或回归真值。
 
-因此它应标为【W2 Conv功能参考/目标适配待完成】，不能标为“目标JSON emulator已有”。根adapter与统一manifest已经存在；后续任务是把获批的RTL28 Conv layout/JSON字段映射到该参数化runner，验证正式shape后再判断它能否升级为目标Conv emulator，而不是重新实现W2小Conv真值。
+因此它应标为【操作者确认的Conv模拟器组件/目标配置适配待完成】，不能标为“目标JSON/bitstream已驱动”。根adapter与统一manifest已经存在，真实`hwop-0004-00`坐标`(0,0,0,0)`也已通过；后续任务是把获批的RTL28 Conv JSON字段映射到该runner，而不是重新实现W2小Conv真值或继续寻找另一个入口。
+
+### 学长提供的 Conv 伪代码配置（2026-07-14新增）
+
+- 根目录`conv_full.txt`声明B1/C64/K64/PQ56/RS3、UINT8 A、INT8 B、INT32 bias、UINT8 D；`conv_full.json`采用正式`dram_loop_configs/lc_pe_configs/buffer_loop_configs/buffer_config/stream_engine/n2n/special_array`结构。`.agents/conv_full(2).*`是操作者原始副本，本轮不改、不删除。
+- 原始JSON存在三处可由伪代码和正式ring模板唯一裁决的转录错误：`LC_PE.LC8`应为`DRAM_LC.LC8`，GROUP2/3的COL源应各自连接本组ROW。修复后又发现共享LC同时扇出到固定A/C、A/D远端资源，物理约束矛盾；使用空闲LC13～15复制`k'/q/p'`控制链并拆分远端消费者后得到合法布局。
+- `contracts/conv_full_encoder_evidence.json`锁定候选hash、46条连接、16/20 LC、7/10 LC-PE、零约束代价布局和正式编码器输出hash；`tools/run_conv_full_encoder.py`会安装该布局到编码器自带mapping cache，由编码器重新计算代价并生成mapping review、parsed bitstream和64/128-bit binary。成功只批准字段/位宽/资源/连接可编码，不批准卷积数值。
+- 已正式证明`special_array.data_type=int8`编码为`00`、`bias_enable=1`编码为`1`，并生成bitstream；所以`B_CONV_TEMPLATE_ABSENT`、`B_CONV_INT8_SA`和placement阻塞已解除。
+- 仍不可直接改成真实1×1：TXT把`q(lc0)`写成range2却在地址式中把它当`k'`，JSON的LC0/1/2/3/6/10/11边界与TXT多处不同；TXT需要PE0～PE7而JSON只有PE0～PE6，且多个`mul`配置的第三输入不会执行伪代码中的加法。必须先形成逐LC/PE/stream的唯一语义表，不能凭“编码成功”猜测。
 
 ## 当前闭环状态
 
@@ -304,7 +312,7 @@ CGRA_SIM/testing/resnet-50-int8/
 - **lowering和身份映射——W3语义层已完成**：78个ONNX节点稳定lower为133个语义hw_op；旧77模型级原语已逐项映射，Flatten明确为zero-copy。JSON实例、逐K-tile和execplan身份在W4/W5/W7继续扩展，不得说成W3尚未实现。
 - **数据变换——W4/G4已完成**：Quantize、Dequantize、View、Conv、Pool、Add、GAP和MatMul均有group4x7/LOW两种正逆实现；混合profile选中七个group4x7布局并按`local/HIGH-4`批准，LOW实现只作未选替代。整网审计覆盖78/78节点、93条runtime边、91条量化qparam链、79 tensor生命周期/alias和静态成本；G4=`passed`、`w5_authorized=true`。
 - **单算子配置——来源已正式、C4-C6静态审计完成/ResNet覆盖仍不完整**：42个静态JSON属于正式配置来源；Pool三模板、Quant/Add-Dequant、6个SA GEMM/GEMV和11个sum族模板的字段/bitstream候选审计已完成。AvgPool仍缺除法/requant，Quant/Add-Dequant仍缺typed qparams和完整UINT8闭环；6个SA模板全是FP16、bias=0，MatMul缺INT8/tail/psum/requant；remote-sum无N2N/neighbor且完成协议未证实。编码确定性不代表数值正确。
-- **W2/G2小Conv软件闭环已通过**：`NDPFuncModel@35eab40` 的参数化runner在同一fixture上完成1/4-slice全部84坐标，实际经过DRAM、input Buffer、SpecialPEA、ActivationUnit、output Buffer和DRAM；NumPy、im2col、ORT、CGRA QNN rounding与NDP的accumulator/D一致，physical D可inverse且全部物理字节可解释。该结论不批准旧固定主入口、目标JSON或硬件layout；C2新增的RTL28→NDP候选探针已覆盖七个HIGH环和代表性LOW路径，但仍是candidate-only，不能升级为目标simulator证据。
+- **W2/G2与首个真实坐标软件闭环已通过**：`NDPFuncModel@35eab40` 的参数化runner在同一fixture上完成1/4-slice全部84坐标；操作者确认其Conv simulator身份后，W5又让真实`hwop-0004-00`坐标`(0,0,0,0)`按HIGH-4顺序`[0,1,3,2]`实际经过DRAM、input Buffer、SpecialPEA、ActivationUnit、output Buffer和DRAM，INT32 P、UINT8 D及inverse physical D与W3一致。该结论仍不批准旧固定主入口、target JSON适配或G6；完整tile的150,528个P/D目前由独立preflight重算而非NDP逐坐标执行。
 - **execplan——28-slice框架已有/ResNet适配没有**：可规划28个slave、28-bit mask、地址、bitstream、指令和Bank_data；schema仍缺numeric attributes，旧配置镜像与目标RTL存在版本冲突，bitstream失败后部分路径还会继续。
 - **RTL/硬件——外部阻塞**：没有完整 runner/testbench、加载/启动/完成/dump 协议或逐算子 checkpoint 入口。
 - **三方比较——通用逻辑比较器和W4 inverse layout已就绪/真实结果未到位**：根集成层已实现inverse-relayout之后的两方/三方比较、整数bit-exact、浮点显式容差、错误分类、拓扑首错和provenance；旧runner与128-bit物理文件工具仍不能替代它。当前没有目标simulator/hardware逻辑输出，因此尚无真实三方通过结论。
@@ -313,7 +321,7 @@ CGRA_SIM/testing/resnet-50-int8/
 
 严格按`.agents/plan.md`的W0→W9工作包和G0→G9验收门推进。W0/G0、W2/G2、W3/G3和W4/G4已经完成；W1仍是跨后续阶段的外部规格总账，G1未整体通过不会回退ADR-009已经关闭的G4。旧16-slice software readiness不再代表当前进度。任何W1～W4修改都必须先说明会使哪些manifest、合同hash和下游证据失效。
 
-当前优先级只有一个：在新对话按`W5_HANDOFF.md`单线程完成最小真实INT8 Conv配置与数值链。先定位DeepSeek实际JSON/bitstream数值执行入口，再做真实qparams→字段→确定性配置；配置形成后立即用同一physical输入跑目标模拟器并比较W3 golden。若模拟器入口缺失，可以保留一个实例的G5 preflight证据，但不得扩展整网或把NDPFuncModel、bundle生成、编码成功冒充G6。clean elaboration不再是W4阻塞；INT8 SA/psum/requant、sum完成协议、目标simulator和hardware load/dump分别在W5/W6/W8闭环。
+当前优先级只有一个：保持单线程，把已可编码的学长3×3候选收敛为语义一致的`hwop-0004-00`真实1×1配置，并建立target JSON/bitstream到NDPFuncModel request的适配。正式encoder零违规与NDP真实坐标P/D均已分别通过，但两条链尚未由同一配置相连；不得扩展整网或把两份分离证据冒充G6。clean elaboration不再是W4阻塞；INT8 SA/psum/requant、sum完成协议和hardware load/dump分别在W5/W6/W8闭环。
 
 配置字段层的Q1~Q4详细背景仍见 `.agents/rules/算子配置规则.md` 第14.3节；端到端外部资料清单以 `plan.md`“当前最高优先级请求”为准。
 
@@ -359,7 +367,7 @@ cgra_python/execution_plan/tensor_dict.json
   -> raw node golden + 55个语义内部tensor golden（W3/G3已完成）
   -> W4批准的28-slice混合profile partition/relayout/packing/remapping（已完成）
   -> ndp-sim-ref/jsons + bitstream（正式来源已冻结；ResNet INT8实例待W5实现）
-  -> 目标 JSON/bitstream emulator（实际执行入口尚未定位/验证，W5首包先沿DeepSeek链追踪）
+  -> NDPFuncModel Conv simulator（入口和真实坐标已验证；target JSON/bitstream适配待实现）
   -> model_execplan + cfg_pkg + Bank_data（28-slice框架已有，ResNet/真实拓扑待适配）
   -> RTL/硬件 runner（仓库内缺失）
   -> W4 inverse-relayout + 通用三方比较器（工具已完成；真实结果待W6/W8）
@@ -676,7 +684,7 @@ testing/resnet-50-int8/gen_execu_plan_ver1.py
 
 这些是字符串扫描统计，不代表 ndp-sim 已支持对应算子或目标 INT8 配置已完成。
 
-## `NDPFuncModel` 详细代码地图【Conv 功能参考/待修复集成】
+## `NDPFuncModel` 详细代码地图【操作者确认的Conv模拟器组件/配置适配待完成】
 
 - 根目录 4 个 `main_*` 分别驱动 Conv/GEMM/GEMV；ResNet 当前只以 `main_CONV_N2N.py` 为核心。
 - `component/` 是运行主体；`GeneralPEA.py` 为空，实际使用 `SpecialPEA.py`。
@@ -717,7 +725,7 @@ testing/resnet-50-int8/gen_execu_plan_ver1.py
 
 1. W5：INT8 SA的A/B端口、`bias_enable`、int32 psum、requant和可选ReLU字段怎样由正式JSON/寄存器表达。
 2. W5：GA的unsigned max、转换、rounding、saturation和溢出语义，以及per-layer/per-channel qparams采用constant patch、tensor stream还是逐层实例JSON。
-3. W6：沿已完成DeepSeek工程定位真正消费目标JSON/bitstream的数值模拟器入口；证明`NDPFuncModel/conv_func`是该入口的受控后端，或继续只把它作为Conv功能参考。原`conv_config`/`hex_data`只作可选兼容资料。
+3. W6：实现并验证`ndp-sim-ref` Conv JSON/bitstream到`NDPFuncModel/conv_func` physical request的受控适配；入口身份和一个真实1×1坐标已经确认，不再登记“模拟器缺失”。原`conv_config`/`hex_data`只作可选兼容资料。
 4. W7：在已继承的6144-row逻辑容量内完成ResNet地址计划、execplan、cfg_pkg和Bank_data；旧8192-row planner结果不得直接加载。
 5. W8：硬件/RTL的配置与数据加载、start/wait/status/error、完成判定和physical D dump协议。
 

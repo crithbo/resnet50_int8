@@ -12,17 +12,22 @@
       "can_dump_physical_output": true
     },
     "ndp_conv_functional": {
-      "status": "approved_for_w2_g2_only",
-      "role": "w2_functional_reference_only",
+      "status": "operator_confirmed_conv_simulator_component",
+      "role": "conv_functional_simulator_config_adapter_pending",
       "source_repository": "https://github.com/runoobb/NDPFuncModel.git",
       "source_commit": "35eab40e5314bf603481dd6268bc96ab2ca514a6",
       "is_target_backend": false,
+      "identity_confirmed": true,
+      "entrypoint": "tools/physical_image_probe.py",
+      "command": ".venv/Scripts/python.exe -m tools.physical_image_probe <request.json>",
+      "consumes_target_json_or_bitstream": false,
+      "config_adapter_available": false,
       "supported_ops": ["QLinearConv"],
       "supported_dtypes": ["uint8_activation", "int8_weight", "int32_accumulator", "uint8_output"],
-      "slice_counts": [1, 4],
-      "config_versions": ["w2_ndp_ring_candidate_v1"],
+      "slice_counts": [1, 4, 28],
+      "config_versions": ["w2_ndp_ring_candidate_v1", "rtl28_physical_probe_v1"],
       "can_dump_physical_output": true,
-      "limitations": ["group=1", "weight_zero_point=0", "not_target_json_or_bitstream", "not_target_simulator", "not_target_hardware", "not_hardware_approved"]
+      "limitations": ["group=1", "weight_zero_point=0", "not_target_json_or_bitstream", "not_config_bound_target_runner", "requant_uses_float32_activation_unit", "not_target_hardware", "not_hardware_approved"]
     },
     "rtl28_candidate_evidence": {
       "status": "candidate_evidence_only",
@@ -68,9 +73,18 @@
       "limitations": ["not_target_numerical_simulator", "not_hardware_execution", "resnet_operator_coverage_incomplete", "audited_static_template_families_only", "avgpool_requantization_absent", "uint8_maxpool_semantics_unresolved", "quant_rounding_target_execution_unconfirmed", "add_dequant_qlinearadd_requantization_absent", "execplan_qparam_binding_absent", "matmul_int8_psum_requant_tail_absent", "sum_cross_slice_and_completion_unproven", "sum_metadata_conflict_unresolved", "typed_parameter_contract_formula_only", "does_not_approve_rtl_or_layout"]
     },
     "target_simulator": {
-      "status": "unapproved_missing_authoritative_binding",
+      "status": "operator_confirmed_conv_backend_adapter_pending",
       "approved": false,
-      "implementation_available": false
+      "identity_confirmed": true,
+      "implementation_available": true,
+      "backend": "ndp_conv_functional",
+      "supported_ops": ["QLinearConv"],
+      "entrypoint": "NDPFuncModel/tools/physical_image_probe.py",
+      "command": ".venv/Scripts/python.exe -m tools.physical_image_probe <request.json>",
+      "consumes_target_json_or_bitstream": false,
+      "config_adapter_available": false,
+      "can_dump_physical_output": true,
+      "g6_ready": false
     },
     "target_hardware": {
       "status": "w4_physical_baseline_approved_runtime_pending",
@@ -84,7 +98,7 @@
     }
   },
   "unresolved": [
-    "authoritative target simulator command and version",
+    "Conv target JSON/bitstream to NDPFuncModel request/configuration adapter",
     "W5 target-field binding and numerical validation for the typed ResNet50 parameters",
     "hardware load/start/wait/error/dump protocol"
   ]

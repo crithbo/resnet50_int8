@@ -61,13 +61,24 @@ class W5FirstConvPreflightTests(unittest.TestCase):
 
     def test_simulator_and_target_configuration_stop_fail_closed(self) -> None:
         simulator = self.report["deepseek_target_simulator_entry"]
-        self.assertEqual(simulator["status"], "missing_from_current_workspace")
+        self.assertEqual(
+            simulator["status"],
+            "operator_confirmed_conv_backend_adapter_pending",
+        )
         self.assertFalse(simulator["packager"]["executes_numerical_model"])
-        self.assertIsNone(simulator["target_runner"]["command"])
+        self.assertTrue(simulator["target_runner"]["command"])
+        self.assertFalse(simulator["target_runner"]["config_adapter_available"])
         target = self.report["target_configuration"]
         self.assertEqual(target["official_named_conv_template_count"], 0)
-        self.assertFalse(target["patched_json_generated"])
-        self.assertFalse(target["bitstream_generated"])
+        self.assertEqual(target["candidate_named_conv_template_count"], 1)
+        self.assertTrue(target["candidate_json_encoded"])
+        self.assertTrue(target["candidate_bitstream_generated"])
+        self.assertTrue(target["candidate_mapping_review_generated"])
+        self.assertFalse(target["real_1x1_patched_json_generated"])
+        self.assertFalse(target["real_1x1_bitstream_generated"])
+        self.assertEqual(
+            target["operator_candidate"]["placement"]["constraint_cost"], 0
+        )
         legacy = target["legacy_generator_probe"]
         self.assertEqual(legacy["status"], "legacy16_reference_only")
         self.assertEqual(legacy["observed"]["slice_count"], 16)
@@ -76,9 +87,9 @@ class W5FirstConvPreflightTests(unittest.TestCase):
         self.assertEqual(
             {item["blocker"] for item in target["unresolved_target_bindings"]},
             {
-                "B_CONV_TEMPLATE_ABSENT",
-                "B_CONV_INT8_SA",
-                "B_CONV_BIAS_PSUM",
+                "B_CONV_CANDIDATE_SHAPE_LOWERING",
+                "B_CONV_SIMULATOR_CONFIG_ADAPTER",
+                "B_CONV_SA_PSUM_BINDING",
                 "B_REQUANT_TARGET_NUMERICS",
                 "B_EXECPLAN_TYPED_TRANSPORT",
             },
@@ -87,9 +98,21 @@ class W5FirstConvPreflightTests(unittest.TestCase):
         self.assertFalse(self.report["gate_state"]["g5_passed"])
         self.assertFalse(self.report["gate_state"]["g6_passed"])
 
+    def test_real_1x1_first_coordinate_passes_ndp_conv_simulator(self) -> None:
+        result = self.report["ndp_conv_simulator_first_coordinate"]
+        self.assertEqual(result["status"], "passed")
+        self.assertEqual(result["coordinate"], [0, 0, 0, 0])
+        self.assertEqual(result["kernel_shape"], [1, 1])
+        self.assertEqual(result["source_owners"], [0, 1, 3, 2])
+        self.assertEqual(result["accumulator"]["mismatch_count"], 0)
+        self.assertEqual(result["output"]["mismatch_count"], 0)
+        self.assertEqual(
+            result["config_link_status"], "not_run_target_json_adapter_missing"
+        )
+
     def test_validator_rejects_target_json_or_gate_overclaim(self) -> None:
         changed = deepcopy(self.report)
-        changed["target_configuration"]["patched_json_generated"] = True
+        changed["target_configuration"]["real_1x1_patched_json_generated"] = True
         with self.assertRaisesRegex(W5ConvPreflightError, "exceeded evidence"):
             validate_w5_first_conv_preflight(changed)
 
