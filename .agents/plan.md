@@ -51,17 +51,17 @@
 ## 当前总体状态
 
 - **已通过**：W0/G0集成骨架，W2/G2小Conv候选软件纵向闭环，W3/G3正式图/lowering/全节点与subop golden。
-- **部分通过**：W1已冻结正式候选模型、固定输入、预处理和软件量化事实；目标RTL候选已选`Trassic2.0_RTL@e3bdebba...`和28-slice。candidate审计已固定权威top/filelist、命令/WREG、HIGH/LOW、DRAM、SA/GA及运行接口的静态证据，但clean elaboration、正式端口layout、量化/requant、JSON/emulator和板级协议未批准，所以G1仍未通过。
-- **当前主线**：ADR-007已由操作者采用。旧16-slice W4的12个candidate、93边审计和成本报告已隔离为历史证据；审计框架、生命周期/alias算法和逻辑比较器继续复用。C0/C1及C2逐算子布局已完成：14个RTL28 candidate layout覆盖simple、view、conv、maxpool、add、global_average_pool、matmul七个家族；QLinearAdd的双残差分支、六个独立qparam端口、正式广播范围、D布局和双输入同时活跃alias约束已有确定性回归，根仓176项测试通过。下一步单线程进入RTL28整网C3审计。G4=`not_passed`、`w5_authorized=false`；不生成正式W5 JSON/bitstream。
-- **当前边界**：W2只证明小合成Conv的golden=NDP functional model；W3公式重放仍属于golden侧。当前没有任何正式ResNet算子达到golden=target simulator=hardware。
+- **部分通过**：W1已冻结正式候选模型、固定输入、预处理和软件量化事实；目标RTL候选已选`Trassic2.0_RTL@e3bdebba...`和28-slice。candidate审计已固定权威top/filelist、命令/WREG、HIGH/LOW、DRAM、SA/GA及运行接口的静态证据，并已形成可直接转发、按三类责任方拆分的批准请求包；clean elaboration、正式端口layout、量化/requant、JSON/emulator和板级协议仍未获外部批准，所以G1仍未通过。
+- **当前主线**：ADR-007已由操作者采用。旧16-slice W4的12个candidate、93边审计和成本报告已隔离为历史证据；审计框架、生命周期/alias算法和逻辑比较器继续复用。C0/C1及C2逐算子布局已完成：14个RTL28 candidate layout覆盖simple、view、conv、maxpool、add、global_average_pool、matmul七个家族；QLinearAdd的双残差分支、六个独立qparam端口、正式广播范围、D布局和双输入同时活跃alias约束已有确定性回归。并行候选探针还把RTL28 Conv物理bundle通过可逆shadow地址映射接入既有NDP functional model，覆盖七个HIGH小环和代表性LOW大环；根仓179项测试通过。下一步单线程进入RTL28整网C3审计。G4=`not_passed`、`w5_authorized=false`；不生成正式W5 JSON/bitstream。
+- **当前边界**：W2已证明小合成Conv的golden=NDP functional model，并新增RTL28 Conv物理布局到该功能模型的candidate-only直接探针；后者不是目标simulator、未执行目标JSON/ISA/RTL，也不构成G6证据。W3公式重放仍属于golden侧。当前没有任何正式ResNet算子达到golden=target simulator=hardware。
 
 ### 接手进度总表
 
 | 工作包 | 门状态 | 已完成边界 | 接手动作 |
 |---|---|---|---|
 | W0 | G0通过 | manifest/contract/backend/artifact/cache/resume/mock DAG | 不重做，只回归 |
-| W1 | G1未通过 | 模型、固定输入、预处理、ONNX量化事实；已选28-slice RTL并完成必要candidate静态审计 | 补clean elaboration、量化/端口/固件/板级批准合同 |
-| W2 | G2通过 | 1/4-slice小Conv候选layout和NDP functional数值闭环 | 作为W4 fixture，不外推为硬件规格 |
+| W1 | G1未通过 | 模型、固定输入、预处理、ONNX量化事实；已选28-slice RTL、完成candidate静态审计并生成外部批准请求包 | 向三类责任方转发并收集clean elaboration、量化/端口/固件/板级原始证据和签署合同 |
+| W2 | G2通过 | 1/4-slice小Conv候选layout和NDP functional数值闭环；RTL28 Conv到该功能模型的candidate-only探针 | 作为W4/W6前置fixture，不外推为目标simulator或硬件规格 |
 | W3 | G3通过 | 78节点、133 hw_op、79 runtime tensor、55内部tensor、旧77映射 | 不重跑大artifact，除非hash/合同失效 |
 | W4 | 旧16-slice readiness历史通过；28-slice重开/G4未通过 | C0/C1/C2逐算子布局完成；14个RTL28 candidate覆盖七个家族，正逆布局、容量、tail、广播与alias负例已回归 | 单线程重审RTL28 93边/成本/生命周期；不进W5 |
 | W5～W9 | 未通过 | W9通用比较器基础设施已前置完成；其余仅有参考框架或mock接口 | 等待对应前置门和真实结果通过 |
@@ -71,8 +71,9 @@
 1. 【已完成】终审16-slice泄漏：current layout registry只含RTL28/28，公共layout不导出旧16类；旧通用`conv_coverage.py`、`network_dry_run.py`和`w4_profiles.py`显式标为legacy16-only并由自动回归约束。
 2. 【已完成】按P4使用三个共享Local协作子任务，严格隔离Conv、MaxPool+GAP、MatMul的实现/测试/候选报告文件；子任务未编辑公共合同、`.agents`或Git。
 3. 【已完成】Local主任务依次复核三路结果，统一更新公共`layout.py`、`architecture.json`、coverage和G4插件登记；随后单线程完成QLinearAdd，当前为14个candidate/0个planned，七个必需布局家族均已登记。
-4. 【下一步】进入C3，重新生成RTL28 transition、93边、91 qparam链、16个残差Add、生命周期/alias和性能成本报告；仍不读取W3大tensor、不生成正式W5产物。
-5. 可独立推进W1的clean elaboration、量化/端口/固件/板级批准合同；没有approved合同不得宣布G4/G5通过。若模型、预处理、量化公式或lowering变化，先列出全部失效manifest/hash和下游产物。
+4. 【并行完成】新增RTL28 Conv→NDP functional candidate探针，在紧凑可逆shadow几何中保留真实slice owner/offset，实际遍历七个HIGH小环和代表性LOW大环；显式标记`candidate_only`、`target_simulator_validated=false`、`g6_validated=false`。
+5. 【下一步】进入C3，重新生成RTL28 transition、93边、91 qparam链、16个残差Add、生命周期/alias和性能成本报告；仍不读取W3大tensor、不生成正式W5产物。
+6. 【并行等待外部】W1批准请求包已生成；向RTL/集成、RTL+量化/编译、板级/固件三类责任方转发并收集原始证据。没有approved合同不得宣布G1/G4/G5通过；若模型、预处理、量化公式或lowering变化，先列出全部失效manifest/hash和下游产物。
 
 Local执行环境已从事故前ZIP选择性恢复并重新验收：Python 3.12.13、`pip check`、三个锁定参考仓和根测试均通过；没有恢复任何managed-worktree junction。后续依赖任务可使用Local主任务或共享目录协作子任务，独立managed worktree仍只允许tracked-only工作。
 
@@ -314,7 +315,7 @@ artifacts/<run_id>/
 
 验收门 G1：权威资料可定位、可重放，架构版本不再从冲突旧文件混选；architecture、quantization和backend contract均通过schema且关键字段为approved。W2可在candidate contract下做软件实验，但W5目标bitstream和W8硬件验收必须等待对应approved contract。
 
-当前状态（2026-07-11）：
+当前状态（2026-07-14）：
 
 - **已完成**：从官方ONNX Model Zoo镜像下载并通过checker；模型SHA-256为 `c234f30975989788b4405f25253275aae247ab6dbdd34aaa69ab0a59ff76f6d0`，IR 4、opset 12、78节点、366 initializer，无external data。
 - **已完成**：算子统计与旧计划完全一致：2 Quantize、53 QLinearConv、1 MaxPool、17 QLinearAdd、1 GlobalAveragePool、1 Flatten、1 QLinearMatMul、2 Dequantize。
@@ -322,6 +323,7 @@ artifacts/<run_id>/
 - **已完成**：从模型确认53层Conv语义均为UINT8 activation、INT8 weight、INT32 bias、per-output-channel weight scale，全部weight zero point为0；input/output zero point并非全部为0。
 - **已记录**：`contracts/model_baseline.json`、`contracts/quantization.json`、`contracts/architecture.json` 和 `.agents/decisions/ADR-001-model-and-preprocessing-baseline.md`。
 - **已完成候选选择**：审查`master/dc/xilinx`后选定最新且功能更完整的28-slice `master@e3bdebba...`；其活动参数、七小环/大环拓扑和28-bit mask已定位。
+- **已完成批准请求准备**：`contracts/rtl28_hardware_approval_request.md`固定唯一repository/commit/top/filelist和八个`APR_*`问题，按RTL/集成、RTL+量化/编译、板级/固件分派原始证据、SHA-256和签署要求；它是`approval_request`，尚未外发且不能替代`hardware_approval.json`。
 - **未完成/仍需外部或权威工具链**：`NDP_Top.sv`/`NDP_Top_new`命名闭合、clean elaboration、批准物理layout、硬件requant和qparams传递、NDPFuncModel/官方emulator关系、硬件load/start/wait/dump协议。
 
 W1的模型子任务已完成，但G1尚未通过；architecture/quantization/backend关键硬件字段仍是candidate/unknown。W0和W2可并行继续，W5目标bitstream与W8硬件验收不得据此提前宣布完成。
@@ -330,7 +332,7 @@ W1的模型子任务已完成，但G1尚未通过；architecture/quantization/ba
 
 目标：完全不依赖正式ResNet模型，让一个小Conv完成 raw→physical→functional model→logical D。
 
-当前状态（2026-07-12）：**G2已通过**。同一带padding、C/K tail的确定性小Conv已分别以1-slice和4-slice执行；标量NumPy、im2col、ONNX Runtime、直接加载的CGRA QNN rounding和 `NDPFuncModel@35eab40` 在全部84个int32 accumulator及UINT8 D上逐元素一致。NDP参数化runner实际经过DRAM→input Buffer→SpecialPEA→ActivationUnit→output Buffer→DRAM，ring LC末态、per-channel requant、物理D覆盖和inverse logical D均验证；每个region的全部物理字节均能解释为data/tensor-padding/alignment并落在正确slice。G2只批准W2小Conv软件候选合同，不批准目标JSON/bitstream、正式硬件layout或旧固定56×56主入口；其4-slice fixture作为ADR-007七小环实现的最小数值基线。
+当前状态（2026-07-14）：**G2已通过，另有RTL28 candidate桥接证据**。同一带padding、C/K tail的确定性小Conv已分别以1-slice和4-slice执行；标量NumPy、im2col、ONNX Runtime、直接加载的CGRA QNN rounding和 `NDPFuncModel@35eab40` 在全部84个int32 accumulator及UINT8 D上逐元素一致。NDP参数化runner实际经过DRAM→input Buffer→SpecialPEA→ActivationUnit→output Buffer→DRAM，ring LC末态、per-channel requant、物理D覆盖和inverse logical D均验证；每个region的全部物理字节均能解释为data/tensor-padding/alignment并落在正确slice。新增`NdpRtl28FunctionalAdapter`把RTL28 Conv bundle可逆映射到受控shadow几何，复用同一功能模型并覆盖group4x7七环与global LOW代表路径；非零weight zero-point在未获硬件规则前fail-closed。G2和该探针都不批准目标JSON/bitstream、正式硬件layout、target simulator或G6；4-slice fixture继续作为ADR-007七小环实现的最小数值基线。
 
 细分：
 
@@ -363,7 +365,7 @@ W1的模型子任务已完成，但G1尚未通过；architecture/quantization/ba
 
 ### W4：逐算子28-slice relayout与性能profile【难度：高】
 
-当前状态（2026-07-14）：ADR-007已采用，旧16-slice W4物理候选全部失效为历史参考。W4按新目标重开；W0～W3不重做，旧93边集合、生命周期/alias算法和逻辑比较器复用，旧物理签名、容量与ring成本不复用。真实`topology28`和`profile28`调度底座、C0-01～07机器合同/legacy隔离、C1公共geometry与Quantize/Dequantize/View，以及C2的Conv、MaxPool、GAP、MatMul、QLinearAdd两profile正逆布局已经完成，176项根测试通过。现行G4、architecture/approval/backend合同、九份旧报告、旧生成器和RTL external evidence继续fail-closed。当前14个candidate layout覆盖七个必需家族，planned registry为空；RTL28 93边/成本、正式硬件批准和clean elaboration仍缺，因此G4未通过且W5未授权。下一步单线程进入C3整网审计。
+当前状态（2026-07-14）：ADR-007已采用，旧16-slice W4物理候选全部失效为历史参考。W4按新目标重开；W0～W3不重做，旧93边集合、生命周期/alias算法和逻辑比较器复用，旧物理签名、容量与ring成本不复用。真实`topology28`和`profile28`调度底座、C0-01～07机器合同/legacy隔离、C1公共geometry与Quantize/Dequantize/View，以及C2的Conv、MaxPool、GAP、MatMul、QLinearAdd两profile正逆布局已经完成；另有不具门权限的RTL28 Conv→NDP functional候选探针，根仓179项测试通过。现行G4、architecture/approval/backend合同、九份旧报告、旧生成器和RTL external evidence继续fail-closed。当前14个candidate layout覆盖七个必需家族，planned registry为空；RTL28 93边/成本、正式硬件批准和clean elaboration仍缺，因此G4未通过且W5未授权。下一步单线程进入C3整网审计。
 
 #### 方案切换遗留修改清单（2026-07-13全工作文件夹复审）
 
@@ -445,6 +447,8 @@ W1的模型子任务已完成，但G1尚未通过；architecture/quantization/ba
 6. 外部进程backend必须限制工作目录、超时、最大日志/产物大小并捕获版本；不得依赖交互式shell或个人环境变量。
 
 验收门 G6：每个hw_op的golden=simulator；整数bit-exact，浮点按manifest tolerance；重复运行稳定。
+
+当前前置进度（2026-07-14）：`NdpRtl28FunctionalAdapter`已证明RTL28 Conv物理bundle可在保留slice owner/offset的可逆shadow几何中进入既有NDP functional model，group4x7实际覆盖七个HIGH环，global profile覆盖显式LOW代表路径，并返回int32 accumulator、UINT8 D和inverse logical D。该adapter自描述为`candidate_only`，没有读取目标JSON、执行目标ISA/RTL或取得target simulator版本，因此`target_simulator_validated=false`、`g6_validated=false`；它只降低后续W6接线风险，不改变G6。
 
 ### W7：网络execplan和数据包【难度：高】
 
