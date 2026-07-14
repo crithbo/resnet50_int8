@@ -52,7 +52,7 @@
 
 - **已通过**：W0/G0集成骨架，W2/G2小Conv候选软件纵向闭环，W3/G3正式图/lowering/全节点与subop golden。
 - **部分通过**：W1已冻结正式候选模型、固定输入、预处理和软件量化事实；目标RTL候选已选`Trassic2.0_RTL@e3bdebba...`和28-slice。ADR-008又按操作者确认，把`ndp-sim-ref@e299b280...`的JSON/bitstream/model_execplan固定为正式硬件配置来源；Pool、Quant/Add-Dequant、GEMM/GEMV和sum族静态模板的字段/寄存器/bitstream候选审计已完成。clean elaboration、批准端口layout/profile、INT8 SA/psum/requant、sum跨slice/完成协议、目标数值模拟器和板级协议仍未完成，所以G1/G4仍未通过。
-- **当前主线**：ADR-007/008均已采用。W4-28 C0-C6软件候选与静态配置审计已经完成；配置来源未知这一阻塞已消除。等待硬件期间下一原子包是C7：建立W3 `hw_op`/tensor/qparams到正式配置字段的typed参数合同、provenance和严格失败校验。所有输出保持audit/preflight身份，不生成正式W5网络JSON/bitstream。G4=`not_passed`、`w5_authorized=false`。
+- **当前主线**：ADR-007/008均已采用。W4-28 C0-C7软件候选、静态配置审计和typed参数合同已经完成；配置来源未知以及W3参数身份未绑定这两个软件问题已消除。所有输出仍保持audit/preflight/formula-only身份，不生成正式W5网络JSON/bitstream。G4=`not_passed`、`w5_authorized=false`。
 - **当前边界**：W2已证明小合成Conv的golden=NDP functional model，并新增RTL28 Conv物理布局到该功能模型的candidate-only直接探针；后者不是目标simulator、未执行目标JSON/ISA/RTL，也不构成G6证据。W3公式重放仍属于golden侧。当前没有任何正式ResNet算子达到golden=target simulator=hardware。
 
 ### 接手进度总表
@@ -63,7 +63,7 @@
 | W1 | G1未通过 | 模型/输入/量化事实、28-slice RTL候选；正式JSON/bitstream/execplan配置来源已固定 | 收集clean elaboration、量化/端口/布局/固件/板级原始证据和签署合同 |
 | W2 | G2通过 | 1/4-slice小Conv候选layout和NDP functional数值闭环；RTL28 Conv到该功能模型的candidate-only探针 | 作为W4/W6前置fixture，不外推为目标simulator或硬件规格 |
 | W3 | G3通过 | 78节点、133 hw_op、79 runtime tensor、55内部tensor、旧77映射 | 不重跑大artifact，除非hash/合同失效 |
-| W4 | 旧16-slice readiness历史通过；28-slice软件候选完成/G4未通过 | C0-C6完成；正式配置源和Pool、Quant/Add-Dequant、GEMM/GEMV、sum族静态模板均已审计 | 单线程建立typed配置参数合同；等待硬件证据后重审G4，不生成正式W5产物 |
+| W4 | 旧16-slice readiness历史通过；28-slice软件候选完成/G4未通过 | C0-C7完成；正式配置源、各静态模板审计和78节点/133 hw_op typed参数合同均已冻结 | 可继续做整网typed qparam连续性与阻塞归并；等待硬件证据后重审G4，不生成正式W5产物 |
 | W5～W9 | 未通过 | W9通用比较器基础设施已前置完成；其余仅有参考框架或mock接口 | 等待对应前置门和真实结果通过 |
 
 ### 当前可立即执行队列
@@ -77,8 +77,9 @@
 7. 【已完成】单线程把同一审计扩展到第二个MaxPool和AvgPool，确认三模板共用shape→LC→stream→buffer→GA五段链；两个MaxPool的18项差异全部归因，AvgPool明确只到int32 sum，未包含除法/requant。三模板均通过确定性、地址差分和溢出拒绝。
 8. 【已完成】C5单线程审计Quant与Add-Dequant；确认静态constant与正式ResNet qparams直接匹配数均为0，现有handler没有typed qparam通道，目标数值rounding和完整QLinearAdd仍未闭环。
 9. 【已完成】C6用两个共享Local子任务隔离审计6个GEMM/GEMV与11个sum族模板；主任务完成公共报告0.4、backend fail-closed绑定和确定性复核。未生成正式W5实例。
-10. 【下一步/可本地继续】C7单线程建立W3 hw_op/tensor/qparams到正式配置字段的typed参数合同、provenance和严格失败测试；只定义参数映射，不生成patched JSON、bitstream或execplan。
-11. 【并行外部等待】W1批准请求包继续收集clean elaboration、量化/端口/布局、目标数值模拟器和板级协议；收到后按approved合同导入、版本检查和G4自动重审流程验收。没有approved合同不得宣布G1/G4/G5通过。
+10. 【已完成】C7单线程建立W3 hw_op/tensor/qparams到正式配置字段的typed参数合同、provenance和严格失败测试；覆盖78节点/133 hw_op、491个initializer参数引用和三态字段解析，只定义参数映射，没有生成patched JSON、bitstream或execplan。
+11. 【下一步/可本地继续】若继续等待硬件，C8单线程建立93条整网runtime边的typed qparam连续性与配置依赖审计：把producer输出量化域、MaxPool/View透明传递和consumer各输入分支逐边闭合，并把重复的实例级阻塞归并到最小硬件批准问题；仍不生成正式W5实例。该工作只消费C3/C7稳定身份，不预设尚未批准的寄存器位义，后续硬件裁决不会要求推倒重做。
+12. 【并行外部等待】W1批准请求包继续收集clean elaboration、量化/端口/布局、目标数值模拟器和板级协议；收到后按approved合同导入、版本检查和G4自动重审流程验收。没有approved合同不得宣布G1/G4/G5通过。
 
 Local执行环境已从事故前ZIP选择性恢复并重新验收：Python 3.12.13、`pip check`、三个锁定参考仓和根测试均通过；没有恢复任何managed-worktree junction。后续依赖任务可使用Local主任务或共享目录协作子任务，独立managed worktree仍只允许tracked-only工作。
 
@@ -436,7 +437,9 @@ W1的模型子任务已完成，但G1尚未通过；architecture/quantization/ba
 
 **W4-28C6：GEMV/MatMul与sum组配置审计已完成。** 两个共享Local子任务分别只新增独立实现与测试，公共crosswalk、backend、权威报告、`.agents`和Git由主任务单线程集成。GEMV/MatMul组锁定6个SA模板与5个placeholder handler：全部FP16、`bias_enable=0`，只有decode两模板经GA sum输出FP16；ResNet `M/N/K=16/1000/2048`套入现有local GEMM整块公式会出现`M//32=0`和N余8，且无typed qparams、zero-point correction、外部INT32 psum生命周期、tail或UINT8 requant。sum组锁定11个local/remote/summac/sum-rec模板：全部remote名称模板都没有N2N/neighbor，只能证明对已放入A流的数据归约；静态last-index链不能升级为硬件完成协议；`sum_config_32_32`无base-info/handler/除法/requant，FP16 4-slice remote另有base-info与JSON/handler冲突。代表GEMV以及全部11个sum模板的官方编码均在临时目录中确定复现，但数值、跨slice通信和硬件完成语义仍为`not_validated`。权威报告升至0.4并保持`no_gate_authority=true`；未生成正式W5实例，G4/W5状态不变。
 
-**W4-28C7下一候选工作包：typed配置参数合同，尚未开始。** 单线程建立W3 `hw_op`、tensor、shape、dtype和qparams到正式配置字段的typed参数对象与provenance表，先覆盖Quant/Add-Dequant、Pool、MatMul和sum审计已经明确的“可派生字段/必须外部批准字段/必须拒绝字段”。本包只实现schema、模型事实提取、公式级映射和严格失败测试，不复制静态样例常量，不生成patched JSON、bitstream、execplan或任何正式W5实例。验收要求是78节点/133个语义hw_op身份可绑定、标量与per-channel qparams无隐式丢失、缺INT8 SA/tail/psum/跨slice/完成协议时明确失败、报告确定可复现；公共合同与Git继续由主任务单线程持有。
+**W4-28C7：typed配置参数合同已单线程完成。** `contracts/typed_config_parameter_contract.json`把锁定ONNX、W3 model graph、batch16 runtime manifest、subop manifest和lowering逐项绑定到78节点/133个语义`hw_op`；只读取三个小型W3 JSON和ONNX initializer，没有读取约951 MB `.npy`。合同保存491个initializer参数引用，其中438个scale/zero-point和53个bias；159个per-channel原始参数保留元素数、axis、精确字节hash和范围，绝不隐式压成scalar；另生成94个float32/int32公式参数。757个字段绑定逐项标为`derived`、`approval_required`或`rejected`，且三态全部固定`formal_target_write_allowed=false`；缺INT8 SA、tail、psum、requant、typed execplan transport、sum完成协议和批准layout时严格拒绝。backend按path/size/SHA-256绑定该合同，G4审计同步验证其语义和配置权威报告身份。该步骤没有复制静态样例constant，没有生成patched JSON、bitstream、execplan/Bank_data或任何正式W5实例，G4/W5状态不变。
+
+**W4-28C8下一候选工作包：整网typed qparam连续性与批准问题归并，尚未开始。** 只基于C3的93边/91 qparam链和C7的精确参数身份，验证每条producer→consumer边的量化域是否连续，显式处理QLinearAdd双分支、MaxPool/View透明传递、GAP/MatMul head边界，并将数百个实例级`approval_required/rejected`记录归并到可外发的最小硬件问题及受影响`hw_op`集合。该包不得猜测寄存器位义，不生成正式配置；如果硬件证据先到，则优先导入approved合同并重审G4，而不是继续C8。
 
 ### W5：逐算子JSON和bitstream【难度：很高】
 

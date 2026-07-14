@@ -35,6 +35,10 @@ from .target_config_audit import (
     SECOND_MAXPOOL_TEMPLATE,
 )
 from .topology28 import HIGH_RING_OWNERS, LOW_RING_OWNERS
+from .typed_config_parameters import (
+    TypedConfigParameterError,
+    validate_typed_config_parameter_contract,
+)
 from .w4_evidence import LEGACY16_METADATA, architecture_evidence_basis_sha256
 
 ALLOWED_CONTRACT_STATUSES = {
@@ -604,6 +608,7 @@ def validate_backend_contract(
         "ga_quant_add_dequant_probe_validated": True,
         "matmul_gemv_config_probe_validated": True,
         "sum_family_config_probe_validated": True,
+        "typed_config_parameter_contract_validated": True,
         "resnet50_operator_coverage_complete": False,
     }
     for field, expected in expected_config_toolchain.items():
@@ -624,6 +629,7 @@ def validate_backend_contract(
         "matmul_int8_psum_requant_tail_absent",
         "sum_cross_slice_and_completion_unproven",
         "sum_metadata_conflict_unresolved",
+        "typed_parameter_contract_formula_only",
         "does_not_approve_rtl_or_layout",
     }:
         raise ContractError("target configuration source limitations must remain fail-closed")
@@ -829,6 +835,50 @@ def validate_backend_contract(
             is not True
         ):
             raise ContractError("target configuration authority audit semantics are invalid")
+
+    typed_identity = {
+        field: config_toolchain.get(field)
+        for field in (
+            "typed_parameter_contract_path",
+            "typed_parameter_contract_sha256",
+            "typed_parameter_contract_size_bytes",
+        )
+    }
+    if (
+        not isinstance(typed_identity["typed_parameter_contract_path"], str)
+        or not isinstance(typed_identity["typed_parameter_contract_sha256"], str)
+        or len(typed_identity["typed_parameter_contract_sha256"]) != 64
+        or not isinstance(typed_identity["typed_parameter_contract_size_bytes"], int)
+        or typed_identity["typed_parameter_contract_size_bytes"] <= 0
+    ):
+        raise ContractError("typed configuration parameter contract identity is invalid")
+    if root is not None:
+        typed_path = root.parent / typed_identity["typed_parameter_contract_path"]
+        if not typed_path.is_file():
+            raise ContractError("typed configuration parameter contract is missing")
+        if typed_path.stat().st_size != typed_identity["typed_parameter_contract_size_bytes"]:
+            raise ContractError("typed configuration parameter contract size mismatch")
+        if sha256_file(typed_path) != typed_identity["typed_parameter_contract_sha256"]:
+            raise ContractError("typed configuration parameter contract hash mismatch")
+        try:
+            typed_contract = json.loads(typed_path.read_text(encoding="utf-8"))
+        except json.JSONDecodeError as error:
+            raise ContractError(
+                "typed configuration parameter contract is invalid JSON"
+            ) from error
+        try:
+            validate_typed_config_parameter_contract(typed_contract)
+        except TypedConfigParameterError as error:
+            raise ContractError(
+                "typed configuration parameter contract semantics are invalid"
+            ) from error
+        if (
+            typed_contract.get("source", {}).get("target_config_authority_sha256")
+            != audit_identity["audit_sha256"]
+        ):
+            raise ContractError(
+                "typed configuration parameter contract targets a different authority audit"
+            )
 
     simulator = backends["target_simulator"]
     if not isinstance(simulator, dict):

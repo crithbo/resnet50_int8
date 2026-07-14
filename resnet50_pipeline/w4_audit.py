@@ -50,6 +50,10 @@ from .target_config_audit import (
     QUANT_TEMPLATE,
     SECOND_MAXPOOL_TEMPLATE,
 )
+from .typed_config_parameters import (
+    TypedConfigParameterError,
+    validate_typed_config_parameter_contract,
+)
 from .w4_evidence import architecture_evidence_basis_sha256
 from .w4_profiles import PROFILE_POLICIES
 
@@ -668,6 +672,7 @@ def _target_config_toolchain_status(root: Path) -> dict[str, Any]:
         "ga_quant_add_dequant_probe_validated": True,
         "matmul_gemv_config_probe_validated": True,
         "sum_family_config_probe_validated": True,
+        "typed_config_parameter_contract_validated": True,
         "resnet50_operator_coverage_complete": False,
     }
     for field, value in expected.items():
@@ -892,6 +897,32 @@ def _target_config_toolchain_status(root: Path) -> dict[str, Any]:
             for name, passed in semantic_checks.items()
             if not passed
         )
+
+    typed_path = root / str(record.get("typed_parameter_contract_path", ""))
+    typed_contract: dict[str, Any] = {}
+    if not typed_path.is_file():
+        reasons.append("typed_parameter_contract_missing")
+    else:
+        if typed_path.stat().st_size != record.get(
+            "typed_parameter_contract_size_bytes"
+        ):
+            reasons.append("typed_parameter_contract_size_mismatch")
+        if sha256_file(typed_path) != record.get("typed_parameter_contract_sha256"):
+            reasons.append("typed_parameter_contract_hash_mismatch")
+        try:
+            typed_contract = _load_json(typed_path)
+        except (OSError, json.JSONDecodeError):
+            reasons.append("typed_parameter_contract_invalid_json")
+    if typed_contract:
+        try:
+            validate_typed_config_parameter_contract(typed_contract)
+        except TypedConfigParameterError:
+            reasons.append("typed_parameter_contract_semantics_invalid")
+        if (
+            typed_contract.get("source", {}).get("target_config_authority_sha256")
+            != record.get("audit_sha256")
+        ):
+            reasons.append("typed_parameter_contract_authority_mismatch")
     return {
         "version_frozen": not reasons,
         "source_repository": record.get("source_repository"),
@@ -910,6 +941,15 @@ def _target_config_toolchain_status(root: Path) -> dict[str, Any]:
         ),
         "sum_family_config_probe_validated": record.get(
             "sum_family_config_probe_validated"
+        ),
+        "typed_config_parameter_contract_validated": record.get(
+            "typed_config_parameter_contract_validated"
+        ),
+        "typed_parameter_contract_path": record.get(
+            "typed_parameter_contract_path"
+        ),
+        "typed_parameter_contract_sha256": record.get(
+            "typed_parameter_contract_sha256"
         ),
         "resnet50_operator_coverage_complete": record.get(
             "resnet50_operator_coverage_complete"

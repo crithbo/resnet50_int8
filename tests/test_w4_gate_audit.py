@@ -122,6 +122,15 @@ class W4GateAuditTests(unittest.TestCase):
             ]
         )
         self.assertTrue(
+            report["target_config_toolchain"][
+                "typed_config_parameter_contract_validated"
+            ]
+        )
+        self.assertEqual(
+            report["target_config_toolchain"]["typed_parameter_contract_path"],
+            "contracts/typed_config_parameter_contract.json",
+        )
+        self.assertTrue(
             report["gate_criteria"]["target_rtl_isa_register_map_version_frozen"]
         )
         self.assertTrue(

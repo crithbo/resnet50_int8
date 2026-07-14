@@ -60,8 +60,12 @@
       "ga_quant_add_dequant_probe_validated": true,
       "matmul_gemv_config_probe_validated": true,
       "sum_family_config_probe_validated": true,
+      "typed_config_parameter_contract_validated": true,
+      "typed_parameter_contract_path": "contracts/typed_config_parameter_contract.json",
+      "typed_parameter_contract_sha256": "abbc87b0b13c92611a90fe1767b32b15fe9c49f23bee616ca2bb51219dd181bd",
+      "typed_parameter_contract_size_bytes": 1619185,
       "resnet50_operator_coverage_complete": false,
-      "limitations": ["not_target_numerical_simulator", "not_hardware_execution", "resnet_operator_coverage_incomplete", "audited_static_template_families_only", "avgpool_requantization_absent", "uint8_maxpool_semantics_unresolved", "quant_rounding_target_execution_unconfirmed", "add_dequant_qlinearadd_requantization_absent", "execplan_qparam_binding_absent", "matmul_int8_psum_requant_tail_absent", "sum_cross_slice_and_completion_unproven", "sum_metadata_conflict_unresolved", "does_not_approve_rtl_or_layout"]
+      "limitations": ["not_target_numerical_simulator", "not_hardware_execution", "resnet_operator_coverage_incomplete", "audited_static_template_families_only", "avgpool_requantization_absent", "uint8_maxpool_semantics_unresolved", "quant_rounding_target_execution_unconfirmed", "add_dequant_qlinearadd_requantization_absent", "execplan_qparam_binding_absent", "matmul_int8_psum_requant_tail_absent", "sum_cross_slice_and_completion_unproven", "sum_metadata_conflict_unresolved", "typed_parameter_contract_formula_only", "does_not_approve_rtl_or_layout"]
     },
     "target_simulator": {
       "status": "unapproved_missing_authoritative_binding",
@@ -78,7 +82,7 @@
   },
   "unresolved": [
     "authoritative target simulator command and version",
-    "ResNet50 INT8 per-operator configuration derivation and numerical validation",
+    "hardware-approved target-field binding and numerical validation for the typed ResNet50 parameters",
     "hardware load/start/wait/error/dump protocol"
   ]
 }

@@ -9,9 +9,9 @@
 - **最终验收**：正式 ResNet50 INT8 ONNX→逐节点/硬件原子算子 golden→28-slice relayout→JSON/bitstream→目标 simulator→execplan/Bank_data→RTL/硬件→三方逐算子和整网一致，并以真实cycle/带宽证据选择性能profile。
 - **W3业务封版检查点**：`35a4fde106d102b0e165e7eb13d60f7dd980db71`；W0/G0、W2/G2、W3/G3已通过，W1只完成模型/输入/软件量化事实，G1因目标硬件合同缺失尚未通过。交接文档可能有后续纯文档提交，当前恢复点以`git rev-parse HEAD`和`history.md`精确台账为准。
 - **三个仓库分工**：`CGRA_SIM`给软件/QNN语义和旧ResNet计划；ADR-008已按操作者确认，把`ndp-sim-ref@e299b280...`的`jsons/`、`bitstream/`和`model_execplan/`固定为正式28-slice硬件配置来源；`NDPFuncModel`只给W2 Conv功能数据通路，不是目标数值backend。配置来源正式不代表数值模拟器或硬件结果已通过。
-- **当前成果**：正式图含78节点/617张量，lower为133个语义hw_op；保存79个运行时tensor和55个INT32内部tensor，全部78节点独立公式重放匹配ORT，旧77原语已逐项映射。W4-28的C0-C6候选审计均已完成：14个RTL28 candidate layout覆盖全部七族；两种整网调度完成93边、91 qparam链、16残差Add和79 tensor生命周期/alias审计，并生成静态成本。配置权威审计盘点42个JSON，完成Pool三模板、Quant/Add-Dequant两模板、6个SA GEMM/GEMV模板和11个sum族模板的字段/寄存器/bitstream审计。6个SA模板均为FP16且bias关闭，ResNet `M/N/K=16/1000/2048`没有tail、typed qparams、INT32 psum或UINT8 requant闭环；所有remote-sum模板均不含N2N/neighbor，完成事件只确认到静态last-index引用链，且FP16 4-slice remote的base-info与JSON/handler冲突。现有execplan仍不承载GA/SA typed qparams。旧16-slice物理证据只作历史参考。
+- **当前成果**：正式图含78节点/617张量，lower为133个语义hw_op；保存79个运行时tensor和55个INT32内部tensor，全部78节点独立公式重放匹配ORT，旧77原语已逐项映射。W4-28的C0-C7候选审计均已完成：14个RTL28 candidate layout覆盖全部七族；两种整网调度完成93边、91 qparam链、16残差Add和79 tensor生命周期/alias审计，并生成静态成本。配置权威审计盘点42个JSON，完成Pool三模板、Quant/Add-Dequant两模板、6个SA GEMM/GEMV模板和11个sum族模板的字段/寄存器/bitstream审计。C7又把78节点/133 hw_op绑定到491个initializer参数引用和94个公式派生参数，所有per-channel值保持axis/hash，并以`derived/approval_required/rejected`三态禁止未批准target写入。6个SA模板均为FP16且bias关闭，ResNet `M/N/K=16/1000/2048`仍没有tail、typed execplan transport、INT32 psum或UINT8 requant闭环；所有remote-sum模板均不含N2N/neighbor，完成事件只确认到静态last-index引用链，且FP16 4-slice remote的base-info与JSON/handler冲突。旧16-slice物理证据只作历史参考。
 - **当前硬件裁决**：目标为28-slice，RTL候选固定`Trassic2.0_RTL@e3bdebba95dec36ee8eba43caa92a326a88392cd`；主体采用七个4-slice小环的batch/channel混合profile，28-slice大环只作代表层性能候选。W4按该方案重开，G4仍未通过，`w5_authorized=false`。
-- **下一主线**：等待硬件批准期间，单线程进入W4-28 C7：建立W3 `hw_op`/tensor/qparams到正式配置字段的typed参数合同、provenance和严格失败校验，只定义参数对象与可验证映射，不生成patched JSON、bitstream或正式W5实例。公共crosswalk、合同/backend、权威报告、`.agents`、Git和最终集成继续由主任务单线程负责；外部证据收到后仍单线程执行批准合同导入和G4重审。
+- **下一主线**：C7已完成。若硬件批准尚未到达，可单线程进入W4-28 C8，把C3的93条runtime边/91条qparam链与C7精确参数身份合并成整网量化域连续性审计，并将实例级阻塞归并到最小批准问题；仍不生成patched JSON、bitstream或正式W5实例。硬件证据一旦到达则优先单线程导入approved合同、做版本检查并重审G4。
 - **当前外部阻塞**：正式配置来源版本不再是阻塞；剩余外部阻塞为目标commit的clean elaboration/顶层命名闭合、批准端口layout/profile、INT8 Conv/MatMul的SA/psum/requant/qparams数值约定、sum跨slice传输与完成协议、目标数值模拟器入口、6144/8192 row地址裁决及硬件加载/dump协议。
 - **禁止误用**：NDPFuncModel 当前 `extracted_*.npy` 和 `verify_pe` psum 不是可信 golden；42个 JSON也不等于 ResNet算子配置已完成；bitstream生成成功不等于数值正确。
 - **接手检查**：Local主工作区依次运行`git status --short`、`.venv\Scripts\python.exe tools\sync_repositories.py verify`、`.venv\Scripts\python.exe -m unittest discover -s tests -v`；fresh checkout可先用`verify --evidence-only`只核对tracked RTL28审计快照。预期根工作树干净、三参考仓匹配lock、RTL28 external evidence匹配hash、登记的全量测试全部通过。2026-07-13已确认managed worktree回收会穿透依赖junction清空Local目标，因此setup对非Local工作树硬失败；依赖`.venv`、三个参考仓或正式W3的任务统一回Local，直到有隔离且通过“销毁安全”验证的新方案。
@@ -309,9 +309,9 @@ CGRA_SIM/testing/resnet-50-int8/
 
 ## 当前最高优先级
 
-严格按`.agents/plan.md`的W0→W9工作包和G0→G9验收门推进。W0/G0、W2/G2、W3/G3已经完成；W1已选定目标RTL commit但G1未通过。W4-28 C0-C6候选工作已完成，旧16-slice software readiness不再代表当前进度。下一业务步骤仍属于W4 C7，不进入W5。任何W1～W3修改都必须先说明会使哪些manifest/hash/下游产物失效。
+严格按`.agents/plan.md`的W0→W9工作包和G0→G9验收门推进。W0/G0、W2/G2、W3/G3已经完成；W1已选定目标RTL commit但G1未通过。W4-28 C0-C7候选工作已完成，旧16-slice software readiness不再代表当前进度。下一业务步骤若继续本地工作仍属于W4 C8，不进入W5。任何W1～W3修改都必须先说明会使哪些manifest/hash/下游产物失效。
 
-优先推进：单线程建立W3 `hw_op`/tensor/qparams到正式配置字段的typed参数合同、字段provenance和fail-closed校验；该包不得生成patched JSON、bitstream或execplan。与此同时继续等待`e3bdebba...`的clean elaboration、端口layout、最小INT8 SA/psum/requant、sum跨slice与完成协议、目标emulator以及硬件load/dump批准。旧ONNX、旧16-slice产物、原`hex_data`和`conv_config`均只作兼容性资料。
+优先推进：若批准证据仍未到达，单线程建立93边的typed qparam连续性和配置依赖审计，并把C7重复阻塞归并到最小硬件问题；该包不得生成patched JSON、bitstream或execplan。与此同时继续等待`e3bdebba...`的clean elaboration、端口layout、最小INT8 SA/psum/requant、sum跨slice与完成协议、目标emulator以及硬件load/dump批准。旧ONNX、旧16-slice产物、原`hex_data`和`conv_config`均只作兼容性资料。
 
 配置字段层的Q1~Q4详细背景仍见 `.agents/rules/算子配置规则.md` 第14.3节；端到端外部资料清单以 `plan.md`“当前最高优先级请求”为准。
 

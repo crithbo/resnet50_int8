@@ -95,6 +95,9 @@ class W0PipelineTests(unittest.TestCase):
             (root / "contracts" / "target_config_authority_audit.json").write_bytes(
                 (PROJECT_ROOT / "contracts" / "target_config_authority_audit.json").read_bytes()
             )
+            (root / "contracts" / "typed_config_parameter_contract.json").write_bytes(
+                (PROJECT_ROOT / "contracts" / "typed_config_parameter_contract.json").read_bytes()
+            )
             legacy_index = json.loads(
                 (PROJECT_ROOT / "artifacts/w4/legacy16_index.json").read_text(
                     encoding="utf-8"
