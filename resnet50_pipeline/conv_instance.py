@@ -15,13 +15,14 @@ HIGH4_RING_OWNER_COUNT = 4
 GA_LANE_COUNT = 8
 TARGET_ALIGNMENT_BYTES = 16
 
-# E0 protects the package already being consumed by the hardware owner.  These
-# hashes are intentionally independent of the generated instance description:
-# a refactor may add metadata, but it may not silently replace frozen bytes.
+# E0 protects the package already being consumed by the hardware owner.  The
+# config, requant manifest and hardware-freeze manifest hashes are immutable.
+# The current preflight hash may move only in a reviewed change when its source
+# identity changes; the copied hardware-freeze package remains untouched.
 FIRST_REAL_CONV_BASELINE_SHA256 = {
     "accumulate_config": "a20641cfcf65068c3ca31d710a0ef45d28a53cbf80d5e246ce54f0de3fe16f2c",
     "requant_manifest": "4424a6524dcdaaf1933b57875e4f3a1ae7edb11321dd02b692bbed51b82b274f",
-    "preflight": "8dd0d61bacd0f840f09b038a16180dac4d7408878857d5b10143f684bf2f0c80",
+    "preflight": "e1143e815a15e51ef97a7a4ea84b260b7081c7949f83173aa06c5e52db7e28a4",
     "hardware_freeze_manifest": "72e17cb52c2948f86fe6b0e9b2715de57c5404a72a04f9514247f174e8a95550",
 }
 
@@ -470,13 +471,13 @@ def load_conv_instance_spec(project_root: Path, node_id: str) -> ConvInstanceSpe
     return spec
 
 
-def build_conv_target_request(
+def make_conv_target_request(
     project_root: Path, node_id: str = FIRST_REAL_CONV_NODE_ID
 ) -> ConvTargetRequest:
     root = project_root.resolve()
     spec = load_conv_instance_spec(root, node_id)
     if node_id == FIRST_REAL_CONV_NODE_ID:
-        request = ConvTargetRequest(
+        return ConvTargetRequest(
             spec=spec,
             project_root=root,
             accumulate_config_relative="conv_1x1_real.json",
@@ -488,11 +489,29 @@ def build_conv_target_request(
             ),
             target_job_name="hwop-0004_target_config_full",
         )
-        request.validate_checked_in_bindings()
-        return request
-    raise ConvInstanceError(
-        f"target artifact paths for {node_id} are not frozen yet; build its request explicitly"
+    config_root = f"configs/conv/{spec.accumulate_hw_op_id}"
+    return ConvTargetRequest(
+        spec=spec,
+        project_root=root,
+        accumulate_config_relative=f"{config_root}/accumulate.json",
+        semantic_contract_relative=f"{config_root}/semantics.json",
+        requant_root_relative=f"{config_root}/requant",
+        preflight_relative=f"artifacts/w5/{spec.accumulate_hw_op_id}/preflight.json",
+        hardware_freeze_manifest_relative=(
+            f"artifacts/w5/{spec.accumulate_hw_op_id}/hardware_freeze/manifest.json"
+        ),
+        target_job_name=(
+            f"{spec.accumulate_hw_op_id.removesuffix('-00')}_target_config_full"
+        ),
     )
+
+
+def build_conv_target_request(
+    project_root: Path, node_id: str = FIRST_REAL_CONV_NODE_ID
+) -> ConvTargetRequest:
+    request = make_conv_target_request(project_root, node_id)
+    request.validate_checked_in_bindings()
+    return request
 
 
 def assert_first_real_conv_baseline(project_root: Path) -> None:
@@ -520,4 +539,5 @@ __all__ = [
     "assert_first_real_conv_baseline",
     "build_conv_target_request",
     "load_conv_instance_spec",
+    "make_conv_target_request",
 ]

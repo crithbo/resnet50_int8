@@ -363,18 +363,43 @@ class NdpFunctionalAdapter:
             if requant_config_binding is None:
                 if returned_requant_binding is not None:
                     raise PipelineError("NDP returned an unexpected requant binding")
-            elif (
-                not isinstance(returned_requant_binding, dict)
-                or returned_requant_binding.get("status") != "validated"
-                or returned_requant_binding.get("manifest_sha256")
-                != requant_config_binding.get("manifest_sha256")
-                or returned_requant_binding.get("channel_count") != 64
-                or returned_requant_binding.get("shard_count") != 8
-                or returned_requant_binding.get("unique_flush_count") != 64
-                or returned_requant_binding.get("flush_count_per_logical_output") != 1
-                or returned_requant_binding.get("staged_d_offsets") != [904400, 979664]
-            ):
-                raise PipelineError("NDP requant config binding validation differs")
+            else:
+                try:
+                    requested_manifest = json.loads(
+                        requant_config_binding["manifest_text"]
+                    )
+                    requested_coverage = requested_manifest["coverage"]
+                    requested_channels = requested_coverage["covered_channels"]
+                    requested_shards = requested_manifest["shards"]
+                    expected_channel_count = len(set(requested_channels))
+                    expected_shard_count = int(requested_coverage["shard_count"])
+                    expected_staged_offsets = sorted(
+                        {
+                            int(shard["staged_d_base_offset"])
+                            for shard in requested_shards
+                        }
+                    )
+                except (KeyError, TypeError, ValueError, json.JSONDecodeError) as exc:
+                    raise PipelineError(
+                        "requested requant manifest summary is invalid"
+                    ) from exc
+                if (
+                    not isinstance(returned_requant_binding, dict)
+                    or returned_requant_binding.get("status") != "validated"
+                    or returned_requant_binding.get("manifest_sha256")
+                    != requant_config_binding.get("manifest_sha256")
+                    or returned_requant_binding.get("channel_count")
+                    != expected_channel_count
+                    or returned_requant_binding.get("shard_count")
+                    != expected_shard_count
+                    or returned_requant_binding.get("unique_flush_count")
+                    != expected_channel_count
+                    or returned_requant_binding.get("flush_count_per_logical_output")
+                    != requested_coverage.get("flush_count_per_logical_output")
+                    or returned_requant_binding.get("staged_d_offsets")
+                    != expected_staged_offsets
+                ):
+                    raise PipelineError("NDP requant config binding validation differs")
         return NdpPhysicalProbeResult(
             per_slice=int(response["per_slice"]),
             total_bytes=int(response["total_bytes"]),

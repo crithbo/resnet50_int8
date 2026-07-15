@@ -13,9 +13,9 @@
     },
     "ndp_conv_functional": {
       "status": "operator_confirmed_conv_simulator_component",
-      "role": "conv_functional_simulator_with_real_1x1_accumulate_requant_json_adapter",
+      "role": "conv_functional_simulator_with_typed_1x1_accumulate_requant_json_adapter",
       "source_repository": "https://github.com/runoobb/NDPFuncModel.git",
-      "source_commit": "1d3181d832d7a409af779215e4aa590d03bd8ed3",
+      "source_commit": "e35b24a446bdaeb7a939ab50d8e0cad5fe2a393c",
       "is_target_backend": false,
       "identity_confirmed": true,
       "entrypoint": "tools/physical_image_probe.py",

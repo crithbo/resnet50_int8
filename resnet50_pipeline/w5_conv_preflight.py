@@ -700,11 +700,13 @@ def _compare_ndp_target_config(
     layout: QLinearConvPhysicalLayout,
     bundle: Any,
     request: ConvTargetRequest,
+    *,
+    timeout_seconds: int = 120,
 ) -> tuple[dict[str, Any], dict[str, Any]]:
     coordinate = (0, 0, 0, 0)
     adapter = NdpRtl28FunctionalAdapter(
         project_root / "NDPFuncModel",
-        timeout_seconds=60,
+        timeout_seconds=timeout_seconds,
     )
     result = adapter.run_target_config_qlinear_conv_1x1(
         layout,
@@ -765,10 +767,16 @@ def _compare_ndp_target_config(
         "dilations": list(bundle.plan.dilations),
         "simulator": "NDPFuncModel conv_func",
         "simulator_status": adapter.status,
-        "source_commit": "1d3181d832d7a409af779215e4aa590d03bd8ed3",
+        "source_commit": "e35b24a446bdaeb7a939ab50d8e0cad5fe2a393c",
         "destination_slice": 0,
         "source_owners": [0, 1, 3, 2],
-        "channel_ranges": [[0, 16], [48, 16], [32, 16], [16, 16]],
+        "channel_ranges": [
+            [
+                bundle.region("A", owner).logical_start,
+                bundle.region("A", owner).logical_count,
+            ]
+            for owner in (0, 1, 3, 2)
+        ],
         "ring_segment_ends": list(probe["ring_segment_ends"]),
         "partial_accumulators": list(probe["partial_accumulators"]),
         "accumulator": {
@@ -786,6 +794,15 @@ def _compare_ndp_target_config(
     }
     requant_binding = result.physical_probe.requant_config_binding
     bulk_job = result.physical_probe.int8_conv_1x1_jobs[0]
+    requant_manifest = _load_json(request.requant_manifest_path)
+    staged_base = int(requant_manifest["physical_layout"]["staged_d_offset"])
+    staged_half_bytes = int(
+        requant_manifest["physical_layout"]["staged_half_bytes"]
+    )
+    expected_staged_offsets = [
+        staged_base + index * staged_half_bytes
+        for index in range(request.spec.requant_shards_per_owner)
+    ]
     if (
         requant_binding is None
         or requant_binding.get("status") != "validated"
@@ -795,12 +812,13 @@ def _compare_ndp_target_config(
         or requant_binding.get("shard_count") != request.spec.requant_shard_count
         or requant_binding.get("unique_flush_count") != request.spec.output_channels
         or requant_binding.get("flush_count_per_logical_output") != 1
-        or requant_binding.get("staged_d_offsets") != [904400, 979664]
+        or requant_binding.get("staged_d_offsets") != expected_staged_offsets
         or len(bulk_job.get("physical_writebacks", [])) != 28
         or any(
             writeback.get("staging_inverse_matches_canonical_D") is not True
             or writeback.get("flush_count_per_logical_output") != 1
-            or len(writeback.get("staged_D_bases", [])) != 2
+            or len(writeback.get("staged_D_bases", []))
+            != request.spec.requant_shards_per_owner
             for writeback in bulk_job.get("physical_writebacks", [])
         )
     ):
@@ -827,6 +845,102 @@ def _compare_ndp_target_config(
         "not_cycle_accurate_lc_interpretation": True,
     }
     return coordinate_report, closure_report
+
+
+def load_conv_instance_execution(
+    project_root: Path,
+    spec: ConvInstanceSpec,
+) -> tuple[dict[str, np.ndarray], QLinearConvPhysicalLayout, Any]:
+    """Load one typed Conv's exact W3 values and construct its RTL28 bundle."""
+
+    root = project_root.resolve()
+    runtime_root = root / "artifacts" / "w3" / "golden_batch16"
+    subop_root = root / "artifacts" / "w3" / "subop_batch16"
+    runtime_manifest = _load_json(runtime_root / "manifest.json")
+    subop_manifest = _load_json(subop_root / "manifest.json")
+    initializers = _initializer_values(
+        root / "artifacts" / "reference_model" / "resnet50-v1-12-int8.onnx"
+    )
+    descriptors = {
+        name: spec.tensor(name).descriptor()
+        for name in (
+            "A",
+            "B",
+            "bias",
+            "w_scale",
+            "w_zero_point",
+            "x_scale",
+            "x_zero_point",
+            "y_scale",
+            "y_zero_point",
+            "P",
+            "D",
+        )
+    }
+    values = {
+        "A": _load_npy(
+            runtime_root,
+            runtime_manifest,
+            runtime_manifest["tensors"][descriptors["A"]["tensor_id"]],
+        ),
+        "P": _load_npy(
+            subop_root,
+            subop_manifest,
+            subop_manifest["internal_tensors"][descriptors["P"]["tensor_id"]],
+        ),
+        "D": _load_npy(
+            runtime_root,
+            runtime_manifest,
+            runtime_manifest["tensors"][descriptors["D"]["tensor_id"]],
+        ),
+    }
+    for port_name in (
+        "B",
+        "bias",
+        "w_scale",
+        "w_zero_point",
+        "x_scale",
+        "x_zero_point",
+        "y_scale",
+        "y_zero_point",
+    ):
+        values[port_name] = _initializer(
+            initializers, runtime_manifest, descriptors[port_name]
+        )
+    for name, expected_sha256 in spec.parameter_sha256:
+        if _array_sha256(values[name]) != expected_sha256:
+            raise W5ConvPreflightError(f"typed parameter transport lost {name}")
+    multiplier = np.asarray(
+        np.float32(values["x_scale"][0])
+        * values["w_scale"].astype(np.float32)
+        / np.float32(values["y_scale"][0]),
+        dtype=np.float32,
+    )
+    if _array_sha256(multiplier) != spec.requant_multiplier_sha256:
+        raise W5ConvPreflightError("typed per-channel requant multiplier differs")
+    layout = QLinearConvPhysicalLayout(
+        profile_id=GROUP4X7_BATCH_CHANNEL28_PROFILE
+    )
+    bundle = layout.forward(
+        activation=values["A"],
+        weight=values["B"],
+        bias=values["bias"],
+        w_scale=values["w_scale"],
+        w_zero_point=values["w_zero_point"],
+        x_scale=values["x_scale"],
+        x_zero_point=values["x_zero_point"],
+        y_scale=values["y_scale"],
+        y_zero_point=values["y_zero_point"],
+        accumulator=values["P"],
+        output=values["D"],
+        strides=spec.strides,
+        pads=spec.pads,
+        dilations=spec.dilations,
+        group=spec.group,
+        tensor_ids={name: descriptor["tensor_id"] for name, descriptor in descriptors.items()},
+    )
+    layout.validate(bundle)
+    return values, layout, bundle
 
 
 def build_w5_first_conv_preflight(

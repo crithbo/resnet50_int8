@@ -571,11 +571,11 @@ def validate_backend_contract(
     if (
         ndp.get("status") != "operator_confirmed_conv_simulator_component"
         or ndp.get("role")
-        != "conv_functional_simulator_with_real_1x1_accumulate_requant_json_adapter"
+        != "conv_functional_simulator_with_typed_1x1_accumulate_requant_json_adapter"
         or ndp.get("source_repository")
         != "https://github.com/runoobb/NDPFuncModel.git"
         or ndp.get("source_commit")
-        != "1d3181d832d7a409af779215e4aa590d03bd8ed3"
+        != "e35b24a446bdaeb7a939ab50d8e0cad5fe2a393c"
         or ndp.get("is_target_backend") is not False
         or ndp.get("identity_confirmed") is not True
         or ndp.get("entrypoint") != "tools/physical_image_probe.py"
