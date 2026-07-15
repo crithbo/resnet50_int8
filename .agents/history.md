@@ -782,3 +782,10 @@
 - 当前完成位置：`B_N2N_TARGET_SELECTOR`已删除，当前只剩`B_REQUANT_TARGET_NUMERICS`和`B_EXECPLAN_TYPED_TRANSPORT`。G5/G6/G8和`stop_expansion`继续fail-closed；selector字段和静态编码已经闭合，但真实N2N搬运、`ping_pong=0`生命周期以及逐周期调度仍需由延期硬件协作最终确认。
 - 下一步建议：继续单线程在同一`node-0004/hwop-0004-00~01`上复用可执行DeepSeek Quant路径，注入真实64-channel qparams，绑定末次reduction与唯一UINT8 flush；完成且三档P/D仍bit-exact后形成单算子配置冻结提交，再交给硬件协作负责人。随后才处理typed execplan transport或shape-family扩展。
 - Git冻结点：根仓业务提交`62628ec8f0b710c7d1c9cca5ee1c7e57953ee848`，父提交`641928845d553027048057f9c55fd3ee9271aaad`，`fix: resolve real conv high4 selectors`；NDPFuncModel提交`797f099a6b5ef549109eefbafb848c234ce66f73`，父提交`e4454f7e12aa38ca94af07e017ae0928b9c839eb`。两者均为本地提交、未推送。精确回退顺序为先revert后续history账本提交，再revert根仓`62628ec8f0b710c7d1c9cca5ee1c7e57953ee848`，并在NDPFuncModel中单独revert`797f099a6b5ef549109eefbafb848c234ce66f73`。
+
+## 2026-07-15：真实64-channel requant配置候选与对齐缺口闭合
+
+- 真实`hwop-0004-01`的64个float32 multiplier全部互异，SHA-256为`e83328d8589db8cfc2c5a1ff033d3c0e08d9bd87d8d8fcf52b8cb22189956bb2`，范围`2.7229637e-08~0.017728098`，`y_zero_point=0`。因此不能把DeepSeek Quant模板的单一`0.06375`常量机械复用；新增确定性生成器把8条GA `mac→int32_sub` lane按四个HIGH owner step和两个local K half拆成8个shard，每个shard绑定8个真实multiplier和7个对应slice，64通道无重叠、无遗漏。
+- 首轮正式编码发现关键地址问题：canonical NHWK D的第二个8-channel半块地址为`D+8`，不满足16B对齐；encoder exit 0但base字段隐式丢低4位，会与第一个半块别名。修复后保持canonical D不变，增加两个对齐UINT8 staging区，base为`904400/979664`，每区75,264 bytes；比较端显式交织两个`[spatial,8]`半块回`[spatial,16]`。
+- 每个shard读取P base `151760/151792`，LC1覆盖9,408个空间点，LC2执行2,352个32B写事务。8个shard均通过正式parser/placement/encoder，连接数21、cost 0；双重重建除mapping review原始列表顺序外，parsed dump、64/128位bitstream和detailed dump逐字节相同，mapping review规范化语义hash相同。全算子magic-round软件重放与nearest-even golden D逐元素一致，64通道flush计数全部为1；新增2/2聚焦测试通过。
+- 当前边界：这些结果闭合了真实qparam、GA常量、对齐staging、round/saturation和唯一flush的候选配置，但NDP request adapter尚未消费8份JSON及staging inverse，所以`B_REQUANT_TARGET_NUMERICS`暂不删除；`B_EXECPLAN_TYPED_TRANSPORT`也保持。下一步只需把该bundle绑定进现有config-bound request并重跑三档P/D，随后即可冻结交给硬件组。

@@ -840,3 +840,5 @@ W0实现前还需把以上补充转成可执行的schema字段、测试用例和
 6. W7以后地址规划统一以6144-row逻辑容量为硬上限；W8再索取或接入load/start/wait/error/dump协议。新的clean elaboration日志只作额外RTL诊断，不再是W4/G4或W5开工前置。
 
 正式模型、固定输入、旧脚本预处理、ONNX算子组成、Conv量化tensor类型、W4物理layout/profile、LC/`last_index`、`[start,end)`、stream端口顺序、byte stride、padding有效范围和lane内小端packing已经确认，不再重复询问。旧运行产物不作为开工前置。
+
+**2026-07-15 requant推进状态：** 已从可执行DeepSeek Quant模板生成8个真实GA shard，写入64个互异float32 multiplier、`y_zero_point=0`、nearest-even magic和UINT8 saturation；每个shard正式encoder均为21条连接、cost 0，双重重建的parsed/64b/128b/detailed逐字节稳定。初版直接写canonical D上半块时发现`D+8`非16B对齐且encoder静默丢低4位，现改为两个对齐staging区`904400/979664`并显式交织回canonical D。全算子软件验证64通道各flush一次且D bit-exact。该包目前仍标candidate：在NDP request adapter实际消费8份JSON、staging inverse与flush表之前不删除`B_REQUANT_TARGET_NUMERICS`；随后只剩typed execplan transport。
