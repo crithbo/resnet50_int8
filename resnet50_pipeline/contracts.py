@@ -571,11 +571,11 @@ def validate_backend_contract(
     if (
         ndp.get("status") != "operator_confirmed_conv_simulator_component"
         or ndp.get("role")
-        != "conv_functional_simulator_with_real_1x1_target_json_adapter"
+        != "conv_functional_simulator_with_real_1x1_accumulate_requant_json_adapter"
         or ndp.get("source_repository")
         != "https://github.com/runoobb/NDPFuncModel.git"
         or ndp.get("source_commit")
-        != "797f099a6b5ef549109eefbafb848c234ce66f73"
+        != "1d3181d832d7a409af779215e4aa590d03bd8ed3"
         or ndp.get("is_target_backend") is not False
         or ndp.get("identity_confirmed") is not True
         or ndp.get("entrypoint") != "tools/physical_image_probe.py"
@@ -984,7 +984,6 @@ def validate_backend_contract(
     ):
         raise ContractError("backend unresolved list must contain explicit blockers")
     expected_unresolved = {
-        "real per-channel Conv requant parameterization and unique-flush binding",
         "execplan typed qparam transport",
         "hardware load/start/wait/error/dump protocol for later exact-candidate validation",
     }

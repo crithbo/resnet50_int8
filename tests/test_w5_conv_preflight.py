@@ -86,6 +86,9 @@ class W5FirstConvPreflightTests(unittest.TestCase):
         self.assertTrue(target["real_1x1_patched_json_generated"])
         self.assertTrue(target["real_1x1_bitstream_generated"])
         self.assertTrue(target["real_1x1_mapping_review_generated"])
+        self.assertEqual(target["real_1x1_requant_shard_count"], 8)
+        self.assertTrue(target["real_1x1_requant_bitstreams_generated"])
+        self.assertTrue(target["real_1x1_requant_staging_inverse_validated"])
         self.assertEqual(
             target["operator_candidate"]["placement"]["constraint_cost"], 0
         )
@@ -96,14 +99,15 @@ class W5FirstConvPreflightTests(unittest.TestCase):
         self.assertFalse(legacy["can_serve_as_target_template"])
         self.assertEqual(
             {item["blocker"] for item in target["unresolved_target_bindings"]},
-            {
-                "B_REQUANT_TARGET_NUMERICS",
-                "B_EXECPLAN_TYPED_TRANSPORT",
-            },
+            {"B_EXECPLAN_TYPED_TRANSPORT"},
         )
         self.assertEqual(
             {item["former_blocker"] for item in target["resolved_target_capabilities"]},
-            {"B_CONV_TARGET_EXECUTION_SEMANTICS", "B_N2N_TARGET_SELECTOR"},
+            {
+                "B_CONV_TARGET_EXECUTION_SEMANTICS",
+                "B_N2N_TARGET_SELECTOR",
+                "B_REQUANT_TARGET_NUMERICS",
+            },
         )
         crosscheck = target["n2n_selector_crosscheck"]
         self.assertEqual(
@@ -118,6 +122,9 @@ class W5FirstConvPreflightTests(unittest.TestCase):
             crosscheck["executable_low28_reference"]["src_slice_sel"], 0
         )
         self.assertTrue(self.report["gate_state"]["stop_expansion"])
+        self.assertTrue(
+            self.report["gate_state"]["single_operator_manual_hardware_handoff_ready"]
+        )
         self.assertFalse(self.report["gate_state"]["g5_passed"])
         self.assertFalse(self.report["gate_state"]["g6_passed"])
         self.assertEqual(
@@ -134,12 +141,27 @@ class W5FirstConvPreflightTests(unittest.TestCase):
         self.assertEqual(result["accumulator"]["mismatch_count"], 0)
         self.assertEqual(result["output"]["mismatch_count"], 0)
         self.assertEqual(
-            result["config_link_status"], "target_json_consumed_and_validated"
+            result["config_link_status"],
+            "accumulate_and_requant_json_consumed_and_validated",
         )
 
     def test_target_config_compares_coordinate_tile_and_full_operator(self) -> None:
         result = self.report["ndp_target_config_comparison"]
-        self.assertEqual(result["status"], "passed_with_execution_boundary")
+        self.assertEqual(
+            result["status"],
+            "accumulate_and_requant_configs_passed_with_execution_boundary",
+        )
+        self.assertEqual(result["request_schema"], "0.3")
+        self.assertEqual(result["requant_config_binding"]["channel_count"], 64)
+        self.assertEqual(result["requant_config_binding"]["shard_count"], 8)
+        self.assertEqual(result["requant_config_binding"]["unique_flush_count"], 64)
+        self.assertEqual(len(result["physical_writebacks"]), 28)
+        self.assertTrue(
+            all(
+                item["staging_inverse_matches_canonical_D"]
+                for item in result["physical_writebacks"]
+            )
+        )
         self.assertTrue(result["not_cycle_accurate_lc_interpretation"])
         comparisons = result["ordered_comparisons"]
         self.assertEqual(

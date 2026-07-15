@@ -12,6 +12,7 @@ from __future__ import annotations
 
 import math
 import hashlib
+import json
 from dataclasses import dataclass, replace
 from pathlib import Path
 
@@ -122,6 +123,7 @@ class NdpTargetConfigConvResult:
 
     config_sha256: str
     semantic_contract_sha256: str
+    requant_manifest_sha256: str
     exact_coordinate: dict[str, object]
     comparisons: tuple[dict[str, object], ...]
     physical_probe: NdpPhysicalProbeResult
@@ -161,10 +163,15 @@ class NdpRtl28FunctionalAdapter:
             raise ValueError("adapter accepts only candidate RTL28 Conv bundles")
 
     @staticmethod
-    def _shadow_map(bundle: Conv28PhysicalBundle) -> Rtl28ShadowAddressMap:
+    def _shadow_map(
+        bundle: Conv28PhysicalBundle,
+        *,
+        required_per_slice_bytes: int | None = None,
+    ) -> Rtl28ShadowAddressMap:
         target = bundle.plan.geometry
         bytes_per_row = target.col_count * target.subword_bytes
-        rows = max(1, math.ceil(bundle.plan.per_slice_used_bytes / bytes_per_row))
+        required = max(bundle.plan.per_slice_used_bytes, required_per_slice_bytes or 0)
+        rows = max(1, math.ceil(required / bytes_per_row))
         shadow = DramGeometry(
             slice_count=target.slice_count,
             bank_count=1,
@@ -172,7 +179,7 @@ class NdpRtl28FunctionalAdapter:
             col_count=target.col_count,
             subword_bytes=target.subword_bytes,
         )
-        if shadow.bytes_per_slice < bundle.plan.per_slice_used_bytes:
+        if shadow.bytes_per_slice < required:
             raise AssertionError("compact RTL28 probe geometry is too small")
         return Rtl28ShadowAddressMap(target, shadow)
 
@@ -563,6 +570,8 @@ class NdpRtl28FunctionalAdapter:
         *,
         config_path: Path,
         semantic_contract_path: Path,
+        requant_manifest_path: Path,
+        requant_config_paths: tuple[Path, ...],
     ) -> NdpTargetConfigConvResult:
         """Bind the real target JSON to one exact and two bulk NDP comparisons."""
 
@@ -580,7 +589,27 @@ class NdpRtl28FunctionalAdapter:
         semantic_text = semantic_contract_path.read_text(encoding="utf-8")
         config_sha256 = hashlib.sha256(config_text.encode("utf-8")).hexdigest()
         semantic_sha256 = hashlib.sha256(semantic_text.encode("utf-8")).hexdigest()
-        address_map = self._shadow_map(bundle)
+        requant_manifest_text = requant_manifest_path.read_text(encoding="utf-8")
+        requant_manifest = json.loads(requant_manifest_text)
+        requant_manifest_sha256 = hashlib.sha256(
+            requant_manifest_text.encode("utf-8")
+        ).hexdigest()
+        if len(requant_config_paths) != 8:
+            raise ValueError("target requant adapter requires exactly eight configs")
+        requant_configs = []
+        for path in requant_config_paths:
+            text = path.read_text(encoding="utf-8")
+            requant_configs.append(
+                {
+                    "config_path": f"conv_1x1_requant_real/{path.name}",
+                    "config_text": text,
+                    "config_sha256": hashlib.sha256(text.encode("utf-8")).hexdigest(),
+                }
+            )
+        staging_end = int(requant_manifest["physical_layout"]["staged_d_offset"]) + int(
+            requant_manifest["physical_layout"]["staged_total_bytes"]
+        )
+        address_map = self._shadow_map(bundle, required_per_slice_bytes=staging_end)
         physical_bundle = self._physical_probe_bundle(bundle, address_map)
         exact_plan = self.build_probe_plans(
             layout,
@@ -627,6 +656,7 @@ class NdpRtl28FunctionalAdapter:
                 destinations.append(
                     {
                         "slice_id": owner,
+                        "slice_base": address_map.shadow_geometry.slice_base(owner),
                         "logical_start": weight["logical_start"],
                         "logical_count": weight["logical_count"],
                         "weight_base": weight["base"],
@@ -644,6 +674,13 @@ class NdpRtl28FunctionalAdapter:
                         "accumulator_base": accumulator["base"],
                         "output_base": output["base"],
                         "output_physical_shape": output["physical_shape"],
+                        "staged_output_bases": [
+                            address_map.shadow_geometry.slice_base(owner)
+                            + int(requant_manifest["physical_layout"]["staged_d_offset"]),
+                            address_map.shadow_geometry.slice_base(owner)
+                            + int(requant_manifest["physical_layout"]["staged_d_offset"])
+                            + int(requant_manifest["physical_layout"]["staged_half_bytes"]),
+                        ],
                     }
                 )
             groups.append(
@@ -689,6 +726,11 @@ class NdpRtl28FunctionalAdapter:
                 "semantic_contract_text": semantic_text,
                 "semantic_contract_sha256": semantic_sha256,
             },
+            requant_config_binding={
+                "manifest_text": requant_manifest_text,
+                "manifest_sha256": requant_manifest_sha256,
+                "configs": requant_configs,
+            },
             int8_conv_1x1_jobs=(bulk_job,),
         )
         exact = physical_probe.int8_dot_probes[0]
@@ -708,6 +750,7 @@ class NdpRtl28FunctionalAdapter:
         return NdpTargetConfigConvResult(
             config_sha256=config_sha256,
             semantic_contract_sha256=semantic_sha256,
+            requant_manifest_sha256=requant_manifest_sha256,
             exact_coordinate=exact,
             comparisons=comparisons,
             physical_probe=physical_probe,

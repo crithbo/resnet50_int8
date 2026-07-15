@@ -24,6 +24,7 @@ class NdpPhysicalProbeResult:
     regions: tuple[dict[str, Any], ...]
     int8_dot_probes: tuple[dict[str, Any], ...]
     target_config_binding: dict[str, Any] | None = None
+    requant_config_binding: dict[str, Any] | None = None
     int8_conv_1x1_jobs: tuple[dict[str, Any], ...] = ()
 
 
@@ -71,12 +72,23 @@ class NdpFunctionalAdapter:
         *,
         int8_dot_probes: tuple[NdpInt8DotProbe, ...] = (),
         target_config_binding: dict[str, Any] | None = None,
+        requant_config_binding: dict[str, Any] | None = None,
         int8_conv_1x1_jobs: tuple[dict[str, Any], ...] = (),
     ) -> NdpPhysicalProbeResult:
         geometry = bundle.geometry
         if int8_conv_1x1_jobs and target_config_binding is None:
             raise ValueError("bulk Conv jobs require a target config binding")
-        schema_version = "0.2" if target_config_binding is not None else "0.1"
+        if requant_config_binding is not None and (
+            target_config_binding is None or not int8_conv_1x1_jobs
+        ):
+            raise ValueError("requant config binding requires accumulate binding and bulk jobs")
+        schema_version = (
+            "0.3"
+            if requant_config_binding is not None
+            else "0.2"
+            if target_config_binding is not None
+            else "0.1"
+        )
         request = {
             "schema_version": schema_version,
             "geometry": {
@@ -92,6 +104,8 @@ class NdpFunctionalAdapter:
         if target_config_binding is not None:
             request["target_config_binding"] = target_config_binding
             request["int8_conv_1x1_jobs"] = list(int8_conv_1x1_jobs)
+        if requant_config_binding is not None:
+            request["requant_config_binding"] = requant_config_binding
         expected: dict[tuple[str, int], str] = {}
         for region in bundle.regions:
             payload = bundle.image.read(region.base_address, region.size_bytes)
@@ -313,9 +327,10 @@ class NdpFunctionalAdapter:
         for output_address, value in pending_writes.items():
             bundle.image.overwrite(output_address, bytes([value]))
         returned_binding = response.get("target_config_binding")
+        returned_requant_binding = response.get("requant_config_binding")
         bulk_response = response.get("int8_conv_1x1_jobs", [])
         if target_config_binding is None:
-            if returned_binding is not None or bulk_response:
+            if returned_binding is not None or returned_requant_binding is not None or bulk_response:
                 raise PipelineError("NDP probe returned an unexpected target config result")
         else:
             if (
@@ -345,12 +360,28 @@ class NdpFunctionalAdapter:
                         raise PipelineError(
                             f"NDP bulk Conv comparison differs: {comparison.get('name')}"
                         )
+            if requant_config_binding is None:
+                if returned_requant_binding is not None:
+                    raise PipelineError("NDP returned an unexpected requant binding")
+            elif (
+                not isinstance(returned_requant_binding, dict)
+                or returned_requant_binding.get("status") != "validated"
+                or returned_requant_binding.get("manifest_sha256")
+                != requant_config_binding.get("manifest_sha256")
+                or returned_requant_binding.get("channel_count") != 64
+                or returned_requant_binding.get("shard_count") != 8
+                or returned_requant_binding.get("unique_flush_count") != 64
+                or returned_requant_binding.get("flush_count_per_logical_output") != 1
+                or returned_requant_binding.get("staged_d_offsets") != [904400, 979664]
+            ):
+                raise PipelineError("NDP requant config binding validation differs")
         return NdpPhysicalProbeResult(
             per_slice=int(response["per_slice"]),
             total_bytes=int(response["total_bytes"]),
             regions=tuple(response["regions"]),
             int8_dot_probes=tuple(dot_response),
             target_config_binding=returned_binding,
+            requant_config_binding=returned_requant_binding,
             int8_conv_1x1_jobs=tuple(bulk_response),
         )
 

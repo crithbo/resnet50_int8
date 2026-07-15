@@ -21,7 +21,7 @@ from .topology28 import Direction, TOPOLOGY28
 from .typed_config_parameters import validate_typed_config_parameter_contract
 
 
-SCHEMA_VERSION = "0.5"
+SCHEMA_VERSION = "0.6"
 REPORT_KIND = "w5_first_real_conv_preflight"
 SELECTED_NODE_ID = "node-0004"
 ACCUMULATE_HW_OP_ID = "hwop-0004-00"
@@ -258,7 +258,7 @@ def _simulator_entry_probe(
             "entrypoint": target["entrypoint"],
             "entrypoint_sha256": sha256_file(simulator_path),
             "version": ndp["source_commit"],
-            "input_package": "physical_image_request schema 0.2 with exact target JSON and semantic contract text",
+            "input_package": "physical_image_request schema 0.3 with exact accumulate/requant JSON texts, SHA-256 values and semantic contract text",
             "exit_code_contract": "0 with one JSON object on stdout",
             "physical_d_output_format": "uint8 DRAM byte plus output_after in JSON",
             "supported_ops": target["supported_ops"],
@@ -680,11 +680,19 @@ def _compare_ndp_target_config(
     semantics_path = (
         project_root / "contracts" / "conv_1x1_lc_pe_stream_semantics.json"
     )
+    requant_root = project_root / "conv_1x1_requant_real"
+    requant_manifest_path = requant_root / "manifest.json"
+    requant_config_paths = tuple(
+        requant_root / f"shard-{shard_index:02d}.json"
+        for shard_index in range(8)
+    )
     result = adapter.run_target_config_qlinear_conv_1x1(
         layout,
         bundle,
         config_path=config_path,
         semantic_contract_path=semantics_path,
+        requant_manifest_path=requant_manifest_path,
+        requant_config_paths=requant_config_paths,
     )
     expected_p = int(values["P"][coordinate])
     expected_d = int(values["D"][coordinate])
@@ -735,7 +743,7 @@ def _compare_ndp_target_config(
         "dilations": list(bundle.plan.dilations),
         "simulator": "NDPFuncModel conv_func",
         "simulator_status": adapter.status,
-        "source_commit": "797f099a6b5ef549109eefbafb848c234ce66f73",
+        "source_commit": "1d3181d832d7a409af779215e4aa590d03bd8ed3",
         "destination_slice": 0,
         "source_owners": [0, 1, 3, 2],
         "channel_ranges": [[0, 16], [48, 16], [32, 16], [16, 16]],
@@ -752,25 +760,48 @@ def _compare_ndp_target_config(
             "mismatch_count": 0,
         },
         "execution_path": probe["execution_path"],
-        "config_link_status": "target_json_consumed_and_validated",
+        "config_link_status": "accumulate_and_requant_json_consumed_and_validated",
     }
+    requant_binding = result.physical_probe.requant_config_binding
+    bulk_job = result.physical_probe.int8_conv_1x1_jobs[0]
+    if (
+        requant_binding is None
+        or requant_binding.get("status") != "validated"
+        or requant_binding.get("manifest_sha256")
+        != result.requant_manifest_sha256
+        or requant_binding.get("channel_count") != 64
+        or requant_binding.get("shard_count") != 8
+        or requant_binding.get("unique_flush_count") != 64
+        or requant_binding.get("flush_count_per_logical_output") != 1
+        or requant_binding.get("staged_d_offsets") != [904400, 979664]
+        or len(bulk_job.get("physical_writebacks", [])) != 28
+        or any(
+            writeback.get("staging_inverse_matches_canonical_D") is not True
+            or writeback.get("flush_count_per_logical_output") != 1
+            or len(writeback.get("staged_D_bases", [])) != 2
+            for writeback in bulk_job.get("physical_writebacks", [])
+        )
+    ):
+        raise W5ConvPreflightError("NDP requant config/staging closure differs")
     closure_report = {
-        "status": "passed_with_execution_boundary",
+        "status": "accumulate_and_requant_configs_passed_with_execution_boundary",
         "config_path": "conv_1x1_real.json",
         "config_sha256": result.config_sha256,
         "semantic_contract_path": "contracts/conv_1x1_lc_pe_stream_semantics.json",
         "semantic_contract_sha256": result.semantic_contract_sha256,
-        "request_schema": "0.2",
+        "requant_manifest_path": "conv_1x1_requant_real/manifest.json",
+        "requant_manifest_sha256": result.requant_manifest_sha256,
+        "request_schema": "0.3",
         "target_config_binding": result.physical_probe.target_config_binding,
+        "requant_config_binding": requant_binding,
         "ordered_comparisons": [comparisons[name] for name in expected_counts],
         "execution_modes": {
             "single_coordinate": "DRAM/Buffer/SpecialPEA/ActivationUnit/DRAM component path",
-            "first_tile": "NDPFuncModel physical-DRAM bulk INT8 equivalent",
-            "full_operator": "NDPFuncModel physical-DRAM bulk INT8 equivalent",
+            "first_tile": "NDPFuncModel config-bound GA requant with two staging D writebacks and inverse",
+            "full_operator": "NDPFuncModel config-bound GA requant with two staging D writebacks and inverse",
         },
-        "bulk_arithmetic_path": result.physical_probe.int8_conv_1x1_jobs[0][
-            "arithmetic_path"
-        ],
+        "bulk_arithmetic_path": bulk_job["arithmetic_path"],
+        "physical_writebacks": bulk_job["physical_writebacks"],
         "not_cycle_accurate_lc_interpretation": True,
     }
     return coordinate_report, closure_report
@@ -954,7 +985,7 @@ def build_w5_first_conv_preflight(
     report = {
         "schema_version": SCHEMA_VERSION,
         "report_kind": REPORT_KIND,
-        "status": "w5_real_1x1_encoded_config_bound_pd_passed",
+        "status": "w5_real_1x1_accumulate_requant_config_bound_pd_passed",
         "selection": {
             "node_id": SELECTED_NODE_ID,
             "onnx_name": accumulate["onnx_name"],
@@ -1026,6 +1057,10 @@ def build_w5_first_conv_preflight(
             "real_1x1_mapping_review_generated": True,
             "real_1x1_semantic_contract": "contracts/conv_1x1_lc_pe_stream_semantics.json",
             "real_1x1_config": "conv_1x1_real.json",
+            "real_1x1_requant_manifest": "conv_1x1_requant_real/manifest.json",
+            "real_1x1_requant_shard_count": 8,
+            "real_1x1_requant_bitstreams_generated": True,
+            "real_1x1_requant_staging_inverse_validated": True,
             "config_adapter_available": True,
             "unknown_fields_rejected": True,
             "legacy_generator_probe": legacy_generator_probe,
@@ -1041,15 +1076,16 @@ def build_w5_first_conv_preflight(
                     "status": "official_high4_selector_resolved",
                     "scope": "the real Conv candidate uses mem_loop=4 with src/dst selector 1",
                     "boundary": "ping_pong remains a separate Conv buffer-lifecycle decision",
-                }
+                },
+                {
+                    "former_blocker": "B_REQUANT_TARGET_NUMERICS",
+                    "status": "real_64_channel_requant_config_bound",
+                    "scope": "eight real requant shards cover all 64 output channels with GA constants, HIGH-ring slices, aligned staging D, 9408/2352 loops and one final UINT8 flush",
+                    "boundary": "the exact new JSON/bitstream hardware run remains deferred; typed automatic dispatch remains B_EXECPLAN_TYPED_TRANSPORT",
+                },
             ],
             "n2n_selector_crosscheck": n2n_selector_crosscheck,
             "unresolved_target_bindings": [
-                {
-                    "blocker": "B_REQUANT_TARGET_NUMERICS",
-                    "fields": ["general_array", "stream_engine"],
-                    "reason": "DeepSeek Quant JSON hardware execution is confirmed, but this Conv still lacks real 64-channel multiplier/qparam parameterization, final-reduction binding and unique UINT8 flush",
-                },
                 {
                     "blocker": "B_EXECPLAN_TYPED_TRANSPORT",
                     "fields": ["OperatorSpec", "control_registers"],
@@ -1059,17 +1095,17 @@ def build_w5_first_conv_preflight(
         },
         "gate_state": {
             "w5_started": True,
-            "g5_preflight": "accumulate_config_encoded",
+            "g5_preflight": "accumulate_and_requant_configs_encoded",
             "g5_passed": False,
             "g6_passed": False,
             "g8_passed": False,
-            "target_simulator_numerical_status": "config_bound_single_tile_full_pd_passed_with_execution_boundary",
+            "target_simulator_numerical_status": "config_bound_accumulate_requant_single_tile_full_pd_passed_with_execution_boundary",
             "conv_simulator_component_status": "single_coordinate_exact_and_bulk_equivalent_passed",
             "golden_tile_status": "passed",
+            "single_operator_manual_hardware_handoff_ready": True,
             "stop_expansion": True,
             "whole_network_generation_allowed": False,
             "next_required_evidence": [
-                "parameterize the executable DeepSeek requant path with the real 64-channel Conv qparams and unique final flush",
                 "carry the same typed qparams through official execplan generation",
             ],
             "exact_new_json_hardware_validation": "deferred_by_operator_not_a_current_configuration_blocker",
@@ -1084,7 +1120,7 @@ def validate_w5_first_conv_preflight(value: dict[str, Any]) -> None:
 
     if value.get("schema_version") != SCHEMA_VERSION or value.get("report_kind") != REPORT_KIND:
         raise W5ConvPreflightError("W5 Conv preflight identity differs")
-    if value.get("status") != "w5_real_1x1_encoded_config_bound_pd_passed":
+    if value.get("status") != "w5_real_1x1_accumulate_requant_config_bound_pd_passed":
         raise W5ConvPreflightError("W5 Conv closure status differs")
     selection = value.get("selection", {})
     if selection.get("node_id") != SELECTED_NODE_ID or selection.get("hw_op_ids") != [
@@ -1102,6 +1138,9 @@ def validate_w5_first_conv_preflight(value: dict[str, Any]) -> None:
         or target.get("real_1x1_patched_json_generated") is not True
         or target.get("real_1x1_bitstream_generated") is not True
         or target.get("real_1x1_mapping_review_generated") is not True
+        or target.get("real_1x1_requant_shard_count") != 8
+        or target.get("real_1x1_requant_bitstreams_generated") is not True
+        or target.get("real_1x1_requant_staging_inverse_validated") is not True
         or target.get("config_adapter_available") is not True
         or target.get("unknown_fields_rejected") is not True
     ):
@@ -1109,10 +1148,7 @@ def validate_w5_first_conv_preflight(value: dict[str, Any]) -> None:
     blocker_ids = {
         item.get("blocker") for item in target.get("unresolved_target_bindings", [])
     }
-    required = {
-        "B_REQUANT_TARGET_NUMERICS",
-        "B_EXECPLAN_TYPED_TRANSPORT",
-    }
+    required = {"B_EXECPLAN_TYPED_TRANSPORT"}
     if blocker_ids != required:
         raise W5ConvPreflightError("W5 Conv blocker set differs")
     resolved = {
@@ -1121,11 +1157,18 @@ def validate_w5_first_conv_preflight(value: dict[str, Any]) -> None:
     }
     n2n = target.get("n2n_selector_crosscheck", {})
     if (
-        set(resolved) != {"B_CONV_TARGET_EXECUTION_SEMANTICS", "B_N2N_TARGET_SELECTOR"}
+        set(resolved)
+        != {
+            "B_CONV_TARGET_EXECUTION_SEMANTICS",
+            "B_N2N_TARGET_SELECTOR",
+            "B_REQUANT_TARGET_NUMERICS",
+        }
         or resolved["B_CONV_TARGET_EXECUTION_SEMANTICS"].get("status")
         != "operator_confirmed_platform_capability"
         or resolved["B_N2N_TARGET_SELECTOR"].get("status")
         != "official_high4_selector_resolved"
+        or resolved["B_REQUANT_TARGET_NUMERICS"].get("status")
+        != "real_64_channel_requant_config_bound"
         or n2n.get("status")
         != "candidate_matches_executable_high4_reference"
         or n2n.get("candidate", {}).get("mem_loop") != 4
@@ -1170,13 +1213,30 @@ def validate_w5_first_conv_preflight(value: dict[str, Any]) -> None:
         or ndp_coordinate.get("accumulator", {}).get("mismatch_count") != 0
         or ndp_coordinate.get("output", {}).get("mismatch_count") != 0
         or ndp_coordinate.get("config_link_status")
-        != "target_json_consumed_and_validated"
+        != "accumulate_and_requant_json_consumed_and_validated"
     ):
         raise W5ConvPreflightError("NDP Conv first-coordinate evidence differs")
     closure = value.get("ndp_target_config_comparison", {})
     ordered = closure.get("ordered_comparisons", [])
     if (
-        closure.get("status") != "passed_with_execution_boundary"
+        closure.get("status")
+        != "accumulate_and_requant_configs_passed_with_execution_boundary"
+        or closure.get("request_schema") != "0.3"
+        or closure.get("requant_config_binding", {}).get("status") != "validated"
+        or closure.get("requant_config_binding", {}).get("channel_count") != 64
+        or closure.get("requant_config_binding", {}).get("shard_count") != 8
+        or closure.get("requant_config_binding", {}).get("unique_flush_count") != 64
+        or closure.get("requant_config_binding", {}).get(
+            "flush_count_per_logical_output"
+        )
+        != 1
+        or len(closure.get("physical_writebacks", [])) != 28
+        or any(
+            item.get("staging_inverse_matches_canonical_D") is not True
+            or item.get("flush_count_per_logical_output") != 1
+            or len(item.get("staged_D_bases", [])) != 2
+            for item in closure.get("physical_writebacks", [])
+        )
         or closure.get("not_cycle_accurate_lc_interpretation") is not True
         or [item.get("name") for item in ordered]
         != ["single_coordinate", "first_tile", "full_operator"]
@@ -1194,6 +1254,7 @@ def validate_w5_first_conv_preflight(value: dict[str, Any]) -> None:
         gate.get("w5_started") is not True
         or gate.get("g5_passed") is not False
         or gate.get("g6_passed") is not False
+        or gate.get("single_operator_manual_hardware_handoff_ready") is not True
         or gate.get("stop_expansion") is not True
         or gate.get("whole_network_generation_allowed") is not False
         or gate.get("exact_new_json_hardware_validation")

@@ -13,9 +13,9 @@
     },
     "ndp_conv_functional": {
       "status": "operator_confirmed_conv_simulator_component",
-      "role": "conv_functional_simulator_with_real_1x1_target_json_adapter",
+      "role": "conv_functional_simulator_with_real_1x1_accumulate_requant_json_adapter",
       "source_repository": "https://github.com/runoobb/NDPFuncModel.git",
-      "source_commit": "797f099a6b5ef549109eefbafb848c234ce66f73",
+      "source_commit": "1d3181d832d7a409af779215e4aa590d03bd8ed3",
       "is_target_backend": false,
       "identity_confirmed": true,
       "entrypoint": "tools/physical_image_probe.py",
@@ -27,7 +27,7 @@
       "supported_ops": ["QLinearConv"],
       "supported_dtypes": ["uint8_activation", "int8_weight", "int32_accumulator", "uint8_output"],
       "slice_counts": [1, 4, 28],
-      "config_versions": ["w2_ndp_ring_candidate_v1", "rtl28_physical_probe_v1", "conv_1x1_target_request_v1"],
+      "config_versions": ["w2_ndp_ring_candidate_v1", "rtl28_physical_probe_v1", "conv_1x1_target_request_v2"],
       "can_dump_physical_output": true,
       "limitations": ["group=1", "weight_zero_point=0", "real_1x1_config_only", "not_cycle_accurate_lc_stream_buffer_interpreter", "not_bitstream_interpreter", "bulk_tile_and_full_use_physical_dram_equivalent_kernel", "requant_uses_float32_activation_unit", "not_target_hardware", "not_hardware_approved"]
     },
@@ -108,7 +108,6 @@
     }
   },
   "unresolved": [
-    "real per-channel Conv requant parameterization and unique-flush binding",
     "execplan typed qparam transport",
     "hardware load/start/wait/error/dump protocol for later exact-candidate validation"
   ]
