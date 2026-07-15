@@ -120,7 +120,7 @@ def build_real_1x1(source: dict[str, Any]) -> dict[str, Any]:
         "up": [None, None, 55],
     }
     neighbor = next(iter(config["n2n"].values()))
-    neighbor.update(mem_loop=4, src_slice_sel=0, dst_slice_sel=0, ping_pong=0)
+    neighbor.update(mem_loop=4, src_slice_sel=1, dst_slice_sel=1, ping_pong=0)
     return config
 
 

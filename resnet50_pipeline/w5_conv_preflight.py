@@ -21,7 +21,7 @@ from .topology28 import Direction, TOPOLOGY28
 from .typed_config_parameters import validate_typed_config_parameter_contract
 
 
-SCHEMA_VERSION = "0.4"
+SCHEMA_VERSION = "0.5"
 REPORT_KIND = "w5_first_real_conv_preflight"
 SELECTED_NODE_ID = "node-0004"
 ACCUMULATE_HW_OP_ID = "hwop-0004-00"
@@ -327,8 +327,8 @@ def _n2n_selector_crosscheck(project_root: Path, source_root: Path) -> dict[str,
     if (
         candidate != {
             "mem_loop": 4,
-            "src_slice_sel": 0,
-            "dst_slice_sel": 0,
+            "src_slice_sel": 1,
+            "dst_slice_sel": 1,
             "ping_pong": 0,
         }
         or high4["mem_loop"] != 4
@@ -343,7 +343,7 @@ def _n2n_selector_crosscheck(project_root: Path, source_root: Path) -> dict[str,
     ):
         raise W5ConvPreflightError("DeepSeek N2N selector crosscheck differs")
     return {
-        "status": "candidate_conflicts_with_executable_high4_reference",
+        "status": "candidate_matches_executable_high4_reference",
         "candidate": {
             "path": "conv_1x1_real.json",
             "sha256": sha256_file(candidate_path),
@@ -370,7 +370,7 @@ def _n2n_selector_crosscheck(project_root: Path, source_root: Path) -> dict[str,
             "sha256": sha256_file(controls_path),
             "rule": "selector=1 when the slice ratio is not 28; otherwise selector=0",
         },
-        "required_resolution": "adjudicate candidate src/dst selector 0 against the executable HIGH-4 value 1; ping_pong remains a separate dataflow choice",
+        "resolution": "candidate src/dst selectors now match the executable HIGH-4 value 1; ping_pong remains a separate dataflow choice",
     }
 
 
@@ -735,7 +735,7 @@ def _compare_ndp_target_config(
         "dilations": list(bundle.plan.dilations),
         "simulator": "NDPFuncModel conv_func",
         "simulator_status": adapter.status,
-        "source_commit": "e4454f7e12aa38ca94af07e017ae0928b9c839eb",
+        "source_commit": "797f099a6b5ef549109eefbafb848c234ce66f73",
         "destination_slice": 0,
         "source_owners": [0, 1, 3, 2],
         "channel_ranges": [[0, 16], [48, 16], [32, 16], [16, 16]],
@@ -1035,15 +1035,16 @@ def build_w5_first_conv_preflight(
                     "status": "operator_confirmed_platform_capability",
                     "scope": "previous DeepSeek operator JSONs execute on target hardware",
                     "boundary": "the exact new Conv 1x1 hardware run is deferred and is not required for the current two-party numerical closure",
+                },
+                {
+                    "former_blocker": "B_N2N_TARGET_SELECTOR",
+                    "status": "official_high4_selector_resolved",
+                    "scope": "the real Conv candidate uses mem_loop=4 with src/dst selector 1",
+                    "boundary": "ping_pong remains a separate Conv buffer-lifecycle decision",
                 }
             ],
             "n2n_selector_crosscheck": n2n_selector_crosscheck,
             "unresolved_target_bindings": [
-                {
-                    "blocker": "B_N2N_TARGET_SELECTOR",
-                    "fields": ["n2n.src_slice_sel", "n2n.dst_slice_sel"],
-                    "reason": "the candidate uses mem_loop=4 with selectors 0, while the executable DeepSeek HIGH-4 reference and execplan rule use selectors 1; the 28-slice reference uses selectors 0",
-                },
                 {
                     "blocker": "B_REQUANT_TARGET_NUMERICS",
                     "fields": ["general_array", "stream_engine"],
@@ -1068,7 +1069,6 @@ def build_w5_first_conv_preflight(
             "stop_expansion": True,
             "whole_network_generation_allowed": False,
             "next_required_evidence": [
-                "resolve the candidate selector-0 tuple against the executable DeepSeek HIGH-4 selector-1 reference",
                 "parameterize the executable DeepSeek requant path with the real 64-channel Conv qparams and unique final flush",
                 "carry the same typed qparams through official execplan generation",
             ],
@@ -1110,24 +1110,26 @@ def validate_w5_first_conv_preflight(value: dict[str, Any]) -> None:
         item.get("blocker") for item in target.get("unresolved_target_bindings", [])
     }
     required = {
-        "B_N2N_TARGET_SELECTOR",
         "B_REQUANT_TARGET_NUMERICS",
         "B_EXECPLAN_TYPED_TRANSPORT",
     }
     if blocker_ids != required:
         raise W5ConvPreflightError("W5 Conv blocker set differs")
-    resolved = target.get("resolved_target_capabilities", [])
+    resolved = {
+        item.get("former_blocker"): item
+        for item in target.get("resolved_target_capabilities", [])
+    }
     n2n = target.get("n2n_selector_crosscheck", {})
     if (
-        len(resolved) != 1
-        or resolved[0].get("former_blocker")
-        != "B_CONV_TARGET_EXECUTION_SEMANTICS"
-        or resolved[0].get("status")
+        set(resolved) != {"B_CONV_TARGET_EXECUTION_SEMANTICS", "B_N2N_TARGET_SELECTOR"}
+        or resolved["B_CONV_TARGET_EXECUTION_SEMANTICS"].get("status")
         != "operator_confirmed_platform_capability"
+        or resolved["B_N2N_TARGET_SELECTOR"].get("status")
+        != "official_high4_selector_resolved"
         or n2n.get("status")
-        != "candidate_conflicts_with_executable_high4_reference"
+        != "candidate_matches_executable_high4_reference"
         or n2n.get("candidate", {}).get("mem_loop") != 4
-        or n2n.get("candidate", {}).get("src_slice_sel") != 0
+        or n2n.get("candidate", {}).get("src_slice_sel") != 1
         or n2n.get("executable_high4_reference", {}).get("src_slice_sel") != 1
         or n2n.get("executable_low28_reference", {}).get("mem_loop") != 28
     ):

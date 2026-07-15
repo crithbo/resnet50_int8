@@ -61,14 +61,14 @@
       "consumes_target_json": true,
       "consumes_target_json_or_bitstream": true,
       "entrypoint": "NDPFuncModel/tools/physical_image_probe.py",
-      "entrypoint_sha256": "3dfefaef9c363d976d551ce7e886d24ec6ce4a530acb2f70587fc1f4e55894cd",
+      "entrypoint_sha256": "02b8c4ec738c697a450d00fcea21d644f891e4a3e4e38d149e9130927c2c968e",
       "exit_code_contract": "0 with one JSON object on stdout",
       "input_package": "physical_image_request schema 0.2 with exact target JSON and semantic contract text",
       "physical_d_output_format": "uint8 DRAM byte plus output_after in JSON",
       "supported_ops": [
         "QLinearConv"
       ],
-      "version": "e4454f7e12aa38ca94af07e017ae0928b9c839eb",
+      "version": "797f099a6b5ef549109eefbafb848c234ce66f73",
       "working_directory": "NDPFuncModel"
     },
     "workspace_contract": {
@@ -408,7 +408,6 @@
     "g8_passed": false,
     "golden_tile_status": "passed",
     "next_required_evidence": [
-      "resolve the candidate selector-0 tuple against the executable DeepSeek HIGH-4 selector-1 reference",
       "parameterize the executable DeepSeek requant path with the real 64-channel Conv qparams and unique final flush",
       "carry the same typed qparams through official execplan generation"
     ],
@@ -547,7 +546,7 @@
     "scope": "one_real_hwop-0004-00_output_coordinate",
     "simulator": "NDPFuncModel conv_func",
     "simulator_status": "operator_confirmed_conv_simulator_component",
-    "source_commit": "e4454f7e12aa38ca94af07e017ae0928b9c839eb",
+    "source_commit": "797f099a6b5ef549109eefbafb848c234ce66f73",
     "source_owners": [
       0,
       1,
@@ -570,7 +569,7 @@
       "DRAM"
     ],
     "config_path": "conv_1x1_real.json",
-    "config_sha256": "e3e985c8a06e2ff2c672c4a96c04055ebf6c835836c0e589cc265e72cc236037",
+    "config_sha256": "a20641cfcf65068c3ca31d710a0ef45d28a53cbf80d5e246ce54f0de3fe16f2c",
     "execution_modes": {
       "first_tile": "NDPFuncModel physical-DRAM bulk INT8 equivalent",
       "full_operator": "NDPFuncModel physical-DRAM bulk INT8 equivalent",
@@ -692,13 +691,16 @@
     ],
     "request_schema": "0.2",
     "semantic_contract_path": "contracts/conv_1x1_lc_pe_stream_semantics.json",
-    "semantic_contract_sha256": "ef747ed72f97c64c89487622a03a7013fcb38370ce73e96fa2b67f4bd7d18c54",
+    "semantic_contract_sha256": "95198b7c60be63d592a5034d017363a280d4addf1e52cffde7774e39b3d4dcda",
     "status": "passed_with_execution_boundary",
     "target_config_binding": {
-      "config_sha256": "e3e985c8a06e2ff2c672c4a96c04055ebf6c835836c0e589cc265e72cc236037",
+      "config_sha256": "a20641cfcf65068c3ca31d710a0ef45d28a53cbf80d5e246ce54f0de3fe16f2c",
       "lc_pe_count": 7,
       "loop_count": 16,
+      "n2n_dst_slice_sel": 1,
       "n2n_mem_loop": 4,
+      "n2n_ping_pong": 0,
+      "n2n_src_slice_sel": 1,
       "port_role_map": {
         "logical_D": {
           "dtype": "uint8",
@@ -727,7 +729,7 @@
           "project_port": "P"
         }
       },
-      "semantic_contract_sha256": "ef747ed72f97c64c89487622a03a7013fcb38370ce73e96fa2b67f4bd7d18c54",
+      "semantic_contract_sha256": "95198b7c60be63d592a5034d017363a280d4addf1e52cffde7774e39b3d4dcda",
       "status": "validated",
       "stream_targets": [
         "A",
@@ -764,7 +766,7 @@
     "storage_sample_count": 3
   },
   "report_kind": "w5_first_real_conv_preflight",
-  "schema_version": "0.4",
+  "schema_version": "0.5",
   "selection": {
     "hw_op_ids": [
       "hwop-0004-00",
@@ -777,7 +779,7 @@
   },
   "source_identity": {
     "backend_contract_path": "contracts/backend.json",
-    "backend_contract_sha256": "591b7b7e425346e1c1c28a5fd0f7aa38a6b5ce54cdf913f75c690aaf08063e02",
+    "backend_contract_sha256": "112fe854a202dd07d402f45ee03ceaa59fa8537dd6aca3ef60d33dacba62b27f",
     "hardware_approval_path": "contracts/hardware_approval.json",
     "hardware_approval_sha256": "963b64087351a45d54f52a86fe3536804e4f24427c94ee912c521b3a93fe159b",
     "model_sha256": "c234f30975989788b4405f25253275aae247ab6dbdd34aaa69ab0a59ff76f6d0",
@@ -834,12 +836,12 @@
     },
     "n2n_selector_crosscheck": {
       "candidate": {
-        "dst_slice_sel": 0,
+        "dst_slice_sel": 1,
         "mem_loop": 4,
         "path": "conv_1x1_real.json",
         "ping_pong": 0,
-        "sha256": "e3e985c8a06e2ff2c672c4a96c04055ebf6c835836c0e589cc265e72cc236037",
-        "src_slice_sel": 0
+        "sha256": "a20641cfcf65068c3ca31d710a0ef45d28a53cbf80d5e246ce54f0de3fe16f2c",
+        "src_slice_sel": 1
       },
       "execplan_binding": {
         "path": "ndp-sim-ref/model_execplan/src/execution_plan_generator/control_registers.py",
@@ -868,8 +870,8 @@
         "selector_1": "jump-4/HIGH route",
         "sha256": "006ca83f282a9d61e2003466a7f75d190452a504466f60f7e70240932ae4ffdc"
       },
-      "required_resolution": "adjudicate candidate src/dst selector 0 against the executable HIGH-4 value 1; ping_pong remains a separate dataflow choice",
-      "status": "candidate_conflicts_with_executable_high4_reference"
+      "resolution": "candidate src/dst selectors now match the executable HIGH-4 value 1; ping_pong remains a separate dataflow choice",
+      "status": "candidate_matches_executable_high4_reference"
     },
     "official_json_inventory_count": 42,
     "official_named_conv_template_count": 0,
@@ -970,18 +972,16 @@
         "former_blocker": "B_CONV_TARGET_EXECUTION_SEMANTICS",
         "scope": "previous DeepSeek operator JSONs execute on target hardware",
         "status": "operator_confirmed_platform_capability"
+      },
+      {
+        "boundary": "ping_pong remains a separate Conv buffer-lifecycle decision",
+        "former_blocker": "B_N2N_TARGET_SELECTOR",
+        "scope": "the real Conv candidate uses mem_loop=4 with src/dst selector 1",
+        "status": "official_high4_selector_resolved"
       }
     ],
     "unknown_fields_rejected": true,
     "unresolved_target_bindings": [
-      {
-        "blocker": "B_N2N_TARGET_SELECTOR",
-        "fields": [
-          "n2n.src_slice_sel",
-          "n2n.dst_slice_sel"
-        ],
-        "reason": "the candidate uses mem_loop=4 with selectors 0, while the executable DeepSeek HIGH-4 reference and execplan rule use selectors 1; the 28-slice reference uses selectors 0"
-      },
       {
         "blocker": "B_REQUANT_TARGET_NUMERICS",
         "fields": [

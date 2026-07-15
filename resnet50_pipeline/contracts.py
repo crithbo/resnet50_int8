@@ -575,7 +575,7 @@ def validate_backend_contract(
         or ndp.get("source_repository")
         != "https://github.com/runoobb/NDPFuncModel.git"
         or ndp.get("source_commit")
-        != "e4454f7e12aa38ca94af07e017ae0928b9c839eb"
+        != "797f099a6b5ef549109eefbafb848c234ce66f73"
         or ndp.get("is_target_backend") is not False
         or ndp.get("identity_confirmed") is not True
         or ndp.get("entrypoint") != "tools/physical_image_probe.py"
@@ -984,7 +984,6 @@ def validate_backend_contract(
     ):
         raise ContractError("backend unresolved list must contain explicit blockers")
     expected_unresolved = {
-        "real Conv HIGH-4 N2N selector binding: candidate selector 0 conflicts with executable four-slice reference selector 1",
         "real per-channel Conv requant parameterization and unique-flush binding",
         "execplan typed qparam transport",
         "hardware load/start/wait/error/dump protocol for later exact-candidate validation",

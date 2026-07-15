@@ -46,8 +46,8 @@ target 字母沿用伪代码而不是项目逻辑端口：target A=weight，targ
 | stream2 | D / INT32 P write | `[k,q,p]` | `[3,0,0]` | `[12544,4,224]` | p 有效 `[0,55]` |
 | stream3 | C / INT32 bias read | `[k_block_replica,null,null]` | `[127,null,null]` | `[128,null,null]` | 无 |
 
-N2N `mem_loop` 从16改为4；四步含本地步和三次传输。group0物理环为`[0,2,3,1]`，destination 0的PREV遍历为`[0,1,3,2]`。但当前候选编码`src/dst_slice_sel=0`，已知可执行的`prefill_gemm_ring_4slice.json`在`mem_loop=4`时使用selector 1，`decode_gemv_ring.json`只在`mem_loop=28`时使用selector 0；register map与execplan也把1绑定到jump-4/HIGH路径。因此当前`mem_loop=4 + selector=0`不是已批准规则，而是待修正/裁决的明确配置冲突。`ping_pong`仍需按Conv数据流单独判断，不能随selector机械复制。
+N2N `mem_loop` 从16改为4；四步含本地步和三次传输。group0物理环为`[0,2,3,1]`，destination 0的PREV遍历为`[0,1,3,2]`。当前候选已把`src/dst_slice_sel`从0修正为1，与可执行`prefill_gemm_ring_4slice.json`、register map的jump-4/HIGH语义和execplan规则一致；`decode_gemv_ring.json`仍以`mem_loop=28, selector=0`作为LOW-28对照。正式dump显示`src=1,dst=1,ping_pong=0,mem_loop=4→00011`，NeighborStreamConfig逻辑字段串为`11000011`。`ping_pong=0`保持不变，仍需按Conv数据流单独判断，不能因selector修复而机械复制参考模板的1。
 
 ## 结论边界
 
-`conv_1x1_real.json`已由正式encoder两次解析、placement、生成bitstream，46条连接、constraint cost 0，两个输出目录逐文件SHA-256一致。目标平台执行DeepSeek JSON的通用能力已经确认；本候选仍有HIGH-4 selector冲突、真实per-channel requant/唯一flush和execplan typed qparam transport三项配置阻塞。该候选的硬件实跑与P/D dump按操作者决定延期，不再作为当前配置工作的前置阻塞。
+`conv_1x1_real.json`已由正式encoder两次解析、placement、生成bitstream，46条连接、constraint cost 0，两个输出目录逐文件SHA-256一致；selector修复改变了bitstream SHA但没有改变连接图、placement或cost。目标平台执行DeepSeek JSON的通用能力已经确认；`B_N2N_TARGET_SELECTOR`已解除，当前仍有真实per-channel requant/唯一flush和execplan typed qparam transport两项配置阻塞。该候选的硬件实跑与P/D dump按操作者决定延期，不再作为当前配置工作的前置阻塞。

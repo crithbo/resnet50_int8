@@ -53,7 +53,7 @@
 - **已通过**：W0/G0集成骨架，W2/G2小Conv候选软件纵向闭环，W3/G3正式图/lowering/全节点与subop golden。
 - **部分通过**：W1已冻结正式候选模型、固定输入、预处理和软件量化事实；目标RTL已选`Trassic2.0_RTL@e3bdebba...`和28-slice。ADR-008按操作者确认，把`ndp-sim-ref@e299b280...`的JSON/bitstream/model_execplan固定为正式硬件配置来源；ADR-009进一步把已完成DeepSeek整网调试记录为具名硬件基线，并明确不声称新的clean elaboration日志。W4物理profile/layout已经批准；INT8 SA/psum/requant、sum跨slice/完成协议、目标数值模拟器和板级协议仍分别留在后续阶段。
 - **当前主线**：W4/G4已闭环，W5首个真实Conv包继续单线程纵向收口。学长伪配置、正式register/encoder和新证据已经整理为逐LC/PE/stream语义合同；由此生成的`conv_1x1_real.json`通过正式parser、46连接零违规placement和稳定bitstream。该配置及语义合同已绑定到`NDPFuncModel/conv_func` physical request，真实`node-0004`/`hwop-0004-00~01`依次完成单坐标、首tile和全算子INT32 P/UINT8 D比较，全部与W3 golden bit-exact。G5/G6仍不升级，因为当前bulk路径是配置校验后的物理DRAM等价kernel，不是逐周期LC/stream/buffer或bitstream解释器。
-- **当前边界**：操作者已确认先前DeepSeek算子JSON可由目标硬件执行，通用JSON执行能力不再是阻塞，本次新1×1候选硬件实跑按决定延期。当前剩余三项配置阻塞为：候选`mem_loop=4, selector=0`与已知可执行HIGH-4 `selector=1`冲突；真实64-channel requant/唯一flush尚未参数化；execplan尚无typed qparam transport。三项闭合前禁止横向扩展53层Conv或整网W5。
+- **当前边界**：操作者已确认先前DeepSeek算子JSON可由目标硬件执行，通用JSON执行能力不再是阻塞，本次新1×1候选硬件实跑按决定延期。HIGH-4 selector已裁决为`mem/src/dst=4/1/1`并由正式encoder、严格adapter及三档P/D复核。当前剩余两项配置阻塞为：真实64-channel requant/唯一flush尚未参数化；execplan尚无typed qparam transport。两项闭合前禁止横向扩展53层Conv或整网W5。
 
 ### 接手进度总表
 
@@ -64,7 +64,7 @@
 | W2 | G2通过 | 1/4-slice小Conv候选layout和NDP functional数值闭环；RTL28 Conv到该功能模型的candidate-only探针 | 作为W4/W6前置fixture，不外推为目标simulator或硬件规格 |
 | W3 | G3通过 | 78节点、133 hw_op、79 runtime tensor、55内部tensor、旧77映射 | 不重跑大artifact，除非hash/合同失效 |
 | W4 | G4通过 | C0-C7、DeepSeek公共物理合同、ResNet差异合同、混合28-slice profile、七族layout/domain、93边/成本和具名批准均闭环 | 不重开；版本或合同hash变化时自动重审 |
-| W5～W9 | W5首例配置与两方数值闭环完成，G5/G6仍未批准，其余未通过 | DeepSeek JSON硬件执行能力已确认；真实1×1 JSON/bitstream及三档P/D均闭合 | 先修HIGH-4 selector，再参数化requant并接typed transport；硬件实跑延期 |
+| W5～W9 | W5首例配置与两方数值闭环完成，G5/G6仍未批准，其余未通过 | DeepSeek JSON硬件执行能力已确认；真实1×1 JSON/bitstream、HIGH-4 selector及三档P/D均闭合 | 参数化requant并接typed transport；硬件实跑延期 |
 
 ### 当前可立即执行队列
 
@@ -80,7 +80,7 @@
 10. 【已完成】C7单线程建立W3 hw_op/tensor/qparams到正式配置字段的typed参数合同、provenance和严格失败测试；覆盖78节点/133 hw_op、491个initializer参数引用和三态字段解析，只定义参数映射，没有生成patched JSON、bitstream或execplan。
 11. 【已完成】按ADR-009完成最小DeepSeek基线继承闭环：schema 0.3不再强迫全网group/global二选一；公共物理合同与ResNet W4差异合同均按本地证据hash验证；七族绑定到`local`或`HIGH-4`，LOW-28只保留为未选替代；没有伪造elaboration日志。全量G4审计12/12为true，阻塞列表为空，正式结束W4。
 12. 【已完成到候选边界】已定位DeepSeek链并固定首例`node-0004`/`hwop-0004-00~01`。逐LC/PE/stream合同裁决了伪代码循环、PE算式、stream维序和端口角色；派生`conv_1x1_real.json`并由正式encoder以46连接、零违规placement稳定生成bitstream。target配置与合同文本/hash已进入NDPFuncModel request；单坐标1元素、首tile 150,528元素和全算子3,211,264元素的P/D全部零不匹配，证据见`artifacts/w5/hwop-0004-00/preflight.json`。
-13. 【当前下一步/单线程】保持G5/G6 fail-closed但不等待硬件仿真：先依据已知可执行DeepSeek配置把HIGH-4 selector冲突裁决并重新编码；再复用可执行Quant路径参数化本层64个multiplier、末次reduction和唯一UINT8 flush；最后让execplan typed qparams重建同一首例。不得在三项完成前生成整网W5或宣称硬件三方通过。
+13. 【当前下一步/单线程】保持G5/G6 fail-closed但不等待硬件仿真：HIGH-4 selector已按已知可执行DeepSeek规则裁决为`4/1/1`并重新正式编码；现在复用可执行Quant路径参数化本层64个multiplier、末次reduction和唯一UINT8 flush；最后让execplan typed qparams重建同一首例。不得在剩余两项完成前生成整网W5或宣称硬件三方通过。
 
 Local执行环境已从事故前ZIP选择性恢复并重新验收：Python 3.12.13、`pip check`、三个锁定参考仓和根测试均通过；没有恢复任何managed-worktree junction。后续依赖任务可使用Local主任务或共享目录协作子任务，独立managed worktree仍只允许tracked-only工作。
 
@@ -446,7 +446,7 @@ W1的模型、RTL、正式配置来源和W4物理基线子任务已完成，但G
 
 ### W5：逐算子JSON和bitstream【难度：很高】
 
-**当前首包状态（2026-07-14）：真实1×1累加JSON和两方数值闭环已完成，停在三项配置阻塞。** `node-0004`已完成逐字段provenance、正式encoder零违规bitstream、config-bound request，以及单坐标/首tile/全算子P/D bit-exact。操作者确认DeepSeek JSON可由目标硬件执行，平台执行能力解除；静态交叉检查发现当前HIGH-4候选selector 0与可执行四slice模板selector 1冲突，另外仍缺真实per-channel requant/唯一flush和execplan typed qparam transport。精确硬件实跑延期。
+**当前首包状态（2026-07-15）：真实1×1累加JSON、HIGH-4 selector和两方数值闭环已完成，停在两项配置阻塞。** `node-0004`已完成逐字段provenance、正式encoder零违规bitstream、config-bound request，以及单坐标/首tile/全算子P/D bit-exact。操作者确认DeepSeek JSON可由目标硬件执行，平台执行能力解除；HIGH-4候选已改为`mem/src/dst=4/1/1`，旧`4/0/0`会立即失败。仍缺真实per-channel requant/唯一flush和execplan typed qparam transport。精确硬件实跑延期。
 
 0. 【已完成】已区分`ndp-sim-ref` bundle/bitstream打包器与NDPFuncModel Conv simulator；入口、命令、physical request和D writeback均已验证。当前停止条件改为配置适配缺失，而不是模拟器入口缺失。
 1. 建立 operator family→模板选择表，区分SA/GA、local/ring和首/中/末tile。
@@ -471,7 +471,7 @@ W1的模型、RTL、正式配置来源和W4物理基线子任务已完成，但G
 
 验收门 G6：每个hw_op的golden=simulator；整数bit-exact，浮点按manifest tolerance；重复运行稳定。
 
-当前前置进度（2026-07-14）：真实1×1配置已经通过正式encoder，target JSON与语义合同已进入NDPFuncModel request；同一physical bundle上的单坐标、首tile和全算子P/D均与W3 bit-exact。操作者确认先前DeepSeek JSON可由目标硬件执行，`B_CONV_TARGET_EXECUTION_SEMANTICS`在平台能力层解除，精确新候选硬件实跑延期。仍阻塞`B_N2N_TARGET_SELECTOR`、`B_REQUANT_TARGET_NUMERICS`和`B_EXECPLAN_TYPED_TRANSPORT`；因此`g6_validated=false`，不能进入网络execplan。
+当前前置进度（2026-07-15）：真实1×1配置已经通过正式encoder，target JSON与语义合同已进入NDPFuncModel request；同一physical bundle上的单坐标、首tile和全算子P/D均与W3 bit-exact。操作者确认先前DeepSeek JSON可由目标硬件执行，`B_CONV_TARGET_EXECUTION_SEMANTICS`在平台能力层解除；HIGH-4 selector已按`4/1/1`闭合，精确新候选硬件实跑延期。仍阻塞`B_REQUANT_TARGET_NUMERICS`和`B_EXECPLAN_TYPED_TRANSPORT`；因此`g6_validated=false`，不能进入网络execplan。
 
 ### W7：网络execplan和数据包【难度：高】
 
@@ -697,13 +697,13 @@ W0实现前还需把以上补充转成可执行的schema字段、测试用例和
 - 改变 shape/qparams 后，所有相关 loop/stride/constant 都被 patch，不存在 unresolved control。
 - bitstream 成功之外，还必须通过阶段 F 的目标模拟器数值测试。
 
-当前状态：42个上游JSON继续作为正式配置来源，且其目标硬件可执行能力已由操作者确认。项目真实1×1 Conv候选已完成字段审计、稳定编码和配置绑定两方数值闭环；静态交叉检查进一步发现HIGH-4候选selector 0与可执行四slice模板selector 1冲突。C7 typed参数合同已覆盖78节点/133 hw_op及真实qparams身份，仍未实现到整网execplan字段的写入。AvgPool、Quant/Add-Dequant、GEMM/GEMV和remote-sum的既有阻塞保持不变。
+当前状态：42个上游JSON继续作为正式配置来源，且其目标硬件可执行能力已由操作者确认。项目真实1×1 Conv候选已完成字段审计、稳定编码、HIGH-4 `4/1/1` selector和配置绑定两方数值闭环。C7 typed参数合同已覆盖78节点/133 hw_op及真实qparams身份，仍未实现到整网execplan字段的写入。AvgPool、Quant/Add-Dequant、GEMM/GEMV和remote-sum的既有阻塞保持不变。
 
 ## 阶段 F：接通目标 JSON/bitstream 数值模拟器
 
 目标：真正执行目标 JSON/bitstream，并按 manifest 导出每个原子算子的物理和逻辑输出。
 
-状态：Conv已有读取并严格校验真实1×1 target JSON/语义合同的NDPFuncModel request入口，并完成物理DRAM等价数值执行；目标硬件执行DeepSeek JSON的通用能力已确认，本候选精确硬件实跑延期。当前阶段不再等待cycle-accurate入口，而先闭合N2N selector、真实requant参数化和execplan typed transport。
+状态：Conv已有读取并严格校验真实1×1 target JSON/语义合同的NDPFuncModel request入口，并完成物理DRAM等价数值执行；目标硬件执行DeepSeek JSON的通用能力已确认，本候选精确硬件实跑延期。HIGH-4 selector已闭合；当前阶段不再等待cycle-accurate入口，而先闭合真实requant参数化和execplan typed transport。
 
 难度：很高。Conv 路径因已有数据通路模型而从“完全外部阻塞”降为“可修复、可适配”，但非 Conv 和 bitstream 级执行仍可能外部阻塞。
 
@@ -723,13 +723,13 @@ W0实现前还需把以上补充转成可执行的schema字段、测试用例和
 - 单算子 golden=simulator；整数 bit-exact，浮点符合 tolerance。
 - emulator 不在仓库时，阻塞必须记录为外部依赖，不能用 bitstream 生成成功替代。
 
-当前状态：真实`hwop-0004`的target JSON和语义合同已由config-bound adapter消费；单坐标走组件路径，首tile/全算子走`physical_dram_bulk_int8_equivalent`，三档P/D均与golden bit-exact。平台执行DeepSeek JSON的能力已确认；当前配置缺口不是“硬件能否读JSON”，而是候选HIGH-4 selector组合、真实per-channel requant/唯一flush和execplan参数注入。精确硬件P/D dump保留为延期最终确认。
+当前状态：真实`hwop-0004`的target JSON和语义合同已由config-bound adapter消费；单坐标走组件路径，首tile/全算子走`physical_dram_bulk_int8_equivalent`，三档P/D均与golden bit-exact。平台执行DeepSeek JSON的能力已确认，HIGH-4 selector组合已按`4/1/1`闭合；当前配置缺口不是“硬件能否读JSON”，而是真实per-channel requant/唯一flush和execplan参数注入。精确硬件P/D dump保留为延期最终确认。
 
 ### 首个真实Conv到全Conv/全算子扩展前的强制门
 
 首例不是合成算子，而是锁定ResNet50 INT8 ONNX中的真实`node-0004`：`fused resnetv17_stage1_conv0_fwd_quant`（`QLinearConv`）。它被lowering为`hwop-0004-00 ConvInt32Accumulate`和`hwop-0004-01 RequantizeUint8`，使用正式`[16,64,56,56]` UINT8 activation、`[64,64,1,1]` INT8 weight、64路INT32 bias、真实per-channel weight qparams、scalar input/output qparams和W3 P/D golden。不得把脱离该模型、随机生成或手工缩小的数据替换为首例验收依据。
 
-当前执行边界必须保持显式：`NDPFuncModel/main_CONV_N2N.py`仍把4-slice、`[256,64,3,3]` weight、R/S三次循环、`./hex_data`和固定requant写死；真实1×1没有进入该旧主程序。现有schema 0.2路径由根仓adapter调用`python -m tools.physical_image_probe <request.json>`：单坐标通过物理地址列表执行DRAM→Buffer→SpecialPEA→ActivationUnit→DRAM，首tile/全算子通过`physical_dram_bulk_int8_equivalent`重组HIGH组并执行1×1等价kernel。target JSON和语义合同在计算前被逐字段校验，但尚未逐LC/stream/buffer/N2N解释，也没有执行正式bitstream。因此当前两方P/D通过不能替代配置驱动模拟器门，也不能证明N2N selector、ping-pong或逐周期调度正确。
+当前执行边界必须保持显式：`NDPFuncModel/main_CONV_N2N.py`仍把4-slice、`[256,64,3,3]` weight、R/S三次循环、`./hex_data`和固定requant写死；真实1×1没有进入该旧主程序。现有schema 0.2路径由根仓adapter调用`python -m tools.physical_image_probe <request.json>`：单坐标通过物理地址列表执行DRAM→Buffer→SpecialPEA→ActivationUnit→DRAM，首tile/全算子通过`physical_dram_bulk_int8_equivalent`重组HIGH组并执行1×1等价kernel。target JSON和语义合同在计算前被逐字段校验，但尚未逐LC/stream/buffer/N2N解释，也没有执行正式bitstream。因此当前两方P/D通过不能替代配置驱动模拟器门。selector字段组合及编码已静态闭合，但仍不能证明真实N2N搬运、ping-pong或逐周期调度正确。
 
 从该首例扩展到其他Conv shape、53层Conv或其他算子族前，必须完成以下原子工作包：
 
@@ -824,15 +824,15 @@ W0实现前还需把以上补充转成可执行的schema字段、测试用例和
 | 6 | 实现 requant 与真实 writeback【W2软件候选已完成】 | 没有 UINT8 D 就无法和 ResNet golden 比较 | `7a47701`+`3cb0ef9`及后续buffered runner完成nearest-even、zp/saturation、output Buffer→DRAM、实际D地址覆盖和inverse；硬件multiplier/shift与正式pack仍待合同/W5 | 高 |
 | 7 | 恢复配置驱动【真实1×1候选已完成】 | 旧主程序绕过 `config/` 和 JSON | 当前adapter读取并校验真实1×1 JSON/语义合同后构造physical request；下一步需升级到逐LC/stream/buffer或bitstream解释 | 高 |
 | 8 | 从4 slice扩到七小环/28-slice【W4已完成】 | 只有前7步正确后，扩规模结果才可判定 | group4x7七条HIGH环与代表LOW路径的candidate探针、3/2 batch、C/K owner和tail已有回归；W4物理layout已批准，但该探针仍不是目标simulator | 高 |
-| 9 | 接一个真实ResNet Conv配置与数值链【两方闭环完成】 | 小模型通过后才能区分算法问题和布局问题 | 真实1×1已完成raw/真实qparams→W4 forward→target JSON绑定→physical P/D→inverse→W3 golden；硬件执行能力已确认，保持单实例修复selector/requant/transport | 很高 |
+| 9 | 接一个真实ResNet Conv配置与数值链【两方闭环完成】 | 小模型通过后才能区分算法问题和布局问题 | 真实1×1已完成raw/真实qparams→W4 forward→target JSON绑定→physical P/D→inverse→W3 golden；硬件执行能力已确认，selector已闭合，保持单实例修复requant/transport | 很高 |
 
-其中第1～6项已经用小合成数据完成，不需要外部`hex_data`。第7/9项的真实1×1候选已闭合target JSON绑定和等价数值关系，通用硬件执行能力也已确认；当前只保留N2N selector、真实requant/唯一flush和execplan typed qparams三项配置缺口。
+其中第1～6项已经用小合成数据完成，不需要外部`hex_data`。第7/9项的真实1×1候选已闭合target JSON绑定、HIGH-4 selector和等价数值关系，通用硬件执行能力也已确认；当前只保留真实requant/唯一flush和execplan typed qparams两项配置缺口。
 
 ## 当前最高优先级工作包
 
 新对话严格执行`.agents/W5_HANDOFF.md`：
 
-1. 保持首个真实1×1实例不变，先将候选`mem_loop=4, selector=0`与可执行DeepSeek HIGH-4 `selector=1`裁决；只修改selector后重新正式编码和两方比较，`ping_pong`另行审计。
+1. 【已完成】保持首个真实1×1实例不变，将候选由`mem/src/dst=4/0/0`改为可执行DeepSeek HIGH-4规则`4/1/1`；`ping_pong=0`独立保留。正式parsed dump为`src=1,dst=1,mem_loop=4→00011`，逻辑字段串为`11000011`；128/64位bitstream SHA均改变，placement仍为46条连接/cost 0，三档软件P/D SHA保持不变，旧组合由adapter立即拒绝。
 2. 复用已知可执行DeepSeek Quant数据通路，将本层64个per-channel multiplier、output zero point、nearest-even、saturation和唯一末次flush参数化为正式配置。
 3. 扩展execplan typed qparam transport，使同一首例完全由manifest/execplan重建，不再由W5脚本手工注入。
 4. 三项完成后重复单坐标、首tile和全算子P/D；精确硬件实跑与dump按操作者决定延期，不作为当前配置前置。

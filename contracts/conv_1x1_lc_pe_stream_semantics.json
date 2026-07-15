@@ -1,7 +1,7 @@
 {
   "schema_version": "0.1",
   "contract_type": "conv_1x1_lc_pe_stream_semantics",
-  "status": "official_encoder_passed_adapter_semantics_candidate",
+  "status": "official_encoder_passed_high4_selector_resolved_adapter_semantics_candidate",
   "authority_order": [
     "operator confirmation that previous DeepSeek operator JSONs execute on target hardware",
     "ndp-sim-ref encoder consumers and register map",
@@ -73,7 +73,10 @@
     "transfers": 3,
     "example_group0_owners": [0, 2, 3, 1],
     "example_destination0_prev_traversal": [0, 1, 3, 2],
-    "selector_encoding_status": "unresolved candidate conflict: this mem_loop=4 candidate encodes src/dst selector 0, while executable prefill_gemm_ring_4slice encodes 1 and executable decode_gemv_ring uses selector 0 with mem_loop=28",
+    "selector_encoding_status": "resolved: this mem_loop=4 candidate encodes src/dst selector 1, matching executable prefill_gemm_ring_4slice and the execplan HIGH-4 rule",
+    "encoded_logical_field_bits": "11000011",
+    "ping_pong": 0,
+    "ping_pong_status": "preserved from the Conv candidate; lifecycle adjudication remains separate from selector selection",
     "selector_reference": {
       "high4": {"path": "ndp-sim-ref/jsons/prefill_gemm_ring_4slice.json", "mem_loop": 4, "src_slice_sel": 1, "dst_slice_sel": 1},
       "low28": {"path": "ndp-sim-ref/jsons/decode_gemv_ring.json", "mem_loop": 28, "src_slice_sel": 0, "dst_slice_sel": 0},
@@ -89,11 +92,12 @@
     "final K uses k_block replica LC13 rather than p_block replica LC15",
     "activation and output stream h/w and p/q axes were reordered to match byte strides",
     "N2N mem_loop changed from legacy 16 to HIGH-4 value 4",
+    "N2N src/dst selectors changed from legacy 0 to the executable HIGH-4 value 1",
     "target A/B role reversal is explicit in the adapter"
   ],
   "config": {
     "path": "conv_1x1_real.json",
-    "sha256": "e3e985c8a06e2ff2c672c4a96c04055ebf6c835836c0e589cc265e72cc236037",
+    "sha256": "a20641cfcf65068c3ca31d710a0ef45d28a53cbf80d5e246ce54f0de3fe16f2c",
     "generator": "tools/generate_conv_1x1_real.py",
     "source": "conv_full.json"
   },
@@ -106,10 +110,10 @@
     "repeat_outputs_identical": true,
     "outputs": {
       "mapping_review.json": {"size_bytes": 9705, "sha256": "2088dd033e7b92c17bd82b065611015a49ef968fccf86c67269e8b911e3ad272"},
-      "parsed_bitstream.txt": {"size_bytes": 5032, "sha256": "17441e46e9d6c20adb9c340a8bbb7d4339f9ed3de5c9a4194d39b41916e9cc2a"},
-      "modules_dump_64b.bin": {"size_bytes": 4620, "sha256": "3d5c677437175042fde9e4726b44ce4ecba8e6e20ded5a8f0f267c5548db7e83"},
-      "modules_dump_128b.bin": {"size_bytes": 4550, "sha256": "074a0787ae774f9cfaf45df158cb8b7b6c02e0920b8199ed5e4864fea3d33744"},
-      "detailed_dump.txt": {"size_bytes": 42403, "sha256": "c5f10e7355f407bf92084e8e04a803703250b5f6575acb7282c85d50ddd06382"}
+      "parsed_bitstream.txt": {"size_bytes": 5032, "sha256": "15d16a698c40caa90eaab26fd2c69342e417eba4d6bcf20032715fd09f2eda7d"},
+      "modules_dump_64b.bin": {"size_bytes": 4620, "sha256": "baa4d71c8f20f725b572d45386bb855928d020434bbbe55430a979c5f30557df"},
+      "modules_dump_128b.bin": {"size_bytes": 4550, "sha256": "2128de615b9b66c8569e3bf3a83f9f6b4ffe4798802ba56be9b21d120e980e6b"},
+      "detailed_dump.txt": {"size_bytes": 42403, "sha256": "f5a2e039982d51cae3fd8467df225ac97ef51ddfebaea60bc753ac07c8b3d39e"}
     }
   },
   "evidence_boundaries": {
@@ -117,11 +121,11 @@
       "the target hardware platform executes previous DeepSeek operator JSONs by operator confirmation",
       "all declared fields are accepted by the official parser/encoder",
       "16 of 20 LC and 7 of 10 LC-PE fit with zero placement violations",
-      "INT8 SA, bias enable, HIGH-4 loop count and corrected loop/PE/stream fields are present in deterministic bitstream"
+      "INT8 SA, bias enable, HIGH-4 loop count and corrected loop/PE/stream fields are present in deterministic bitstream",
+      "src/dst selector 1 and mem_loop 4 encode as logical NeighborStreamConfig bits 11000011 while ping_pong remains 0"
     ],
     "not_proven": [
       "exact hardware execution and P/D dump for this new Conv 1x1 candidate (deferred by operator, not a current configuration blocker)",
-      "the candidate src_slice_sel/dst_slice_sel value 0 for HIGH-4; executable DeepSeek references instead select 1",
       "hardware INT32 P writeback packing and unique flush",
       "per-channel requant multiplier/rounding/saturation encoding in this SA-only JSON",
       "execplan typed qparam transport"

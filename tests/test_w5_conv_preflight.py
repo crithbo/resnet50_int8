@@ -97,21 +97,20 @@ class W5FirstConvPreflightTests(unittest.TestCase):
         self.assertEqual(
             {item["blocker"] for item in target["unresolved_target_bindings"]},
             {
-                "B_N2N_TARGET_SELECTOR",
                 "B_REQUANT_TARGET_NUMERICS",
                 "B_EXECPLAN_TYPED_TRANSPORT",
             },
         )
         self.assertEqual(
-            target["resolved_target_capabilities"][0]["former_blocker"],
-            "B_CONV_TARGET_EXECUTION_SEMANTICS",
+            {item["former_blocker"] for item in target["resolved_target_capabilities"]},
+            {"B_CONV_TARGET_EXECUTION_SEMANTICS", "B_N2N_TARGET_SELECTOR"},
         )
         crosscheck = target["n2n_selector_crosscheck"]
         self.assertEqual(
             crosscheck["status"],
-            "candidate_conflicts_with_executable_high4_reference",
+            "candidate_matches_executable_high4_reference",
         )
-        self.assertEqual(crosscheck["candidate"]["src_slice_sel"], 0)
+        self.assertEqual(crosscheck["candidate"]["src_slice_sel"], 1)
         self.assertEqual(
             crosscheck["executable_high4_reference"]["src_slice_sel"], 1
         )
@@ -178,7 +177,7 @@ class W5FirstConvPreflightTests(unittest.TestCase):
 
         changed = deepcopy(self.report)
         changed["target_configuration"]["n2n_selector_crosscheck"][
-            "executable_high4_reference"
+            "candidate"
         ]["src_slice_sel"] = 0
         with self.assertRaisesRegex(W5ConvPreflightError, "crosscheck"):
             validate_w5_first_conv_preflight(changed)
