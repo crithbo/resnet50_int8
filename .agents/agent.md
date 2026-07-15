@@ -1,6 +1,6 @@
 # ResNet50 INT8 项目入口与代码地图
 
-最后更新：2026-07-14
+最后更新：2026-07-15
 
 本文件记录项目总入口、当前闭环状态、协作规则、仓库基线和代码地图。W4已经封版；新对话先读`.agents/W5_HANDOFF.md`，唯一权威执行计划见`.agents/plan.md`，W4追溯入口见`.agents/W4_ARCHIVE.md`，已经发生的事实见`.agents/history.md`。
 
@@ -8,11 +8,11 @@
 
 - **最终验收**：正式 ResNet50 INT8 ONNX→逐节点/硬件原子算子 golden→28-slice relayout→JSON/bitstream→目标 simulator→execplan/Bank_data→RTL/硬件→三方逐算子和整网一致，并以真实cycle/带宽证据选择性能profile。
 - **W3业务封版检查点**：`35a4fde106d102b0e165e7eb13d60f7dd980db71`；W0/G0、W2/G2、W3/G3已通过，W1只完成模型/输入/软件量化事实，G1因目标硬件合同缺失尚未通过。交接文档可能有后续纯文档提交，当前恢复点以`git rev-parse HEAD`和`history.md`精确台账为准。
-- **三个仓库分工**：`CGRA_SIM`给软件/QNN语义和旧ResNet计划；`ndp-sim-ref@e299b280...`的`jsons/`、`bitstream/`和`model_execplan/`是正式28-slice硬件配置来源，操作者已进一步确认先前DeepSeek算子JSON可由目标硬件执行；`NDPFuncModel/conv_func@797f099`是Conv数值模拟器组件，现已读取并严格校验真实1×1 target JSON/语义合同及HIGH-4 `mem/src/dst=4/1/1`，完成单坐标、首tile和全算子P/D两方bit-exact。精确新候选硬件实跑延期，不再是当前配置前置。
+- **三个仓库分工**：`CGRA_SIM`给软件/QNN语义和旧ResNet计划；`ndp-sim-ref@e299b280...`的`jsons/`、`bitstream/`和`model_execplan/`是正式28-slice硬件配置来源，操作者已进一步确认先前DeepSeek算子JSON可由目标硬件执行；`NDPFuncModel/conv_func@1d3181d`是Conv数值模拟器组件，现以request schema 0.3读取累加JSON、requant manifest及8份JSON原文/SHA，严格校验HIGH-4 `4/1/1`、64通道GA常量、对齐staging和唯一flush，并完成单坐标、首tile和全算子P/D两方bit-exact。精确新候选硬件实跑延期，不再是当前配置前置。
 - **当前成果**：正式图含78节点/617张量，lower为133个语义hw_op；保存79个运行时tensor和55个INT32内部tensor，全部78节点独立公式重放匹配ORT，旧77原语已逐项映射。W4-28 C0-C7与DeepSeek基线继承闭环已经完成：保留14个RTL28可逆layout实现，其中七个被`w4_deepseek_hybrid28_resnet50_v1`选中并批准，另七个LOW-28实现仅作gate-ineligible替代证据；93边、91 qparam链、16残差Add、79 tensor生命周期/alias和两种历史成本场景均通过内容寻址复核。配置权威审计盘点42个JSON，完成Pool三模板、Quant/Add-Dequant两模板、6个SA GEMM/GEMV模板和11个sum族模板的字段/寄存器/bitstream审计；C7把78节点/133 hw_op绑定到491个initializer参数引用和94个公式派生参数。旧16-slice物理证据只作历史参考。
 - **当前硬件裁决**：目标为28-slice，RTL固定`Trassic2.0_RTL@e3bdebba95dec36ee8eba43caa92a326a88392cd`，配置基线固定`ndp-sim-ref@e299b280...`。ADR-009记录操作者对已完成DeepSeek整网硬件基线的具名确认；正式profile统一用全28-bit mask并按算子绑定`local`或`HIGH-4`，当前七族均不选择`LOW-28`。该决定没有声称或伪造clean elaboration日志。G4已经通过，`w5_authorized=true`，W4正式结束。
-- **下一主线**：继续单线程收口同一`hwop-0004-00~01`。当前累加JSON、正式bitstream、config adapter、HIGH-4 `mem/src/dst=4/1/1`和三档P/D已通过；下一步复用可执行DeepSeek Quant路径参数化本层64个multiplier/唯一flush，最后接通execplan typed qparams。
-- **当前阻塞**：通用DeepSeek JSON硬件执行能力、Conv simulator入口、config adapter和HIGH-4 selector均已解除。当前真实两项是`B_REQUANT_TARGET_NUMERICS`、`B_EXECPLAN_TYPED_TRANSPORT`；sum族、整网地址和W8 load/dump仍按后续阶段独立处理。精确新候选硬件P/D验证由操作者决定延期，不倒灌成W5配置阻塞。
+- **下一主线**：首个`hwop-0004-00~01`已在根仓`1388dede...`、NDP `1d3181d...`形成单算子配置冻结提交。硬件负责人从该点手工加载并dump P/D；扩展负责人从同一点处理第二个1×1和shape-family，但结果在硬件回报前标candidate。公共合同、Git和全量回归串行维护。
+- **当前阻塞**：该首例的通用DeepSeek JSON硬件执行能力、Conv simulator入口、config adapter、HIGH-4 selector及`B_REQUANT_TARGET_NUMERICS`均已解除；只剩`B_EXECPLAN_TYPED_TRANSPORT`妨碍自动扩展/整网执行，不妨碍手工硬件加载。sum族、整网地址和W8 load/dump仍按后续阶段独立处理；精确新候选硬件P/D验证尚未发生，不能宣称三方一致。
 - **禁止误用**：NDPFuncModel 当前 `extracted_*.npy` 和 `verify_pe` psum 不是可信 golden；42个 JSON也不等于 ResNet算子配置已完成；bitstream生成成功不等于数值正确。
 - **接手检查**：严格按`.agents/W5_HANDOFF.md`的三条无副作用检查执行；fresh checkout可先用`verify --evidence-only`只核对tracked RTL28审计快照。预期根工作树干净、三参考仓匹配lock、RTL28 external evidence匹配hash、登记的全量测试全部通过。2026-07-13已确认managed worktree回收会穿透依赖junction清空Local目标，因此setup对非Local工作树硬失败；依赖`.venv`、三个参考仓或正式W3的任务统一回Local，直到有隔离且通过“销毁安全”验证的新方案。
 
@@ -156,7 +156,7 @@ resnet50_int8/
 | 根集成仓 | W3业务封版`35a4fde106d102b0e165e7eb13d60f7dd980db71`；当前文档HEAD见Git | Private `crithbo/resnet50_int8`，W0～W3代码、合同和文档 |
 | `CGRA_SIM` | `53c41e02c294bcc54379e686dc9d25bbb93919fa` | 公开upstream，QNN语义和旧ResNet参考 |
 | `ndp-sim-ref` | `e299b2804448242d1589b3e58ed7c5a9a5eca09f` | 公开upstream；ADR-008确认的正式JSON/bitstream/execplan配置来源 |
-| `NDPFuncModel` | `conv_func@35eab40e5314bf603481dd6268bc96ab2ca514a6` | Private `crithbo/NDPFuncModel-private`，W2修复后的Conv功能模型 |
+| `NDPFuncModel` | `conv_func@1d3181d832d7a409af779215e4aa590d03bd8ed3` | Private `crithbo/NDPFuncModel-private`，已绑定真实1×1累加/requant配置的Conv功能模型 |
 
 `repos.lock.json`是三个参考仓的恢复真值，也是RTL28静态审计快照的离线校验真值；用`tools/sync_repositories.py verify`统一核验，用`verify --evidence-only`在fresh checkout只验tracked证据，用显式`sync --repo <name>`恢复缺失参考仓。当前四个代码工作树均应干净。正式模型、`.venv`和W3大产物不在普通Git提交中；C0登记的九份小型legacy16 W4报告例外，已按hash跟踪以保证合同可复核。
 
@@ -283,7 +283,7 @@ CGRA_SIM/testing/resnet-50-int8/
 - `kernel/add_config_MN_N.json`、`output/add_config_MN_N_pseudocode.py`：ADD JSON 与生成伪代码的完整工作样例，不是 Conv 配置。`graph/` 虽只跟踪 CPython 3.12 `.pyc`，但已恢复其职责：加载 JSON 为 LC/PE/AG 依赖图、拓扑排序、生成嵌套循环伪代码和地址队列；因此是可恢复的配置前端，不再视为完全未知文件。
 - `verify_pe/` 及各 dump 目录：大量生成 trace/日志，属于验证产物，不是配置规则真值。
 
-该仓库补齐的是“Conv 数据通路怎样走”的W2功能参考，并已升级为真实1×1 target JSON schema 0.2的config-bound候选入口。DRAM几何、地址/掩码、Buffer行列、8×8 PEA、4-slice ring和psum provenance已用于ResNet Conv relayout与三档P/D比较；固定主入口仍保留下列遗留，但不再影响已完成的两方候选闭环：
+该仓库补齐的是“Conv 数据通路怎样走”的W2功能参考，并已升级为真实1×1累加/requant target JSON schema 0.3的config-bound候选入口。DRAM几何、地址/掩码、Buffer行列、8×8 PEA、4-slice ring、psum provenance和双staging D inverse已用于ResNet Conv relayout与三档P/D比较；固定主入口仍保留下列遗留，但不再影响已完成的两方候选闭环：
 
 1. 上游 `reduc_state = r*s*cc_shared` 不可能正确表示多层循环末态，且在每个R后清空psum；本地 `86cd3e3` 已改用LC `last/last_index`并把清零移到完整C/S/R+ring之后。`d212225` 和根adapter已用全部输出坐标验证四段ring整数累加；真实主入口flush/writeback仍未恢复。
 2. `run_buffer_writeback_to_dram()` 仍只记录“将要写回”的日志，实际 `dram.stream_write()` 被注释；`3cb0ef9`完成的是probe路径按provenance地址的真实单字节写回，不能冒充主WRAG路径已修复。
@@ -312,7 +312,7 @@ CGRA_SIM/testing/resnet-50-int8/
 - **lowering和身份映射——W3语义层已完成**：78个ONNX节点稳定lower为133个语义hw_op；旧77模型级原语已逐项映射，Flatten明确为zero-copy。JSON实例、逐K-tile和execplan身份在W4/W5/W7继续扩展，不得说成W3尚未实现。
 - **数据变换——W4/G4已完成**：Quantize、Dequantize、View、Conv、Pool、Add、GAP和MatMul均有group4x7/LOW两种正逆实现；混合profile选中七个group4x7布局并按`local/HIGH-4`批准，LOW实现只作未选替代。整网审计覆盖78/78节点、93条runtime边、91条量化qparam链、79 tensor生命周期/alias和静态成本；G4=`passed`、`w5_authorized=true`。
 - **单算子配置——来源已正式、C4-C6静态审计完成/ResNet覆盖仍不完整**：42个静态JSON属于正式配置来源；Pool三模板、Quant/Add-Dequant、6个SA GEMM/GEMV和11个sum族模板的字段/bitstream候选审计已完成。AvgPool仍缺除法/requant，Quant/Add-Dequant仍缺typed qparams和完整UINT8闭环；6个SA模板全是FP16、bias=0，MatMul缺INT8/tail/psum/requant；remote-sum无N2N/neighbor且完成协议未证实。编码确定性不代表数值正确。
-- **W2/G2与首个真实1×1两方闭环已通过**：`NDPFuncModel@797f099`除1/4-slice fixture外，已校验真实target JSON和HIGH-4 `4/1/1`，并完成单坐标组件路径、首tile 150,528元素和全算子3,211,264元素的P/D bit-exact。操作者确认DeepSeek JSON硬件可执行能力；当前不批准的是目标真实requant参数化和typed execplan，而不是入口、配置适配或selector。
+- **W2/G2与首个真实1×1两方闭环已通过**：`NDPFuncModel@1d3181d`除1/4-slice fixture外，已校验真实累加/requant target JSON和HIGH-4 `4/1/1`，执行28个slice的双staging D写回/inverse，并完成单坐标组件路径、首tile150,528元素和全算子3,211,264元素的P/D bit-exact。操作者确认DeepSeek JSON硬件可执行能力；该首例当前不批准的是逐周期/bitstream解释、精确硬件P/D和typed execplan，而不是入口、配置适配、selector或真实requant数值。
 - **execplan——28-slice框架已有/ResNet适配没有**：可规划28个slave、28-bit mask、地址、bitstream、指令和Bank_data；schema仍缺numeric attributes，旧配置镜像与目标RTL存在版本冲突，bitstream失败后部分路径还会继续。
 - **RTL/硬件——执行能力已确认/项目接口延期**：操作者确认先前DeepSeek算子JSON可由目标硬件执行；当前工作树仍没有load/start/wait/dump接口或逐算子checkpoint，精确新1×1候选硬件验证按决定延期。
 - **三方比较——通用逻辑比较器和W4 inverse layout已就绪/真实结果未到位**：根集成层已实现inverse-relayout之后的两方/三方比较、整数bit-exact、浮点显式容差、错误分类、拓扑首错和provenance；旧runner与128-bit物理文件工具仍不能替代它。当前没有目标simulator/hardware逻辑输出，因此尚无真实三方通过结论。
@@ -321,7 +321,7 @@ CGRA_SIM/testing/resnet-50-int8/
 
 严格按`.agents/plan.md`的W0→W9工作包和G0→G9验收门推进。W0/G0、W2/G2、W3/G3和W4/G4已经完成；W1仍是跨后续阶段的外部规格总账，G1未整体通过不会回退ADR-009已经关闭的G4。旧16-slice software readiness不再代表当前进度。任何W1～W4修改都必须先说明会使哪些manifest、合同hash和下游证据失效。
 
-当前优先级只有一个：保持单线程和同一真实1×1实例。HIGH-4 N2N selector已裁决为`mem/src/dst=4/1/1`并完成正式重编码；现在复用可执行DeepSeek Quant路径完成64-channel requant/唯一flush，最后让execplan typed qparams完整重建该实例。剩余两项闭合前不得扩展整网；精确硬件实跑延期，不再等待通用执行能力证明。
+当前首例已冻结：HIGH-4 `mem/src/dst=4/1/1`、64-channel requant/唯一flush、正式编码和三档两方P/D均已闭合。硬件负责人只使用冻结镜像取得真实P/D；扩展负责人可从同一提交处理第二个1×1与shape-family candidate。execplan typed qparams仍是自动扩展前的唯一当前配置阻塞；不得扩展整网或把尚未发生的精确硬件实跑写成三方通过。
 
 配置字段层的Q1~Q4详细背景仍见 `.agents/rules/算子配置规则.md` 第14.3节；端到端外部资料清单以 `plan.md`“当前最高优先级请求”为准。
 

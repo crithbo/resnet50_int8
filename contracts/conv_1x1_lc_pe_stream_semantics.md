@@ -50,4 +50,4 @@ N2N `mem_loop` 从16改为4；四步含本地步和三次传输。group0物理�
 
 ## 结论边界
 
-`conv_1x1_real.json`已由正式encoder两次解析、placement、生成bitstream，46条连接、constraint cost 0，两个输出目录逐文件SHA-256一致；selector修复改变了bitstream SHA但没有改变连接图、placement或cost。目标平台执行DeepSeek JSON的通用能力已经确认；`B_N2N_TARGET_SELECTOR`已解除，当前仍有真实per-channel requant/唯一flush和execplan typed qparam transport两项配置阻塞。该候选的硬件实跑与P/D dump按操作者决定延期，不再作为当前配置工作的前置阻塞。
+`conv_1x1_real.json`已由正式encoder两次解析、placement、生成bitstream，46条连接、constraint cost 0，两个输出目录逐文件SHA-256一致；selector修复改变了bitstream SHA但没有改变连接图、placement或cost。目标平台执行DeepSeek JSON的通用能力已经确认；`B_N2N_TARGET_SELECTOR`已解除。8份真实requant JSON又由正式encoder以每份21条连接、cost 0稳定生成，并经NDP request schema 0.3实际消费，验证64通道、GA常量、HIGH-ring slice、16B双staging、LC `1/9408/2352`和唯一flush，三档P/D保持bit-exact，因此该首例`B_REQUANT_TARGET_NUMERICS`也已解除。当前只剩execplan typed qparam transport；硬件实跑与P/D dump尚未发生，不能宣称三方一致。
