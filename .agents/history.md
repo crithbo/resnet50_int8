@@ -1,8 +1,8 @@
 # ResNet50 INT8 工作日志
 
-最后更新：2026-07-14
+最后更新：2026-07-15
 
-本文件只保留已经发生的关键决策、验证和状态变化。W5新对话先看`.agents/W5_HANDOFF.md`，当前任务看`.agents/plan.md`，W4错误追溯先看`.agents/W4_ARCHIVE.md`，代码和仓库细节看`.agents/agent.md`，单算子推导看`.agents/rules/算子配置规则.md`。
+本文件只保存已经发生的关键决策、验证、提交和状态变化，**不是接手入口，也不是当前任务清单**。除非需要定位历史问题、追溯旧结论、查完整提交/父提交或回退点，否则不要加载本文件；当前任务只读`.agents/plan.md`，代码地图按需读`.agents/agent.md`，单算子推导规则按需读`.agents/rules/算子配置规则.md`，W4专项追溯读`.agents/W4_ARCHIVE.md`。
 
 > 当前口径提示（2026-07-14）：ADR-009已经完成DeepSeek公共物理基线继承，正式profile为`w4_deepseek_hybrid28_resnet50_v1`，G4 v2的12项条件全部为true，W4结束且W5已授权；同时`clean_elaboration_claimed=false`，尚无目标simulator、硬件或三方数值通过。本文旧条目中的16-slice方案、group/global二选一、“等待clean elaboration”“G4未通过”“下一步C8”等均是当时事实，不能作为当前任务。W4业务闭环为`952a96b...`，精确追溯见`.agents/W4_ARCHIVE.md`。
 
@@ -803,3 +803,29 @@
 - 冻结交付审计发现此前physical bundle只在W5/NDP请求内存中存在，若直接结束会把“可生成”误报为“硬件组已收到”。因此新增`tools/export_conv_1x1_hardware_freeze.py`：确定导出28-slice全部11个physical port，其中A/B/bias/6类qparam标为load input，P/D标为golden output；另导出canonical P/D、累加+requant共10份配置、18份128/64位bitstream，以及含308个physical region和56个staging输出区的地址表。目录`artifacts/w5/hwop-0004-00/hardware_freeze/`共339个manifest文件、约41.9 MB，freeze ID `f687debd0215f1d29b6ca94176c4e9cbcf20434d58bce57c430129edb8922d5f`，两次导出manifest SHA-256均为`72e17cb52c2948f86fe6b0e9b2715de57c5404a72a04f9514247f174e8a95550`。
 - 新增`tools/compare_conv_1x1_hardware_dump.py`，约定硬件dump目录为`P/slice-XX.bin`和`D/slice-XX.bin`，按地址表inverse回canonical NCHW并输出首错坐标/值/hash。使用冻结physical golden作自检时，P/D各3,211,264元素、0 mismatch，SHA-256仍为`1ec864...`/`2793bbe...`；新增变异测试证明D首错`[0,0,0,0]`可报告。根仓全量回归随之增至249/249。
 - 真正可交硬件组的根仓冻结提交为`e9b6492098c2101aa86afd83bf95e8024fa6e8df`，父提交`e6c1ed579be5c3d0f583a3b008180c4714e77cb5`，`feat: export real 1x1 hardware freeze`；数值闭环业务提交仍为`1388dede...`，NDP冻结提交仍为`1d3181d...`。精确回退时先revert后续台账，再`git revert e9b6492098c2101aa86afd83bf95e8024fa6e8df`移除交付器，若还需回退数值闭环再按上一条顺序revert`1388dede...`与NDP `1d3181d...`。大体积交付目录是可再生产物，不进入普通Git历史。
+
+## 2026-07-15：说明文档收敛前的完成计划归档索引
+
+- 操作者要求不再维护独立接手文件，把唯一接手入口合并进`plan.md`；`agent.md`只保留稳定代码地图、当前边界和协作规则；本`history.md`明确改为“只有定位历史问题才加载”。因此原`W5_HANDOFF.md`中的三条接手检查、冻结恢复点、硬件交付命令和人员拆分迁入新`plan.md`，其W5首包A～D过程说明归入本节及前述2026-07-14/15 W5条目后删除原文件。
+- 原`plan.md`中W0～W5的详细实施步骤、W4 C0～C7并行波次、16→28切换清单、NDPFuncModel第1～9项修复账本和“阶段A～F”的重复计划均已完成或被后续裁决替代，不再作为当前计划加载。追溯位置如下：W0～W3见“W0～W3交接封版”及2026-07-12条目；W4-28 C0～C7见2026-07-13/14连续条目与`W4_ARCHIVE.md`；W5首例入口、伪代码裁决、selector、requant和冻结见2026-07-14“W5首个真实1×1”起至2026-07-15“requant config-bound闭环”各条。
+- 原`agent.md`中三个参考仓逐目录文件数、2026-07-11全量源码分类、旧NDP主入口/trace/pyc清点和旧CGRA实验入口的长篇地图属于当时审计证据，不再承担当前状态说明。其历史结论已分别记录在2026-07-10“引入NDP工具链”、2026-07-11“引入Conv模型”、2026-07-13“方案切换全工作文件夹遗留审计”和规则文档第11～17节；后续代码定位以精简后的职责级地图、`rg`和实际源码为准，不依赖旧文件计数。
+- 被替换的旧结论包括：“NDP config adapter待完成”“当前缺W5真实Conv JSON”“首例仍缺64-channel requant/唯一flush”“当前只到schema 0.2”“QLinearConv仍无任何项目配置”。现行事实是：首个真实`node-0004/hwop-0004-00~01`已有累加JSON和8份requant JSON，schema 0.3实际消费原文/SHA，28-slice双staging inverse和三档P/D通过，并已形成freeze ID `f687debd...`的硬件交付目录；该首例只剩`B_EXECPLAN_TYPED_TRANSPORT`影响自动重建，精确硬件P/D仍未发生。
+- 文档收敛不改变任何代码、JSON、bitstream、合同、freeze manifest或门状态。G0/G2/G3/G4保持通过；W5首例冻结但G5/G6/G8仍为false；第二个1×1/shape-family只能标candidate；硬件负责人和扩展负责人可从同一冻结提交分工，公共schema/合同/Git/全量回归继续串行。
+
+### 从原`plan.md`移出的已完成详细计划摘要
+
+| 原计划块 | 已完成内容与最终边界 | 历史证据入口 |
+|---|---|---|
+| W0/G0与阶段B骨架 | 根集成包、manifest/contract/backend/artifact、cache/resume、mock DAG、仓库lock与恢复验证均完成；后续不再作为当前实施步骤重载 | “W0空流水线骨架完成”“W0/G0最终封版” |
+| W2/G2小Conv | 1/4-slice软件fixture完成physical ingress、uint8×int8/int32 psum、reduction、requant、D写回和inverse；只批准软件候选，不批准目标RTL/bitstream | 2026-07-11连续NDPFuncModel条目 |
+| W3/G3与原阶段A～C | 正式模型/输入、78节点、133个`hw_op`、79个runtime tensor、55个internal tensor、491个initializer引用、ORT节点与子步骤golden、旧77原语映射均完成 | “W0～W3交接封版”及2026-07-12条目 |
+| W4/G4与原阶段D | 28-slice topology、七族正逆layout、93边、91条qparam链、16个残差Add、79 tensor生命周期/alias、DeepSeek公共基线和ResNet差异合同、12/12 G4批准完成 | 2026-07-13/14 C0～C7条目与`W4_ARCHIVE.md` |
+| W5首例与原阶段E | 首个真实`node-0004/hwop-0004-00~01`的LC/PE/stream裁决、1×1累加JSON、selector `4/1/1`、8份requant JSON、正式encoder、parsed dump、placement、bitstream和确定性完成 | 2026-07-14“W5首个真实1×1”起的连续条目 |
+| 原阶段F的首例软件数值 | schema 0.3实际消费manifest、JSON原文/SHA，验证64通道/GA/16B/LC/唯一flush，28-slice双staging inverse及三档P/D bit-exact完成；这是config-bound功能闭环，G6仍false | 2026-07-15“requant config-bound闭环”条目 |
+| 首例硬件交付准备 | 339文件冻结包、地址表、physical/canonical P/D、10份配置、18份bitstream和硬件dump inverse比较器完成；精确硬件实跑尚未发生，G8仍false | 2026-07-15冻结导出与比较器条目 |
+
+原计划中“当前可立即执行队列”的13项已完成细节不再逐条留在现行入口：16-slice泄漏终审、三路layout候选、Conv探针、C3两种调度、ADR-008配置源审计、Pool三模板、Quant/Add-Dequant、GEMM/GEMV与sum族、C7 typed参数合同、ADR-009继承、首个1×1累加、selector修复、64通道requant与硬件冻结，均由上表及相邻历史提交台账覆盖。未完成的typed execplan、第二实例/shape-family、真实3×3、硬件P/D和全算子/整网工作已重新整理进精简后的`plan.md`，没有被归档成“已完成”。
+
+- 文档实体变更完成：`agent.md`由767行精简为140行，只保留职责级代码地图、当前证据边界和协作规则；`plan.md`由844行精简为180行，成为唯一接手入口并直接包含三条检查、冻结点、门状态、三路人员分工和后续阻塞；独立`W5_HANDOFF.md`删除，`W4_ARCHIVE.md`改指`plan.md`且只在W4追溯时加载。
+- 规则文档同步纠错：把“原始42个模板没有QLinearConv”与“项目已生成首个真实1×1”分开；把“量化参数完全没有传递通道”收窄为`B_EXECPLAN_TYPED_TRANSPORT`；将首例状态更新为schema 0.3、64通道requant、双staging inverse和config-bound P/D已通过但硬件未验证；修正14～17章编号并删除重复的Conv requant节。
+- 文档收敛后执行`git diff --check`、活动旧引用/重复标题检查和`tools/sync_repositories.py verify`均通过；根仓249/249测试通过，NDPFuncModel 19/19测试通过。测试仅出现既有NumPy弃用告警，没有失败。操作者未跟踪的`.agents/conv_full(2).json/.txt`保持原样。
