@@ -829,3 +829,9 @@
 - 文档实体变更完成：`agent.md`由767行精简为140行，只保留职责级代码地图、当前证据边界和协作规则；`plan.md`由844行精简为180行，成为唯一接手入口并直接包含三条检查、冻结点、门状态、三路人员分工和后续阻塞；独立`W5_HANDOFF.md`删除，`W4_ARCHIVE.md`改指`plan.md`且只在W4追溯时加载。
 - 规则文档同步纠错：把“原始42个模板没有QLinearConv”与“项目已生成首个真实1×1”分开；把“量化参数完全没有传递通道”收窄为`B_EXECPLAN_TYPED_TRANSPORT`；将首例状态更新为schema 0.3、64通道requant、双staging inverse和config-bound P/D已通过但硬件未验证；修正14～17章编号并删除重复的Conv requant节。
 - 文档收敛后执行`git diff --check`、活动旧引用/重复标题检查和`tools/sync_repositories.py verify`均通过；根仓249/249测试通过，NDPFuncModel 19/19测试通过。测试仅出现既有NumPy弃用告警，没有失败。操作者未跟踪的`.agents/conv_full(2).json/.txt`保持原样。
+
+## 2026-07-15：恢复既有直接Git推送规则
+
+- 操作者澄清此前云端发布一直使用已建立的根仓`origin`直接推送，不要求GitHub插件重新安装仓库权限，也不要求`gh`。先前把完整PR发布流程的前置条件套到普通`git push`属于流程过度；现已在`agent.md`固定区分直接Git推送与插件PR操作。
+- 新的长期授权边界是：只有操作者明确要求推送/发布/同步云端时才执行`git push`；本地提交不自动授权远端写入。获授权后必须先fetch并证明`origin/main`是HEAD祖先，只允许非强制fast-forward，推送后核对远端SHA；分叉、认证错误或需要force时停止。
+- 当前操作者已明确要求本轮按原方式直接推送。推送范围只包含现有已提交历史以及本条规则提交；未跟踪的`.agents/conv_full(2).json/.txt`保持本地原件状态，不暂存、不提交、不上传。

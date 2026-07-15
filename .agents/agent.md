@@ -130,6 +130,10 @@ $env:PYTHONDONTWRITEBYTECODE='1'; .\.venv\Scripts\python.exe -m unittest discove
 - 不覆盖、移动或改写未跟踪的`.agents/conv_full(2).json`和`.agents/conv_full(2).txt`。它们是未测试伪代码原件，不是正式配置源。
 - 修改前检查`git status --short`，保留无关用户改动；禁止无批准使用`git reset --hard`、`git checkout --`或删除恢复点。
 - 业务/合同/规则变更须聚焦测试和原子提交；台账记录完整hash、父提交、范围、验证与回退。
+- **只有操作者明确要求“推送”“发布到GitHub”或“同步云端”时才允许执行远端推送。** 本地提交、阶段完成、用户要求“保存”或普通任务结束都不自动授权`git push`；不得为了备份或方便自行推送。
+- 根仓既有直接推送远端为`origin=https://github.com/crithbo/resnet50_int8.git`。普通推送使用现有Git凭据，不把GitHub插件或`gh`当作前置；只有用户明确要求PR、Issue、Review或插件操作时才使用对应GitHub工具。
+- 用户授权直接推送后，固定执行：`git status -sb`核对范围；`git fetch origin`刷新远端；用`git rev-list --left-right --count origin/main...HEAD`确认远端独有提交数为0；只执行非强制`git push origin HEAD:main`；最后用`git ls-remote origin refs/heads/main`确认远端SHA与`git rev-parse HEAD`一致。若远端分叉、仓库URL异常、认证失败或需要force，立即停止并报告，不自动改写远端历史。
+- 推送只传递已提交对象。工作树中的未跟踪/未暂存文件不得为“顺便上传”而加入提交；本项目尤其要继续排除`.agents/conv_full(2).json/.txt`，除非操作者另行明确授权。
 
 ## 9. 文档更新规则
 
