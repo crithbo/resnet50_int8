@@ -11,14 +11,14 @@ from pathlib import Path
 from typing import Any, Sequence
 
 
-LOCK_VERSION = "0.3"
+LOCK_VERSION = "0.4"
 COMMIT_RE = re.compile(r"^[0-9a-f]{40}$")
 SHA256_RE = re.compile(r"^[0-9a-f]{64}$")
 REQUIRED_FIELDS = {
     "name",
     "path",
     "upstream",
-    "private_mirror",
+    "mirror",
     "branch",
     "commit",
     "dirty",
@@ -182,9 +182,9 @@ def load_lock_document(path: Path) -> RepositoryLock:
         for field in ("upstream", "branch"):
             if not isinstance(repository[field], str) or not repository[field]:
                 raise RepositoryLockError(f"{name}.{field} must be a non-empty string")
-        mirror = repository["private_mirror"]
+        mirror = repository["mirror"]
         if mirror is not None and (not isinstance(mirror, str) or not mirror):
-            raise RepositoryLockError(f"{name}.private_mirror must be null or non-empty")
+            raise RepositoryLockError(f"{name}.mirror must be null or non-empty")
         if not isinstance(repository["commit"], str) or not COMMIT_RE.fullmatch(
             repository["commit"]
         ):
@@ -340,8 +340,8 @@ def verify_repository(root: Path, repository: dict[str, Any]) -> RepositoryState
         )
     remotes = _remote_urls(target)
     expected_urls = [repository["upstream"]]
-    if repository["private_mirror"]:
-        expected_urls.append(repository["private_mirror"])
+    if repository["mirror"]:
+        expected_urls.append(repository["mirror"])
     missing_urls = [url for url in expected_urls if url not in remotes]
     if missing_urls:
         raise RepositoryLockError(
@@ -364,9 +364,9 @@ def sync_repository(root: Path, repository: dict[str, Any]) -> RepositoryState:
         raise RepositoryLockError(
             f"refusing to sync shared linked repository: {repository['name']}"
         )
-    mirror = repository["private_mirror"]
+    mirror = repository["mirror"]
     preferred_url = mirror or repository["upstream"]
-    preferred_name = "private" if mirror else "origin"
+    preferred_name = "mirror" if mirror else "origin"
     created = not target.exists()
     if created:
         _git(
@@ -389,7 +389,7 @@ def sync_repository(root: Path, repository: dict[str, Any]) -> RepositoryState:
 
     _set_remote(target, "origin", repository["upstream"])
     if mirror:
-        _set_remote(target, "private", mirror)
+        _set_remote(target, "mirror", mirror)
     object_check = _git(
         target, "cat-file", "-e", f"{repository['commit']}^{{commit}}", check=False
     )

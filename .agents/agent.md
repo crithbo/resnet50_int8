@@ -105,6 +105,7 @@ ADR-008裁决正式配置来自`ndp-sim-ref`；ADR-009与`contracts/hardware_app
 ## 6. 本地执行入口
 
 ```powershell
+python bootstrap.py
 .\.venv\Scripts\python.exe tools\sync_repositories.py verify
 $env:PYTHONDONTWRITEBYTECODE='1'; .\.venv\Scripts\python.exe -m unittest discover -s tests -v
 .\.venv\Scripts\python.exe tools\run_w5_conv_preflight.py

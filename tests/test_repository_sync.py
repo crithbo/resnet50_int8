@@ -11,6 +11,7 @@ from io import StringIO
 from pathlib import Path
 from unittest.mock import patch
 
+import bootstrap
 from tools.sync_repositories import (
     RepositoryLockError,
     load_lock,
@@ -71,7 +72,7 @@ def record(name: str, commit: str, upstream: str) -> dict[str, object]:
         "name": name,
         "path": name,
         "upstream": upstream,
-        "private_mirror": None,
+        "mirror": None,
         "branch": "main",
         "commit": commit,
         "dirty": False,
@@ -80,6 +81,20 @@ def record(name: str, commit: str, upstream: str) -> dict[str, object]:
 
 
 class RepositorySyncTests(unittest.TestCase):
+    def test_bootstrap_syncs_all_locks_then_verifies_them(self) -> None:
+        with patch(
+            "bootstrap.repository_sync_main", side_effect=(0, 0)
+        ) as repository_sync:
+            self.assertEqual(bootstrap.main(), 0)
+        self.assertEqual(repository_sync.call_count, 2)
+        self.assertEqual(repository_sync.call_args_list[0].args[0][0], "sync")
+        self.assertEqual(repository_sync.call_args_list[1].args[0][0], "verify")
+
+    def test_bootstrap_stops_when_sync_fails(self) -> None:
+        with patch("bootstrap.repository_sync_main", return_value=2) as repository_sync:
+            self.assertEqual(bootstrap.main(), 2)
+        repository_sync.assert_called_once()
+
     def test_project_lock_and_schema_describe_the_same_contract(self) -> None:
         lock = load_lock_document(PROJECT_ROOT / "repos.lock.json")
         repositories = list(lock.repositories)
@@ -88,7 +103,7 @@ class RepositorySyncTests(unittest.TestCase):
                 encoding="utf-8"
             )
         )
-        self.assertEqual(schema["properties"]["schema_version"]["const"], "0.3")
+        self.assertEqual(schema["properties"]["schema_version"]["const"], "0.4")
         self.assertEqual(
             set(schema["required"]),
             {"schema_version", "repositories", "external_evidence"},
@@ -119,7 +134,7 @@ class RepositorySyncTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             value = {
-                "schema_version": "0.3",
+                "schema_version": "0.4",
                 "repositories": [record("repo", "0" * 40, "https://example.invalid/repo.git")],
                 "external_evidence": [{}],
             }
@@ -192,7 +207,7 @@ class RepositorySyncTests(unittest.TestCase):
             payload = json.dumps(snapshot).encode("utf-8")
             path.write_bytes(payload)
             lock = {
-                "schema_version": "0.3",
+                "schema_version": "0.4",
                 "repositories": [
                     record("missing-reference-repo", "4" * 40, "https://example.invalid/ref.git")
                 ],
@@ -290,7 +305,7 @@ class RepositorySyncTests(unittest.TestCase):
             with self.assertRaisesRegex(RepositoryLockError, "refusing to sync dirty"):
                 sync_repository(root, record("repo", commit, upstream))
 
-    def test_sync_prefers_private_mirror_for_private_commit(self) -> None:
+    def test_sync_prefers_mirror_for_mirrored_commit(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             source = root / "source"
@@ -305,19 +320,19 @@ class RepositorySyncTests(unittest.TestCase):
             (source / "private.txt").write_text("private commit\n", encoding="utf-8")
             git(source, "add", "private.txt")
             git(source, "commit", "-m", "private")
-            private_commit = git(source, "rev-parse", "HEAD")
-            private = root / "private.git"
+            mirrored_commit = git(source, "rev-parse", "HEAD")
+            mirror = root / "mirror.git"
             subprocess.run(
-                ["git", "clone", "--bare", str(source), str(private)],
+                ["git", "clone", "--bare", str(source), str(mirror)],
                 cwd=root,
                 check=True,
                 capture_output=True,
             )
-            item = record("checkout", private_commit, upstream.as_uri())
-            item["private_mirror"] = private.as_uri()
+            item = record("checkout", mirrored_commit, upstream.as_uri())
+            item["mirror"] = mirror.as_uri()
             state = sync_repository(root, item)
-            self.assertEqual(state.head, private_commit)
-            self.assertIn(private.as_uri(), state.remotes)
+            self.assertEqual(state.head, mirrored_commit)
+            self.assertIn(mirror.as_uri(), state.remotes)
             self.assertIn(upstream.as_uri(), state.remotes)
 
 
