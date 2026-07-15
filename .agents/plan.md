@@ -19,8 +19,8 @@ $env:PYTHONDONTWRITEBYTECODE='1'; .\.venv\Scripts\python.exe -m unittest discove
 预期：
 
 - 除操作者保留的`.agents/conv_full(2).json`和`.agents/conv_full(2).txt`外，没有未解释改动；文档编辑中的预期差异先核对再继续。
-- `CGRA_SIM@53c41e0...`、`ndp-sim-ref@e299b28...`、`NDPFuncModel@9004ff7...`和RTL28静态证据匹配`repos.lock.json`。
-- 当前E2冻结点根仓回归260/260、NDP 21/21；测试数量可随提交增加，验收以零失败为准。
+- `CGRA_SIM@53c41e0...`、`ndp-sim-ref@5aa7d44...`、`NDPFuncModel@9004ff7...`和RTL28静态证据匹配`repos.lock.json`；`e299b28...`仍是不可变JSON/encoder配置基线且必须为当前execplan提交的祖先。
+- 当前E3冻结点根仓回归264/264、NDP 21/21、官方execplan 3/3；测试数量可随提交增加，验收以零失败为准。
 
 任一项失败时先判断环境、lock、用户改动或业务回归。不要直接重建W3、修改W4批准合同或重生成全部配置。
 
@@ -37,6 +37,8 @@ $env:PYTHONDONTWRITEBYTECODE='1'; .\.venv\Scripts\python.exe -m unittest discove
 | E1第二个1×1 | `51d6e787e1c4df1fa617a4a2aa3b0ffa0dfcdb46` | `node-0008`正式编码与config-bound三档P/D候选闭环 |
 | E2 NDP wide-output | `9004ff73e2e2d7c501f682de6df8543a45ae56cc` | 128 MiB显式shadow guard，容纳经容量审查的64→256实例 |
 | E2输出通道扩展 | `2ad29d247a296679d248e3923a7fadbccd23f8f3` | `node-0003`的32 shard、8 staging/owner与三档P/D候选闭环 |
+| 正式execplan typed transport | `5aa7d44aa2c58b7c86cfa32389d135246001629c` | 在`e299b28...`配置基线上增加typed constant/config原文与SHA的正式解析和寄存器绑定 |
+| E3 Conv typed transport闭环 | `f4dfe4b83efa442bc8c201bf5f8e2bc71636b124` | first/E1/E2共享同一`node_id`入口并删除`B_EXECPLAN_TYPED_TRANSPORT` |
 | 当前根仓HEAD | 接手时运行`git rev-parse HEAD` | 可能只增加文档/台账，不自动代表新数值版本 |
 
 首例交付目录为`artifacts/w5/hwop-0004-00/hardware_freeze/`：
@@ -79,9 +81,9 @@ $env:PYTHONDONTWRITEBYTECODE='1'; .\.venv\Scripts\python.exe -m unittest discove
 | W2/G2 | 通过 | 小Conv软件fixture通过，不外推为目标机规格 |
 | W3/G3 | 通过 | 78节点、133个`hw_op`、ORT节点与子步骤golden闭合 |
 | W4/G4 | 通过 | `w4_deepseek_hybrid28_resnet50_v1`、七族layout、93边、91条qparam链和批准合同闭合；无clean elaboration声明 |
-| W5/G5 | 首例冻结，G5仍false | 真实1×1累加+8份requant JSON正式编码；没有批准完整算子族/目标执行证据 |
+| W5/G5 | 三个1×1实例软件闭环，G5仍false | first/E1/E2均由正式encoder和typed request重建；没有批准完整算子族/目标执行证据 |
 | W6/G6 | config-bound两方P/D通过，G6仍false | NDP实际消费配置原文/SHA并三档bit-exact；它不是逐周期/bitstream目标模拟器 |
-| W7/G7 | 未开始 | 网络typed execplan、地址计划和Bank_data未闭合 |
+| W7/G7 | typed运输底座已具备，G7未开始 | Conv三实例typed request已闭合；整网顺序、地址/lifetime、cfg_pkg和Bank_data未闭合 |
 | W8/G8 | 未通过 | 冻结包可交硬件；精确配置硬件P/D未取得 |
 | W9/G9 | 未开始 | 全算子和整网三方回归未完成 |
 
@@ -98,11 +100,23 @@ $env:PYTHONDONTWRITEBYTECODE='1'; .\.venv\Scripts\python.exe -m unittest discove
 
 已删除首例阻塞`B_N2N_TARGET_SELECTOR`、`B_REQUANT_TARGET_NUMERICS`。旧结论“首例缺真实JSON”“仍是schema 0.2”“64通道requant未进入NDP”均已过时。
 
-首例配置侧只保留：
-
-- `B_EXECPLAN_TYPED_TRANSPORT`：network execplan尚不能无损传递逐实例typed qparams和全部目标字段。它不阻塞冻结包手工加载，但阻塞自动生成第二批/整网配置。
+首例及E1/E2配置侧不再保留`B_EXECPLAN_TYPED_TRANSPORT`：正式`OperatorSpec`现可无损保存typed constants、目标字段绑定、配置原文和SHA，三个实例均由同一`node_id` CLI重建并通过负向校验。该结论只覆盖已闭合Conv实例，不代表单算子运行包、其他算子handler、整网地址或Bank_data已完成。
 
 精确硬件P/D未取得是W8证据缺口，不再误写成selector、requant或JSON字段阻塞。
+
+### 5.1 当前单算子硬件执行策略【2026-07-15确认，in_progress】
+
+用户确认`ndp-sim-ref/model_execplan`自动生成的`execplan.txt`与`Bank_data`是可信的硬件侧入口。当前策略因此不再完全绕开execplan，而是在不改写冻结数值事实的前提下，为`node-0004`增加目标适配层，把冻结包变成该入口可直接消费的运行时执行包。
+
+- 唯一数值输入仍为`artifacts/w5/hwop-0004-00/hardware_freeze/`，freeze ID固定为`f687debd0215f1d29b6ca94176c4e9cbcf20434d58bce57c430129edb8922d5f`，manifest SHA-256固定为`72e17cb52c2948f86fe6b0e9b2715de57c5404a72a04f9514247f174e8a95550`；执行前逐文件核对manifest，不从当前工作树重新生成或覆盖v1冻结包。
+- 适配层把两个逻辑阶段展开为9个运行时算子：1个accumulate在28个slice上启动并写冻结P地址，8个requant shard按各自`selected_slices`启动、读取对应P半片并写冻结`staged_D_0/staged_D_1`地址。
+- 指令由`model_execplan`的正式`InstructionGenerator`生成；配置流使用冻结128-bit bitstream，配置长度按有效64-bit word数计算；数据/配置/execplan基址、slice mask和寄存器基址更新全部进入机器可校验的生成清单。
+- `sca_cfg.json`与`Bank_data`只预装`role=load_input`的A/B/bias/qparams、9份冻结配置流和`execplan.txt`；golden P/D与staged-D不得进入预加载清单，避免硬件结果被Golden污染。
+- 硬件dump合同固定为P地址区和两个staged-D地址区。P可直接导出；D必须把每个slice的两个`[sample,H,W,8]` half沿最后一维合并成冻结`[sample,H,W,16]` ABI，禁止按文件首尾拼接。
+- 三方判定为“冻结Golden ↔ 同一配置绑定的参考模型 ↔ `execplan.txt/Bank_data`硬件侧结果”；P/D各3,211,264元素必须0 mismatch，canonical SHA分别为`1ec864892d82279beff561927500f55ebec636daf2fb7c624a1e153dd5e17532`和`2793bbe64e2b3289657f1c77bad61ebc54a4672791093d5c19a66ca742e7376e`。
+- 正式证据必须保存源request/freeze hash、所有生成文件hash、硬件/RTL/固件/仿真器版本、真实运行命令、原始Bank dump和machine-readable comparison。该首例通过不外推为G7、其他shape/算子或整网通过。
+
+执行进度（2026-07-15）：冻结包本地完整性、地址无重叠和P/D自比对已经通过；E3 typed request运输已闭合，当前下一串行包是实现并验证`1 accumulate + 8 requant shard`的`model_execplan`运行包适配器。仓库内尚未发现实际消费`execplan.txt + Bank_data`的板卡/RTL仿真命令，执行包闭环后继续探测；若runner位于项目外，则按本节dump合同只补接该入口，不再回退到猜测寄存器协议。
 
 ## 6. 当前人员拆分，以冻结提交为边界
 
@@ -129,27 +143,28 @@ $env:PYTHONDONTWRITEBYTECODE='1'; .\.venv\Scripts\python.exe -m unittest discove
 
 操作者负责第二个1×1、Conv shape-family、其他算子族、typed execplan和最终综合。所有新实例在精确硬件证据前标`candidate`，首例freeze ID与硬件负责人镜像保持只读。
 
-当前工作包已推进到E3 `B_EXECPLAN_TYPED_TRANSPORT`：用首例、E1和E2三种已闭合实例冻结manifest/request schema，使shape、bias、per-channel qparams、rounding、地址和provenance自动进入handler/request，并让缺字段、错dtype、错SHA和旧16-slice路径在执行前失败。
+E3 `B_EXECPLAN_TYPED_TRANSPORT`已闭合。当前串行工作包是E3b：把首例typed request展开成`1 accumulate + 8 requant shard`运行包，经正式`model_execplan`生成`execplan.txt/Bank_data/sca_cfg`并证明没有golden预加载、地址漂移或阶段丢失；通过后才启动E4实例级并行。
 
 配置域暂定HIGH-4 `4/1/1`、LOW-28 `28/0/0`；每个新实例都要正式parser、placement、bitstream和数值复核。`ping_pong`由buffer生命周期和邻居接收单独裁决，不随selector机械变化。
 
 ### C. 公共合同工作【并入操作者主线，串行】
 
-- 实现`B_EXECPLAN_TYPED_TRANSPORT`：从typed contract/manifest把shape、bias、per-channel qparams、rounding、zero-point、saturation、地址和provenance无损传入execplan handler。
-- fail-closed拒绝缺字段、截断、资源越界、SHA不一致和旧16-slice路径。
+- E3 schema已冻结：shape、bias、per-channel qparams、rounding、zero-point、saturation、地址和provenance均通过typed contract/manifest进入execplan request；缺字段、截断、SHA不一致和旧16-slice路径已fail-closed。
+- E3b/E4不得静默修改公共schema；确需扩展字段时先停下实例，由主线串行升级合同、版本号并重跑first/E1/E2。
 - 公共schema、selector/ping-pong规则、合同、Git集成和全量回归由操作者主线串行修改；硬件反馈与扩展候选只能通过独立报告回灌，不直接改写真值。
 
 ## 7. 操作者主线总览
 
-E0～E3和公共合同修改保持串行；E3通过并冻结实例接口后，E4可把互不共享产物目录的shape实例分组并行，最后由主线串行合并、全量回归。首例硬件实跑继续作为外部独立并行项。
+E0～E3和公共合同修改保持串行；E3 typed接口已冻结，继续串行闭合E3b单算子运行包入口。E3b通过后，E4才把互不共享产物目录的shape实例分组并行，最后由主线串行合并、全量回归。首例硬件实跑继续作为外部独立并行项。
 
 | 顺序 | 工作包 | 状态 | 目标 | 进入条件 | 完成标志 |
 |---:|---|---|---|---|---|
 | E0 | 基线保护与参数化接口 | **completed** `a679df9e...` | 把首例硬编码入口变成`ConvInstanceSpec/request`驱动，同时保持首例全部hash不变 | 当前freeze可重建 | 首例JSON/bitstream/preflight/freeze逐字节不变，负向测试仍fail-closed |
 | E1 | 第二个真实1×1 | **completed** `51d6e787...` | 闭合`node-0008`的多K psum/requant | E0通过 | 三档P/D bit-exact，正式encoder与确定性通过 |
 | E2 | 输出通道扩展1×1 | **completed** `2ad29d24...` | 闭合`node-0003`的64→256输出通道与32个requant shard | E1通过 | 通道唯一覆盖、8 staging/owner inverse正确、三档P/D通过 |
-| E3 | typed transport | **in_progress** | 删除`B_EXECPLAN_TYPED_TRANSPORT`，让实例参数由manifest自动进入handler/request | E2通过，三种实例足以冻结schema | 首例、E1与E2由同一CLI重建；漏字段、错SHA、错dtype立即失败 |
-| E4 | 1×1 shape-family | pending；接口冻结后可实例级并行 | 覆盖15种1×1逻辑signature | E2/E3通过 | 每个signature代表例全算子通过；全部1×1实例配置可重建 |
+| E3 | typed transport | **completed** `f4dfe4bb...` | 删除`B_EXECPLAN_TYPED_TRANSPORT`，让实例参数由manifest自动进入handler/request | E2通过，三种实例足以冻结schema | 首例、E1与E2由同一CLI重建；漏字段、错SHA、错dtype立即失败 |
+| E3b | 单算子`model_execplan`运行包 | **in_progress（当前下一包）** | 将首例2个逻辑阶段展开为9个运行时算子并生成可信`execplan.txt/Bank_data/sca_cfg` | E3通过、freeze v1只读 | 正式入口可重建；只预载输入/配置；阶段、mask、地址和hash可审计 |
+| E4 | 1×1 shape-family | pending；E3b后实例级可并行 | 覆盖15种1×1逻辑signature | E3b通过 | 每个signature代表例全算子通过；全部1×1实例配置可重建 |
 | E5 | 3×3与7×7 | pending | 参数化kernel/pad/stride/邻域与stem特殊路径 | E4稳定 | 4种3×3和1种7×7代表例三档P/D通过 |
 | E6 | 全53 Conv | pending | 由20个signature扩展到53个正式模型实例 | E5通过 | 53实例无缺失、无重复、全部encode/config-bound比较通过 |
 | O1～O6 | 其他算子族 | pending；族间可并行、族内串行 | Quant、MaxPool、Add、GAP、MatMul、Dequant/View逐族闭环 | Conv合同稳定 | 78节点/133 hw_op配置覆盖完整，族内数值门通过 |
@@ -178,20 +193,11 @@ NDPFuncModel参数化提交为`e35b24a446bdaeb7a939ab50d8e0cad5fe2a393c`；根�
 
 `2ad29d247a296679d248e3923a7fadbccd23f8f3`已闭合`node-0003/hwop-0003-00~01`：`Cin=64,Cout=256,H/W=56`，正式累加编码46连接/cost 0且双次一致，32个requant shard各21连接/cost 0且双次一致；256通道恰好覆盖一次，每个HIGH destination使用8份staging D并成功inverse，28个physical writeback全部通过。
 
-NDP单坐标、首tile 602,112元素和全算子12,845,056元素的P/D全部bit-exact；通道0/128/255另有坐标级P/D与物理地址证据。目标每slice使用3,165,824 B、容量25,165,824 B；NDP compact shadow约105.5 MB，`9004ff73e2e2d7c501f682de6df8543a45ae56cc`把仍然显式的功能探针guard从64 MiB审查提升到128 MiB。根仓260/260、NDP 21/21和lock验证通过；hardware/G5/G6/G8仍为false。详细过程与回退点已移入`history.md`，当前只执行E3。
+NDP单坐标、首tile 602,112元素和全算子12,845,056元素的P/D全部bit-exact；通道0/128/255另有坐标级P/D与物理地址证据。目标每slice使用3,165,824 B、容量25,165,824 B；NDP compact shadow约105.5 MB，`9004ff73e2e2d7c501f682de6df8543a45ae56cc`把仍然显式的功能探针guard从64 MiB审查提升到128 MiB。根仓260/260、NDP 21/21和lock验证通过；hardware/G5/G6/G8仍为false。详细过程与回退点已移入`history.md`。
 
-### E3：删除`B_EXECPLAN_TYPED_TRANSPORT`
+### E3：已完成摘要
 
-先用首例、E1、E2三种实例定义schema，再扩网络handler：
-
-1. `OperatorSpec`显式携带或内容寻址引用typed attributes/constants；
-2. handler不得把FP32 scale塞进整数`params`，不得从文件名推断channel或shape；
-3. 每个目标字段保留initializer/tensor ID、dtype、shape、值hash、派生公式和写入位置；
-4. 累加和requant子配置共享同一个实例ID，manifest明确一对多；
-5. adapter验证配置原文/SHA、64/256通道覆盖、slice、地址、循环和flush；
-6. 同一CLI只改`node_id`即可重建首例/E1/E2，输出根按`artifacts/w5/<hw_op_id>/`隔离。
-
-完成门E3：删除阻塞项；三实例正向通过，缺scale/zp/bias、axis丢失、float截断、旧16-slice字段和SHA漂移的测试全部失败；首例freeze不变。
+正式execplan提交`5aa7d44aa...`和根仓`f4dfe4bb...`已闭合typed constant/config transport。first、E1、E2由同一CLI只改`node_id`重建；缺scale/zp/bias、axis丢失、float截断、旧16-slice字段和SHA漂移全部在执行前失败。`B_EXECPLAN_TYPED_TRANSPORT`已删除，W4批准快照与首例hardware freeze v1保持字节不变；详细字段、SHA、测试和回退点只见`history.md`。
 
 ## 9. E4～E6：Conv shape-family扩展矩阵
 
