@@ -19,6 +19,7 @@ from pathlib import Path
 import numpy as np
 
 from ..conv28_layout import Conv28PhysicalBundle, QLinearConvPhysicalLayout
+from ..conv_instance import ConvTargetRequest
 from ..conv_layout import ConvPhysicalBundle, PhysicalRegion
 from ..errors import PipelineError
 from ..memory import ByteProvenance, DramGeometry, SparsePhysicalImage
@@ -568,40 +569,45 @@ class NdpRtl28FunctionalAdapter:
         layout: QLinearConvPhysicalLayout,
         bundle: Conv28PhysicalBundle,
         *,
-        config_path: Path,
-        semantic_contract_path: Path,
-        requant_manifest_path: Path,
-        requant_config_paths: tuple[Path, ...],
+        request: ConvTargetRequest,
     ) -> NdpTargetConfigConvResult:
         """Bind the real target JSON to one exact and two bulk NDP comparisons."""
 
         self._require_layout(layout, bundle)
+        request.validate_checked_in_bindings()
+        spec = request.spec
         if (
-            bundle.plan.activation_shape != (16, 64, 56, 56)
-            or bundle.plan.weight_shape != (64, 64, 1, 1)
-            or bundle.plan.output_shape != (16, 64, 56, 56)
-            or bundle.plan.strides != (1, 1)
-            or bundle.plan.pads != (0, 0, 0, 0)
-            or bundle.plan.dilations != (1, 1)
+            bundle.plan.activation_shape != spec.activation_shape
+            or bundle.plan.weight_shape != spec.weight_shape
+            or bundle.plan.output_shape != spec.output_shape
+            or bundle.plan.strides != spec.strides
+            or bundle.plan.pads != spec.pads
+            or bundle.plan.dilations != spec.dilations
+            or bundle.plan.group != spec.group
+            or bundle.plan.profile_id != spec.profile_id
         ):
-            raise ValueError("target config adapter accepts only the bound real 1x1 Conv")
-        config_text = config_path.read_text(encoding="utf-8")
-        semantic_text = semantic_contract_path.read_text(encoding="utf-8")
+            raise ValueError("target config adapter request differs from the physical bundle")
+        config_text = request.accumulate_config_path.read_text(encoding="utf-8")
+        semantic_text = request.semantic_contract_path.read_text(encoding="utf-8")
         config_sha256 = hashlib.sha256(config_text.encode("utf-8")).hexdigest()
         semantic_sha256 = hashlib.sha256(semantic_text.encode("utf-8")).hexdigest()
-        requant_manifest_text = requant_manifest_path.read_text(encoding="utf-8")
+        requant_manifest_text = request.requant_manifest_path.read_text(encoding="utf-8")
         requant_manifest = json.loads(requant_manifest_text)
         requant_manifest_sha256 = hashlib.sha256(
             requant_manifest_text.encode("utf-8")
         ).hexdigest()
-        if len(requant_config_paths) != 8:
-            raise ValueError("target requant adapter requires exactly eight configs")
+        if len(request.requant_config_paths) != spec.requant_shard_count:
+            raise ValueError("target requant adapter config coverage differs")
         requant_configs = []
-        for path in requant_config_paths:
+        for path, shard in zip(
+            request.requant_config_paths,
+            requant_manifest.get("shards", []),
+            strict=True,
+        ):
             text = path.read_text(encoding="utf-8")
             requant_configs.append(
                 {
-                    "config_path": f"conv_1x1_requant_real/{path.name}",
+                    "config_path": shard["config_path"],
                     "config_text": text,
                     "config_sha256": hashlib.sha256(text.encode("utf-8")).hexdigest(),
                 }
@@ -693,7 +699,7 @@ class NdpRtl28FunctionalAdapter:
                 }
             )
         bulk_job = {
-            "name": "hwop-0004_target_config_full",
+            "name": request.target_job_name,
             "profile_id": bundle.plan.profile_id,
             "activation_shape": list(bundle.plan.activation_shape),
             "weight_shape": list(bundle.plan.weight_shape),
@@ -709,11 +715,21 @@ class NdpRtl28FunctionalAdapter:
                 },
                 {
                     "name": "first_tile",
-                    "ranges": {"n": [0, 3], "k": [0, 16], "h": [0, 56], "w": [0, 56]},
+                    "ranges": {
+                        "n": [0, spec.first_group_sample_count],
+                        "k": [0, bundle.plan.k_tile],
+                        "h": [0, spec.output_height],
+                        "w": [0, spec.output_width],
+                    },
                 },
                 {
                     "name": "full_operator",
-                    "ranges": {"n": [0, 16], "k": [0, 64], "h": [0, 56], "w": [0, 56]},
+                    "ranges": {
+                        "n": [0, spec.batch_size],
+                        "k": [0, spec.output_channels],
+                        "h": [0, spec.output_height],
+                        "w": [0, spec.output_width],
+                    },
                 },
             ],
         }

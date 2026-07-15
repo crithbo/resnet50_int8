@@ -7,6 +7,10 @@ import subprocess
 import sys
 from pathlib import Path
 
+from resnet50_pipeline.conv_instance import (
+    FIRST_REAL_CONV_NODE_ID,
+    load_conv_instance_spec,
+)
 from generate_conv_1x1_requant_real import OUTPUT_ROOT, build_bundle
 
 
@@ -84,20 +88,27 @@ def _encode(config: Path, output: Path) -> dict[str, dict[str, int | str]]:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Rebuild all real Conv requant shards twice")
+    parser.add_argument("--node-id", default=FIRST_REAL_CONV_NODE_ID)
+    parser.add_argument("--config-root", type=Path, default=OUTPUT_ROOT)
     parser.add_argument(
         "--output",
         type=Path,
         default=ROOT / "artifacts" / "w5" / "conv_1x1_requant_real",
     )
     args = parser.parse_args()
-    _, generated = build_bundle()
+    spec = load_conv_instance_spec(ROOT, args.node_id)
+    try:
+        config_root_relative = args.config_root.resolve().relative_to(ROOT).as_posix()
+    except ValueError as error:
+        raise ValueError("requant config root must stay inside the project root") from error
+    _, generated = build_bundle(spec, config_root_relative=config_root_relative)
     for name, expected in generated.items():
-        if (OUTPUT_ROOT / name).read_bytes() != expected:
+        if (args.config_root / name).read_bytes() != expected:
             raise ValueError(f"checked-in requant output differs: {name}")
     observed = {}
-    for shard_index in range(8):
+    for shard_index in range(spec.requant_shard_count):
         shard_name = f"shard-{shard_index:02d}"
-        config = OUTPUT_ROOT / f"{shard_name}.json"
+        config = args.config_root / f"{shard_name}.json"
         first = _encode(config, args.output / "encode-a" / shard_name)
         second = _encode(config, args.output / "encode-b" / shard_name)
         if first != second:
@@ -107,7 +118,7 @@ def main() -> int:
         json.dumps(
             {
                 "status": "official_real_conv_requant_encoder_passed",
-                "shard_count": 8,
+                "shard_count": spec.requant_shard_count,
                 "connections_per_shard": 21,
                 "mapping_cost": 0,
                 "repeat_outputs_identical": True,

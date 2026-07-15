@@ -2,9 +2,16 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
 from copy import deepcopy
 from pathlib import Path
 from typing import Any
+
+from resnet50_pipeline.conv_instance import (
+    FIRST_REAL_CONV_NODE_ID,
+    ConvInstanceSpec,
+    load_conv_instance_spec,
+)
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -17,7 +24,10 @@ def _load(path: Path) -> dict[str, Any]:
     return value
 
 
-def build_real_1x1(source: dict[str, Any]) -> dict[str, Any]:
+def build_real_1x1(
+    source: dict[str, Any],
+    spec: ConvInstanceSpec | None = None,
+) -> dict[str, Any]:
     """Lower the reviewed senior Conv skeleton to the real 1x1 microprogram.
 
     The static JSON is one sample's SA accumulation microprogram.  Batch-16 and
@@ -25,25 +35,34 @@ def build_real_1x1(source: dict[str, Any]) -> dict[str, Any]:
     keeps batch ownership out of a per-slice loop tree that has no batch field.
     """
 
+    spec = spec or load_conv_instance_spec(ROOT, FIRST_REAL_CONV_NODE_ID)
+    spec.validate()
+    if spec.kernel != (1, 1) or spec.strides != (1, 1) or spec.pads != (0, 0, 0, 0):
+        raise ValueError("real 1x1 generator requires kernel1/stride1/pad0")
+    output_blocks = math.ceil(spec.output_channels / 32)
+    spatial_blocks = math.ceil(spec.output_height / 32)
+    c_quartets = math.ceil(spec.c_tile / 4)
+    k_register_groups = math.ceil(spec.k_tile / 4)
+
     config = deepcopy(source)
     loops = config["dram_loop_configs"]
     ranges = {
-        "LC0": (0, 2, 1),   # k_block: K / 32
-        "LC1": (0, 56, 1),  # q
-        "LC2": (0, 2, 1),   # p_block: ceil(P / 32)
-        "LC3": (0, 4, 1),   # shared C quartet
-        "LC4": (0, 1, 1),   # s for 1x1
-        "LC5": (0, 1, 1),   # r for 1x1
-        "LC6": (0, 4, 1),   # weight C quartet
-        "LC7": (0, 1, 1),   # s replica
-        "LC8": (0, 1, 1),   # r replica
-        "LC9": (0, 4, 1),   # k register group
+        "LC0": (0, output_blocks, 1),  # k_block: ceil(K / 32)
+        "LC1": (0, spec.output_width, 1),  # q
+        "LC2": (0, spatial_blocks, 1),  # p_block: ceil(P / 32)
+        "LC3": (0, c_quartets, 1),  # local C quartets
+        "LC4": (0, spec.kernel[1], 1),  # s
+        "LC5": (0, spec.kernel[0], 1),  # r
+        "LC6": (0, c_quartets, 1),  # weight local C quartets
+        "LC7": (0, spec.kernel[1], 1),  # s replica
+        "LC8": (0, spec.kernel[0], 1),  # r replica
+        "LC9": (0, k_register_groups, 1),  # k register group
         "LC10": (0, 4, 1),  # p register group
         "LC11": (0, 8, 4),  # p PE offset: 0, 4
-        "LC12": (0, 2, 1),  # k PE offset
-        "LC13": (0, 2, 1),  # placement replica of k_block
-        "LC14": (0, 56, 1), # placement replica of q
-        "LC15": (0, 2, 1),  # placement replica of p_block
+        "LC12": (0, output_blocks, 1),  # k PE offset
+        "LC13": (0, output_blocks, 1),  # placement replica of k_block
+        "LC14": (0, spec.output_width, 1),  # placement replica of q
+        "LC15": (0, spatial_blocks, 1),  # placement replica of p_block
     }
     if set(loops) != set(ranges):
         raise ValueError("Conv source loop inventory differs from the reviewed skeleton")
@@ -101,8 +120,13 @@ def build_real_1x1(source: dict[str, Any]) -> dict[str, Any]:
     streams = config["stream_engine"]
     # Target JSON port names follow the senior skeleton: A=weight,
     # B=activation, C=bias, D=INT32 accumulator writeback.
-    streams["stream0"]["dim_stride"] = [128, 2048, 128]
+    streams["stream0"]["dim_stride"] = [128, spec.input_channels * 32, 128]
     streams["stream1"]["idx"] = ["DRAM_LC.LC6", "LC_PE.PE2", "LC_PE.PE1"]
+    streams["stream1"]["dim_stride"] = [
+        spec.output_height * spec.output_width * 4,
+        4,
+        spec.output_width * 4,
+    ]
     streams["stream1"]["padding_enable"] = [0, 0, 0]
     streams["stream1"]["idx_padding_range"] = {
         "low_bound": [None, None, None],
@@ -111,16 +135,26 @@ def build_real_1x1(source: dict[str, Any]) -> dict[str, Any]:
     streams["stream1"]["tailing_enable"] = [0, 0, 1]
     streams["stream1"]["idx_tailing_range"] = {
         "low": [None, None, 0],
-        "up": [None, None, 55],
+        "up": [None, None, spec.output_width - 1],
     }
     streams["stream2"]["idx"] = ["LC_PE.PE6", "DRAM_LC.LC14", "LC_PE.PE4"]
+    streams["stream2"]["dim_stride"] = [
+        spec.output_height * spec.output_width * 4,
+        4,
+        spec.output_width * 4,
+    ]
     streams["stream2"]["tailing_enable"] = [0, 0, 1]
     streams["stream2"]["idx_tailing_range"] = {
         "low": [None, None, 0],
-        "up": [None, None, 55],
+        "up": [None, None, spec.output_width - 1],
     }
     neighbor = next(iter(config["n2n"].values()))
-    neighbor.update(mem_loop=4, src_slice_sel=1, dst_slice_sel=1, ping_pong=0)
+    neighbor.update(
+        mem_loop=spec.n2n_mem_loop,
+        src_slice_sel=spec.n2n_src_slice_sel,
+        dst_slice_sel=spec.n2n_dst_slice_sel,
+        ping_pong=spec.n2n_ping_pong,
+    )
     return config
 
 
@@ -128,10 +162,15 @@ def main() -> int:
     parser = argparse.ArgumentParser(description="Generate the reviewed real 1x1 Conv JSON")
     parser.add_argument("--source", type=Path, default=ROOT / "conv_full.json")
     parser.add_argument("--output", type=Path, default=ROOT / "conv_1x1_real.json")
+    parser.add_argument("--node-id", default=FIRST_REAL_CONV_NODE_ID)
     parser.add_argument("--check", action="store_true")
     args = parser.parse_args()
     payload = json.dumps(
-        build_real_1x1(_load(args.source)), ensure_ascii=False, indent=2
+        build_real_1x1(
+            _load(args.source), load_conv_instance_spec(ROOT, args.node_id)
+        ),
+        ensure_ascii=False,
+        indent=2,
     ) + "\n"
     if args.check:
         if not args.output.is_file() or args.output.read_text(encoding="utf-8") != payload:

@@ -8,6 +8,10 @@ import sys
 from pathlib import Path
 from typing import Any
 
+from resnet50_pipeline.conv_instance import (
+    FIRST_REAL_CONV_NODE_ID,
+    build_conv_target_request,
+)
 from run_conv_full_encoder import _connection_pairs
 
 
@@ -27,11 +31,11 @@ def _sha256(path: Path) -> str:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Rebuild the real 1x1 Conv bitstream")
-    parser.add_argument("--config", type=Path, default=ROOT / "conv_1x1_real.json")
+    parser.add_argument("--node-id", default=FIRST_REAL_CONV_NODE_ID)
+    parser.add_argument("--config", type=Path)
     parser.add_argument(
         "--contract",
         type=Path,
-        default=ROOT / "contracts" / "conv_1x1_lc_pe_stream_semantics.json",
     )
     parser.add_argument(
         "--output",
@@ -39,10 +43,13 @@ def main() -> int:
         default=ROOT / "artifacts" / "w5" / "conv_1x1_real" / "rebuild",
     )
     args = parser.parse_args()
+    request = build_conv_target_request(ROOT, args.node_id)
+    config_path = args.config or request.accumulate_config_path
+    contract_path = args.contract or request.semantic_contract_path
 
-    config = _load(args.config)
-    contract = _load(args.contract)
-    if _sha256(args.config) != contract["config"]["sha256"]:
+    config = _load(config_path)
+    contract = _load(contract_path)
+    if _sha256(config_path) != contract["config"]["sha256"]:
         raise ValueError("real 1x1 Conv config hash differs")
     pairs = _connection_pairs(config)
     cache_key = hashlib.sha256(
@@ -74,7 +81,7 @@ def main() -> int:
             "utf8",
             "bitstream/main.py",
             "-c",
-            str(args.config.resolve()),
+            str(config_path.resolve()),
             "-o",
             str(args.output.resolve()),
             "--heuristic-iterations",

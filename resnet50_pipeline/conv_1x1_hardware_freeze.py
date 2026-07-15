@@ -8,18 +8,14 @@ from typing import Any
 
 import numpy as np
 
+from .conv_instance import ConvTargetRequest, build_conv_target_request
 from .conv28_layout import GROUP4X7_BATCH_CHANNEL28_PROFILE, QLinearConvPhysicalLayout
 from .typed_config_parameters import validate_typed_config_parameter_contract
 from .w5_conv_preflight import (
-    ACCUMULATE_HW_OP_ID,
-    REQUANT_HW_OP_ID,
-    SELECTED_NODE_ID,
     _initializer,
     _initializer_values,
     _load_json,
     _load_npy,
-    _port,
-    _record_by_hw_op,
     validate_w5_first_conv_preflight,
 )
 
@@ -73,11 +69,14 @@ def _copy_relative(root: Path, source: Path, relative: str) -> dict[str, Any]:
     }
 
 
-def _selected_bundle(project_root: Path):
+def _selected_bundle(
+    project_root: Path,
+    request: ConvTargetRequest | None = None,
+):
+    request = request or build_conv_target_request(project_root)
+    spec = request.spec
     typed = _load_json(project_root / "contracts" / "typed_config_parameter_contract.json")
     validate_typed_config_parameter_contract(typed)
-    accumulate = _record_by_hw_op(typed, ACCUMULATE_HW_OP_ID)
-    requant = _record_by_hw_op(typed, REQUANT_HW_OP_ID)
     runtime_root = project_root / "artifacts" / "w3" / "golden_batch16"
     subop_root = project_root / "artifacts" / "w3" / "subop_batch16"
     runtime_manifest = _load_json(runtime_root / "manifest.json")
@@ -86,17 +85,20 @@ def _selected_bundle(project_root: Path):
         project_root / "artifacts" / "reference_model" / "resnet50-v1-12-int8.onnx"
     )
     descriptors = {
-        "A": _port(accumulate, "inputs", "x"),
-        "B": _port(accumulate, "inputs", "w"),
-        "bias": _port(accumulate, "inputs", "bias"),
-        "w_zero_point": _port(accumulate, "inputs", "w_zero_point"),
-        "x_zero_point": _port(accumulate, "inputs", "x_zero_point"),
-        "x_scale": _port(requant, "inputs", "x_scale"),
-        "w_scale": _port(requant, "inputs", "w_scale"),
-        "y_scale": _port(requant, "inputs", "y_scale"),
-        "y_zero_point": _port(requant, "inputs", "y_zero_point"),
-        "P": requant["ports"]["inputs"][0],
-        "D": requant["ports"]["outputs"][0],
+        name: spec.tensor(name).descriptor()
+        for name in (
+            "A",
+            "B",
+            "bias",
+            "w_scale",
+            "w_zero_point",
+            "x_scale",
+            "x_zero_point",
+            "y_scale",
+            "y_zero_point",
+            "P",
+            "D",
+        )
     }
     values = {
         "A": _load_npy(
@@ -121,7 +123,6 @@ def _selected_bundle(project_root: Path):
             runtime_manifest,
             descriptors[port],
         )
-    attributes = accumulate["logical_geometry"]["attributes"]
     layout = QLinearConvPhysicalLayout(
         profile_id=GROUP4X7_BATCH_CHANNEL28_PROFILE
     )
@@ -137,10 +138,10 @@ def _selected_bundle(project_root: Path):
         y_zero_point=values["y_zero_point"],
         accumulator=values["P"],
         output=values["D"],
-        strides=tuple(attributes["strides"]),
-        pads=tuple(attributes["pads"]),
-        dilations=tuple(attributes["dilations"]),
-        group=int(attributes["group"]),
+        strides=spec.strides,
+        pads=spec.pads,
+        dilations=spec.dilations,
+        group=spec.group,
         tensor_ids={name: descriptor["tensor_id"] for name, descriptor in descriptors.items()},
     )
     layout.validate(bundle)
@@ -150,14 +151,16 @@ def _selected_bundle(project_root: Path):
 def export_hardware_freeze(project_root: Path, output_root: Path) -> dict[str, Any]:
     project_root = project_root.resolve()
     output_root = output_root.resolve()
-    preflight_path = project_root / "artifacts" / "w5" / "hwop-0004-00" / "preflight.json"
+    request = build_conv_target_request(project_root)
+    spec = request.spec
+    preflight_path = request.preflight_path
     preflight_payload = preflight_path.read_bytes()
     preflight = json.loads(preflight_payload)
     validate_w5_first_conv_preflight(preflight)
     if preflight["gate_state"].get("single_operator_manual_hardware_handoff_ready") is not True:
         raise ValueError("W5 report does not authorize the manual hardware handoff")
 
-    values, bundle = _selected_bundle(project_root)
+    values, bundle = _selected_bundle(project_root, request)
     files: list[dict[str, Any]] = []
     regions: list[dict[str, Any]] = []
     for region in bundle.regions:
@@ -187,10 +190,16 @@ def export_hardware_freeze(project_root: Path, output_root: Path) -> dict[str, A
             }
         )
 
-    requant_manifest = _load_json(project_root / "conv_1x1_requant_real" / "manifest.json")
+    requant_manifest = _load_json(request.requant_manifest_path)
+    staged_base = int(requant_manifest["physical_layout"]["staged_d_offset"])
+    staged_bytes = int(requant_manifest["physical_layout"]["staged_half_bytes"])
+    staged_offsets = [
+        staged_base + index * staged_bytes
+        for index in range(spec.requant_shards_per_owner)
+    ]
     for slice_id in range(bundle.plan.geometry.slice_count):
         slice_base = bundle.plan.geometry.slice_base(slice_id)
-        for local_half, offset in enumerate((904400, 979664)):
+        for local_half, offset in enumerate(staged_offsets):
             regions.append(
                 {
                     "port": f"staged_D_{local_half}",
@@ -200,7 +209,12 @@ def export_hardware_freeze(project_root: Path, output_root: Path) -> dict[str, A
                     "base_address_hex": f"0x{slice_base + offset:08x}",
                     "payload_bytes": requant_manifest["physical_layout"]["staged_half_bytes"],
                     "size_bytes": requant_manifest["physical_layout"]["staged_half_bytes"],
-                    "physical_shape": [3, 56, 56, 8],
+                    "physical_shape": [
+                        spec.first_group_sample_count,
+                        spec.output_height,
+                        spec.output_width,
+                        spec.ga_lane_count,
+                    ],
                     "dtype": "uint8",
                 }
             )
@@ -219,17 +233,17 @@ def export_hardware_freeze(project_root: Path, output_root: Path) -> dict[str, A
 
     config_records = []
     for source, relative in [
-        (project_root / "conv_1x1_real.json", "configs/conv_1x1_real.json"),
+        (request.accumulate_config_path, "configs/conv_1x1_real.json"),
         (
-            project_root / "conv_1x1_requant_real" / "manifest.json",
+            request.requant_manifest_path,
             "configs/requant/manifest.json",
         ),
         *[
             (
-                project_root / "conv_1x1_requant_real" / f"shard-{index:02d}.json",
+                request.requant_root / f"shard-{index:02d}.json",
                 f"configs/requant/shard-{index:02d}.json",
             )
-            for index in range(8)
+            for index in range(spec.requant_shard_count)
         ],
     ]:
         record = _copy_relative(output_root, source, relative)
@@ -249,7 +263,7 @@ def export_hardware_freeze(project_root: Path, output_root: Path) -> dict[str, A
         )
         for width in ("128b", "64b")
     ]
-    for shard_index in range(8):
+    for shard_index in range(spec.requant_shard_count):
         bitstream_sources.extend(
             (
                 project_root
@@ -290,8 +304,8 @@ def export_hardware_freeze(project_root: Path, output_root: Path) -> dict[str, A
         "contract_type": FREEZE_CONTRACT_TYPE,
         "status": "manual_hardware_handoff_ready",
         "identity": {
-            "node_id": SELECTED_NODE_ID,
-            "hw_op_ids": [ACCUMULATE_HW_OP_ID, REQUANT_HW_OP_ID],
+            "node_id": spec.node_id,
+            "hw_op_ids": [spec.accumulate_hw_op_id, spec.requant_hw_op_id],
             "preflight_sha256": _sha256(preflight_payload),
             "ndp_source_commit": preflight["ndp_conv_simulator_first_coordinate"]["source_commit"],
             "request_schema": preflight["ndp_target_config_comparison"]["request_schema"],
@@ -300,8 +314,8 @@ def export_hardware_freeze(project_root: Path, output_root: Path) -> dict[str, A
             "profile_id": bundle.plan.profile_id,
             "slice_count": bundle.plan.geometry.slice_count,
             "per_slice_used_bytes": bundle.plan.per_slice_used_bytes,
-            "staged_d_offsets": [904400, 979664],
-            "staged_half_bytes": 75264,
+            "staged_d_offsets": staged_offsets,
+            "staged_half_bytes": staged_bytes,
         },
         "configs": config_records,
         "bitstreams": bitstream_records,

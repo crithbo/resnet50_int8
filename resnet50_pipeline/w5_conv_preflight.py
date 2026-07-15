@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import math
 import subprocess
 from pathlib import Path
 from typing import Any
@@ -12,6 +13,12 @@ import onnx
 from onnx import numpy_helper
 
 from .adapters.ndp_rtl28_functional import NdpRtl28FunctionalAdapter
+from .conv_instance import (
+    FIRST_REAL_CONV_NODE_ID,
+    ConvInstanceSpec,
+    ConvTargetRequest,
+    build_conv_target_request,
+)
 from .conv28_layout import QLinearConvPhysicalLayout
 from .golden.qlinear_conv import requantize_uint8
 from .hardware_approval import validate_hardware_approval_file
@@ -23,7 +30,7 @@ from .typed_config_parameters import validate_typed_config_parameter_contract
 
 SCHEMA_VERSION = "0.6"
 REPORT_KIND = "w5_first_real_conv_preflight"
-SELECTED_NODE_ID = "node-0004"
+SELECTED_NODE_ID = FIRST_REAL_CONV_NODE_ID
 ACCUMULATE_HW_OP_ID = "hwop-0004-00"
 REQUANT_HW_OP_ID = "hwop-0004-01"
 OFFICIAL_CONFIG_COMMIT = "e299b2804448242d1589b3e58ed7c5a9a5eca09f"
@@ -528,6 +535,7 @@ def _compare_tile(
     values: dict[str, np.ndarray],
     layout: QLinearConvPhysicalLayout,
     bundle: Any,
+    spec: ConvInstanceSpec,
 ) -> dict[str, Any]:
     ring = TOPOLOGY28.high_ring_for_group(0)
     destination = ring.owners[0]
@@ -543,13 +551,18 @@ def _compare_tile(
     ):
         raise W5ConvPreflightError("selected first physical Conv tile differs")
 
-    activation = values["A"][:3].astype(np.int64)
-    weight = values["B"][:16, :, 0, 0].astype(np.int64)
+    activation = values["A"][: spec.first_group_sample_count].astype(np.int64)
+    weight = values["B"][: spec.k_tile, :, 0, 0].astype(np.int64)
     x_zero_point = int(values["x_zero_point"].reshape(-1)[0])
-    w_zero_point = values["w_zero_point"][:16].astype(np.int64)
+    w_zero_point = values["w_zero_point"][: spec.k_tile].astype(np.int64)
     accumulator = np.broadcast_to(
-        values["bias"][:16].astype(np.int64).reshape(1, 16, 1, 1),
-        (3, 16, 56, 56),
+        values["bias"][: spec.k_tile].astype(np.int64).reshape(1, spec.k_tile, 1, 1),
+        (
+            spec.first_group_sample_count,
+            spec.k_tile,
+            spec.output_height,
+            spec.output_width,
+        ),
     ).copy()
     lifecycle: list[dict[str, Any]] = []
     for index, source_slice in enumerate(traversal):
@@ -579,21 +592,25 @@ def _compare_tile(
         )
 
     recomputed_p = _checked_int32(accumulator, "final tile accumulator")
-    expected_p = np.ascontiguousarray(values["P"][:3, :16])
+    expected_p = np.ascontiguousarray(
+        values["P"][: spec.first_group_sample_count, : spec.k_tile]
+    )
     p_mismatches = int(np.count_nonzero(recomputed_p != expected_p))
     if p_mismatches:
         raise W5ConvPreflightError(f"real tile P differs from W3 golden: {p_mismatches}")
 
     multiplier = np.asarray(
         np.float32(values["x_scale"][0])
-        * values["w_scale"][:16].astype(np.float32)
+        * values["w_scale"][: spec.k_tile].astype(np.float32)
         / np.float32(values["y_scale"][0]),
         dtype=np.float32,
     )
     recomputed_d = requantize_uint8(
         recomputed_p, multiplier, values["y_zero_point"]
     )
-    expected_d = np.ascontiguousarray(values["D"][:3, :16])
+    expected_d = np.ascontiguousarray(
+        values["D"][: spec.first_group_sample_count, : spec.k_tile]
+    )
     d_mismatches = int(np.count_nonzero(recomputed_d != expected_d))
     if d_mismatches:
         raise W5ConvPreflightError(f"real tile D differs from W3 golden: {d_mismatches}")
@@ -614,24 +631,36 @@ def _compare_tile(
     return {
         "status": "golden_and_physical_preflight_passed",
         "target_simulator_comparison_status": "passed_in_ndp_target_config_comparison",
-        "tile_id": "node-0004-group0-k000-015-n000-002",
+        "tile_id": (
+            f"{spec.node_id}-group0-k000-{spec.k_tile - 1:03d}-"
+            f"n000-{spec.first_group_sample_count - 1:03d}"
+        ),
         "group_id": 0,
         "high_ring_owners": list(ring.owners),
         "reduction_traversal": list(traversal),
         "destination_slice": destination,
         "logical_ranges": {
-            "N": [0, 3],
-            "K": [0, 16],
-            "H": [0, 56],
-            "W": [0, 56],
-            "C": [0, 64],
+            "N": [0, spec.first_group_sample_count],
+            "K": [0, spec.k_tile],
+            "H": [0, spec.output_height],
+            "W": [0, spec.output_width],
+            "C": [0, spec.input_channels],
         },
-        "logical_im2col_projection": {"M": 3 * 56 * 56, "N": 16, "K": 64},
-        "physical_shape": [3, 56, 56, 16],
+        "logical_im2col_projection": {
+            "M": spec.first_tile_spatial_count,
+            "N": spec.k_tile,
+            "K": spec.input_channels,
+        },
+        "physical_shape": [
+            spec.first_group_sample_count,
+            spec.output_height,
+            spec.output_width,
+            spec.k_tile,
+        ],
         "k_lifecycle": lifecycle,
         "requant": {
             "multiplier_dtype": "float32",
-            "multiplier_shape": [16],
+            "multiplier_shape": [spec.k_tile],
             "multiplier_sha256": _array_sha256(multiplier),
             "rounding": "nearest_even_numpy_rint_golden",
             "output_zero_point": int(values["y_zero_point"][0]),
@@ -670,29 +699,17 @@ def _compare_ndp_target_config(
     values: dict[str, np.ndarray],
     layout: QLinearConvPhysicalLayout,
     bundle: Any,
+    request: ConvTargetRequest,
 ) -> tuple[dict[str, Any], dict[str, Any]]:
     coordinate = (0, 0, 0, 0)
     adapter = NdpRtl28FunctionalAdapter(
         project_root / "NDPFuncModel",
         timeout_seconds=60,
     )
-    config_path = project_root / "conv_1x1_real.json"
-    semantics_path = (
-        project_root / "contracts" / "conv_1x1_lc_pe_stream_semantics.json"
-    )
-    requant_root = project_root / "conv_1x1_requant_real"
-    requant_manifest_path = requant_root / "manifest.json"
-    requant_config_paths = tuple(
-        requant_root / f"shard-{shard_index:02d}.json"
-        for shard_index in range(8)
-    )
     result = adapter.run_target_config_qlinear_conv_1x1(
         layout,
         bundle,
-        config_path=config_path,
-        semantic_contract_path=semantics_path,
-        requant_manifest_path=requant_manifest_path,
-        requant_config_paths=requant_config_paths,
+        request=request,
     )
     expected_p = int(values["P"][coordinate])
     expected_d = int(values["D"][coordinate])
@@ -718,8 +735,13 @@ def _compare_ndp_target_config(
     comparisons = {item["name"]: item for item in result.comparisons}
     expected_counts = {
         "single_coordinate": 1,
-        "first_tile": 3 * 16 * 56 * 56,
-        "full_operator": 16 * 64 * 56 * 56,
+        "first_tile": (
+            request.spec.first_group_sample_count
+            * request.spec.k_tile
+            * request.spec.output_height
+            * request.spec.output_width
+        ),
+        "full_operator": math.prod(request.spec.output_shape),
     }
     if set(comparisons) != set(expected_counts):
         raise W5ConvPreflightError("NDP target config comparison scopes differ")
@@ -734,7 +756,7 @@ def _compare_ndp_target_config(
             raise W5ConvPreflightError(f"NDP target config {name} P/D differs")
     coordinate_report = {
         "status": "passed",
-        "scope": "one_real_hwop-0004-00_output_coordinate",
+        "scope": f"one_real_{request.spec.accumulate_hw_op_id}_output_coordinate",
         "coordinate": list(coordinate),
         "logical_shape": list(bundle.plan.output_shape),
         "kernel_shape": list(bundle.plan.weight_shape[2:]),
@@ -769,9 +791,9 @@ def _compare_ndp_target_config(
         or requant_binding.get("status") != "validated"
         or requant_binding.get("manifest_sha256")
         != result.requant_manifest_sha256
-        or requant_binding.get("channel_count") != 64
-        or requant_binding.get("shard_count") != 8
-        or requant_binding.get("unique_flush_count") != 64
+        or requant_binding.get("channel_count") != request.spec.output_channels
+        or requant_binding.get("shard_count") != request.spec.requant_shard_count
+        or requant_binding.get("unique_flush_count") != request.spec.output_channels
         or requant_binding.get("flush_count_per_logical_output") != 1
         or requant_binding.get("staged_d_offsets") != [904400, 979664]
         or len(bulk_job.get("physical_writebacks", [])) != 28
@@ -785,11 +807,11 @@ def _compare_ndp_target_config(
         raise W5ConvPreflightError("NDP requant config/staging closure differs")
     closure_report = {
         "status": "accumulate_and_requant_configs_passed_with_execution_boundary",
-        "config_path": "conv_1x1_real.json",
+        "config_path": request.accumulate_config_relative,
         "config_sha256": result.config_sha256,
-        "semantic_contract_path": "contracts/conv_1x1_lc_pe_stream_semantics.json",
+        "semantic_contract_path": request.semantic_contract_relative,
         "semantic_contract_sha256": result.semantic_contract_sha256,
-        "requant_manifest_path": "conv_1x1_requant_real/manifest.json",
+        "requant_manifest_path": f"{request.requant_root_relative}/manifest.json",
         "requant_manifest_sha256": result.requant_manifest_sha256,
         "request_schema": "0.3",
         "target_config_binding": result.physical_probe.target_config_binding,
@@ -816,17 +838,15 @@ def build_w5_first_conv_preflight(
     root = project_root.resolve()
     source = (source_root or root / "ndp-sim-ref").resolve()
     commit = _verify_source_commit(source)
+    target_request = build_conv_target_request(root, SELECTED_NODE_ID)
+    spec = target_request.spec
 
     typed_path = root / "contracts" / "typed_config_parameter_contract.json"
     typed = _load_json(typed_path)
     validate_typed_config_parameter_contract(typed)
-    accumulate = _record_by_hw_op(typed, ACCUMULATE_HW_OP_ID)
-    requant = _record_by_hw_op(typed, REQUANT_HW_OP_ID)
     if (
-        accumulate.get("node_id") != SELECTED_NODE_ID
-        or requant.get("node_id") != SELECTED_NODE_ID
-        or accumulate["logical_geometry"]["attributes"]
-        != requant["logical_geometry"]["attributes"]
+        spec.accumulate_hw_op_id != ACCUMULATE_HW_OP_ID
+        or spec.requant_hw_op_id != REQUANT_HW_OP_ID
     ):
         raise W5ConvPreflightError("selected Conv lowering identity differs")
 
@@ -854,17 +874,20 @@ def build_w5_first_conv_preflight(
     )
 
     descriptors = {
-        "A": _port(accumulate, "inputs", "x"),
-        "B": _port(accumulate, "inputs", "w"),
-        "bias": _port(accumulate, "inputs", "bias"),
-        "w_zero_point": _port(accumulate, "inputs", "w_zero_point"),
-        "x_zero_point": _port(accumulate, "inputs", "x_zero_point"),
-        "x_scale": _port(requant, "inputs", "x_scale"),
-        "w_scale": _port(requant, "inputs", "w_scale"),
-        "y_scale": _port(requant, "inputs", "y_scale"),
-        "y_zero_point": _port(requant, "inputs", "y_zero_point"),
-        "P": requant["ports"]["inputs"][0],
-        "D": requant["ports"]["outputs"][0],
+        name: spec.tensor(name).descriptor()
+        for name in (
+            "A",
+            "B",
+            "bias",
+            "w_scale",
+            "w_zero_point",
+            "x_scale",
+            "x_zero_point",
+            "y_scale",
+            "y_zero_point",
+            "P",
+            "D",
+        )
     }
     values = {
         "A": _load_npy(
@@ -897,13 +920,8 @@ def build_w5_first_conv_preflight(
             initializers, runtime_manifest, descriptors[port_name]
         )
 
-    direct_parameters = {
-        item["name"]: item
-        for item in (*accumulate["parameters"], *requant["parameters"])
-        if item["provenance"]["kind"] == "onnx_initializer"
-    }
-    for name, parameter in direct_parameters.items():
-        if _array_sha256(values[name]) != parameter["value"]["value_sha256"]:
+    for name, expected_sha256 in spec.parameter_sha256:
+        if _array_sha256(values[name]) != expected_sha256:
             raise W5ConvPreflightError(f"typed parameter transport lost {name}")
     multiplier = np.asarray(
         np.float32(values["x_scale"][0])
@@ -911,16 +929,13 @@ def build_w5_first_conv_preflight(
         / np.float32(values["y_scale"][0]),
         dtype=np.float32,
     )
-    if _array_sha256(multiplier) != _parameter(
-        requant, "requant_multiplier"
-    )["value"]["value_sha256"]:
+    if _array_sha256(multiplier) != spec.requant_multiplier_sha256:
         raise W5ConvPreflightError("typed per-channel requant multiplier differs")
 
     tensor_ids = {name: descriptors[name]["tensor_id"] for name in descriptors}
     layout = QLinearConvPhysicalLayout(
         profile_id=GROUP4X7_BATCH_CHANNEL28_PROFILE
     )
-    attributes = accumulate["logical_geometry"]["attributes"]
     bundle = layout.forward(
         activation=values["A"],
         weight=values["B"],
@@ -933,10 +948,10 @@ def build_w5_first_conv_preflight(
         y_zero_point=values["y_zero_point"],
         accumulator=values["P"],
         output=values["D"],
-        strides=tuple(attributes["strides"]),
-        pads=tuple(attributes["pads"]),
-        dilations=tuple(attributes["dilations"]),
-        group=int(attributes["group"]),
+        strides=spec.strides,
+        pads=spec.pads,
+        dilations=spec.dilations,
+        group=spec.group,
         tensor_ids=tensor_ids,
     )
     layout_validation = layout.validate(bundle)
@@ -976,9 +991,9 @@ def build_w5_first_conv_preflight(
     n2n_selector_crosscheck = _n2n_selector_crosscheck(root, source)
     legacy_generator_probe = _legacy_conv_generator_probe(source)
     operator_candidate = _operator_conv_candidate_probe(root)
-    tile = _compare_tile(values, layout, bundle)
+    tile = _compare_tile(values, layout, bundle, spec)
     ndp_coordinate, ndp_config_closure = _compare_ndp_target_config(
-        root, values, layout, bundle
+        root, values, layout, bundle, target_request
     )
 
     plan = bundle.plan
@@ -987,10 +1002,10 @@ def build_w5_first_conv_preflight(
         "report_kind": REPORT_KIND,
         "status": "w5_real_1x1_accumulate_requant_config_bound_pd_passed",
         "selection": {
-            "node_id": SELECTED_NODE_ID,
-            "onnx_name": accumulate["onnx_name"],
+            "node_id": spec.node_id,
+            "onnx_name": spec.onnx_name,
             "onnx_op_type": "QLinearConv",
-            "hw_op_ids": [ACCUMULATE_HW_OP_ID, REQUANT_HW_OP_ID],
+            "hw_op_ids": [spec.accumulate_hw_op_id, spec.requant_hw_op_id],
             "reason": "first real 1x1 stride-1 Conv recommended by W5 handoff",
         },
         "source_identity": {
@@ -1015,7 +1030,14 @@ def build_w5_first_conv_preflight(
             "activation_shape": list(plan.activation_shape),
             "weight_shape": list(plan.weight_shape),
             "output_shape": list(plan.output_shape),
-            "attributes": attributes,
+            "attributes": {
+                "auto_pad": "NOTSET",
+                "dilations": list(spec.dilations),
+                "group": spec.group,
+                "kernel_shape": list(spec.kernel),
+                "pads": list(spec.pads),
+                "strides": list(spec.strides),
+            },
             "dtype_path": ["uint8_A", "int8_B", "int32_bias_and_P", "uint8_D"],
             "per_channel_axis": 0,
             "parameter_transport": "lossless_into_preflight_only",
