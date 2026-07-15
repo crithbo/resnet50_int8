@@ -725,6 +725,22 @@ W0实现前还需把以上补充转成可执行的schema字段、测试用例和
 
 当前状态：真实`hwop-0004`的target JSON和语义合同已由config-bound adapter消费；单坐标走组件路径，首tile/全算子走`physical_dram_bulk_int8_equivalent`，三档P/D均与golden bit-exact。平台执行DeepSeek JSON的能力已确认；当前配置缺口不是“硬件能否读JSON”，而是候选HIGH-4 selector组合、真实per-channel requant/唯一flush和execplan参数注入。精确硬件P/D dump保留为延期最终确认。
 
+### 首个真实Conv到全Conv/全算子扩展前的强制门
+
+首例不是合成算子，而是锁定ResNet50 INT8 ONNX中的真实`node-0004`：`fused resnetv17_stage1_conv0_fwd_quant`（`QLinearConv`）。它被lowering为`hwop-0004-00 ConvInt32Accumulate`和`hwop-0004-01 RequantizeUint8`，使用正式`[16,64,56,56]` UINT8 activation、`[64,64,1,1]` INT8 weight、64路INT32 bias、真实per-channel weight qparams、scalar input/output qparams和W3 P/D golden。不得把脱离该模型、随机生成或手工缩小的数据替换为首例验收依据。
+
+当前执行边界必须保持显式：`NDPFuncModel/main_CONV_N2N.py`仍把4-slice、`[256,64,3,3]` weight、R/S三次循环、`./hex_data`和固定requant写死；真实1×1没有进入该旧主程序。现有schema 0.2路径由根仓adapter调用`python -m tools.physical_image_probe <request.json>`：单坐标通过物理地址列表执行DRAM→Buffer→SpecialPEA→ActivationUnit→DRAM，首tile/全算子通过`physical_dram_bulk_int8_equivalent`重组HIGH组并执行1×1等价kernel。target JSON和语义合同在计算前被逐字段校验，但尚未逐LC/stream/buffer/N2N解释，也没有执行正式bitstream。因此当前两方P/D通过不能替代配置驱动模拟器门，也不能证明N2N selector、ping-pong或逐周期调度正确。
+
+从该首例扩展到其他Conv shape、53层Conv或其他算子族前，必须完成以下原子工作包：
+
+1. 将旧3×3主程序重构为参数化Conv runner，或实现一个等价的统一runner；输入只来自manifest/physical bundle和锁定target JSON，不再从函数常量或固定`./hex_data`取得shape、循环和地址。
+2. 让配置实际驱动kernel R/S、stride/pad/dilation、C/K tile、LC range/last、stream地址、buffer生命周期、HIGH/LOW N2N selector、ping-pong、bias/psum首中末状态、per-channel requant和唯一末次UINT8 flush；修改任一受控字段必须改变执行结果或fail-closed，不能只改变hash/报告文本。
+3. 同一入口至少覆盖当前真实1×1首例和一个正式ResNet50 3×3代表实例；二者都必须从各自真实shape/qparams生成request，不得保留“1×1走bulk、3×3走写死脚本”两套不可比真值。7×7/stride2等其余shape族按此冻结接口继续扩展。
+4. 对每个实例输出可追溯的INT32 P、最终UINT8 D、physical地址、inverse logical坐标和首错；同一输入重复运行稳定，并与W3 golden整数bit-exact。
+5. 如果目标验收要求bitstream级语义，则接入正式decoder/解释器或外部target simulator；仅校验JSON字段后调用数学等价kernel不得标记G6，也不得作为开放全算子扩展的唯一依据。
+
+开放横向扩展的验收条件：当前真实1×1在新配置驱动路径上重复通过单坐标、首tile和全算子P/D；代表性真实3×3通过同一runner与同一错误报告合同；selector/requant/typed transport均闭合；旧写死入口不再是任何正式验收路径。达到该门后，可以冻结公共request/schema和验收命令，再把硬件协作与不同shape族扩展拆为互不修改公共合同的并行任务。
+
 ## 阶段 G：生成 ResNet 网络级硬件 execplan
 
 目标：从阶段 B 的 lowering manifest 自动生成完整 ResNet 网络级 JSON、per-instance 配置、地址、Bank_data 和目标指令流。
@@ -820,6 +836,7 @@ W0实现前还需把以上补充转成可执行的schema字段、测试用例和
 2. 复用已知可执行DeepSeek Quant数据通路，将本层64个per-channel multiplier、output zero point、nearest-even、saturation和唯一末次flush参数化为正式配置。
 3. 扩展execplan typed qparam transport，使同一首例完全由manifest/execplan重建，不再由W5脚本手工注入。
 4. 三项完成后重复单坐标、首tile和全算子P/D；精确硬件实跑与dump按操作者决定延期，不作为当前配置前置。
-5. W7以后地址规划统一以6144-row逻辑容量为硬上限；W8再索取或接入load/start/wait/error/dump协议。新的clean elaboration日志只作额外RTL诊断，不再是W4/G4或W5开工前置。
+5. 按“首个真实Conv到全Conv/全算子扩展前的强制门”把旧写死3×3入口升级为真正消费manifest/physical bundle/target JSON的参数化runner；当前单坐标组件probe和1×1 bulk等价kernel继续作为交叉检查，不得单独开放53层Conv扩展。
+6. W7以后地址规划统一以6144-row逻辑容量为硬上限；W8再索取或接入load/start/wait/error/dump协议。新的clean elaboration日志只作额外RTL诊断，不再是W4/G4或W5开工前置。
 
 正式模型、固定输入、旧脚本预处理、ONNX算子组成、Conv量化tensor类型、W4物理layout/profile、LC/`last_index`、`[start,end)`、stream端口顺序、byte stride、padding有效范围和lane内小端packing已经确认，不再重复询问。旧运行产物不作为开工前置。

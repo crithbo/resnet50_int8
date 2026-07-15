@@ -763,3 +763,10 @@
 - 活动`agent.md`、`plan.md`和算子配置规则同步改为三项阻塞；历史W5 handoff和旧history条目继续保留其发生时事实，不反向改写。validator要求resolved former blocker、三项精确集合、候选/可执行HIGH-4/LOW28三个selector tuple和延期硬件边界，任一篡改均失败。
 - 验证：根仓246/246通过，仅保留既有NumPy标量转换DeprecationWarning；合同聚焦23/23、`py_compile`、正式1×1 encoder runner、`validate-contracts`、四仓lock和`git diff --check`全部通过。合同digest为`ad2466b1bb5c2b838671910501dd7679c39a81590a714bb29c589b72d0c2553a`。
 - 当前完成位置：通用DeepSeek JSON硬件执行能力解除，W5两方P/D闭环保持，剩余真实配置问题从四项变为三项。下一步保持单线程，只改N2N selector并重新正式编码/两方比较；selector闭合后才参数化requant，再接typed execplan。三项完成前不扩53层Conv或整网W5，硬件实跑继续延期。
+
+## 2026-07-15：确认首例真实性并增加全算子扩展前模拟器门
+
+- 复核`contracts/typed_config_parameter_contract.json`确认当前首例是锁定ResNet50 INT8 ONNX模型SHA-256 `c234f30975989788b4405f25253275aae247ab6dbdd34aaa69ab0a59ff76f6d0`中的真实`node-0004`，名称`fused resnetv17_stage1_conv0_fwd_quant`、类型`QLinearConv`；lowering为`hwop-0004-00 ConvInt32Accumulate`和`hwop-0004-01 RequantizeUint8`。其`[16,64,56,56]` activation、`[64,64,1,1]` weight、64路INT32 bias、per-channel weight qparams、scalar x/y qparams及P/D golden均来自正式模型和W3产物，不是合成或随机Conv。
+- 澄清数值执行边界：旧`NDPFuncModel/main_CONV_N2N.py`仍写死4-slice、3×3 R/S循环、固定shape/`hex_data`和requant，真实1×1未调用该入口。当前根仓adapter通过`python -m tools.physical_image_probe <request.json>`执行；单坐标为地址驱动组件路径，首tile/全算子为`physical_dram_bulk_int8_equivalent`。target JSON/语义合同被校验和绑定，但没有逐LC/stream/buffer/N2N或bitstream解释，因此已有P/D闭环是可靠两方数值证据，不是配置驱动target simulator通过。
+- `.agents/plan.md`新增“首个真实Conv到全Conv/全算子扩展前的强制门”：要求参数化旧3×3入口或实现统一runner，使manifest/physical bundle/target JSON实际驱动shape、R/S、地址、N2N、psum和requant；同一入口至少覆盖当前真实1×1和一个正式3×3代表实例，字段变更必须影响执行或fail-closed，P/D必须与W3 bit-exact。该门完成前，单坐标probe和1×1 bulk只作交叉检查，不开放53层Conv或其他算子族横向扩展。
+- 本轮仅更新权威计划和历史边界，不修改代码、合同、配置、bitstream、产物或门状态；`B_N2N_TARGET_SELECTOR`、`B_REQUANT_TARGET_NUMERICS`和`B_EXECPLAN_TYPED_TRANSPORT`仍是当前三项配置阻塞。
