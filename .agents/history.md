@@ -766,7 +766,7 @@
 
 ## 2026-07-15：确认首例真实性并增加全算子扩展前模拟器门
 
-- 根仓计划提交`efb966cf4fbaedbc88fc50cd5c8c546eedb3e94a`，父提交`59ff276747ad65be092a469447f85c45d1d9e95b`，`docs: gate full conv expansion on config runner`；范围仅为`.agents/plan.md`与本历史边界，不修改代码、合同、配置或运行产物。验证为`git diff --check`通过；精确回退使用`git revert efb966cf4fbaedbc88fc50cd5c8c546eedb3e94a`。
+- 根仓计划提交`efb966c9c327e671096e7b1899f59de83d2c891d`，父提交`59ff276747ad65be092a469447f85c45d1d9e95b`，`docs: gate full conv expansion on config runner`；范围仅为`.agents/plan.md`与本历史边界，不修改代码、合同、配置或运行产物。验证为`git diff --check`通过；精确回退使用`git revert efb966c9c327e671096e7b1899f59de83d2c891d`。
 - 复核`contracts/typed_config_parameter_contract.json`确认当前首例是锁定ResNet50 INT8 ONNX模型SHA-256 `c234f30975989788b4405f25253275aae247ab6dbdd34aaa69ab0a59ff76f6d0`中的真实`node-0004`，名称`fused resnetv17_stage1_conv0_fwd_quant`、类型`QLinearConv`；lowering为`hwop-0004-00 ConvInt32Accumulate`和`hwop-0004-01 RequantizeUint8`。其`[16,64,56,56]` activation、`[64,64,1,1]` weight、64路INT32 bias、per-channel weight qparams、scalar x/y qparams及P/D golden均来自正式模型和W3产物，不是合成或随机Conv。
 - 澄清数值执行边界：旧`NDPFuncModel/main_CONV_N2N.py`仍写死4-slice、3×3 R/S循环、固定shape/`hex_data`和requant，真实1×1未调用该入口。当前根仓adapter通过`python -m tools.physical_image_probe <request.json>`执行；单坐标为地址驱动组件路径，首tile/全算子为`physical_dram_bulk_int8_equivalent`。target JSON/语义合同被校验和绑定，但没有逐LC/stream/buffer/N2N或bitstream解释，因此已有P/D闭环是可靠两方数值证据，不是配置驱动target simulator通过。
 - `.agents/plan.md`新增“首个真实Conv到全Conv/全算子扩展前的强制门”：要求参数化旧3×3入口或实现统一runner，使manifest/physical bundle/target JSON实际驱动shape、R/S、地址、N2N、psum和requant；同一入口至少覆盖当前真实1×1和一个正式3×3代表实例，字段变更必须影响执行或fail-closed，P/D必须与W3 bit-exact。该门完成前，单坐标probe和1×1 bulk只作交叉检查，不开放53层Conv或其他算子族横向扩展。
