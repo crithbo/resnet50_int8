@@ -835,3 +835,10 @@
 - 操作者澄清此前云端发布一直使用已建立的根仓`origin`直接推送，不要求GitHub插件重新安装仓库权限，也不要求`gh`。先前把完整PR发布流程的前置条件套到普通`git push`属于流程过度；现已在`agent.md`固定区分直接Git推送与插件PR操作。
 - 新的长期授权边界是：只有操作者明确要求推送/发布/同步云端时才执行`git push`；本地提交不自动授权远端写入。获授权后必须先fetch并证明`origin/main`是HEAD祖先，只允许非强制fast-forward，推送后核对远端SHA；分叉、认证错误或需要force时停止。
 - 当前操作者已明确要求本轮按原方式直接推送。推送范围只包含现有已提交历史以及本条规则提交；未跟踪的`.agents/conv_full(2).json/.txt`保持本地原件状态，不暂存、不提交、不上传。
+
+## 2026-07-15：单算子扩展与最终综合计划裁决
+
+- 操作者已通知硬件负责人并行运行首例freeze，本线程不接管硬件执行；操作者主线负责单算子扩展、typed execplan和最后综合。两路只通过原始dump/comparison/freeze版本合流，公共schema、地址、selector/ping-pong和Git继续串行裁决。
+- W3正式图复核确认53个QLinearConv可归并为20种逻辑signature：15种1×1、4种3×3、1种7×7。第二实例固定`node-0008/hwop-0008-00~01`（256→64、56×56、1×1/s1），以最小空间/输出变化优先验证多K psum和唯一flush；第三实例为`node-0003/hwop-0003-00~01`（64→256），验证输出owner、256通道qparams、32个requant shard和staging/inverse扩展。
+- 现行计划新增E0～E6 Conv梯级、O1～O6其他算子族、I1 typed网络execplan、I2硬件反馈合流、I3/I4子图到整网三方综合。执行顺序明确要求首例hash保护、三档P/D、正式encoder、负向fail-closed、20个signature代表例后再扩53 Conv；其他算子按Quant→MaxPool→Add→GAP→Dequant/View→MatMul/head闭环。
+- 本次只生成计划，不改变代码、schema、JSON、bitstream、freeze或门状态；G0/G2/G3/G4保持通过，G5/G6/G8仍false。详细未完成步骤保留在`plan.md`，完成后再迁回本历史文件。
