@@ -19,8 +19,8 @@ $env:PYTHONDONTWRITEBYTECODE='1'; .\.venv\Scripts\python.exe -m unittest discove
 预期：
 
 - 除操作者保留的`.agents/conv_full(2).json`和`.agents/conv_full(2).txt`外，没有未解释改动；文档编辑中的预期差异先核对再继续。
-- `CGRA_SIM@53c41e0...`、`ndp-sim-ref@e299b28...`、`NDPFuncModel@1d3181d...`和RTL28静态证据匹配`repos.lock.json`。
-- 最近冻结点根仓回归249/249、NDP 19/19；测试数量可随提交增加，验收以零失败为准。
+- `CGRA_SIM@53c41e0...`、`ndp-sim-ref@e299b28...`、`NDPFuncModel@e35b24a...`和RTL28静态证据匹配`repos.lock.json`。
+- 当前E1冻结点根仓回归258/258、NDP 20/20；测试数量可随提交增加，验收以零失败为准。
 
 任一项失败时先判断环境、lock、用户改动或业务回归。不要直接重建W3、修改W4批准合同或重生成全部配置。
 
@@ -33,6 +33,8 @@ $env:PYTHONDONTWRITEBYTECODE='1'; .\.venv\Scripts\python.exe -m unittest discove
 | 首例数值闭环 | `1388dede4aac53a77d02dec0b24db0ad2d35ef1f` | config-bound三档P/D恢复点 |
 | 首例硬件交付 | `e9b6492098c2101aa86afd83bf95e8024fa6e8df` | 硬件负责人使用的根仓业务镜像 |
 | NDP首例冻结 | `1d3181d832d7a409af779215e4aa590d03bd8ed3` | request schema 0.3与双staging实现 |
+| E1 NDP参数化 | `e35b24a446bdaeb7a939ab50d8e0cad5fe2a393c` | 实例驱动的accumulate/requant校验与第二实例偏移 |
+| E1第二个1×1 | `51d6e787e1c4df1fa617a4a2aa3b0ffa0dfcdb46` | `node-0008`正式编码与config-bound三档P/D候选闭环 |
 | 当前根仓HEAD | 接手时运行`git rev-parse HEAD` | 可能只增加文档/台账，不自动代表新数值版本 |
 
 首例交付目录为`artifacts/w5/hwop-0004-00/hardware_freeze/`：
@@ -125,7 +127,7 @@ $env:PYTHONDONTWRITEBYTECODE='1'; .\.venv\Scripts\python.exe -m unittest discove
 
 操作者负责第二个1×1、Conv shape-family、其他算子族、typed execplan和最终综合。所有新实例在精确硬件证据前标`candidate`，首例freeze ID与硬件负责人镜像保持只读。
 
-当前第一工作包固定为`node-0008/hwop-0008-00~01`：`[16,256,56,56] -> [16,64,56,56]`、1×1/stride1。它与首例共享空间和输出通道，只扩大输入通道，优先暴露多K阶段、psum持久化和末阶段唯一flush问题。
+当前工作包已推进到`node-0003/hwop-0003-00~01`：`[16,64,56,56] -> [16,256,56,56]`、1×1/stride1。它保持输入与空间尺寸，只扩大输出通道，用于验证多output owner、256通道qparams、32个requant shard和staging/inverse扩展。
 
 配置域暂定HIGH-4 `4/1/1`、LOW-28 `28/0/0`；每个新实例都要正式parser、placement、bitstream和数值复核。`ping_pong`由buffer生命周期和邻居接收单独裁决，不随selector机械变化。
 
@@ -142,9 +144,9 @@ E0～E3和公共合同修改保持串行；E3通过并冻结实例接口后，E4
 | 顺序 | 工作包 | 状态 | 目标 | 进入条件 | 完成标志 |
 |---:|---|---|---|---|---|
 | E0 | 基线保护与参数化接口 | **completed** `a679df9e...` | 把首例硬编码入口变成`ConvInstanceSpec/request`驱动，同时保持首例全部hash不变 | 当前freeze可重建 | 首例JSON/bitstream/preflight/freeze逐字节不变，负向测试仍fail-closed |
-| E1 | 第二个真实1×1 | **in_progress** | 闭合`node-0008`的多K psum/requant | E0通过 | 单坐标、首tile、全算子P/D bit-exact，正式encoder与确定性通过 |
-| E2 | 输出通道扩展1×1 | pending | 闭合`node-0003`的64→256输出通道与32个requant shard | E1通过 | 通道覆盖恰好一次、staging/inverse正确、三档P/D通过 |
-| E3 | typed transport | pending | 删除`B_EXECPLAN_TYPED_TRANSPORT`，让实例参数由manifest自动进入handler/request | E1证明实例模型可参数化 | 首例与E1由同一CLI重建；漏字段、错SHA、错dtype立即失败 |
+| E1 | 第二个真实1×1 | **completed** `51d6e787...` | 闭合`node-0008`的多K psum/requant | E0通过 | 三档P/D bit-exact，正式encoder与确定性通过 |
+| E2 | 输出通道扩展1×1 | **in_progress** | 闭合`node-0003`的64→256输出通道与32个requant shard | E1通过 | 通道覆盖恰好一次、staging/inverse正确、三档P/D通过 |
+| E3 | typed transport | pending | 删除`B_EXECPLAN_TYPED_TRANSPORT`，让实例参数由manifest自动进入handler/request | E2通过，三种实例足以冻结schema | 首例、E1与E2由同一CLI重建；漏字段、错SHA、错dtype立即失败 |
 | E4 | 1×1 shape-family | pending；接口冻结后可实例级并行 | 覆盖15种1×1逻辑signature | E2/E3通过 | 每个signature代表例全算子通过；全部1×1实例配置可重建 |
 | E5 | 3×3与7×7 | pending | 参数化kernel/pad/stride/邻域与stem特殊路径 | E4稳定 | 4种3×3和1种7×7代表例三档P/D通过 |
 | E6 | 全53 Conv | pending | 由20个signature扩展到53个正式模型实例 | E5通过 | 53实例无缺失、无重复、全部encode/config-bound比较通过 |
@@ -162,22 +164,13 @@ E0～E3和公共合同修改保持串行；E3通过并冻结实例接口后，E4
 
 `a679df9ef3f36b2f0714b89a0719306009288a23`已新增统一`ConvInstanceSpec/ConvTargetRequest`，首例生成器、encoder wrapper、NDP adapter、preflight和freeze exporter均改从该对象取得identity、shape、typed tensor/qparam、HIGH-4 selector、tile、shard和路径绑定。`node-0008`与`node-0003`已可从同一typed contract解析为未冻结spec，但其配置/request仍按fail-closed拒绝冒充正式产物。
 
-E0重构没有改写首例受控文件：累加JSON、requant manifest、preflight和hardware freeze manifest SHA保持原值；正式累加encoder仍为46连接/cost 0，8个requant shard仍各21连接/cost 0且双重编码一致；根仓254/254通过。详细实施与验证移入`history.md`，当前只执行E1。
+E0重构没有改写首例受控文件：累加JSON、requant manifest和hardware freeze manifest SHA保持原值；正式累加encoder仍为46连接/cost 0，8个requant shard仍各21连接/cost 0且双重编码一致；根仓254/254通过。详细实施与验证移入`history.md`。
 
-### E1：第二个1×1 `node-0008`
+### E1：已完成摘要
 
-选择理由：保持`H/W=56`、`Cout=64`和stride1，与首例相比只把`Cin=64`扩为256，先隔离多K reduction风险。
+`51d6e787e1c4df1fa617a4a2aa3b0ffa0dfcdb46`已闭合`node-0008/hwop-0008-00~01`：正式累加编码为46连接/cost 0且双次输出一致，8个requant shard均通过正式编码；四段各64通道K生命周期覆盖Cin=256；NDP单坐标、首tile、全算子P/D全部bit-exact，两份staging D均inverse回canonical D，64通道唯一覆盖且每逻辑输出只flush一次。候选报告明确保持hardware/G5/G6/G8为false。
 
-实施顺序：
-
-1. 从W3 manifest/typed contract提取`hwop-0008-00~01`、weight/bias/qparams和golden P/D，禁止复制首例数值常量。
-2. 推导K tile数、首K bias、中间INT32 psum和末K requant；每个逻辑输出只能在全K完成后flush一次。
-3. 参数化累加LC/PE/stream/buffer与physical地址；requant空间循环因`Cout/H/W`相同应保持结构一致，但JSON原文和SHA必须绑定新P/qparams/地址。
-4. 正式encoder生成parsed dump、mapping review及128/64位bitstream；两次生成逐字节一致。
-5. NDP依次跑单坐标、首tile、全算子P/D；保存first mismatch和canonical/physical hash。
-6. 建立负向测试：漏一个K阶段、提前flush、重复flush、错bias owner、错JSON SHA、未对齐staging必须在计算前失败。
-
-完成门E1：三档P/D bit-exact；P覆盖全部K阶段；D覆盖64通道恰好一次；所有physical region可inverse且无重叠；首例回归保持不变。
+NDPFuncModel参数化提交为`e35b24a446bdaeb7a939ab50d8e0cad5fe2a393c`；根仓258/258、NDP 20/20及仓库lock验证通过。首例当前preflight只更新NDP源码身份，硬件负责人使用的freeze manifest、配置、bitstream和包内preflight未改写。详细过程、SHA和回退点已移入`history.md`，当前只执行E2。
 
 ### E2：输出通道扩展 `node-0003`
 
