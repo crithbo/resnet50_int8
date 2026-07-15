@@ -4,7 +4,7 @@
 
 状态：**W4/G4已结束；W5首个真实1×1的累加、64通道requant配置与两方P/D闭环已经冻结，可交硬件组手工加载，但G5/G6/G8仍未批准。** 本文件是新对话的最短接手入口；执行口径仍以`.agents/plan.md`为唯一权威计划。本对话及`.agents/W4_ARCHIVE.md`只用于追溯W4事实、错误和裁决。
 
-当前冻结恢复点：根仓`1388dede4aac53a77d02dec0b24db0ad2d35ef1f`，NDPFuncModel `1d3181d832d7a409af779215e4aa590d03bd8ed3`。累加配置`conv_1x1_real.json` SHA-256为`a20641cfcf65068c3ca31d710a0ef45d28a53cbf80d5e246ce54f0de3fe16f2c`；requant manifest SHA-256为`4424a6524dcdaaf1933b57875e4f3a1ae7edb11321dd02b692bbed51b82b274f`；最终preflight SHA-256为`8dd0d61bacd0f840f09b038a16180dac4d7408878857d5b10143f684bf2f0c80`。当前首例未解决配置阻塞只有`B_EXECPLAN_TYPED_TRANSPORT`，它不妨碍硬件组手工加载冻结JSON/bitstream与数据。
+当前冻结恢复点：根仓`e9b6492098c2101aa86afd83bf95e8024fa6e8df`，NDPFuncModel `1d3181d832d7a409af779215e4aa590d03bd8ed3`；其中数值闭环业务提交为根仓`1388dede4aac53a77d02dec0b24db0ad2d35ef1f`。累加配置`conv_1x1_real.json` SHA-256为`a20641cfcf65068c3ca31d710a0ef45d28a53cbf80d5e246ce54f0de3fe16f2c`；requant manifest SHA-256为`4424a6524dcdaaf1933b57875e4f3a1ae7edb11321dd02b692bbed51b82b274f`；最终preflight SHA-256为`8dd0d61bacd0f840f09b038a16180dac4d7408878857d5b10143f684bf2f0c80`。硬件交付目录`artifacts/w5/hwop-0004-00/hardware_freeze/`由冻结提交确定生成，freeze ID为`f687debd0215f1d29b6ca94176c4e9cbcf20434d58bce57c430129edb8922d5f`。当前首例未解决配置阻塞只有`B_EXECPLAN_TYPED_TRANSPORT`，它不妨碍硬件组手工加载冻结JSON/bitstream与数据。
 
 ## 1. 接手时只需读取什么
 
@@ -32,7 +32,7 @@ $env:PYTHONDONTWRITEBYTECODE='1'; .\.venv\Scripts\python.exe -m unittest discove
 
 - 根工作树没有未解释改动；
 - RTL28静态证据、`CGRA_SIM`、`ndp-sim-ref`和`NDPFuncModel`全部匹配`repos.lock.json`；
-- 当前冻结点根仓全量回归为248/248，NDPFuncModel为19/19。若测试数量因后续正常提交增加，应以“零失败”及`history.md`最新台账为准，不要求机械保持固定数量。
+- 当前冻结点根仓全量回归为249/249，NDPFuncModel为19/19。若测试数量因后续正常提交增加，应以“零失败”及`history.md`最新台账为准，不要求机械保持固定数量。
 
 若任一检查失败，先定位环境、lock或文档提交差异，不要立即重建W3、重跑ORT或修改W4批准合同。
 
@@ -64,7 +64,15 @@ W4没有批准：INT8 SA数值行为、bias/psum/requant寄存器语义、逐实
 - `conv_1x1_requant_real/manifest.json`与8份原始JSON覆盖64个通道；NDP request schema 0.3携带manifest/JSON原文及各自SHA，逐份验证GA常量、HIGH-ring slice、16B地址、LC `1/9408/2352`和每个逻辑输出唯一flush。
 - NDP对28个slice各写低/高两个staging D，地址偏移`904400/979664`，读回后inverse为canonical D；单坐标、首tile 150,528元素和全算子3,211,264元素的P/D均为0 mismatch。
 - 正式requant encoder的8个shard均为21条连接、constraint cost 0，两次生成逐文件一致；`artifacts/w5/hwop-0004-00/preflight.json`保存配置绑定、28组双staging写回和三档hash证据。
+- `tools/export_conv_1x1_hardware_freeze.py`确定导出339个受hash约束的交付文件：28-slice physical A/B/bias/qparams、physical/canonical golden P/D、10份配置、18份128/64位bitstream和含56个staging输出区的地址表；总目录约41.9 MB，重复导出manifest逐字节相同。`tools/compare_conv_1x1_hardware_dump.py`按`P|D/slice-XX.bin`读硬件dump，inverse回canonical NCHW并报告首错。
 - `B_REQUANT_TARGET_NUMERICS`已从该首例阻塞清单删除；NDP仍是config-bound功能模型而非逐周期LC/stream/buffer或bitstream解释器，因此G5/G6/G8保持false，不能把两方一致写成硬件通过。
+
+硬件交付与比较命令：
+
+```powershell
+.\.venv\Scripts\python.exe tools\export_conv_1x1_hardware_freeze.py
+.\.venv\Scripts\python.exe tools\compare_conv_1x1_hardware_dump.py --freeze-root artifacts\w5\hwop-0004-00\hardware_freeze --dump-root <hardware-dump-root> --output <comparison.json>
+```
 
 下面A～D保留为首包形成过程与复核口径，不再是待办清单。不要回退到只验证累加JSON，也不要先批量生成53层Conv配置。
 
@@ -124,6 +132,6 @@ W4没有批准：INT8 SA数值行为、bias/psum/requant寄存器语义、逐实
 
 首个Conv闭环已经冻结，可以按两个互不改写真值的角色拆分：
 
-- 硬件协作负责人只使用根仓`1388dede...`与NDP `1d3181d...`对应镜像，接收冻结JSON、bitstream、physical A/B/bias/qparams、golden P/D、地址表与比较工具；运行真实N2N并dump P/D，记录首错slice、逻辑坐标和物理地址，不修改公共生成器。
+- 硬件协作负责人只使用根仓`e9b6492...`与NDP `1d3181d...`对应镜像，直接接收`artifacts/w5/hwop-0004-00/hardware_freeze/`；运行真实N2N并把dump保存为`P|D/slice-XX.bin`，用冻结比较工具记录首错逻辑坐标，不修改公共生成器。
 - 扩展负责人从同一冻结点处理第二个代表性1×1与shape-family测试，继续使用HIGH-4 `4/1/1`、LOW-28 `28/0/0`规则；未有硬件证据的扩展结果统一标candidate。
 - `B_EXECPLAN_TYPED_TRANSPORT`留给自动扩展和整网执行，不阻塞上述手工单算子硬件加载。公共schema/合同、selector与ping-pong规则、Git集成和全量回归仍串行维护。

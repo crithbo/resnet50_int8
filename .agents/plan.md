@@ -52,7 +52,7 @@
 
 - **已通过**：W0/G0集成骨架，W2/G2小Conv候选软件纵向闭环，W3/G3正式图/lowering/全节点与subop golden。
 - **部分通过**：W1已冻结正式候选模型、固定输入、预处理和软件量化事实；目标RTL已选`Trassic2.0_RTL@e3bdebba...`和28-slice。ADR-008按操作者确认，把`ndp-sim-ref@e299b280...`的JSON/bitstream/model_execplan固定为正式硬件配置来源；ADR-009进一步把已完成DeepSeek整网调试记录为具名硬件基线，并明确不声称新的clean elaboration日志。W4物理profile/layout已经批准；INT8 SA/psum/requant、sum跨slice/完成协议、目标数值模拟器和板级协议仍分别留在后续阶段。
-- **当前主线**：W4/G4已闭环，W5首个真实Conv在根仓`1388dede...`与NDP `1d3181d...`形成单算子配置冻结提交。累加JSON与8份真实requant JSON均通过正式encoder；schema 0.3把全部原文/SHA送入NDP，28个slice各执行双staging D写回/inverse，单坐标、首tile和全算子INT32 P/UINT8 D全部与W3 golden bit-exact。下一阶段允许硬件负责人只使用冻结镜像手工运行，同时扩展负责人从同一提交处理第二个1×1/shape-family；公共合同、Git和全量回归仍串行。
+- **当前主线**：W4/G4已闭环，W5首个真实Conv在根仓`e9b6492...`与NDP `1d3181d...`形成单算子配置冻结提交。累加JSON与8份真实requant JSON均通过正式encoder；schema 0.3把全部原文/SHA送入NDP，28个slice各执行双staging D写回/inverse，单坐标、首tile和全算子INT32 P/UINT8 D全部与W3 golden bit-exact。确定性导出器又生成339个受hash约束的physical输入/golden/config/bitstream/地址与比较交付文件。下一阶段允许硬件负责人只使用冻结镜像手工运行，同时扩展负责人从同一提交处理第二个1×1/shape-family；公共合同、Git和全量回归仍串行。
 - **当前边界**：操作者已确认先前DeepSeek算子JSON可由目标硬件执行，HIGH-4 selector固定为`mem/src/dst=4/1/1`；真实64-channel requant、GA常量、16B staging、LC `1/9408/2352`和唯一flush也已config-bound闭合，`B_REQUANT_TARGET_NUMERICS`从该首例清单删除。只剩`B_EXECPLAN_TYPED_TRANSPORT`阻碍自动扩展/整网执行，不妨碍手工硬件加载。G5/G6仍不升级，因为bulk路径不是逐周期LC/stream/buffer或bitstream解释器，且精确新配置硬件P/D尚未取得。
 
 ### 接手进度总表
@@ -841,4 +841,4 @@ W0实现前还需把以上补充转成可执行的schema字段、测试用例和
 
 正式模型、固定输入、旧脚本预处理、ONNX算子组成、Conv量化tensor类型、W4物理layout/profile、LC/`last_index`、`[start,end)`、stream端口顺序、byte stride、padding有效范围和lane内小端packing已经确认，不再重复询问。旧运行产物不作为开工前置。
 
-**2026-07-15 requant冻结状态：** 8个真实GA shard写入64个互异float32 multiplier、`y_zero_point=0`、nearest-even magic和UINT8 saturation；每个shard正式encoder均为21条连接、cost 0，双重重建的parsed/64b/128b/detailed逐字节稳定。两个对齐staging区固定为`904400/979664`。NDP request schema 0.3现实际消费manifest和8份JSON原文/SHA，严格验证64通道、HIGH-ring、16B地址、LC `1/9408/2352`与唯一flush；28个slice的staging写回均inverse匹配canonical D，三档P/D bit-exact。因此该首例`B_REQUANT_TARGET_NUMERICS`已删除，只剩typed execplan transport；根仓冻结提交为`1388dede...`，NDP为`1d3181d...`。
+**2026-07-15 requant冻结状态：** 8个真实GA shard写入64个互异float32 multiplier、`y_zero_point=0`、nearest-even magic和UINT8 saturation；每个shard正式encoder均为21条连接、cost 0，双重重建的parsed/64b/128b/detailed逐字节稳定。两个对齐staging区固定为`904400/979664`。NDP request schema 0.3现实际消费manifest和8份JSON原文/SHA，严格验证64通道、HIGH-ring、16B地址、LC `1/9408/2352`与唯一flush；28个slice的staging写回均inverse匹配canonical D，三档P/D bit-exact。硬件交付目录freeze ID为`f687debd...`，physical P/D自检inverse后仍为全算子0 mismatch。因此该首例`B_REQUANT_TARGET_NUMERICS`已删除，只剩typed execplan transport；根仓冻结提交为`e9b6492...`，NDP为`1d3181d...`。
