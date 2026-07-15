@@ -19,11 +19,22 @@ from .conv_instance import (
     ConvTargetRequest,
     build_conv_target_request,
 )
+from .conv_execplan_transport import (
+    SCHEMA_VERSION as CONV_EXECPLAN_SCHEMA_VERSION,
+    build_conv_execplan_request,
+    canonical_execplan_bytes,
+    validate_conv_execplan_request,
+)
 from .conv28_layout import QLinearConvPhysicalLayout
 from .golden.qlinear_conv import requantize_uint8
 from .hardware_approval import validate_hardware_approval_file
 from .hashing import canonical_json_bytes, sha256_bytes, sha256_file
 from .profile28 import GROUP4X7_BATCH_CHANNEL28_PROFILE
+from .source_versions import (
+    OFFICIAL_CONFIG_COMMIT,
+    SourceVersionError,
+    verify_ndp_source_checkout,
+)
 from .topology28 import Direction, TOPOLOGY28
 from .typed_config_parameters import validate_typed_config_parameter_contract
 
@@ -33,7 +44,6 @@ REPORT_KIND = "w5_first_real_conv_preflight"
 SELECTED_NODE_ID = FIRST_REAL_CONV_NODE_ID
 ACCUMULATE_HW_OP_ID = "hwop-0004-00"
 REQUANT_HW_OP_ID = "hwop-0004-01"
-OFFICIAL_CONFIG_COMMIT = "e299b2804448242d1589b3e58ed7c5a9a5eca09f"
 MODEL_SHA256 = "c234f30975989788b4405f25253275aae247ab6dbdd34aaa69ab0a59ff76f6d0"
 
 
@@ -52,28 +62,13 @@ def _load_json(path: Path) -> dict[str, Any]:
 
 
 def _verify_source_commit(source_root: Path) -> str:
-    resolved = source_root.resolve()
-    completed = subprocess.run(
-        [
-            "git",
-            "-c",
-            f"safe.directory={resolved.as_posix()}",
-            "rev-parse",
-            "HEAD",
-        ],
-        cwd=resolved,
-        text=True,
-        encoding="utf-8",
-        errors="replace",
-        capture_output=True,
-        check=False,
-    )
-    commit = completed.stdout.strip()
-    if completed.returncode or commit != OFFICIAL_CONFIG_COMMIT:
-        raise W5ConvPreflightError(
-            "official DeepSeek configuration source does not match the locked commit"
-        )
-    return commit
+    try:
+        verify_ndp_source_checkout(source_root)
+    except SourceVersionError as error:
+        raise W5ConvPreflightError(str(error)) from error
+    # This field names the immutable JSON/encoder baseline.  The newer
+    # execplan code identity is tracked separately in repos.lock.json.
+    return OFFICIAL_CONFIG_COMMIT
 
 
 def _record_by_hw_op(contract: dict[str, Any], hw_op_id: str) -> dict[str, Any]:
@@ -960,6 +955,17 @@ def build_w5_first_conv_preflight(
     commit = _verify_source_commit(source)
     target_request = build_conv_target_request(root, SELECTED_NODE_ID)
     spec = target_request.spec
+    typed_execplan = build_conv_execplan_request(root, spec.node_id)
+    typed_execplan_validation = validate_conv_execplan_request(
+        typed_execplan, root, expected_node_id=spec.node_id
+    )
+    typed_execplan_path = target_request.preflight_path.parent / "execplan_request.json"
+    typed_execplan_payload = canonical_execplan_bytes(typed_execplan)
+    if (
+        not typed_execplan_path.is_file()
+        or typed_execplan_path.read_bytes() != typed_execplan_payload
+    ):
+        raise W5ConvPreflightError("checked-in first Conv typed execplan request differs")
 
     typed_path = root / "contracts" / "typed_config_parameter_contract.json"
     typed = _load_json(typed_path)
@@ -1223,17 +1229,30 @@ def build_w5_first_conv_preflight(
                     "former_blocker": "B_REQUANT_TARGET_NUMERICS",
                     "status": "real_64_channel_requant_config_bound",
                     "scope": "eight real requant shards cover all 64 output channels with GA constants, HIGH-ring slices, aligned staging D, 9408/2352 loops and one final UINT8 flush",
-                    "boundary": "the exact new JSON/bitstream hardware run remains deferred; typed automatic dispatch remains B_EXECPLAN_TYPED_TRANSPORT",
+                    "boundary": "the exact new JSON/bitstream hardware run remains deferred",
+                },
+                {
+                    "former_blocker": "B_EXECPLAN_TYPED_TRANSPORT",
+                    "status": "official_typed_transport_and_conv_request_validated",
+                    "scope": "OperatorSpec preserves typed constants/config raw text/SHA and the first, E1 and E2 Conv instances share one node-id-driven request schema",
+                    "boundary": "operator-specific numerical semantics outside the closed Conv instances and whole-network cfg_pkg generation remain separate work",
                 },
             ],
             "n2n_selector_crosscheck": n2n_selector_crosscheck,
-            "unresolved_target_bindings": [
-                {
-                    "blocker": "B_EXECPLAN_TYPED_TRANSPORT",
-                    "fields": ["OperatorSpec", "control_registers"],
-                    "reason": "official execplan has no typed qparam/constants transport",
-                },
-            ],
+            "typed_execplan_transport": {
+                "status": typed_execplan_validation["status"],
+                "schema_version": CONV_EXECPLAN_SCHEMA_VERSION,
+                "path": "artifacts/w5/hwop-0004-00/execplan_request.json",
+                "sha256": sha256_bytes(typed_execplan_payload),
+                "operator_count": typed_execplan_validation["operator_count"],
+                "config_artifact_count": typed_execplan_validation[
+                    "config_artifact_count"
+                ],
+                "typed_constant_count": typed_execplan_validation[
+                    "typed_constant_count"
+                ],
+            },
+            "unresolved_target_bindings": [],
         },
         "gate_state": {
             "w5_started": True,
@@ -1245,10 +1264,10 @@ def build_w5_first_conv_preflight(
             "conv_simulator_component_status": "single_coordinate_exact_and_bulk_equivalent_passed",
             "golden_tile_status": "passed",
             "single_operator_manual_hardware_handoff_ready": True,
-            "stop_expansion": True,
+            "stop_expansion": False,
             "whole_network_generation_allowed": False,
             "next_required_evidence": [
-                "carry the same typed qparams through official execplan generation",
+                "expand the next Conv shape-family instance through the frozen typed request schema",
             ],
             "exact_new_json_hardware_validation": "deferred_by_operator_not_a_current_configuration_blocker",
         },
@@ -1290,8 +1309,7 @@ def validate_w5_first_conv_preflight(value: dict[str, Any]) -> None:
     blocker_ids = {
         item.get("blocker") for item in target.get("unresolved_target_bindings", [])
     }
-    required = {"B_EXECPLAN_TYPED_TRANSPORT"}
-    if blocker_ids != required:
+    if blocker_ids:
         raise W5ConvPreflightError("W5 Conv blocker set differs")
     resolved = {
         item.get("former_blocker"): item
@@ -1304,6 +1322,7 @@ def validate_w5_first_conv_preflight(value: dict[str, Any]) -> None:
             "B_CONV_TARGET_EXECUTION_SEMANTICS",
             "B_N2N_TARGET_SELECTOR",
             "B_REQUANT_TARGET_NUMERICS",
+            "B_EXECPLAN_TYPED_TRANSPORT",
         }
         or resolved["B_CONV_TARGET_EXECUTION_SEMANTICS"].get("status")
         != "operator_confirmed_platform_capability"
@@ -1311,6 +1330,8 @@ def validate_w5_first_conv_preflight(value: dict[str, Any]) -> None:
         != "official_high4_selector_resolved"
         or resolved["B_REQUANT_TARGET_NUMERICS"].get("status")
         != "real_64_channel_requant_config_bound"
+        or resolved["B_EXECPLAN_TYPED_TRANSPORT"].get("status")
+        != "official_typed_transport_and_conv_request_validated"
         or n2n.get("status")
         != "candidate_matches_executable_high4_reference"
         or n2n.get("candidate", {}).get("mem_loop") != 4
@@ -1319,6 +1340,19 @@ def validate_w5_first_conv_preflight(value: dict[str, Any]) -> None:
         or n2n.get("executable_low28_reference", {}).get("mem_loop") != 28
     ):
         raise W5ConvPreflightError("W5 Conv resolved capability/N2N crosscheck differs")
+    typed_transport = target.get("typed_execplan_transport", {})
+    typed_path = Path(str(typed_transport.get("path", "")))
+    if (
+        typed_transport.get("status") != "typed_transport_validated"
+        or typed_transport.get("schema_version") != CONV_EXECPLAN_SCHEMA_VERSION
+        or typed_transport.get("operator_count") != 2
+        or typed_transport.get("config_artifact_count") != 11
+        or typed_transport.get("typed_constant_count") != 8
+        or typed_path.as_posix()
+        != "artifacts/w5/hwop-0004-00/execplan_request.json"
+        or len(typed_transport.get("sha256", "")) != 64
+    ):
+        raise W5ConvPreflightError("W5 Conv typed execplan evidence differs")
     tile = value.get("first_tile_golden_preflight", {})
     comparisons = tile.get("comparisons", {})
     if (
@@ -1397,7 +1431,7 @@ def validate_w5_first_conv_preflight(value: dict[str, Any]) -> None:
         or gate.get("g5_passed") is not False
         or gate.get("g6_passed") is not False
         or gate.get("single_operator_manual_hardware_handoff_ready") is not True
-        or gate.get("stop_expansion") is not True
+        or gate.get("stop_expansion") is not False
         or gate.get("whole_network_generation_allowed") is not False
         or gate.get("exact_new_json_hardware_validation")
         != "deferred_by_operator_not_a_current_configuration_blocker"

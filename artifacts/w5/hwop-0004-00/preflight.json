@@ -408,10 +408,10 @@
     "g8_passed": false,
     "golden_tile_status": "passed",
     "next_required_evidence": [
-      "carry the same typed qparams through official execplan generation"
+      "expand the next Conv shape-family instance through the frozen typed request schema"
     ],
     "single_operator_manual_hardware_handoff_ready": true,
-    "stop_expansion": true,
+    "stop_expansion": false,
     "target_simulator_numerical_status": "config_bound_accumulate_requant_single_tile_full_pd_passed_with_execution_boundary",
     "w5_started": true,
     "whole_network_generation_allowed": false
@@ -1901,7 +1901,7 @@
       "execplan_binding": {
         "path": "ndp-sim-ref/model_execplan/src/execution_plan_generator/control_registers.py",
         "rule": "selector=1 when the slice ratio is not 28; otherwise selector=0",
-        "sha256": "8be7f21d8058ba3eaf45e55256c9237325c55f45d43c9e7b1ba8c3a54f7456d1"
+        "sha256": "5fe1c5f363a0ff57c1db26281d75a0cc365a260395f2130155fb6ccdc4fcb8dd"
       },
       "executable_high4_reference": {
         "dst_slice_sel": 1,
@@ -2039,22 +2039,28 @@
         "status": "official_high4_selector_resolved"
       },
       {
-        "boundary": "the exact new JSON/bitstream hardware run remains deferred; typed automatic dispatch remains B_EXECPLAN_TYPED_TRANSPORT",
+        "boundary": "the exact new JSON/bitstream hardware run remains deferred",
         "former_blocker": "B_REQUANT_TARGET_NUMERICS",
         "scope": "eight real requant shards cover all 64 output channels with GA constants, HIGH-ring slices, aligned staging D, 9408/2352 loops and one final UINT8 flush",
         "status": "real_64_channel_requant_config_bound"
+      },
+      {
+        "boundary": "operator-specific numerical semantics outside the closed Conv instances and whole-network cfg_pkg generation remain separate work",
+        "former_blocker": "B_EXECPLAN_TYPED_TRANSPORT",
+        "scope": "OperatorSpec preserves typed constants/config raw text/SHA and the first, E1 and E2 Conv instances share one node-id-driven request schema",
+        "status": "official_typed_transport_and_conv_request_validated"
       }
     ],
+    "typed_execplan_transport": {
+      "config_artifact_count": 11,
+      "operator_count": 2,
+      "path": "artifacts/w5/hwop-0004-00/execplan_request.json",
+      "schema_version": "resnet50-conv-typed-execplan-0.1",
+      "sha256": "fd6efbe86193f5d9660e8ae746763632b29ff8c968e10415d666a62f22ed3fe8",
+      "status": "typed_transport_validated",
+      "typed_constant_count": 8
+    },
     "unknown_fields_rejected": true,
-    "unresolved_target_bindings": [
-      {
-        "blocker": "B_EXECPLAN_TYPED_TRANSPORT",
-        "fields": [
-          "OperatorSpec",
-          "control_registers"
-        ],
-        "reason": "official execplan has no typed qparam/constants transport"
-      }
-    ]
+    "unresolved_target_bindings": []
   }
 }

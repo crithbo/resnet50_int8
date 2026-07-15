@@ -22,7 +22,7 @@ TARGET_ALIGNMENT_BYTES = 16
 FIRST_REAL_CONV_BASELINE_SHA256 = {
     "accumulate_config": "a20641cfcf65068c3ca31d710a0ef45d28a53cbf80d5e246ce54f0de3fe16f2c",
     "requant_manifest": "4424a6524dcdaaf1933b57875e4f3a1ae7edb11321dd02b692bbed51b82b274f",
-    "preflight": "abae81ff16d990d9caabc263ebf768b2be21ad8652634863be6f4824ee3c6bd8",
+    "preflight": "dff41e18e324d109257bb4f4d425ec251448c98efc526a987c243dfe779c5f46",
     "hardware_freeze_manifest": "72e17cb52c2948f86fe6b0e9b2715de57c5404a72a04f9514247f174e8a95550",
 }
 

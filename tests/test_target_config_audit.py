@@ -259,13 +259,16 @@ class TargetConfigAuditTests(unittest.TestCase):
         self.assertEqual(comparison["qlinearadd_branch_count"], 34)
         self.assertFalse(comparison["qlinearadd_y_qparams_consumed_by_template"])
 
-    def test_execplan_handlers_confirm_qparam_binding_gap(self) -> None:
+    def test_execplan_typed_transport_is_available_without_overstating_handlers(self) -> None:
         report = audit_execplan_qparam_binding(SOURCE)
-        self.assertEqual(report["status"], "gap_confirmed")
-        self.assertEqual(report["current_binding"], "shape_and_stream_stride_only")
+        self.assertEqual(report["status"], "typed_transport_available")
+        self.assertEqual(report["legacy_handler_binding"], "shape_and_stream_stride_only")
         self.assertEqual(len(report["handler_fields"]["quant_from_buffer"]), 5)
         self.assertEqual(len(report["handler_fields"]["add_dequant"]), 8)
-        self.assertFalse(report["ga_constant_qparams_patched"])
+        self.assertTrue(report["typed_values_content_addressed"])
+        self.assertTrue(report["config_raw_text_sha_validated"])
+        self.assertTrue(report["generic_control_register_consumer"])
+        self.assertTrue(report["ga_constant_qparams_patched"])
 
     def test_quant_and_add_dequant_encoders_are_constant_sensitive_and_fail_closed(self) -> None:
         report = audit_ga_quant_add(

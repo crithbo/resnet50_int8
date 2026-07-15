@@ -99,7 +99,7 @@ class W5FirstConvPreflightTests(unittest.TestCase):
         self.assertFalse(legacy["can_serve_as_target_template"])
         self.assertEqual(
             {item["blocker"] for item in target["unresolved_target_bindings"]},
-            {"B_EXECPLAN_TYPED_TRANSPORT"},
+            set(),
         )
         self.assertEqual(
             {item["former_blocker"] for item in target["resolved_target_capabilities"]},
@@ -107,6 +107,7 @@ class W5FirstConvPreflightTests(unittest.TestCase):
                 "B_CONV_TARGET_EXECUTION_SEMANTICS",
                 "B_N2N_TARGET_SELECTOR",
                 "B_REQUANT_TARGET_NUMERICS",
+                "B_EXECPLAN_TYPED_TRANSPORT",
             },
         )
         crosscheck = target["n2n_selector_crosscheck"]
@@ -121,7 +122,12 @@ class W5FirstConvPreflightTests(unittest.TestCase):
         self.assertEqual(
             crosscheck["executable_low28_reference"]["src_slice_sel"], 0
         )
-        self.assertTrue(self.report["gate_state"]["stop_expansion"])
+        typed = target["typed_execplan_transport"]
+        self.assertEqual(typed["status"], "typed_transport_validated")
+        self.assertEqual(typed["operator_count"], 2)
+        self.assertEqual(typed["config_artifact_count"], 11)
+        self.assertEqual(typed["typed_constant_count"], 8)
+        self.assertFalse(self.report["gate_state"]["stop_expansion"])
         self.assertTrue(
             self.report["gate_state"]["single_operator_manual_hardware_handoff_ready"]
         )

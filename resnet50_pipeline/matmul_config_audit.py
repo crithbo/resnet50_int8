@@ -13,9 +13,14 @@ from pathlib import Path
 from typing import Any
 
 from .hashing import sha256_file
+from .source_versions import (
+    OFFICIAL_CONFIG_COMMIT,
+    OFFICIAL_EXECPLAN_COMMIT,
+    SourceVersionError,
+    verify_ndp_source_checkout,
+)
 
 
-OFFICIAL_CONFIG_COMMIT = "e299b2804448242d1589b3e58ed7c5a9a5eca09f"
 PRIMARY_GEMV_TEMPLATE = "gemv_config_local_M1N128K32.json"
 SA_TEMPLATES: dict[str, dict[str, Any]] = {
     "decode_gemv_local.json": {
@@ -396,13 +401,17 @@ def _extract_handler_audit(source_root: Path) -> dict[str, Any]:
     )["operators"]
     registered = sorted(name for name in base_info if "gemm" in name or "gemv" in name)
     return {
-        "status": "partial_binding_only",
+        "status": "typed_transport_available_operator_handlers_partial",
         "source": "model_execplan/src/execution_plan_generator/control_registers.py",
         "source_sha256": sha256_file(control_path),
         "handler_count": len(handlers),
         "handlers": handlers,
         "operator_spec_fields": operator_fields,
         "operator_spec_has_typed_qparams": any(name in operator_fields for name in ("qparams", "attributes", "constants")),
+        "generic_typed_constant_consumer": (
+            "_append_typed_constant_register_updates" in text
+            and "control_register:" in text
+        ),
         "operator_base_info_registered_types": registered,
         "templates_without_registered_operator_type": sorted(
             name for name, spec in SA_TEMPLATES.items()
@@ -493,14 +502,10 @@ def extract_matmul_crosswalk(source_root: Path) -> dict[str, Any]:
 
 
 def _verify_source(source_root: Path) -> None:
-    resolved = source_root.resolve()
-    result = subprocess.run(
-        ["git", "-c", f"safe.directory={resolved.as_posix()}", "rev-parse", "HEAD"],
-        cwd=resolved, text=True,
-        encoding="utf-8", errors="replace", capture_output=True, check=False,
-    )
-    if result.returncode or result.stdout.strip() != OFFICIAL_CONFIG_COMMIT:
-        raise MatmulConfigAuditError("official config source does not match the locked commit")
+    try:
+        verify_ndp_source_checkout(source_root)
+    except SourceVersionError as error:
+        raise MatmulConfigAuditError(str(error)) from error
 
 
 def _run_encoder(source_root: Path, config_path: Path, output_dir: Path) -> dict[str, Any]:
@@ -584,7 +589,12 @@ def build_matmul_candidate_report(source_root: Path, *, run_encoder: bool = Fals
     report: dict[str, Any] = {
         "schema_version": "0.1",
         "report_kind": "w4_28_c6_matmul_candidate_audit",
-        "source": {"repository": "ndp-sim-ref", "commit": OFFICIAL_CONFIG_COMMIT},
+        "source": {
+            "repository": "ndp-sim-ref",
+            "commit": OFFICIAL_CONFIG_COMMIT,
+            "config_baseline_commit": OFFICIAL_CONFIG_COMMIT,
+            "execplan_commit": OFFICIAL_EXECPLAN_COMMIT,
+        },
         "status": "candidate_preflight_only",
         "inventory": inventory_sa_templates(source_root),
         "crosswalk": extract_matmul_crosswalk(source_root),

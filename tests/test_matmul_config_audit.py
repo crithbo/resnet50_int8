@@ -66,13 +66,16 @@ class MatmulConfigAuditTests(unittest.TestCase):
             )
             self.assertEqual(candidate["observed_chain"]["buffer"]["buffer5"]["dst_port"], 1)
 
-    def test_handlers_are_present_but_placeholder_and_qparam_free(self) -> None:
+    def test_typed_transport_exists_while_matmul_handlers_remain_partial(self) -> None:
         binding = extract_matmul_crosswalk(SOURCE)["handler_binding"]
         self.assertEqual(binding["handler_count"], 5)
-        self.assertEqual(binding["status"], "partial_binding_only")
+        self.assertEqual(
+            binding["status"], "typed_transport_available_operator_handlers_partial"
+        )
         self.assertTrue(all(item["declared_placeholder"] for item in binding["handlers"].values()))
         self.assertTrue(all(not item["typed_qparams_consumed"] for item in binding["handlers"].values()))
-        self.assertFalse(binding["operator_spec_has_typed_qparams"])
+        self.assertTrue(binding["operator_spec_has_typed_qparams"])
+        self.assertTrue(binding["generic_typed_constant_consumer"])
         self.assertEqual(
             binding["operator_base_info_registered_types"],
             ["prefill_gemm_local", "prefill_gemm_ring_4slice"],

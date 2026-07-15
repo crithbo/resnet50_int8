@@ -2832,6 +2832,13 @@
     "semantics": {
       "path": "configs/conv/hwop-0003-00/semantics.json",
       "sha256": "d873e36abfcf275b5b8ed25157de7e3492772d9e5c1612b185119633e1336983"
+    },
+    "typed_execplan_request": {
+      "config_artifact_count": 35,
+      "operator_count": 2,
+      "path": "artifacts/w5/hwop-0003-00/execplan_request.json",
+      "sha256": "48a793ed0710c3a931318deab549cbf0d4be46eee32c93a2d579d149574a690d",
+      "status": "typed_transport_validated"
     }
   },
   "first_tile": {
@@ -2977,7 +2984,7 @@
   },
   "gate_state": {
     "e1_candidate_passed": true,
-    "execplan_typed_transport_blocked": true,
+    "execplan_typed_transport_passed": true,
     "g5_passed": false,
     "g6_passed": false,
     "g8_passed": false,

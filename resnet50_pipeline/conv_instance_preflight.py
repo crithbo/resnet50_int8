@@ -8,6 +8,11 @@ from typing import Any
 import numpy as np
 
 from .conv_instance import ConvTargetRequest, build_conv_target_request
+from .conv_execplan_transport import (
+    build_conv_execplan_request,
+    canonical_execplan_bytes,
+    validate_conv_execplan_request,
+)
 from .golden.qlinear_conv import requantize_uint8
 from .hashing import sha256_file
 from .w5_conv_preflight import (
@@ -115,6 +120,17 @@ def build_conv_instance_preflight(
         raise ConvInstancePreflightError(
             "the hardware-frozen first instance uses build_w5_first_conv_preflight"
         )
+    typed_execplan = build_conv_execplan_request(root, node_id)
+    typed_execplan_validation = validate_conv_execplan_request(
+        typed_execplan, root, expected_node_id=node_id
+    )
+    typed_execplan_payload = canonical_execplan_bytes(typed_execplan)
+    typed_execplan_path = request.preflight_path.parent / "execplan_request.json"
+    if (
+        not typed_execplan_path.is_file()
+        or typed_execplan_path.read_bytes() != typed_execplan_payload
+    ):
+        raise ConvInstancePreflightError("candidate typed execplan request differs")
     values, layout, bundle = load_conv_instance_execution(root, spec)
     tile = _compare_tile(values, layout, bundle, spec)
     baseline_macs = 16 * 64 * 64 * 56 * 56
@@ -178,6 +194,17 @@ def build_conv_instance_preflight(
                     "flush_count_per_logical_output"
                 ],
             },
+            "typed_execplan_request": {
+                "path": (
+                    f"artifacts/w5/{spec.accumulate_hw_op_id}/execplan_request.json"
+                ),
+                "sha256": sha256_file(typed_execplan_path),
+                "status": typed_execplan_validation["status"],
+                "operator_count": typed_execplan_validation["operator_count"],
+                "config_artifact_count": typed_execplan_validation[
+                    "config_artifact_count"
+                ],
+            },
         },
         "official_encoder": encoder,
         "physical_plan": {
@@ -199,7 +226,7 @@ def build_conv_instance_preflight(
             "g5_passed": False,
             "g6_passed": False,
             "g8_passed": False,
-            "execplan_typed_transport_blocked": True,
+            "execplan_typed_transport_passed": True,
         },
     }
     validate_conv_instance_preflight(report, request)
@@ -239,6 +266,13 @@ def validate_conv_instance_preflight(
         != list(range(spec.output_channels))
         or configs.get("requant_manifest", {}).get("flush_count_per_logical_output")
         != 1
+        or configs.get("typed_execplan_request", {}).get("sha256")
+        != sha256_file(request.preflight_path.parent / "execplan_request.json")
+        or configs.get("typed_execplan_request", {}).get("status")
+        != "typed_transport_validated"
+        or configs.get("typed_execplan_request", {}).get("operator_count") != 2
+        or configs.get("typed_execplan_request", {}).get("config_artifact_count")
+        != spec.requant_shard_count + 3
     ):
         raise ConvInstancePreflightError("candidate Conv config binding differs")
     encoder = report.get("official_encoder", {})
@@ -313,7 +347,7 @@ def validate_conv_instance_preflight(
         "g5_passed": False,
         "g6_passed": False,
         "g8_passed": False,
-        "execplan_typed_transport_blocked": True,
+        "execplan_typed_transport_passed": True,
     }:
         raise ConvInstancePreflightError("candidate Conv gate boundary differs")
 

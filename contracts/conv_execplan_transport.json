@@ -1,0 +1,150 @@
+{
+  "approved_w4_snapshots": [
+    {
+      "path": "contracts/target_config_authority_audit.json",
+      "sha256": "b81436245886aaca2c6e2ab26f52d6c70810daa18c835cb6f08ce683f4ffa8d3",
+      "unchanged": true
+    },
+    {
+      "path": "contracts/typed_config_parameter_contract.json",
+      "sha256": "abbc87b0b13c92611a90fe1767b32b15fe9c49f23bee616ca2bb51219dd181bd",
+      "unchanged": true
+    }
+  ],
+  "boundary": {
+    "conv_shape_family_parallel_expansion_allowed": true,
+    "g5_passed": false,
+    "g6_passed": false,
+    "g8_passed": false,
+    "hardware_execution_proven": false,
+    "operator_specific_bindings_outside_closed_conv_instances": "pending",
+    "whole_network_execplan_generated": false
+  },
+  "contract_type": "conv_execplan_typed_transport_closure",
+  "former_blocker": "B_EXECPLAN_TYPED_TRANSPORT",
+  "instances": [
+    {
+      "hw_op_ids": [
+        "hwop-0004-00",
+        "hwop-0004-01"
+      ],
+      "node_id": "node-0004",
+      "path": "artifacts/w5/hwop-0004-00/execplan_request.json",
+      "sha256": "fd6efbe86193f5d9660e8ae746763632b29ff8c968e10415d666a62f22ed3fe8",
+      "size_bytes": 226800,
+      "validation": {
+        "config_artifact_count": 11,
+        "instance_id": "conv:node-0004:hwop-0004-00+hwop-0004-01",
+        "n2n": {
+          "dst_slice_sel": 1,
+          "mem_loop": 4,
+          "ping_pong": 0,
+          "src_slice_sel": 1
+        },
+        "node_id": "node-0004",
+        "operator_count": 2,
+        "requant_channel_count": 64,
+        "requant_shard_count": 8,
+        "status": "typed_transport_validated",
+        "typed_constant_count": 8,
+        "unique_flush_count": 64
+      }
+    },
+    {
+      "hw_op_ids": [
+        "hwop-0008-00",
+        "hwop-0008-01"
+      ],
+      "node_id": "node-0008",
+      "path": "artifacts/w5/hwop-0008-00/execplan_request.json",
+      "sha256": "467fe1985f2971fe2be13f715cc81f8a9fbf35d930db612498e787173117177f",
+      "size_bytes": 230183,
+      "validation": {
+        "config_artifact_count": 11,
+        "instance_id": "conv:node-0008:hwop-0008-00+hwop-0008-01",
+        "n2n": {
+          "dst_slice_sel": 1,
+          "mem_loop": 4,
+          "ping_pong": 0,
+          "src_slice_sel": 1
+        },
+        "node_id": "node-0008",
+        "operator_count": 2,
+        "requant_channel_count": 64,
+        "requant_shard_count": 8,
+        "status": "typed_transport_validated",
+        "typed_constant_count": 8,
+        "unique_flush_count": 64
+      }
+    },
+    {
+      "hw_op_ids": [
+        "hwop-0003-00",
+        "hwop-0003-01"
+      ],
+      "node_id": "node-0003",
+      "path": "artifacts/w5/hwop-0003-00/execplan_request.json",
+      "sha256": "48a793ed0710c3a931318deab549cbf0d4be46eee32c93a2d579d149574a690d",
+      "size_bytes": 785122,
+      "validation": {
+        "config_artifact_count": 35,
+        "instance_id": "conv:node-0003:hwop-0003-00+hwop-0003-01",
+        "n2n": {
+          "dst_slice_sel": 1,
+          "mem_loop": 4,
+          "ping_pong": 0,
+          "src_slice_sel": 1
+        },
+        "node_id": "node-0003",
+        "operator_count": 2,
+        "requant_channel_count": 256,
+        "requant_shard_count": 32,
+        "status": "typed_transport_validated",
+        "typed_constant_count": 8,
+        "unique_flush_count": 256
+      }
+    }
+  ],
+  "negative_tests": [
+    "missing_scale",
+    "missing_zero_point",
+    "missing_bias",
+    "per_channel_axis_loss",
+    "float_to_integer_truncation",
+    "legacy_16_slice_mask",
+    "config_raw_text_or_sha_drift"
+  ],
+  "schema_guarantees": {
+    "config_binding": "exact UTF-8 JSON raw_text plus SHA-256",
+    "legacy_integer_params_reused_for_fp32": false,
+    "operator_spec_fields": [
+      "instance_id",
+      "stage",
+      "attributes",
+      "constants",
+      "config_artifacts"
+    ],
+    "requant_cardinality": "one manifest to many shards",
+    "substage_identity": "accumulate and requantize share one instance_id",
+    "tensor_metadata": [
+      "tensor_id",
+      "dtype",
+      "logical_shape",
+      "identity_sha256",
+      "value_sha256",
+      "axis"
+    ]
+  },
+  "schema_version": "0.1",
+  "source": {
+    "config_baseline_commit": "e299b2804448242d1589b3e58ed7c5a9a5eca09f",
+    "execplan_commit": "5aa7d44aa2c58b7c86cfa32389d135246001629c",
+    "ndpfuncmodel_commit": "9004ff73e2e2d7c501f682de6df8543a45ae56cc",
+    "transport_audit": {
+      "path": "contracts/target_execplan_transport_audit.json",
+      "sha256": "1a4af25b1860093fff084eac8804fe5c060c6b5c8538ba491a2b155338e25300",
+      "size_bytes": 241429
+    }
+  },
+  "status": "resolved_for_closed_conv_instances"
+}

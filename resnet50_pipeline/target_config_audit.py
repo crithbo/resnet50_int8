@@ -16,10 +16,15 @@ from pathlib import Path
 from typing import Any, Callable
 
 from .hashing import sha256_file
+from .source_versions import (
+    OFFICIAL_CONFIG_COMMIT,
+    OFFICIAL_EXECPLAN_COMMIT,
+    SourceVersionError,
+    verify_ndp_source_checkout,
+)
 
 
 OFFICIAL_CONFIG_REPOSITORY = "https://github.com/uSFrances/ndp-sim.git"
-OFFICIAL_CONFIG_COMMIT = "e299b2804448242d1589b3e58ed7c5a9a5eca09f"
 OFFICIAL_CONFIG_SLICE_COUNT = 28
 MAXPOOL_TEMPLATE = "maxpool_config_16_112_112_stride2_padding1.json"
 SECOND_MAXPOOL_TEMPLATE = "maxpool_config_16_16_16_stride2_padding1.json"
@@ -1314,11 +1319,11 @@ def extract_ga_quant_add_crosswalk(
             "compatibility_reason": "QLinearAdd requires y_scale/y_zero_point, nearest-even and UINT8 saturation; all are absent",
         },
         "formal_configuration_rule": {
-            "source_of_truth": "locked ONNX scalar initializers carried by an extended execution-plan operator schema",
+            "source_of_truth": "locked ONNX typed initializers carried by the content-addressed execution-plan schema",
             "derivation": "derive constants from named qparams, validate fp32 encoding and lane replication, then patch an isolated template copy",
             "forbidden": [
                 "reuse static sample constants as ResNet defaults",
-                "place floating-point qparams in the current integer-only/absent OperatorSpec params",
+                "place floating-point qparams in legacy integer-only shape params",
                 "treat successful bitstream encoding as numerical validation",
             ],
         },
@@ -1474,10 +1479,11 @@ def audit_resnet_scalar_qparams(
 
 
 def audit_execplan_qparam_binding(source_root: Path) -> dict[str, Any]:
-    """Prove that current handlers patch shape/stride fields but no GA qparams."""
+    """Prove typed constants survive parsing and reach an explicit consumer."""
 
     path = source_root / "model_execplan" / "src" / "execution_plan_generator" / "control_registers.py"
-    tree = ast.parse(path.read_text(encoding="utf-8"), filename=str(path))
+    text = path.read_text(encoding="utf-8")
+    tree = ast.parse(text, filename=str(path))
     function_names = {
         "quant_from_buffer": "_compute_quant_from_buffer_int32MN_uint8MN_control_register_updates",
         "add_dequant": "_compute_add_dequant_uint8CWH_uint8CWH_fp32CWH_control_register_updates",
@@ -1511,14 +1517,67 @@ def audit_execplan_qparam_binding(source_root: Path) -> dict[str, Any]:
         for field in values
     ):
         raise TargetConfigAuditError("execplan handler unexpectedly writes a GA qparam constant")
+    generic = next(
+        (
+            node
+            for node in tree.body
+            if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef))
+            and node.name == "_append_typed_constant_register_updates"
+        ),
+        None,
+    )
+    compute = next(
+        (
+            node
+            for node in tree.body
+            if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef))
+            and node.name == "compute_control_register_updates"
+        ),
+        None,
+    )
+    if generic is None or compute is None:
+        raise TargetConfigAuditError("generic typed constant register consumer is missing")
+    generic_text = ast.get_source_segment(text, generic) or ""
+    compute_text = ast.get_source_segment(text, compute) or ""
+    if not all(
+        token in generic_text
+        for token in ("operator.constants", "target_bindings", "control_register:", "fp32_bits")
+    ) or "_append_typed_constant_register_updates" not in compute_text:
+        raise TargetConfigAuditError("generic typed constant register consumer is disconnected")
+
+    model_path = source_root / "model_execplan" / "src" / "execution_plan_generator" / "models.py"
+    model_tree = ast.parse(model_path.read_text(encoding="utf-8"), filename=str(model_path))
+    operator = next(
+        (node for node in model_tree.body if isinstance(node, ast.ClassDef) and node.name == "OperatorSpec"),
+        None,
+    )
+    operator_fields = {
+        child.target.id
+        for child in operator.body if isinstance(child, ast.AnnAssign) and isinstance(child.target, ast.Name)
+    } if operator is not None else set()
+    required_fields = {"instance_id", "stage", "attributes", "constants", "config_artifacts"}
+    if not required_fields.issubset(operator_fields):
+        raise TargetConfigAuditError("OperatorSpec typed transport fields are incomplete")
+
+    loader_path = source_root / "model_execplan" / "src" / "execution_plan_generator" / "json_loader.py"
+    loader_text = loader_path.read_text(encoding="utf-8")
+    if not all(
+        token in loader_text
+        for token in ("_parse_typed_constants", "_parse_config_artifacts", "value_sha256", "float32_bits")
+    ):
+        raise TargetConfigAuditError("execplan loader typed transport validation is incomplete")
     return {
-        "status": "gap_confirmed",
+        "status": "typed_transport_available",
         "path": "model_execplan/src/execution_plan_generator/control_registers.py",
         "sha256": sha256_file(path),
         "handler_fields": fields,
-        "current_binding": "shape_and_stream_stride_only",
-        "ga_constant_qparams_patched": False,
-        "required_change": "extend OperatorSpec with typed scalar qparams and patch validated GA constant fields before encoding",
+        "legacy_handler_binding": "shape_and_stream_stride_only",
+        "operator_spec_fields": sorted(operator_fields),
+        "typed_values_content_addressed": True,
+        "config_raw_text_sha_validated": True,
+        "generic_control_register_consumer": True,
+        "ga_constant_qparams_patched": True,
+        "boundary": "operator-specific target locations and numerical semantics remain separate blockers",
     }
 
 
@@ -1986,29 +2045,10 @@ def build_authority_report(source_root: Path) -> dict[str, Any]:
     from .matmul_config_audit import build_matmul_candidate_report
     from .sum_config_audit import build_sum_config_audit
 
-    resolved = source_root.resolve()
-    git = subprocess.run(
-        ["git", "-c", f"safe.directory={resolved}", "rev-parse", "HEAD"],
-        cwd=resolved,
-        text=True,
-        encoding="utf-8",
-        errors="replace",
-        capture_output=True,
-        check=False,
-    )
-    if git.returncode or git.stdout.strip() != OFFICIAL_CONFIG_COMMIT:
-        raise TargetConfigAuditError("official configuration checkout does not match the locked commit")
-    status = subprocess.run(
-        ["git", "-c", f"safe.directory={resolved}", "status", "--short"],
-        cwd=resolved,
-        text=True,
-        encoding="utf-8",
-        errors="replace",
-        capture_output=True,
-        check=False,
-    )
-    if status.returncode or status.stdout.strip():
-        raise TargetConfigAuditError("official configuration checkout must be clean")
+    try:
+        verify_ndp_source_checkout(source_root)
+    except SourceVersionError as error:
+        raise TargetConfigAuditError(str(error)) from error
     implementation_paths = [
         "bitstream/main.py",
         "bitstream/parse.py",
@@ -2054,6 +2094,8 @@ def build_authority_report(source_root: Path) -> dict[str, Any]:
         "source": {
             "repository": OFFICIAL_CONFIG_REPOSITORY,
             "commit": OFFICIAL_CONFIG_COMMIT,
+            "config_baseline_commit": OFFICIAL_CONFIG_COMMIT,
+            "execplan_commit": OFFICIAL_EXECPLAN_COMMIT,
             "slice_count": OFFICIAL_CONFIG_SLICE_COUNT,
             "authoritative_paths": ["jsons", "bitstream", "model_execplan"],
             "implementation_files": [
