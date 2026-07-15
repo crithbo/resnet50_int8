@@ -61,14 +61,14 @@
       "consumes_target_json": true,
       "consumes_target_json_or_bitstream": true,
       "entrypoint": "NDPFuncModel/tools/physical_image_probe.py",
-      "entrypoint_sha256": "a07789515b2de4f96870bdd4a901edafb1a3d78730954db02e7dce20e8d61235",
+      "entrypoint_sha256": "f25f31f33240d02ed5a415c06b74e3f8eee96bf2597fdcfd948a4afeffe82269",
       "exit_code_contract": "0 with one JSON object on stdout",
       "input_package": "physical_image_request schema 0.3 with exact accumulate/requant JSON texts, SHA-256 values and semantic contract text",
       "physical_d_output_format": "uint8 DRAM byte plus output_after in JSON",
       "supported_ops": [
         "QLinearConv"
       ],
-      "version": "e35b24a446bdaeb7a939ab50d8e0cad5fe2a393c",
+      "version": "9004ff73e2e2d7c501f682de6df8543a45ae56cc",
       "working_directory": "NDPFuncModel"
     },
     "workspace_contract": {
@@ -546,7 +546,7 @@
     "scope": "one_real_hwop-0004-00_output_coordinate",
     "simulator": "NDPFuncModel conv_func",
     "simulator_status": "operator_confirmed_conv_simulator_component",
-    "source_commit": "e35b24a446bdaeb7a939ab50d8e0cad5fe2a393c",
+    "source_commit": "9004ff73e2e2d7c501f682de6df8543a45ae56cc",
     "source_owners": [
       0,
       1,
@@ -573,8 +573,8 @@
     "config_path": "conv_1x1_real.json",
     "config_sha256": "a20641cfcf65068c3ca31d710a0ef45d28a53cbf80d5e246ce54f0de3fe16f2c",
     "execution_modes": {
-      "first_tile": "NDPFuncModel config-bound GA requant with two staging D writebacks and inverse",
-      "full_operator": "NDPFuncModel config-bound GA requant with two staging D writebacks and inverse",
+      "first_tile": "NDPFuncModel config-bound GA requant with 2 staging D writebacks and inverse",
+      "full_operator": "NDPFuncModel config-bound GA requant with 2 staging D writebacks and inverse",
       "single_coordinate": "DRAM/Buffer/SpecialPEA/ActivationUnit/DRAM component path"
     },
     "not_cycle_accurate_lc_interpretation": true,
@@ -1834,7 +1834,7 @@
   },
   "source_identity": {
     "backend_contract_path": "contracts/backend.json",
-    "backend_contract_sha256": "b3cd4f8fc90818ab6223e6507f18ccf596f135ed1b7214e535e75bfacce7716c",
+    "backend_contract_sha256": "def7fb2fe07b3d7290dffdd9f5710712e6d755fff141ff7ea328c7511b230e57",
     "hardware_approval_path": "contracts/hardware_approval.json",
     "hardware_approval_sha256": "963b64087351a45d54f52a86fe3536804e4f24427c94ee912c521b3a93fe159b",
     "model_sha256": "c234f30975989788b4405f25253275aae247ab6dbdd34aaa69ab0a59ff76f6d0",

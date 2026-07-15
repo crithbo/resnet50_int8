@@ -9,9 +9,9 @@ from pathlib import Path
 
 from resnet50_pipeline.conv_instance import (
     FIRST_REAL_CONV_NODE_ID,
-    load_conv_instance_spec,
+    make_conv_target_request,
 )
-from generate_conv_1x1_requant_real import OUTPUT_ROOT, build_bundle
+from generate_conv_1x1_requant_real import build_bundle
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -89,28 +89,34 @@ def _encode(config: Path, output: Path) -> dict[str, dict[str, int | str]]:
 def main() -> int:
     parser = argparse.ArgumentParser(description="Rebuild all real Conv requant shards twice")
     parser.add_argument("--node-id", default=FIRST_REAL_CONV_NODE_ID)
-    parser.add_argument("--config-root", type=Path, default=OUTPUT_ROOT)
+    parser.add_argument("--config-root", type=Path)
     parser.add_argument(
         "--output",
         type=Path,
-        default=ROOT / "artifacts" / "w5" / "conv_1x1_requant_real",
     )
     args = parser.parse_args()
-    spec = load_conv_instance_spec(ROOT, args.node_id)
+    request = make_conv_target_request(ROOT, args.node_id)
+    spec = request.spec
+    config_root = args.config_root or request.requant_root
+    output = args.output or (
+        ROOT / "artifacts" / "w5" / "conv_1x1_requant_real"
+        if args.node_id == FIRST_REAL_CONV_NODE_ID
+        else ROOT / "artifacts" / "w5" / spec.accumulate_hw_op_id / "requant-encoder"
+    )
     try:
-        config_root_relative = args.config_root.resolve().relative_to(ROOT).as_posix()
+        config_root_relative = config_root.resolve().relative_to(ROOT).as_posix()
     except ValueError as error:
         raise ValueError("requant config root must stay inside the project root") from error
     _, generated = build_bundle(spec, config_root_relative=config_root_relative)
     for name, expected in generated.items():
-        if (args.config_root / name).read_bytes() != expected:
+        if (config_root / name).read_bytes() != expected:
             raise ValueError(f"checked-in requant output differs: {name}")
     observed = {}
     for shard_index in range(spec.requant_shard_count):
         shard_name = f"shard-{shard_index:02d}"
-        config = args.config_root / f"{shard_name}.json"
-        first = _encode(config, args.output / "encode-a" / shard_name)
-        second = _encode(config, args.output / "encode-b" / shard_name)
+        config = config_root / f"{shard_name}.json"
+        first = _encode(config, output / "encode-a" / shard_name)
+        second = _encode(config, output / "encode-b" / shard_name)
         if first != second:
             raise ValueError(f"requant encoder output is not deterministic: {shard_name}")
         observed[shard_name] = first

@@ -79,10 +79,11 @@ class ConvInstanceSpecTests(unittest.TestCase):
                 FIRST_REAL_CONV_BASELINE_SHA256["hardware_freeze_manifest"],
             )
 
-    def test_second_real_instance_is_bound_and_third_is_not_prematurely_frozen(self) -> None:
+    def test_second_and_third_instances_are_bound_without_freezing_the_next(self) -> None:
         second_request = build_conv_target_request(ROOT, "node-0008")
         second = second_request.spec
-        wide_output = load_conv_instance_spec(ROOT, "node-0003")
+        wide_output_request = build_conv_target_request(ROOT, "node-0003")
+        wide_output = wide_output_request.spec
         self.assertEqual(second.activation_shape, (16, 256, 56, 56))
         self.assertEqual(second.output_shape, (16, 64, 56, 56))
         self.assertEqual((second.c_tile, second.k_tile), (64, 16))
@@ -91,8 +92,9 @@ class ConvInstanceSpecTests(unittest.TestCase):
         self.assertEqual((wide_output.c_tile, wide_output.k_tile), (16, 64))
         self.assertEqual(wide_output.requant_shard_count, 32)
         second_request.validate_checked_in_bindings()
+        wide_output_request.validate_checked_in_bindings()
         with self.assertRaisesRegex(ConvInstanceError, "files are missing"):
-            build_conv_target_request(ROOT, "node-0003")
+            build_conv_target_request(ROOT, "node-0005")
 
     def test_non_conv_or_unknown_node_fails_closed(self) -> None:
         with self.assertRaises(ConvInstanceError):

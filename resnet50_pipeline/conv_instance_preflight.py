@@ -5,7 +5,10 @@ import math
 from pathlib import Path
 from typing import Any
 
+import numpy as np
+
 from .conv_instance import ConvTargetRequest, build_conv_target_request
+from .golden.qlinear_conv import requantize_uint8
 from .hashing import sha256_file
 from .w5_conv_preflight import (
     _compare_ndp_target_config,
@@ -27,6 +30,78 @@ def _load_json(path: Path) -> dict[str, Any]:
     if not isinstance(value, dict):
         raise ConvInstancePreflightError(f"JSON root must be an object: {path}")
     return value
+
+
+def _selected_output_channel_samples(
+    values: dict[str, np.ndarray],
+    layout: Any,
+    bundle: Any,
+    request: ConvTargetRequest,
+) -> list[dict[str, Any]]:
+    spec = request.spec
+    channels = sorted({0, spec.output_channels // 2, spec.output_channels - 1})
+    activation = values["A"][0, :, 0, 0].astype(np.int64)
+    x_zero_point = int(values["x_zero_point"].reshape(-1)[0])
+    output_zero_point = values["y_zero_point"]
+    samples = []
+    for channel in channels:
+        weight = values["B"][channel, :, 0, 0].astype(np.int64)
+        weight_zero_point = int(values["w_zero_point"][channel])
+        accumulator = int(values["bias"][channel]) + int(
+            np.dot(
+                activation - x_zero_point,
+                weight - weight_zero_point,
+            )
+        )
+        expected_p = int(values["P"][0, channel, 0, 0])
+        multiplier = np.asarray(
+            [
+                np.float32(values["x_scale"][0])
+                * np.float32(values["w_scale"][channel])
+                / np.float32(values["y_scale"][0])
+            ],
+            dtype=np.float32,
+        )
+        observed_d = int(
+            requantize_uint8(
+                np.asarray([[[[accumulator]]]], dtype=np.int32),
+                multiplier,
+                output_zero_point,
+            )[0, 0, 0, 0]
+        )
+        expected_d = int(values["D"][0, channel, 0, 0])
+        coordinate = (0, channel, 0, 0)
+        p_address = layout.explain_coordinate(
+            bundle, bundle.tensor_ids["P"], coordinate
+        )[0]["address"]
+        d_address = layout.explain_coordinate(
+            bundle, bundle.tensor_ids["D"], coordinate
+        )[0]["address"]
+        samples.append(
+            {
+                "coordinate": list(coordinate),
+                "P": {
+                    "observed": accumulator,
+                    "golden": expected_p,
+                    "mismatch_count": int(accumulator != expected_p),
+                    "physical_address": int(p_address),
+                },
+                "D": {
+                    "observed": observed_d,
+                    "golden": expected_d,
+                    "mismatch_count": int(observed_d != expected_d),
+                    "physical_address": int(d_address),
+                },
+                "covered_by_config_bound_full_operator": True,
+            }
+        )
+    if any(
+        item[port]["mismatch_count"]
+        for item in samples
+        for port in ("P", "D")
+    ):
+        raise ConvInstancePreflightError("selected output-channel P/D sample differs")
+    return samples
 
 
 def build_conv_instance_preflight(
@@ -58,6 +133,9 @@ def build_conv_instance_preflight(
         bundle,
         request,
         timeout_seconds=timeout_seconds,
+    )
+    channel_samples = _selected_output_channel_samples(
+        values, layout, bundle, request
     )
     evidence_path = request.accumulate_config_path.parent / "encoder_evidence.json"
     encoder = _load_json(evidence_path)
@@ -113,6 +191,7 @@ def build_conv_instance_preflight(
         },
         "first_tile": tile,
         "single_coordinate": coordinate,
+        "selected_output_channel_samples": channel_samples,
         "config_bound_comparison": closure,
         "gate_state": {
             "e1_candidate_passed": True,
@@ -212,6 +291,21 @@ def validate_conv_instance_preflight(
         != 28
     ):
         raise ConvInstancePreflightError("candidate Conv config-bound P/D differs")
+    samples = report.get("selected_output_channel_samples", [])
+    expected_sample_channels = sorted(
+        {0, spec.output_channels // 2, spec.output_channels - 1}
+    )
+    if (
+        [item.get("coordinate") for item in samples]
+        != [[0, channel, 0, 0] for channel in expected_sample_channels]
+        or any(
+            item.get("covered_by_config_bound_full_operator") is not True
+            or item.get(port, {}).get("mismatch_count") != 0
+            for item in samples
+            for port in ("P", "D")
+        )
+    ):
+        raise ConvInstancePreflightError("candidate Conv channel samples differ")
     gate = report.get("gate_state", {})
     if gate != {
         "e1_candidate_passed": True,

@@ -545,9 +545,9 @@ def _compare_tile(
     if (
         destination != 0
         or p_region.sample_start != 0
-        or p_region.sample_count != 3
+        or p_region.sample_count != spec.first_group_sample_count
         or p_region.logical_start != 0
-        or p_region.logical_count != 16
+        or p_region.logical_count != spec.k_tile
     ):
         raise W5ConvPreflightError("selected first physical Conv tile differs")
 
@@ -767,7 +767,7 @@ def _compare_ndp_target_config(
         "dilations": list(bundle.plan.dilations),
         "simulator": "NDPFuncModel conv_func",
         "simulator_status": adapter.status,
-        "source_commit": "e35b24a446bdaeb7a939ab50d8e0cad5fe2a393c",
+        "source_commit": "9004ff73e2e2d7c501f682de6df8543a45ae56cc",
         "destination_slice": 0,
         "source_owners": [0, 1, 3, 2],
         "channel_ranges": [
@@ -837,8 +837,14 @@ def _compare_ndp_target_config(
         "ordered_comparisons": [comparisons[name] for name in expected_counts],
         "execution_modes": {
             "single_coordinate": "DRAM/Buffer/SpecialPEA/ActivationUnit/DRAM component path",
-            "first_tile": "NDPFuncModel config-bound GA requant with two staging D writebacks and inverse",
-            "full_operator": "NDPFuncModel config-bound GA requant with two staging D writebacks and inverse",
+            "first_tile": (
+                "NDPFuncModel config-bound GA requant with "
+                f"{request.spec.requant_shards_per_owner} staging D writebacks and inverse"
+            ),
+            "full_operator": (
+                "NDPFuncModel config-bound GA requant with "
+                f"{request.spec.requant_shards_per_owner} staging D writebacks and inverse"
+            ),
         },
         "bulk_arithmetic_path": bulk_job["arithmetic_path"],
         "physical_writebacks": bulk_job["physical_writebacks"],

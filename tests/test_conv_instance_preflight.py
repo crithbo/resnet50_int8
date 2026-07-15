@@ -79,5 +79,55 @@ class ConvInstancePreflightTests(unittest.TestCase):
             validate_conv_instance_preflight(changed, self.request)
 
 
+class WideOutputConvInstancePreflightTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls) -> None:
+        cls.request = build_conv_target_request(ROOT, "node-0003")
+        report_path = ROOT / "artifacts" / "w5" / "hwop-0003-00" / "preflight.json"
+        cls.report = json.loads(report_path.read_text(encoding="utf-8"))
+
+    def test_wide_output_channels_shards_and_staging_are_complete(self) -> None:
+        report = self.report
+        target = report["instance_spec"]["target"]
+        self.assertEqual((target["c_tile"], target["k_tile"]), (16, 64))
+        manifest = report["configs"]["requant_manifest"]
+        self.assertEqual(manifest["shard_count"], 32)
+        self.assertEqual(manifest["covered_channels"], list(range(256)))
+        writebacks = report["config_bound_comparison"]["physical_writebacks"]
+        self.assertEqual(len(writebacks), 28)
+        self.assertTrue(
+            all(
+                len(item["staged_D_bases"]) == 8
+                and len(item["requant_shards"]) == 8
+                and item["staging_inverse_matches_canonical_D"]
+                for item in writebacks
+            )
+        )
+        validate_conv_instance_preflight(report, self.request)
+
+    def test_wide_output_three_scopes_and_edge_channel_samples_are_exact(self) -> None:
+        comparisons = self.report["config_bound_comparison"]["ordered_comparisons"]
+        self.assertEqual(
+            [item["P"]["element_count"] for item in comparisons],
+            [1, 602_112, 12_845_056],
+        )
+        for item in comparisons:
+            for port in ("P", "D"):
+                self.assertEqual(item[port]["mismatch_count"], 0)
+                self.assertEqual(item[port]["actual_sha256"], item[port]["golden_sha256"])
+        samples = self.report["selected_output_channel_samples"]
+        self.assertEqual(
+            [item["coordinate"] for item in samples],
+            [[0, 0, 0, 0], [0, 128, 0, 0], [0, 255, 0, 0]],
+        )
+        self.assertTrue(
+            all(
+                item[port]["mismatch_count"] == 0
+                for item in samples
+                for port in ("P", "D")
+            )
+        )
+
+
 if __name__ == "__main__":
     unittest.main()

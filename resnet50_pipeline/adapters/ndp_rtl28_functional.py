@@ -682,10 +682,14 @@ class NdpRtl28FunctionalAdapter:
                         "output_physical_shape": output["physical_shape"],
                         "staged_output_bases": [
                             address_map.shadow_geometry.slice_base(owner)
-                            + int(requant_manifest["physical_layout"]["staged_d_offset"]),
-                            address_map.shadow_geometry.slice_base(owner)
                             + int(requant_manifest["physical_layout"]["staged_d_offset"])
-                            + int(requant_manifest["physical_layout"]["staged_half_bytes"]),
+                            + local_half
+                            * int(
+                                requant_manifest["physical_layout"][
+                                    "staged_half_bytes"
+                                ]
+                            )
+                            for local_half in range(spec.requant_shards_per_owner)
                         ],
                     }
                 )

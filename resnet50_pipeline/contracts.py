@@ -575,7 +575,7 @@ def validate_backend_contract(
         or ndp.get("source_repository")
         != "https://github.com/runoobb/NDPFuncModel.git"
         or ndp.get("source_commit")
-        != "e35b24a446bdaeb7a939ab50d8e0cad5fe2a393c"
+        != "9004ff73e2e2d7c501f682de6df8543a45ae56cc"
         or ndp.get("is_target_backend") is not False
         or ndp.get("identity_confirmed") is not True
         or ndp.get("entrypoint") != "tools/physical_image_probe.py"

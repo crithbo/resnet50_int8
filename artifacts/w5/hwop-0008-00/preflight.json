@@ -13,8 +13,8 @@
     "config_path": "configs/conv/hwop-0008-00/accumulate.json",
     "config_sha256": "f1b8478a8a210903867c7d5c04a9b682cc2ec4752850ebd505c80050b64e243b",
     "execution_modes": {
-      "first_tile": "NDPFuncModel config-bound GA requant with two staging D writebacks and inverse",
-      "full_operator": "NDPFuncModel config-bound GA requant with two staging D writebacks and inverse",
+      "first_tile": "NDPFuncModel config-bound GA requant with 2 staging D writebacks and inverse",
+      "full_operator": "NDPFuncModel config-bound GA requant with 2 staging D writebacks and inverse",
       "single_coordinate": "DRAM/Buffer/SpecialPEA/ActivationUnit/DRAM component path"
     },
     "not_cycle_accurate_lc_interpretation": true,
@@ -1752,6 +1752,71 @@
   },
   "report_kind": "typed_conv_instance_candidate_preflight",
   "schema_version": "0.1",
+  "selected_output_channel_samples": [
+    {
+      "D": {
+        "golden": 64,
+        "mismatch_count": 0,
+        "observed": 64,
+        "physical_address": 1208528
+      },
+      "P": {
+        "golden": 18948,
+        "mismatch_count": 0,
+        "observed": 18948,
+        "physical_address": 606416
+      },
+      "coordinate": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "covered_by_config_bound_full_operator": true
+    },
+    {
+      "D": {
+        "golden": 0,
+        "mismatch_count": 0,
+        "observed": 0,
+        "physical_address": 76706000
+      },
+      "P": {
+        "golden": -7606,
+        "mismatch_count": 0,
+        "observed": -7606,
+        "physical_address": 76103888
+      },
+      "coordinate": [
+        0,
+        32,
+        0,
+        0
+      ],
+      "covered_by_config_bound_full_operator": true
+    },
+    {
+      "D": {
+        "golden": 45,
+        "mismatch_count": 0,
+        "observed": 45,
+        "physical_address": 26374367
+      },
+      "P": {
+        "golden": 9760,
+        "mismatch_count": 0,
+        "observed": 9760,
+        "physical_address": 25772300
+      },
+      "coordinate": [
+        0,
+        63,
+        0,
+        0
+      ],
+      "covered_by_config_bound_full_operator": true
+    }
+  ],
   "single_coordinate": {
     "accumulator": {
       "golden": 18948,
@@ -1832,7 +1897,7 @@
     "scope": "one_real_hwop-0008-00_output_coordinate",
     "simulator": "NDPFuncModel conv_func",
     "simulator_status": "operator_confirmed_conv_simulator_component",
-    "source_commit": "e35b24a446bdaeb7a939ab50d8e0cad5fe2a393c",
+    "source_commit": "9004ff73e2e2d7c501f682de6df8543a45ae56cc",
     "source_owners": [
       0,
       1,
@@ -1846,7 +1911,7 @@
     ]
   },
   "source_identity": {
-    "ndp_source_commit": "e35b24a446bdaeb7a939ab50d8e0cad5fe2a393c",
+    "ndp_source_commit": "9004ff73e2e2d7c501f682de6df8543a45ae56cc",
     "target_config_commit": "e299b2804448242d1589b3e58ed7c5a9a5eca09f",
     "typed_contract": {
       "path": "contracts/typed_config_parameter_contract.json",

@@ -15,7 +15,7 @@
       "status": "operator_confirmed_conv_simulator_component",
       "role": "conv_functional_simulator_with_typed_1x1_accumulate_requant_json_adapter",
       "source_repository": "https://github.com/runoobb/NDPFuncModel.git",
-      "source_commit": "e35b24a446bdaeb7a939ab50d8e0cad5fe2a393c",
+      "source_commit": "9004ff73e2e2d7c501f682de6df8543a45ae56cc",
       "is_target_backend": false,
       "identity_confirmed": true,
       "entrypoint": "tools/physical_image_probe.py",
