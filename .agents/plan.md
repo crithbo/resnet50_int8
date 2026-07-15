@@ -137,55 +137,32 @@ $env:PYTHONDONTWRITEBYTECODE='1'; .\.venv\Scripts\python.exe -m unittest discove
 
 ## 7. 操作者主线总览
 
-所有内部工作默认单线程，按依赖顺序推进；唯一外部并行项是已启动的首例硬件实跑。
+E0～E3和公共合同修改保持串行；E3通过并冻结实例接口后，E4可把互不共享产物目录的shape实例分组并行，最后由主线串行合并、全量回归。首例硬件实跑继续作为外部独立并行项。
 
-| 顺序 | 工作包 | 目标 | 进入条件 | 完成标志 |
-|---:|---|---|---|---|
-| E0 | 基线保护与参数化接口 | 把首例硬编码入口变成`ConvInstanceSpec/request`驱动，同时保持首例全部hash不变 | 当前freeze可重建 | 首例JSON/bitstream/preflight/freeze逐字节不变，负向测试仍fail-closed |
-| E1 | 第二个真实1×1 | 闭合`node-0008`的多K psum/requant | E0通过 | 单坐标、首tile、全算子P/D bit-exact，正式encoder与确定性通过 |
-| E2 | 输出通道扩展1×1 | 闭合`node-0003`的64→256输出通道与32个requant shard | E1通过 | 通道覆盖恰好一次、staging/inverse正确、三档P/D通过 |
-| E3 | typed transport | 删除`B_EXECPLAN_TYPED_TRANSPORT`，让实例参数由manifest自动进入handler/request | E1证明实例模型可参数化 | 首例与E1由同一CLI重建；漏字段、错SHA、错dtype立即失败 |
-| E4 | 1×1 shape-family | 覆盖15种1×1逻辑signature | E2/E3通过 | 每个signature代表例全算子通过；全部1×1实例配置可重建 |
-| E5 | 3×3与7×7 | 参数化kernel/pad/stride/邻域与stem特殊路径 | E4稳定 | 4种3×3和1种7×7代表例三档P/D通过 |
-| E6 | 全53 Conv | 由20个signature扩展到53个正式模型实例 | E5通过 | 53实例无缺失、无重复、全部encode/config-bound比较通过 |
-| O1～O6 | 其他算子族 | Quant、MaxPool、Add、GAP、MatMul、Dequant/View逐族闭环 | Conv合同稳定；族内串行 | 78节点/133 hw_op配置覆盖完整，族内数值门通过 |
-| I1 | 网络execplan | 生成typed execplan、地址、cfg_pkg与Bank_data | 代表算子合同稳定 | 133 hw_op顺序、地址/lifetime/alias和hash全部可审计 |
-| I2 | 硬件反馈合流 | 接收首例硬件P/D并裁决是否产生freeze v2 | 外部dump返回 | 原始dump、comparison、首错或通过报告入库；公共真值唯一 |
-| I3 | 子图/阶段综合 | 从残差块扩到四个stage与head | I1及相关算子通过 | 每层首错可定位，stage输出与golden一致 |
-| I4 | 全网三方闭环 | golden/NDP/硬件逐算子与整网一致 | I2/I3和硬件整网能力具备 | G5～G9按直接证据升级，最终报告可复现 |
+| 顺序 | 工作包 | 状态 | 目标 | 进入条件 | 完成标志 |
+|---:|---|---|---|---|---|
+| E0 | 基线保护与参数化接口 | **completed** `a679df9e...` | 把首例硬编码入口变成`ConvInstanceSpec/request`驱动，同时保持首例全部hash不变 | 当前freeze可重建 | 首例JSON/bitstream/preflight/freeze逐字节不变，负向测试仍fail-closed |
+| E1 | 第二个真实1×1 | **in_progress** | 闭合`node-0008`的多K psum/requant | E0通过 | 单坐标、首tile、全算子P/D bit-exact，正式encoder与确定性通过 |
+| E2 | 输出通道扩展1×1 | pending | 闭合`node-0003`的64→256输出通道与32个requant shard | E1通过 | 通道覆盖恰好一次、staging/inverse正确、三档P/D通过 |
+| E3 | typed transport | pending | 删除`B_EXECPLAN_TYPED_TRANSPORT`，让实例参数由manifest自动进入handler/request | E1证明实例模型可参数化 | 首例与E1由同一CLI重建；漏字段、错SHA、错dtype立即失败 |
+| E4 | 1×1 shape-family | pending；接口冻结后可实例级并行 | 覆盖15种1×1逻辑signature | E2/E3通过 | 每个signature代表例全算子通过；全部1×1实例配置可重建 |
+| E5 | 3×3与7×7 | pending | 参数化kernel/pad/stride/邻域与stem特殊路径 | E4稳定 | 4种3×3和1种7×7代表例三档P/D通过 |
+| E6 | 全53 Conv | pending | 由20个signature扩展到53个正式模型实例 | E5通过 | 53实例无缺失、无重复、全部encode/config-bound比较通过 |
+| O1～O6 | 其他算子族 | pending；族间可并行、族内串行 | Quant、MaxPool、Add、GAP、MatMul、Dequant/View逐族闭环 | Conv合同稳定 | 78节点/133 hw_op配置覆盖完整，族内数值门通过 |
+| I1 | 网络execplan | pending；串行合流 | 生成typed execplan、地址、cfg_pkg与Bank_data | 代表算子合同稳定 | 133 hw_op顺序、地址/lifetime/alias和hash全部可审计 |
+| I2 | 硬件反馈合流 | **running（外部）** | 接收首例硬件P/D并裁决是否产生freeze v2 | 外部dump返回 | 原始dump、comparison、首错或通过报告入库；公共真值唯一 |
+| I3 | 子图/阶段综合 | pending | 从残差块扩到四个stage与head | I1及相关算子通过 | 每层首错可定位，stage输出与golden一致 |
+| I4 | 全网三方闭环 | pending | golden/NDP/硬件逐算子与整网一致 | I2/I3和硬件整网能力具备 | G5～G9按直接证据升级，最终报告可复现 |
 
 任何工作包失败都停在该包，不跳过失败实例继续生成“看似完整”的下游产物。
 
 ## 8. E0～E3：从首例复制转向真正参数化
 
-### E0.1 冻结不变量
+### E0：已完成摘要
 
-参数化前把首例以下事实变成回归断言：
+`a679df9ef3f36b2f0714b89a0719306009288a23`已新增统一`ConvInstanceSpec/ConvTargetRequest`，首例生成器、encoder wrapper、NDP adapter、preflight和freeze exporter均改从该对象取得identity、shape、typed tensor/qparam、HIGH-4 selector、tile、shard和路径绑定。`node-0008`与`node-0003`已可从同一typed contract解析为未冻结spec，但其配置/request仍按fail-closed拒绝冒充正式产物。
 
-- `node-0004/hwop-0004-00~01`身份、shape、qparams来源和physical端口角色；
-- HIGH-4 `mem/src/dst=4/1/1`、`ping_pong=0`；
-- 46条累加连接、8×21条requant连接、placement cost 0；
-- 累加JSON、requant manifest/8份JSON、18份bitstream、preflight及freeze manifest SHA；
-- 28个slice双staging地址、canonical P/D SHA和三档元素数。
-
-验收：重构前后首例全部受控文件逐字节一致。若必须改变任何hash，先证明是合同修复而非生成器噪声，并产生新freeze ID；在硬件负责人使用旧freeze期间不得静默替换。
-
-### E0.2 目标参数接口
-
-统一实例对象至少承载：
-
-```text
-node_id / hw_op_ids / op_type
-N,Cin,Hin,Win,Cout,Hout,Wout
-kernel,stride,pads,dilation,group
-activation/weight/bias/output tensor IDs及dtype
-input/output zp，input/output scale，per-channel weight scale/zp
-tile、K阶段、HIGH/LOW domain、slice owner、tail
-physical region、16B地址、staging、flush与inverse规则
-每个源文件/initializer/JSON的SHA和provenance
-```
-
-生成器、encoder wrapper、NDP request、preflight和freeze exporter只消费该对象，禁止各自重新读取并解释一套常量。
+E0重构没有改写首例受控文件：累加JSON、requant manifest、preflight和hardware freeze manifest SHA保持原值；正式累加encoder仍为46连接/cost 0，8个requant shard仍各21连接/cost 0且双重编码一致；根仓254/254通过。详细实施与验证移入`history.md`，当前只执行E1。
 
 ### E1：第二个1×1 `node-0008`
 

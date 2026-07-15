@@ -842,3 +842,14 @@
 - W3正式图复核确认53个QLinearConv可归并为20种逻辑signature：15种1×1、4种3×3、1种7×7。第二实例固定`node-0008/hwop-0008-00~01`（256→64、56×56、1×1/s1），以最小空间/输出变化优先验证多K psum和唯一flush；第三实例为`node-0003/hwop-0003-00~01`（64→256），验证输出owner、256通道qparams、32个requant shard和staging/inverse扩展。
 - 现行计划新增E0～E6 Conv梯级、O1～O6其他算子族、I1 typed网络execplan、I2硬件反馈合流、I3/I4子图到整网三方综合。执行顺序明确要求首例hash保护、三档P/D、正式encoder、负向fail-closed、20个signature代表例后再扩53 Conv；其他算子按Quant→MaxPool→Add→GAP→Dequant/View→MatMul/head闭环。
 - 本次只生成计划，不改变代码、schema、JSON、bitstream、freeze或门状态；G0/G2/G3/G4保持通过，G5/G6/G8仍false。详细未完成步骤保留在`plan.md`，完成后再迁回本历史文件。
+
+## 2026-07-15：E0首例基线保护与Conv实例入口参数化
+
+- 根仓业务提交`a679df9ef3f36b2f0714b89a0719306009288a23`，父提交`d972324aadca40d2ed6c0d3cb7fdb95470dba0e7`，`refactor: parameterize real conv instance entry`；仅创建本地提交，没有推送。开工时三条接手检查通过：除操作者两份未跟踪伪代码外工作树无未知改动，RTL证据及三个参考仓全部匹配lock，参数化前根仓249/249通过。
+- 新增`resnet50_pipeline/conv_instance.py`作为统一实例事实入口。`ConvInstanceSpec`从`typed_config_parameter_contract.json`按node和stage提取两段`hw_op`、11个typed tensor端口、shape/dtype/tensor ID、initializer/value SHA、requant multiplier SHA、kernel/stride/pads/dilation/group、HIGH-4 `4/1/1`、`ping_pong=0`、C/K tile和GA shard数；`ConvTargetRequest`绑定累加配置、语义合同、requant manifest/原文、preflight与freeze路径并在消费前验证identity、通道数、shard覆盖和文件SHA。
+- 首例累加/requant生成器、两个正式encoder wrapper、`NdpRtl28FunctionalAdapter.run_target_config_qlinear_conv_1x1`、W5 preflight和hardware freeze exporter均改为消费同一个spec/request。生成器不再各自解释首例shape常量；LC range、stream stride/tail、selector、requant loop、K owner、staging与shard数由实例几何推导。非首例只有typed spec时不得取得冻结request，防止把候选路径冒充已编码产物。
+- 基线字节保护通过：`conv_1x1_real.json`仍为`a20641cfcf65068c3ca31d710a0ef45d28a53cbf80d5e246ce54f0de3fe16f2c`，requant manifest仍为`4424a6524dcdaaf1933b57875e4f3a1ae7edb11321dd02b692bbed51b82b274f`，preflight仍为`8dd0d61bacd0f840f09b038a16180dac4d7408878857d5b10143f684bf2f0c80`，hardware freeze manifest仍为`72e17cb52c2948f86fe6b0e9b2715de57c5404a72a04f9514247f174e8a95550`。没有覆盖硬件负责人正在使用的freeze目录。
+- 正式编码复核通过：累加配置仍为46连接、placement cost 0，parsed dump、mapping review、128/64位输出均命中既有证据SHA；8个requant shard仍各21连接、cost 0，两次编码的parsed/detailed/128/64位文件和规范化mapping review逐项一致。W5 `checked-in report is exact generated output`及三档P/D测试仍通过。
+- 新增5项实例合同测试：首例唯一typed入口、两类生成器逐字节保持、三个tracked基线SHA保护、`node-0008`与`node-0003`真实shape解析、未知/非Conv node和未冻结request拒绝。最终根仓254/254通过，`git diff --check`通过；只有既有NumPy弃用告警。`node-0008`已解析为`Cin=256/Cout=64,c_tile=64,k_tile=16,8 shards`，`node-0003`已解析为`Cin=64/Cout=256,c_tile=16,k_tile=64,32 shards`，但二者尚未生成正式配置或宣称数值/硬件通过。
+- 门与并行裁决不变：E0完成不升级G5/G6/G8，不解除`B_EXECPLAN_TYPED_TRANSPORT`；硬件负责人继续只读运行首例freeze。操作者主线现在串行进入E1 `node-0008`，待E1/E2/E3冻结公共实例接口后，E4才允许按独立实例目录并行扩展，公共schema、地址、selector/ping-pong和Git合流保持串行。
+- 精确回退：先revert后续说明台账提交，再`git revert a679df9ef3f36b2f0714b89a0719306009288a23`；其父提交`d972324aadca40d2ed6c0d3cb7fdb95470dba0e7`恢复参数化前计划状态。回退不得删除或改写操作者未跟踪的`.agents/conv_full(2).json/.txt`，也不触碰首例硬件freeze目录。

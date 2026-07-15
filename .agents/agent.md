@@ -68,6 +68,7 @@ ADR-008裁决正式配置来自`ndp-sim-ref`；ADR-009与`contracts/hardware_app
 
 ### 首个真实1×1闭环
 
+- `resnet50_pipeline/conv_instance.py`：统一`ConvInstanceSpec/ConvTargetRequest`，从typed contract提取实例identity、shape、tensor/qparam SHA、HIGH-4控制与产物路径；扩展实例不得绕过该入口复制常量。
 - `contracts/conv_1x1_lc_pe_stream_semantics.{md,json}`：逐LC/PE/stream/port语义裁决。
 - `conv_1x1_real.json`；生成/编码入口为`tools/generate_conv_1x1_real.py`、`tools/run_conv_1x1_encoder.py`。
 - `conv_1x1_requant_real/manifest.json`和`shard-00~07.json`；生成/编码入口为`tools/generate_conv_1x1_requant_real.py`、`tools/run_conv_1x1_requant_encoder.py`。
