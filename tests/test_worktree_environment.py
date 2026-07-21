@@ -39,6 +39,16 @@ class CodexWorktreeEnvironmentTests(unittest.TestCase):
         )
         self.assertFalse(any(".npy" in entry for entry in entries))
         self.assertFalse(any(entry in {".venv", "artifacts"} for entry in entries))
+        completed = subprocess.run(
+            ["git", "ls-files", "--error-unmatch", *entries],
+            cwd=ROOT,
+            check=False,
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+        )
+        self.assertEqual(completed.returncode, 0, completed.stderr)
+        self.assertEqual(set(completed.stdout.splitlines()), set(entries))
 
     def test_nested_w3_manifest_snapshots_are_tracked_small_and_frozen(self) -> None:
         specifications = {

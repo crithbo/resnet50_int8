@@ -1,5 +1,6 @@
-# Small ignored W3 metadata needed for graph/layout queries in Codex worktrees.
-# Never add W3 .npy payloads, the full artifacts tree, virtualenvs, or reference
-# repositories here: those would multiply roughly 951 MB or more per worktree.
+# Small tracked W3 graph metadata needed for graph/layout queries. Keep these
+# compatibility entries for managed worktree setup, but never add W3 .npy
+# payloads, the full artifacts tree, virtualenvs, or reference repositories:
+# those would multiply roughly 951 MB or more per worktree.
 artifacts/w3/legacy77_mapping.json
 artifacts/w3/model_graph.json

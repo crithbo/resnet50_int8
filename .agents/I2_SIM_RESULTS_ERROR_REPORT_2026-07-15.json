@@ -1,0 +1,116 @@
+{
+  "schema_version": "resnet50-hardware-sim-error-report-0.1",
+  "report_id": "I2-SIM-20260715-001",
+  "date": "2026-07-15",
+  "status": "returned_incomplete",
+  "classification": "input_preload_failure_and_early_termination",
+  "numeric_verdict": "not_comparable",
+  "source_archive": {
+    "path": "sim_results.zip",
+    "sha256": "919f24c7f9bfacb5b90d5a9abaff043046378dfb9a2dd194ed5ccca63d9882c2",
+    "entry_count_including_directories": 3012,
+    "file_count": 2634,
+    "uncompressed_bytes": 1507822077,
+    "contains_only_logs": true,
+    "missing_run_metadata": [
+      "simulator_version",
+      "rtl_version",
+      "firmware_version",
+      "run_command",
+      "exit_status",
+      "freeze_manifest_binding"
+    ]
+  },
+  "target": {
+    "package": "artifacts/w5/hwop-0004-00/hardware_execplan",
+    "freeze_id": "f687debd0215f1d29b6ca94176c4e9cbcf20434d58bce57c430129edb8922d5f",
+    "freeze_manifest_sha256": "72e17cb52c2948f86fe6b0e9b2715de57c5404a72a04f9514247f174e8a95550",
+    "execplan_128b_beats": 175,
+    "expected_runtime_stages": 9,
+    "expected_accumulate_stages": 1,
+    "expected_requant_stages": 8,
+    "expected_p_elements": 3211264,
+    "expected_d_elements": 3211264,
+    "expected_p_sha256": "1ec864892d82279beff561927500f55ebec636daf2fb7c624a1e153dd5e17532",
+    "expected_d_sha256": "2793bbe64e2b3289657f1c77bad61ebc54a4672791093d5c19a66ca742e7376e"
+  },
+  "three_way_comparison": {
+    "golden_vs_ndp": {
+      "status": "pass",
+      "levels": ["coordinate", "first_tile", "full_operator"],
+      "p_mismatch_count": 0,
+      "d_mismatch_count": 0,
+      "first_coordinate_p": 1225,
+      "first_coordinate_d": 4
+    },
+    "golden_vs_hardware": {
+      "status": "not_comparable",
+      "reason": "input readback failed and execution did not complete"
+    },
+    "ndp_vs_hardware": {
+      "status": "not_comparable",
+      "reason": "input readback failed and execution did not complete"
+    }
+  },
+  "trace_observations": {
+    "accumulate_config_expected_64b_words": 70,
+    "accumulate_config_observed_64b_words": 70,
+    "accumulate_config_exact": true,
+    "config_word_order": "low64_then_high64",
+    "config_exact_slice_count": 28,
+    "input_first_read": {
+      "a_expected_128b": "00000e0c1f000f11120000091c091b11",
+      "a_zero_slice_count": 28,
+      "b_expected_128b": "000081e0e800fc1cf6071310e6eb8202",
+      "b_zero_slice_count": 28,
+      "bias_expected_128b": "ffee347afffffbd500000d0f00006adc",
+      "bias_zero_slice_count": 27,
+      "bias_unknown_slice_count": 1
+    },
+    "observed_start_comp_slice_events": 28,
+    "observed_runtime_stages": 1,
+    "observed_requant_stages": 0,
+    "slice_completed_markers": 0,
+    "total_handshake_markers": 0,
+    "post_start_target_p_writes": 0,
+    "post_start_target_d0_writes": 0,
+    "post_start_target_d1_writes": 0,
+    "pre_start_p_region_zero_writes": 614,
+    "excluded_unbound_log_directories": [
+      "local_layer0_0-42",
+      "local_layer0_op0-42_1",
+      "local_op23-42"
+    ]
+  },
+  "decode_policy": {
+    "bank_frame_address_to_byte_address": "left_shift_4",
+    "multiple_writes": "chronological_last_write_wins",
+    "display_word_to_memory_bytes": "little_endian",
+    "staged_d_merge": "concatenate_d0_d1_along_final_channel_axis"
+  },
+  "triage": {
+    "simulation_side_first": [
+      "S1_INPUT_PRELOAD: verify all 28 Bank_data files load into the same slice/bank/address space and add exact A/B/bias readback before Start_Comp",
+      "S2_RUNNER_COMPLETION: diagnose why only accumulate starts; run all eight requant stages and wait for completion before dump",
+      "S3_EVIDENCE_PACKAGING: bind versions, command, exit status, freeze identity, raw logs and post-run dumps"
+    ],
+    "operator_side_conditional": [
+      "If P first differs after S1-S3: inspect A/B role and address, selector/ring, bias/K-stage and overflow",
+      "If P passes but D differs: inspect requant shard coverage, multiplier/zero-point, rounding/saturation, staging/flush/inverse",
+      "Any contract fix must be reproduced in software with a negative test and issued under a new freeze ID"
+    ]
+  },
+  "resume_gate": {
+    "deferred_until": "the other window finishes the current Conv generalization work and the user explicitly reassigns I2",
+    "required_runtime_stages": 9,
+    "required_post_run_bank_dump_count": 28,
+    "minimum_bytes_per_bank_dump": 1054928,
+    "comparison_tool": "tools/compare_conv_hardware_execplan_dump.py",
+    "pass_condition": "P and D each contain 3211264 elements, have zero mismatches, and match the frozen canonical SHA-256 values"
+  },
+  "gate_effect": {
+    "g6_upgrade": false,
+    "g8_upgrade": false,
+    "freeze_v1_mutable": false
+  }
+}

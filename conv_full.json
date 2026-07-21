@@ -441,7 +441,7 @@
             "buf_end_row_addr": 3
         },
         "buffer5": {
-            "dst_port": 1,
+            "dst_port": 0,
             "nbr_enable": 0,
             "buf_full_last_index": 5,
             "buffer_life_time": 1,
@@ -878,7 +878,7 @@
             "nbr_enable": 0
         },
         "outport": {
-            "mode": "row",
+            "mode": "col",
             "fp32tofp16": "false",
             "fp32tobf16": "false"
         }

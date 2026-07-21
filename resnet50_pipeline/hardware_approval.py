@@ -1,8 +1,10 @@
 from __future__ import annotations
 
 import datetime as dt
+import hashlib
 import json
 import re
+import subprocess
 from pathlib import Path
 from typing import Any
 
@@ -347,6 +349,57 @@ def _validate_local_evidence(root: Path, entries: Any, location: str) -> None:
             raise ContractError(f"{location}[{index}] file/hash mismatch: {item['path']}")
 
 
+def _validate_repository_commit_evidence(
+    root: Path,
+    entries: Any,
+    *,
+    repository_relative: str,
+    commit: str,
+    location: str,
+) -> None:
+    """Validate historical baseline files at their declared Git commit."""
+
+    if not isinstance(entries, list) or not entries:
+        raise ContractError(f"{location} must be a non-empty array")
+    repository = (root / repository_relative).resolve()
+    prefix = repository_relative.rstrip("/") + "/"
+    for index, item in enumerate(entries):
+        if not isinstance(item, dict):
+            raise ContractError(f"{location}[{index}] must be an object")
+        _require_keys(item, {"path", "sha256"}, f"{location}[{index}]")
+        relative = item["path"]
+        digest = _require_sha256(item["sha256"], f"{location}[{index}].sha256")
+        if not isinstance(relative, str) or not relative.startswith(prefix):
+            raise ContractError(
+                f"{location}[{index}] is outside {repository_relative}: {relative!r}"
+            )
+        repository_path = relative[len(prefix) :]
+        if not repository_path or ".." in Path(repository_path).parts:
+            raise ContractError(f"{location}[{index}] repository path is unsafe")
+        completed = subprocess.run(
+            [
+                "git",
+                "-c",
+                f"safe.directory={repository.as_posix()}",
+                "show",
+                f"{commit}:{repository_path}",
+            ],
+            cwd=repository,
+            capture_output=True,
+            check=False,
+        )
+        blob = completed.stdout
+        checkout_crlf = blob.replace(b"\r\n", b"\n").replace(b"\n", b"\r\n")
+        observed_digests = {
+            hashlib.sha256(blob).hexdigest(),
+            hashlib.sha256(checkout_crlf).hexdigest(),
+        }
+        if completed.returncode or digest not in observed_digests:
+            raise ContractError(
+                f"{location}[{index}] Git blob/hash mismatch: {relative}@{commit}"
+            )
+
+
 def _validate_deepseek_baseline(value: Any, root: Path) -> None:
     if not isinstance(value, dict):
         raise ContractError("DeepSeek common baseline must be an object")
@@ -400,7 +453,13 @@ def _validate_deepseek_baseline(value: Any, root: Path) -> None:
         or conventions.get("physical_record_bits") != 128
     ):
         raise ContractError("DeepSeek physical conventions are incomplete")
-    _validate_local_evidence(root, value["evidence"], "DeepSeek common baseline.evidence")
+    _validate_repository_commit_evidence(
+        root,
+        value["evidence"],
+        repository_relative="ndp-sim-ref",
+        commit=TARGET_CONFIG_COMMIT,
+        location="DeepSeek common baseline.evidence",
+    )
 
 
 def _validate_resnet_delta(value: Any, root: Path) -> None:

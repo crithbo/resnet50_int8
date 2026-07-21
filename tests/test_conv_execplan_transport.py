@@ -24,7 +24,7 @@ class ConvExecplanTransportTests(unittest.TestCase):
 
     def test_same_node_id_cli_contract_builds_first_e1_and_e2(self) -> None:
         expected = {
-            "node-0004": (64, 8, 11),
+            "node-0004": (64, 8, 12),
             "node-0008": (64, 8, 11),
             "node-0003": (256, 32, 35),
         }
@@ -66,6 +66,29 @@ class ConvExecplanTransportTests(unittest.TestCase):
             with self.subTest(name=name):
                 with self.assertRaisesRegex(
                     ConvExecplanTransportError, "constant coverage differs"
+                ):
+                    validate_conv_execplan_request(value, ROOT)
+
+    def test_transport_abi_is_explicit_and_stage_consistent(self) -> None:
+        self.assertEqual(
+            self.first["operators"][0]["attributes"]["target"]["transport_abi"],
+            "conv_sa_q8k8_v2",
+        )
+        for mutation in ("missing", "unknown", "mismatch"):
+            value = copy.deepcopy(self.first)
+            if mutation == "missing":
+                del value["operators"][0]["attributes"]["target"]["transport_abi"]
+            elif mutation == "unknown":
+                value["operators"][0]["attributes"]["target"]["transport_abi"] = (
+                    "conv_sa_shape_guessed"
+                )
+            else:
+                value["operators"][1]["attributes"]["target"]["transport_abi"] = (
+                    "conv_sa_legacy_v1"
+                )
+            with self.subTest(mutation=mutation):
+                with self.assertRaisesRegex(
+                    ConvExecplanTransportError, "transport ABI"
                 ):
                     validate_conv_execplan_request(value, ROOT)
 

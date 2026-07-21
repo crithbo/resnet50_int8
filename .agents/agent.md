@@ -1,145 +1,170 @@
-# ResNet50 INT8 项目地图与协作约束
+# ResNet50 INT8 项目总览与协作约束
 
-最后更新：2026-07-15
+最后更新：2026-07-21（职责、事实来源、规则定位与服务器证据边界复核）
 
-本文件只保存相对稳定的项目地图、证据边界和协作规则，**不是当前任务清单，也不是新对话接手入口**。新任务只从`.agents/plan.md`开始；需要定位实现时再按需读取本文件。
-
-> `.agents/history.md`是历史台账。除非需要定位历史问题、追溯旧结论/提交/父提交或确认回退点，否则不要加载它。不要用历史条目覆盖`.agents/plan.md`中的现行状态。
+本文件只保存相对稳定的项目职责、代码地图、事实来源、证据边界和协作约束。当前任务、阻塞、输入身份和下一步只看`.agents/plan.md`；已经发生的版本过程、失败和恢复点只看`.agents/history.md`。
 
 ## 1. 文档职责
 
-- `.agents/plan.md`：唯一接手入口和当前执行计划，含接手检查、恢复点、门状态、阻塞和下一工作包。
-- `.agents/agent.md`：本文件；稳定代码地图、仓库职责、证据边界和协作规则。
-- `.agents/rules/算子配置规则.md`：模型语义到LC/PE/stream、layout与数值比较的现行规则。它会随真实证据修订，不是不可修改的先验规格。
-- `.agents/history.md`：已发生事实与完成计划归档；只有追溯时加载。
-- `.agents/W4_ARCHIVE.md`：W4方案切换、事故和裁决的专项历史索引，不是当前入口。
-- `.agents/decisions/`、`contracts/`：ADR、机器合同和审批证据；被hash绑定的合同不能只为整理措辞改写。
-- `.agents/经验.md`：通用工作经验，不承担当前状态说明。
+- `.agents/agent.md`：稳定总览、代码/工具入口、长期边界和协作约束。
+- `.agents/plan.md`：唯一动态接手入口，只保留当前状态、当前输入、下一步和停止条件。
+- `.agents/history.md`：压缩历史、服务器实测证据、版本错误、关键恢复点和制品清理记录，不作为当前命令来源。
+- `.agents/rules/算子配置规则.md`：从实现、consumer/RTL和实证中提炼的模型语义、LC/PE/stream、layout、qparams和数值比较约束；只读取与当前修改相关的章节，发现与事实冲突时及时更正。
+- `.agents/rules/服务器测试包生成规则.md`：从原仿真入口、实际runner和服务器结果中提炼的package/overlay、运行与回传约束；不是独立权威，也不因旧文字自动增加服务器校验。
+- `.agents/archive/README.md`：专项历史文档索引；只用于追溯。
+- `.agents/decisions/`与`contracts/`：设计裁决和机器合同；被hash绑定的合同不能为整理措辞随意改写。
 
-不再维护独立W5接手文件。接手、冻结交付和人员拆分均直接写在`plan.md`。
+发生冲突时，先区分可执行字段与说明性文字：活动consumer/RTL、实际生成输入输出、被消费的机器字段和直接服务器证据优先；原始README用于解释入口意图。机器合同中的自由文本同样可能过时，不能仅因被写入JSON就覆盖可复现行为。`plan.md`负责表达由这些事实得到的当前状态；规则和说明是派生总结，必须随事实修正。历史只用于追溯，不授权当前命令。
 
-## 2. 当前事实快照
+## 2. 项目目标与端到端链路
 
-- W0/G0、W2/G2、W3/G3、W4/G4已经通过；W1只冻结当前可取得的模型、输入、量化和架构事实，G1未整体通过。
-- 首个真实ResNet50算子是`node-0004`的`hwop-0004-00~01`：1×1、stride 1、`[16,64,56,56] -> [16,64,56,56]`。
-- 累加JSON与8份64通道requant JSON已由正式`ndp-sim-ref` encoder解析、placement并生成128/64位bitstream；HIGH-4 selector为`mem/src/dst=4/1/1`，`ping_pong=0`。
-- `NDPFuncModel` request schema 0.3实际携带requant manifest、8份JSON原文及SHA，并验证GA常量、HIGH-ring slice、16B地址、LC `1/9408/2352`和唯一UINT8 flush。
-- NDP对28个slice各生成两个staging D并inverse回canonical D；单坐标、首tile和全算子INT32 P/UINT8 D均与W3 golden bit-exact。
-- 以上证明“配置绑定的软件功能模型”和golden一致；不证明逐周期LC/stream/buffer、bitstream解释器或真实硬件通过。因此G5/G6/G8仍为false。
-- 首例唯一配置侧阻塞是`B_EXECPLAN_TYPED_TRANSPORT`，只影响自动重建/扩展和整网执行，不妨碍硬件组手工加载冻结包。
-- 根仓硬件交付业务冻结为`e9b6492098c2101aa86afd83bf95e8024fa6e8df`；数值闭环为`1388dede4aac53a77d02dec0b24db0ad2d35ef1f`；NDP冻结为`1d3181d832d7a409af779215e4aa590d03bd8ed3`。其后的纯文档提交不是新数值冻结。
+目标是把正式ResNet50 INT8 ONNX模型转成可审计、可重建、可在28-slice目标架构执行并能定位首错的硬件链：
 
-冻结包`artifacts/w5/hwop-0004-00/hardware_freeze/`：
-
-- freeze ID：`f687debd0215f1d29b6ca94176c4e9cbcf20434d58bce57c430129edb8922d5f`；
-- manifest SHA-256：`72e17cb52c2948f86fe6b0e9b2715de57c5404a72a04f9514247f174e8a95550`；
-- preflight SHA-256：`8dd0d61bacd0f840f09b038a16180dac4d7408878857d5b10143f684bf2f0c80`；
-- canonical P/D SHA-256：`1ec864892d82279beff561927500f55ebec636daf2fb7c624a1e153dd5e17532` / `2793bbe64e2b3289657f1c77bad61ebc54a4672791093d5c19a66ca742e7376e`。
-
-## 3. 仓库与权威边界
-
-根仓负责编排、合同、lowering、golden、28-slice layout、target配置审计、W5 preflight、硬件冻结导出和比较。参考仓由`repos.lock.json`锁定：
-
-| 仓库 | 锁定版本 | 本项目职责 | 不能误称为 |
-|---|---|---|---|
-| `ndp-sim-ref` | `e299b2804448242d1589b3e58ed7c5a9a5eca09f` | 正式JSON schema/parser、placement、128/64位bitstream encoder、execplan参考 | 数值功能模拟器或硬件执行器 |
-| `NDPFuncModel` `conv_func` | `1d3181d832d7a409af779215e4aa590d03bd8ed3` | Conv功能模型、target-config request适配、physical staging/inverse与P/D比较 | 逐周期目标机、bitstream解释器或RTL |
-| `CGRA_SIM` | `53c41e02c294bcc54379e686dc9d25bbb93919fa` | 旧ResNet计划、ONNX/QNN语义、软件算子和性能参考 | 当前28-slice配置真值 |
-
-目标RTL静态证据来自`Trassic2.0_RTL@e3bdebba95dec36ee8eba43caa92a326a88392cd`。当前只冻结静态审计与W4物理基线，`clean_elaboration_claimed=false`，没有精确首例硬件P/D证据。
-
-ADR-008裁决正式配置来自`ndp-sim-ref`；ADR-009与`contracts/hardware_approval.json`按hash批准DeepSeek公共物理基线。旧16-slice代码、CSV、注释和学长伪代码都是解释证据，不能单独覆盖正式parser与真实数值结果。
-
-## 4. 根仓代码地图
-
-### 模型、lowering与golden
-
-- `resnet50_pipeline/model/onnx_graph.py`：正式ONNX图和initializer读取。
-- `resnet50_pipeline/lowering/`：模型节点到硬件原子算子的一对多映射。
-- `resnet50_pipeline/golden/`：ORT节点golden及Conv accumulate/requant等子步骤golden。
-- `resnet50_pipeline/manifest.py`、`records.py`：稳定ID、shape、dtype、layout与provenance。
-
-### 28-slice layout与合同
-
-- `topology28.py`、`profile28.py`、`layout.py`：28-slice拓扑、profile和公共入口。
-- `conv28_layout.py`、`pool28_layout.py`、`add28_layout.py`、`matmul28_layout.py`、`simple_layout.py`：七族physical bundle及inverse。
-- `contracts/architecture.json`、`deepseek_rtl28_physical_baseline.json`、`resnet50_rtl28_w4_delta.json`：W4机器合同。
-- 文件名含`16`的layout和旧network dry-run只作历史/fixture，不能进入RTL28正式链。
-
-### 首个真实1×1闭环
-
-- `resnet50_pipeline/conv_instance.py`：统一`ConvInstanceSpec/ConvTargetRequest`，从typed contract提取实例identity、shape、tensor/qparam SHA、HIGH-4控制与产物路径；扩展实例不得绕过该入口复制常量。
-- `contracts/conv_1x1_lc_pe_stream_semantics.{md,json}`：逐LC/PE/stream/port语义裁决。
-- `conv_1x1_real.json`；生成/编码入口为`tools/generate_conv_1x1_real.py`、`tools/run_conv_1x1_encoder.py`。
-- `conv_1x1_requant_real/manifest.json`和`shard-00~07.json`；生成/编码入口为`tools/generate_conv_1x1_requant_real.py`、`tools/run_conv_1x1_requant_encoder.py`。
-- `contracts/typed_config_parameter_contract.json`：W3 `hw_op/tensor/qparams`到目标字段的typed合同。
-- `target_config_audit.py`：正式配置解析和fail-closed字段/资源/连接审计。
-- `w5_conv_preflight.py`、`tools/run_w5_conv_preflight.py`：绑定配置、physical bundle、NDP request和三档P/D。
-- `adapters/ndp_rtl28_functional.py`：根仓到NDP config-bound入口的适配。
-- `conv_1x1_hardware_freeze.py`、`tools/export_conv_1x1_hardware_freeze.py`：确定导出硬件输入/golden、配置、bitstream和地址表。
-- `tools/compare_conv_1x1_hardware_dump.py`：读`P|D/slice-XX.bin`，inverse到canonical NCHW并报告首错。
-
-### 管线与校验
-
-- `pipeline.py`、`backends.py`、`artifacts.py`、`cli.py`：阶段DAG、backend、产物、cache/resume和CLI。
-- `tools/sync_repositories.py`：锁定仓库与RTL证据校验，不能用普通`git status`替代。
-- `tools/validate_hardware_approval.py`、`w4_audit.py`：批准合同与G4证据校验。
-- `tests/`：根仓回归；固定测试数量只是历史快照，验收以零失败为准。
-
-## 5. 两个参考入口怎样使用
-
-### `ndp-sim-ref`
-
-- `jsons/`：DeepSeek单算子模板；
-- `bitstream/`：正式解析、字段映射、placement、mapping review和编码；
-- `model_execplan/`：多算子handler、地址规划和网络配置入口；
-- `generate_python_golden/`、`address_remapping/`：DeepSeek数据布局和地址参考。
-
-判定顺序：parser接受 -> 范围/资源校验 -> placement零违规 -> parsed dump/mapping review -> 两种bitstream确定性 -> 数值链实际消费同一配置。前五项不能替代最后一项。
-
-### `NDPFuncModel`
-
-真实Conv功能入口位于`conv_func`分支。根仓adapter构造request并调用其功能链；首例已从旧固定3×3调用扩为配置绑定的1×1、28-slice、64-channel requant路径。
-
-旧`main_CONV_N2N.py`围绕3×3邻域、旧输入组织和固定循环。它过去能正确跑3×3，是因为数据尺寸、padding、weight索引和循环边界共同满足写死假设，不代表任意Conv已参数化。扩第二个1×1、3×3或53层Conv前，必须由统一request/schema驱动shape、stride、padding、channel、tile、qparams和flush；禁止复制旧main常量形成正式结果。
-
-## 6. 本地执行入口
-
-```powershell
-.\.venv\Scripts\python.exe tools\sync_repositories.py verify
-$env:PYTHONDONTWRITEBYTECODE='1'; .\.venv\Scripts\python.exe -m unittest discover -s tests -v
-.\.venv\Scripts\python.exe tools\run_w5_conv_preflight.py
-.\.venv\Scripts\python.exe tools\export_conv_1x1_hardware_freeze.py
-.\.venv\Scripts\python.exe tools\compare_conv_1x1_hardware_dump.py --freeze-root artifacts\w5\hwop-0004-00\hardware_freeze --dump-root <hardware-dump-root> --output <comparison.json>
+```text
+正式ONNX、输入和initializer
+  -> 模型图与硬件原子算子lowering
+  -> 节点/子步骤golden
+  -> 28-slice physical layout、地址、JSON和bitstream
+  -> typed execplan、cfg_pkg、SCA和Bank_data
+  -> NDPFuncModel / ndp-sim / RTL或真实硬件执行
+  -> 原始Bank dump与inverse
+  -> Golden / NDPFuncModel / target execution三方比较
 ```
 
-编码器参数以对应`tools/run_conv_1x1*_encoder.py --help`为准；禁止手写位串或绕过正式parser。除非模型/hash/合同失效，不为文档检查重建约951 MB的W3数据。硬件冻结目录是可再生产物，通常不进入普通Git历史。
+成功标准不是“JSON可解析”“bitstream已生成”“CPU占用高”或“make退出0”，而是目标执行链实际消费同一冻结身份后，完整P/staged-D输出经过physical inverse，与Golden和NDPFuncModel逐元素一致。
 
-## 7. 证据边界
+### 2.1 三类证据
 
-- JSON可解析、placement成功、bitstream确定，只证明配置编码链成立。
-- NDP与golden P/D bit-exact，证明当前request、JSON原文/SHA、physical bundle和数学实现对首例一致；不证明bitstream逐周期执行。
-- DeepSeek JSON曾被硬件执行，只证明通用字段/加载能力存在；不证明当前1×1精确配置、地址、qparams和P/D已在硬件通过。
-- 硬件验收必须记录版本、freeze ID、命令/协议、退出状态、原始dump、inverse和首错，否则G8不升级。
-- 第二个1×1和shape-family在硬件证据前统一标`candidate`。
+1. **Golden**：正式ONNX和固定输入产生的节点/子步骤真值。
+2. **NDPFuncModel**：消费typed request、配置原文/SHA、qparams和physical layout的配置绑定功能模型；证明数学和布局闭合，不是逐周期bitstream执行器。
+3. **Target execution**：ndp-sim数值执行器、RTL仿真或真实硬件对冻结包的实际输出。RTL/硬件证据必须包含身份、退出状态、原始dump、inverse和比较报告。
 
-## 8. 协作与Git规则
+正式报告必须分别保存Golden↔NDP、Golden↔target、NDP↔target三组结果。任一侧缺失时只能标记`three_way_not_comparable`。
 
-- 公共schema、合同、selector/ping-pong规则、Git集成和全量回归串行维护；硬件反馈与扩展不得同时改写真值文件。
-- 硬件负责人只消费冻结包并产生dump/比较记录；扩展负责人从同一冻结提交派生第二实例。
-- managed worktree只保证tracked文件和`.worktreeinclude`的小元数据；不以junction/symlink共享Local `.venv`、参考仓或大产物。正式W3、参考仓或全量回归在Local执行。
-- 不覆盖、移动或改写未跟踪的`.agents/conv_full(2).json`和`.agents/conv_full(2).txt`。它们是未测试伪代码原件，不是正式配置源。
-- 修改前检查`git status --short`，保留无关用户改动；禁止无批准使用`git reset --hard`、`git checkout --`或删除恢复点。
-- 业务/合同/规则变更须聚焦测试和原子提交；台账记录完整hash、父提交、范围、验证与回退。
-- **只有操作者明确要求“推送”“发布到GitHub”或“同步云端”时才允许执行远端推送。** 本地提交、阶段完成、用户要求“保存”或普通任务结束都不自动授权`git push`；不得为了备份或方便自行推送。
-- 根仓既有直接推送远端为`origin=https://github.com/crithbo/resnet50_int8.git`。普通推送使用现有Git凭据，不把GitHub插件或`gh`当作前置；只有用户明确要求PR、Issue、Review或插件操作时才使用对应GitHub工具。
-- 用户授权直接推送后，固定执行：`git status -sb`核对范围；`git fetch origin`刷新远端；用`git rev-list --left-right --count origin/main...HEAD`确认远端独有提交数为0；只执行非强制`git push origin HEAD:main`；最后用`git ls-remote origin refs/heads/main`确认远端SHA与`git rev-parse HEAD`一致。若远端分叉、仓库URL异常、认证失败或需要force，立即停止并报告，不自动改写远端历史。
-- 推送只传递已提交对象。工作树中的未跟踪/未暂存文件不得为“顺便上传”而加入提交；本项目尤其要继续排除`.agents/conv_full(2).json/.txt`，除非操作者另行明确授权。
+## 3. 门状态口径
 
-## 9. 文档更新规则
+| 门 | 含义 | 不足以通过的证据 |
+|---|---|---|
+| G0 | 编排、schema、artifact生命周期与失败阻断 | mock运行成功 |
+| G1 | 模型、输入、量化和架构基线完整批准 | 仅取得候选ONNX或部分参数 |
+| G2 | 小算子功能/布局参考闭环 | 非正式目标布局 |
+| G3 | 全图节点与子步骤golden闭环 | 未生成目标配置/运行包 |
+| G4 | 28-slice公共物理布局与目标配置继承闭合 | 单个candidate通过 |
+| G5 | 单算子正式编码与配置绑定软件执行闭合 | JSON/bitstream能生成 |
+| G6 | 目标数值执行器完整消费配置并通过 | 仅准备execplan/Bank_data |
+| G8 | RTL/真实硬件完整P/D三方bit-exact | 高CPU、局部marker、自然退出或文件存在 |
 
-- 当前任务、阻塞、负责人或接手命令变化：更新`plan.md`。
-- 稳定代码入口、仓库职责或长期边界变化：更新`agent.md`。
-- 真实配置/数值证据修正规则：更新`rules/算子配置规则.md`并补测试。
-- 工作包完成或结论被替代：追加`history.md`，从`plan.md`移除详细完成步骤，只留状态摘要。
-- W4历史只在需要时查`W4_ARCHIVE.md`；不再建立独立接手文件。
+当前具体状态只在`plan.md`维护。
+
+稳定门快照：W0/G0、W2/G2、W3/G3、W4/G4已通过；W1仅冻结当前可取得的模型/输入/量化事实，G1未整体关闭；`node-0004`的正式编码、config-bound软件P/D和freeze-bound单算子运行包已闭合，因此该首例范围G5=true。其他shape/算子族的G5仍未闭合，目标数值执行和RTL三方证据尚无，因此G6/G8保持false。最新变化以`plan.md`为准。
+
+## 4. 仓库与事实来源
+
+根仓负责编排、合同、lowering、golden、28-slice布局、目标配置审计、硬件freeze、服务器包、返回分析和三方比较。参考仓由`repos.lock.json`恢复：
+
+| 仓库 | 职责 | 不能误称为 |
+|---|---|---|
+| `ndp-sim-ref` | 正式JSON parser、placement、bitstream和原生execplan生成规则 | ResNet数值功能模型或硬件通过证据 |
+| `NDPFuncModel/conv_func` | Conv配置绑定功能模型、physical staging/inverse和P/D比较 | 逐周期RTL、bitstream解释器 |
+| `CGRA_SIM` | 旧ResNet/QNN语义、软件算子和性能参考 | 当前28-slice配置真值 |
+| `NDP_copy01` | 本地只读服务器入口镜像、主Makefile/TB/filelist兼容性分析 | 可在Windows本机完成的VCS环境 |
+
+稳定锁定点和提交恢复记录见`history.md`及`repos.lock.json`，不要在本文件复制版本台账。
+
+## 5. 核心代码与工具地图
+
+### 5.1 模型、golden与layout
+
+- `resnet50_pipeline/model/`：正式ONNX图、initializer和模型身份。
+- `resnet50_pipeline/lowering/`：模型节点到硬件原子算子的稳定映射。
+- `resnet50_pipeline/golden/`：节点输出和Conv accumulate/requant子步骤真值。
+- `resnet50_pipeline/*28_layout.py`：28-slice physical布局、relayout和inverse。
+- `resnet50_pipeline/conv_instance.py`：Conv实例事实、shape、qparams、地址和ABI入口；外围不得复制硬编码。
+- `tools/run_onnx_golden.py`、`tools/run_subop_golden.py`：正式golden入口。
+- `tools/verify_w4_*layout.py`、`tools/audit_w4_gate.py`：W4物理布局与门审计。
+
+### 5.2 配置、编码与数值闭环
+
+- `tools/generate_conv_instance.py`：生成统一Conv实例。
+- `tools/generate_conv_1x1_real.py`、`tools/generate_conv_1x1_requant_real.py`：生成accumulate/requant配置。
+- `tools/run_conv_1x1_encoder.py`、`tools/run_conv_1x1_requant_encoder.py`：调用正式parser/placement/encoder并复验确定性。
+- `tools/run_w5_conv_preflight.py`：配置绑定的Golden/NDP P/D比较。
+- `tools/export_conv_1x1_hardware_freeze.py`：冻结输入、配置、bitstream、parsed evidence、地址表和manifest。
+- `tools/compare_conv_hardware_execplan_dump.py`、`tools/compare_conv_1x1_hardware_dump.py`：真实返回Bank/P/D的inverse和三方比较。
+
+### 5.3 execplan与服务器包
+
+- `tools/generate_conv_hardware_execplan.py`：项目唯一正式硬件package入口。
+- `resnet50_pipeline/conv_execplan_hardware.py`：消费freeze和typed request，调用原生execplan API，增加服务器barrier、SCA、Bank_data与完整readback合同。
+- `tools/build_ndp_server_overlay.py`：唯一runtime-only overlay/runner/manifest/ZIP入口。
+- `tools/audit_ndp_server_overlay_zip.py`：从最终ZIP全新解包的第二轮独立审计。
+- `tools/analyze_hardware_server_trace_zip.py`：原始服务器结果ZIP结构分析；不能冒充数值比较。
+- `NDP_copy01/Makefile.tb_NDP_Top_new_phy`、`tb_NDP_Top_new_phy.sv`、`rtl/filelists/NDP_Top_phy_filelist.f`：服务器三个活动入口。
+- `NDP_copy01/README_HARDWARE_SIM_ENTRY.md`：只保存该目录的活动文件地图、Make/TB实际语义和Linux/VCS运行条件；不承担当前revision状态。
+
+## 6. `model_execplan`复用边界
+
+原生执行计划的直接事实来源为`ndp-sim-ref/model_execplan`同目录源码、正式consumer和可复现输出；README用于解释接口，源码行为优先于过时示例：
+
+- 地址格式为`(slave<<25)|(bank<<23)|(row<<10)|(col<<4)|subword`，配置地址写入Load_Config前右移10位。
+- 原生opcode为Load_Config=`000`、Clock_Enable=`001`、Write_Reg=`100`、Start_Comp=`101`；Clock_Enable全局一次。
+- 64-bit命令两两封装为128-bit文本时，后一个命令位于高64位、前一个位于低64位；奇数尾补零，文件以LF结束。
+- 项目wrapper直接复用原生`InstructionGenerator`、`write_instruction_outputs`和`write_install_manifest`，再加入opcode `110`的服务器completion barrier。
+
+不得另建第三套execplan编码器。通用`ndp-sim-ref/model_execplan/main.py`会重跑bitstream、使用固定输出目录、原生流缺服务器barrier，且失败路径不满足当前freeze的fail-closed要求，因此不能直接生成正式服务器包。
+
+## 7. 服务器与HDL边界
+
+- `NDP_copy01/rtl/**`、主testbench及所有`.v/.sv`均只读；overlay不得包含、覆盖或现场修改HDL。
+- 服务器源码可以更新。runner只要求主Makefile、主TB和主filelist三个逻辑入口可读并记录provenance，不要求Git HEAD、整树SHA、物理路径位于服务器根内或与本地逐字节一致；接口语义由真实Make/VCS/UCLI执行判定。
+- TB/RTL实际SHA只作为provenance记录，不作为启动阻断门。
+- 非HDL UCLI/TCL只允许驱动经审计但未连接的环境端口等窄范围动作，不得修改设计功能、伪造完成或定时宣告成功。
+- 默认不采全量波形；正式完成包使用`completion_no_wave`，诊断波形必须使用独立revision。
+- 本机只生成/审计运行包、分析原始ZIP并比较P/D；VCS/Verdi真实编译仿真只在具备许可证的Linux服务器执行。
+
+修改package/overlay/generator/runner前读取`plan.md`、原仿真README、包内README模板和服务器规则中与变化直接相关的章节；无需反复阅读无关历史。影响最终制品的新revision仍须经过“受影响生成链/真实目录行为自检”和“最终ZIP独立解包审计”两轮不同覆盖的检查，但不得重复同一全量validator冒充两轮。
+
+## 8. Artifact与证据保留
+
+- `artifacts/w3/golden_batch16/`和`subop_batch16/`是大型只读golden，不因服务器包清理而重建或删除。
+- `artifacts/w3/golden_batch16/`已完成精确目录ownership恢复并保持递归只读/执行权限；不得用重建数据掩盖权限问题。
+- typed request、config-bound preflight、官方encoder合同、批准freeze和下一revision明确依赖的数值资产是生成输入，不属于旧服务器包。
+- 当前只保留一个最新工作revision的package/overlay/ZIP/sidecar/selfcheck；已发往服务器且结果尚待回传的诊断revision可暂留到证据入库和下一revision接替，随后按服务器规则清理。
+- 未上服务器的旧revision在错误进入规则/history后删除全部生成包。
+- 已上服务器的revision在原始结果ZIP完成入库、验证和下一revision接替后，只长期保留原始结果ZIP及其SHA记录，不保留对应package、overlay、展开结果或派生分析目录。
+- 原始结果ZIP不可改写；CPU占用、日志片段和分析目录都不能代替它。
+
+详细归档策略见服务器包规则第10.1节，当前保留清单见`plan.md`。
+
+## 9. 环境恢复与验证
+
+普通本地接手先读`plan.md`并检查工作区改动，不默认同步参考仓、重建W3或跑全量回归。本地可使用Git查看改动，但服务器运行和完整性校验永久不依赖Git或`.git`。
+
+```powershell
+.\.venv\Scripts\python.exe tools\sync_repositories.py sync
+.\.venv\Scripts\python.exe tools\sync_repositories.py verify
+```
+
+参考模型只在缺失或明确复验基线时运行`tools/prepare_reference_model.py [--check]`。约951 MiB的W3输出只在目录缺失或模型身份变化时由`tools/run_onnx_golden.py`和`tools/run_subop_golden.py`重建；输出目录必须预先不存在，不能混合新旧节点结果。
+
+依赖参考仓的Python命令先设置`PYTHONDONTWRITEBYTECODE=1`，避免历史tracked pyc造成假脏。日常只跑受影响模块测试；只有新冻结身份、公共合同/lock变化或正式发布边界才集中运行全量测试和`git diff --check`。
+
+大型输出目录必须首次生成前不存在；生成器应fail closed，禁止把新旧数据混在同一目录。
+
+## 10. 首例通过后的长期顺序
+
+1. 先让`node-0004`完成正式服务器自然结束、完整readback和三方P/D，关闭首例G6/G8证据缺口。
+2. 再用同一`ConvInstanceSpec`入口扩展1×1 shape/K/C组合；已完成的软件candidate不能冒充硬件批准。
+3. 覆盖3×3、7×7 Conv及Pool、Add、Quant/Dequant、GAP、MatMul等算子族，每族都保留参数化、layout/inverse和配置绑定测试。
+4. 生成typed网络execplan、地址生命周期与分段运行包，按残差块、stage、head、整网顺序合流。
+5. 最终逐层保存Golden/NDP/target三组比较，禁止从单算子成功直接跳到整网通过。
+
+## 11. 协作、Git与文档维护
+
+- 修改前检查`git status --short`，保留无关用户改动；禁止未经明确授权使用`git reset --hard`、`git checkout --`或删除恢复点。
+- 业务、合同、规则和测试修改应聚焦验证；硬件反馈与扩展工作不得并行改写真值文件。
+- 只有用户明确要求推送/发布/同步云端时才允许`git push`；普通完成、本地提交或文档更新不构成推送授权。
+- 获得直接推送授权后依次执行：`git status -sb`核对范围、`git fetch origin`、`git rev-list --left-right --count origin/main...HEAD`确认远端无独有提交、非强制`git push origin HEAD:main`、`git ls-remote origin refs/heads/main`核对远端SHA；分叉、认证失败或需要force时立即停止。
+- 不覆盖或移动`.agents/conv_full(2).json/.txt`等未跟踪伪代码原件；它们不是正式配置源。
+- 确认的新配置/服务器错误先写入对应rule和`plan.md`，再修改实现；完成后把过程压缩迁入`history.md`。
+- `agent.md`不保存版本过程；`plan.md`不保存已完成命令和旧决策树；`history.md`控制在1000行以内，优先用表格、身份摘要和archive引用压缩重复细节。

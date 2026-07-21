@@ -20,6 +20,12 @@ from typing import Any, Literal
 
 import numpy as np
 
+from .conv_sa_contract import (
+    SA_CHANNEL_LANES,
+    SA_OUTPUT_LANES,
+    SA_SPATIAL_LANES,
+    ceil_div,
+)
 from .memory import DramGeometry, TARGET_DRAM_GEOMETRY28
 from .profile28 import (
     BATCH_SIZE,
@@ -32,12 +38,19 @@ from .profile28 import (
     validate_profile_name,
 )
 from .records import LayoutRecord
-from .topology28 import HIGH_RING_OWNERS, LOW_RING_OWNERS, TOPOLOGY28
+from .topology28 import Direction, HIGH_RING_OWNERS, LOW_RING_OWNERS, TOPOLOGY28
 
 
 CONV28_LAYOUT_IDS = {
     GROUP4X7_BATCH_CHANNEL28_PROFILE: "w4_conv_group4x7_28_candidate_v1",
     GLOBAL_RING28_PROFILE: "w4_conv_global_ring28_candidate_v1",
+}
+CONV28_PUBLIC_LAYOUT_ABI = "conv28_public_v1"
+CONV28_HARDWARE_LAYOUT_ABI = "conv28_sa_q8k8_v2"
+CONV28_HARDWARE_LAYOUT_IDS = {
+    GROUP4X7_BATCH_CHANNEL28_PROFILE: (
+        "hardware_private_conv_group4x7_sa_q8k8_candidate_v2"
+    ),
 }
 
 PORT_ORDER = (
@@ -88,6 +101,7 @@ class Conv28PortPlan:
 @dataclass(frozen=True)
 class Conv28PhysicalPlan:
     contract: str
+    layout_abi: str
     status: str
     target_family: str
     profile_id: str
@@ -105,6 +119,10 @@ class Conv28PhysicalPlan:
     c_tile: int
     k_tile: int
     c_padded: int
+    c_tile_padded: int
+    k_tile_padded: int
+    activation_width_padded: int
+    output_width_padded: int
     storage_sample_count: int
     ports: tuple[Conv28PortPlan, ...]
     per_slice_used_bytes: int
@@ -119,6 +137,7 @@ class Conv28PhysicalPlan:
     def capacity_report(self) -> dict[str, int | str | bool]:
         return {
             "contract": self.contract,
+            "layout_abi": self.layout_abi,
             "profile_id": self.profile_id,
             "slice_count": self.geometry.slice_count,
             "per_slice_used_bytes": self.per_slice_used_bytes,
@@ -264,6 +283,7 @@ class Conv28PhysicalBundle:
                             else "OIHW" if placement.port == "B" else "vector/scalar"
                         ),
                         "physical_order": placement.physical_axis_order,
+                        "layout_abi": self.plan.layout_abi,
                         "element_order": "C",
                         "byte_order": "little",
                         "alignment_bytes": self.plan.alignment,
@@ -293,6 +313,7 @@ class QLinearConvPhysicalLayout:
         geometry: DramGeometry | None = None,
         *,
         alignment: int = 16,
+        layout_abi: str = CONV28_PUBLIC_LAYOUT_ABI,
     ) -> None:
         self.profile_id = validate_profile_name(profile_id)
         self.geometry = geometry or TARGET_DRAM_GEOMETRY28
@@ -301,7 +322,28 @@ class QLinearConvPhysicalLayout:
         if alignment <= 0 or alignment % self.geometry.subword_bytes:
             raise ValueError("alignment must be a positive multiple of subword_bytes")
         self.alignment = alignment
-        self.contract = CONV28_LAYOUT_IDS[self.profile_id]
+        if layout_abi not in {
+            CONV28_PUBLIC_LAYOUT_ABI,
+            CONV28_HARDWARE_LAYOUT_ABI,
+        }:
+            raise ValueError(f"unsupported Conv28 layout ABI: {layout_abi}")
+        if (
+            layout_abi == CONV28_HARDWARE_LAYOUT_ABI
+            and self.profile_id != GROUP4X7_BATCH_CHANNEL28_PROFILE
+        ):
+            raise ValueError(
+                "the hardware-private Conv28 ABI only supports the group4x7 profile"
+            )
+        self.layout_abi = layout_abi
+        self.contract = (
+            CONV28_HARDWARE_LAYOUT_IDS[self.profile_id]
+            if self.layout_abi == CONV28_HARDWARE_LAYOUT_ABI
+            else CONV28_LAYOUT_IDS[self.profile_id]
+        )
+
+    @property
+    def hardware_transaction_packing(self) -> bool:
+        return self.layout_abi == CONV28_HARDWARE_LAYOUT_ABI
 
     @staticmethod
     def _output_shape(
@@ -366,23 +408,83 @@ class QLinearConvPhysicalLayout:
         )
         c_tile = math.ceil(channels / owner_count)
         k_tile = math.ceil(outputs / owner_count)
-        # B always carries a complete input-channel row for every local K.  The
-        # 16-element storage rounding gives C-tail bytes an explicit per-K
-        # zero-point meaning instead of hiding them in anonymous alignment.
-        c_padded = _align(channels, 16)
-        physical_shapes = {
-            "A": (storage_samples, height, width, c_tile),
-            "B": (kernel_h, kernel_w, k_tile, c_padded),
-            "bias": (k_tile,),
-            "w_scale": (k_tile,),
-            "w_zero_point": (k_tile,),
-            "x_scale": (1,),
-            "x_zero_point": (1,),
-            "y_scale": (1,),
-            "y_zero_point": (1,),
-            "P": (storage_samples, output_h, output_w, k_tile),
-            "D": (storage_samples, output_h, output_w, k_tile),
-        }
+        if self.hardware_transaction_packing:
+            # The hardware-facing default profile is transaction packed.  A
+            # 32B activation transaction is Q8xC4; a 32B weight transaction is
+            # K8xC4.  Weight C blocks are stored in the exact PREV traversal in
+            # which neighbor_stream0 delivers activation owners to this K owner.
+            c_tile_padded = _align(c_tile, SA_CHANNEL_LANES)
+            k_tile_padded = _align(k_tile, SA_OUTPUT_LANES)
+            c_padded = owner_count * c_tile_padded
+            activation_width_padded = _align(width, SA_SPATIAL_LANES)
+            output_width_padded = _align(output_w, SA_SPATIAL_LANES)
+            c_quartets = c_tile_padded // SA_CHANNEL_LANES
+            k_blocks = k_tile_padded // SA_OUTPUT_LANES
+            physical_shapes = {
+                "A": (
+                    storage_samples,
+                    height,
+                    activation_width_padded // SA_SPATIAL_LANES,
+                    c_quartets,
+                    SA_SPATIAL_LANES,
+                    SA_CHANNEL_LANES,
+                ),
+                "B": (
+                    kernel_h,
+                    kernel_w,
+                    owner_count,
+                    c_quartets,
+                    k_blocks,
+                    SA_OUTPUT_LANES,
+                    SA_CHANNEL_LANES,
+                ),
+                "bias": (k_blocks, SA_OUTPUT_LANES),
+                "w_scale": (k_tile_padded,),
+                "w_zero_point": (k_tile_padded,),
+                "x_scale": (1,),
+                "x_zero_point": (1,),
+                "y_scale": (1,),
+                "y_zero_point": (1,),
+                # Q8 precedes K8 so every spatial row's K8 INT32 result is one
+                # contiguous 32B write and requant reads the same K8 directly.
+                "P": (
+                    storage_samples,
+                    output_h,
+                    output_width_padded // SA_SPATIAL_LANES,
+                    SA_SPATIAL_LANES,
+                    k_blocks,
+                    SA_OUTPUT_LANES,
+                ),
+                "D": (
+                    storage_samples,
+                    output_h,
+                    output_width_padded // SA_SPATIAL_LANES,
+                    SA_SPATIAL_LANES,
+                    k_blocks,
+                    SA_OUTPUT_LANES,
+                ),
+            }
+        else:
+            # The global LOW-ring research profile is not consumed by the
+            # current hardware JSON.  Preserve its older reversible layout.
+            c_padded = _align(channels, 16)
+            c_tile_padded = c_tile
+            k_tile_padded = k_tile
+            activation_width_padded = width
+            output_width_padded = output_w
+            physical_shapes = {
+                "A": (storage_samples, height, width, c_tile),
+                "B": (kernel_h, kernel_w, k_tile, c_padded),
+                "bias": (k_tile,),
+                "w_scale": (k_tile,),
+                "w_zero_point": (k_tile,),
+                "x_scale": (1,),
+                "x_zero_point": (1,),
+                "y_scale": (1,),
+                "y_zero_point": (1,),
+                "P": (storage_samples, output_h, output_w, k_tile),
+                "D": (storage_samples, output_h, output_w, k_tile),
+            }
         dtypes = {
             "A": "uint8",
             "B": "int8",
@@ -422,19 +524,34 @@ class QLinearConvPhysicalLayout:
             "P": "K",
             "D": "K",
         }
-        physical_orders = {
-            "A": "NHWC-local",
-            "B": "RSK-localC-global-padded",
-            "bias": "K-local",
-            "w_scale": "K-local",
-            "w_zero_point": "K-local",
-            "x_scale": "replicated-scalar",
-            "x_zero_point": "replicated-scalar",
-            "y_scale": "replicated-scalar",
-            "y_zero_point": "replicated-scalar",
-            "P": "NHWK-local",
-            "D": "NHWK-local",
-        }
+        if self.hardware_transaction_packing:
+            physical_orders = {
+                "A": "NH-Qblock-Cquartet-Q8-C4",
+                "B": "RS-ringPREV-Cquartet-Kblock-K8-C4",
+                "bias": "Kblock-K8",
+                "w_scale": "K-local-padded8",
+                "w_zero_point": "K-local-padded8",
+                "x_scale": "replicated-scalar",
+                "x_zero_point": "replicated-scalar",
+                "y_scale": "replicated-scalar",
+                "y_zero_point": "replicated-scalar",
+                "P": "NH-Qblock-Q8-Kblock-K8",
+                "D": "NH-Qblock-Q8-Kblock-K8",
+            }
+        else:
+            physical_orders = {
+                "A": "NHWC-local",
+                "B": "RSK-localC-global-padded",
+                "bias": "K-local",
+                "w_scale": "K-local",
+                "w_zero_point": "K-local",
+                "x_scale": "replicated-scalar",
+                "x_zero_point": "replicated-scalar",
+                "y_scale": "replicated-scalar",
+                "y_zero_point": "replicated-scalar",
+                "P": "NHWK-local",
+                "D": "NHWK-local",
+            }
         tail_rules = {
             "A": "inactive N/C slots equal x_zero_point",
             "B": (
@@ -479,6 +596,7 @@ class QLinearConvPhysicalLayout:
             )
         return Conv28PhysicalPlan(
             contract=self.contract,
+            layout_abi=self.layout_abi,
             status=self.status,
             target_family=self.target_family,
             profile_id=self.profile_id,
@@ -496,6 +614,10 @@ class QLinearConvPhysicalLayout:
             c_tile=c_tile,
             k_tile=k_tile,
             c_padded=c_padded,
+            c_tile_padded=c_tile_padded,
+            k_tile_padded=k_tile_padded,
+            activation_width_padded=activation_width_padded,
+            output_width_padded=output_width_padded,
             storage_sample_count=storage_samples,
             ports=tuple(ports),
             per_slice_used_bytes=cursor,
@@ -677,44 +799,149 @@ class QLinearConvPhysicalLayout:
                 shape = port.physical_shape
                 dtype = np.dtype(port.dtype).newbyteorder("<")
                 if port.port == "A":
-                    local = np.full(shape, x_zp, dtype=dtype)
-                    if logical_count:
-                        source = canonical["A"][
-                            sample_start : sample_start + sample_count,
-                            logical_start : logical_start + logical_count,
-                            ...,
-                        ]
-                        local[:sample_count, ..., :logical_count] = np.moveaxis(
-                            source, 1, -1
+                    if self.hardware_transaction_packing:
+                        flat = np.full(
+                            (
+                                plan.storage_sample_count,
+                                plan.activation_shape[2],
+                                plan.activation_width_padded,
+                                plan.c_tile_padded,
+                            ),
+                            x_zp,
+                            dtype=dtype,
                         )
+                        if logical_count:
+                            source = canonical["A"][
+                                sample_start : sample_start + sample_count,
+                                logical_start : logical_start + logical_count,
+                                ...,
+                            ]
+                            flat[
+                                :sample_count,
+                                :,
+                                : plan.activation_shape[3],
+                                :logical_count,
+                            ] = np.moveaxis(source, 1, -1)
+                        local = flat.reshape(
+                            plan.storage_sample_count,
+                            plan.activation_shape[2],
+                            plan.activation_width_padded // SA_SPATIAL_LANES,
+                            SA_SPATIAL_LANES,
+                            plan.c_tile_padded // SA_CHANNEL_LANES,
+                            SA_CHANNEL_LANES,
+                        ).transpose(0, 1, 2, 4, 3, 5)
+                    else:
+                        local = np.full(shape, x_zp, dtype=dtype)
+                        if logical_count:
+                            source = canonical["A"][
+                                sample_start : sample_start + sample_count,
+                                logical_start : logical_start + logical_count,
+                                ...,
+                            ]
+                            local[:sample_count, ..., :logical_count] = np.moveaxis(
+                                source, 1, -1
+                            )
                 elif port.port == "B":
                     local = np.zeros(shape, dtype=dtype)
-                    for local_k in range(logical_count):
-                        global_k = logical_start + local_k
-                        local[:, :, local_k, :] = canonical["w_zero_point"][global_k]
-                        local[:, :, local_k, : plan.weight_shape[1]] = np.transpose(
-                            canonical["B"][global_k], (1, 2, 0)
-                        )
+                    if self.hardware_transaction_packing:
+                        for local_k in range(logical_count):
+                            global_k = logical_start + local_k
+                            k_block, k_lane = divmod(local_k, SA_OUTPUT_LANES)
+                            local[:, :, :, :, k_block, k_lane, :] = canonical[
+                                "w_zero_point"
+                            ][global_k]
+                        group_id = int(descriptor["group_id"])
+                        ring = TOPOLOGY28.high_ring_for_group(group_id)
+                        traversal = ring.traverse(slice_id, Direction.PREV)
+                        owners = HIGH_RING_OWNERS[group_id]
+                        for ring_step, source_owner in enumerate(traversal):
+                            c_owner_step = owners.index(source_owner)
+                            c_start = c_owner_step * plan.c_tile
+                            c_count = max(
+                                0,
+                                min(
+                                    plan.c_tile,
+                                    plan.weight_shape[1] - c_start,
+                                ),
+                            )
+                            for local_c in range(c_count):
+                                global_c = c_start + local_c
+                                c_quartet, c_lane = divmod(
+                                    local_c, SA_CHANNEL_LANES
+                                )
+                                for local_k in range(logical_count):
+                                    global_k = logical_start + local_k
+                                    k_block, k_lane = divmod(
+                                        local_k, SA_OUTPUT_LANES
+                                    )
+                                    local[
+                                        :,
+                                        :,
+                                        ring_step,
+                                        c_quartet,
+                                        k_block,
+                                        k_lane,
+                                        c_lane,
+                                    ] = canonical["B"][global_k, global_c]
+                    else:
+                        for local_k in range(logical_count):
+                            global_k = logical_start + local_k
+                            local[:, :, local_k, :] = canonical["w_zero_point"][global_k]
+                            local[:, :, local_k, : plan.weight_shape[1]] = np.transpose(
+                                canonical["B"][global_k], (1, 2, 0)
+                            )
                 elif port.port in {"bias", "w_scale", "w_zero_point"}:
                     local = np.zeros(shape, dtype=dtype)
                     if logical_count:
-                        local[:logical_count] = canonical[port.port][
+                        local.reshape(-1)[:logical_count] = canonical[port.port][
                             logical_start : logical_start + logical_count
                         ]
                 elif port.owner_axis == "replicated":
                     local = canonical[port.port].copy()
                 elif port.port in {"P", "D"}:
                     fill = 0 if port.port == "P" else y_zp
-                    local = np.full(shape, fill, dtype=dtype)
-                    if logical_count:
-                        source = canonical[port.port][
-                            sample_start : sample_start + sample_count,
-                            logical_start : logical_start + logical_count,
-                            ...,
-                        ]
-                        local[:sample_count, ..., :logical_count] = np.moveaxis(
-                            source, 1, -1
+                    if self.hardware_transaction_packing:
+                        flat = np.full(
+                            (
+                                plan.storage_sample_count,
+                                plan.output_shape[2],
+                                plan.output_width_padded,
+                                plan.k_tile_padded,
+                            ),
+                            fill,
+                            dtype=dtype,
                         )
+                        if logical_count:
+                            source = canonical[port.port][
+                                sample_start : sample_start + sample_count,
+                                logical_start : logical_start + logical_count,
+                                ...,
+                            ]
+                            flat[
+                                :sample_count,
+                                :,
+                                : plan.output_shape[3],
+                                :logical_count,
+                            ] = np.moveaxis(source, 1, -1)
+                        local = flat.reshape(
+                            plan.storage_sample_count,
+                            plan.output_shape[2],
+                            plan.output_width_padded // SA_SPATIAL_LANES,
+                            SA_SPATIAL_LANES,
+                            plan.k_tile_padded // SA_OUTPUT_LANES,
+                            SA_OUTPUT_LANES,
+                        )
+                    else:
+                        local = np.full(shape, fill, dtype=dtype)
+                        if logical_count:
+                            source = canonical[port.port][
+                                sample_start : sample_start + sample_count,
+                                logical_start : logical_start + logical_count,
+                                ...,
+                            ]
+                            local[:sample_count, ..., :logical_count] = np.moveaxis(
+                                source, 1, -1
+                            )
                 else:
                     raise AssertionError(f"unhandled Conv port {port.port}")
                 raw = np.ascontiguousarray(local).tobytes(order="C")
@@ -792,15 +1019,33 @@ class QLinearConvPhysicalLayout:
                 if not region.logical_count:
                     continue
                 local = self._read_array(bundle, port, slice_id)
-                block = np.moveaxis(
-                    local[
-                        : region.sample_count,
-                        ...,
-                        : region.logical_count,
-                    ],
-                    -1,
-                    1,
-                )
+                if self.hardware_transaction_packing:
+                    flat = local.transpose(0, 1, 2, 4, 3, 5).reshape(
+                        bundle.plan.storage_sample_count,
+                        bundle.plan.activation_shape[2],
+                        bundle.plan.activation_width_padded,
+                        bundle.plan.c_tile_padded,
+                    )
+                    block = np.moveaxis(
+                        flat[
+                            : region.sample_count,
+                            :,
+                            : bundle.plan.activation_shape[3],
+                            : region.logical_count,
+                        ],
+                        -1,
+                        1,
+                    )
+                else:
+                    block = np.moveaxis(
+                        local[
+                            : region.sample_count,
+                            ...,
+                            : region.logical_count,
+                        ],
+                        -1,
+                        1,
+                    )
                 n_stop = region.sample_start + region.sample_count
                 c_stop = region.logical_start + region.logical_count
                 if coverage[
@@ -823,15 +1068,52 @@ class QLinearConvPhysicalLayout:
                 if coverage[region.logical_start:stop].any():
                     raise ValueError("Conv B K-owner coverage overlaps")
                 local = self._read_array(bundle, port, slice_id)
-                logical[region.logical_start:stop] = np.transpose(
-                    local[
-                        :,
-                        :,
-                        : region.logical_count,
-                        : bundle.plan.weight_shape[1],
-                    ],
-                    (2, 3, 0, 1),
-                )
+                if self.hardware_transaction_packing:
+                    group_id = int(region.group_id)
+                    owners = HIGH_RING_OWNERS[group_id]
+                    traversal = TOPOLOGY28.high_ring_for_group(group_id).traverse(
+                        slice_id, Direction.PREV
+                    )
+                    for ring_step, source_owner in enumerate(traversal):
+                        c_owner_step = owners.index(source_owner)
+                        c_start = c_owner_step * bundle.plan.c_tile
+                        c_count = max(
+                            0,
+                            min(
+                                bundle.plan.c_tile,
+                                bundle.plan.weight_shape[1] - c_start,
+                            ),
+                        )
+                        for local_c in range(c_count):
+                            c_quartet, c_lane = divmod(local_c, SA_CHANNEL_LANES)
+                            for local_k in range(region.logical_count):
+                                k_block, k_lane = divmod(
+                                    local_k, SA_OUTPUT_LANES
+                                )
+                                logical[
+                                    region.logical_start + local_k,
+                                    c_start + local_c,
+                                    :,
+                                    :,
+                                ] = local[
+                                    :,
+                                    :,
+                                    ring_step,
+                                    c_quartet,
+                                    k_block,
+                                    k_lane,
+                                    c_lane,
+                                ]
+                else:
+                    logical[region.logical_start:stop] = np.transpose(
+                        local[
+                            :,
+                            :,
+                            : region.logical_count,
+                            : bundle.plan.weight_shape[1],
+                        ],
+                        (2, 3, 0, 1),
+                    )
                 coverage[region.logical_start:stop] = True
         elif port in {"bias", "w_scale", "w_zero_point"}:
             coverage = np.zeros(spec.logical_shape[0], dtype=np.bool_)
@@ -844,7 +1126,7 @@ class QLinearConvPhysicalLayout:
                     raise ValueError(f"Conv {port} K-owner coverage overlaps")
                 logical[region.logical_start:stop] = self._read_array(
                     bundle, port, slice_id
-                )[: region.logical_count]
+                ).reshape(-1)[: region.logical_count]
                 coverage[region.logical_start:stop] = True
         elif port in {"P", "D"}:
             coverage = np.zeros(spec.logical_shape[:2], dtype=np.bool_)
@@ -853,15 +1135,33 @@ class QLinearConvPhysicalLayout:
                 if not region.logical_count:
                     continue
                 local = self._read_array(bundle, port, slice_id)
-                block = np.moveaxis(
-                    local[
-                        : region.sample_count,
-                        ...,
-                        : region.logical_count,
-                    ],
-                    -1,
-                    1,
-                )
+                if self.hardware_transaction_packing:
+                    flat = local.reshape(
+                        bundle.plan.storage_sample_count,
+                        bundle.plan.output_shape[2],
+                        bundle.plan.output_width_padded,
+                        bundle.plan.k_tile_padded,
+                    )
+                    block = np.moveaxis(
+                        flat[
+                            : region.sample_count,
+                            :,
+                            : bundle.plan.output_shape[3],
+                            : region.logical_count,
+                        ],
+                        -1,
+                        1,
+                    )
+                else:
+                    block = np.moveaxis(
+                        local[
+                            : region.sample_count,
+                            ...,
+                            : region.logical_count,
+                        ],
+                        -1,
+                        1,
+                    )
                 n_stop = region.sample_start + region.sample_count
                 k_stop = region.logical_start + region.logical_count
                 if coverage[
@@ -911,10 +1211,22 @@ class QLinearConvPhysicalLayout:
                 assignment = sample_to_group(n)
                 slice_ids = (HIGH_RING_OWNERS[assignment.group_id][owner_step],)
                 local_n = assignment.local_slot
+                if self.hardware_transaction_packing:
+                    local_c = c % plan.c_tile
+                    physical = (
+                        local_n,
+                        h,
+                        w // SA_SPATIAL_LANES,
+                        local_c // SA_CHANNEL_LANES,
+                        w % SA_SPATIAL_LANES,
+                        local_c % SA_CHANNEL_LANES,
+                    )
+                else:
+                    physical = (local_n, h, w, c % plan.c_tile)
             else:
                 slice_ids = (LOW_RING_OWNERS[owner_step],)
                 local_n = n
-            physical = (local_n, h, w, c % plan.c_tile)
+                physical = (local_n, h, w, c % plan.c_tile)
             semantic = "data"
         elif port == "B":
             k, c, r, s = coordinate
@@ -924,7 +1236,22 @@ class QLinearConvPhysicalLayout:
                 if self.profile_id == GROUP4X7_BATCH_CHANNEL28_PROFILE
                 else (LOW_RING_OWNERS[owner_step],)
             )
-            physical = (r, s, k % plan.k_tile, c)
+            if self.hardware_transaction_packing:
+                c_owner_step = c // plan.c_tile
+                local_c = c % plan.c_tile
+                local_k = k % plan.k_tile
+                ring_step = (owner_step - c_owner_step) % len(HIGH_RING_OWNERS[0])
+                physical = (
+                    r,
+                    s,
+                    ring_step,
+                    local_c // SA_CHANNEL_LANES,
+                    local_k // SA_OUTPUT_LANES,
+                    local_k % SA_OUTPUT_LANES,
+                    local_c % SA_CHANNEL_LANES,
+                )
+            else:
+                physical = (r, s, k % plan.k_tile, c)
             semantic = (
                 "replicated_static_weight"
                 if len(slice_ids) > 1
@@ -938,7 +1265,13 @@ class QLinearConvPhysicalLayout:
                 if self.profile_id == GROUP4X7_BATCH_CHANNEL28_PROFILE
                 else (LOW_RING_OWNERS[owner_step],)
             )
-            physical = (k % plan.k_tile,)
+            local_k = k % plan.k_tile
+            physical = (
+                (local_k // SA_OUTPUT_LANES, local_k % SA_OUTPUT_LANES)
+                if port == "bias"
+                and self.hardware_transaction_packing
+                else (local_k,)
+            )
             semantic = (
                 "replicated_static_k_parameter"
                 if len(slice_ids) > 1
@@ -955,10 +1288,22 @@ class QLinearConvPhysicalLayout:
                 assignment = sample_to_group(n)
                 slice_ids = (HIGH_RING_OWNERS[assignment.group_id][owner_step],)
                 local_n = assignment.local_slot
+                if self.hardware_transaction_packing:
+                    local_k = k % plan.k_tile
+                    physical = (
+                        local_n,
+                        h,
+                        w // SA_SPATIAL_LANES,
+                        w % SA_SPATIAL_LANES,
+                        local_k // SA_OUTPUT_LANES,
+                        local_k % SA_OUTPUT_LANES,
+                    )
+                else:
+                    physical = (local_n, h, w, k % plan.k_tile)
             else:
                 slice_ids = (LOW_RING_OWNERS[owner_step],)
                 local_n = n
-            physical = (local_n, h, w, k % plan.k_tile)
+                physical = (local_n, h, w, k % plan.k_tile)
             semantic = "data"
         first = bundle.region(port, slice_ids[0])
         element_index = int(np.ravel_multi_index(physical, first.physical_shape))
@@ -996,16 +1341,61 @@ class QLinearConvPhysicalLayout:
         plan = bundle.plan
         tail_elements = 0
         if port == "A":
-            valid = np.zeros(region.physical_shape, dtype=np.bool_)
-            if region.logical_count:
-                valid[: region.sample_count, ..., : region.logical_count] = True
-            tail = local[~valid]
+            if self.hardware_transaction_packing:
+                flat = local.transpose(0, 1, 2, 4, 3, 5).reshape(
+                    plan.storage_sample_count,
+                    plan.activation_shape[2],
+                    plan.activation_width_padded,
+                    plan.c_tile_padded,
+                )
+                valid = np.zeros(flat.shape, dtype=np.bool_)
+                if region.logical_count:
+                    valid[
+                        : region.sample_count,
+                        :,
+                        : plan.activation_shape[3],
+                        : region.logical_count,
+                    ] = True
+                tail = flat[~valid]
+            else:
+                valid = np.zeros(region.physical_shape, dtype=np.bool_)
+                if region.logical_count:
+                    valid[: region.sample_count, ..., : region.logical_count] = True
+                tail = local[~valid]
             expected = self._read_array(bundle, "x_zero_point", slice_id)[0]
         elif port == "B":
             valid_k = region.logical_count
+            wzp = self._read_array(bundle, "w_zero_point", slice_id).reshape(-1)
+            if self.hardware_transaction_packing:
+                for local_k in range(plan.k_tile_padded):
+                    k_block, k_lane = divmod(local_k, SA_OUTPUT_LANES)
+                    values = local[:, :, :, :, k_block, k_lane, :]
+                    if local_k >= valid_k:
+                        if np.any(values != 0):
+                            raise ValueError("Conv B invalid-K tail is corrupted")
+                        tail_elements += int(values.size)
+                        continue
+                    for ring_step in range(len(HIGH_RING_OWNERS[0])):
+                        c_owner_step = (int(region.owner_step) - ring_step) % len(
+                            HIGH_RING_OWNERS[0]
+                        )
+                        c_start = c_owner_step * plan.c_tile
+                        c_count = max(
+                            0,
+                            min(plan.c_tile, plan.weight_shape[1] - c_start),
+                        )
+                        flat_c = values[:, :, ring_step].reshape(
+                            plan.weight_shape[2],
+                            plan.weight_shape[3],
+                            plan.c_tile_padded,
+                        )
+                        c_tail = flat_c[:, :, c_count:]
+                        if c_tail.size and np.any(c_tail != wzp[local_k]):
+                            raise ValueError("Conv B per-channel C-tail is corrupted")
+                        tail_elements += int(c_tail.size)
+                return tail_elements
             if valid_k < plan.k_tile and np.any(local[:, :, valid_k:, :] != 0):
                 raise ValueError("Conv B invalid-K tail is corrupted")
-            wzp = self._read_array(bundle, "w_zero_point", slice_id)
             for local_k in range(valid_k):
                 c_tail = local[:, :, local_k, plan.weight_shape[1] :]
                 if c_tail.size and np.any(c_tail != wzp[local_k]):
@@ -1013,13 +1403,30 @@ class QLinearConvPhysicalLayout:
                 tail_elements += int(c_tail.size)
             return tail_elements + int(local[:, :, valid_k:, :].size)
         elif port in {"bias", "w_scale", "w_zero_point"}:
-            tail = local[region.logical_count :]
+            tail = local.reshape(-1)[region.logical_count :]
             expected = 0
         elif port in {"P", "D"}:
-            valid = np.zeros(region.physical_shape, dtype=np.bool_)
-            if region.logical_count:
-                valid[: region.sample_count, ..., : region.logical_count] = True
-            tail = local[~valid]
+            if self.hardware_transaction_packing:
+                flat = local.reshape(
+                    plan.storage_sample_count,
+                    plan.output_shape[2],
+                    plan.output_width_padded,
+                    plan.k_tile_padded,
+                )
+                valid = np.zeros(flat.shape, dtype=np.bool_)
+                if region.logical_count:
+                    valid[
+                        : region.sample_count,
+                        :,
+                        : plan.output_shape[3],
+                        : region.logical_count,
+                    ] = True
+                tail = flat[~valid]
+            else:
+                valid = np.zeros(region.physical_shape, dtype=np.bool_)
+                if region.logical_count:
+                    valid[: region.sample_count, ..., : region.logical_count] = True
+                tail = local[~valid]
             expected = (
                 0
                 if port == "P"
@@ -1035,6 +1442,7 @@ class QLinearConvPhysicalLayout:
         plan = bundle.plan
         if (
             plan.contract != self.contract
+            or plan.layout_abi != self.layout_abi
             or plan.status != self.status
             or plan.target_family != self.target_family
             or plan.profile_id != self.profile_id
@@ -1148,6 +1556,7 @@ class QLinearConvPhysicalLayout:
         return {
             "target_family": self.target_family,
             "profile_id": self.profile_id,
+            "layout_abi": self.layout_abi,
             "slice_count": self.geometry.slice_count,
             "port_count": len(PORT_ORDER),
             "region_count": len(bundle.regions),

@@ -1,5 +1,12 @@
 .venv/
-artifacts/
+# Generated artifacts stay out of Git except the two small, frozen W3 graph
+# metadata files needed by layout queries in a fresh clone. Tensor payloads,
+# manifests, models, encoder output, hardware freezes, logs, and caches remain ignored.
+/artifacts/*
+!/artifacts/w3/
+/artifacts/w3/*
+!/artifacts/w3/model_graph.json
+!/artifacts/w3/legacy77_mapping.json
 __pycache__/
 *.py[cod]
 *.egg-info/
@@ -12,3 +19,15 @@ htmlcov/
 /CGRA_SIM/
 /ndp-sim-ref/
 /NDPFuncModel/
+
+# Local server RTL/VCS mirror and immutable returned result archives are
+# evidence inputs, not source-controlled project payloads. Keep only the
+# hand-maintained entry documentation from the mirror in the root repository.
+/NDP_copy01/*
+!/NDP_copy01/README_HARDWARE_SIM_ENTRY.md
+/sim_result*.zip
+
+# Operator pseudocode originals supplied for comparison remain local and must
+# not be normalized, renamed, or mistaken for generated configuration truth.
+/.agents/conv_full(2).json
+/.agents/conv_full(2).txt

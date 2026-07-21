@@ -17,7 +17,7 @@
       "upstream": "https://github.com/uSFrances/ndp-sim.git",
       "private_mirror": null,
       "branch": "main",
-      "commit": "5aa7d44aa2c58b7c86cfa32389d135246001629c",
+      "commit": "d4ffc32c9b29a858d83e13706cd837c5549521a4",
       "dirty": false,
       "dirty_paths": []
     },
@@ -27,7 +27,7 @@
       "upstream": "https://github.com/runoobb/NDPFuncModel.git",
       "private_mirror": "https://github.com/crithbo/NDPFuncModel-private.git",
       "branch": "conv_func",
-      "commit": "9004ff73e2e2d7c501f682de6df8543a45ae56cc",
+      "commit": "a1d975ee2d6d9200b8df0deea3e2ffc13ce0d05e",
       "dirty": false,
       "dirty_paths": []
     }

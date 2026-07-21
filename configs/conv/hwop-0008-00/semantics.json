@@ -1,6 +1,7 @@
 {
   "schema_version": "0.1",
   "contract_type": "conv_1x1_lc_pe_stream_semantics",
+  "transport_abi": "conv_sa_legacy_v1",
   "status": "official_encoder_passed_high4_selector_resolved_adapter_semantics_candidate",
   "authority_order": [
     "operator confirmation that previous DeepSeek operator JSONs execute on target hardware",
@@ -469,7 +470,7 @@
   ],
   "config": {
     "path": "configs/conv/hwop-0008-00/accumulate.json",
-    "sha256": "f1b8478a8a210903867c7d5c04a9b682cc2ec4752850ebd505c80050b64e243b",
+    "sha256": "b258dc8e23d80e18b8bb6fdf21092f8607fd0a05ebb4703e1691e82ebd0ae0c3",
     "generator": "tools/generate_conv_instance.py",
     "source": "conv_full.json"
   },
@@ -487,19 +488,19 @@
       },
       "parsed_bitstream.txt": {
         "size_bytes": 5032,
-        "sha256": "1fbe11a7e6c1b0dedbd167f571e0602ff933e5a03cb3ed2d8c2397902df61ee7"
+        "sha256": "620ced76c37a224dc57559441a5fa8509d60637cd2f34bbb50f142e9274bd24b"
       },
       "modules_dump_64b.bin": {
         "size_bytes": 4620,
-        "sha256": "2f82a0ec6ee61bdae53aa5ca81b74490c5d1f7d9839fe12bd16c51844b642c17"
+        "sha256": "442264ed8b43a43b46bf77a5c834cb465b684a7dab60681b601d6a9e77295096"
       },
       "modules_dump_128b.bin": {
         "size_bytes": 4550,
-        "sha256": "3f8606b7c7aeeafdb4f74e13d17a13dd36a0bc05c7e3a9923cf1fbf77278f500"
+        "sha256": "2c25b4bc14fba3c62ac46949130c1c1dc14bac1212461d3298813f9788ed438c"
       },
       "detailed_dump.txt": {
         "size_bytes": 42403,
-        "sha256": "ce8296d66e6376927af73155a711030e067898b5ddef306605f47ed35e451083"
+        "sha256": "5b37e01a7207b0362adcafb75fc39473e15ef8cf6b3f30a2ba8cf798afb1bb96"
       }
     }
   },

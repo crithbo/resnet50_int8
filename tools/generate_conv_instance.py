@@ -42,6 +42,7 @@ def _semantic_contract(
 ) -> dict[str, Any]:
     spec = request.spec
     contract = deepcopy(base)
+    contract["transport_abi"] = "conv_sa_legacy_v1"
     contract["status"] = (
         "official_encoder_passed_high4_selector_resolved_adapter_semantics_candidate"
         if encoder_evidence is not None

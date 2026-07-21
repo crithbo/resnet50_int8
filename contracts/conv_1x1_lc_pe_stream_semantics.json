@@ -1,7 +1,8 @@
 {
   "schema_version": "0.1",
   "contract_type": "conv_1x1_lc_pe_stream_semantics",
-  "status": "official_encoder_passed_high4_selector_resolved_adapter_semantics_candidate",
+  "transport_abi": "conv_sa_q8k8_v2",
+  "status": "official_encoder_passed_unified_sa_physical_contract",
   "authority_order": [
     "operator confirmation that previous DeepSeek operator JSONs execute on target hardware",
     "ndp-sim-ref encoder consumers and register map",
@@ -12,108 +13,507 @@
   ],
   "instance": {
     "node_id": "node-0004",
-    "hw_op_ids": ["hwop-0004-00", "hwop-0004-01"],
-    "activation_shape": [16, 64, 56, 56],
-    "weight_shape": [64, 64, 1, 1],
-    "output_shape": [16, 64, 56, 56],
-    "strides": [1, 1],
-    "pads": [0, 0, 0, 0],
-    "dilations": [1, 1],
+    "hw_op_ids": [
+      "hwop-0004-00",
+      "hwop-0004-01"
+    ],
+    "activation_shape": [
+      16,
+      64,
+      56,
+      56
+    ],
+    "weight_shape": [
+      64,
+      64,
+      1,
+      1
+    ],
+    "output_shape": [
+      16,
+      64,
+      56,
+      56
+    ],
+    "strides": [
+      1,
+      1
+    ],
+    "pads": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "dilations": [
+      1,
+      1
+    ],
     "group": 1,
-    "static_json_scope": "one-sample accumulation microprogram; batch-16 and seven HIGH-4 groups are request-adapter scheduling"
+    "static_json_scope": "one-sample accumulation microprogram; batch-16 and seven HIGH-4 groups are request-adapter scheduling",
+    "runtime_batch_schedule": {
+      "local_sample_slot_count": 3,
+      "group_sample_counts": [
+        3,
+        3,
+        2,
+        2,
+        2,
+        2,
+        2
+      ],
+      "accumulate_wave_count": 3,
+      "wave_slice_masks": [
+        "0xFFFFFFF",
+        "0xFFFFFFF",
+        "0x00000FF"
+      ],
+      "logical_samples_by_wave": [
+        [
+          0,
+          3,
+          6,
+          8,
+          10,
+          12,
+          14
+        ],
+        [
+          1,
+          4,
+          7,
+          9,
+          11,
+          13,
+          15
+        ],
+        [
+          2,
+          5
+        ]
+      ]
+    },
+    "hardware_quantization_precondition": {
+      "x_zero_point": 0,
+      "w_zero_point": "all channels must be zero",
+      "failure_mode": "reject before preflight/freeze until centered activation or corrected-bias transport is implemented"
+    }
   },
   "port_semantics": {
-    "target_A": {"logical_role": "weight", "project_port": "B", "dtype": "int8"},
-    "target_B": {"logical_role": "activation", "project_port": "A", "dtype": "uint8"},
-    "target_C": {"logical_role": "bias", "project_port": "bias", "dtype": "int32"},
-    "target_D": {"logical_role": "accumulator_writeback", "project_port": "P", "dtype": "int32"},
-    "logical_D": {"logical_role": "requantized_output", "project_port": "D", "dtype": "uint8", "encoding_status": "not represented by this SA-only JSON; executed by the bound NDP ActivationUnit candidate"}
+    "target_A": {
+      "logical_role": "activation_q8c4",
+      "project_port": "A",
+      "dtype": "uint8"
+    },
+    "target_B": {
+      "logical_role": "weight_k8c4_in_high_ring_prev_order",
+      "project_port": "B",
+      "dtype": "int8"
+    },
+    "target_C": {
+      "logical_role": "bias",
+      "project_port": "bias",
+      "dtype": "int32"
+    },
+    "target_D": {
+      "logical_role": "accumulator_writeback",
+      "project_port": "P",
+      "dtype": "int32"
+    },
+    "logical_D": {
+      "logical_role": "requantized_output",
+      "project_port": "D",
+      "dtype": "uint8",
+      "encoding_status": "not represented by this SA-only JSON; executed by the bound NDP ActivationUnit candidate"
+    }
   },
   "lc_semantics": [
-    {"lc": "LC0", "symbol": "k_block", "range": [0, 2, 1], "formula": "K/32", "placement_replica": "LC13"},
-    {"lc": "LC1", "symbol": "q", "range": [0, 56, 1], "formula": "Q", "placement_replica": "LC14"},
-    {"lc": "LC2", "symbol": "p_block", "range": [0, 2, 1], "formula": "ceil(P/32)", "placement_replica": "LC15"},
-    {"lc": "LC3", "symbol": "c_shared", "range": [0, 4, 1], "formula": "C/16"},
-    {"lc": "LC4", "symbol": "s", "range": [0, 1, 1], "formula": "S"},
-    {"lc": "LC5", "symbol": "r", "range": [0, 1, 1], "formula": "R"},
-    {"lc": "LC6", "symbol": "c_weight", "range": [0, 4, 1], "formula": "C/16"},
-    {"lc": "LC7", "symbol": "s_weight", "range": [0, 1, 1], "formula": "S"},
-    {"lc": "LC8", "symbol": "r_activation", "range": [0, 1, 1], "formula": "R"},
-    {"lc": "LC9", "symbol": "k_reg", "range": [0, 4, 1], "formula": "32/(4*2)"},
-    {"lc": "LC10", "symbol": "p_reg", "range": [0, 4, 1], "formula": "32/8"},
-    {"lc": "LC11", "symbol": "p_pe", "range": [0, 8, 4], "formula": "two offsets 0 and 4"},
-    {"lc": "LC12", "symbol": "k_pe", "range": [0, 2, 1], "formula": "two K offsets"},
-    {"lc": "LC13", "symbol": "k_block_replica", "range": [0, 2, 1], "formula": "placement-only replica of LC0"},
-    {"lc": "LC14", "symbol": "q_replica", "range": [0, 56, 1], "formula": "placement-only replica of LC1"},
-    {"lc": "LC15", "symbol": "p_block_replica", "range": [0, 2, 1], "formula": "placement-only replica of LC2"}
+    {
+      "lc": "LC0",
+      "symbol": "k_block_compute",
+      "range": [
+        0,
+        2,
+        1
+      ],
+      "src_id": null,
+      "last_index": 0
+    },
+    {
+      "lc": "LC1",
+      "symbol": "p_compute",
+      "range": [
+        0,
+        56,
+        1
+      ],
+      "src_id": "DRAM_LC.LC0",
+      "last_index": 1
+    },
+    {
+      "lc": "LC2",
+      "symbol": "q_block_compute",
+      "range": [
+        0,
+        7,
+        1
+      ],
+      "src_id": "DRAM_LC.LC1",
+      "last_index": 2
+    },
+    {
+      "lc": "LC3",
+      "symbol": "local_c_quartet_activation",
+      "range": [
+        0,
+        4,
+        1
+      ],
+      "src_id": "DRAM_LC.LC2",
+      "last_index": 3
+    },
+    {
+      "lc": "LC4",
+      "symbol": "unused",
+      "range": [
+        0,
+        0,
+        0
+      ],
+      "src_id": null,
+      "last_index": 0
+    },
+    {
+      "lc": "LC5",
+      "symbol": "unused",
+      "range": [
+        0,
+        0,
+        0
+      ],
+      "src_id": null,
+      "last_index": 0
+    },
+    {
+      "lc": "LC6",
+      "symbol": "high_ring_step",
+      "range": [
+        0,
+        4,
+        1
+      ],
+      "src_id": "DRAM_LC.LC2",
+      "last_index": 3
+    },
+    {
+      "lc": "LC7",
+      "symbol": "local_c_quartet_weight",
+      "range": [
+        0,
+        4,
+        1
+      ],
+      "src_id": "DRAM_LC.LC6",
+      "last_index": 4
+    },
+    {
+      "lc": "LC8",
+      "symbol": "unused",
+      "range": [
+        0,
+        0,
+        0
+      ],
+      "src_id": null,
+      "last_index": 0
+    },
+    {
+      "lc": "LC9",
+      "symbol": "q_lane_write",
+      "range": [
+        0,
+        8,
+        1
+      ],
+      "src_id": "DRAM_LC.LC15",
+      "last_index": 3
+    },
+    {
+      "lc": "LC10",
+      "symbol": "k_block_bias",
+      "range": [
+        0,
+        2,
+        1
+      ],
+      "src_id": null,
+      "last_index": 0
+    },
+    {
+      "lc": "LC11",
+      "symbol": "p_bias",
+      "range": [
+        0,
+        56,
+        1
+      ],
+      "src_id": "DRAM_LC.LC10",
+      "last_index": 1
+    },
+    {
+      "lc": "LC12",
+      "symbol": "q_block_bias",
+      "range": [
+        0,
+        7,
+        1
+      ],
+      "src_id": "DRAM_LC.LC11",
+      "last_index": 2
+    },
+    {
+      "lc": "LC13",
+      "symbol": "k_block_write_replica",
+      "range": [
+        0,
+        2,
+        1
+      ],
+      "src_id": null,
+      "last_index": 0
+    },
+    {
+      "lc": "LC14",
+      "symbol": "p_write_replica",
+      "range": [
+        0,
+        56,
+        1
+      ],
+      "src_id": "DRAM_LC.LC13",
+      "last_index": 1
+    },
+    {
+      "lc": "LC15",
+      "symbol": "q_block_write_replica",
+      "range": [
+        0,
+        7,
+        1
+      ],
+      "src_id": "DRAM_LC.LC14",
+      "last_index": 2
+    }
   ],
   "lc_pe_contract": {
     "mac_formula": "inport0 * inport1 + inport2",
-    "encoding_evidence": "official consumer maps mac to opcode 2; arithmetic formula remains adapter semantics rather than cycle-accurate RTL proof",
+    "encoding_evidence": "official encoder maps both address PEs at constraint cost zero",
     "pes": [
-      {"pe": "PE0", "result": "rs", "formula": "s*1+r", "sources": ["LC4", "constant:1", "LC5"]},
-      {"pe": "PE1", "result": "h", "formula": "p_block*32+r", "sources": ["LC2", "constant:32", "LC8"]},
-      {"pe": "PE2", "result": "w", "formula": "s*1+q", "sources": ["LC7", "constant:1", "LC1"]},
-      {"pe": "PE3", "result": "p_inner", "formula": "p_reg*8+p_pe", "sources": ["LC10", "constant:8", "LC11"]},
-      {"pe": "PE4", "result": "p", "formula": "p_block_replica*32+p_inner", "sources": ["LC15", "constant:32", "PE3"]},
-      {"pe": "PE5", "result": "k_inner", "formula": "k_reg*2+k_pe", "sources": ["LC9", "constant:2", "LC12"]},
-      {"pe": "PE6", "result": "k", "formula": "k_block_replica*32+k_inner", "sources": ["LC13", "constant:32", "PE5"]}
-    ],
-    "eliminated_pseudocode_pe": "c_shared*4+c_weight is represented by stream transaction/spatial axes; it is not allocated as an eighth LC-PE"
+      {
+        "pe": "PE0",
+        "result": "ring_step_c_quartet",
+        "formula": "LC6*c_quartets+LC7",
+        "sources": [
+          "LC6",
+          "constant:c_quartets",
+          "LC7"
+        ]
+      },
+      {
+        "pe": "PE1",
+        "result": "q_linear",
+        "formula": "LC15*8+LC9",
+        "sources": [
+          "LC15",
+          "constant:8",
+          "LC9"
+        ]
+      }
+    ]
   },
   "stream_semantics": [
-    {"stream": "stream0", "target": "A", "role": "weight_read", "idx_order_port2_to_port0": ["c_shared", "k_block", "rs"], "idx_size_minus_one": [3, 31, 0], "byte_stride": [128, 2048, 128], "tail": null},
-    {"stream": "stream1", "target": "B", "role": "activation_read", "idx_order_port2_to_port0": ["c_weight", "w", "h"], "idx_size_minus_one": [3, 0, 0], "byte_stride": [12544, 4, 224], "tail": {"axis": "h", "inclusive_valid_range": [0, 55]}},
-    {"stream": "stream2", "target": "D", "role": "int32_accumulator_write", "idx_order_port2_to_port0": ["k", "q", "p"], "idx_size_minus_one": [3, 0, 0], "byte_stride": [12544, 4, 224], "tail": {"axis": "p", "inclusive_valid_range": [0, 55]}},
-    {"stream": "stream3", "target": "C", "role": "int32_bias_read", "idx_order_port2_to_port0": ["k_block_replica", null, null], "idx_size_minus_one": [127, null, null], "byte_stride": [128, null, null], "tail": null}
+    {
+      "stream": "stream0",
+      "target": "A",
+      "role": "activation_q8c4_read",
+      "idx": [
+        "DRAM_LC.LC3",
+        "DRAM_LC.LC2",
+        "DRAM_LC.LC1"
+      ],
+      "idx_size_minus_one": [
+        31,
+        0,
+        0
+      ],
+      "byte_stride": [
+        32,
+        128,
+        896
+      ],
+      "buf_full_last_index": 3,
+      "tail": null
+    },
+    {
+      "stream": "stream1",
+      "target": "B",
+      "role": "weight_k8c4_read",
+      "idx": [
+        "LC_PE.PE0",
+        "DRAM_LC.LC0",
+        null
+      ],
+      "idx_size_minus_one": [
+        31,
+        0,
+        0
+      ],
+      "byte_stride": [
+        64,
+        32,
+        null
+      ],
+      "buf_full_last_index": 4,
+      "tail": null
+    },
+    {
+      "stream": "stream2",
+      "target": "D",
+      "role": "int32_p_k8_write",
+      "idx": [
+        "DRAM_LC.LC13",
+        "LC_PE.PE1",
+        "DRAM_LC.LC14"
+      ],
+      "idx_size_minus_one": [
+        31,
+        0,
+        0
+      ],
+      "byte_stride": [
+        32,
+        64,
+        3584
+      ],
+      "buf_full_last_index": null,
+      "tail": null
+    },
+    {
+      "stream": "stream3",
+      "target": "C",
+      "role": "int32_bias_k8_read",
+      "idx": [
+        "DRAM_LC.LC10",
+        "DRAM_LC.LC11",
+        "DRAM_LC.LC12"
+      ],
+      "idx_size_minus_one": [
+        31,
+        0,
+        0
+      ],
+      "byte_stride": [
+        32,
+        0,
+        0
+      ],
+      "buf_full_last_index": 2,
+      "tail": null
+    }
   ],
   "ring_semantics": {
     "domain": "HIGH-4",
     "mem_loop": 4,
     "transfers": 3,
-    "example_group0_owners": [0, 2, 3, 1],
-    "example_destination0_prev_traversal": [0, 1, 3, 2],
+    "example_group0_owners": [
+      0,
+      2,
+      3,
+      1
+    ],
+    "example_destination0_prev_traversal": [
+      0,
+      1,
+      3,
+      2
+    ],
     "selector_encoding_status": "resolved: this mem_loop=4 candidate encodes src/dst selector 1, matching executable prefill_gemm_ring_4slice and the execplan HIGH-4 rule",
     "encoded_logical_field_bits": "11000011",
     "ping_pong": 0,
-    "ping_pong_status": "preserved from the Conv candidate; lifecycle adjudication remains separate from selector selection",
+    "ping_pong_status": "the selected target RTL does not consume this JSON field at the Neighbor Stream Engine port; preserved as provenance only, not treated as a correctness control",
     "selector_reference": {
-      "high4": {"path": "ndp-sim-ref/jsons/prefill_gemm_ring_4slice.json", "mem_loop": 4, "src_slice_sel": 1, "dst_slice_sel": 1},
-      "low28": {"path": "ndp-sim-ref/jsons/decode_gemv_ring.json", "mem_loop": 28, "src_slice_sel": 0, "dst_slice_sel": 0},
+      "high4": {
+        "path": "ndp-sim-ref/jsons/prefill_gemm_ring_4slice.json",
+        "mem_loop": 4,
+        "src_slice_sel": 1,
+        "dst_slice_sel": 1
+      },
+      "low28": {
+        "path": "ndp-sim-ref/jsons/decode_gemv_ring.json",
+        "mem_loop": 28,
+        "src_slice_sel": 0,
+        "dst_slice_sel": 0
+      },
       "register_rule": "1 selects the jump-4/HIGH route; 0 selects the non-jump/28-slice route"
-    }
+    },
+    "neighbor_stream": 0,
+    "payload_role": "activation_q8c4",
+    "weight_order": "destination-relative PREV traversal: destination, prev1, prev2, prev3"
   },
   "resolved_pseudocode_conflicts": [
-    "top-level q and k_block labels/ranges were swapped",
-    "R/S loops and rs multiplier were changed from 3x3 to 1x1",
-    "PE2 now computes q+s rather than q*s",
-    "output p_inner uses multiplier 8 rather than 4",
-    "three affine output-address operations use mac rather than mul",
-    "final K uses k_block replica LC13 rather than p_block replica LC15",
-    "activation and output stream h/w and p/q axes were reordered to match byte strides",
-    "N2N mem_loop changed from legacy 16 to HIGH-4 value 4",
-    "N2N src/dst selectors changed from legacy 0 to the executable HIGH-4 value 1",
-    "target A/B role reversal is explicit in the adapter"
+    "RTL group2 broadcasts by SA column, so activation is group0 and weight is group1",
+    "physical A/B/P ranges are transaction packed; encoder-valid v8 NHWC/NHWK strides are rejected",
+    "WRITE_STREAM0 uses a value-identical LC13-LC15 placement branch required by physical IGA connectivity",
+    "READ_STREAM3 uses an independent LC10-LC12 Kblock/H/Qblock branch so every output tile receives four bias handshakes"
   ],
   "config": {
     "path": "conv_1x1_real.json",
-    "sha256": "a20641cfcf65068c3ca31d710a0ef45d28a53cbf80d5e246ce54f0de3fe16f2c",
+    "sha256": "f26a3346859601055abc9cb88dd0b7c3650e5fcc4fae6d1f85d2562aba0ad8ed",
     "generator": "tools/generate_conv_1x1_real.py",
-    "source": "conv_full.json"
+    "source": "conv_full.json",
+    "required_presence_mask": "11101110",
+    "presence_mask_semantics": "SA-only, reference-compatible; GA and zero-presence blocks are absent"
   },
   "official_encoder": {
-    "repository_commit": "e299b2804448242d1589b3e58ed7c5a9a5eca09f",
-    "mapping_cache_key": "66245288c5ee2398",
-    "connection_count": 46,
+    "repository_commit": "056b1c3c08b24e098636615d9001e8a974beb09f",
+    "mapping_cache_key": "2702bd9d31f9efc0",
+    "connection_count": 33,
     "constraint_cost": 0,
     "repeat_count": 2,
     "repeat_outputs_identical": true,
     "outputs": {
-      "mapping_review.json": {"size_bytes": 9705, "sha256": "2088dd033e7b92c17bd82b065611015a49ef968fccf86c67269e8b911e3ad272"},
-      "parsed_bitstream.txt": {"size_bytes": 5032, "sha256": "15d16a698c40caa90eaab26fd2c69342e417eba4d6bcf20032715fd09f2eda7d"},
-      "modules_dump_64b.bin": {"size_bytes": 4620, "sha256": "baa4d71c8f20f725b572d45386bb855928d020434bbbe55430a979c5f30557df"},
-      "modules_dump_128b.bin": {"size_bytes": 4550, "sha256": "2128de615b9b66c8569e3bf3a83f9f6b4ffe4798802ba56be9b21d120e980e6b"},
-      "detailed_dump.txt": {"size_bytes": 42403, "sha256": "f5a2e039982d51cae3fd8467df225ac97ef51ddfebaea60bc753ac07c8b3d39e"}
+      "mapping_review.json": {
+        "size_bytes": 7068,
+        "sha256": "ce401e920d3187c70f3c7e4edd29659d7c9722b577f63a3890e57547952dfb22"
+      },
+      "parsed_bitstream.txt": {
+        "size_bytes": 4104,
+        "sha256": "2c90f484d3e976bfe0ebcfbc7bc7f982611bb9054323a80fb437254204391c43"
+      },
+      "modules_dump_64b.bin": {
+        "size_bytes": 3828,
+        "sha256": "1941a00cd1d74259b0db943ec84ead57ddb3f2d5fc39b033ff5f4ee20bc9bca6",
+        "raw_size_bytes": 3828,
+        "raw_sha256": "1941a00cd1d74259b0db943ec84ead57ddb3f2d5fc39b033ff5f4ee20bc9bca6",
+        "logical_size_bytes": 3770,
+        "logical_sha256": "0dc587e837d4a2a0e27495146f0b7706c15e1359502b5a32c3d1214571dd7c16",
+        "line_count": 58,
+        "line_width_bits": 64
+      },
+      "modules_dump_128b.bin": {
+        "size_bytes": 3770,
+        "sha256": "e9a9db42fdbe70f79d654c2137e25732092b0a7ef634e1eb599974d884e10cc7",
+        "raw_size_bytes": 3770,
+        "raw_sha256": "e9a9db42fdbe70f79d654c2137e25732092b0a7ef634e1eb599974d884e10cc7",
+        "logical_size_bytes": 3741,
+        "logical_sha256": "7d85938215a1d5a5622c38938b5adb64b982c631170604a4ba8285fb5397b255",
+        "line_count": 29,
+        "line_width_bits": 128
+      },
+      "detailed_dump.txt": {
+        "size_bytes": 33523,
+        "sha256": "b02d292142149068315199ae6a3eb11265229d683fe083bb5ce81a592f897c27"
+      }
     }
   },
   "evidence_boundaries": {
@@ -130,5 +530,26 @@
       "per-channel requant multiplier/rounding/saturation encoding in this SA-only JSON",
       "execplan typed qparam transport"
     ]
+  },
+  "bias_runtime_contract": {
+    "schedule": "one_32B_K8_row_per_Kblock_H_Qblock_tile",
+    "loop_branch": [
+      "DRAM_LC.LC10",
+      "DRAM_LC.LC11",
+      "DRAM_LC.LC12"
+    ],
+    "memory_byte_stride": [
+      32,
+      0,
+      0
+    ],
+    "transaction_bytes": 32,
+    "transaction_count": 784,
+    "unique_address_count": 2,
+    "physical_extent_bytes": 64,
+    "sa_handshakes_per_tile": 4,
+    "buffer4_json_lifetime": 4,
+    "buffer4_encoded_lifetime": 3,
+    "terminal_last_index": 2
   }
 }

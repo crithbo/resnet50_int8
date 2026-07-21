@@ -7,19 +7,19 @@ from pathlib import Path
 
 from resnet50_pipeline.w5_conv_preflight import (
     W5ConvPreflightError,
-    build_w5_first_conv_preflight,
     validate_w5_first_conv_preflight,
 )
 
 
 ROOT = Path(__file__).resolve().parents[1]
-REPORT_PATH = ROOT / "artifacts" / "w5" / "hwop-0004-00" / "preflight.json"
-
-
+REPORT_PATH = (
+    ROOT / "artifacts" / "w5" / "hwop-0004-00" / "v14" / "preflight.json"
+)
 class W5FirstConvPreflightTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
-        cls.report = build_w5_first_conv_preflight(ROOT)
+        cls.report = json.loads(REPORT_PATH.read_text(encoding="utf-8"))
+        validate_w5_first_conv_preflight(cls.report)
 
     def test_selects_the_real_recommended_1x1_instance(self) -> None:
         report = self.report
@@ -125,8 +125,16 @@ class W5FirstConvPreflightTests(unittest.TestCase):
         typed = target["typed_execplan_transport"]
         self.assertEqual(typed["status"], "typed_transport_validated")
         self.assertEqual(typed["operator_count"], 2)
-        self.assertEqual(typed["config_artifact_count"], 11)
+        self.assertEqual(typed["config_artifact_count"], 12)
         self.assertEqual(typed["typed_constant_count"], 8)
+        native = self.report["native_encoder_candidate"]
+        self.assertEqual(len(native["address_plan_sha256"]), 64)
+        self.assertGreater(native["address_plan_size_bytes"], 0)
+        self.assertTrue(native["address_plan_path"].endswith("address_plan.json"))
+        self.assertIn(
+            "address plan bound",
+            self.report["physical_preflight"]["address_scope"],
+        )
         self.assertFalse(self.report["gate_state"]["stop_expansion"])
         self.assertTrue(
             self.report["gate_state"]["single_operator_manual_hardware_handoff_ready"]
@@ -158,6 +166,10 @@ class W5FirstConvPreflightTests(unittest.TestCase):
             "accumulate_and_requant_configs_passed_with_execution_boundary",
         )
         self.assertEqual(result["request_schema"], "0.3")
+        self.assertEqual(
+            result["target_config_binding"]["transport_abi"],
+            "conv_sa_q8k8_v2",
+        )
         self.assertEqual(result["requant_config_binding"]["channel_count"], 64)
         self.assertEqual(result["requant_config_binding"]["shard_count"], 8)
         self.assertEqual(result["requant_config_binding"]["unique_flush_count"], 64)
@@ -187,6 +199,13 @@ class W5FirstConvPreflightTests(unittest.TestCase):
 
     def test_validator_rejects_target_json_or_gate_overclaim(self) -> None:
         changed = deepcopy(self.report)
+        changed["ndp_target_config_comparison"]["target_config_binding"][
+            "transport_abi"
+        ] = "conv_sa_legacy_v1"
+        with self.assertRaisesRegex(W5ConvPreflightError, "P/D closure"):
+            validate_w5_first_conv_preflight(changed)
+
+        changed = deepcopy(self.report)
         changed["target_configuration"]["real_1x1_bitstream_generated"] = False
         with self.assertRaisesRegex(W5ConvPreflightError, "evidence differs"):
             validate_w5_first_conv_preflight(changed)
@@ -210,7 +229,12 @@ class W5FirstConvPreflightTests(unittest.TestCase):
         with self.assertRaisesRegex(W5ConvPreflightError, "crosscheck"):
             validate_w5_first_conv_preflight(changed)
 
-    def test_checked_in_report_is_exact_generated_output(self) -> None:
+        changed = deepcopy(self.report)
+        changed["native_encoder_candidate"]["address_plan_sha256"] = "short"
+        with self.assertRaisesRegex(W5ConvPreflightError, "candidate/preflight"):
+            validate_w5_first_conv_preflight(changed)
+
+    def test_checked_in_historical_report_is_canonical_and_validated(self) -> None:
         expected = json.dumps(
             self.report, ensure_ascii=False, indent=2, sort_keys=True
         ) + "\n"

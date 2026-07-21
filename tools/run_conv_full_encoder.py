@@ -61,11 +61,22 @@ def main() -> int:
         type=Path,
         default=ROOT / "artifacts" / "w5" / "conv_full_audit" / "accepted",
     )
+    parser.add_argument(
+        "--refresh-evidence",
+        action="store_true",
+        help=(
+            "Refresh the source/output hashes after a reviewed, connection-graph-"
+            "preserving config change. Placement identity must still match."
+        ),
+    )
     args = parser.parse_args()
 
     config = _load(args.config)
     evidence = _load(args.evidence)
-    if _sha256(args.config) != evidence["source"]["json_sha256"]:
+    if (
+        not args.refresh_evidence
+        and _sha256(args.config) != evidence["source"]["json_sha256"]
+    ):
         raise ValueError("conv_full.json hash differs from the placement evidence")
     pairs = _connection_pairs(config)
     cache_key = hashlib.sha256(
@@ -127,8 +138,21 @@ def main() -> int:
     for name, expected in evidence["encoder"]["outputs"].items():
         path = args.output / name
         observed[name] = {"size_bytes": path.stat().st_size, "sha256": _sha256(path)}
-        if observed[name] != expected:
+        if not args.refresh_evidence and observed[name] != expected:
             raise ValueError(f"official encoder output differs: {name}")
+    if args.refresh_evidence:
+        evidence["source"]["json_sha256"] = _sha256(args.config)
+        repair = (
+            "SA GEMM outport JSON row -> col (official encoder label inversion: "
+            "col encodes RTL sa_outport_major=0 row-major)"
+        )
+        if repair not in evidence["deterministic_repairs"]:
+            evidence["deterministic_repairs"].append(repair)
+        evidence["encoder"]["outputs"] = observed
+        args.evidence.write_text(
+            json.dumps(evidence, ensure_ascii=False, indent=2) + "\n",
+            encoding="utf-8",
+        )
     print(
         json.dumps(
             {

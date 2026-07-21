@@ -4,7 +4,7 @@
   "status": "official_encoder_passed_candidate_semantics_unvalidated",
   "source": {
     "json_path": "conv_full.json",
-    "json_sha256": "72b81a745694bd90c630d2276339a1e22d9b77f1de808bb670b927953b488949",
+    "json_sha256": "c47d1deb6f7cd0e7a729954084ce6f7753085684f2f3fbb403ed79ea4e16fd4a",
     "pseudocode_path": "conv_full.txt",
     "pseudocode_sha256": "1b24cc4b70e5becfd3537ae7ae61c10f7f0f8951d2089843e7ff54461b41a635",
     "provenance": "operator-provided senior-authored untested Conv pseudocode",
@@ -24,7 +24,9 @@
   "deterministic_repairs": [
     "LC_PE.LC8 -> DRAM_LC.LC8",
     "GROUP2.COL_LC source -> GROUP2.ROW_LC",
-    "GROUP3.COL_LC source -> GROUP3.ROW_LC"
+    "GROUP3.COL_LC source -> GROUP3.ROW_LC",
+    "SA-only accumulate buffer5.dst_port 1 -> 0 (SpecArray producer)",
+    "SA GEMM outport JSON row -> col (official encoder label inversion: col encodes RTL sa_outport_major=0 row-major)"
   ],
   "placement_repair": {
     "reason": "fixed A/C and A/D endpoints made shared LC fanout physically contradictory",
@@ -76,19 +78,19 @@
       },
       "parsed_bitstream.txt": {
         "size_bytes": 5032,
-        "sha256": "e9a668056af903923da573d8c218b1aaa5353f3f2eeb416f41d5fd0ed8b21aa1"
+        "sha256": "212eaffaa2bce372b4e80cbe313480170959c232100e2ce28a277aa9ac995008"
       },
       "modules_dump_64b.bin": {
         "size_bytes": 4620,
-        "sha256": "5171dc60449a4619730c4a8bb8fcb0bead9282b2657d078f2055f1f0f761581f"
+        "sha256": "6ff6f18cea1fe1aeaedc9dd3e663dd8ea8de3e893e93a8cf4d87b8e8287a21bc"
       },
       "modules_dump_128b.bin": {
         "size_bytes": 4550,
-        "sha256": "f6991ad5e1da9cc627cf4b16ebd1550d2d9055a1977d5fb519a20fb02983af8c"
+        "sha256": "8e9d25953d9277eba892060cdb6eafe8d214eb21213c181674e6636113f8436a"
       },
       "detailed_dump.txt": {
         "size_bytes": 42402,
-        "sha256": "0cb9aa3648d82017c8c921bf255ca8670243b33ebb16f1a12016f2696f3cdf1b"
+        "sha256": "18070f0c5c8cacd58e82b594313dc0514ad7e5e78e7ad7d2ae571dbe7287da11"
       }
     }
   },
@@ -96,7 +98,13 @@
     "special_array.data_type": "int8 encoded as 00",
     "special_array.bias_enable": "1 encoded as 1",
     "special_array.mode": "gemm",
-    "stream_targets": ["A", "B", "C", "D"]
+    "buffer5.dst_port": "0 selects the SpecArray producer",
+    "stream_targets": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ]
   },
   "not_proven": [
     "pseudocode-to-JSON loop and PE transcription correctness",

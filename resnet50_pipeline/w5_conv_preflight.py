@@ -4,7 +4,9 @@ from __future__ import annotations
 
 import json
 import math
+import re
 import subprocess
+import sys
 from pathlib import Path
 from typing import Any
 
@@ -25,7 +27,10 @@ from .conv_execplan_transport import (
     canonical_execplan_bytes,
     validate_conv_execplan_request,
 )
-from .conv28_layout import QLinearConvPhysicalLayout
+from .conv28_layout import (
+    CONV28_HARDWARE_LAYOUT_ABI,
+    QLinearConvPhysicalLayout,
+)
 from .golden.qlinear_conv import requantize_uint8
 from .hardware_approval import validate_hardware_approval_file
 from .hashing import canonical_json_bytes, sha256_bytes, sha256_file
@@ -39,7 +44,7 @@ from .topology28 import Direction, TOPOLOGY28
 from .typed_config_parameters import validate_typed_config_parameter_contract
 
 
-SCHEMA_VERSION = "0.6"
+SCHEMA_VERSION = "0.7"
 REPORT_KIND = "w5_first_real_conv_preflight"
 SELECTED_NODE_ID = FIRST_REAL_CONV_NODE_ID
 ACCUMULATE_HW_OP_ID = "hwop-0004-00"
@@ -49,6 +54,35 @@ MODEL_SHA256 = "c234f30975989788b4405f25253275aae247ab6dbdd34aaa69ab0a59ff76f6d0
 
 class W5ConvPreflightError(ValueError):
     """The first real Conv preflight violates a locked invariant."""
+
+
+def validate_conv_hardware_quantization_preconditions(
+    values: dict[str, np.ndarray],
+) -> None:
+    """Reject quantization cases the current SA microprogram cannot center."""
+
+    if "x_zero_point" not in values or "w_zero_point" not in values:
+        raise W5ConvPreflightError(
+            "hardware Conv quantization precheck is missing zero-point tensors"
+        )
+    x_zero_point = np.asarray(values["x_zero_point"]).reshape(-1)
+    w_zero_point = np.asarray(values["w_zero_point"]).reshape(-1)
+    if x_zero_point.size != 1:
+        raise W5ConvPreflightError(
+            "hardware Conv currently requires one scalar x_zero_point"
+        )
+    if int(x_zero_point[0]) != 0:
+        raise W5ConvPreflightError(
+            "hardware Conv requires x_zero_point=0 until centered activation or "
+            "corrected-bias transport is implemented"
+        )
+    nonzero_weight_channels = np.flatnonzero(w_zero_point != 0)
+    if nonzero_weight_channels.size:
+        preview = nonzero_weight_channels[:8].astype(int).tolist()
+        raise W5ConvPreflightError(
+            "hardware Conv requires every w_zero_point=0 until per-channel "
+            f"weight centering is implemented; nonzero channels begin at {preview}"
+        )
 
 
 def _load_json(path: Path) -> dict[str, Any]:
@@ -61,9 +95,125 @@ def _load_json(path: Path) -> dict[str, Any]:
     return value
 
 
+def _bind_native_encoder_candidate(
+    root: Path,
+    source_root: Path,
+    candidate_path: Path,
+    *,
+    expected_node_id: str,
+    expected_typed_request_sha256: str,
+) -> dict[str, Any]:
+    """Independently validate and bind a native server-profile candidate."""
+
+    resolved = candidate_path.resolve()
+    candidate_root = resolved.parent if resolved.is_file() else resolved
+    manifest_path = candidate_root / "candidate_manifest.json"
+    if resolved.is_file() and resolved != manifest_path:
+        raise W5ConvPreflightError(
+            "native encoder candidate file must be candidate_manifest.json"
+        )
+
+    native_src = source_root / "model_execplan" / "src"
+    if not native_src.is_dir():
+        raise W5ConvPreflightError(
+            f"native model_execplan source directory is missing: {native_src}"
+        )
+    native_src_text = str(native_src)
+    inserted = native_src_text not in sys.path
+    if inserted:
+        sys.path.insert(0, native_src_text)
+    try:
+        from execution_plan_generator.server_profile import (
+            ServerProfileError,
+            validate_server_candidate_validation_report,
+        )
+
+        try:
+            validation = validate_server_candidate_validation_report(
+                candidate_root, expected_node_id=expected_node_id
+            )
+        except (OSError, ServerProfileError, ValueError) as error:
+            raise W5ConvPreflightError(
+                f"native encoder candidate validation failed: {error}"
+            ) from error
+    finally:
+        if inserted:
+            sys.path.remove(native_src_text)
+
+    manifest = _load_json(manifest_path)
+    typed_request = manifest.get("typed_request", {})
+    if typed_request.get("sha256") != expected_typed_request_sha256:
+        raise W5ConvPreflightError(
+            "native encoder candidate is not bound to this typed execplan request"
+        )
+    records = manifest.get("records", [])
+    expected_artifacts = {"hwop-0004-00.config"} | {
+        f"hwop-0004-01.shard-{index:02d}" for index in range(8)
+    }
+    actual_artifacts = {
+        record.get("artifact_id") for record in records if isinstance(record, dict)
+    }
+    if (
+        manifest.get("node_id") != expected_node_id
+        or manifest.get("record_count") != 9
+        or len(records) != 9
+        or actual_artifacts != expected_artifacts
+        or any(record.get("repeat_outputs_identical") is not True for record in records)
+    ):
+        raise W5ConvPreflightError(
+            "native encoder candidate record set/double-run evidence differs"
+        )
+
+    repository = manifest.get("encoder_repository", {})
+    source_tree = repository.get("native_source_tree", {})
+    address_plan = manifest.get("address_plan")
+    if (
+        not isinstance(address_plan, dict)
+        or not isinstance(address_plan.get("path"), str)
+        or not address_plan["path"].endswith("address_plan.json")
+        or not re.fullmatch(r"[0-9a-f]{64}", str(address_plan.get("sha256", "")))
+        or not isinstance(address_plan.get("size_bytes"), int)
+        or address_plan["size_bytes"] <= 0
+    ):
+        raise W5ConvPreflightError(
+            "native encoder candidate address-plan binding is missing or malformed"
+        )
+    try:
+        manifest_relative = manifest_path.relative_to(root).as_posix()
+    except ValueError:
+        manifest_relative = str(manifest_path)
+    return {
+        "status": "native_encoder_double_run_validated_and_bound",
+        "candidate_id": validation["candidate_id"],
+        "candidate_revision": manifest["candidate_revision"],
+        "manifest_path": manifest_relative,
+        "manifest_sha256": validation["candidate_manifest_sha256"],
+        "validation_report_id": validation["report_id"],
+        "validation_report_sha256": validation[
+            "candidate_validation_report_sha256"
+        ],
+        "candidate_tree_sha256": validation["candidate_tree"]["sha256"],
+        "candidate_tree_file_count": validation["candidate_tree"]["file_count"],
+        "node_id": manifest["node_id"],
+        "typed_request_sha256": typed_request["sha256"],
+        "encoder_repository_commit": repository.get("commit"),
+        "encoder_repository_dirty_at_generation": repository.get("dirty"),
+        "native_source_tree_algorithm": source_tree.get("algorithm"),
+        "native_source_tree_file_count": source_tree.get("file_count"),
+        "native_source_tree_sha256": source_tree.get("sha256"),
+        "address_plan_path": address_plan["path"],
+        "address_plan_sha256": address_plan["sha256"],
+        "address_plan_size_bytes": address_plan["size_bytes"],
+        "record_count": validation["record_count"],
+        "checked_file_count": validation["checked_file_count"],
+        "config_artifact_ids": sorted(actual_artifacts),
+        "repeat_outputs_identical": True,
+    }
+
+
 def _verify_source_commit(source_root: Path) -> str:
     try:
-        verify_ndp_source_checkout(source_root)
+        verify_ndp_source_checkout(source_root, require_clean=False)
     except SourceVersionError as error:
         raise W5ConvPreflightError(str(error)) from error
     # This field names the immutable JSON/encoder baseline.  The newer
@@ -762,7 +912,7 @@ def _compare_ndp_target_config(
         "dilations": list(bundle.plan.dilations),
         "simulator": "NDPFuncModel conv_func",
         "simulator_status": adapter.status,
-        "source_commit": "9004ff73e2e2d7c501f682de6df8543a45ae56cc",
+        "source_commit": "cb262bb9cef35107776c802e624736a279f288e3",
         "destination_slice": 0,
         "source_owners": [0, 1, 3, 2],
         "channel_ranges": [
@@ -911,6 +1061,7 @@ def load_conv_instance_execution(
     for name, expected_sha256 in spec.parameter_sha256:
         if _array_sha256(values[name]) != expected_sha256:
             raise W5ConvPreflightError(f"typed parameter transport lost {name}")
+    validate_conv_hardware_quantization_preconditions(values)
     multiplier = np.asarray(
         np.float32(values["x_scale"][0])
         * values["w_scale"].astype(np.float32)
@@ -920,7 +1071,8 @@ def load_conv_instance_execution(
     if _array_sha256(multiplier) != spec.requant_multiplier_sha256:
         raise W5ConvPreflightError("typed per-channel requant multiplier differs")
     layout = QLinearConvPhysicalLayout(
-        profile_id=GROUP4X7_BATCH_CHANNEL28_PROFILE
+        profile_id=GROUP4X7_BATCH_CHANNEL28_PROFILE,
+        layout_abi=CONV28_HARDWARE_LAYOUT_ABI,
     )
     bundle = layout.forward(
         activation=values["A"],
@@ -947,6 +1099,8 @@ def load_conv_instance_execution(
 def build_w5_first_conv_preflight(
     project_root: Path,
     source_root: Path | None = None,
+    execplan_request_path: Path | None = None,
+    encoder_candidate_path: Path | None = None,
 ) -> dict[str, Any]:
     """Build the deterministic, fail-closed first-real-Conv W5 report."""
 
@@ -959,13 +1113,31 @@ def build_w5_first_conv_preflight(
     typed_execplan_validation = validate_conv_execplan_request(
         typed_execplan, root, expected_node_id=spec.node_id
     )
-    typed_execplan_path = target_request.preflight_path.parent / "execplan_request.json"
+    typed_execplan_path = (
+        execplan_request_path
+        or target_request.preflight_path.parent / "execplan_request.json"
+    ).resolve()
     typed_execplan_payload = canonical_execplan_bytes(typed_execplan)
     if (
         not typed_execplan_path.is_file()
         or typed_execplan_path.read_bytes() != typed_execplan_payload
     ):
         raise W5ConvPreflightError("checked-in first Conv typed execplan request differs")
+    try:
+        typed_execplan_relative = typed_execplan_path.relative_to(root).as_posix()
+    except ValueError:
+        typed_execplan_relative = str(typed_execplan_path)
+    native_encoder_candidate = (
+        _bind_native_encoder_candidate(
+            root,
+            source,
+            encoder_candidate_path,
+            expected_node_id=spec.node_id,
+            expected_typed_request_sha256=sha256_bytes(typed_execplan_payload),
+        )
+        if encoder_candidate_path is not None
+        else None
+    )
 
     typed_path = root / "contracts" / "typed_config_parameter_contract.json"
     typed = _load_json(typed_path)
@@ -1060,7 +1232,8 @@ def build_w5_first_conv_preflight(
 
     tensor_ids = {name: descriptors[name]["tensor_id"] for name in descriptors}
     layout = QLinearConvPhysicalLayout(
-        profile_id=GROUP4X7_BATCH_CHANNEL28_PROFILE
+        profile_id=GROUP4X7_BATCH_CHANNEL28_PROFILE,
+        layout_abi=CONV28_HARDWARE_LAYOUT_ABI,
     )
     bundle = layout.forward(
         activation=values["A"],
@@ -1183,12 +1356,20 @@ def build_w5_first_conv_preflight(
             "storage_sample_count": plan.storage_sample_count,
             "per_slice_used_bytes": plan.per_slice_used_bytes,
             "per_slice_capacity_bytes": plan.per_slice_capacity_bytes,
-            "address_scope": "W4 per-operator physical placeholder; W7 address plan not assigned",
+            "address_scope": (
+                "content-addressed native server-profile address plan bound; "
+                "freeze export must reproduce its exact bytes"
+            ),
             "layout_validation": layout_validation,
         },
         "first_tile_golden_preflight": tile,
         "ndp_conv_simulator_first_coordinate": ndp_coordinate,
         "ndp_target_config_comparison": ndp_config_closure,
+        **(
+            {"native_encoder_candidate": native_encoder_candidate}
+            if native_encoder_candidate is not None
+            else {}
+        ),
         "deepseek_target_simulator_entry": simulator_probe,
         "target_configuration": {
             "official_json_inventory_count": authority["inventory"]["json_count"],
@@ -1242,7 +1423,7 @@ def build_w5_first_conv_preflight(
             "typed_execplan_transport": {
                 "status": typed_execplan_validation["status"],
                 "schema_version": CONV_EXECPLAN_SCHEMA_VERSION,
-                "path": "artifacts/w5/hwop-0004-00/execplan_request.json",
+                "path": typed_execplan_relative,
                 "sha256": sha256_bytes(typed_execplan_payload),
                 "operator_count": typed_execplan_validation["operator_count"],
                 "config_artifact_count": typed_execplan_validation[
@@ -1346,13 +1527,52 @@ def validate_w5_first_conv_preflight(value: dict[str, Any]) -> None:
         typed_transport.get("status") != "typed_transport_validated"
         or typed_transport.get("schema_version") != CONV_EXECPLAN_SCHEMA_VERSION
         or typed_transport.get("operator_count") != 2
-        or typed_transport.get("config_artifact_count") != 11
+        or typed_transport.get("config_artifact_count") != 12
         or typed_transport.get("typed_constant_count") != 8
-        or typed_path.as_posix()
-        != "artifacts/w5/hwop-0004-00/execplan_request.json"
+        or not (
+            typed_path.as_posix()
+            == "artifacts/w5/hwop-0004-00/execplan_request.json"
+            or re.fullmatch(
+                r"artifacts/w5/hwop-0004-00/v[0-9]+/execplan_request\.json",
+                typed_path.as_posix(),
+            )
+        )
         or len(typed_transport.get("sha256", "")) != 64
     ):
         raise W5ConvPreflightError("W5 Conv typed execplan evidence differs")
+    native_candidate = value.get("native_encoder_candidate")
+    if native_candidate is not None:
+        expected_artifacts = ["hwop-0004-00.config"] + [
+            f"hwop-0004-01.shard-{index:02d}" for index in range(8)
+        ]
+        if (
+            not isinstance(native_candidate, dict)
+            or native_candidate.get("status")
+            != "native_encoder_double_run_validated_and_bound"
+            or native_candidate.get("node_id") != SELECTED_NODE_ID
+            or native_candidate.get("typed_request_sha256")
+            != typed_transport.get("sha256")
+            or native_candidate.get("record_count") != 9
+            or native_candidate.get("checked_file_count", 0) <= 0
+            or native_candidate.get("config_artifact_ids") != expected_artifacts
+            or native_candidate.get("repeat_outputs_identical") is not True
+            or len(str(native_candidate.get("candidate_id", ""))) != 64
+            or len(str(native_candidate.get("manifest_sha256", ""))) != 64
+            or len(str(native_candidate.get("native_source_tree_sha256", "")))
+            != 64
+            or len(str(native_candidate.get("address_plan_sha256", ""))) != 64
+            or not isinstance(native_candidate.get("address_plan_size_bytes"), int)
+            or native_candidate.get("address_plan_size_bytes", 0) <= 0
+            or not str(native_candidate.get("address_plan_path", "")).endswith(
+                "address_plan.json"
+            )
+            or not str(native_candidate.get("manifest_path", "")).endswith(
+                "/candidate_manifest.json"
+            )
+        ):
+            raise W5ConvPreflightError(
+                "native encoder candidate/preflight binding differs"
+            )
     tile = value.get("first_tile_golden_preflight", {})
     comparisons = tile.get("comparisons", {})
     if (
@@ -1398,6 +1618,9 @@ def validate_w5_first_conv_preflight(value: dict[str, Any]) -> None:
         closure.get("status")
         != "accumulate_and_requant_configs_passed_with_execution_boundary"
         or closure.get("request_schema") != "0.3"
+        or closure.get("target_config_binding", {}).get("status") != "validated"
+        or closure.get("target_config_binding", {}).get("transport_abi")
+        != "conv_sa_q8k8_v2"
         or closure.get("requant_config_binding", {}).get("status") != "validated"
         or closure.get("requant_config_binding", {}).get("channel_count") != 64
         or closure.get("requant_config_binding", {}).get("shard_count") != 8

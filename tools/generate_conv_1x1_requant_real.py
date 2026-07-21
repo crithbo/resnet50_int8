@@ -14,8 +14,12 @@ from resnet50_pipeline.conv_instance import (
     FIRST_REAL_CONV_NODE_ID,
     ConvInstanceSpec,
     load_conv_instance_spec,
+    validate_conv_requant_output_route,
 )
-from resnet50_pipeline.conv28_layout import QLinearConvPhysicalLayout
+from resnet50_pipeline.conv28_layout import (
+    CONV28_HARDWARE_LAYOUT_ABI,
+    QLinearConvPhysicalLayout,
+)
 from resnet50_pipeline.topology28 import HIGH_RING_OWNERS
 from resnet50_pipeline.w5_conv_preflight import (
     _initializer,
@@ -93,7 +97,9 @@ def build_bundle(
         raise ValueError("real Conv requant generator currently requires a 1x1 instance")
     template = _load_json(TEMPLATE_PATH)
     multiplier, output_zero_point, multiplier_sha = _real_qparams(spec)
-    plan = QLinearConvPhysicalLayout().plan(
+    plan = QLinearConvPhysicalLayout(
+        layout_abi=CONV28_HARDWARE_LAYOUT_ABI
+    ).plan(
         activation_shape=spec.activation_shape,
         weight_shape=spec.weight_shape,
         strides=spec.strides,
@@ -139,11 +145,12 @@ def build_bundle(
         config["stream_engine"]["stream0"]["base_addr"] = (
             p_base + local_half * spec.ga_lane_count * 4
         )
-        config["stream_engine"]["stream0"]["dim_stride"][0] = plan.k_tile * 4
+        config["stream_engine"]["stream0"]["dim_stride"][0] = plan.k_tile_padded * 4
         config["stream_engine"]["stream2"]["base_addr"] = (
             staged_d_base + local_half * staged_half_bytes
         )
         config["stream_engine"]["stream2"]["dim_stride"][0] = spec.ga_lane_count * 4
+        validate_conv_requant_output_route(config)
         name = f"shard-{shard_index:02d}.json"
         payload = _canonical_bytes(config)
         files[name] = payload
@@ -199,8 +206,12 @@ def build_bundle(
             "staged_d_offset": staged_d_base,
             "staged_half_bytes": staged_half_bytes,
             "staged_total_bytes": staged_half_bytes * spec.requant_shards_per_owner,
-            "staged_to_canonical_transform": "interleave two [spatial,8] UINT8 halves into NHWK [spatial,16]",
+            "staged_to_canonical_transform": (
+                "concatenate two NHWK8 halves, then reshape to "
+                "NH-Qblock-Q8-Kblock-K8"
+            ),
             "local_k_tile": plan.k_tile,
+            "local_k_tile_padded": plan.k_tile_padded,
             "ga_lane_count": spec.ga_lane_count,
         },
         "coverage": {

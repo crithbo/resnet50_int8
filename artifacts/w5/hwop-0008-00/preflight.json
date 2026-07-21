@@ -11,7 +11,7 @@
       "DRAM"
     ],
     "config_path": "configs/conv/hwop-0008-00/accumulate.json",
-    "config_sha256": "f1b8478a8a210903867c7d5c04a9b682cc2ec4752850ebd505c80050b64e243b",
+    "config_sha256": "b258dc8e23d80e18b8bb6fdf21092f8607fd0a05ebb4703e1691e82ebd0ae0c3",
     "execution_modes": {
       "first_tile": "NDPFuncModel config-bound GA requant with 2 staging D writebacks and inverse",
       "full_operator": "NDPFuncModel config-bound GA requant with 2 staging D writebacks and inverse",
@@ -1186,10 +1186,10 @@
     "requant_manifest_sha256": "3cfc892f9947882afb86a97499c725bbd04ac65fca536a90c30b9fb3e649cf8e",
     "request_schema": "0.3",
     "semantic_contract_path": "configs/conv/hwop-0008-00/semantics.json",
-    "semantic_contract_sha256": "a46ba8224bfb2e22f05521cdcc61d38d3d3519c6aea6143740f2cf1c70fe5bc0",
+    "semantic_contract_sha256": "3b4453dad834780e442d0bc744175553e3c33b25d65bb152d8fc7f4fe4b7f25e",
     "status": "accumulate_and_requant_configs_passed_with_execution_boundary",
     "target_config_binding": {
-      "config_sha256": "f1b8478a8a210903867c7d5c04a9b682cc2ec4752850ebd505c80050b64e243b",
+      "config_sha256": "b258dc8e23d80e18b8bb6fdf21092f8607fd0a05ebb4703e1691e82ebd0ae0c3",
       "lc_pe_count": 7,
       "loop_count": 16,
       "n2n_dst_slice_sel": 1,
@@ -1224,20 +1224,21 @@
           "project_port": "P"
         }
       },
-      "semantic_contract_sha256": "a46ba8224bfb2e22f05521cdcc61d38d3d3519c6aea6143740f2cf1c70fe5bc0",
+      "semantic_contract_sha256": "3b4453dad834780e442d0bc744175553e3c33b25d65bb152d8fc7f4fe4b7f25e",
       "status": "validated",
       "stream_targets": [
         "A",
         "B",
         "D",
         "C"
-      ]
+      ],
+      "transport_abi": "conv_sa_legacy_v1"
     }
   },
   "configs": {
     "accumulate": {
       "path": "configs/conv/hwop-0008-00/accumulate.json",
-      "sha256": "f1b8478a8a210903867c7d5c04a9b682cc2ec4752850ebd505c80050b64e243b"
+      "sha256": "b258dc8e23d80e18b8bb6fdf21092f8607fd0a05ebb4703e1691e82ebd0ae0c3"
     },
     "requant_manifest": {
       "covered_channels": [
@@ -1313,13 +1314,13 @@
     },
     "semantics": {
       "path": "configs/conv/hwop-0008-00/semantics.json",
-      "sha256": "a46ba8224bfb2e22f05521cdcc61d38d3d3519c6aea6143740f2cf1c70fe5bc0"
+      "sha256": "3b4453dad834780e442d0bc744175553e3c33b25d65bb152d8fc7f4fe4b7f25e"
     },
     "typed_execplan_request": {
       "config_artifact_count": 11,
       "operator_count": 2,
       "path": "artifacts/w5/hwop-0008-00/execplan_request.json",
-      "sha256": "467fe1985f2971fe2be13f715cc81f8a9fbf35d930db612498e787173117177f",
+      "sha256": "72b7cada9f9ce2fa80107227dc3c700069d4f52269ec981b37fdcc86d7f07beb",
       "status": "typed_transport_validated"
     }
   },
@@ -1715,7 +1716,7 @@
     "mapping_cache_key": "66245288c5ee2398",
     "outputs": {
       "detailed_dump.txt": {
-        "sha256": "ce8296d66e6376927af73155a711030e067898b5ddef306605f47ed35e451083",
+        "sha256": "5b37e01a7207b0362adcafb75fc39473e15ef8cf6b3f30a2ba8cf798afb1bb96",
         "size_bytes": 42403
       },
       "mapping_review.json": {
@@ -1723,15 +1724,15 @@
         "size_bytes": 9705
       },
       "modules_dump_128b.bin": {
-        "sha256": "3f8606b7c7aeeafdb4f74e13d17a13dd36a0bc05c7e3a9923cf1fbf77278f500",
+        "sha256": "2c25b4bc14fba3c62ac46949130c1c1dc14bac1212461d3298813f9788ed438c",
         "size_bytes": 4550
       },
       "modules_dump_64b.bin": {
-        "sha256": "2f82a0ec6ee61bdae53aa5ca81b74490c5d1f7d9839fe12bd16c51844b642c17",
+        "sha256": "442264ed8b43a43b46bf77a5c834cb465b684a7dab60681b601d6a9e77295096",
         "size_bytes": 4620
       },
       "parsed_bitstream.txt": {
-        "sha256": "1fbe11a7e6c1b0dedbd167f571e0602ff933e5a03cb3ed2d8c2397902df61ee7",
+        "sha256": "620ced76c37a224dc57559441a5fa8509d60637cd2f34bbb50f142e9274bd24b",
         "size_bytes": 5032
       }
     },
@@ -1743,6 +1744,7 @@
     "c_tile": 64,
     "k_tile": 16,
     "layout_validation": {
+      "layout_abi": "conv28_sa_q8k8_v2",
       "per_slice_used_bytes": 1359056,
       "physical_bytes": 38053568,
       "port_count": 11,
@@ -1904,7 +1906,7 @@
     "scope": "one_real_hwop-0008-00_output_coordinate",
     "simulator": "NDPFuncModel conv_func",
     "simulator_status": "operator_confirmed_conv_simulator_component",
-    "source_commit": "9004ff73e2e2d7c501f682de6df8543a45ae56cc",
+    "source_commit": "cb262bb9cef35107776c802e624736a279f288e3",
     "source_owners": [
       0,
       1,
@@ -1918,7 +1920,7 @@
     ]
   },
   "source_identity": {
-    "ndp_source_commit": "9004ff73e2e2d7c501f682de6df8543a45ae56cc",
+    "ndp_source_commit": "cb262bb9cef35107776c802e624736a279f288e3",
     "target_config_commit": "e299b2804448242d1589b3e58ed7c5a9a5eca09f",
     "typed_contract": {
       "path": "contracts/typed_config_parameter_contract.json",

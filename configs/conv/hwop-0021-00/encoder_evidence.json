@@ -1,0 +1,30 @@
+{
+  "repository_commit": "e299b2804448242d1589b3e58ed7c5a9a5eca09f",
+  "mapping_cache_key": "66245288c5ee2398",
+  "connection_count": 46,
+  "constraint_cost": 0,
+  "repeat_count": 2,
+  "repeat_outputs_identical": true,
+  "outputs": {
+    "mapping_review.json": {
+      "size_bytes": 9705,
+      "sha256": "2088dd033e7b92c17bd82b065611015a49ef968fccf86c67269e8b911e3ad272"
+    },
+    "parsed_bitstream.txt": {
+      "size_bytes": 5032,
+      "sha256": "b3e44560fa8dfaf4201ee175a493c215d8b4d7cd7bced4aaa8395f84a364c2a3"
+    },
+    "modules_dump_64b.bin": {
+      "size_bytes": 4620,
+      "sha256": "df5bfc9ba2fd855d7a1664aa135643c456a9ffeb907809686c0a1f6dc3cab59d"
+    },
+    "modules_dump_128b.bin": {
+      "size_bytes": 4550,
+      "sha256": "9e4aefab799b3ce97d10c7c7844b2fabbcdc51742dff1fd2779c1109c0c6bb1c"
+    },
+    "detailed_dump.txt": {
+      "size_bytes": 42403,
+      "sha256": "16df7a4b75f9dc33ecaa371d771aa3afd29804398cfe96cb10e3b96bf59781ca"
+    }
+  }
+}

@@ -741,6 +741,7 @@ class NdpRtl28FunctionalAdapter:
             physical_bundle,
             int8_dot_probes=(exact_plan.probe,),
             target_config_binding={
+                "transport_abi": request.transport_abi,
                 "config_text": config_text,
                 "config_sha256": config_sha256,
                 "semantic_contract_text": semantic_text,

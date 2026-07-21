@@ -12,15 +12,39 @@ ROOT = Path(__file__).resolve().parents[1]
 
 def main() -> int:
     parser = argparse.ArgumentParser(
-        description="Build the fail-closed W5 first-real-Conv preflight report"
+        description="Build the fail-closed first-real-Conv preflight report"
     )
     parser.add_argument(
         "--output",
         type=Path,
-        default=ROOT / "artifacts" / "w5" / "hwop-0004-00" / "preflight.json",
+        default=(
+            ROOT
+            / "artifacts"
+            / "w5"
+            / "hwop-0004-00"
+            / "v10"
+            / "preflight.json"
+        ),
+    )
+    parser.add_argument(
+        "--execplan-request",
+        type=Path,
+        help="Versioned typed execplan request to bind into the preflight report.",
+    )
+    parser.add_argument(
+        "--encoder-candidate",
+        type=Path,
+        help=(
+            "Native server-profile candidate directory (or its "
+            "candidate_manifest.json) to validate and bind."
+        ),
     )
     args = parser.parse_args()
-    report = build_w5_first_conv_preflight(ROOT)
+    report = build_w5_first_conv_preflight(
+        ROOT,
+        execplan_request_path=args.execplan_request,
+        encoder_candidate_path=args.encoder_candidate,
+    )
     payload = (
         json.dumps(report, ensure_ascii=False, indent=2, sort_keys=True) + "\n"
     ).encode("utf-8")
@@ -42,6 +66,9 @@ def main() -> int:
                 "target_simulator": report["deepseek_target_simulator_entry"][
                     "status"
                 ],
+                "native_encoder_candidate_id": report.get(
+                    "native_encoder_candidate", {}
+                ).get("candidate_id"),
             },
             sort_keys=True,
         )

@@ -29,11 +29,11 @@
         "hwop-0004-01"
       ],
       "node_id": "node-0004",
-      "path": "artifacts/w5/hwop-0004-00/execplan_request.json",
-      "sha256": "fd6efbe86193f5d9660e8ae746763632b29ff8c968e10415d666a62f22ed3fe8",
-      "size_bytes": 226800,
+      "path": "artifacts/w5/hwop-0004-00/v19/execplan_request.json",
+      "sha256": "105f2bc78556f7ae8a33cd2c20bb3b6e63a4acc40e1138ba90a125b12a577e06",
+      "size_bytes": 242134,
       "validation": {
-        "config_artifact_count": 11,
+        "config_artifact_count": 12,
         "instance_id": "conv:node-0004:hwop-0004-00+hwop-0004-01",
         "n2n": {
           "dst_slice_sel": 1,
@@ -46,6 +46,7 @@
         "requant_channel_count": 64,
         "requant_shard_count": 8,
         "status": "typed_transport_validated",
+        "transport_abi": "conv_sa_q8k8_v2",
         "typed_constant_count": 8,
         "unique_flush_count": 64
       }
@@ -57,8 +58,8 @@
       ],
       "node_id": "node-0008",
       "path": "artifacts/w5/hwop-0008-00/execplan_request.json",
-      "sha256": "467fe1985f2971fe2be13f715cc81f8a9fbf35d930db612498e787173117177f",
-      "size_bytes": 230183,
+      "sha256": "72b7cada9f9ce2fa80107227dc3c700069d4f52269ec981b37fdcc86d7f07beb",
+      "size_bytes": 230324,
       "validation": {
         "config_artifact_count": 11,
         "instance_id": "conv:node-0008:hwop-0008-00+hwop-0008-01",
@@ -73,6 +74,7 @@
         "requant_channel_count": 64,
         "requant_shard_count": 8,
         "status": "typed_transport_validated",
+        "transport_abi": "conv_sa_legacy_v1",
         "typed_constant_count": 8,
         "unique_flush_count": 64
       }
@@ -84,8 +86,8 @@
       ],
       "node_id": "node-0003",
       "path": "artifacts/w5/hwop-0003-00/execplan_request.json",
-      "sha256": "48a793ed0710c3a931318deab549cbf0d4be46eee32c93a2d579d149574a690d",
-      "size_bytes": 785122,
+      "sha256": "d2b7914a766f3a5f2f41b7cbeb99360c5fd61832e5311a98028023b14f23fdcd",
+      "size_bytes": 785263,
       "validation": {
         "config_artifact_count": 35,
         "instance_id": "conv:node-0003:hwop-0003-00+hwop-0003-01",
@@ -100,6 +102,7 @@
         "requant_channel_count": 256,
         "requant_shard_count": 32,
         "status": "typed_transport_validated",
+        "transport_abi": "conv_sa_legacy_v1",
         "typed_constant_count": 8,
         "unique_flush_count": 256
       }
@@ -138,11 +141,11 @@
   "schema_version": "0.1",
   "source": {
     "config_baseline_commit": "e299b2804448242d1589b3e58ed7c5a9a5eca09f",
-    "execplan_commit": "5aa7d44aa2c58b7c86cfa32389d135246001629c",
-    "ndpfuncmodel_commit": "9004ff73e2e2d7c501f682de6df8543a45ae56cc",
+    "execplan_commit": "d4ffc32c9b29a858d83e13706cd837c5549521a4",
+    "ndpfuncmodel_commit": "a1d975ee2d6d9200b8df0deea3e2ffc13ce0d05e",
     "transport_audit": {
       "path": "contracts/target_execplan_transport_audit.json",
-      "sha256": "1a4af25b1860093fff084eac8804fe5c060c6b5c8538ba491a2b155338e25300",
+      "sha256": "f0537d65ca1ee97f061d69f7d002a6f35d336a80753ce03b470deace81903392",
       "size_bytes": 241429
     }
   },

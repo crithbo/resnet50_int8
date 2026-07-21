@@ -9,3 +9,8 @@
 *.npz binary
 *.onnx binary
 *.bin binary
+
+# Frozen machine metadata is hash-bound byte-for-byte. Do not normalize its
+# historical CRLF representation when adding it to Git.
+artifacts/w3/model_graph.json binary !eol
+artifacts/w3/legacy77_mapping.json binary !eol

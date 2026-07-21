@@ -13,7 +13,12 @@ from resnet50_pipeline.profile28 import (
     GLOBAL_RING28_PROFILE,
     GROUP4X7_BATCH_CHANNEL28_PROFILE,
 )
-from resnet50_pipeline.conv28_layout import QLinearConvPhysicalLayout
+from resnet50_pipeline.conv28_layout import (
+    CONV28_HARDWARE_LAYOUT_ABI,
+    CONV28_LAYOUT_IDS,
+    CONV28_PUBLIC_LAYOUT_ABI,
+    QLinearConvPhysicalLayout,
+)
 from resnet50_pipeline.topology28 import HIGH_RING_OWNERS, LOW_RING_OWNERS
 
 
@@ -56,8 +61,23 @@ def _case(
 
 
 class Rtl28QLinearConvPhysicalLayoutTests(unittest.TestCase):
-    def test_group4x7_round_trip_tail_records_and_coordinate_formula(self) -> None:
+    @staticmethod
+    def _hardware_layout() -> QLinearConvPhysicalLayout:
+        return QLinearConvPhysicalLayout(
+            layout_abi=CONV28_HARDWARE_LAYOUT_ABI
+        )
+
+    def test_default_layout_preserves_the_public_v1_identity(self) -> None:
         layout = QLinearConvPhysicalLayout()
+        self.assertEqual(layout.layout_abi, CONV28_PUBLIC_LAYOUT_ABI)
+        self.assertEqual(
+            layout.contract,
+            CONV28_LAYOUT_IDS[GROUP4X7_BATCH_CHANNEL28_PROFILE],
+        )
+        self.assertFalse(layout.hardware_transaction_packing)
+
+    def test_group4x7_round_trip_tail_records_and_coordinate_formula(self) -> None:
+        layout = self._hardware_layout()
         values = _case()
         tensor_ids = {
             "A": "a",
@@ -98,7 +118,10 @@ class Rtl28QLinearConvPhysicalLayoutTests(unittest.TestCase):
         a_address = layout.explain_coordinate(bundle, "a", (15, 4, 2, 1))
         self.assertEqual(a_address[0]["slice_id"], HIGH_RING_OWNERS[6][2])
         self.assertEqual(a_address[0]["group_id"], 6)
-        self.assertEqual(a_address[0]["physical_coordinate"], (1, 2, 1, 0))
+        self.assertEqual(
+            a_address[0]["physical_coordinate"],
+            (1, 2, 0, 0, 1, 0),
+        )
 
         # K-owned static data is copied at the same owner step in all 7 rings.
         b_address = layout.explain_coordinate(bundle, "b", (6, 4, 1, 0))
@@ -111,12 +134,12 @@ class Rtl28QLinearConvPhysicalLayoutTests(unittest.TestCase):
         )
         psum = layout.explain_coordinate(bundle, "psum", (2, 6, 1, 1))
         self.assertEqual(psum[0]["slice_id"], HIGH_RING_OWNERS[0][3])
-        self.assertEqual(psum[0]["physical_coordinate"], (2, 1, 1, 0))
+        self.assertEqual(psum[0]["physical_coordinate"], (2, 1, 0, 1, 0, 0))
 
         two_sample = bundle.region("D", HIGH_RING_OWNERS[2][0])
         self.assertEqual(two_sample.sample_count, 2)
         self.assertEqual(two_sample.storage_sample_count, 3)
-        self.assertEqual(two_sample.physical_shape, (3, 2, 2, 2))
+        self.assertEqual(two_sample.physical_shape, (3, 2, 1, 8, 1, 8))
 
         records = {record.port: record for record in bundle.layout_records()}
         self.assertEqual(records["A"].partition["axis"], 1)
@@ -137,21 +160,25 @@ class Rtl28QLinearConvPhysicalLayoutTests(unittest.TestCase):
         )
 
     def test_per_channel_weight_c_tail_and_k_tail_are_unambiguous(self) -> None:
-        layout = QLinearConvPhysicalLayout()
+        layout = self._hardware_layout()
         values = _case()
         bundle = layout.forward(**values)
         # owner step 0 has K0/K1: each valid row uses its own w_zp for C tail.
         owner = HIGH_RING_OWNERS[0][0]
         b = layout._read_array(bundle, "B", owner)
-        np.testing.assert_array_equal(b[:, :, 0, 5:], values["w_zero_point"][0])
-        np.testing.assert_array_equal(b[:, :, 1, 5:], values["w_zero_point"][1])
+        np.testing.assert_array_equal(
+            b[:, :, 0, 0, 0, 0, 2:], values["w_zero_point"][0]
+        )
+        np.testing.assert_array_equal(
+            b[:, :, 0, 0, 0, 1, 2:], values["w_zero_point"][1]
+        )
         # owner step 3 owns K6 and one invalid K slot. Invalid K is deterministic 0.
         last_owner = HIGH_RING_OWNERS[0][3]
         last_b = layout._read_array(bundle, "B", last_owner)
         np.testing.assert_array_equal(
-            last_b[:, :, 0, 5:], values["w_zero_point"][6]
+            last_b[:, :, 1, 0, 0, 0, 1:], values["w_zero_point"][6]
         )
-        self.assertTrue(np.all(last_b[:, :, 1, :] == 0))
+        self.assertTrue(np.all(last_b[:, :, :, :, 0, 1:, :] == 0))
         self.assertEqual(layout.validate(bundle)["profile_id"], layout.profile_id)
 
     def test_global_low_ring_round_trip_and_owner_order(self) -> None:
@@ -184,7 +211,7 @@ class Rtl28QLinearConvPhysicalLayoutTests(unittest.TestCase):
             QLinearConvPhysicalLayout(profile_id="legacy16")
         with self.assertRaisesRegex(ValueError, "TARGET_DRAM_GEOMETRY28"):
             QLinearConvPhysicalLayout(geometry=LEGACY_DRAM_GEOMETRY16)
-        layout = QLinearConvPhysicalLayout()
+        layout = self._hardware_layout()
         with self.assertRaisesRegex(ValueError, "batch=16"):
             layout.plan(
                 activation_shape=(15, 3, 8, 8),
@@ -217,7 +244,9 @@ class Rtl28QLinearConvPhysicalLayoutTests(unittest.TestCase):
         local = np.frombuffer(
             payload, dtype=np.int8, count=region.payload_bytes
         ).reshape(region.physical_shape)
-        local[0, 0, 0, 5] = np.int8(local[0, 0, 0, 5] + 1)
+        local[0, 0, 0, 0, 0, 0, 2] = np.int8(
+            local[0, 0, 0, 0, 0, 0, 2] + 1
+        )
         bundle.payloads[("B", owner)] = bytes(payload)
         with self.assertRaisesRegex(ValueError, "per-channel C-tail"):
             layout.validate(bundle)
@@ -250,7 +279,7 @@ class Rtl28QLinearConvPhysicalLayoutTests(unittest.TestCase):
             layout.validate(bundle)
 
     def test_formal_conv0_terminal_and_downsample_plans_do_not_allocate(self) -> None:
-        layout = QLinearConvPhysicalLayout()
+        layout = self._hardware_layout()
         conv0 = layout.formal_plan(
             activation_shape=(16, 3, 224, 224),
             weight_shape=(64, 3, 7, 7),
@@ -276,7 +305,10 @@ class Rtl28QLinearConvPhysicalLayoutTests(unittest.TestCase):
         )
         self.assertEqual(downsample.output_shape, (16, 1024, 14, 14))
         self.assertTrue(downsample.capacity_report()["fits"])
-        self.assertEqual(downsample.port("B").physical_shape, (1, 1, 256, 512))
+        self.assertEqual(
+            downsample.port("B").physical_shape,
+            (1, 1, 4, 32, 32, 8, 4),
+        )
 
         global_plan = QLinearConvPhysicalLayout(
             profile_id=GLOBAL_RING28_PROFILE
@@ -290,9 +322,7 @@ class Rtl28QLinearConvPhysicalLayoutTests(unittest.TestCase):
         self.assertTrue(global_plan.capacity_report()["fits"])
 
     def test_deterministic_forward_payloads(self) -> None:
-        layout = QLinearConvPhysicalLayout(
-            profile_id=GROUP4X7_BATCH_CHANNEL28_PROFILE
-        )
+        layout = self._hardware_layout()
         first = layout.forward(**_case())
         second = layout.forward(**_case())
         self.assertEqual(first.plan, second.plan)

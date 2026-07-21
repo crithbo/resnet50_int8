@@ -3330,7 +3330,7 @@
     "source": {
       "commit": "e299b2804448242d1589b3e58ed7c5a9a5eca09f",
       "config_baseline_commit": "e299b2804448242d1589b3e58ed7c5a9a5eca09f",
-      "execplan_commit": "5aa7d44aa2c58b7c86cfa32389d135246001629c",
+      "execplan_commit": "d4ffc32c9b29a858d83e13706cd837c5549521a4",
       "repository": "ndp-sim-ref"
     },
     "status": "candidate_preflight_only",
@@ -5540,7 +5540,7 @@
     ],
     "commit": "e299b2804448242d1589b3e58ed7c5a9a5eca09f",
     "config_baseline_commit": "e299b2804448242d1589b3e58ed7c5a9a5eca09f",
-    "execplan_commit": "5aa7d44aa2c58b7c86cfa32389d135246001629c",
+    "execplan_commit": "d4ffc32c9b29a858d83e13706cd837c5549521a4",
     "implementation_files": [
       {
         "path": "bitstream/main.py",
@@ -5579,8 +5579,8 @@
       },
       {
         "path": "model_execplan/README.md",
-        "sha256": "992360e8cfc1a15d03abbbb70047de86548e07518e329248d17c61c130b9b11f",
-        "size_bytes": 40935
+        "sha256": "4c3f1c688c0778723f3812569353d3429b207651663d1a9eee10dba1df895367",
+        "size_bytes": 14432
       },
       {
         "path": "model_execplan/config/register_map_with_groups1.csv",

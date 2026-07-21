@@ -13,7 +13,11 @@ import numpy as np
 import onnx
 from onnx import numpy_helper
 
-from .conv_instance import ConvTargetRequest, build_conv_target_request
+from .conv_instance import (
+    FIRST_REAL_CONV_NODE_ID,
+    ConvTargetRequest,
+    build_conv_target_request,
+)
 from .source_versions import (
     OFFICIAL_CONFIG_COMMIT,
     OFFICIAL_EXECPLAN_COMMIT,
@@ -204,6 +208,7 @@ def build_conv_execplan_request(project_root: Path, node_id: str) -> dict[str, A
     accumulate_config_id = f"{spec.accumulate_hw_op_id}.config"
     semantic_contract_id = f"{spec.accumulate_hw_op_id}.semantics"
     requant_manifest_id = f"{spec.requant_hw_op_id}.manifest"
+    requant_encoder_contract_id = f"{spec.requant_hw_op_id}.encoder-contract"
     shard_artifact_ids = [
         f"{spec.requant_hw_op_id}.shard-{index:02d}"
         for index in range(spec.requant_shard_count)
@@ -230,6 +235,17 @@ def build_conv_execplan_request(project_root: Path, node_id: str) -> dict[str, A
             relative_path=f"{request.requant_root_relative}/manifest.json",
         )
     ]
+    if spec.node_id == FIRST_REAL_CONV_NODE_ID:
+        requant_artifacts.append(
+            _artifact(
+                root,
+                artifact_id=requant_encoder_contract_id,
+                role="requant_encoder_contract",
+                relative_path=(
+                    f"{request.requant_root_relative}/encoder_contract.json"
+                ),
+            )
+        )
     requant_artifacts.extend(
         _artifact(
             root,
@@ -388,6 +404,7 @@ def build_conv_execplan_request(project_root: Path, node_id: str) -> dict[str, A
                         "group": spec.group,
                     },
                     "target": {
+                        "transport_abi": request.transport_abi,
                         "slice_count": 28,
                         "communication_domain": spec.communication_domain,
                         "n2n": {
@@ -425,6 +442,7 @@ def build_conv_execplan_request(project_root: Path, node_id: str) -> dict[str, A
                     "hw_op_id": spec.requant_hw_op_id,
                     "stage_index": 1,
                     "target": {
+                        "transport_abi": request.transport_abi,
                         "slice_count": 28,
                         "communication_domain": spec.communication_domain,
                         "ga_lane_count": spec.ga_lane_count,
@@ -436,6 +454,11 @@ def build_conv_execplan_request(project_root: Path, node_id: str) -> dict[str, A
                         "cardinality": "one_manifest_to_many_shards",
                         "manifest_artifact_id": requant_manifest_id,
                         "member_artifact_ids": shard_artifact_ids,
+                        "encoder_contract_artifact_id": (
+                            requant_encoder_contract_id
+                            if spec.node_id == FIRST_REAL_CONV_NODE_ID
+                            else None
+                        ),
                     },
                     "coverage": {
                         "channel_count": spec.output_channels,
@@ -588,6 +611,15 @@ def validate_conv_execplan_request(
         or requant.attributes.get("hw_op_id") != spec.requant_hw_op_id
     ):
         raise ConvExecplanTransportError("Conv hw_op identity differs")
+    accumulate_target = accumulate.attributes.get("target", {})
+    requant_target = requant.attributes.get("target", {})
+    if (
+        accumulate_target.get("transport_abi") != request.transport_abi
+        or requant_target.get("transport_abi") != request.transport_abi
+    ):
+        raise ConvExecplanTransportError(
+            "Conv transport ABI is missing, unknown, or differs between stages"
+        )
     _validate_tensor_metadata(accumulate, request)
     _validate_tensor_metadata(requant, request)
     _validate_constants(accumulate, request)
@@ -599,7 +631,10 @@ def validate_conv_execplan_request(
     requant_roles = _artifact_map(requant)
     if set(accumulate_roles) != {"accumulate_config", "semantic_contract"}:
         raise ConvExecplanTransportError("accumulate artifact roles differ")
-    if set(requant_roles) != {"requant_manifest", "requant_shard"}:
+    expected_requant_roles = {"requant_manifest", "requant_shard"}
+    if spec.node_id == FIRST_REAL_CONV_NODE_ID:
+        expected_requant_roles.add("requant_encoder_contract")
+    if set(requant_roles) != expected_requant_roles:
         raise ConvExecplanTransportError("requant artifact roles differ")
     shard_artifacts = [item for item in requant.config_artifacts if item.role == "requant_shard"]
     relationship = requant.attributes.get("artifact_relationship", {})
@@ -608,6 +643,11 @@ def validate_conv_execplan_request(
         or relationship.get("manifest_artifact_id") != requant_roles["requant_manifest"].artifact_id
         or relationship.get("member_artifact_ids") != [item.artifact_id for item in shard_artifacts]
         or len(shard_artifacts) != spec.requant_shard_count
+        or (
+            spec.node_id == FIRST_REAL_CONV_NODE_ID
+            and relationship.get("encoder_contract_artifact_id")
+            != requant_roles["requant_encoder_contract"].artifact_id
+        )
     ):
         raise ConvExecplanTransportError("requant manifest one-to-many relationship differs")
 
@@ -615,6 +655,7 @@ def validate_conv_execplan_request(
     try:
         accumulate_result = validate_accumulate(
             {
+                "transport_abi": request.transport_abi,
                 "config_text": accumulate_roles["accumulate_config"].raw_text,
                 "config_sha256": accumulate_roles["accumulate_config"].sha256,
                 "semantic_contract_text": accumulate_roles["semantic_contract"].raw_text,
@@ -649,6 +690,7 @@ def validate_conv_execplan_request(
         "node_id": spec.node_id,
         "instance_id": expected_instance,
         "operator_count": 2,
+        "transport_abi": request.transport_abi,
         "config_artifact_count": len(accumulate.config_artifacts) + len(requant.config_artifacts),
         "typed_constant_count": len(accumulate.constants) + len(requant.constants),
         "requant_channel_count": requant_result["channel_count"],
@@ -671,7 +713,7 @@ def canonical_execplan_bytes(value: Mapping[str, Any]) -> bytes:
 
 def build_conv_execplan_transport_contract(project_root: Path) -> dict[str, Any]:
     root = project_root.resolve()
-    verify_ndp_source_checkout(root / "ndp-sim-ref")
+    verify_ndp_source_checkout(root / "ndp-sim-ref", require_clean=False)
     lock = json.loads((root / "repos.lock.json").read_text(encoding="utf-8"))
     locked = {item["name"]: item["commit"] for item in lock["repositories"]}
     if locked.get("ndp-sim-ref") != OFFICIAL_EXECPLAN_COMMIT:

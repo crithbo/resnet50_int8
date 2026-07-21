@@ -340,6 +340,8 @@ class NdpFunctionalAdapter:
                 != target_config_binding.get("config_sha256")
                 or returned_binding.get("semantic_contract_sha256")
                 != target_config_binding.get("semantic_contract_sha256")
+                or returned_binding.get("transport_abi")
+                != target_config_binding.get("transport_abi")
                 or returned_binding.get("n2n_mem_loop") != 4
                 or returned_binding.get("n2n_src_slice_sel") != 1
                 or returned_binding.get("n2n_dst_slice_sel") != 1

@@ -26,8 +26,9 @@
     "staged_d_offset": 904400,
     "staged_half_bytes": 75264,
     "staged_total_bytes": 150528,
-    "staged_to_canonical_transform": "interleave two [spatial,8] UINT8 halves into NHWK [spatial,16]",
+    "staged_to_canonical_transform": "concatenate two NHWK8 halves, then reshape to NH-Qblock-Q8-Kblock-K8",
     "local_k_tile": 16,
+    "local_k_tile_padded": 16,
     "ga_lane_count": 8
   },
   "coverage": {
