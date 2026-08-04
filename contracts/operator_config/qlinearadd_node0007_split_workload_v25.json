@@ -1,0 +1,139 @@
+{
+  "schema": "qlinearadd-node0007-split-workload-contract-v25",
+  "status": "AUTHORIZED_MATERIALIZATION_IN_PROGRESS",
+  "analysis_owner_thread": "019fa2c0-b647-7a91-93bf-d21a173487e3",
+  "return_target_thread": "019fbec2-fe93-7e03-9314-cff6f222f33d",
+  "source_assets": {
+    "v24_zip": {
+      "path": "artifacts/operator_config_validation/r5-server-test-packages/r5_qadd_n7_bctrl_v24.zip",
+      "bytes": 38032104,
+      "sha256": "71e14695c3025340987dba2fc0ffedd23e8e61d9bcb6eaec704de74c8e6928da",
+      "immutable": true
+    },
+    "v24_sca": {
+      "path": "artifacts/operator_config_validation/r5-server-test-packages/r5_qadd_n7_bctrl_v24/workload/runtime/sca_cfg.json",
+      "bytes": 17019,
+      "sha256": "2739a52012c7971c82eacbe7c0753cf92c7824fbc5e9d0c4e18771bcc9ca4250",
+      "repeat_num": 1,
+      "exec_length": 29,
+      "selected_execplan": "execplan_op_b_dequant.txt",
+      "execution_adjudication": "B_DEQUANT_SINGLE_STAGE_ALREADY_SPLIT"
+    },
+    "v18_graph": {
+      "path": "artifacts/operator_config_validation/r5-qlinearadd-node0007-d-buffer-column-pair-v18/graph.json",
+      "bytes": 4379,
+      "sha256": "74162e57d49fdcf5b2340bfdecc5b5947bbe2ef137c628293677ea607cae3f4e"
+    },
+    "v18_address_bound_graph": {
+      "path": "artifacts/operator_config_validation/r5-qlinearadd-node0007-d-buffer-column-pair-v18/execplan/pipeline_output/graph_withbaseaddr.json",
+      "sha256": "2d2cc67efefb66270ca6d106d4145d812755bbf0c3d255f2840e4bde9f67468e",
+      "address_policy": "FROZEN_FULL_GRAPH_BASES_RETAINED_IN_EVERY_SUBGRAPH"
+    }
+  },
+  "frozen_semantics": {
+    "numeric": true,
+    "w3_order": true,
+    "six_qparams": true,
+    "exact_uint8_tail": true,
+    "functional_rtl": true,
+    "golden_values": true,
+    "full_chain_v24_identity": true,
+    "numeric_analysis_repeated": false,
+    "workload_numeric_analysis_repeated": false
+  },
+  "segments": {
+    "A": {
+      "requested_scope": [
+        "op_a_dequant",
+        "op_b_dequant"
+      ],
+      "materialized_scope": [
+        "op_a_dequant",
+        "op_b_dequant"
+      ],
+      "execution_form": "INDEPENDENT_TWO_PRODUCER_PREFIX",
+      "boundary_mode": "ORIGINAL_TYPED_EXTERNAL_INPUT",
+      "input_contract": [
+        "node0007_A_uint8_original",
+        "node0007_B_uint8_original"
+      ],
+      "producer_evidence_claimed": false,
+      "host_precomputed_internal_tensor": false,
+      "package_class": "DIAGNOSTIC_ONLY_NOT_FUNCTIONAL_FIX"
+    },
+    "B": {
+      "requested_scope": [
+        "op_relocation_pad"
+      ],
+      "materialized_scope": [
+        "op_relocation_pad"
+      ],
+      "execution_form": "INDEPENDENT_SINGLE_STAGE",
+      "boundary_mode": "FROZEN_NONCOMPUTATIONAL_CONSTANT",
+      "input_contract": [
+        "relocation_zero_spacer_fp32_external"
+      ],
+      "input_graph_source_type": "external",
+      "input_shape": [
+        1,
+        4224,
+        8
+      ],
+      "input_dtype": "fp32",
+      "input_payload_tree": {
+        "path": "artifacts/operator_config_validation/r5-server-test-packages/r5_qadd_n7_bctrl_v24/workload/runtime/install/op_relocation_pad",
+        "files": 28,
+        "bytes": 30514176,
+        "tree_sha256": "97cbd388ac0da38787cc2373be1863def7c49ea140dffebfb6d12f6a11c19f8e"
+      },
+      "producer_evidence_claimed": false,
+      "host_precomputed_internal_tensor": false,
+      "package_class": "DIAGNOSTIC_ONLY_NOT_FUNCTIONAL_FIX"
+    },
+    "C": {
+      "requested_scope": [
+        "op_fp32_add"
+      ],
+      "materialized_scope": [
+        "op_a_dequant",
+        "op_b_dequant",
+        "op_relocation_pad",
+        "op_fp32_add"
+      ],
+      "execution_form": "CUMULATIVE_PREFIX",
+      "fallback_reason": "NO_BYTE_RECOVERED_HARDWARE_A_SCALED_AND_B_SCALED_BOUNDARY_PAYLOAD",
+      "internal_tensor_replay": false,
+      "host_precomputed_internal_tensor": false,
+      "package_class": "DIAGNOSTIC_ONLY_NOT_FUNCTIONAL_FIX"
+    },
+    "D": {
+      "requested_scope": [
+        "op_tail_mul",
+        "op_tail_round",
+        "formal_D"
+      ],
+      "materialized_scope": [
+        "op_a_dequant",
+        "op_b_dequant",
+        "op_relocation_pad",
+        "op_fp32_add",
+        "op_tail_mul",
+        "op_tail_round"
+      ],
+      "execution_form": "FULL_CHAIN_FALLBACK",
+      "fallback_reason": "NO_BYTE_RECOVERED_HARDWARE_FP32_SUM_BOUNDARY_PAYLOAD",
+      "internal_tensor_replay": false,
+      "host_precomputed_internal_tensor": false,
+      "formal_D_target_count": 28,
+      "package_class": "DIAGNOSTIC_ONLY_NOT_FUNCTIONAL_FIX"
+    }
+  },
+  "claim_boundary": {
+    "split_results_are_localization_only": true,
+    "segment_pass_does_not_close_upstream_producer": true,
+    "segment_pass_does_not_close_cross_segment_barrier_or_lifetime": true,
+    "segment_pass_does_not_raise_e3_e4_e5": true,
+    "full_six_stage_28D_run_still_required": true
+  },
+  "next_action": "GENERATE_FRESH_A_B_C_D_IDENTITIES_WITH_PRUNED_PAYLOADS_AND_CURRENT_RULE_AUDITS"
+}

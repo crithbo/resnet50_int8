@@ -1,0 +1,39 @@
+{
+  "schema": "operator-config-address-bound-materialization-v1",
+  "status": "strict_config_bound_to_planner_addresses",
+  "source": {
+    "artifact": "configs/native_ndp_sim/maxpool_config_16_112_112_stride2_padding1_strict_v1/config.json",
+    "sha256": "c2eff2a065d6f8d92873a71727cded83635ba51f89fc3acfa445b8804f67713e",
+    "materialization_manifest_sha256": "20debc3a8aed75c87cb0924cc278461f16e6cf4f28ef40daebbb2eb10b5330df",
+    "strict_normalization_decision": "approved-explicit-zero-padding-operator-contract"
+  },
+  "graph_withbaseaddr": {
+    "artifact": "configs/native_ndp_sim/maxpool_node0002_guarded_wave0_address_seed_v1.json",
+    "sha256": "6917e0f59adc958a38ed46584a5596997ec3ca87eb40050614f08df5806cf682"
+  },
+  "bound_config": {
+    "artifact": "config.json",
+    "sha256": "dee9073a34b14e5f4c293b992930ae7ad70ea12a2737a3d9bf6bf0620aa28268",
+    "canonical_sha256": "54e3a4920da426625799991c591242aa53f864fb085744d5bb9a8c8624b1eb49"
+  },
+  "changes": [
+    {
+      "path": "$.stream_engine.stream0.base_addr",
+      "target": "A",
+      "before": 1024,
+      "after": "0x0"
+    },
+    {
+      "path": "$.stream_engine.stream1.base_addr",
+      "target": "D",
+      "before": 201728,
+      "after": "0x311D0"
+    }
+  ],
+  "change_set_sha256": "ae708ce51a5161c0640afabb4198eb886456201d44619a56a579ce5b6ed2f1fd",
+  "strict_validation": {
+    "valid": true,
+    "issue_count": 0
+  },
+  "source_rewrite_performed": false
+}

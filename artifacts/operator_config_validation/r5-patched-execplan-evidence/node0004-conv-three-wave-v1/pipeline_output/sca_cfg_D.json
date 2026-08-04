@@ -1,0 +1,322 @@
+{
+  "op_w0_matrixD_slice0": {
+    "base_addr": "0x00031440",
+    "path": "install/op_w0/slice00/matrix_D_linearized_128bit.txt",
+    "length": 12544
+  },
+  "op_w0_matrixD_slice1": {
+    "base_addr": "0x02031440",
+    "path": "install/op_w0/slice01/matrix_D_linearized_128bit.txt",
+    "length": 12544
+  },
+  "op_w0_matrixD_slice2": {
+    "base_addr": "0x04031440",
+    "path": "install/op_w0/slice02/matrix_D_linearized_128bit.txt",
+    "length": 12544
+  },
+  "op_w0_matrixD_slice3": {
+    "base_addr": "0x06031440",
+    "path": "install/op_w0/slice03/matrix_D_linearized_128bit.txt",
+    "length": 12544
+  },
+  "op_w0_matrixD_slice4": {
+    "base_addr": "0x08031440",
+    "path": "install/op_w0/slice04/matrix_D_linearized_128bit.txt",
+    "length": 12544
+  },
+  "op_w0_matrixD_slice5": {
+    "base_addr": "0x0A031440",
+    "path": "install/op_w0/slice05/matrix_D_linearized_128bit.txt",
+    "length": 12544
+  },
+  "op_w0_matrixD_slice6": {
+    "base_addr": "0x0C031440",
+    "path": "install/op_w0/slice06/matrix_D_linearized_128bit.txt",
+    "length": 12544
+  },
+  "op_w0_matrixD_slice7": {
+    "base_addr": "0x0E031440",
+    "path": "install/op_w0/slice07/matrix_D_linearized_128bit.txt",
+    "length": 12544
+  },
+  "op_w0_matrixD_slice8": {
+    "base_addr": "0x10031440",
+    "path": "install/op_w0/slice08/matrix_D_linearized_128bit.txt",
+    "length": 12544
+  },
+  "op_w0_matrixD_slice9": {
+    "base_addr": "0x12031440",
+    "path": "install/op_w0/slice09/matrix_D_linearized_128bit.txt",
+    "length": 12544
+  },
+  "op_w0_matrixD_slice10": {
+    "base_addr": "0x14031440",
+    "path": "install/op_w0/slice10/matrix_D_linearized_128bit.txt",
+    "length": 12544
+  },
+  "op_w0_matrixD_slice11": {
+    "base_addr": "0x16031440",
+    "path": "install/op_w0/slice11/matrix_D_linearized_128bit.txt",
+    "length": 12544
+  },
+  "op_w0_matrixD_slice12": {
+    "base_addr": "0x18031440",
+    "path": "install/op_w0/slice12/matrix_D_linearized_128bit.txt",
+    "length": 12544
+  },
+  "op_w0_matrixD_slice13": {
+    "base_addr": "0x1A031440",
+    "path": "install/op_w0/slice13/matrix_D_linearized_128bit.txt",
+    "length": 12544
+  },
+  "op_w0_matrixD_slice14": {
+    "base_addr": "0x1C031440",
+    "path": "install/op_w0/slice14/matrix_D_linearized_128bit.txt",
+    "length": 12544
+  },
+  "op_w0_matrixD_slice15": {
+    "base_addr": "0x1E031440",
+    "path": "install/op_w0/slice15/matrix_D_linearized_128bit.txt",
+    "length": 12544
+  },
+  "op_w0_matrixD_slice16": {
+    "base_addr": "0x20031440",
+    "path": "install/op_w0/slice16/matrix_D_linearized_128bit.txt",
+    "length": 12544
+  },
+  "op_w0_matrixD_slice17": {
+    "base_addr": "0x22031440",
+    "path": "install/op_w0/slice17/matrix_D_linearized_128bit.txt",
+    "length": 12544
+  },
+  "op_w0_matrixD_slice18": {
+    "base_addr": "0x24031440",
+    "path": "install/op_w0/slice18/matrix_D_linearized_128bit.txt",
+    "length": 12544
+  },
+  "op_w0_matrixD_slice19": {
+    "base_addr": "0x26031440",
+    "path": "install/op_w0/slice19/matrix_D_linearized_128bit.txt",
+    "length": 12544
+  },
+  "op_w0_matrixD_slice20": {
+    "base_addr": "0x28031440",
+    "path": "install/op_w0/slice20/matrix_D_linearized_128bit.txt",
+    "length": 12544
+  },
+  "op_w0_matrixD_slice21": {
+    "base_addr": "0x2A031440",
+    "path": "install/op_w0/slice21/matrix_D_linearized_128bit.txt",
+    "length": 12544
+  },
+  "op_w0_matrixD_slice22": {
+    "base_addr": "0x2C031440",
+    "path": "install/op_w0/slice22/matrix_D_linearized_128bit.txt",
+    "length": 12544
+  },
+  "op_w0_matrixD_slice23": {
+    "base_addr": "0x2E031440",
+    "path": "install/op_w0/slice23/matrix_D_linearized_128bit.txt",
+    "length": 12544
+  },
+  "op_w0_matrixD_slice24": {
+    "base_addr": "0x30031440",
+    "path": "install/op_w0/slice24/matrix_D_linearized_128bit.txt",
+    "length": 12544
+  },
+  "op_w0_matrixD_slice25": {
+    "base_addr": "0x32031440",
+    "path": "install/op_w0/slice25/matrix_D_linearized_128bit.txt",
+    "length": 12544
+  },
+  "op_w0_matrixD_slice26": {
+    "base_addr": "0x34031440",
+    "path": "install/op_w0/slice26/matrix_D_linearized_128bit.txt",
+    "length": 12544
+  },
+  "op_w0_matrixD_slice27": {
+    "base_addr": "0x36031440",
+    "path": "install/op_w0/slice27/matrix_D_linearized_128bit.txt",
+    "length": 12544
+  },
+  "op_w1_matrixD_slice0": {
+    "base_addr": "0x00093880",
+    "path": "install/op_w1/slice00/matrix_D_linearized_128bit.txt",
+    "length": 12544
+  },
+  "op_w1_matrixD_slice1": {
+    "base_addr": "0x02093880",
+    "path": "install/op_w1/slice01/matrix_D_linearized_128bit.txt",
+    "length": 12544
+  },
+  "op_w1_matrixD_slice2": {
+    "base_addr": "0x04093880",
+    "path": "install/op_w1/slice02/matrix_D_linearized_128bit.txt",
+    "length": 12544
+  },
+  "op_w1_matrixD_slice3": {
+    "base_addr": "0x06093880",
+    "path": "install/op_w1/slice03/matrix_D_linearized_128bit.txt",
+    "length": 12544
+  },
+  "op_w1_matrixD_slice4": {
+    "base_addr": "0x08093880",
+    "path": "install/op_w1/slice04/matrix_D_linearized_128bit.txt",
+    "length": 12544
+  },
+  "op_w1_matrixD_slice5": {
+    "base_addr": "0x0A093880",
+    "path": "install/op_w1/slice05/matrix_D_linearized_128bit.txt",
+    "length": 12544
+  },
+  "op_w1_matrixD_slice6": {
+    "base_addr": "0x0C093880",
+    "path": "install/op_w1/slice06/matrix_D_linearized_128bit.txt",
+    "length": 12544
+  },
+  "op_w1_matrixD_slice7": {
+    "base_addr": "0x0E093880",
+    "path": "install/op_w1/slice07/matrix_D_linearized_128bit.txt",
+    "length": 12544
+  },
+  "op_w1_matrixD_slice8": {
+    "base_addr": "0x10093880",
+    "path": "install/op_w1/slice08/matrix_D_linearized_128bit.txt",
+    "length": 12544
+  },
+  "op_w1_matrixD_slice9": {
+    "base_addr": "0x12093880",
+    "path": "install/op_w1/slice09/matrix_D_linearized_128bit.txt",
+    "length": 12544
+  },
+  "op_w1_matrixD_slice10": {
+    "base_addr": "0x14093880",
+    "path": "install/op_w1/slice10/matrix_D_linearized_128bit.txt",
+    "length": 12544
+  },
+  "op_w1_matrixD_slice11": {
+    "base_addr": "0x16093880",
+    "path": "install/op_w1/slice11/matrix_D_linearized_128bit.txt",
+    "length": 12544
+  },
+  "op_w1_matrixD_slice12": {
+    "base_addr": "0x18093880",
+    "path": "install/op_w1/slice12/matrix_D_linearized_128bit.txt",
+    "length": 12544
+  },
+  "op_w1_matrixD_slice13": {
+    "base_addr": "0x1A093880",
+    "path": "install/op_w1/slice13/matrix_D_linearized_128bit.txt",
+    "length": 12544
+  },
+  "op_w1_matrixD_slice14": {
+    "base_addr": "0x1C093880",
+    "path": "install/op_w1/slice14/matrix_D_linearized_128bit.txt",
+    "length": 12544
+  },
+  "op_w1_matrixD_slice15": {
+    "base_addr": "0x1E093880",
+    "path": "install/op_w1/slice15/matrix_D_linearized_128bit.txt",
+    "length": 12544
+  },
+  "op_w1_matrixD_slice16": {
+    "base_addr": "0x20093880",
+    "path": "install/op_w1/slice16/matrix_D_linearized_128bit.txt",
+    "length": 12544
+  },
+  "op_w1_matrixD_slice17": {
+    "base_addr": "0x22093880",
+    "path": "install/op_w1/slice17/matrix_D_linearized_128bit.txt",
+    "length": 12544
+  },
+  "op_w1_matrixD_slice18": {
+    "base_addr": "0x24093880",
+    "path": "install/op_w1/slice18/matrix_D_linearized_128bit.txt",
+    "length": 12544
+  },
+  "op_w1_matrixD_slice19": {
+    "base_addr": "0x26093880",
+    "path": "install/op_w1/slice19/matrix_D_linearized_128bit.txt",
+    "length": 12544
+  },
+  "op_w1_matrixD_slice20": {
+    "base_addr": "0x28093880",
+    "path": "install/op_w1/slice20/matrix_D_linearized_128bit.txt",
+    "length": 12544
+  },
+  "op_w1_matrixD_slice21": {
+    "base_addr": "0x2A093880",
+    "path": "install/op_w1/slice21/matrix_D_linearized_128bit.txt",
+    "length": 12544
+  },
+  "op_w1_matrixD_slice22": {
+    "base_addr": "0x2C093880",
+    "path": "install/op_w1/slice22/matrix_D_linearized_128bit.txt",
+    "length": 12544
+  },
+  "op_w1_matrixD_slice23": {
+    "base_addr": "0x2E093880",
+    "path": "install/op_w1/slice23/matrix_D_linearized_128bit.txt",
+    "length": 12544
+  },
+  "op_w1_matrixD_slice24": {
+    "base_addr": "0x30093880",
+    "path": "install/op_w1/slice24/matrix_D_linearized_128bit.txt",
+    "length": 12544
+  },
+  "op_w1_matrixD_slice25": {
+    "base_addr": "0x32093880",
+    "path": "install/op_w1/slice25/matrix_D_linearized_128bit.txt",
+    "length": 12544
+  },
+  "op_w1_matrixD_slice26": {
+    "base_addr": "0x34093880",
+    "path": "install/op_w1/slice26/matrix_D_linearized_128bit.txt",
+    "length": 12544
+  },
+  "op_w1_matrixD_slice27": {
+    "base_addr": "0x36093880",
+    "path": "install/op_w1/slice27/matrix_D_linearized_128bit.txt",
+    "length": 12544
+  },
+  "op_w2_matrixD_slice0": {
+    "base_addr": "0x000F5CC0",
+    "path": "install/op_w2/slice00/matrix_D_linearized_128bit.txt",
+    "length": 12544
+  },
+  "op_w2_matrixD_slice1": {
+    "base_addr": "0x020F5CC0",
+    "path": "install/op_w2/slice01/matrix_D_linearized_128bit.txt",
+    "length": 12544
+  },
+  "op_w2_matrixD_slice2": {
+    "base_addr": "0x040F5CC0",
+    "path": "install/op_w2/slice02/matrix_D_linearized_128bit.txt",
+    "length": 12544
+  },
+  "op_w2_matrixD_slice3": {
+    "base_addr": "0x060F5CC0",
+    "path": "install/op_w2/slice03/matrix_D_linearized_128bit.txt",
+    "length": 12544
+  },
+  "op_w2_matrixD_slice4": {
+    "base_addr": "0x080F5CC0",
+    "path": "install/op_w2/slice04/matrix_D_linearized_128bit.txt",
+    "length": 12544
+  },
+  "op_w2_matrixD_slice5": {
+    "base_addr": "0x0A0F5CC0",
+    "path": "install/op_w2/slice05/matrix_D_linearized_128bit.txt",
+    "length": 12544
+  },
+  "op_w2_matrixD_slice6": {
+    "base_addr": "0x0C0F5CC0",
+    "path": "install/op_w2/slice06/matrix_D_linearized_128bit.txt",
+    "length": 12544
+  },
+  "op_w2_matrixD_slice7": {
+    "base_addr": "0x0E0F5CC0",
+    "path": "install/op_w2/slice07/matrix_D_linearized_128bit.txt",
+    "length": 12544
+  }
+}

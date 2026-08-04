@@ -1,0 +1,91 @@
+{
+  "schema": "operator-config-strict-materialization-v1",
+  "status": "strict_config_materialized_from_bit_equivalent_cleanup",
+  "source": {
+    "path": "ndp-sim/jsons/avgpool_config_2048_7_7.json",
+    "sha256": "a3d19c7b1759eb40b66a6b786234865b61917e9cf74822a62dd469729c2497c5",
+    "read_only": true
+  },
+  "normalized": {
+    "path": "config.json",
+    "sha256": "bc1c593106c0dd25251af67c5500983218051dc21d19d33f8c91942c9e412e76",
+    "canonical_sha256": "126a730406281748378fa15cf8f53d0c6e437da5e4fceeda16f6b52ba2df11ff"
+  },
+  "changes": [
+    {
+      "kind": "explicit_zero_padding",
+      "path": "$.stream_engine.stream0.padding_reg_value",
+      "before": null,
+      "after": 0
+    }
+  ],
+  "change_set_sha256": "6cc8f525842dcd3b7b14c4829252f4c9d7d7920de6967db8d6d84c801998b982",
+  "strict_validation": {
+    "valid": true,
+    "issue_count": 0,
+    "target_profile": {
+      "slices": 28,
+      "banks_per_slice": 4,
+      "ddr_rows": 6144,
+      "ddr_columns": 64,
+      "subwords_per_column": 16,
+      "read_streams": 4,
+      "write_streams": 1,
+      "buffers": 6
+    }
+  },
+  "native_field_probe": {
+    "returncode": 0,
+    "command": [
+      "<python>",
+      "-c",
+      "<native FIELD_MAP/_encode_field differential probe>",
+      "<original-config>",
+      "<normalized-config>",
+      "<changes>",
+      "<proof-output>"
+    ],
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "proof_sha256": "fd3c81e30aae7d4ac4e042458559ab8bf8aa49715fdc7c6c579b8ed0347d617d",
+    "proof": {
+      "all_equivalent": true,
+      "entries": [
+        {
+          "equal": true,
+          "native_module": "ReadStreamEngineConfig",
+          "native_status": "encoded-by-field-map",
+          "normalized_encoded": [
+            [
+              0,
+              8
+            ]
+          ],
+          "original_encoded": [
+            [
+              0,
+              8
+            ]
+          ],
+          "path": "$.stream_engine.stream0.padding_reg_value"
+        }
+      ],
+      "schema": "operator-config-native-field-probe-v1",
+      "scope": "changed fields only; this is not a full mapping or bitstream proof"
+    },
+    "all_equivalent": true
+  },
+  "adjudication": {
+    "legacy_source_identity": "intentional-reject",
+    "normalization_decision": "approved-explicit-zero-padding-operator-contract",
+    "reason": "the exact source and normalized identities are bound to a UINT8 MaxPool contract proving byte zero is the max identity",
+    "source_rewrite_authorized": false,
+    "activation_gate": "R3 full evidence closure and explicit source/generator remediation"
+  },
+  "operator_padding_contract": {
+    "path": "contracts/operator_config/gap_sum_zero_padding_contract_v1.json",
+    "sha256": "41229531143c8d3d9c4928993db28c8f44cbee937bf4cbbd34bd5d59f28d432b",
+    "contract_sha256": "a9649472c92f790361e9127c773eb38ef73c339cf3685aaeca61e6a1a9415016"
+  },
+  "source_rewrite_performed": false
+}

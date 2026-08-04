@@ -1,0 +1,27 @@
+{
+  "configs": {
+    "stem_serialized_w0": {
+      "operator_type": "resnet50_conv_stem_hwop0001_serialized_wave0",
+      "path": "wave-0.json",
+      "sha256": "11be6fdde9538751bc4f0e0ec311c9b390b41509da26a79bb7aeca0faa9c3d31"
+    },
+    "stem_serialized_w1": {
+      "operator_type": "resnet50_conv_stem_hwop0001_serialized_wave1",
+      "path": "wave-1.json",
+      "sha256": "e544e7d5209b3e64ec326172806043d530c6f1f0ac0e83203d506a57a38342ae"
+    },
+    "stem_serialized_w2": {
+      "operator_type": "resnet50_conv_stem_hwop0001_serialized_wave2",
+      "path": "wave-2.json",
+      "sha256": "fdceae56d4997c53777d759f2ccbc5c604f03dd5c0ebdc29685e42cd3137800c"
+    }
+  },
+  "request_id": "r5:hwop-0001-00",
+  "request_sha256": "36b50b93353c995ea4392dc5bd535fcecfa70f4a032b860ec4cf81128e6824d6",
+  "schema": "resnet50-conv-stem-serialized-config-manifest-v1",
+  "source_inventory": {
+    "path": "conv_full.json",
+    "semantic_owner": false,
+    "sha256": "c47d1deb6f7cd0e7a729954084ce6f7753085684f2f3fbb403ed79ea4e16fd4a"
+  }
+}

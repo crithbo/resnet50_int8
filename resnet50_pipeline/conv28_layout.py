@@ -47,9 +47,15 @@ CONV28_LAYOUT_IDS = {
 }
 CONV28_PUBLIC_LAYOUT_ABI = "conv28_public_v1"
 CONV28_HARDWARE_LAYOUT_ABI = "conv28_sa_q8k8_v2"
+CONV28_SIGNED_A_LOCAL_LAYOUT_ABI = "conv28_sa_s8a_u8b_local_v3"
 CONV28_HARDWARE_LAYOUT_IDS = {
     GROUP4X7_BATCH_CHANNEL28_PROFILE: (
         "hardware_private_conv_group4x7_sa_q8k8_candidate_v2"
+    ),
+}
+CONV28_SIGNED_A_LOCAL_LAYOUT_IDS = {
+    GROUP4X7_BATCH_CHANNEL28_PROFILE: (
+        "hardware_private_conv_group4x7_sa_s8a_u8b_local_v3"
     ),
 }
 
@@ -122,6 +128,10 @@ class Conv28PhysicalPlan:
     c_tile_padded: int
     k_tile_padded: int
     activation_width_padded: int
+    activation_halo_staged: bool
+    activation_halo_height: int
+    activation_halo_width: int
+    activation_halo_width_padded: int
     output_width_padded: int
     storage_sample_count: int
     ports: tuple[Conv28PortPlan, ...]
@@ -325,10 +335,12 @@ class QLinearConvPhysicalLayout:
         if layout_abi not in {
             CONV28_PUBLIC_LAYOUT_ABI,
             CONV28_HARDWARE_LAYOUT_ABI,
+            CONV28_SIGNED_A_LOCAL_LAYOUT_ABI,
         }:
             raise ValueError(f"unsupported Conv28 layout ABI: {layout_abi}")
         if (
-            layout_abi == CONV28_HARDWARE_LAYOUT_ABI
+            layout_abi
+            in {CONV28_HARDWARE_LAYOUT_ABI, CONV28_SIGNED_A_LOCAL_LAYOUT_ABI}
             and self.profile_id != GROUP4X7_BATCH_CHANNEL28_PROFILE
         ):
             raise ValueError(
@@ -336,6 +348,9 @@ class QLinearConvPhysicalLayout:
             )
         self.layout_abi = layout_abi
         self.contract = (
+            CONV28_SIGNED_A_LOCAL_LAYOUT_IDS[self.profile_id]
+            if self.layout_abi == CONV28_SIGNED_A_LOCAL_LAYOUT_ABI
+            else
             CONV28_HARDWARE_LAYOUT_IDS[self.profile_id]
             if self.layout_abi == CONV28_HARDWARE_LAYOUT_ABI
             else CONV28_LAYOUT_IDS[self.profile_id]
@@ -343,7 +358,14 @@ class QLinearConvPhysicalLayout:
 
     @property
     def hardware_transaction_packing(self) -> bool:
-        return self.layout_abi == CONV28_HARDWARE_LAYOUT_ABI
+        return self.layout_abi in {
+            CONV28_HARDWARE_LAYOUT_ABI,
+            CONV28_SIGNED_A_LOCAL_LAYOUT_ABI,
+        }
+
+    @property
+    def signed_a_local_replication(self) -> bool:
+        return self.layout_abi == CONV28_SIGNED_A_LOCAL_LAYOUT_ABI
 
     @staticmethod
     def _output_shape(
@@ -396,6 +418,15 @@ class QLinearConvPhysicalLayout:
             activation_shape, weight_shape, strides, pads, dilations
         )
         _, _, output_h, output_w = output_shape
+        if self.signed_a_local_replication and (
+            (kernel_h, kernel_w) != (1, 1)
+            or strides != (1, 1)
+            or pads != (0, 0, 0, 0)
+            or dilations != (1, 1)
+        ):
+            raise ValueError(
+                "the signed-A local-replication ABI currently supports only 1x1/stride1/pad0"
+            )
         owner_count = (
             4
             if self.profile_id == GROUP4X7_BATCH_CHANNEL28_PROFILE
@@ -417,17 +448,49 @@ class QLinearConvPhysicalLayout:
             k_tile_padded = _align(k_tile, SA_OUTPUT_LANES)
             c_padded = owner_count * c_tile_padded
             activation_width_padded = _align(width, SA_SPATIAL_LANES)
+            activation_halo_staged = (
+                (kernel_h, kernel_w) == (3, 3)
+                and strides == (1, 1)
+                and pads == (1, 1, 1, 1)
+                and dilations == (1, 1)
+            )
+            activation_halo_height = height + pads[0] + pads[2]
+            activation_halo_width = width + pads[1] + pads[3]
+            activation_halo_width_padded = _align(
+                activation_halo_width, SA_SPATIAL_LANES
+            )
             output_width_padded = _align(output_w, SA_SPATIAL_LANES)
             c_quartets = c_tile_padded // SA_CHANNEL_LANES
             k_blocks = k_tile_padded // SA_OUTPUT_LANES
             physical_shapes = {
                 "A": (
-                    storage_samples,
-                    height,
-                    activation_width_padded // SA_SPATIAL_LANES,
-                    c_quartets,
-                    SA_SPATIAL_LANES,
-                    SA_CHANNEL_LANES,
+                    (
+                        storage_samples,
+                        height,
+                        activation_width_padded // SA_SPATIAL_LANES,
+                        owner_count,
+                        c_quartets,
+                        SA_SPATIAL_LANES,
+                        SA_CHANNEL_LANES,
+                    )
+                    if self.signed_a_local_replication
+                    else
+                    (
+                        storage_samples,
+                        activation_halo_height,
+                        c_quartets,
+                        activation_halo_width_padded,
+                        SA_CHANNEL_LANES,
+                    )
+                    if activation_halo_staged
+                    else (
+                        storage_samples,
+                        height,
+                        activation_width_padded // SA_SPATIAL_LANES,
+                        c_quartets,
+                        SA_SPATIAL_LANES,
+                        SA_CHANNEL_LANES,
+                    )
                 ),
                 "B": (
                     kernel_h,
@@ -471,6 +534,10 @@ class QLinearConvPhysicalLayout:
             c_tile_padded = c_tile
             k_tile_padded = k_tile
             activation_width_padded = width
+            activation_halo_staged = False
+            activation_halo_height = height
+            activation_halo_width = width
+            activation_halo_width_padded = width
             output_width_padded = output_w
             physical_shapes = {
                 "A": (storage_samples, height, width, c_tile),
@@ -526,7 +593,14 @@ class QLinearConvPhysicalLayout:
         }
         if self.hardware_transaction_packing:
             physical_orders = {
-                "A": "NH-Qblock-Cquartet-Q8-C4",
+                "A": (
+                    "NH-Qblock-destinationPREV-Cquartet-Q8-C4"
+                    if self.signed_a_local_replication
+                    else
+                    "N-HaloH-Cquartet-HaloW-C4"
+                    if activation_halo_staged
+                    else "NH-Qblock-Cquartet-Q8-C4"
+                ),
                 "B": "RS-ringPREV-Cquartet-Kblock-K8-C4",
                 "bias": "Kblock-K8",
                 "w_scale": "K-local-padded8",
@@ -553,7 +627,14 @@ class QLinearConvPhysicalLayout:
                 "D": "NHWK-local",
             }
         tail_rules = {
-            "A": "inactive N/C slots equal x_zero_point",
+            "A": (
+                "activation is replicated in destination-relative PREV order; inactive N/C slots equal x_zero_point"
+                if self.signed_a_local_replication
+                else
+                "explicit spatial halo plus inactive N/C slots equal x_zero_point"
+                if activation_halo_staged
+                else "inactive N/C slots equal x_zero_point"
+            ),
             "B": (
                 "valid-K C-tail equals that K's w_zero_point; invalid-K rows "
                 "equal int8 zero"
@@ -617,6 +698,10 @@ class QLinearConvPhysicalLayout:
             c_tile_padded=c_tile_padded,
             k_tile_padded=k_tile_padded,
             activation_width_padded=activation_width_padded,
+            activation_halo_staged=activation_halo_staged,
+            activation_halo_height=activation_halo_height,
+            activation_halo_width=activation_halo_width,
+            activation_halo_width_padded=activation_halo_width_padded,
             output_width_padded=output_width_padded,
             storage_sample_count=storage_samples,
             ports=tuple(ports),
@@ -672,6 +757,16 @@ class QLinearConvPhysicalLayout:
             owner_step = LOW_RING_OWNERS.index(slice_id)
             sample_start = 0
             sample_count = BATCH_SIZE
+        if port.port == "A" and self.signed_a_local_replication:
+            return {
+                "active": True,
+                "group_id": group_id,
+                "owner_step": owner_step,
+                "sample_start": sample_start,
+                "sample_count": sample_count,
+                "logical_start": 0,
+                "logical_count": plan.activation_shape[1],
+            }
         if port.owner_axis == "C":
             logical_extent = plan.activation_shape[1]
             tile = plan.c_tile
@@ -800,36 +895,116 @@ class QLinearConvPhysicalLayout:
                 dtype = np.dtype(port.dtype).newbyteorder("<")
                 if port.port == "A":
                     if self.hardware_transaction_packing:
-                        flat = np.full(
-                            (
+                        if self.signed_a_local_replication:
+                            local = np.full(shape, x_zp, dtype=dtype)
+                            group_id = int(descriptor["group_id"])
+                            ring = TOPOLOGY28.high_ring_for_group(group_id)
+                            owners = HIGH_RING_OWNERS[group_id]
+                            traversal = ring.traverse(slice_id, Direction.PREV)
+                            for ring_step, source_owner in enumerate(traversal):
+                                c_owner_step = owners.index(source_owner)
+                                c_start = c_owner_step * plan.c_tile
+                                c_count = max(
+                                    0,
+                                    min(
+                                        plan.c_tile,
+                                        plan.activation_shape[1] - c_start,
+                                    ),
+                                )
+                                flat = np.full(
+                                    (
+                                        plan.storage_sample_count,
+                                        plan.activation_shape[2],
+                                        plan.activation_width_padded,
+                                        plan.c_tile_padded,
+                                    ),
+                                    x_zp,
+                                    dtype=dtype,
+                                )
+                                if c_count:
+                                    source = canonical["A"][
+                                        sample_start : sample_start + sample_count,
+                                        c_start : c_start + c_count,
+                                        ...,
+                                    ]
+                                    flat[
+                                        :sample_count,
+                                        :,
+                                        : plan.activation_shape[3],
+                                        :c_count,
+                                    ] = np.moveaxis(source, 1, -1)
+                                packed = flat.reshape(
+                                    plan.storage_sample_count,
+                                    plan.activation_shape[2],
+                                    plan.activation_width_padded // SA_SPATIAL_LANES,
+                                    SA_SPATIAL_LANES,
+                                    plan.c_tile_padded // SA_CHANNEL_LANES,
+                                    SA_CHANNEL_LANES,
+                                ).transpose(0, 1, 2, 4, 3, 5)
+                                local[:, :, :, ring_step, :, :, :] = packed
+                        elif plan.activation_halo_staged:
+                            flat = np.full(
+                                (
+                                    plan.storage_sample_count,
+                                    plan.activation_halo_height,
+                                    plan.activation_halo_width_padded,
+                                    plan.c_tile_padded,
+                                ),
+                                x_zp,
+                                dtype=dtype,
+                            )
+                            if logical_count:
+                                source = canonical["A"][
+                                    sample_start : sample_start + sample_count,
+                                    logical_start : logical_start + logical_count,
+                                    ...,
+                                ]
+                                flat[
+                                    :sample_count,
+                                    plan.pads[0] : plan.pads[0]
+                                    + plan.activation_shape[2],
+                                    plan.pads[1] : plan.pads[1]
+                                    + plan.activation_shape[3],
+                                    :logical_count,
+                                ] = np.moveaxis(source, 1, -1)
+                            local = flat.reshape(
+                                plan.storage_sample_count,
+                                plan.activation_halo_height,
+                                plan.activation_halo_width_padded,
+                                plan.c_tile_padded // SA_CHANNEL_LANES,
+                                SA_CHANNEL_LANES,
+                            ).transpose(0, 1, 3, 2, 4)
+                        else:
+                            flat = np.full(
+                                (
+                                    plan.storage_sample_count,
+                                    plan.activation_shape[2],
+                                    plan.activation_width_padded,
+                                    plan.c_tile_padded,
+                                ),
+                                x_zp,
+                                dtype=dtype,
+                            )
+                            if logical_count:
+                                source = canonical["A"][
+                                    sample_start : sample_start + sample_count,
+                                    logical_start : logical_start + logical_count,
+                                    ...,
+                                ]
+                                flat[
+                                    :sample_count,
+                                    :,
+                                    : plan.activation_shape[3],
+                                    :logical_count,
+                                ] = np.moveaxis(source, 1, -1)
+                            local = flat.reshape(
                                 plan.storage_sample_count,
                                 plan.activation_shape[2],
-                                plan.activation_width_padded,
-                                plan.c_tile_padded,
-                            ),
-                            x_zp,
-                            dtype=dtype,
-                        )
-                        if logical_count:
-                            source = canonical["A"][
-                                sample_start : sample_start + sample_count,
-                                logical_start : logical_start + logical_count,
-                                ...,
-                            ]
-                            flat[
-                                :sample_count,
-                                :,
-                                : plan.activation_shape[3],
-                                :logical_count,
-                            ] = np.moveaxis(source, 1, -1)
-                        local = flat.reshape(
-                            plan.storage_sample_count,
-                            plan.activation_shape[2],
-                            plan.activation_width_padded // SA_SPATIAL_LANES,
-                            SA_SPATIAL_LANES,
-                            plan.c_tile_padded // SA_CHANNEL_LANES,
-                            SA_CHANNEL_LANES,
-                        ).transpose(0, 1, 2, 4, 3, 5)
+                                plan.activation_width_padded // SA_SPATIAL_LANES,
+                                SA_SPATIAL_LANES,
+                                plan.c_tile_padded // SA_CHANNEL_LANES,
+                                SA_CHANNEL_LANES,
+                            ).transpose(0, 1, 2, 4, 3, 5)
                     else:
                         local = np.full(shape, x_zp, dtype=dtype)
                         if logical_count:
@@ -998,7 +1173,8 @@ class QLinearConvPhysicalLayout:
         return LOW_RING_OWNERS
 
     def inverse_port(self, bundle: Conv28PhysicalBundle, port: str) -> np.ndarray:
-        spec = bundle.plan.port(port)
+        plan = bundle.plan
+        spec = plan.port(port)
         dtype = np.dtype(spec.dtype)
         if spec.owner_axis == "replicated":
             copies = [
@@ -1019,23 +1195,84 @@ class QLinearConvPhysicalLayout:
                 if not region.logical_count:
                     continue
                 local = self._read_array(bundle, port, slice_id)
-                if self.hardware_transaction_packing:
-                    flat = local.transpose(0, 1, 2, 4, 3, 5).reshape(
-                        bundle.plan.storage_sample_count,
-                        bundle.plan.activation_shape[2],
-                        bundle.plan.activation_width_padded,
-                        bundle.plan.c_tile_padded,
+                if self.signed_a_local_replication:
+                    block = np.empty(
+                        (
+                            region.sample_count,
+                            plan.activation_shape[1],
+                            plan.activation_shape[2],
+                            plan.activation_shape[3],
+                        ),
+                        dtype=dtype,
                     )
-                    block = np.moveaxis(
-                        flat[
-                            : region.sample_count,
-                            :,
-                            : bundle.plan.activation_shape[3],
-                            : region.logical_count,
-                        ],
-                        -1,
-                        1,
+                    group_id = int(region.group_id)
+                    owners = HIGH_RING_OWNERS[group_id]
+                    traversal = TOPOLOGY28.high_ring_for_group(group_id).traverse(
+                        slice_id, Direction.PREV
                     )
+                    for ring_step, source_owner in enumerate(traversal):
+                        c_owner_step = owners.index(source_owner)
+                        c_start = c_owner_step * plan.c_tile
+                        c_count = max(
+                            0,
+                            min(plan.c_tile, plan.activation_shape[1] - c_start),
+                        )
+                        if not c_count:
+                            continue
+                        packed = local[:, :, :, ring_step, :, :, :]
+                        flat = packed.transpose(0, 1, 2, 4, 3, 5).reshape(
+                            plan.storage_sample_count,
+                            plan.activation_shape[2],
+                            plan.activation_width_padded,
+                            plan.c_tile_padded,
+                        )
+                        block[:, c_start : c_start + c_count, :, :] = np.moveaxis(
+                            flat[
+                                : region.sample_count,
+                                :,
+                                : plan.activation_shape[3],
+                                :c_count,
+                            ],
+                            -1,
+                            1,
+                        )
+                elif self.hardware_transaction_packing:
+                    if bundle.plan.activation_halo_staged:
+                        flat = local.transpose(0, 1, 3, 2, 4).reshape(
+                            bundle.plan.storage_sample_count,
+                            bundle.plan.activation_halo_height,
+                            bundle.plan.activation_halo_width_padded,
+                            bundle.plan.c_tile_padded,
+                        )
+                        block = np.moveaxis(
+                            flat[
+                                : region.sample_count,
+                                bundle.plan.pads[0] : bundle.plan.pads[0]
+                                + bundle.plan.activation_shape[2],
+                                bundle.plan.pads[1] : bundle.plan.pads[1]
+                                + bundle.plan.activation_shape[3],
+                                : region.logical_count,
+                            ],
+                            -1,
+                            1,
+                        )
+                    else:
+                        flat = local.transpose(0, 1, 2, 4, 3, 5).reshape(
+                            bundle.plan.storage_sample_count,
+                            bundle.plan.activation_shape[2],
+                            bundle.plan.activation_width_padded,
+                            bundle.plan.c_tile_padded,
+                        )
+                        block = np.moveaxis(
+                            flat[
+                                : region.sample_count,
+                                :,
+                                : bundle.plan.activation_shape[3],
+                                : region.logical_count,
+                            ],
+                            -1,
+                            1,
+                        )
                 else:
                     block = np.moveaxis(
                         local[
@@ -1048,16 +1285,22 @@ class QLinearConvPhysicalLayout:
                     )
                 n_stop = region.sample_start + region.sample_count
                 c_stop = region.logical_start + region.logical_count
-                if coverage[
+                covered = coverage[
                     region.sample_start:n_stop, region.logical_start:c_stop
-                ].any():
-                    raise ValueError("Conv A owner coverage overlaps")
-                logical[
+                ]
+                destination = logical[
                     region.sample_start:n_stop, region.logical_start:c_stop, ...
-                ] = block
-                coverage[
-                    region.sample_start:n_stop, region.logical_start:c_stop
-                ] = True
+                ]
+                if covered.all() and self.signed_a_local_replication:
+                    if not np.array_equal(destination, block):
+                        raise ValueError(
+                            "Conv destination-local activation replicas differ within a HIGH group"
+                        )
+                elif covered.any():
+                    raise ValueError("Conv A owner coverage overlaps")
+                else:
+                    destination[...] = block
+                    covered[...] = True
         elif port == "B":
             coverage = np.zeros(spec.logical_shape[0], dtype=np.bool_)
             for slice_id in self._canonical_k_owners():
@@ -1209,18 +1452,75 @@ class QLinearConvPhysicalLayout:
             owner_step = c // plan.c_tile
             if self.profile_id == GROUP4X7_BATCH_CHANNEL28_PROFILE:
                 assignment = sample_to_group(n)
+                if self.signed_a_local_replication:
+                    explanations: list[dict[str, Any]] = []
+                    owners = HIGH_RING_OWNERS[assignment.group_id]
+                    source_owner = owners[owner_step]
+                    local_c = c % plan.c_tile
+                    itemsize = np.dtype(placement.dtype).itemsize
+                    for slice_id in owners:
+                        traversal = TOPOLOGY28.high_ring_for_group(
+                            assignment.group_id
+                        ).traverse(slice_id, Direction.PREV)
+                        ring_step = traversal.index(source_owner)
+                        physical = (
+                            assignment.local_slot,
+                            h,
+                            w // SA_SPATIAL_LANES,
+                            ring_step,
+                            local_c // SA_CHANNEL_LANES,
+                            w % SA_SPATIAL_LANES,
+                            local_c % SA_CHANNEL_LANES,
+                        )
+                        region = bundle.region(port, slice_id)
+                        element_index = int(
+                            np.ravel_multi_index(physical, region.physical_shape)
+                        )
+                        for element_byte in range(itemsize):
+                            address = (
+                                region.base_address
+                                + element_index * itemsize
+                                + element_byte
+                            )
+                            explanations.append(
+                                {
+                                    "tensor_id": tensor_id,
+                                    "port": port,
+                                    "logical_coordinate": coordinate,
+                                    "physical_coordinate": physical,
+                                    "profile_id": self.profile_id,
+                                    "slice_id": slice_id,
+                                    "group_id": region.group_id,
+                                    "owner_step": region.owner_step,
+                                    "source_owner_step": owner_step,
+                                    "address": address,
+                                    "dram_coordinate": self.geometry.decode(address),
+                                    "element_byte": element_byte,
+                                    "semantic": "destination_local_replica",
+                                }
+                            )
+                    return tuple(explanations)
                 slice_ids = (HIGH_RING_OWNERS[assignment.group_id][owner_step],)
                 local_n = assignment.local_slot
                 if self.hardware_transaction_packing:
                     local_c = c % plan.c_tile
-                    physical = (
-                        local_n,
-                        h,
-                        w // SA_SPATIAL_LANES,
-                        local_c // SA_CHANNEL_LANES,
-                        w % SA_SPATIAL_LANES,
-                        local_c % SA_CHANNEL_LANES,
-                    )
+                    if plan.activation_halo_staged:
+                        physical = (
+                            local_n,
+                            h + plan.pads[0],
+                            local_c // SA_CHANNEL_LANES,
+                            w + plan.pads[1],
+                            local_c % SA_CHANNEL_LANES,
+                        )
+                    else:
+                        physical = (
+                            local_n,
+                            h,
+                            w // SA_SPATIAL_LANES,
+                            local_c // SA_CHANNEL_LANES,
+                            w % SA_SPATIAL_LANES,
+                            local_c % SA_CHANNEL_LANES,
+                        )
                 else:
                     physical = (local_n, h, w, c % plan.c_tile)
             else:
@@ -1342,21 +1642,66 @@ class QLinearConvPhysicalLayout:
         tail_elements = 0
         if port == "A":
             if self.hardware_transaction_packing:
-                flat = local.transpose(0, 1, 2, 4, 3, 5).reshape(
-                    plan.storage_sample_count,
-                    plan.activation_shape[2],
-                    plan.activation_width_padded,
-                    plan.c_tile_padded,
-                )
-                valid = np.zeros(flat.shape, dtype=np.bool_)
-                if region.logical_count:
-                    valid[
-                        : region.sample_count,
-                        :,
-                        : plan.activation_shape[3],
-                        : region.logical_count,
-                    ] = True
-                tail = flat[~valid]
+                if self.signed_a_local_replication:
+                    valid = np.zeros(region.physical_shape, dtype=np.bool_)
+                    group_id = int(region.group_id)
+                    owners = HIGH_RING_OWNERS[group_id]
+                    traversal = TOPOLOGY28.high_ring_for_group(group_id).traverse(
+                        slice_id, Direction.PREV
+                    )
+                    for ring_step, source_owner in enumerate(traversal):
+                        c_owner_step = owners.index(source_owner)
+                        c_start = c_owner_step * plan.c_tile
+                        c_count = max(
+                            0,
+                            min(plan.c_tile, plan.activation_shape[1] - c_start),
+                        )
+                        for local_c in range(c_count):
+                            for w in range(plan.activation_shape[3]):
+                                valid[
+                                    : region.sample_count,
+                                    :,
+                                    w // SA_SPATIAL_LANES,
+                                    ring_step,
+                                    local_c // SA_CHANNEL_LANES,
+                                    w % SA_SPATIAL_LANES,
+                                    local_c % SA_CHANNEL_LANES,
+                                ] = True
+                    tail = local[~valid]
+                elif plan.activation_halo_staged:
+                    flat = local.transpose(0, 1, 3, 2, 4).reshape(
+                        plan.storage_sample_count,
+                        plan.activation_halo_height,
+                        plan.activation_halo_width_padded,
+                        plan.c_tile_padded,
+                    )
+                    valid = np.zeros(flat.shape, dtype=np.bool_)
+                    if region.logical_count:
+                        valid[
+                            : region.sample_count,
+                            plan.pads[0] : plan.pads[0]
+                            + plan.activation_shape[2],
+                            plan.pads[1] : plan.pads[1]
+                            + plan.activation_shape[3],
+                            : region.logical_count,
+                        ] = True
+                    tail = flat[~valid]
+                else:
+                    flat = local.transpose(0, 1, 2, 4, 3, 5).reshape(
+                        plan.storage_sample_count,
+                        plan.activation_shape[2],
+                        plan.activation_width_padded,
+                        plan.c_tile_padded,
+                    )
+                    valid = np.zeros(flat.shape, dtype=np.bool_)
+                    if region.logical_count:
+                        valid[
+                            : region.sample_count,
+                            :,
+                            : plan.activation_shape[3],
+                            : region.logical_count,
+                        ] = True
+                    tail = flat[~valid]
             else:
                 valid = np.zeros(region.physical_shape, dtype=np.bool_)
                 if region.logical_count:
@@ -1567,6 +1912,8 @@ class QLinearConvPhysicalLayout:
 
 
 __all__ = [
+    "CONV28_SIGNED_A_LOCAL_LAYOUT_ABI",
+    "CONV28_SIGNED_A_LOCAL_LAYOUT_IDS",
     "CONV28_LAYOUT_IDS",
     "PORT_ORDER",
     "Conv28PhysicalBundle",

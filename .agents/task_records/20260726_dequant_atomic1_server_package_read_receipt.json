@@ -1,0 +1,147 @@
+{
+  "schema": "dequant-node0077-atomic1-server-package-read-receipt-v1",
+  "recorded_on": "2026-07-26",
+  "scope": "node0077 DequantizeLinear atomic single-stage stock-RTL diagnostic package",
+  "files": [
+    {
+      "path": ".agents/agent.md",
+      "size_bytes": 3439,
+      "sha256": "367f4f4260246d40531d83cc6d24fe94946cb05bce6fbef18c428f05b634c083",
+      "read": "complete"
+    },
+    {
+      "path": ".agents/rules/生成前必读索引.md",
+      "size_bytes": 5650,
+      "sha256": "539e8dfbe52ad9fc8bd9fdef8c69d448fb5fd713e938e3adc5f663f82fd806d7",
+      "read": "complete"
+    },
+    {
+      "path": ".agents/rules/服务器测试包生成规则.md",
+      "size_bytes": 11557,
+      "sha256": "bdddfedd8d361d745298ac36db9862638a54096eac3d7da5c77e852a3e8dfeea",
+      "read": "complete"
+    },
+    {
+      "path": ".agents/rules/DequantizeLinear算子配置规则.md",
+      "size_bytes": 6572,
+      "sha256": "ba75b679199aa140a9765b8f44ae335b492f667509f50a0c01f9dfc6cdd3f8e2",
+      "read": "complete"
+    },
+    {
+      "path": ".agents/rules/DequantizeLinear原子动态合同规则.md",
+      "size_bytes": 2835,
+      "sha256": "c2873ebf86181262ae1f6235f19162e44ab31523e5031cc329b89150a61b7e53",
+      "read": "complete"
+    },
+    {
+      "path": "NDP_copy01/README_HARDWARE_SIM_ENTRY.md",
+      "size_bytes": 5461,
+      "sha256": "4318f3a28de399fb522740315f11bdddf346e71969cf1e45686899a568b042d7",
+      "read": "complete"
+    },
+    {
+      "path": "NDP_copy01/Makefile.tb_NDP_Top_new_phy",
+      "size_bytes": 17683,
+      "sha256": "528d93f3c7f458d256bdbaf1d9ec39edfbfe5bd8a924e2bf0786914a634f4aba",
+      "read": "compile, no-dump, isolated run and SCA argv consumers"
+    },
+    {
+      "path": "NDP_copy01/tb_NDP_Top_new_phy.sv",
+      "size_bytes": 342445,
+      "sha256": "e068f7500f0c71c2ba2c756f74a4519c33d13d4afe0fa4cc9f6c9e79b1e3f994",
+      "read": "SCA/SCA_D loader, completion observation and observer include consumer"
+    },
+    {
+      "path": "NDP_copy01/native_return_observer.svh",
+      "size_bytes": 111824,
+      "sha256": "47f0d66728f47c92f9f93f8cf87b47a0ff8567d587c3a099e2d03f610af09f49",
+      "read": "read-only observer exports and accepted MSE4 handshake paths"
+    },
+    {
+      "path": "ndp-sim/model_execplan/main.py",
+      "size_bytes": 7346,
+      "sha256": "661623ebf37f0c2fe31a530fc53c756e58408000a371d7cc528301314a4dac7e",
+      "read": "complete"
+    },
+    {
+      "path": "ndp-sim/model_execplan/src/execution_plan_generator/pipeline.py",
+      "size_bytes": 11797,
+      "sha256": "1e59210c4401dbe6c694ffdb34939531238c0e3c949ff965a3f74667eb46cfae",
+      "read": "complete"
+    },
+    {
+      "path": "ndp-sim/model_execplan/src/execution_plan_generator/address_planner.py",
+      "size_bytes": 30150,
+      "sha256": "2208ffa925c509d2479e2763f323551a36e1b6c1680a112e7519f6356a312ea0",
+      "read": "address-bound config consumer"
+    },
+    {
+      "path": "ndp-sim/model_execplan/src/execution_plan_generator/output_writer.py",
+      "size_bytes": 48029,
+      "sha256": "434dde3c5a34ab8f3992095771876e7fad56e443eec08eb469c093b30f87beae",
+      "read": "execplan, SCA and SCA_D writers"
+    },
+    {
+      "path": "ndp-sim/bitstream/main.py",
+      "size_bytes": 13598,
+      "sha256": "067723b4ef118932b3a69623fa8bb4f2ed70d06eda3a5a24886c9562611ff415",
+      "read": "encoder entry"
+    },
+    {
+      "path": "ndp-sim/bitstream/config/mapper.py",
+      "size_bytes": 68728,
+      "sha256": "c7685cc297e4e11ccafa23758a46d20986e5db931fcb3c4e21f5f4a0a2534226",
+      "read": "mapping and physical PE binding consumer"
+    },
+    {
+      "path": "resnet50_pipeline/dequantize_linear_vertical.py",
+      "size_bytes": 85929,
+      "sha256": "1372706d6faad420100e6d8d9610f05004522f7696384021ad565861ac74e072",
+      "read": "isolated planner, mapper, encoder and execplan toolchain copy"
+    },
+    {
+      "path": "tools/requant_node0001_server_runtime.py",
+      "size_bytes": 63303,
+      "sha256": "9c91cac49673f1c79545a210ce83547dc0882069aeedc0333d2d7dfc646fa9eb",
+      "read": "transactional observer install, focused identity and restore consumer"
+    },
+    {
+      "path": "configs/native_ndp_sim/node0077_dequant_atomic_single_stage_stocktb_v1/manifest.json",
+      "size_bytes": 3345,
+      "sha256": "fe9103a3a672f9270f0f82c128550d046d9d0511adfc489fd22cfa45722c4318",
+      "read": "complete"
+    },
+    {
+      "path": "configs/native_ndp_sim/node0077_dequant_atomic_single_stage_stocktb_v1/generation_receipt.json",
+      "size_bytes": 5691,
+      "sha256": "d8f97f5f81b2f3939ab20de86b31dc04b515ead171675ec2913aa3e98bcff04f",
+      "read": "complete"
+    },
+    {
+      "path": "contracts/operator_config/dequant_node0077_atomic_single_stage_stocktb_v1.json",
+      "size_bytes": 1475,
+      "sha256": "6cba3fd2c04dd9feb3447c185d4432a1aaba28f15276595c57406b67c64cf74d",
+      "read": "complete"
+    },
+    {
+      "path": "artifacts/operator_config_validation/r5-dequant-node0077-atomic-single-stage-stocktb-v1/local_contract_report.json",
+      "size_bytes": 988,
+      "sha256": "cf59f82a0b962662e4cdc1983b254e3d79c74e9d02f689090c382c1e7f394cff",
+      "read": "complete"
+    }
+  ],
+  "constraints_acknowledged": {
+    "frozen_config_graph_input_golden_and_write_contract": true,
+    "planner_transport_adapter_semantic_change_allowed": false,
+    "python_bytecode_write_disabled_before_package_import": true,
+    "pyc_or_pycache_allowlisting_forbidden": true,
+    "functional_rtl_or_tb_top_modification_allowed": false,
+    "read_only_observer_hook_transactional_restore_required": true,
+    "force_deposit_or_driving_observer_allowed": false,
+    "internal_tb_timeout_shortening_allowed": false,
+    "candidate_release": false,
+    "counts_as_node0077_e4_or_e5": false,
+    "server_user_command_count": 1,
+    "return_policy": "allowlist-only fail-closed"
+  }
+}

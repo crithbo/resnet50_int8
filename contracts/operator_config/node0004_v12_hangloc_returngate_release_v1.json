@@ -1,0 +1,157 @@
+{
+  "schema": "node0004-v12-hangloc-returngate-release-v1",
+  "status": "PACKAGE_READY_NOT_RUN",
+  "classification": "DIAGNOSTIC_ONLY_NOT_FUNCTIONAL_FIX",
+  "package": {
+    "path": "artifacts/operator_config_validation/r5-server-test-packages/r5_n4_hw_v12_hangloc_returngate.zip",
+    "bytes": 5811903,
+    "sha256": "80d489798af019b00bba7ee7a7b6060de9f4cf77c2b6e57b11955995803e2e6d",
+    "sidecar_path": "artifacts/operator_config_validation/r5-server-test-packages/r5_n4_hw_v12_hangloc_returngate.zip.sha256",
+    "sidecar_sha256": "debd7103308eae24566af0db164952b7628882944c2517256b5366f55936e9d7",
+    "single_command": "bash r5_n4_hw_v12_hangloc_returngate/PREPARE_AND_RUN.sh /absolute/path/to/NDP_copy",
+    "expected_return_zip": "r5_n4_hw_v12_hangloc_returngate_return.zip",
+    "expected_return_sidecar": "r5_n4_hw_v12_hangloc_returngate_return.zip.sha256"
+  },
+  "frozen_provenance": {
+    "source_package": "r5_n4_hw_v11_hangloc_finalaudit.zip",
+    "source_package_sha256": "27b9c6b36076fd5e4c3a5ab7db283b7953254bcf1b2ba9005bb0a4fd6e134ea7",
+    "bound_v7_return_sha256": "37e84246a8908c38ec5056c3fc965d90198a2809b049f3c7303215e508d07dcf",
+    "numeric_analysis_repeated": false,
+    "node0004_workload_rebuilt": false,
+    "frozen_workload_file_count": 89,
+    "sca_root_rebinding_leaf_counts": {
+      "sca_cfg.json": 86,
+      "sca_cfg_D.json": 28
+    }
+  },
+  "package_side_delta": {
+    "functional_semantics_changed": false,
+    "functional_rtl_modified": false,
+    "server_rtl_entries": 0,
+    "return_exact_set_and_crc_gate": true,
+    "return_budget_gate": {
+      "compressed_zip_max_bytes": 16777216,
+      "uncompressed_max_bytes": 33554432,
+      "per_text_file_max_bytes": 8388608
+    },
+    "required_after_compile_success": [
+      "runs/c0/simulator_argv.txt",
+      "runs/c0/sim.log",
+      "runs/c0/return_observer.log",
+      "runs/c0/host_progress.log"
+    ],
+    "external_signal_before_observer_decision": "EVIDENCE_INSUFFICIENT_CANONICAL_FALLBACK"
+  },
+  "post_generation_rule_receipts": [
+    {
+      "path": ".agents/rules/生成前必读索引.md",
+      "sha256": "12583308ec9a16dbb8ea15571a5280291fed7e152167d2e4e8e00509a9a6370f",
+      "current_match": true
+    },
+    {
+      "path": ".agents/rules/服务器测试包生成规则.md",
+      "sha256": "7672b44bbcb7e130792d6b288188caa2509dc72b1ea3962bf44ffb82588009aa",
+      "current_match": true
+    },
+    {
+      "path": ".agents/rules/INT8_SA点积专项规则.md",
+      "sha256": "54a1e12541aaeb6f62dadb19c47a6154eb0462b758a35a9a5bc4a0043cb37dce",
+      "current_match": true
+    },
+    {
+      "path": "NDP_copy01/README_HARDWARE_SIM_ENTRY.md",
+      "sha256": "4318f3a28de399fb522740315f11bdddf346e71969cf1e45686899a568b042d7",
+      "current_match": true
+    }
+  ],
+  "plan_mutable_provenance_sha256": "8625b61df7094b20e71b07cb658e7fe80599df847d1c7b22adf5af613028b851",
+  "applicable_rule_ids": [
+    "CDA-SERVER-FINAL-ZIP-RULE-SELF-AUDIT-001",
+    "CDA-SERVER-PACKAGE-BOOTSTRAP-IMMUTABILITY-001",
+    "CDA-SERVER-ONE-COMMAND-001",
+    "CDA-SCA-D-TB-READBACK-LENGTH-001",
+    "CDA-SERVER-RUNTIME-READBACK-TARGET-ABSENT-001",
+    "CDA-SERVER-TIMEOUT-MANUAL-INTERRUPT-HANG-FIRST-001",
+    "CDA-SERVER-LONG-RUN-PROGRESS-LOCALIZATION-001",
+    "CDA-SERVER-OBSERVER-BINDING-FOUR-WAY-001",
+    "CDA-SERVER-OBSERVER-EVENT-QUALIFICATION-001",
+    "CDA-SERVER-DIAGNOSTIC-DECISION-CANONICAL-RECORD-001",
+    "CDA-SERVER-DEFAULT-PROGRESS-DIAGNOSTICS-001",
+    "CDA-SERVER-RESULT-GATE-CONJUNCTION-001",
+    "CDA-SERVER-RETURN-RECEIPT-001",
+    "CDA-SERVER-RETURN-MANIFEST-ALLOWLIST-001",
+    "CDA-SA-NODE0004-ASSUMED-FIXED-HARDWARE-001"
+  ],
+  "validation": {
+    "FINAL_ZIP_RULE_SELF_AUDIT_PASS": true,
+    "errors": 0,
+    "all_required_negative_controls_fail_closed": true,
+    "deterministic_rebuild_equal": true,
+    "fresh_extract_preflight_exit": 0,
+    "bootstrap_tree_immutable": true,
+    "runtime_D_absent_leaf_count": 28,
+    "commands": [
+      {
+        "name": "return_gate_positive_and_six_negative_controls",
+        "command": "python -B tools/validate_node0004_return_gate_v12.py --output artifacts/operator_config_validation/r5-server-test-packages/r5_n4_hw_v12_hangloc_returngate.return_gate_receipt.json",
+        "exit_code": 0,
+        "report_sha256": "686bce02c300feeb561e37822a3f82871ece529c0933b5d28bbb34a22fa44d5f"
+      },
+      {
+        "name": "observer_four_way_and_four_negative_controls",
+        "command": "python -B tools/validate_node0004_observer_four_way_binding.py --zip artifacts/operator_config_validation/r5-server-test-packages/r5_n4_hw_v12_hangloc_returngate.zip --negative-controls --output artifacts/operator_config_validation/r5-server-test-packages/r5_n4_hw_v12_hangloc_returngate.four_way_receipt.json",
+        "exit_code": 0,
+        "report_sha256": "0e0e7430105aa0c501a902a45cb74b2df0ef1ba0d6a655ccc1f140f389f075aa"
+      },
+      {
+        "name": "canonical_decision_and_five_negative_controls",
+        "command": "python -B tools/validate_node0004_canonical_decision_v10.py --zip artifacts/operator_config_validation/r5-server-test-packages/r5_n4_hw_v12_hangloc_returngate.zip --output artifacts/operator_config_validation/r5-server-test-packages/r5_n4_hw_v12_hangloc_returngate.canonical_receipt.json",
+        "exit_code": 0,
+        "report_sha256": "1dd70c2d38ee9a7502d154a2f9558ecd8e5c8295bc5a6dd9870724110d7333f1"
+      },
+      {
+        "name": "final_zip_rule_self_audit",
+        "command": "python -B tools/validate_node0004_final_zip_rule_self_audit_v11.py --project-root . --zip artifacts/operator_config_validation/r5-server-test-packages/r5_n4_hw_v12_hangloc_returngate.zip --sidecar artifacts/operator_config_validation/r5-server-test-packages/r5_n4_hw_v12_hangloc_returngate.zip.sha256 --python <python> --builder tools/build_node0004_v11_return_budget_package_v12.py --output artifacts/operator_config_validation/r5-server-test-packages/r5_n4_hw_v12_hangloc_returngate.final_rule_self_audit.json",
+        "exit_code": 0,
+        "report_sha256": "89e5352a23caca1e4f16bf8c01c5b55822827757fdabd01ce2df398a10dcfd44"
+      }
+    ]
+  },
+  "quarantine": [
+    {
+      "package": "r5_n4_hw_v9_hangloc_qualified.zip",
+      "sha256": "bce6e7e852885cc3c396a860f8aeb687b245a1137a7943db1b9bdc6cf9bd14ce",
+      "server_should_withdraw": true
+    },
+    {
+      "package": "r5_n4_hw_v10_hangloc_canonical.zip",
+      "sha256": "9dad438724489b56d4a2546631f4de8a8ee6fc76f2133072a3868a33ba10f0c4",
+      "server_should_withdraw": true
+    },
+    {
+      "package": "r5_n4_hw_v11_hangloc_finalaudit.zip",
+      "sha256": "27b9c6b36076fd5e4c3a5ab7db283b7953254bcf1b2ba9005bb0a4fd6e134ea7",
+      "server_should_withdraw": true
+    }
+  ],
+  "claim_boundary": {
+    "E3": false,
+    "E4": false,
+    "E5": false,
+    "diagnostic_result_pending_server_run": true,
+    "server_action_performed": false
+  },
+  "rule_delta_proposal": [],
+  "blocker_delta": {
+    "closed": [
+      "v11 bootstrap immutability defect",
+      "final return exact-set and aggregate budget omission",
+      "progress evidence optionality after compile success",
+      "external-signal canonical record omission"
+    ],
+    "open": [
+      "node0004 dynamic hang/progress root cause remains pending v12 return",
+      "E3/E4/E5 remain open"
+    ]
+  }
+}

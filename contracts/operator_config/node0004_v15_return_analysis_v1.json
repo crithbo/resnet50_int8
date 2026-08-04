@@ -1,0 +1,121 @@
+{
+  "schema": "node0004-v15-return-analysis-v1",
+  "status": "PACKAGE_LOCAL_OBSERVER_MISSING_ENDTASK_COMPILE_FAILURE",
+  "valid": true,
+  "errors": [],
+  "identity": {
+    "return_zip": "C:\\Users\\15383\\xwechat_files\\wxid_vwpfpfs4fgyk22_29b7\\msg\\file\\2026-07\\r5_n4_hw_v15_abpe_syntax_fix_return.zip",
+    "return_zip_bytes": 28328,
+    "return_zip_sha256": "592d792e9f0d647f1a3d43bdc8b3a5bbffb1956d4ff908916d0f6d78cf9a94d2",
+    "sidecar": "C:\\Users\\15383\\xwechat_files\\wxid_vwpfpfs4fgyk22_29b7\\msg\\file\\2026-07\\r5_n4_hw_v15_abpe_syntax_fix_return.zip.sha256",
+    "sidecar_sha256": "3f1af41064bf761235b01ef5d3f1e3fe56fe0e7a4d5d0315b344b9a137959102",
+    "sidecar_valid": true,
+    "source_zip": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-server-test-packages\\r5_n4_hw_v15_abpe_syntax_fix.zip",
+    "source_zip_sha256": "65e5b50b00046d662d219b71054f7f3f64c5794c98bf87dc134b5b3dd09a2130",
+    "install_name": "r5_n4_hw_v15_abpe_syntax_fix",
+    "identity_valid": true,
+    "observer_sha256": "d4fad8b0bd85bdb3e6848c21c8809d3c05ceedfe668a417767bf5f267bcb3636"
+  },
+  "return_envelope": {
+    "crc_pass": true,
+    "single_root": "r5_n4_hw_v15_abpe_syntax_fix_return",
+    "entry_count": 10,
+    "exact_set_valid": true,
+    "allowlist_record_count": 9,
+    "hash_size_mismatches": []
+  },
+  "preflight": {
+    "valid": true,
+    "package": {
+      "schema": "node0004-hang-localization-preflight-v7",
+      "valid": true,
+      "install_name": "r5_n4_hw_v15_abpe_syntax_fix",
+      "package_file_count": 95,
+      "c0_input_leaf_count": 86,
+      "c0_absent_d_leaf_count": 28,
+      "observer_sha256": "d4fad8b0bd85bdb3e6848c21c8809d3c05ceedfe668a417767bf5f267bcb3636",
+      "observer_runtime_enabled": true,
+      "progress_log_return_bound": true,
+      "host_monotonic_log_return_bound": true
+    },
+    "install": {
+      "schema": "node0004-hang-localization-install-v7",
+      "valid": true,
+      "file_count": 89,
+      "runtime_d_initially_absent": true
+    },
+    "observer": {
+      "schema": "node0004-package-local-observer-precompile-v1",
+      "valid": true,
+      "errors": [],
+      "package_root": "/home/panqs/ndp/r5_n4_hw_v15_abpe_syntax_fix",
+      "observer_relative_path": "tb_probe/native_return_observer.svh",
+      "observer_path": "/home/panqs/ndp/r5_n4_hw_v15_abpe_syntax_fix/tb_probe/native_return_observer.svh",
+      "observer_readable": true,
+      "observer_symlink": false,
+      "expected_sha256": "d4fad8b0bd85bdb3e6848c21c8809d3c05ceedfe668a417767bf5f267bcb3636",
+      "observed_sha256": "d4fad8b0bd85bdb3e6848c21c8809d3c05ceedfe668a417767bf5f267bcb3636",
+      "identity_match": true,
+      "compile_include_directory": "/home/panqs/ndp/r5_n4_hw_v15_abpe_syntax_fix/tb_probe",
+      "xmr_static_gate": {
+        "rule_id": "CDA-SERVER-OBSERVER-XMR-ELABORATION-CONSTANT-001",
+        "status": "pass",
+        "checked_generated_instance_reference_count": 208,
+        "declared_genvars": [
+          "return_obs_abpe_col",
+          "return_obs_abpe_group",
+          "return_obs_abpe_row",
+          "return_obs_abpe_slice",
+          "return_obs_buf_slot",
+          "return_obs_group",
+          "return_obs_row",
+          "return_obs_slice"
+        ],
+        "runtime_indexed_generated_instance_reference_count": 0
+      },
+      "server_file_written": false,
+      "functional_rtl_modified": false
+    }
+  },
+  "dynamic": {
+    "compile_exit_status": 2,
+    "run_exit_status": 125,
+    "signal_status": "NONE",
+    "simulation_started": false,
+    "natural_terminal": false,
+    "canonical_progress_is_actual": false,
+    "canonical_fallback_used": true,
+    "formal_d_member_count": 0,
+    "formal_d_readback": false,
+    "mismatch_zero_with_all_missing_is_pass": false
+  },
+  "first_divergence": {
+    "boundary": "COMPILE_PACKAGE_LOCAL_RETURN_OBSERVER",
+    "file": "tb_probe/native_return_observer.svh",
+    "line": 2433,
+    "tool": "VCS",
+    "token": "end",
+    "diagnostic": "keyword 'endtask' is missing",
+    "source_mechanism": "return_obs_write_abpe_state opens a task and an explicit begin block but closes both levels with end; the task declaration requires endtask",
+    "compile_log_match": true,
+    "source_match": true,
+    "driver_make_exit2": true
+  },
+  "evidence_levels": {
+    "E3": false,
+    "E4": false,
+    "E5": false,
+    "joint_gate_passed": false,
+    "reason": "compile failed before elaboration and simulation"
+  },
+  "adjudication": {
+    "root_cause": "PACKAGE_LOCAL_READ_ONLY_OBSERVER_MISSING_ENDTASK",
+    "functional_rtl_implicated": false,
+    "conv_configuration_implicated": false,
+    "legal_minimal_fix": "replace only the final task-closing end with endtask in the package-local read-only observer",
+    "successor_status": "HOLD_PENDING_NEW_SERVER_RULE_SHA_AND_SINGLE_SOURCE_MANIFEST_BINDING"
+  },
+  "numeric_analysis_repeated": false,
+  "node0004_workload_rebuilt": false,
+  "frozen_source_consumed_read_only": true
+}

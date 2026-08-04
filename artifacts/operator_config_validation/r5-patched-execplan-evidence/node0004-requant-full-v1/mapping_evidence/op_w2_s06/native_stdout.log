@@ -1,0 +1,613 @@
+
+=== Loading Configurations from JSON ===
+
+=== Resource Allocation & Mapping ===
+
+=== Using Heuristic Search (Simulated Annealing) ===
+[Heuristic Search] Using 21 connections
+  Connection: DRAM_LC.LC0 -> DRAM_LC.LC1
+  Connection: DRAM_LC.LC0 -> DRAM_LC.LC2
+  Connection: DRAM_LC.LC1 -> GROUP0.ROW_LC
+  Connection: GROUP0.ROW_LC -> GROUP0.COL_LC
+  Connection: DRAM_LC.LC2 -> GROUP2.ROW_LC
+  Connection: GROUP2.ROW_LC -> GROUP2.COL_LC
+  Connection: DRAM_LC.LC0 -> LC_PE.PE0
+  Connection: LC_PE.PE0 -> LC_PE.PE1
+  Connection: LC_PE.PE0 -> LC_PE.PE2
+  Connection: DRAM_LC.LC1 -> STREAM.stream0
+  Connection: LC_PE.PE1 -> STREAM.stream0
+  Connection: DRAM_LC.LC2 -> STREAM.stream2
+  Connection: LC_PE.PE2 -> STREAM.stream2
+  Connection: GA_PE.PE00 -> GA_PE.PE01
+  Connection: GA_PE.PE02 -> GA_PE.PE03
+  Connection: GA_PE.PE10 -> GA_PE.PE11
+  Connection: GA_PE.PE12 -> GA_PE.PE13
+  Connection: GA_PE.PE20 -> GA_PE.PE21
+  Connection: GA_PE.PE22 -> GA_PE.PE23
+  Connection: GA_PE.PE30 -> GA_PE.PE31
+  Connection: GA_PE.PE32 -> GA_PE.PE33
+[Simulated Annealing] Starting search with 21 connections
+[Simulated Annealing] Parameters: iterations=10000, T0=100.0, cooling=0.995, repair_prob=0.2
+[Simulated Annealing] Processing 22 nodes
+[Simulated Annealing] Nodes in connections: ['DRAM_LC.LC0', 'DRAM_LC.LC1', 'DRAM_LC.LC2', 'GA_PE.PE00', 'GA_PE.PE01', 'GA_PE.PE02', 'GA_PE.PE03', 'GA_PE.PE10', 'GA_PE.PE11', 'GA_PE.PE12', 'GA_PE.PE13', 'GA_PE.PE20', 'GA_PE.PE21', 'GA_PE.PE22', 'GA_PE.PE23', 'GA_PE.PE30', 'GA_PE.PE31', 'GA_PE.PE32', 'GA_PE.PE33', 'GROUP0.COL_LC', 'GROUP0.ROW_LC', 'GROUP2.COL_LC', 'GROUP2.ROW_LC', 'LC_PE.PE0', 'LC_PE.PE1', 'LC_PE.PE2', 'STREAM.stream0', 'STREAM.stream2']
+[Simulated Annealing] Nodes being searched: 22
+[Warning] Unmapped nodes in initial mapping: ['GA_PE.PE21', 'GROUP2.ROW_LC', 'GROUP0.COL_LC', 'GA_PE.PE13', 'GA_PE.PE01', 'GA_PE.PE03', 'GA_PE.PE12', 'GA_PE.PE33', 'STREAM.stream0', 'GA_PE.PE31', 'STREAM.stream2', 'GA_PE.PE00', 'GA_PE.PE10', 'GA_PE.PE30', 'GROUP0.ROW_LC', 'GA_PE.PE32', 'GA_PE.PE23', 'GA_PE.PE11', 'GA_PE.PE22', 'GA_PE.PE20', 'GA_PE.PE02', 'GROUP2.COL_LC']
+[Info] Adding pre-assigned node GROUP2.ROW_LC → ROW_LC4
+[Info] Adding pre-assigned node GROUP0.COL_LC → COL_LC0
+[Info] Adding pre-assigned node STREAM.stream0 → READ_STREAM0
+[Info] Adding pre-assigned node STREAM.stream2 → WRITE_STREAM0
+[Info] Adding pre-assigned node GROUP0.ROW_LC → ROW_LC0
+[Info] Adding pre-assigned node GROUP2.COL_LC → COL_LC4
+[Simulated Annealing] Initial cost: 11.00 (penalty sum)
+[Simulated Annealing] Reassigning DRAM_LC.LC0 -> LC9 (unused resource) at iter 0
+[Simulated Annealing] Found optimal solution at iteration 25
+[Simulated Annealing] Success: Found valid mapping with 0 violations
+[Simulated Annealing] Cached mapping (12 nodes)
+[Success] Heuristic search completed with 30 nodes
+[✓] Mapping successful with zero violations
+=== Resource Mapping Summary ===
+GROUP0                    -> GROUP0
+GROUP0.ROW_LC             -> ROW_LC0
+GROUP0.COL_LC             -> COL_LC0
+GROUP2                    -> GROUP4
+GROUP2.ROW_LC             -> ROW_LC4
+GROUP2.COL_LC             -> COL_LC4
+STREAM.stream0            -> READ_STREAM0
+STREAM.stream2            -> WRITE_STREAM0
+GA_PE.PE21                -> GENERIC
+LC_PE.PE2                 -> PE6
+LC_PE.PE0                 -> PE4
+GA_PE.PE13                -> GENERIC
+DRAM_LC.LC0               -> LC5
+GA_PE.PE01                -> GENERIC
+GA_PE.PE03                -> GENERIC
+GA_PE.PE12                -> GENERIC
+GA_PE.PE33                -> GENERIC
+DRAM_LC.LC1               -> LC3
+GA_PE.PE31                -> GENERIC
+GA_PE.PE00                -> GENERIC
+GA_PE.PE10                -> GENERIC
+LC_PE.PE1                 -> PE3
+GA_PE.PE30                -> GENERIC
+GA_PE.PE32                -> GENERIC
+GA_PE.PE23                -> GENERIC
+GA_PE.PE11                -> GENERIC
+GA_PE.PE22                -> GENERIC
+GA_PE.PE20                -> GENERIC
+DRAM_LC.LC2               -> LC6
+GA_PE.PE02                -> GENERIC
+===============================
+Mapping review JSON written to C:\Users\15383\Desktop\Codex\project\resnet50_int8\artifacts\operator_config_validation\r5-patched-mapping-evidence\operator-config-evidence-4kp2hduz\native-output\mapping_review.json
+
+=== Detailed Module Configuration Dump ===
+=== Dump: DramLoopControlConfig ===
+src_id                         | value=None                                | encoded=['0000']
+outmost_loop                   | value=1                                   | encoded=['1']
+start                          | value=0                                   | encoded=['00000000000000000']
+stride                         | value=1                                   | encoded=['00000000000000001']
+end                            | value=1                                   | encoded=['00000000000000001']
+last_index                     | value=0                                   | encoded=['0000']
+
+=== Dump: DramLoopControlConfig ===
+src_id                         | value=Connect(DRAM_LC.LC0 -> DRAM_LC.LC1) | encoded=['1000']
+outmost_loop                   | value=0                                   | encoded=['0']
+start                          | value=0                                   | encoded=['00000000000000000']
+stride                         | value=1                                   | encoded=['00000000000000001']
+end                            | value=3136                                | encoded=['00000110001000000']
+last_index                     | value=1                                   | encoded=['0001']
+
+=== Dump: DramLoopControlConfig ===
+src_id                         | value=Connect(DRAM_LC.LC0 -> DRAM_LC.LC2) | encoded=['0110']
+outmost_loop                   | value=0                                   | encoded=['0']
+start                          | value=0                                   | encoded=['00000000000000000']
+stride                         | value=1                                   | encoded=['00000000000000001']
+end                            | value=784                                 | encoded=['00000001100010000']
+last_index                     | value=2                                   | encoded=['0010']
+
+=== Dump: BufferLoopControlGroupConfig ===
+  === Dump: BufferRowLCConfig ===
+  src_id                         | value=Connect(DRAM_LC.LC1 -> GROUP0.ROW_LC) | encoded=['0101']
+  start                          | value=0                                   | encoded=['000']
+  stride                         | value=1                                   | encoded=['001']
+  end                            | value=1                                   | encoded=['001']
+  last_index                     | value=2                                   | encoded=['0010']
+  === Dump: BufferColLCConfig ===
+  src_id                         | value=Connect(GROUP0.ROW_LC -> GROUP0.COL_LC) | encoded=['1100']
+  start                          | value=0                                   | encoded=['000000']
+  stride                         | value=16                                  | encoded=['010000']
+  end                            | value=32                                  | encoded=['100000']
+  last_index                     | value=3                                   | encoded=['0011']
+
+=== Dump: BufferLoopControlGroupConfig ===
+  === Dump: BufferRowLCConfig ===
+  src_id                         | value=Connect(DRAM_LC.LC2 -> GROUP2.ROW_LC) | encoded=['0000']
+  start                          | value=0                                   | encoded=['000']
+  stride                         | value=1                                   | encoded=['001']
+  end                            | value=1                                   | encoded=['001']
+  last_index                     | value=2                                   | encoded=['0010']
+  === Dump: BufferColLCConfig ===
+  src_id                         | value=Connect(GROUP2.ROW_LC -> GROUP2.COL_LC) | encoded=['1100']
+  start                          | value=0                                   | encoded=['000000']
+  stride                         | value=2                                   | encoded=['000010']
+  end                            | value=4                                   | encoded=['000100']
+  last_index                     | value=3                                   | encoded=['0011']
+
+=== Dump: LCPEConfig ===
+_padding                       | value=0                                   | encoded=['0000000000000000']
+opcode                         | value=mul                                 | encoded=['01']
+inport2_src                    | value=0                                   | encoded=['0000']
+inport2_last_index             | value=None                                | encoded=['0000']
+inport2_mode                   | value=None                                | encoded=['00']
+inport1_src                    | value=0                                   | encoded=['0000']
+inport1_last_index             | value=None                                | encoded=['0000']
+inport1_mode                   | value=constant                            | encoded=['11']
+inport0_src                    | value=Connect(DRAM_LC.LC0 -> LC_PE.PE0)   | encoded=['0010']
+inport0_last_index             | value=None                                | encoded=['0000']
+inport0_mode                   | value=buffer                              | encoded=['01']
+constant2                      | value=0                                   | encoded=['0000000000000000']
+constant1                      | value=1                                   | encoded=['0000000000000001']
+constant0                      | value=0                                   | encoded=['0000000000000000']
+
+=== Dump: LCPEConfig ===
+_padding                       | value=0                                   | encoded=['0000000000000000']
+opcode                         | value=mul                                 | encoded=['01']
+inport2_src                    | value=0                                   | encoded=['0000']
+inport2_last_index             | value=None                                | encoded=['0000']
+inport2_mode                   | value=None                                | encoded=['00']
+inport1_src                    | value=0                                   | encoded=['0000']
+inport1_last_index             | value=None                                | encoded=['0000']
+inport1_mode                   | value=constant                            | encoded=['11']
+inport0_src                    | value=Connect(LC_PE.PE0 -> LC_PE.PE1)     | encoded=['1000']
+inport0_last_index             | value=None                                | encoded=['0000']
+inport0_mode                   | value=buffer                              | encoded=['01']
+constant2                      | value=0                                   | encoded=['0000000000000000']
+constant1                      | value=1                                   | encoded=['0000000000000001']
+constant0                      | value=0                                   | encoded=['0000000000000000']
+
+=== Dump: LCPEConfig ===
+_padding                       | value=0                                   | encoded=['0000000000000000']
+opcode                         | value=mul                                 | encoded=['01']
+inport2_src                    | value=0                                   | encoded=['0000']
+inport2_last_index             | value=None                                | encoded=['0000']
+inport2_mode                   | value=None                                | encoded=['00']
+inport1_src                    | value=0                                   | encoded=['0000']
+inport1_last_index             | value=None                                | encoded=['0000']
+inport1_mode                   | value=constant                            | encoded=['11']
+inport0_src                    | value=Connect(LC_PE.PE0 -> LC_PE.PE2)     | encoded=['0110']
+inport0_last_index             | value=None                                | encoded=['0000']
+inport0_mode                   | value=buffer                              | encoded=['01']
+constant2                      | value=0                                   | encoded=['0000000000000000']
+constant1                      | value=1                                   | encoded=['0000000000000001']
+constant0                      | value=0                                   | encoded=['0000000000000000']
+
+=== Dump: StreamConfig ===
+  === Dump: ReadStreamEngineConfig ===
+  mem_idx_mode                   | value=['buffer', 'keep', None]            | encoded=['011000']
+  mem_idx_keep_last_index        | value=[None, 1, None]                     | encoded=['000000010000']
+  idx                            | value=[Connect(DRAM_LC.LC1 -> STREAM.stream0), Connect(LC_PE.PE1 -> STREAM.stream0), None] | encoded=['001011000100000']
+  mem_idx_constant               | value=[None, None, None]                  | encoded=['000000000000000000000000']
+  buf_idx_mode                   | value=['keep', 'buffer']                  | encoded=['10']
+  buf_idx_keep_last_index        | value=[3, None]                           | encoded=['00110000']
+  ping_pong                      | value=0                                   | encoded=['0']
+  pingpong_last_index            | value=None                                | encoded=['0000']
+  base_addr                      | value=0x002A1C00                          | encoded=['000000001010100001110000000000']
+  idx_size                       | value=[0, 31, None]                       | encoded=['000000000001111100000000']
+  idx_size_log                   | value=[0, 5, 0]                           | encoded=['000101000']
+  total_size                     | value=32                                  | encoded=['00100000']
+  dim_stride                     | value=[32, 1024, None]                    | encoded=['000000000000001000000000000001000000000000000000000000000000']
+  address_remapping              | value=None                                | encoded=['11001110001011110110101011010010011100101000110000011110111001101011000101101010010010100000111001100010100100000110001000001000', '00']
+  padding_reg_value              | value=None                                | encoded=['00000000']
+  padding_enable                 | value=[0, 0, 0]                           | encoded=['000']
+  idx_padding_range              | value=[None, None, None, None, None, None] | encoded=['000000000000000000000000000000000000000000000000000000000000000000000000']
+  tailing_enable                 | value=[0, 0, 0]                           | encoded=['000']
+  idx_tailing_range              | value=[None, None, None, None, None, None] | encoded=['000000000000000000000000000000000000000000000000000000000000000000000000']
+  buf_spatial_stride             | value=[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15] | encoded=['01111011100110101100010110101001001010000011100110001010010000011000100000100000']
+  buf_spatial_size               | value=16                                  | encoded=['10000']
+  buf_full_last_index            | value=2                                   | encoded=['0010']
+
+=== Dump: StreamConfig ===
+  === Dump: WriteStreamEngineConfig ===
+  _padding                       | value=0                                   | encoded=['000']
+  mem_idx_mode                   | value=['buffer', 'keep', None]            | encoded=['011000']
+  mem_idx_keep_last_index        | value=[None, 1, None]                     | encoded=['000000010000']
+  idx                            | value=[Connect(DRAM_LC.LC2 -> STREAM.stream2), Connect(LC_PE.PE2 -> STREAM.stream2), None] | encoded=['000000110000000']
+  mem_idx_constant               | value=[None, None, None]                  | encoded=['000000000000000000000000']
+  buf_idx_mode                   | value=['keep', 'buffer']                  | encoded=['10']
+  buf_idx_keep_last_index        | value=[3, None]                           | encoded=['00110000']
+  ping_pong                      | value=0                                   | encoded=['0']
+  pingpong_last_index            | value=None                                | encoded=['0000']
+  base_addr                      | value=0x002BA400                          | encoded=['000000001010111010010000000000']
+  idx_size                       | value=[3, 7, None]                        | encoded=['000000110000011100000000']
+  idx_size_log                   | value=[2, 5, 0]                           | encoded=['010101000']
+  total_size                     | value=32                                  | encoded=['00100000']
+  dim_stride                     | value=[32, 256, None]                     | encoded=['000000000000001000000000000000010000000000000000000000000000']
+  address_remapping              | value=None                                | encoded=['11001110001011110110101011010010011100101000110000011110111001101011000101101010010010100000111001100010100100000110001000001000', '00']
+  tailing_enable                 | value=[0, 0, 0]                           | encoded=['000']
+  idx_tailing_range              | value=[None, None, None, None, None, None] | encoded=['000000000000000000000000000000000000000000000000000000000000000000000000']
+  buf_spatial_stride             | value=[0, 4, 8, 12, 16, 20, 24, 28, 1, 5, 9, 13, 17, 21, 25, 29] | encoded=['11101110011010110001011010100100101000011110011000101001000001100010000010000000']
+  buf_spatial_size               | value=16                                  | encoded=['10000']
+
+=== Dump: BufferConfig ===
+dst_port                       | value=1                                   | encoded=['1']
+buf_full_last_index            | value=2                                   | encoded=['0010']
+buffer_nbr_cnt                 | value=None                                | encoded=['11011']
+nbr_enable                     | value=0                                   | encoded=['0']
+buffer_life_time               | value=1                                   | encoded=['0000']
+mode                           | value=0                                   | encoded=['0']
+mask                           | value=[1, 1, 1, 1, 1, 1, 1, 1]            | encoded=['11111111']
+buf_end_row_addr               | value=0                                   | encoded=['00']
+
+=== Dump: BufferConfig ===
+dst_port                       | value=1                                   | encoded=['1']
+buf_full_last_index            | value=2                                   | encoded=['0010']
+buffer_nbr_cnt                 | value=None                                | encoded=['11011']
+nbr_enable                     | value=0                                   | encoded=['0']
+buffer_life_time               | value=1                                   | encoded=['0000']
+mode                           | value=0                                   | encoded=['0']
+mask                           | value=[1, 1, 1, 1, 1, 1, 1, 1]            | encoded=['11111111']
+buf_end_row_addr               | value=0                                   | encoded=['00']
+
+=== Dump: GAInportConfig ===
+mask                           | value=[1, 1, 1, 1, 1, 1, 1, 1]            | encoded=['11111111']
+src_id                         | value=0                                   | encoded=['0']
+pingpong_en                    | value=0                                   | encoded=['0']
+pingpong_last_index            | value=None                                | encoded=['0000']
+nbr_enable                     | value=0                                   | encoded=['0']
+fp16tofp32                     | value=false                               | encoded=['0']
+bf16tofp32                     | value=false                               | encoded=['0']
+int32tofp32                    | value=true                                | encoded=['1']
+uint8tofp32                    | value=false                               | encoded=['0']
+uint8toint32                   | value=false                               | encoded=['0']
+
+=== Dump: GAInportConfig ===
+mask                           | value=[0, 0, 0, 0, 0, 0, 0, 0]            | encoded=['00000000']
+src_id                         | value=0                                   | encoded=['0']
+pingpong_en                    | value=0                                   | encoded=['0']
+pingpong_last_index            | value=None                                | encoded=['0000']
+nbr_enable                     | value=0                                   | encoded=['0']
+fp16tofp32                     | value=false                               | encoded=['0']
+bf16tofp32                     | value=false                               | encoded=['0']
+int32tofp32                    | value=false                               | encoded=['0']
+uint8tofp32                    | value=false                               | encoded=['0']
+uint8toint32                   | value=false                               | encoded=['0']
+
+=== Dump: GAInportConfig ===
+mask                           | value=[0, 0, 0, 0, 0, 0, 0, 0]            | encoded=['00000000']
+src_id                         | value=0                                   | encoded=['0']
+pingpong_en                    | value=0                                   | encoded=['0']
+pingpong_last_index            | value=None                                | encoded=['0000']
+nbr_enable                     | value=0                                   | encoded=['0']
+fp16tofp32                     | value=false                               | encoded=['0']
+bf16tofp32                     | value=false                               | encoded=['0']
+int32tofp32                    | value=false                               | encoded=['0']
+uint8tofp32                    | value=false                               | encoded=['0']
+uint8toint32                   | value=false                               | encoded=['0']
+
+=== Dump: GAOutportConfig ===
+mask                           | value=[1, 1, 1, 1, 1, 1, 1, 1]            | encoded=['11111111']
+src_id                         | value=1                                   | encoded=['1']
+fp32tofp16                     | value=false                               | encoded=['0']
+fp32tobf16                     | value=false                               | encoded=['0']
+int32touint8                   | value=true                                | encoded=['1']
+
+=== Dump: GAPEConfig ===
+alu_opcode                     | value=mac                                 | encoded=['00110']
+transout_last_index            | value=15                                  | encoded=['1111']
+inport2_src_id                 | value=0                                   | encoded=['000']
+inport2_keep_last_index        | value=None                                | encoded=['0000']
+inport2_mode                   | value=constant                            | encoded=['11']
+inport1_src_id                 | value=0                                   | encoded=['000']
+inport1_keep_last_index        | value=None                                | encoded=['0000']
+inport1_mode                   | value=constant                            | encoded=['11']
+inport0_src_id                 | value=0                                   | encoded=['000']
+inport0_keep_last_index        | value=None                                | encoded=['0000']
+inport0_mode                   | value=buffer                              | encoded=['01']
+_padding0                      | value=0                                   | encoded=['0000']
+constant0                      | value=0                                   | encoded=['00000000000000000000000000000000']
+_padding1                      | value=0                                   | encoded=['0000']
+constant1                      | value=0.003706118557602167                | encoded=['00111011011100101110001001011010']
+_padding0                      | value=0                                   | encoded=['0000']
+constant2                      | value=12582912.0                          | encoded=['01001011010000000000000000000000']
+
+=== Dump: GAPEConfig ===
+alu_opcode                     | value=int32_sub                           | encoded=['01101']
+transout_last_index            | value=15                                  | encoded=['1111']
+inport2_src_id                 | value=0                                   | encoded=['000']
+inport2_keep_last_index        | value=None                                | encoded=['0000']
+inport2_mode                   | value=None                                | encoded=['00']
+inport1_src_id                 | value=0                                   | encoded=['000']
+inport1_keep_last_index        | value=None                                | encoded=['0000']
+inport1_mode                   | value=constant                            | encoded=['11']
+inport0_src_id                 | value=Connect(GA_PE.PE00 -> GA_PE.PE01)   | encoded=['100']
+inport0_keep_last_index        | value=None                                | encoded=['0000']
+inport0_mode                   | value=buffer                              | encoded=['01']
+_padding0                      | value=0                                   | encoded=['0000']
+constant0                      | value=0                                   | encoded=['00000000000000000000000000000000']
+_padding1                      | value=0                                   | encoded=['0000']
+constant1                      | value=1262485504                          | encoded=['01001011010000000000000000000000']
+_padding0                      | value=0                                   | encoded=['0000']
+constant2                      | value=0                                   | encoded=['00000000000000000000000000000000']
+
+=== Dump: GAPEConfig ===
+alu_opcode                     | value=mac                                 | encoded=['00110']
+transout_last_index            | value=15                                  | encoded=['1111']
+inport2_src_id                 | value=0                                   | encoded=['000']
+inport2_keep_last_index        | value=None                                | encoded=['0000']
+inport2_mode                   | value=constant                            | encoded=['11']
+inport1_src_id                 | value=0                                   | encoded=['000']
+inport1_keep_last_index        | value=None                                | encoded=['0000']
+inport1_mode                   | value=constant                            | encoded=['11']
+inport0_src_id                 | value=0                                   | encoded=['000']
+inport0_keep_last_index        | value=None                                | encoded=['0000']
+inport0_mode                   | value=buffer                              | encoded=['01']
+_padding0                      | value=0                                   | encoded=['0000']
+constant0                      | value=0                                   | encoded=['00000000000000000000000000000000']
+_padding1                      | value=0                                   | encoded=['0000']
+constant1                      | value=0.005640458315610886                | encoded=['00111011101110001101001110011000']
+_padding0                      | value=0                                   | encoded=['0000']
+constant2                      | value=12582912.0                          | encoded=['01001011010000000000000000000000']
+
+=== Dump: GAPEConfig ===
+alu_opcode                     | value=int32_sub                           | encoded=['01101']
+transout_last_index            | value=15                                  | encoded=['1111']
+inport2_src_id                 | value=0                                   | encoded=['000']
+inport2_keep_last_index        | value=None                                | encoded=['0000']
+inport2_mode                   | value=None                                | encoded=['00']
+inport1_src_id                 | value=0                                   | encoded=['000']
+inport1_keep_last_index        | value=None                                | encoded=['0000']
+inport1_mode                   | value=constant                            | encoded=['11']
+inport0_src_id                 | value=Connect(GA_PE.PE02 -> GA_PE.PE03)   | encoded=['100']
+inport0_keep_last_index        | value=None                                | encoded=['0000']
+inport0_mode                   | value=buffer                              | encoded=['01']
+_padding0                      | value=0                                   | encoded=['0000']
+constant0                      | value=0                                   | encoded=['00000000000000000000000000000000']
+_padding1                      | value=0                                   | encoded=['0000']
+constant1                      | value=1262485504                          | encoded=['01001011010000000000000000000000']
+_padding0                      | value=0                                   | encoded=['0000']
+constant2                      | value=0                                   | encoded=['00000000000000000000000000000000']
+
+=== Dump: GAPEConfig ===
+alu_opcode                     | value=mac                                 | encoded=['00110']
+transout_last_index            | value=15                                  | encoded=['1111']
+inport2_src_id                 | value=0                                   | encoded=['000']
+inport2_keep_last_index        | value=None                                | encoded=['0000']
+inport2_mode                   | value=constant                            | encoded=['11']
+inport1_src_id                 | value=0                                   | encoded=['000']
+inport1_keep_last_index        | value=None                                | encoded=['0000']
+inport1_mode                   | value=constant                            | encoded=['11']
+inport0_src_id                 | value=0                                   | encoded=['000']
+inport0_keep_last_index        | value=None                                | encoded=['0000']
+inport0_mode                   | value=buffer                              | encoded=['01']
+_padding0                      | value=0                                   | encoded=['0000']
+constant0                      | value=0                                   | encoded=['00000000000000000000000000000000']
+_padding1                      | value=0                                   | encoded=['0000']
+constant1                      | value=0.003440962638705969                | encoded=['00111011011000011000000111000110']
+_padding0                      | value=0                                   | encoded=['0000']
+constant2                      | value=12582912.0                          | encoded=['01001011010000000000000000000000']
+
+=== Dump: GAPEConfig ===
+alu_opcode                     | value=int32_sub                           | encoded=['01101']
+transout_last_index            | value=15                                  | encoded=['1111']
+inport2_src_id                 | value=0                                   | encoded=['000']
+inport2_keep_last_index        | value=None                                | encoded=['0000']
+inport2_mode                   | value=None                                | encoded=['00']
+inport1_src_id                 | value=0                                   | encoded=['000']
+inport1_keep_last_index        | value=None                                | encoded=['0000']
+inport1_mode                   | value=constant                            | encoded=['11']
+inport0_src_id                 | value=Connect(GA_PE.PE10 -> GA_PE.PE11)   | encoded=['100']
+inport0_keep_last_index        | value=None                                | encoded=['0000']
+inport0_mode                   | value=buffer                              | encoded=['01']
+_padding0                      | value=0                                   | encoded=['0000']
+constant0                      | value=0                                   | encoded=['00000000000000000000000000000000']
+_padding1                      | value=0                                   | encoded=['0000']
+constant1                      | value=1262485504                          | encoded=['01001011010000000000000000000000']
+_padding0                      | value=0                                   | encoded=['0000']
+constant2                      | value=0                                   | encoded=['00000000000000000000000000000000']
+
+=== Dump: GAPEConfig ===
+alu_opcode                     | value=mac                                 | encoded=['00110']
+transout_last_index            | value=15                                  | encoded=['1111']
+inport2_src_id                 | value=0                                   | encoded=['000']
+inport2_keep_last_index        | value=None                                | encoded=['0000']
+inport2_mode                   | value=constant                            | encoded=['11']
+inport1_src_id                 | value=0                                   | encoded=['000']
+inport1_keep_last_index        | value=None                                | encoded=['0000']
+inport1_mode                   | value=constant                            | encoded=['11']
+inport0_src_id                 | value=0                                   | encoded=['000']
+inport0_keep_last_index        | value=None                                | encoded=['0000']
+inport0_mode                   | value=buffer                              | encoded=['01']
+_padding0                      | value=0                                   | encoded=['0000']
+constant0                      | value=0                                   | encoded=['00000000000000000000000000000000']
+_padding1                      | value=0                                   | encoded=['0000']
+constant1                      | value=0.003514145966619253                | encoded=['00111011011001100100110110010110']
+_padding0                      | value=0                                   | encoded=['0000']
+constant2                      | value=12582912.0                          | encoded=['01001011010000000000000000000000']
+
+=== Dump: GAPEConfig ===
+alu_opcode                     | value=int32_sub                           | encoded=['01101']
+transout_last_index            | value=15                                  | encoded=['1111']
+inport2_src_id                 | value=0                                   | encoded=['000']
+inport2_keep_last_index        | value=None                                | encoded=['0000']
+inport2_mode                   | value=None                                | encoded=['00']
+inport1_src_id                 | value=0                                   | encoded=['000']
+inport1_keep_last_index        | value=None                                | encoded=['0000']
+inport1_mode                   | value=constant                            | encoded=['11']
+inport0_src_id                 | value=Connect(GA_PE.PE12 -> GA_PE.PE13)   | encoded=['100']
+inport0_keep_last_index        | value=None                                | encoded=['0000']
+inport0_mode                   | value=buffer                              | encoded=['01']
+_padding0                      | value=0                                   | encoded=['0000']
+constant0                      | value=0                                   | encoded=['00000000000000000000000000000000']
+_padding1                      | value=0                                   | encoded=['0000']
+constant1                      | value=1262485504                          | encoded=['01001011010000000000000000000000']
+_padding0                      | value=0                                   | encoded=['0000']
+constant2                      | value=0                                   | encoded=['00000000000000000000000000000000']
+
+=== Dump: GAPEConfig ===
+alu_opcode                     | value=mac                                 | encoded=['00110']
+transout_last_index            | value=15                                  | encoded=['1111']
+inport2_src_id                 | value=0                                   | encoded=['000']
+inport2_keep_last_index        | value=None                                | encoded=['0000']
+inport2_mode                   | value=constant                            | encoded=['11']
+inport1_src_id                 | value=0                                   | encoded=['000']
+inport1_keep_last_index        | value=None                                | encoded=['0000']
+inport1_mode                   | value=constant                            | encoded=['11']
+inport0_src_id                 | value=0                                   | encoded=['000']
+inport0_keep_last_index        | value=None                                | encoded=['0000']
+inport0_mode                   | value=buffer                              | encoded=['01']
+_padding0                      | value=0                                   | encoded=['0000']
+constant0                      | value=0                                   | encoded=['00000000000000000000000000000000']
+_padding1                      | value=0                                   | encoded=['0000']
+constant1                      | value=0.013200203888118267                | encoded=['00111100010110000100010110101011']
+_padding0                      | value=0                                   | encoded=['0000']
+constant2                      | value=12582912.0                          | encoded=['01001011010000000000000000000000']
+
+=== Dump: GAPEConfig ===
+alu_opcode                     | value=int32_sub                           | encoded=['01101']
+transout_last_index            | value=15                                  | encoded=['1111']
+inport2_src_id                 | value=0                                   | encoded=['000']
+inport2_keep_last_index        | value=None                                | encoded=['0000']
+inport2_mode                   | value=None                                | encoded=['00']
+inport1_src_id                 | value=0                                   | encoded=['000']
+inport1_keep_last_index        | value=None                                | encoded=['0000']
+inport1_mode                   | value=constant                            | encoded=['11']
+inport0_src_id                 | value=Connect(GA_PE.PE20 -> GA_PE.PE21)   | encoded=['100']
+inport0_keep_last_index        | value=None                                | encoded=['0000']
+inport0_mode                   | value=buffer                              | encoded=['01']
+_padding0                      | value=0                                   | encoded=['0000']
+constant0                      | value=0                                   | encoded=['00000000000000000000000000000000']
+_padding1                      | value=0                                   | encoded=['0000']
+constant1                      | value=1262485504                          | encoded=['01001011010000000000000000000000']
+_padding0                      | value=0                                   | encoded=['0000']
+constant2                      | value=0                                   | encoded=['00000000000000000000000000000000']
+
+=== Dump: GAPEConfig ===
+alu_opcode                     | value=mac                                 | encoded=['00110']
+transout_last_index            | value=15                                  | encoded=['1111']
+inport2_src_id                 | value=0                                   | encoded=['000']
+inport2_keep_last_index        | value=None                                | encoded=['0000']
+inport2_mode                   | value=constant                            | encoded=['11']
+inport1_src_id                 | value=0                                   | encoded=['000']
+inport1_keep_last_index        | value=None                                | encoded=['0000']
+inport1_mode                   | value=constant                            | encoded=['11']
+inport0_src_id                 | value=0                                   | encoded=['000']
+inport0_keep_last_index        | value=None                                | encoded=['0000']
+inport0_mode                   | value=buffer                              | encoded=['01']
+_padding0                      | value=0                                   | encoded=['0000']
+constant0                      | value=0                                   | encoded=['00000000000000000000000000000000']
+_padding1                      | value=0                                   | encoded=['0000']
+constant1                      | value=0.0036575456615537405               | encoded=['00111011011011111011001101101111']
+_padding0                      | value=0                                   | encoded=['0000']
+constant2                      | value=12582912.0                          | encoded=['01001011010000000000000000000000']
+
+=== Dump: GAPEConfig ===
+alu_opcode                     | value=int32_sub                           | encoded=['01101']
+transout_last_index            | value=15                                  | encoded=['1111']
+inport2_src_id                 | value=0                                   | encoded=['000']
+inport2_keep_last_index        | value=None                                | encoded=['0000']
+inport2_mode                   | value=None                                | encoded=['00']
+inport1_src_id                 | value=0                                   | encoded=['000']
+inport1_keep_last_index        | value=None                                | encoded=['0000']
+inport1_mode                   | value=constant                            | encoded=['11']
+inport0_src_id                 | value=Connect(GA_PE.PE22 -> GA_PE.PE23)   | encoded=['100']
+inport0_keep_last_index        | value=None                                | encoded=['0000']
+inport0_mode                   | value=buffer                              | encoded=['01']
+_padding0                      | value=0                                   | encoded=['0000']
+constant0                      | value=0                                   | encoded=['00000000000000000000000000000000']
+_padding1                      | value=0                                   | encoded=['0000']
+constant1                      | value=1262485504                          | encoded=['01001011010000000000000000000000']
+_padding0                      | value=0                                   | encoded=['0000']
+constant2                      | value=0                                   | encoded=['00000000000000000000000000000000']
+
+=== Dump: GAPEConfig ===
+alu_opcode                     | value=mac                                 | encoded=['00110']
+transout_last_index            | value=15                                  | encoded=['1111']
+inport2_src_id                 | value=0                                   | encoded=['000']
+inport2_keep_last_index        | value=None                                | encoded=['0000']
+inport2_mode                   | value=constant                            | encoded=['11']
+inport1_src_id                 | value=0                                   | encoded=['000']
+inport1_keep_last_index        | value=None                                | encoded=['0000']
+inport1_mode                   | value=constant                            | encoded=['11']
+inport0_src_id                 | value=0                                   | encoded=['000']
+inport0_keep_last_index        | value=None                                | encoded=['0000']
+inport0_mode                   | value=buffer                              | encoded=['01']
+_padding0                      | value=0                                   | encoded=['0000']
+constant0                      | value=0                                   | encoded=['00000000000000000000000000000000']
+_padding1                      | value=0                                   | encoded=['0000']
+constant1                      | value=0.0017291561234742403               | encoded=['00111010111000101010010011011010']
+_padding0                      | value=0                                   | encoded=['0000']
+constant2                      | value=12582912.0                          | encoded=['01001011010000000000000000000000']
+
+=== Dump: GAPEConfig ===
+alu_opcode                     | value=int32_sub                           | encoded=['01101']
+transout_last_index            | value=15                                  | encoded=['1111']
+inport2_src_id                 | value=0                                   | encoded=['000']
+inport2_keep_last_index        | value=None                                | encoded=['0000']
+inport2_mode                   | value=None                                | encoded=['00']
+inport1_src_id                 | value=0                                   | encoded=['000']
+inport1_keep_last_index        | value=None                                | encoded=['0000']
+inport1_mode                   | value=constant                            | encoded=['11']
+inport0_src_id                 | value=Connect(GA_PE.PE30 -> GA_PE.PE31)   | encoded=['100']
+inport0_keep_last_index        | value=None                                | encoded=['0000']
+inport0_mode                   | value=buffer                              | encoded=['01']
+_padding0                      | value=0                                   | encoded=['0000']
+constant0                      | value=0                                   | encoded=['00000000000000000000000000000000']
+_padding1                      | value=0                                   | encoded=['0000']
+constant1                      | value=1262485504                          | encoded=['01001011010000000000000000000000']
+_padding0                      | value=0                                   | encoded=['0000']
+constant2                      | value=0                                   | encoded=['00000000000000000000000000000000']
+
+=== Dump: GAPEConfig ===
+alu_opcode                     | value=mac                                 | encoded=['00110']
+transout_last_index            | value=15                                  | encoded=['1111']
+inport2_src_id                 | value=0                                   | encoded=['000']
+inport2_keep_last_index        | value=None                                | encoded=['0000']
+inport2_mode                   | value=constant                            | encoded=['11']
+inport1_src_id                 | value=0                                   | encoded=['000']
+inport1_keep_last_index        | value=None                                | encoded=['0000']
+inport1_mode                   | value=constant                            | encoded=['11']
+inport0_src_id                 | value=0                                   | encoded=['000']
+inport0_keep_last_index        | value=None                                | encoded=['0000']
+inport0_mode                   | value=buffer                              | encoded=['01']
+_padding0                      | value=0                                   | encoded=['0000']
+constant0                      | value=0                                   | encoded=['00000000000000000000000000000000']
+_padding1                      | value=0                                   | encoded=['0000']
+constant1                      | value=0.01246708631515503                 | encoded=['00111100010011000100001011000000']
+_padding0                      | value=0                                   | encoded=['0000']
+constant2                      | value=12582912.0                          | encoded=['01001011010000000000000000000000']
+
+=== Dump: GAPEConfig ===
+alu_opcode                     | value=int32_sub                           | encoded=['01101']
+transout_last_index            | value=15                                  | encoded=['1111']
+inport2_src_id                 | value=0                                   | encoded=['000']
+inport2_keep_last_index        | value=None                                | encoded=['0000']
+inport2_mode                   | value=None                                | encoded=['00']
+inport1_src_id                 | value=0                                   | encoded=['000']
+inport1_keep_last_index        | value=None                                | encoded=['0000']
+inport1_mode                   | value=constant                            | encoded=['11']
+inport0_src_id                 | value=Connect(GA_PE.PE32 -> GA_PE.PE33)   | encoded=['100']
+inport0_keep_last_index        | value=None                                | encoded=['0000']
+inport0_mode                   | value=buffer                              | encoded=['01']
+_padding0                      | value=0                                   | encoded=['0000']
+constant0                      | value=0                                   | encoded=['00000000000000000000000000000000']
+_padding1                      | value=0                                   | encoded=['0000']
+constant1                      | value=1262485504                          | encoded=['01001011010000000000000000000000']
+_padding0                      | value=0                                   | encoded=['0000']
+constant2                      | value=0                                   | encoded=['00000000000000000000000000000000']
+
+Detailed dump written to C:\Users\15383\Desktop\Codex\project\resnet50_int8\artifacts\operator_config_validation\r5-patched-mapping-evidence\operator-config-evidence-4kp2hduz\native-output\detailed_dump.txt
+
+=== Building Bitstream Entries ===
+Processing iga_lc with 20 entries, max lines: 1
+Processing iga_row_lc with 5 entries, max lines: 1
+Processing iga_col_lc with 5 entries, max lines: 1
+Processing iga_pe with 10 entries, max lines: 2
+Processing se_rd_mse with 4 entries, max lines: 10
+Processing se_wr_mse with 1 entries, max lines: 8
+Processing se_nse with 2 entries, max lines: 1
+Processing buffer_manager_cluster with 6 entries, max lines: 1
+Processing ga_inport_group with 3 entries, max lines: 1
+Processing ga_outport_group with 1 entries, max lines: 1
+Processing ga_pe with 16 entries, max lines: 4
+Bitstream written to C:\Users\15383\Desktop\Codex\project\resnet50_int8\artifacts\operator_config_validation\r5-patched-mapping-evidence\operator-config-evidence-4kp2hduz\native-output\parsed_bitstream.txt
+Binary dump (64b) written to C:\Users\15383\Desktop\Codex\project\resnet50_int8\artifacts\operator_config_validation\r5-patched-mapping-evidence\operator-config-evidence-4kp2hduz\native-output\modules_dump_64b.bin
+Binary dump (128b) written to C:\Users\15383\Desktop\Codex\project\resnet50_int8\artifacts\operator_config_validation\r5-patched-mapping-evidence\operator-config-evidence-4kp2hduz\native-output\modules_dump_128b.bin

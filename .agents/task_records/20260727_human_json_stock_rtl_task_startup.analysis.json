@@ -1,0 +1,88 @@
+{
+  "schema": "human_json_stock_rtl_startup_analysis_v1",
+  "created_at": "2026-07-27T14:28:04+08:00",
+  "status": "READY_WAITING_FOR_EXACT_HUMAN_JSON_PATH",
+  "generated_package": false,
+  "candidate_selected": false,
+  "human_authored_input": null,
+  "read_receipt": [
+    {
+      "path": ".agents/agent.md",
+      "bytes": 3439,
+      "sha256": "367f4f4260246d40531d83cc6d24fe94946cb05bce6fbef18c428f05b634c083",
+      "reason": "project_boundary"
+    },
+    {
+      "path": ".agents/plan.md",
+      "bytes": 13195,
+      "sha256": "a9f0c3397dad32473f542c82852bef9d244535ca40abdb688623aa3c47f14354",
+      "reason": "active_state_and_stop_gates"
+    },
+    {
+      "path": ".agents/rules/生成前必读索引.md",
+      "bytes": 5650,
+      "sha256": "539e8dfbe52ad9fc8bd9fdef8c69d448fb5fd713e938e3adc5f663f82fd806d7",
+      "reason": "routing"
+    },
+    {
+      "path": ".agents/rules/算子配置规则.md",
+      "bytes": 12168,
+      "sha256": "a5fbe2f0fa2e26d8cd4ebfe8772d5a3c69516d6918cfaa5087198706a352427b",
+      "reason": "config_provenance_and_rebuild"
+    },
+    {
+      "path": ".agents/rules/NDP硬件字段语义.md",
+      "bytes": 12602,
+      "sha256": "7f446adb1719658ce75c2614c6d619fc2c7cdcabf5e4fd34945482645539158f",
+      "reason": "lc_mse_buffer_sa_ga_n2n_semantics"
+    },
+    {
+      "path": ".agents/rules/服务器测试包生成规则.md",
+      "bytes": 15938,
+      "sha256": "0fec7a4f72246c9e802fb2e91e972c2f636e2721aaeef1194c2d4d3fba103fbc",
+      "reason": "server_package_and_return_contract"
+    },
+    {
+      "path": "NDP_copy01/README_HARDWARE_SIM_ENTRY.md",
+      "bytes": 5461,
+      "sha256": "4318f3a28de399fb522740315f11bdddf346e71969cf1e45686899a568b042d7",
+      "reason": "stock_rtl_entry"
+    }
+  ],
+  "candidate_inventory": {
+    "jsons_reference_json_count": 53,
+    "ndp_sim_native_json_count": 55,
+    "ndp_sim_op_json_count": 26,
+    "dedicated_candidate_directories": []
+  },
+  "omitted_files": [
+    {
+      "path": ".agents/rules/<operator-specific-rule>.md",
+      "reason": "operator_not_yet_specified"
+    },
+    {
+      "path": "ndp-sim/model_execplan/op_json/<target>.json",
+      "reason": "target_graph_not_yet_specified"
+    },
+    {
+      "path": "ndp-sim/<target-handler-or-relayout>",
+      "reason": "actual_target_consumer_not_yet_resolvable"
+    }
+  ],
+  "minimum_required_input": [
+    "exact_human_json_path",
+    "operator_and_resnet_node_hwop_stage_identity",
+    "input_output_shape_dtype_layout",
+    "quantization_rounding_saturation_parameters",
+    "input_tensor_identity_or_authorized_generation_source",
+    "independent_golden_identity_or_authorized_generation_source",
+    "target_stage_slice_occurrence_and_output_region",
+    "explicit_permission_before_writing_a_corrected_candidate"
+  ],
+  "classification": {
+    "confirmed_reference": "reference_locations_only",
+    "local_e2": false,
+    "structural_risk": "not_assessed_without_candidate",
+    "dynamic_required": true
+  }
+}

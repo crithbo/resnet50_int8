@@ -1,0 +1,158 @@
+{
+  "schema": "deepseek-softmax-generation-read-receipt-v1",
+  "created_at": "2026-07-25",
+  "task": "DeepSeek crop-derived five-stage prefill Softmax local E2 validation",
+  "scope": {
+    "mode": "local_rule_validation",
+    "json_generation_allowed_after_receipt": true,
+    "server_package_generation_allowed": false,
+    "rtl_tree_mutation_allowed": false,
+    "maximum_evidence_level": "E2"
+  },
+  "source_identity_boundary": {
+    "onnx_repository_classification": "SEMANTIC_MODEL_MATCH",
+    "original_source_identity_claim_allowed": false,
+    "crop_required_for_ndpsim_shape": true,
+    "direct_onnx_shape_equals_hardware_stage_claim_allowed": false
+  },
+  "base_read_receipt": {
+    "path": "contracts/operator_config/deepseek_onnx_stage_validation_read_receipt_v1.json",
+    "sha256": "bab13378476bd715f416d7cdb9b9d9b753a5729132590322d44954f5ce8c1ce4",
+    "scope": "common rules, DeepSeek-specific rules, LC/MSE/Buffer/GA field semantics and shared native consumers"
+  },
+  "supplemental_rules_read": [
+    {
+      "path": ".agents/rules/DeepSeek_码流生命周期增量规则.md",
+      "sha256": "247f4469572359055af077b631d59f4193cb1735c8932c857f5de94e1a83518a",
+      "size_bytes": 5516,
+      "reason": "64b-owned Load_Config length and exact 64b-to-128b packing"
+    },
+    {
+      "path": ".agents/rules/DeepSeek_Softmax增量规则.md",
+      "sha256": "2bb2dfb0f37db68848f7a8ff1c018169d3d4a2ee13359c672c502f1031f00cc8",
+      "size_bytes": 2465,
+      "reason": "mask stride ownership, exp-input bank layout, normalized roundtrip and payload boundary"
+    }
+  ],
+  "active_stage_producer": {
+    "graph": {
+      "path": "artifacts/operator_config_validation/r5-deepseek-onnx-stage-json-e2-v1/layer0_prefill.rule_normalized.json",
+      "sha256": "2f1fc4def9d9332d4d3abb19fc711a4488d659ceac3b67a3e85b951ce43a423b",
+      "size_bytes": 34628
+    },
+    "contract": {
+      "path": "contracts/operator_config/deepseek_prefill_rule_normalized_stage_v1.json",
+      "sha256": "b59312280d0e11cdae398b4ab7c3cd467061e2b8db48bfb7c37d0373c0a334c1",
+      "size_bytes": 5517
+    }
+  },
+  "additional_native_sources_read": [
+    {
+      "path": "ndp-sim/model_execplan/op_json/softmax.json",
+      "sha256": "6b4f61f1880912c6c501694b715991d8a8c54dd1040902378a927b735fca46e7",
+      "size_bytes": 2696,
+      "reason": "native five-stage prefill Softmax DAG"
+    },
+    {
+      "path": "ndp-sim/generate_python_golden/deepseek1.5b_3_time_golden_smallsize.py",
+      "sha256": "4dde1877861b9feec6c4650a662d1c9b633cfe5be9abcabfa1839bde6e776053",
+      "size_bytes": 53478,
+      "read_scope": "scale, mask, row max, exp, reciprocal sum and normalization formula",
+      "reason": "native numerical decomposition oracle"
+    },
+    {
+      "path": "ndp-sim/generate_python_golden/single_op_data/relayout_softmax.py",
+      "sha256": "6046cc49a57ea0a203df971942ff3ca4c92531accedc62b3f400759f61d43efb",
+      "size_bytes": 14553,
+      "reason": "actual seven-head to four-slice-per-head input and scalar broadcast relayout"
+    },
+    {
+      "path": "ndp-sim/generate_python_golden/softmax_scale.bin",
+      "sha256": "08334c86b963804acd3bea683d9a8f57e81da5594d278ced1d8644a7a85198ab",
+      "size_bytes": 4,
+      "reason": "native fp32 attention scale payload"
+    },
+    {
+      "path": "contracts/operator_config/deepseek_onnx_prefill_stage_audit_v1.json",
+      "sha256": "84a62ed3d95f5c1f784df9a25771eef2263d44b258d34c07dd3d7cf360831935",
+      "size_bytes": 10042,
+      "reason": "existing fused GQA scale, key-axis and upstream leader-route evidence"
+    }
+  ],
+  "trusted_operator_json_oracles": [
+    {
+      "path": "ndp-sim/jsons/prefill_mac_fp32MN_fp32MN_fp32MN.json",
+      "sha256": "32521b8ed33e020019258911542929e1220c3326510fb6f7ce4867b6d09536a9",
+      "size_bytes": 16364
+    },
+    {
+      "path": "ndp-sim/jsons/prefill_max_fp32MN_fp32MN.json",
+      "sha256": "2d20d87f5bbd14546c346bb54e1200ffd07299c193aded766dbeb59ea704921b",
+      "size_bytes": 13577
+    },
+    {
+      "path": "ndp-sim/jsons/prefill_sub_SFU_fp32MN_fp32M_fp32MN.json",
+      "sha256": "a745ce74782b2f3598e246b5646102e835299196a626e6b8d219e0d0b48e4fc9",
+      "size_bytes": 22689
+    },
+    {
+      "path": "ndp-sim/jsons/prefill_sum_rec_fp32MN_fp32MN.json",
+      "sha256": "33f1332d15a659d3be5244b293edd341bd12a22c4427b2d16b1efcddd57c6522",
+      "size_bytes": 19521
+    },
+    {
+      "path": "ndp-sim/jsons/prefill_mul_fp32MN_fp32M_fp16MN.json",
+      "sha256": "31d4369b393a39435349adb687a1a0dab63835f3a5f246f02e40a2af5f8923de",
+      "size_bytes": 16004
+    }
+  ],
+  "trusted_materialized_package_oracle": {
+    "graph": {
+      "path": "jsons/softmax/softmax_withbaseaddr.json",
+      "sha256": "d98526ec4a728d8fcacd23e1301f17e26e3f882d24b23ab6da0b861bfe934fe5",
+      "size_bytes": 3650
+    },
+    "execplan": {
+      "path": "jsons/softmax/install/execplan.txt",
+      "sha256": "39484641fbcf4d7cb9f9070ecfe7935229a125b8a8bd643a112b8818fc8fdc4d",
+      "size_bytes": 25284
+    },
+    "sca": {
+      "path": "jsons/softmax/sca_cfg.json",
+      "sha256": "6d1f1d16fe13f06b44ae3bbe7cc20fc6b666525fcbb01bc6b50444623836cb45",
+      "size_bytes": 35209
+    },
+    "sca_d": {
+      "path": "jsons/softmax/sca_cfg_D.json",
+      "sha256": "2f4c4481bb8605c6499b27e2111235d4335d1b3fd3ce3b74915f7df65bcf5fe9",
+      "size_bytes": 24761
+    },
+    "numeric_payload_boundary": "the package input/output tensor files are zero-length placeholders and cannot be used as numerical golden evidence"
+  },
+  "onnx_anchor": {
+    "node_index": 12,
+    "name": "/model/layers.0/attn/GroupQueryAttention",
+    "op_type": "GroupQueryAttention",
+    "scale": 0.0883883461356163,
+    "softmax_is_fused_inside_gqa": true
+  },
+  "known_counterexamples": [
+    "A trusted materialized package proves JSON and lifecycle precedent but zero-length tensor files do not prove numerical Softmax.",
+    "An isolated external score matrix may remove the upstream slice4 route only if the four-slice-per-head replication contract is explicit.",
+    "Five individually trusted JSONs do not by themselves prove max and reciprocal-sum scalar lifetimes across all five stages."
+  ],
+  "rule_ids": [
+    "CDA-CONFIG-SEMANTIC-OWNERSHIP-001",
+    "CDA-CONFIG-MATERIALIZED-ROUNDTRIP-001",
+    "CDA-CONFIG-FULL-REBUILD-PROVENANCE-001",
+    "CDA-DEEPSEEK-MODEL-IDENTITY-001",
+    "CDA-DEEPSEEK-CROP-EXPLICIT-001",
+    "CDA-DEEPSEEK-ONNX-STAGE-DAG-001",
+    "CDA-DEEPSEEK-STAGE-JSON-ORACLE-001",
+    "CDA-DEEPSEEK-SOFTMAX-MASK-STRIDE-OWNER-001",
+    "CDA-DEEPSEEK-SOFTMAX-EXP-BUFFER-LAYOUT-001",
+    "CDA-DEEPSEEK-SOFTMAX-NORMALIZED-ROUNDTRIP-001",
+    "CDA-DEEPSEEK-SOFTMAX-PAYLOAD-COVERAGE-001"
+  ],
+  "receipt_status": "SOFTMAX_FIVE_STAGE_MATERIALIZATION_READY"
+}

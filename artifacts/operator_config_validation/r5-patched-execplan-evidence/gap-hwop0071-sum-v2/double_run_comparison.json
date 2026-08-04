@@ -1,0 +1,24 @@
+{
+  "schema": "operator-config-execplan-double-run-v1",
+  "equal": true,
+  "excluded_nondeterministic_outputs": [
+    "placement.png"
+  ],
+  "files": {
+    "config/op0/detailed_dump.txt": "67a83e43f498533e5f7c98834b322286cc1628eb3e4e792cea85d604b05cac8f",
+    "config/op0/mapping_review.json": "627e20efca2c16a79211609533ef094c2ccae4e9c1996c686b7815048076da12",
+    "config/op0/modules_dump_128b.bin": "8ab9cef57ed267d80596ec49a96068822b86ebf4cfba04e11e35d777c201c2c6",
+    "config/op0/modules_dump_64b.bin": "b643bdc9356e944cb8a952d0b5518be50d8293d4e696afa061d77d3f3076f555",
+    "config/op0/op0_resnet50_gap_sum_uint8_int32_bitstream_128b.bin": "8ab9cef57ed267d80596ec49a96068822b86ebf4cfba04e11e35d777c201c2c6",
+    "config/op0/op0_resnet50_gap_sum_uint8_int32_bitstream_64b.bin": "b643bdc9356e944cb8a952d0b5518be50d8293d4e696afa061d77d3f3076f555",
+    "config/op0/parsed_bitstream.txt": "75f84d35968d9f65b074154253c0dbb7cea950e8314d31d66eac66985d2077d8",
+    "graph_address_seed_withbaseaddr.json": "66928400ee70b761c776f1b42638f613bb4651579e6eda6bb315541894ca816f",
+    "install/cfg_pkg/op0_resnet50_gap_sum_uint8_int32_bitstream_128b.bin": "8ab9cef57ed267d80596ec49a96068822b86ebf4cfba04e11e35d777c201c2c6",
+    "install/execplan.txt": "7b221b48a43ddd630f90c2f653f675b5f72d01bd3eb4a984c8cef27b14fc7ba5",
+    "install/execplan_op0.txt": "7b221b48a43ddd630f90c2f653f675b5f72d01bd3eb4a984c8cef27b14fc7ba5",
+    "instructions_explained.txt": "5a2f190e93ca43e641b54604a19681e75587aaedd3e8dac9dfc19175e15725f3",
+    "jsons/op0_resnet50_gap_sum_uint8_int32.json": "5cbf02721fd01619b7cd2e5f99de13f5d697e7ebdbf783ff91ace24cf772a7ad",
+    "sca_cfg.json": "b6a86ff7ab39838dc2294b4c05ec506c04cbe736dfa55a14b46cc8a513f8c688",
+    "sca_cfg_D.json": "74cdbc6aa58045845ab51551b8dc4cd87b523b685aef332b85a66fdeb4500ddb"
+  }
+}

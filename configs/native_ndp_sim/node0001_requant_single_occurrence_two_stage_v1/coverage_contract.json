@@ -1,0 +1,45 @@
+{
+  "all_required_classes_present": true,
+  "element_count": 32,
+  "exact_half_even_tie_count": 8,
+  "lane_multiplier_bits": [
+    "0x3a013ecf",
+    "0x3925d60c",
+    "0x39583010",
+    "0x3919c3d4",
+    "0x3a767cd0",
+    "0x3929ea7d",
+    "0x394e89f0",
+    "0x39da68e4"
+  ],
+  "lane_multiplier_count": 8,
+  "lower_saturation_count": 9,
+  "magic_vs_independent_mismatch_count": 0,
+  "minus_one_count": 1,
+  "negative_count": 2,
+  "positive_count": 29,
+  "tie_input_by_lane": [
+    510109,
+    452092,
+    448653,
+    228448,
+    72851,
+    490606,
+    170076,
+    200440
+  ],
+  "tie_round_down_to_even_count": 2,
+  "tie_round_up_to_even_count": 6,
+  "tie_scaled_by_lane": [
+    251.5,
+    71.5,
+    92.5,
+    33.5,
+    68.5,
+    79.5,
+    33.5,
+    83.5
+  ],
+  "upper_saturation_count": 9,
+  "zero_count": 1
+}

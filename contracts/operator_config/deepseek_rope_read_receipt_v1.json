@@ -1,0 +1,162 @@
+{
+  "schema": "deepseek-rope-generation-read-receipt-v1",
+  "created_at": "2026-07-25",
+  "task": "DeepSeek crop-derived three-stage RoPE local E2 validation",
+  "scope": {
+    "mode": "local_rule_validation",
+    "json_generation_allowed_after_receipt": true,
+    "server_package_generation_allowed": false,
+    "rtl_tree_mutation_allowed": false,
+    "maximum_evidence_level": "E2"
+  },
+  "source_identity_boundary": {
+    "onnx_repository_classification": "SEMANTIC_MODEL_MATCH",
+    "original_source_identity_claim_allowed": false,
+    "crop_required_for_ndpsim_shape": true,
+    "direct_onnx_shape_equals_hardware_stage_claim_allowed": false
+  },
+  "base_read_receipt": {
+    "path": "contracts/operator_config/deepseek_onnx_stage_validation_read_receipt_v1.json",
+    "sha256": "bab13378476bd715f416d7cdb9b9d9b753a5729132590322d44954f5ce8c1ce4",
+    "scope": "common rules, DeepSeek-specific rules, LC/MSE/Buffer/GA field semantics and shared native consumers"
+  },
+  "supplemental_rules_read": [
+    {
+      "path": ".agents/rules/DeepSeek_码流生命周期增量规则.md",
+      "sha256": "247f4469572359055af077b631d59f4193cb1735c8932c857f5de94e1a83518a",
+      "size_bytes": 5516,
+      "reason": "64b-owned Load_Config length and exact 64b-to-128b packing"
+    },
+    {
+      "path": ".agents/rules/DeepSeek_RoPE增量规则.md",
+      "sha256": "f4ae02f66fd00f98f4597af254e6f8c28f902af56de3b940b8e9be33fba4b2d4",
+      "size_bytes": 4204,
+      "reason": "non-interleaved half-vector pairing, canonical XOR2 implementation choice, single-owner sign convention and complete payload coverage"
+    }
+  ],
+  "additional_native_sources_read": [
+    {
+      "path": "ndp-sim/model_execplan/op_json/rope.json",
+      "sha256": "0f141f95c08a3803ae0c000cb25c01198b4d86e8c827d0b27104463e9ec63747",
+      "size_bytes": 2235,
+      "reason": "native Q RoPE stage DAG and rope_slice_xor2 output annotation"
+    },
+    {
+      "path": "ndp-sim/model_execplan/op_json/rope_k.json",
+      "sha256": "abd247b69a4497166298b44d7a4bcdd8b29a60c633c00643e392024c3ee97f6e",
+      "size_bytes": 2121,
+      "reason": "native KV RoPE shape variant"
+    },
+    {
+      "path": "ndp-sim/jsons/prefill_mul_fp32MN_fp32MN_fp32MN.json",
+      "sha256": "b3eaafdd63d40c7506341c1c72abf120ca3d2feea93092fcd6933efa1274ed7e",
+      "size_bytes": 16252,
+      "reason": "trusted cos/sin multiply JSON oracle"
+    },
+    {
+      "path": "ndp-sim/jsons/prefill_add_fp32MN_fp32MN_fp16MN.json",
+      "sha256": "14c6394c39ced9ad465902ed7f747c729c61e64174dee1c5a7a5a3953f78cb5e",
+      "size_bytes": 16251,
+      "reason": "trusted RoPE final add and fp32-to-fp16 JSON oracle"
+    },
+    {
+      "path": "ndp-sim/model_execplan/src/execution_plan_generator/slice_routing.py",
+      "sha256": "10431a3f47057988eaaf2b56de6723dedd4d75efa6449ac1b7fe1c02de307599",
+      "size_bytes": 2220,
+      "reason": "native preimage whose rope_slice_xor2 implementation is retained as historical counterevidence"
+    },
+    {
+      "path": "resnet50_pipeline/native_overlays/deepseek_rope/slice_routing.py",
+      "sha256": "2856ba5a3640a2f7efe541d66466eed7ba485936607785257f7ef7aa23a179fa",
+      "size_bytes": 2079,
+      "reason": "project-owned isolated canonical XOR2 execplan consumer; active ndp-sim checkout remains unmodified"
+    },
+    {
+      "path": "ndp-sim/generate_python_golden/deepseek1.5b_3_time_golden_smallsize_0527.py",
+      "sha256": "4dc42e91a5869bb523fb86ba8caf92280df18de5487c1ce33b706361fa799540",
+      "size_bytes": 49401,
+      "read_scope": "rope decomposition, half-vector pairing, signed sin product and final add",
+      "reason": "historical prefill numeric decomposition"
+    },
+    {
+      "path": "ndp-sim/generate_python_golden/deepseek1.5b_3_time_golden_smallsize.py",
+      "sha256": "4dde1877861b9feec6c4650a662d1c9b633cfe5be9abcabfa1839bde6e776053",
+      "size_bytes": 53478,
+      "read_scope": "current rope decomposition, signed sin export and final add",
+      "reason": "actual current prefill golden consumer bound by the validator"
+    },
+    {
+      "path": "ndp-sim/generate_python_golden/single_op_data/relayout_rope.py",
+      "sha256": "8ccd4fd1f7fe917d11a882a98e7ca89058e0ab4dbe2f12cf3e4c157e9d1c26f1",
+      "size_bytes": 15692,
+      "reason": "actual ordered quarter split and global op1 matrix_B negation"
+    },
+    {
+      "path": "ndp-sim/generate_python_golden/single_op_data/backup/relayout_rope.py",
+      "sha256": "792d9aebe0805caa05fe6f7bc99c5db5d29b92106ae001386af52a8cb30ed0c8",
+      "size_bytes": 13694,
+      "reason": "historical ordered quarter split before the global op1 matrix_B negation"
+    },
+    {
+      "path": "ndp-sim/generate_python_golden/README.md",
+      "sha256": "4d6cc73fa99b283d557e5fe11cba40d1044e09ade3740e73efaad1ddef1f2d60",
+      "size_bytes": 43056,
+      "reason": "documented alternative decode convention: pre-swapped activation, rearranged sin and no cross-slice route"
+    },
+    {
+      "path": "jsons/rope/rope_withbaseaddr.json",
+      "sha256": "9b204ed2b42b78a4adab2ee6083dffc7aaf91c03bc22e4a218faff7e182bb57c",
+      "size_bytes": 2299,
+      "reason": "trusted address-bound three-stage RoPE JSON topology oracle"
+    },
+    {
+      "path": "jsons/rope/instructions_explained.txt",
+      "sha256": "8046f886fd326f5534c09dea02af6fa09ad2432eb5f8fd48d798b9b1ff61cc4f",
+      "size_bytes": 144144,
+      "reason": "trusted package control-plane route programming evidence"
+    },
+    {
+      "path": "jsons/rope/sca_cfg.json",
+      "sha256": "2137df4ddc6fbc26e97cee31aa06eb8094f10d9d2840448e4d74f7c70d019c55",
+      "size_bytes": 25642,
+      "reason": "trusted package input and config load manifest"
+    },
+    {
+      "path": "jsons/rope/sca_cfg_D.json",
+      "sha256": "b5fb0e0dda748761daf13c48ad65da8fbdf60b6749d9949020c76189b7ecee8f",
+      "size_bytes": 14421,
+      "reason": "trusted package output load manifest"
+    }
+  ],
+  "onnx_anchor": {
+    "node_index": 12,
+    "name": "/model/layers.0/attn/GroupQueryAttention",
+    "op_type": "GroupQueryAttention",
+    "do_rotary": 1,
+    "rotary_interleaved": 0,
+    "cos_input": "cos_cache",
+    "sin_input": "sin_cache"
+  },
+  "known_counterexamples": [
+    "A native graph and its trusted per-stage JSONs can all encode successfully while the inter-stage source-slice permutation is numerically wrong.",
+    "For a 128-element head split in ordered 32-element quarters, non-interleaved half-vector RoPE requires quarter i to pair with i xor 2.",
+    "The current rope_slice_xor2 router name is not evidence of its implementation; the consumer must be checked directly.",
+    "A signed sin table followed by an unconditional relayout negation applies the sign convention twice.",
+    "A trusted package with only one non-empty tensor payload cannot prove a three-stage numerical route."
+  ],
+  "rule_ids": [
+    "CDA-CONFIG-SEMANTIC-OWNERSHIP-001",
+    "CDA-CONFIG-MATERIALIZED-ROUNDTRIP-001",
+    "CDA-CONFIG-FULL-REBUILD-PROVENANCE-001",
+    "CDA-DEEPSEEK-MODEL-IDENTITY-001",
+    "CDA-DEEPSEEK-CROP-EXPLICIT-001",
+    "CDA-DEEPSEEK-ONNX-STAGE-DAG-001",
+    "CDA-DEEPSEEK-STAGE-JSON-ORACLE-001",
+    "CDA-DEEPSEEK-CROSS-SLICE-ROUTE-001",
+    "CDA-DEEPSEEK-ROPE-HALF-PAIRING-001",
+    "CDA-DEEPSEEK-ROPE-SIGN-SINGLE-OWNER-001",
+    "CDA-DEEPSEEK-ROPE-PAYLOAD-COVERAGE-001",
+    "CDA-DEEPSEEK-ROPE-IMPLEMENTATION-CHOICE-001"
+  ],
+  "receipt_status": "ROPE_CANONICAL_XOR2_MATERIALIZATION_READY"
+}

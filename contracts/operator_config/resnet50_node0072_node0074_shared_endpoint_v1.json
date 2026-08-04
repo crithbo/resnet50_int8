@@ -1,0 +1,832 @@
+{
+  "schema": "resnet50-shared-endpoint-owner-manifest-v1",
+  "date": "2026-07-29",
+  "status": "ALL_OWNER_SECTIONS_PRESENT_ENDPOINT_BINDING_BLOCKED",
+  "chain": [
+    "node-0072:D",
+    "node-0073:metadata-alias",
+    "node-0074:A"
+  ],
+  "control_plane_receipt": {
+    "path": ".agents/plan.md",
+    "sha256": "53bd530998d6a3a57d5ac63302067d66ca46bef3e0e7b4adcba3bb1fbdcf7c35",
+    "sections_read": [
+      "0",
+      "0.1"
+    ],
+    "mutable_provenance_only": true
+  },
+  "owner_sections": {
+    "DequantizeLinear": {
+      "owner_family": "DequantizeLinear",
+      "owner_node": "node-0072",
+      "owner_hwop": "r5:hwop-0072-00",
+      "owner_port": "D",
+      "owner_section_content_sha256": "e372f7b0fa434845a8199830c3c46a9467fc71d5687fa103750a86408191b371",
+      "reuse_status": "REUSE_ACCEPTED_FOR_INTEGRATION",
+      "reuse_class": "EXACT_FULL_OPERATOR",
+      "numeric_analysis_repeated": false,
+      "operator_e2_retested": false,
+      "consumed_reuse_assets": true,
+      "immutable_sources": [
+        {
+          "path": "contracts/operator_config/node0072_dequant_config_only_correctness_baseline_v1.json",
+          "sha256": "cf5172db59a0a7c294e49445f63cd7c61919c3aa4640af180799d2dcef42c60f",
+          "role": "frozen node0072 CONFIG_ONLY_CORRECTNESS_BASELINE machine contract"
+        },
+        {
+          "path": "artifacts/operator_config_validation/r5-dequant-node0072-config-only-e2-v1/local_e2_report.json",
+          "sha256": "50e30f52bcc95fb3f3e89b2690bc163c77b4de3d77474dd9fecb569ed5176a43",
+          "role": "frozen local materialized E2 and endpoint handoff evidence"
+        },
+        {
+          "path": ".agents/rules/DequantizeLinear算子配置规则.md",
+          "sha256": "f8cf7d2a041426f2b3348f3d02b570e3e559fe1a77c643a8393e77a2583e15a1",
+          "role": "node0072 local E2 reuse authority and claim boundary"
+        },
+        {
+          "path": ".agents/rules/算子配置规则.md",
+          "sha256": "cbaffcc5fb3bea7da9f0c199bb2e7f06445a676ab456bdfd505b90dd89825171",
+          "role": "reuse-first integration binding authority"
+        },
+        {
+          "path": ".agents/rules/生成前必读索引.md",
+          "sha256": "12583308ec9a16dbb8ea15571a5280291fed7e152167d2e4e8e00509a9a6370f",
+          "role": "reuse-first routing receipt"
+        },
+        {
+          "path": "contracts/operator_config/resnet50_reuse_first_integration_policy_v1.json",
+          "sha256": "c8886c946a15e281e2b9fc40c3e37523cc00d3aab330131572887f3d64de6960",
+          "role": "active immutable reuse policy manifest"
+        }
+      ],
+      "rule_ids": [
+        "CDA-REUSE-FIRST-DEFERRED-RETEST-001",
+        "CDA-DEQUANT-NODE0072-CONFIG-ONLY-E2-001",
+        "CDA-DEQUANT-MATERIALIZED-CONSTANT-NORMALIZATION-001",
+        "CDA-VIEW-PHYSICAL-IDENTITY-001",
+        "CDA-VIEW-ENDPOINT-COVERAGE-001",
+        "CDA-VIEW-ACCEPTED-LIFETIME-001"
+      ],
+      "storage_identity": {
+        "storage_id": "r5:activation:node-0072:D:tensor-50c285690f899b1b:slice-sharded-28x4736-v1",
+        "identity_class": "SLICE_SHARDED_ACTIVATION",
+        "allocation_owner": "r5:hwop-0072-00:D",
+        "tensor_id": "tensor-50c285690f899b1b",
+        "dtype": "float32",
+        "logical_shape": [
+          16,
+          2048,
+          1,
+          1
+        ],
+        "logical_byte_strides": [
+          8192,
+          4,
+          4,
+          4
+        ],
+        "logical_element_count": 32768,
+        "logical_valid_byte_span": 131072,
+        "byte_offset_within_allocation": 0,
+        "physical_address_space": "NDP_PER_SLICE_DDR",
+        "allocation_owner_remains_producer": true,
+        "flatten_may_allocate_or_relocate": false
+      },
+      "base_and_offset": {
+        "slice_count": 28,
+        "slice0_base_addr": "0x000004a0",
+        "slice_address_stride_bytes": 33554432,
+        "base_formula": "D_base(slice)=0x000004a0+(slice_id<<25)",
+        "d_offset_from_node0072_a_bytes": 1184,
+        "consumer_required_view_byte_offset": 0,
+        "same_storage_requires_identical_per_slice_bases": true
+      },
+      "coverage": {
+        "physical_written_bytes": 132608,
+        "logical_valid_bytes": 131072,
+        "physical_padding_bytes": 1536,
+        "padding_location": "slice27 local byte range [3200,4736)",
+        "padding_value_bits": "0x00000000",
+        "logical_mapping": "logical flat byte k maps to slice=floor(k/4736), local_byte=k mod 4736",
+        "logical_inverse_complete": true,
+        "logical_inverse_unique": true,
+        "slice_records": [
+          {
+            "slice_id": 0,
+            "physical_d_base_addr": "0x000004a0",
+            "allocation_byte_offset": 0,
+            "physical_written_bytes": 4736,
+            "valid_logical_byte_offset": 0,
+            "valid_logical_bytes": 4736,
+            "physical_padding_bytes": 0,
+            "final_written_byte_coverage_complete": true,
+            "final_written_byte_coverage_unique": true
+          },
+          {
+            "slice_id": 1,
+            "physical_d_base_addr": "0x020004a0",
+            "allocation_byte_offset": 0,
+            "physical_written_bytes": 4736,
+            "valid_logical_byte_offset": 4736,
+            "valid_logical_bytes": 4736,
+            "physical_padding_bytes": 0,
+            "final_written_byte_coverage_complete": true,
+            "final_written_byte_coverage_unique": true
+          },
+          {
+            "slice_id": 2,
+            "physical_d_base_addr": "0x040004a0",
+            "allocation_byte_offset": 0,
+            "physical_written_bytes": 4736,
+            "valid_logical_byte_offset": 9472,
+            "valid_logical_bytes": 4736,
+            "physical_padding_bytes": 0,
+            "final_written_byte_coverage_complete": true,
+            "final_written_byte_coverage_unique": true
+          },
+          {
+            "slice_id": 3,
+            "physical_d_base_addr": "0x060004a0",
+            "allocation_byte_offset": 0,
+            "physical_written_bytes": 4736,
+            "valid_logical_byte_offset": 14208,
+            "valid_logical_bytes": 4736,
+            "physical_padding_bytes": 0,
+            "final_written_byte_coverage_complete": true,
+            "final_written_byte_coverage_unique": true
+          },
+          {
+            "slice_id": 4,
+            "physical_d_base_addr": "0x080004a0",
+            "allocation_byte_offset": 0,
+            "physical_written_bytes": 4736,
+            "valid_logical_byte_offset": 18944,
+            "valid_logical_bytes": 4736,
+            "physical_padding_bytes": 0,
+            "final_written_byte_coverage_complete": true,
+            "final_written_byte_coverage_unique": true
+          },
+          {
+            "slice_id": 5,
+            "physical_d_base_addr": "0x0a0004a0",
+            "allocation_byte_offset": 0,
+            "physical_written_bytes": 4736,
+            "valid_logical_byte_offset": 23680,
+            "valid_logical_bytes": 4736,
+            "physical_padding_bytes": 0,
+            "final_written_byte_coverage_complete": true,
+            "final_written_byte_coverage_unique": true
+          },
+          {
+            "slice_id": 6,
+            "physical_d_base_addr": "0x0c0004a0",
+            "allocation_byte_offset": 0,
+            "physical_written_bytes": 4736,
+            "valid_logical_byte_offset": 28416,
+            "valid_logical_bytes": 4736,
+            "physical_padding_bytes": 0,
+            "final_written_byte_coverage_complete": true,
+            "final_written_byte_coverage_unique": true
+          },
+          {
+            "slice_id": 7,
+            "physical_d_base_addr": "0x0e0004a0",
+            "allocation_byte_offset": 0,
+            "physical_written_bytes": 4736,
+            "valid_logical_byte_offset": 33152,
+            "valid_logical_bytes": 4736,
+            "physical_padding_bytes": 0,
+            "final_written_byte_coverage_complete": true,
+            "final_written_byte_coverage_unique": true
+          },
+          {
+            "slice_id": 8,
+            "physical_d_base_addr": "0x100004a0",
+            "allocation_byte_offset": 0,
+            "physical_written_bytes": 4736,
+            "valid_logical_byte_offset": 37888,
+            "valid_logical_bytes": 4736,
+            "physical_padding_bytes": 0,
+            "final_written_byte_coverage_complete": true,
+            "final_written_byte_coverage_unique": true
+          },
+          {
+            "slice_id": 9,
+            "physical_d_base_addr": "0x120004a0",
+            "allocation_byte_offset": 0,
+            "physical_written_bytes": 4736,
+            "valid_logical_byte_offset": 42624,
+            "valid_logical_bytes": 4736,
+            "physical_padding_bytes": 0,
+            "final_written_byte_coverage_complete": true,
+            "final_written_byte_coverage_unique": true
+          },
+          {
+            "slice_id": 10,
+            "physical_d_base_addr": "0x140004a0",
+            "allocation_byte_offset": 0,
+            "physical_written_bytes": 4736,
+            "valid_logical_byte_offset": 47360,
+            "valid_logical_bytes": 4736,
+            "physical_padding_bytes": 0,
+            "final_written_byte_coverage_complete": true,
+            "final_written_byte_coverage_unique": true
+          },
+          {
+            "slice_id": 11,
+            "physical_d_base_addr": "0x160004a0",
+            "allocation_byte_offset": 0,
+            "physical_written_bytes": 4736,
+            "valid_logical_byte_offset": 52096,
+            "valid_logical_bytes": 4736,
+            "physical_padding_bytes": 0,
+            "final_written_byte_coverage_complete": true,
+            "final_written_byte_coverage_unique": true
+          },
+          {
+            "slice_id": 12,
+            "physical_d_base_addr": "0x180004a0",
+            "allocation_byte_offset": 0,
+            "physical_written_bytes": 4736,
+            "valid_logical_byte_offset": 56832,
+            "valid_logical_bytes": 4736,
+            "physical_padding_bytes": 0,
+            "final_written_byte_coverage_complete": true,
+            "final_written_byte_coverage_unique": true
+          },
+          {
+            "slice_id": 13,
+            "physical_d_base_addr": "0x1a0004a0",
+            "allocation_byte_offset": 0,
+            "physical_written_bytes": 4736,
+            "valid_logical_byte_offset": 61568,
+            "valid_logical_bytes": 4736,
+            "physical_padding_bytes": 0,
+            "final_written_byte_coverage_complete": true,
+            "final_written_byte_coverage_unique": true
+          },
+          {
+            "slice_id": 14,
+            "physical_d_base_addr": "0x1c0004a0",
+            "allocation_byte_offset": 0,
+            "physical_written_bytes": 4736,
+            "valid_logical_byte_offset": 66304,
+            "valid_logical_bytes": 4736,
+            "physical_padding_bytes": 0,
+            "final_written_byte_coverage_complete": true,
+            "final_written_byte_coverage_unique": true
+          },
+          {
+            "slice_id": 15,
+            "physical_d_base_addr": "0x1e0004a0",
+            "allocation_byte_offset": 0,
+            "physical_written_bytes": 4736,
+            "valid_logical_byte_offset": 71040,
+            "valid_logical_bytes": 4736,
+            "physical_padding_bytes": 0,
+            "final_written_byte_coverage_complete": true,
+            "final_written_byte_coverage_unique": true
+          },
+          {
+            "slice_id": 16,
+            "physical_d_base_addr": "0x200004a0",
+            "allocation_byte_offset": 0,
+            "physical_written_bytes": 4736,
+            "valid_logical_byte_offset": 75776,
+            "valid_logical_bytes": 4736,
+            "physical_padding_bytes": 0,
+            "final_written_byte_coverage_complete": true,
+            "final_written_byte_coverage_unique": true
+          },
+          {
+            "slice_id": 17,
+            "physical_d_base_addr": "0x220004a0",
+            "allocation_byte_offset": 0,
+            "physical_written_bytes": 4736,
+            "valid_logical_byte_offset": 80512,
+            "valid_logical_bytes": 4736,
+            "physical_padding_bytes": 0,
+            "final_written_byte_coverage_complete": true,
+            "final_written_byte_coverage_unique": true
+          },
+          {
+            "slice_id": 18,
+            "physical_d_base_addr": "0x240004a0",
+            "allocation_byte_offset": 0,
+            "physical_written_bytes": 4736,
+            "valid_logical_byte_offset": 85248,
+            "valid_logical_bytes": 4736,
+            "physical_padding_bytes": 0,
+            "final_written_byte_coverage_complete": true,
+            "final_written_byte_coverage_unique": true
+          },
+          {
+            "slice_id": 19,
+            "physical_d_base_addr": "0x260004a0",
+            "allocation_byte_offset": 0,
+            "physical_written_bytes": 4736,
+            "valid_logical_byte_offset": 89984,
+            "valid_logical_bytes": 4736,
+            "physical_padding_bytes": 0,
+            "final_written_byte_coverage_complete": true,
+            "final_written_byte_coverage_unique": true
+          },
+          {
+            "slice_id": 20,
+            "physical_d_base_addr": "0x280004a0",
+            "allocation_byte_offset": 0,
+            "physical_written_bytes": 4736,
+            "valid_logical_byte_offset": 94720,
+            "valid_logical_bytes": 4736,
+            "physical_padding_bytes": 0,
+            "final_written_byte_coverage_complete": true,
+            "final_written_byte_coverage_unique": true
+          },
+          {
+            "slice_id": 21,
+            "physical_d_base_addr": "0x2a0004a0",
+            "allocation_byte_offset": 0,
+            "physical_written_bytes": 4736,
+            "valid_logical_byte_offset": 99456,
+            "valid_logical_bytes": 4736,
+            "physical_padding_bytes": 0,
+            "final_written_byte_coverage_complete": true,
+            "final_written_byte_coverage_unique": true
+          },
+          {
+            "slice_id": 22,
+            "physical_d_base_addr": "0x2c0004a0",
+            "allocation_byte_offset": 0,
+            "physical_written_bytes": 4736,
+            "valid_logical_byte_offset": 104192,
+            "valid_logical_bytes": 4736,
+            "physical_padding_bytes": 0,
+            "final_written_byte_coverage_complete": true,
+            "final_written_byte_coverage_unique": true
+          },
+          {
+            "slice_id": 23,
+            "physical_d_base_addr": "0x2e0004a0",
+            "allocation_byte_offset": 0,
+            "physical_written_bytes": 4736,
+            "valid_logical_byte_offset": 108928,
+            "valid_logical_bytes": 4736,
+            "physical_padding_bytes": 0,
+            "final_written_byte_coverage_complete": true,
+            "final_written_byte_coverage_unique": true
+          },
+          {
+            "slice_id": 24,
+            "physical_d_base_addr": "0x300004a0",
+            "allocation_byte_offset": 0,
+            "physical_written_bytes": 4736,
+            "valid_logical_byte_offset": 113664,
+            "valid_logical_bytes": 4736,
+            "physical_padding_bytes": 0,
+            "final_written_byte_coverage_complete": true,
+            "final_written_byte_coverage_unique": true
+          },
+          {
+            "slice_id": 25,
+            "physical_d_base_addr": "0x320004a0",
+            "allocation_byte_offset": 0,
+            "physical_written_bytes": 4736,
+            "valid_logical_byte_offset": 118400,
+            "valid_logical_bytes": 4736,
+            "physical_padding_bytes": 0,
+            "final_written_byte_coverage_complete": true,
+            "final_written_byte_coverage_unique": true
+          },
+          {
+            "slice_id": 26,
+            "physical_d_base_addr": "0x340004a0",
+            "allocation_byte_offset": 0,
+            "physical_written_bytes": 4736,
+            "valid_logical_byte_offset": 123136,
+            "valid_logical_bytes": 4736,
+            "physical_padding_bytes": 0,
+            "final_written_byte_coverage_complete": true,
+            "final_written_byte_coverage_unique": true
+          },
+          {
+            "slice_id": 27,
+            "physical_d_base_addr": "0x360004a0",
+            "allocation_byte_offset": 0,
+            "physical_written_bytes": 4736,
+            "valid_logical_byte_offset": 127872,
+            "valid_logical_bytes": 3200,
+            "physical_padding_bytes": 1536,
+            "final_written_byte_coverage_complete": true,
+            "final_written_byte_coverage_unique": true
+          }
+        ]
+      },
+      "final_accepted_write_completion": {
+        "evidence_scope": "FROZEN_NODE0072_LOCAL_E2_REUSED_NOT_RERUN",
+        "static_validator_completion_path_accepted": true,
+        "execplan_start_and_all_slice_d_address_writes_accepted": true,
+        "config_bound_simulator_all_physical_d_writes_complete": true,
+        "dynamic_hardware_final_write_accepted": false,
+        "integrated_node0072_to_node0073_completion_accepted": false
+      },
+      "visibility_and_lifetime": {
+        "producer_visibility_event": "node0072 final D write accepted AND node0072 completion accepted",
+        "consumer_first_legal_read": "after producer_visibility_event",
+        "required_release_event": "node0074 final A input-data accepted AND no pending/replayed read; fallback=node0074 completion accepted",
+        "allocation_owner": "r5:hwop-0072-00:D",
+        "flatten_owns_no_allocation": true,
+        "shared_multi_operator_barrier_materialized": false,
+        "integrated_visibility_lifetime_status": "DEFERRED_TO_INTEGRATION"
+      },
+      "addressed_identities": {
+        "addressed_graph": {
+          "path": "artifacts/operator_config_validation/r5-dequant-node0072-config-only-e2-v1/isolated_toolchain/model_execplan/output/dq72/dq72_withbaseaddr.json",
+          "sha256": "2c9cf00cd6ac03ac2f09236a4868d7b2fb6bd61f3e48a18de13d3f4630a3d7d1"
+        },
+        "final_address_bound_json": {
+          "path": "artifacts/operator_config_validation/r5-dequant-node0072-config-only-e2-v1/isolated_toolchain/model_execplan/output/dq72/jsons/op0_dq72_u8_f32_cfg_v1.json",
+          "sha256": "de212d8d49bc963bc08a5691879433c165ef2aa938aa2581b56c25e75a92da50"
+        },
+        "execplan": {
+          "path": "artifacts/operator_config_validation/r5-dequant-node0072-config-only-e2-v1/isolated_toolchain/model_execplan/output/dq72/install/execplan.txt",
+          "sha256": "fdcdd46b878cdf7582b072ec1438a0211a01f34bf7245a280ea6dd1e7e322687"
+        },
+        "sca": {
+          "path": "artifacts/operator_config_validation/r5-dequant-node0072-config-only-e2-v1/isolated_toolchain/model_execplan/output/dq72/sca_cfg.json",
+          "sha256": "a1131970cc29df9baf7e0186f8fdc5e00785681dd6c05d2592ae75cf7a61fc2a"
+        },
+        "sca_d": {
+          "path": "artifacts/operator_config_validation/r5-dequant-node0072-config-only-e2-v1/isolated_toolchain/model_execplan/output/dq72/sca_cfg_D.json",
+          "sha256": "68e6cf00f09bc16ebdfddab72b63b9f3cb4fd0d3a4d8e3a80bb06162a09ff1ae"
+        },
+        "layout_contract": {
+          "path": "artifacts/operator_config_validation/r5-dequant-node0072-config-only-e2-v1/layout_evidence.json",
+          "sha256": "4a8d3ac9ef7f965b944ef8d116b324f2229dabdd86b9b39a7699fd984f55b61a"
+        }
+      },
+      "consumer_match_requirements": {
+        "required_storage_id": "r5:activation:node-0072:D:tensor-50c285690f899b1b:slice-sharded-28x4736-v1",
+        "required_identical_per_slice_bases": true,
+        "required_view_byte_offset": 0,
+        "required_valid_read_bytes": 131072,
+        "flatten_input_strides": [
+          8192,
+          4,
+          4,
+          4
+        ],
+        "flatten_output_strides": [
+          8192,
+          4
+        ],
+        "flatten_section_present": false,
+        "quantize_section_present": false
+      },
+      "deferred_dependencies": {
+        "upstream": [
+          "B_GAP_NODE0071_TO_NODE0072_INTEGRATED_BINDING"
+        ],
+        "dequant_production_or_integration": [
+          "B_DEQUANT_NODE0072_NATIVE_STANDALONE_PATH",
+          "B_DEQUANT_NODE0072_FORMAL_LAYOUT_APPROVAL",
+          "B_DEQUANT_NODE0072_HARDWARE_E4_E5",
+          "B_DEQUANT_NODE0072_TO_NODE0073_INTEGRATED_BINDING"
+        ],
+        "fallback_owner_on_first_divergence": "DequantizeLinear if the first integrated divergence is in node0072-D value, base, coverage, completion or producer visibility"
+      },
+      "claim_boundary": {
+        "dequant_local_e2_preserved": true,
+        "integrated_endpoint_closed": false,
+        "counts_as_new_e2": false,
+        "counts_as_e4_or_e5": false,
+        "counts_as_formal_three_party_node": false,
+        "formal_three_party_count_remains": "1/78",
+        "precise_materialized_json_count_incremented": false,
+        "reason": "This manifest binds frozen endpoint fields and does not materialize a new operator JSON."
+      },
+      "package_release": {
+        "state": "NONE",
+        "server_package_generated": false,
+        "server_files_inspected": false,
+        "server_upload_or_run": false,
+        "server_lease": false
+      }
+    },
+    "QuantizeLinear": {
+      "owner_family": "QuantizeLinear",
+      "owner_node": "node-0074",
+      "owner_hwop": "r5:hwop-0074-00",
+      "owner_port": "A",
+      "owner_section_content_sha256": "c9fd80cc6b81a6569dfc3a38f3d46fd9804093d4b4f51d4c5a0cbf1ea911fd53",
+      "status": "APPROVED_EQUIVALENT_WAIT_INTEGRATION_OWNER",
+      "numeric_analysis_repeated": true,
+      "accepted_primitive_retested": false,
+      "consumed_reuse_assets": true,
+      "reuse_class": "APPROVED_EQUIVALENT",
+      "reuse_status": "FROZEN_CHAIN_EQUIVALENT_GENERIC_DIVIDER_BLOCKER_RETAINED_OFF_PATH",
+      "audit_contract": {
+        "path": "contracts/operator_config/quantize_node0074_exact_division_reuse_audit_v2.json",
+        "sha256": "7892b1dc2b54161ee2d5cab3c033d2a72bec19bbabaf269a38099674e2e45bdf"
+      },
+      "identity_fusion_contract": {
+        "path": "contracts/operator_config/quantize_node0074_dq_view_q_identity_fusion_v1.json",
+        "sha256": "7f9dbfa7d92a70c310c04275ee7c1f90dfa763de975d68bf663d3f20cbc073db"
+      },
+      "original_arithmetic_path_consumer_tensor": {
+        "tensor_id": "tensor-9b1363d3baf474c8",
+        "dtype": "float32",
+        "logical_shape": [
+          16,
+          2048
+        ],
+        "logical_byte_strides": [
+          8192,
+          4
+        ],
+        "logical_element_count": 32768,
+        "required_read_bytes": 131072,
+        "formal_identity_sha256": "3c59f1721a8a18c862764229f5f002ad3f976147add4a582ff26b853d3eeaa52"
+      },
+      "approved_equivalent_rewrite": {
+        "scope": "frozen node0072->node0073->node0074 instance only",
+        "source_tensor_id": "tensor-ab32f279540568c3",
+        "source_storage_id": "r5:activation:node-0071:D:tensor-ab32f279540568c3:batch-slice-sharded-16x2048-v1",
+        "source_dtype": "uint8",
+        "source_shape": [
+          16,
+          2048,
+          1,
+          1
+        ],
+        "alias_tensor_id": "tensor-6fbd5707d5f08110",
+        "alias_dtype": "uint8",
+        "alias_shape": [
+          16,
+          2048
+        ],
+        "alias_byte_strides": [
+          2048,
+          1
+        ],
+        "view_offset_bytes": 0,
+        "element_order": "C_NCHW_trailing_unit_dims_to_C_NC",
+        "typed_rewrite_closed": true,
+        "physical_integration_closed": false,
+        "host_precompute_used": false,
+        "scaled_rounded_saturated_or_final_tensor_replayed": false,
+        "reciprocal_or_multiply_used_as_division": false,
+        "old_fp32_endpoint_reused": false
+      },
+      "qparams": {
+        "scale_dtype": "float32",
+        "scale_bits": "0x3cbf57ec",
+        "scale_value_sha256": "a0da76078599a1809616c74430a869c573c530c8f89dec21191c963aadb321bc",
+        "zero_point_dtype": "uint8",
+        "zero_point": 0,
+        "zero_point_value_sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d",
+        "axis": null,
+        "quantization_granularity": "per_tensor",
+        "dequant_and_quant_bitwise_identical": true,
+        "node0075_a_qdomain_identical": true
+      },
+      "exact_equivalence": {
+        "input_domain": [
+          0,
+          255
+        ],
+        "domain_value_count": 256,
+        "mismatch_count": 0,
+        "noninteger_unrounded_exact_quotient_count": 234,
+        "noninteger_binary32_quotient_count": 50,
+        "maximum_binary32_quotient_error_exact": "1/65536",
+        "maximum_binary32_quotient_error_u": 172,
+        "minimum_margin_to_wrong_nearest_even_boundary_exact": "32767/65536",
+        "per_value_records_sha256": "d074a345d23915884423ab5279e0f58d327ffec44b94dbea5d703910228fa59a",
+        "identity_for_all_uint8_values": true
+      },
+      "numeric_capability": {
+        "required_operation": "binary32_divide(x,scale) -> nearest-even -> zero-point -> uint8 saturation",
+        "direct_binary32_division_entry": null,
+        "reciprocal_mul_equivalent": false,
+        "same_scale_counterexample": {
+          "x_bits": "0x406cefe0",
+          "divide_then_rne_uint8": 159,
+          "reciprocal_mul_then_rne_uint8": 158
+        },
+        "first_unavoidable_break": "exact_binary32_division_opcode_and_config_entry",
+        "minimum_missing_capability": "EXACT_BINARY32_DIVIDE_RNE",
+        "blocker_id": "B_QUANT_NODE0074_EXACT_DIVISION",
+        "shared_blocker_id": "B_QUANT_TAIL_EXACT_FP32_DIVISION",
+        "generic_family_capability_status": "OPEN",
+        "on_frozen_chain_execution_path": false,
+        "off_path_reason": "node0072 and node0074 arithmetic are eliminated together for the bitwise-identical frozen qparams"
+      },
+      "consumer_owned_endpoint_fields": {
+        "final_storage_identity": null,
+        "final_producer_base": null,
+        "final_view_offset": null,
+        "final_consumer_base": null,
+        "final_read_coverage": null,
+        "final_accepted_lifetime": null
+      },
+      "endpoint_claim": {
+        "same_storage_claimed": false,
+        "base_plus_offset_claimed": false,
+        "read_coverage_claimed": false,
+        "accepted_lifetime_claimed": false,
+        "provisional_address_allowed": false,
+        "reason": "The equivalent typed rewrite is proven, but node0075 A occurrence addresses/read acceptance, shared allocator alias overlay, multi-operator visibility barrier and release lifetime are not materialized.",
+        "first_integration_blocker": "B_QUANT_NODE0074_IDENTITY_FUSION_NODE0075_BINDING",
+        "blocker_class": "WAIT_INTEGRATION_OWNER",
+        "next_owner": "QLinearMatMul/integration allocator+execplan owner"
+      },
+      "generated_outputs": {
+        "target_json": false,
+        "mapping": false,
+        "bitstream": false,
+        "execplan": false,
+        "sca": false,
+        "server_package": false,
+        "candidate_release": false
+      },
+      "claim_boundary": {
+        "consumer_requirement_projection_only": false,
+        "instance_equivalence_adjudicated": true,
+        "integrated_endpoint_closed": false,
+        "counts_as_new_e2": false,
+        "counts_as_e4_or_e5": false,
+        "formal_endpoint_claimed": false,
+        "generic_quantize_capability_closed": false
+      },
+      "package_release": {
+        "state": "NONE",
+        "server_package_generated": false,
+        "server_files_inspected": false,
+        "server_upload_or_run": false,
+        "server_lease": false
+      }
+    },
+    "Flatten_View": {
+      "owner_family": "Flatten_View",
+      "owner_node": "node-0073",
+      "owner_hwop": "r5:hwop-0073-00",
+      "owner_role": "metadata-only physical alias",
+      "owner_section_content_sha256": "21e9f13fe422d7e6a6f4a0dae729380fc523c3030faad380d71d6ce6f9781d86",
+      "reuse_status": "REUSE_ACCEPTED_FOR_INTEGRATION",
+      "reuse_class": "EXACT_METADATA_ONLY_VIEW",
+      "numeric_analysis_repeated": false,
+      "element_address_mapping_retested": false,
+      "consumed_reuse_assets": true,
+      "immutable_sources": [
+        {
+          "path": "contracts/operator_config/node0072_node0073_node0074_shared_endpoint_manifest_v1.json",
+          "sha256": "3d9589db8505502ad575c68b2eeab65c62a645842b78b29ca35ab0547886fbb9",
+          "role": "read-only requirement/View projection"
+        },
+        {
+          "path": "configs/view/node0073_zero_copy_view_v1.json",
+          "sha256": "a63655c339ab68b7edad6d7c9a30776d369749dda80d3b5661152ec07582bddc",
+          "role": "frozen Flatten/View source receipt"
+        },
+        {
+          "path": "contracts/operator_config/flatten_node0073_physical_view_v1.json",
+          "sha256": "067351563c40fb1b95e63f3b327e9758f19c49c72d3c48b348d223426ada9851",
+          "role": "frozen Flatten/View source receipt"
+        },
+        {
+          "path": "artifacts/operator_config_validation/r5-flatten-node0073-view-v1/validation_report.json",
+          "sha256": "62b92ffad44bc89ea6e6a97c6f77110170e208ccefde0f63ffed1cabea61b13c",
+          "role": "frozen Flatten/View source receipt"
+        },
+        {
+          "path": ".agents/rules/Flatten_View算子配置规则.md",
+          "sha256": "28ba3a92fecbb83149d494867429c34aa3124040a5c59fe99c4b9481feb3b7ee",
+          "role": "frozen Flatten/View source receipt"
+        },
+        {
+          "path": ".agents/rules/算子配置规则.md",
+          "sha256": "cbaffcc5fb3bea7da9f0c199bb2e7f06445a676ab456bdfd505b90dd89825171",
+          "role": "frozen Flatten/View source receipt"
+        },
+        {
+          "path": ".agents/rules/生成前必读索引.md",
+          "sha256": "12583308ec9a16dbb8ea15571a5280291fed7e152167d2e4e8e00509a9a6370f",
+          "role": "frozen Flatten/View source receipt"
+        }
+      ],
+      "rule_ids": [
+        "CDA-REUSE-FIRST-DEFERRED-RETEST-001",
+        "CDA-VIEW-METADATA-ONLY-001",
+        "CDA-VIEW-PHYSICAL-IDENTITY-001",
+        "CDA-VIEW-ENDPOINT-COVERAGE-001",
+        "CDA-VIEW-ACCEPTED-LIFETIME-001",
+        "CDA-VIEW-INTEGRATED-CLAIM-BOUNDARY-001"
+      ],
+      "metadata_alias": {
+        "input_tensor_id": "tensor-50c285690f899b1b",
+        "output_tensor_id": "tensor-9b1363d3baf474c8",
+        "dtype": "float32",
+        "input_shape": [
+          16,
+          2048,
+          1,
+          1
+        ],
+        "output_shape": [
+          16,
+          2048
+        ],
+        "input_byte_strides": [
+          8192,
+          4,
+          4,
+          4
+        ],
+        "output_byte_strides": [
+          8192,
+          4
+        ],
+        "linear_order": "C",
+        "logical_element_count": 32768,
+        "logical_byte_span": 131072,
+        "required_storage_id": "r5:activation:node-0072:D:tensor-50c285690f899b1b:slice-sharded-28x4736-v1",
+        "producer_byte_offset": 0,
+        "view_byte_offset_delta": 0,
+        "consumer_required_byte_offset": 0,
+        "address_equation": "node0073_output_addr(n,c)=node0072_D_addr(n,c,0,0)=D_base(slice)+local_byte",
+        "mapping_proof_reused_not_recomputed": true
+      },
+      "materialization": {
+        "kind": "execplan_metadata_zero_copy_alias",
+        "arithmetic_json_generated": false,
+        "mapping_or_bitstream_generated": false,
+        "hardware_instruction_count": 0,
+        "hardware_memory_request_count": 0,
+        "copy_enabled": false,
+        "replay_enabled": false,
+        "host_precomputed_internal_or_final_tensor_enabled": false
+      },
+      "allocation_ownership": {
+        "allocation_owner": "r5:hwop-0072-00:D",
+        "allocation_owner_storage_id": "r5:activation:node-0072:D:tensor-50c285690f899b1b:slice-sharded-28x4736-v1",
+        "view_owns_allocation": false,
+        "view_may_allocate": false,
+        "view_may_relocate": false,
+        "view_may_release": false,
+        "consumer_role": "read-only borrower"
+      },
+      "endpoint_requirements": {
+        "same_storage_id_required": true,
+        "identical_per_slice_base_required": true,
+        "base_plus_offset_delta_bytes": 0,
+        "producer_final_valid_write_bytes_required": 131072,
+        "consumer_final_valid_read_bytes_required": 131072,
+        "producer_occurrence_address_proof_reused": true,
+        "consumer_occurrence_address_proof_present": false,
+        "allocator_plan_present": false,
+        "shared_multi_operator_addressed_execplan_present": false,
+        "quantize_owner_section_present": true
+      },
+      "accepted_lifetime_requirement": {
+        "producer_visibility_event": "node0072 final D write accepted AND node0072 completion accepted",
+        "consumer_first_legal_read": "after producer_visibility_event",
+        "release_precondition": "node0074 final A input-data accepted AND no pending/replayed read",
+        "conservative_release_fallback": "node0074 completion accepted",
+        "copy_or_replay_fallback_allowed": false,
+        "integrated_lifetime_certificate_present": false
+      },
+      "claim_boundary": {
+        "view_projection_ready": true,
+        "producer_plus_view_ready": true,
+        "quantize_section_present": true,
+        "quantize_exact_division_pending": true,
+        "integrated_endpoint_closed": false,
+        "integrated_target_local_e2": false,
+        "claim_label": null,
+        "counts_as_new_e2": false,
+        "counts_as_e4_or_e5": false
+      },
+      "package_release": {
+        "state": "NONE",
+        "server_package_generated": false,
+        "server_files_inspected": false,
+        "server_upload_or_run": false,
+        "server_lease": false
+      }
+    }
+  },
+  "required_missing_owner_sections": [],
+  "cross_owner_gates": {
+    "owner_sections_present": "DEQUANT_FLATTEN_QUANTIZE_PRESENT",
+    "producer_view_projection": "READY",
+    "quantize_exact_division": "OPEN",
+    "same_storage_match": "BLOCKED_BY_NULL_QUANTIZE_ENDPOINT",
+    "base_plus_offset_match": "BLOCKED_BY_NULL_QUANTIZE_ENDPOINT",
+    "producer_write_vs_consumer_read_coverage": "PRODUCER_READY_CONSUMER_PENDING_EXACT_DIVISION",
+    "accepted_visibility_lifetime": "PENDING_CONSUMER_AND_SHARED_MULTI_OPERATOR_ALLOCATOR_EXECPLAN"
+  },
+  "integrated_endpoint_closed": false,
+  "server_package_generated": false,
+  "claim_boundary": "DequantizeLinear, Flatten/View and QuantizeLinear owner sections are present and immutable. QuantizeLinear exact division leaves all six consumer endpoint fields null; consumer occurrence/address coverage and the shared allocator/execplan/lifetime certificate remain pending. No integrated E2, E4/E5 or package claim is enabled."
+}

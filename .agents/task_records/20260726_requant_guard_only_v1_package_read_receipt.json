@@ -1,0 +1,88 @@
+{
+  "schema": "requant-guard-only-package-read-receipt-v1",
+  "read_complete": true,
+  "read_at_local_date": "2026-07-26",
+  "scope": "rq_node0001_guardonly_stock_v1 generation and local validation",
+  "rules": [
+    {
+      "path": ".agents/rules/生成前必读索引.md",
+      "sha256": "539e8dfbe52ad9fc8bd9fdef8c69d448fb5fd713e938e3adc5f663f82fd806d7"
+    },
+    {
+      "path": ".agents/rules/服务器测试包生成规则.md",
+      "sha256": "bdddfedd8d361d745298ac36db9862638a54096eac3d7da5c77e852a3e8dfeea"
+    },
+    {
+      "path": ".agents/rules/RequantizeUint8算子配置规则.md",
+      "sha256": "f0315f627a492a660c91a95aa12d46339518863b79358280e498dc2125799cf3"
+    },
+    {
+      "path": "NDP_copy01/README_HARDWARE_SIM_ENTRY.md",
+      "sha256": "4318f3a28de399fb522740315f11bdddf346e71969cf1e45686899a568b042d7"
+    }
+  ],
+  "return_adjudication": {
+    "path": "server_returns/rq_node0001_atomic2_stock_v2_return_analysis_20260726.json",
+    "sha256": "a51a651eff4cb546b67f62b2cf40297c3e78d58f28dc809fc7751983317c6d19",
+    "first_divergence": "GUARD_WRITE_PAYLOAD_ZERO_AFTER_NONZERO_INPUT_PRELOAD",
+    "enabled_followup": "guard-only"
+  },
+  "actual_server_consumers": [
+    {
+      "path": "NDP_copy01/Makefile.tb_NDP_Top_new_phy",
+      "sha256": "528d93f3c7f458d256bdbaf1d9ec39edfbfe5bd8a924e2bf0786914a634f4aba"
+    },
+    {
+      "path": "NDP_copy01/tb_NDP_Top_new_phy.sv",
+      "sha256": "e068f7500f0c71c2ba2c756f74a4519c33d13d4afe0fa4cc9f6c9e79b1e3f994"
+    },
+    {
+      "path": "NDP_copy01/native_return_observer.svh",
+      "sha256": "47f0d66728f47c92f9f93f8cf87b47a0ff8567d587c3a099e2d03f610af09f49"
+    },
+    {
+      "path": "NDP_copy01/rtl/Slice/LSU/Stream_Engine/Memory_Stream_Engine/Memory_RD_Stream_Engine/RD_Memory_AG.sv",
+      "sha256": "4a4e6d591099113eebdcce5b9231f209e1bc3166038132eb0448c0f65e30c4f6"
+    },
+    {
+      "path": "NDP_copy01/rtl/Slice/LSU/Stream_Engine/Memory_Stream_Engine/Memory_WR_Stream_Engine/WR_Memory_AG.sv",
+      "sha256": "7ecfdf2e4a9493f1f470cac03b4b581f6bde95126ab163a55dff8918d3aaa09f"
+    },
+    {
+      "path": "NDP_copy01/rtl/Slice/General_Array/GA_Inport/GA_Inport_Group.sv",
+      "sha256": "2faff6a0a48d1f6d2363f23009012dc8e0a964aba40ff78cb390ad4c96f900ab"
+    },
+    {
+      "path": "NDP_copy01/rtl/Slice/General_Array/GA_Inport/GA_Inport.sv",
+      "sha256": "42a7ac1d740c758de9656ee0d41663ef1c8b11253e76ba2e20be6faee2d12e17"
+    },
+    {
+      "path": "NDP_copy01/rtl/Slice/General_Array/GA_PE_Group/GA_PE_Group.sv",
+      "sha256": "ac6ce995896c1ac0ba4d6c45eae852f9637c0d86a72de038c33fc3f47d6ce77d"
+    },
+    {
+      "path": "NDP_copy01/rtl/Slice/General_Array/GA_PE_Group/GA_SFU_PE/GA_SFU_PE.sv",
+      "sha256": "fe09e7d44651cbc86dead5ee8bd406c90b8ffd4ad74b68acc3f46ea21781ffca"
+    },
+    {
+      "path": "NDP_copy01/rtl/Slice/General_Array/GA_PE_Group/GA_SFU_PE/GA_SFU_PE_Preprocess.sv",
+      "sha256": "79a285e4988e36b5fbb0ef4646131fd3ca559d7bc7ea0d4ee2751b544e2eb548"
+    },
+    {
+      "path": "NDP_copy01/rtl/Slice/General_Array/GA_PE_Group/GA_SFU_PE/GA_SFU_PE_Postprocess.sv",
+      "sha256": "074564e6b2a26dfbefd710082fedaf0f8c6e758f2bca3681b1f6404579c5ac06"
+    }
+  ],
+  "tool_consumers": [
+    "tools/build_requant_atomic_onecmd_server_test.py",
+    "tools/requant_atomic_server_runtime.py",
+    "tools/requant_node0001_server_runtime.py"
+  ],
+  "claim_boundary": {
+    "candidate_release": false,
+    "counts_as_node0001_e4": false,
+    "counts_as_node0001_e5": false,
+    "server_run_authorized_or_performed": false,
+    "functional_rtl_change_authorized_or_performed": false
+  }
+}

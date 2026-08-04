@@ -1,0 +1,792 @@
+{
+  "pair_local_address_policy": {
+    "mul_A": "0x00000000",
+    "mul_D_round_A": "0x00018800",
+    "reuse_across_wave_shard_pairs": true,
+    "round_D": "0x00031000"
+  },
+  "records": [
+    {
+      "channels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "config_sha256": "30a2b1be0ef0d078b6d66f55ce5620bcf3bd9f052350674d41b4ac458a1795dc",
+      "kind": "mul",
+      "shard": 0,
+      "wave": 0
+    },
+    {
+      "channels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "config_sha256": "b2cec76b7ff7a5cbaf05adde017d6397f95f41efb043506d9a734354be414d05",
+      "kind": "round",
+      "shard": 0,
+      "wave": 0
+    },
+    {
+      "channels": [
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15
+      ],
+      "config_sha256": "28684b199880ed8c1b1d2886576c5f27ff4815aa86e3c7be71055a7f70e33ee0",
+      "kind": "mul",
+      "shard": 1,
+      "wave": 0
+    },
+    {
+      "channels": [
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15
+      ],
+      "config_sha256": "b2cec76b7ff7a5cbaf05adde017d6397f95f41efb043506d9a734354be414d05",
+      "kind": "round",
+      "shard": 1,
+      "wave": 0
+    },
+    {
+      "channels": [
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23
+      ],
+      "config_sha256": "670eddabdc5b4bb6d7b6fdc5f836dc08c776c94e557e1d296f423cec2267d461",
+      "kind": "mul",
+      "shard": 2,
+      "wave": 0
+    },
+    {
+      "channels": [
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23
+      ],
+      "config_sha256": "b2cec76b7ff7a5cbaf05adde017d6397f95f41efb043506d9a734354be414d05",
+      "kind": "round",
+      "shard": 2,
+      "wave": 0
+    },
+    {
+      "channels": [
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31
+      ],
+      "config_sha256": "adb5447118b1b1f016525bff204597fa7244f0df875d2e3c23dd2f2f390a8d4b",
+      "kind": "mul",
+      "shard": 3,
+      "wave": 0
+    },
+    {
+      "channels": [
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31
+      ],
+      "config_sha256": "b2cec76b7ff7a5cbaf05adde017d6397f95f41efb043506d9a734354be414d05",
+      "kind": "round",
+      "shard": 3,
+      "wave": 0
+    },
+    {
+      "channels": [
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39
+      ],
+      "config_sha256": "8ebad1923878cd4c787c2b5e645d169574405396fd08737dcabe016fd1688eba",
+      "kind": "mul",
+      "shard": 4,
+      "wave": 0
+    },
+    {
+      "channels": [
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39
+      ],
+      "config_sha256": "b2cec76b7ff7a5cbaf05adde017d6397f95f41efb043506d9a734354be414d05",
+      "kind": "round",
+      "shard": 4,
+      "wave": 0
+    },
+    {
+      "channels": [
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47
+      ],
+      "config_sha256": "a657c42b4629e178008455fa1aa6e60902482380a0e7fc8c86356ddb62d22af7",
+      "kind": "mul",
+      "shard": 5,
+      "wave": 0
+    },
+    {
+      "channels": [
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47
+      ],
+      "config_sha256": "b2cec76b7ff7a5cbaf05adde017d6397f95f41efb043506d9a734354be414d05",
+      "kind": "round",
+      "shard": 5,
+      "wave": 0
+    },
+    {
+      "channels": [
+        48,
+        49,
+        50,
+        51,
+        52,
+        53,
+        54,
+        55
+      ],
+      "config_sha256": "b453997869494d645c3d1f62dff85f3d6e0de1c730568db52c2a85d14992a760",
+      "kind": "mul",
+      "shard": 6,
+      "wave": 0
+    },
+    {
+      "channels": [
+        48,
+        49,
+        50,
+        51,
+        52,
+        53,
+        54,
+        55
+      ],
+      "config_sha256": "b2cec76b7ff7a5cbaf05adde017d6397f95f41efb043506d9a734354be414d05",
+      "kind": "round",
+      "shard": 6,
+      "wave": 0
+    },
+    {
+      "channels": [
+        56,
+        57,
+        58,
+        59,
+        60,
+        61,
+        62,
+        63
+      ],
+      "config_sha256": "d40475d6aeac239173c135ca761cf4b56dcc8c65cfe3dcd922a6b8967017257a",
+      "kind": "mul",
+      "shard": 7,
+      "wave": 0
+    },
+    {
+      "channels": [
+        56,
+        57,
+        58,
+        59,
+        60,
+        61,
+        62,
+        63
+      ],
+      "config_sha256": "b2cec76b7ff7a5cbaf05adde017d6397f95f41efb043506d9a734354be414d05",
+      "kind": "round",
+      "shard": 7,
+      "wave": 0
+    },
+    {
+      "channels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "config_sha256": "30a2b1be0ef0d078b6d66f55ce5620bcf3bd9f052350674d41b4ac458a1795dc",
+      "kind": "mul",
+      "shard": 0,
+      "wave": 1
+    },
+    {
+      "channels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "config_sha256": "b2cec76b7ff7a5cbaf05adde017d6397f95f41efb043506d9a734354be414d05",
+      "kind": "round",
+      "shard": 0,
+      "wave": 1
+    },
+    {
+      "channels": [
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15
+      ],
+      "config_sha256": "28684b199880ed8c1b1d2886576c5f27ff4815aa86e3c7be71055a7f70e33ee0",
+      "kind": "mul",
+      "shard": 1,
+      "wave": 1
+    },
+    {
+      "channels": [
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15
+      ],
+      "config_sha256": "b2cec76b7ff7a5cbaf05adde017d6397f95f41efb043506d9a734354be414d05",
+      "kind": "round",
+      "shard": 1,
+      "wave": 1
+    },
+    {
+      "channels": [
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23
+      ],
+      "config_sha256": "670eddabdc5b4bb6d7b6fdc5f836dc08c776c94e557e1d296f423cec2267d461",
+      "kind": "mul",
+      "shard": 2,
+      "wave": 1
+    },
+    {
+      "channels": [
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23
+      ],
+      "config_sha256": "b2cec76b7ff7a5cbaf05adde017d6397f95f41efb043506d9a734354be414d05",
+      "kind": "round",
+      "shard": 2,
+      "wave": 1
+    },
+    {
+      "channels": [
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31
+      ],
+      "config_sha256": "adb5447118b1b1f016525bff204597fa7244f0df875d2e3c23dd2f2f390a8d4b",
+      "kind": "mul",
+      "shard": 3,
+      "wave": 1
+    },
+    {
+      "channels": [
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31
+      ],
+      "config_sha256": "b2cec76b7ff7a5cbaf05adde017d6397f95f41efb043506d9a734354be414d05",
+      "kind": "round",
+      "shard": 3,
+      "wave": 1
+    },
+    {
+      "channels": [
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39
+      ],
+      "config_sha256": "8ebad1923878cd4c787c2b5e645d169574405396fd08737dcabe016fd1688eba",
+      "kind": "mul",
+      "shard": 4,
+      "wave": 1
+    },
+    {
+      "channels": [
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39
+      ],
+      "config_sha256": "b2cec76b7ff7a5cbaf05adde017d6397f95f41efb043506d9a734354be414d05",
+      "kind": "round",
+      "shard": 4,
+      "wave": 1
+    },
+    {
+      "channels": [
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47
+      ],
+      "config_sha256": "a657c42b4629e178008455fa1aa6e60902482380a0e7fc8c86356ddb62d22af7",
+      "kind": "mul",
+      "shard": 5,
+      "wave": 1
+    },
+    {
+      "channels": [
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47
+      ],
+      "config_sha256": "b2cec76b7ff7a5cbaf05adde017d6397f95f41efb043506d9a734354be414d05",
+      "kind": "round",
+      "shard": 5,
+      "wave": 1
+    },
+    {
+      "channels": [
+        48,
+        49,
+        50,
+        51,
+        52,
+        53,
+        54,
+        55
+      ],
+      "config_sha256": "b453997869494d645c3d1f62dff85f3d6e0de1c730568db52c2a85d14992a760",
+      "kind": "mul",
+      "shard": 6,
+      "wave": 1
+    },
+    {
+      "channels": [
+        48,
+        49,
+        50,
+        51,
+        52,
+        53,
+        54,
+        55
+      ],
+      "config_sha256": "b2cec76b7ff7a5cbaf05adde017d6397f95f41efb043506d9a734354be414d05",
+      "kind": "round",
+      "shard": 6,
+      "wave": 1
+    },
+    {
+      "channels": [
+        56,
+        57,
+        58,
+        59,
+        60,
+        61,
+        62,
+        63
+      ],
+      "config_sha256": "d40475d6aeac239173c135ca761cf4b56dcc8c65cfe3dcd922a6b8967017257a",
+      "kind": "mul",
+      "shard": 7,
+      "wave": 1
+    },
+    {
+      "channels": [
+        56,
+        57,
+        58,
+        59,
+        60,
+        61,
+        62,
+        63
+      ],
+      "config_sha256": "b2cec76b7ff7a5cbaf05adde017d6397f95f41efb043506d9a734354be414d05",
+      "kind": "round",
+      "shard": 7,
+      "wave": 1
+    },
+    {
+      "channels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "config_sha256": "30a2b1be0ef0d078b6d66f55ce5620bcf3bd9f052350674d41b4ac458a1795dc",
+      "kind": "mul",
+      "shard": 0,
+      "wave": 2
+    },
+    {
+      "channels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "config_sha256": "b2cec76b7ff7a5cbaf05adde017d6397f95f41efb043506d9a734354be414d05",
+      "kind": "round",
+      "shard": 0,
+      "wave": 2
+    },
+    {
+      "channels": [
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15
+      ],
+      "config_sha256": "28684b199880ed8c1b1d2886576c5f27ff4815aa86e3c7be71055a7f70e33ee0",
+      "kind": "mul",
+      "shard": 1,
+      "wave": 2
+    },
+    {
+      "channels": [
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15
+      ],
+      "config_sha256": "b2cec76b7ff7a5cbaf05adde017d6397f95f41efb043506d9a734354be414d05",
+      "kind": "round",
+      "shard": 1,
+      "wave": 2
+    },
+    {
+      "channels": [
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23
+      ],
+      "config_sha256": "670eddabdc5b4bb6d7b6fdc5f836dc08c776c94e557e1d296f423cec2267d461",
+      "kind": "mul",
+      "shard": 2,
+      "wave": 2
+    },
+    {
+      "channels": [
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23
+      ],
+      "config_sha256": "b2cec76b7ff7a5cbaf05adde017d6397f95f41efb043506d9a734354be414d05",
+      "kind": "round",
+      "shard": 2,
+      "wave": 2
+    },
+    {
+      "channels": [
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31
+      ],
+      "config_sha256": "adb5447118b1b1f016525bff204597fa7244f0df875d2e3c23dd2f2f390a8d4b",
+      "kind": "mul",
+      "shard": 3,
+      "wave": 2
+    },
+    {
+      "channels": [
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31
+      ],
+      "config_sha256": "b2cec76b7ff7a5cbaf05adde017d6397f95f41efb043506d9a734354be414d05",
+      "kind": "round",
+      "shard": 3,
+      "wave": 2
+    },
+    {
+      "channels": [
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39
+      ],
+      "config_sha256": "8ebad1923878cd4c787c2b5e645d169574405396fd08737dcabe016fd1688eba",
+      "kind": "mul",
+      "shard": 4,
+      "wave": 2
+    },
+    {
+      "channels": [
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39
+      ],
+      "config_sha256": "b2cec76b7ff7a5cbaf05adde017d6397f95f41efb043506d9a734354be414d05",
+      "kind": "round",
+      "shard": 4,
+      "wave": 2
+    },
+    {
+      "channels": [
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47
+      ],
+      "config_sha256": "a657c42b4629e178008455fa1aa6e60902482380a0e7fc8c86356ddb62d22af7",
+      "kind": "mul",
+      "shard": 5,
+      "wave": 2
+    },
+    {
+      "channels": [
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47
+      ],
+      "config_sha256": "b2cec76b7ff7a5cbaf05adde017d6397f95f41efb043506d9a734354be414d05",
+      "kind": "round",
+      "shard": 5,
+      "wave": 2
+    },
+    {
+      "channels": [
+        48,
+        49,
+        50,
+        51,
+        52,
+        53,
+        54,
+        55
+      ],
+      "config_sha256": "b453997869494d645c3d1f62dff85f3d6e0de1c730568db52c2a85d14992a760",
+      "kind": "mul",
+      "shard": 6,
+      "wave": 2
+    },
+    {
+      "channels": [
+        48,
+        49,
+        50,
+        51,
+        52,
+        53,
+        54,
+        55
+      ],
+      "config_sha256": "b2cec76b7ff7a5cbaf05adde017d6397f95f41efb043506d9a734354be414d05",
+      "kind": "round",
+      "shard": 6,
+      "wave": 2
+    },
+    {
+      "channels": [
+        56,
+        57,
+        58,
+        59,
+        60,
+        61,
+        62,
+        63
+      ],
+      "config_sha256": "d40475d6aeac239173c135ca761cf4b56dcc8c65cfe3dcd922a6b8967017257a",
+      "kind": "mul",
+      "shard": 7,
+      "wave": 2
+    },
+    {
+      "channels": [
+        56,
+        57,
+        58,
+        59,
+        60,
+        61,
+        62,
+        63
+      ],
+      "config_sha256": "b2cec76b7ff7a5cbaf05adde017d6397f95f41efb043506d9a734354be414d05",
+      "kind": "round",
+      "shard": 7,
+      "wave": 2
+    }
+  ],
+  "schema": "node0004-direct-signed-two-stage-tail-config-set-v1",
+  "stage_count": 48,
+  "template": {
+    "path": "ndp-sim/jsons/quant_from_buffer_int32MN_uint8MN.json",
+    "reuse_scope": "structure and primitive only",
+    "sha256": "db638f0640e74217e80e61350a2fe400f7b495e2201f17c39915328cdd455ba2"
+  },
+  "typed_identity": {
+    "multiplier_sha256": "e83328d8589db8cfc2c5a1ff033d3c0e08d9bd87d8d8fcf52b8cb22189956bb2",
+    "output_zero_point": 0,
+    "typed_contract_id": "w4-28-c7-resnet50-batch16-typed-parameters-v1",
+    "typed_contract_sha256": "abbc87b0b13c92611a90fe1767b32b15fe9c49f23bee616ca2bb51219dd181bd",
+    "typed_stage_sha256": "9a7671fdf34df5809a4e176aee16c3867479648f5b08c7fa41e271677081925d"
+  }
+}

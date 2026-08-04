@@ -1,0 +1,39 @@
+{
+  "active_slices": [
+    0,
+    1
+  ],
+  "candidate_release": false,
+  "config_manifest": {
+    "path": "C:/Users/15383/Desktop/Codex/project/resnet50_int8/configs/native_ndp_sim/node0077_dequant_atomic_single_stage_stocktb_v1/manifest.json",
+    "sha256": "fe9103a3a672f9270f0f82c128550d046d9d0511adfc489fd22cfa45722c4318",
+    "size_bytes": 3345
+  },
+  "contract_id": "dequant-node0077-atomic-single-stage-stocktb-v1",
+  "contract_sha256": "f8292accbe3c1ab6a2a59f473963907decf8d39d2efa9096dfb3a59a916672d5",
+  "counts_as_node0077_e4": false,
+  "counts_as_node0077_e5": false,
+  "local_report": {
+    "path": "C:/Users/15383/Desktop/Codex/project/resnet50_int8/artifacts/operator_config_validation/r5-dequant-node0077-atomic-single-stage-stocktb-v1/local_contract_report.json",
+    "sha256": "cf59f82a0b962662e4cdc1983b254e3d79c74e9d02f689090c382c1e7f394cff",
+    "size_bytes": 988
+  },
+  "remaining_blockers": [
+    "B_DEQUANT_SERVER_E4_E5"
+  ],
+  "repeat_num": 1,
+  "request_id": "r5:hwop-0077-00",
+  "rule_ids": [
+    "CDA-CONFIG-SEMANTIC-OWNERSHIP-001",
+    "CDA-CONFIG-MATERIALIZED-ROUNDTRIP-001",
+    "CDA-DEQUANT-ONNX-ORDER-001",
+    "CDA-DEQUANT-NO-AFFINE-MAC-001",
+    "CDA-DEQUANT-TWO-STAGE-GA-001",
+    "CDA-DEQUANT-NORMAL-OUTBUFFER-001",
+    "CDA-DEQUANT-STREAM-LIFECYCLE-001",
+    "CDA-DEQUANT-ATOMIC-STOCK-TB-001"
+  ],
+  "schema": "operator-config-semantic-contract-v1",
+  "server_package": false,
+  "status": "LOCAL_DYNAMIC_CONTRACT_MATERIALIZED_NOT_RUN"
+}

@@ -1,0 +1,53 @@
+{
+  "schema": "operator-config-semantic-contract-v1",
+  "graph_sha256": "d186c163ca847aaec9a7cd606bb0963fd4a36e300c756fa809c7f13ea8b59061",
+  "target_profile": {
+    "slices": 28,
+    "banks_per_slice": 4,
+    "ddr_rows": 6144,
+    "ddr_columns": 64,
+    "subwords_per_column": 16,
+    "read_streams": 4,
+    "write_streams": 1,
+    "buffers": 6
+  },
+  "operators": {
+    "op0": {
+      "op_type": "decode_summac_fp32N_fp32N",
+      "layouts": {
+        "A": "KMN; per-slice contiguous fp32; native decode relayout",
+        "D": "KMN; one fp32 reduction result per slice"
+      },
+      "qparams": {
+        "policy": "not-applicable"
+      },
+      "stage": {
+        "role": "RMSNorm sum-of-squares reduction substage",
+        "dependencies": []
+      },
+      "tail": {
+        "policy": "explicit",
+        "bindings": {
+          "A": {
+            "block_elements": 4,
+            "valid_last": 4
+          },
+          "D": {
+            "block_elements": 4,
+            "valid_last": 1
+          }
+        }
+      },
+      "provenance": {
+        "source_config": {
+          "artifact": "mapping_evidence/op0/source_config.json",
+          "sha256": "4f488cc0370591953a46125953be0b64e8ca368df466ad4e6a416e05b6e33f39"
+        },
+        "mapping_evidence": {
+          "artifact": "mapping_evidence/op0/mapping_evidence.json",
+          "sha256": "9608dc26f0145f4b9e4d46d28f9dd25144841672fb2528455b277765332aa34e"
+        }
+      }
+    }
+  }
+}

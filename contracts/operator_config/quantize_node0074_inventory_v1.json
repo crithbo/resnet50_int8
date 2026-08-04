@@ -1,0 +1,167 @@
+{
+  "schema": "resnet50-quantize-inventory-contract-v1",
+  "status": "BLOCKED_BEFORE_GENERATION",
+  "test_id": "quantize-node0074-inventory-v1",
+  "selected_representative": {
+    "request_id": "r5:hwop-0074-00",
+    "node_id": "node-0074",
+    "hw_op_id": "hwop-0074-00",
+    "onnx_name": "flatten_473_QuantizeLinear",
+    "onnx_op_type": "QuantizeLinear",
+    "hardware_equivalence_route": "quant_from_buffer",
+    "selection_reason": "The 32768-element zero-point-zero classifier input is the smaller of the two real ResNet50 QuantizeLinear instances and directly supplies node-0075 QLinearMatMul.",
+    "upstream": {
+      "node_id": "node-0073",
+      "op_type": "Flatten",
+      "tensor_id": "tensor-9b1363d3baf474c8",
+      "onnx_name": "flatten_473",
+      "dtype": "float32",
+      "shape": [
+        16,
+        2048
+      ],
+      "layout": "logical_NC_contiguous; RTL28 physical layout unresolved"
+    },
+    "qparams": {
+      "scale": {
+        "dtype": "float32",
+        "shape": [
+          1
+        ],
+        "scalar": 0.02335735410451889,
+        "float32_bits": "0x3cbf57ec",
+        "sha256": "a0da76078599a1809616c74430a869c573c530c8f89dec21191c963aadb321bc"
+      },
+      "zero_point": {
+        "dtype": "uint8",
+        "shape": [
+          1
+        ],
+        "scalar": 0,
+        "sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d"
+      }
+    },
+    "output": {
+      "tensor_id": "tensor-6fbd5707d5f08110",
+      "onnx_name": "flatten_473_quantized",
+      "dtype": "uint8",
+      "shape": [
+        16,
+        2048
+      ],
+      "element_count": 32768,
+      "logical_bytes": 32768,
+      "sha256": "c2d08ebd45a564d63e499b333a9576bbdafc71448ee693c8a199a7cf65193f12"
+    },
+    "downstream": {
+      "node_id": "node-0075",
+      "op_type": "QLinearMatMul",
+      "onnx_name": "resnetv17_dense0_fwd_MatMul_quant"
+    }
+  },
+  "software_semantics": {
+    "qdomain": "uint8",
+    "equation": "y = saturate_uint8(round_to_nearest_even_float32(x / y_scale) + y_zero_point)",
+    "rounding": "round-to-nearest-even",
+    "saturation": [
+      0,
+      255
+    ],
+    "zero_point": 0,
+    "golden_identity": "artifacts/w3/golden_batch16/tensors/tensor-6fbd5707d5f08110.npy"
+  },
+  "oracle_boundary": {
+    "path": "ndp-sim/jsons/quant_from_buffer_int32MN_uint8MN.json",
+    "sha256": "db638f0640e74217e80e61350a2fe400f7b495e2201f17c39915328cdd455ba2",
+    "accepted_use": "reverse-engineer LC/MSE/Buffer/GA field semantics only",
+    "rejected_use": "direct implementation of ONNX fp32-input QuantizeLinear",
+    "mismatch": "oracle input conversion is int32tofp32 and its static numeric recipe is not a proven fp32-input ONNX QuantizeLinear route"
+  },
+  "native_consumer_inventory": {
+    "operator_base_info": {
+      "path": "ndp-sim/model_execplan/config/operator_base_info.json",
+      "sha256": "e408606006e5778997b015f6cf90608dad93ef45efe60d73c5a0b675eab096e0",
+      "finding": "only the fixed [1,32,32] quant_from_buffer template and bitstream path are registered"
+    },
+    "control_register_handler": {
+      "path": "ndp-sim/model_execplan/src/execution_plan_generator/control_registers.py",
+      "sha256": "cd12ee5f31231e856f9f63f61746a8e43435228d0268813c3eb8c4630e09a941",
+      "finding": "handler is explicitly marked Placeholder and assumes rank-3 A/D geometry"
+    },
+    "mapper_registry": {
+      "path": "ndp-sim/address_remapping/tests/test_solver.py",
+      "finding": "test explicitly asserts quant_from_buffer is absent from the address-remapping registry"
+    }
+  },
+  "generation_gate": {
+    "specialized_rule_present": false,
+    "typed_request_formal_target_instance_allowed": false,
+    "typed_request_candidate_files_may_satisfy_request": false,
+    "family_backend_status": "related_template_evidence_available_emitter_blocked",
+    "blocking_rule_ids": [
+      "CDA-CONFIG-SEMANTIC-OWNERSHIP-001",
+      "CDA-CONFIG-MATERIALIZED-ROUNDTRIP-001",
+      "CDA-CONFIG-FULL-REBUILD-PROVENANCE-001"
+    ],
+    "blockers": [
+      "B_QUANT_SPECIALIZED_RULE_MISSING",
+      "B_LAYOUT_APPROVAL",
+      "B_EXECPLAN_TYPED_TRANSPORT",
+      "B_QUANT_FP32_INPUT_PATH",
+      "B_QUANT_INPUT_DTYPE_PATH",
+      "B_QUANT_ROUNDING_EXECUTION",
+      "B_QUANT_NATIVE_HANDLER_PLACEHOLDER",
+      "B_QUANT_MAPPER_REGISTRY_MISSING"
+    ],
+    "not_materialized": [
+      "occurrence/bank/address/lifetime",
+      "final JSON",
+      "mapping/bitstream/execplan/SCA",
+      "config-bound simulator",
+      "server package"
+    ]
+  },
+  "read_receipt": [
+    {
+      "path": ".agents/agent.md",
+      "sha256": "5a4660df1e771b75045c45f75e08b7eba771542750b91ab18af6ab0434043de0",
+      "reason": "delegated family boundary"
+    },
+    {
+      "path": ".agents/plan.md",
+      "sha256": "81d57f8143c495b9c2d7e0a33f4eeeb3824ba1b318b03a3b3731552ce045016d",
+      "reason": "active blockers and Quantize priority"
+    },
+    {
+      "path": ".agents/rules/生成前必读索引.md",
+      "sha256": "539e8dfbe52ad9fc8bd9fdef8c69d448fb5fd713e938e3adc5f663f82fd806d7",
+      "reason": "generation routing and stop gate"
+    },
+    {
+      "path": ".agents/rules/算子配置规则.md",
+      "sha256": "f7e3f80e7fb4edd2b42d7ff41a70bba55abfde6797013648dfedccdc6385e023",
+      "reason": "materialization and provenance gates"
+    },
+    {
+      "path": ".agents/rules/NDP硬件字段语义.md",
+      "sha256": "a955834fc059f08bada8131adc94db5c05112eb1e6acc0a0976eee7e6ae17c59",
+      "reason": "LC/MSE/Buffer/GA semantics"
+    },
+    {
+      "path": ".agents/rules/服务器测试包生成规则.md",
+      "sha256": "f3fe8dd18c9e2009db4a2736c6c1e86841760d8ec023bb7b57562f27f5faff04",
+      "reason": "package readiness boundary"
+    },
+    {
+      "path": "NDP_copy01/README_HARDWARE_SIM_ENTRY.md",
+      "sha256": "4318f3a28de399fb522740315f11bdddf346e71969cf1e45686899a568b042d7",
+      "reason": "stock-RTL simulation entry"
+    }
+  ],
+  "package": {
+    "state": "NOT_BUILT",
+    "candidate_release": false,
+    "rtl_entries": 0,
+    "reason": "local E2 cannot begin while the generation stop gate is active"
+  }
+}

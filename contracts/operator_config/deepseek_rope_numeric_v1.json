@@ -1,0 +1,122 @@
+{
+  "candidate_release": false,
+  "contract_sha256": "e211b7cb23dd58c632b4434bd6e4590d10f8d6df1c85412858cd107d828ab7f1",
+  "coverage": {
+    "all_stage_inputs_outputs_covered": true,
+    "head_count": 7,
+    "logical_file_count": 49,
+    "nonempty_file_count": 301,
+    "op0_op1_external_activation_payloads_bit_equal": true,
+    "physical_file_count": 252,
+    "physical_tensors_per_slice": 9,
+    "slice_count": 28,
+    "stage_count": 3
+  },
+  "formal_target_config": false,
+  "identity_boundary": {
+    "hardware_readback": false,
+    "onnx_original_weight_payload": false,
+    "payload_kind": "DETERMINISTIC_SYNTHETIC"
+  },
+  "implementation_choice": {
+    "activation_pre_swapped": false,
+    "global_relayout_negation": false,
+    "name": "CANONICAL_CROSS_SLICE_XOR2",
+    "producer_to_destination_slice": "slice_id xor 0b10",
+    "same_slice_add": false,
+    "sin_sign_by_half": [
+      1,
+      -1
+    ]
+  },
+  "inputs": {
+    "active_router_overlay": {
+      "path": "resnet50_pipeline/native_overlays/deepseek_rope/slice_routing.py",
+      "sha256": "2856ba5a3640a2f7efe541d66466eed7ba485936607785257f7ef7aa23a179fa",
+      "size_bytes": 2079
+    },
+    "generated_execplan": {
+      "path": "artifacts/operator_config_validation/ds_rope_v1/a/t/model_execplan/output/ds_rope_v1/instructions_explained.txt",
+      "sha256": "3490ea9f95805b554b55173c740f343934544ac9d5247d6d80c4473dda75b450",
+      "size_bytes": 144406
+    },
+    "manifest": {
+      "path": "artifacts/operator_config_validation/ds_rope_numeric_v1/manifest.json",
+      "sha256": "93fdf6161209bc614406a81d52f0d9d493dfefdfe8607074fced35bfced600c5",
+      "size_bytes": 126151
+    },
+    "materialized_jsons": [
+      {
+        "path": "artifacts/operator_config_validation/ds_rope_v1/a/t/model_execplan/output/ds_rope_v1/jsons/op0_prefill_mul_fp32MN_fp32MN_fp32MN.json",
+        "sha256": "7d5f6673803c83e3e495cc987e34759d4ba7e8c84d56f53bd845e8cb2775e03a",
+        "size_bytes": 14996
+      },
+      {
+        "path": "artifacts/operator_config_validation/ds_rope_v1/a/t/model_execplan/output/ds_rope_v1/jsons/op1_prefill_mul_fp32MN_fp32MN_fp32MN.json",
+        "sha256": "a4d637f6b529e50a5cfc41e62eac9793fe97b9e36d745a00040073061604acaa",
+        "size_bytes": 14999
+      },
+      {
+        "path": "artifacts/operator_config_validation/ds_rope_v1/a/t/model_execplan/output/ds_rope_v1/jsons/op2_prefill_add_fp32MN_fp32MN_fp16MN.json",
+        "sha256": "da8a5c0b6e1859993226c0710b837b4ef53ad84ade9a49bac1c2e0b53b92f19d",
+        "size_bytes": 14998
+      }
+    ],
+    "native_relayout_primitive": {
+      "path": "ndp-sim/generate_python_golden/single_op_data/relayout_rope.py",
+      "sha256": "8ccd4fd1f7fe917d11a882a98e7ca89058e0ab4dbe2f12cf3e4c157e9d1c26f1",
+      "size_bytes": 15692
+    },
+    "rope_rule": {
+      "path": ".agents/rules/DeepSeek_RoPE\u589e\u91cf\u89c4\u5219.md",
+      "sha256": "f4ae02f66fd00f98f4597af254e6f8c28f902af56de3b940b8e9be33fba4b2d4",
+      "size_bytes": 4204
+    }
+  },
+  "numeric_result": {
+    "generated_route": [
+      2,
+      3,
+      0,
+      1,
+      6,
+      7,
+      4,
+      5,
+      10,
+      11,
+      8,
+      9,
+      14,
+      15,
+      12,
+      13,
+      18,
+      19,
+      16,
+      17,
+      22,
+      23,
+      20,
+      21,
+      26,
+      27,
+      24,
+      25
+    ],
+    "logical_payload_matches_equation": true,
+    "max_fp16_cast_error": 0.0,
+    "onnx_non_interleaved_equation": "y_first=x_first*cos-x_second*sin; y_second=x_first*sin+x_second*cos",
+    "physical_payload_matches_native_relayout_primitive": true,
+    "route_mismatch_count": 0
+  },
+  "rule_ids": [
+    "CDA-DEEPSEEK-ROPE-HALF-PAIRING-001",
+    "CDA-DEEPSEEK-ROPE-SIGN-SINGLE-OWNER-001",
+    "CDA-DEEPSEEK-ROPE-PAYLOAD-COVERAGE-001",
+    "CDA-DEEPSEEK-ROPE-IMPLEMENTATION-CHOICE-001"
+  ],
+  "schema": "deepseek-rope-canonical-xor2-synthetic-numeric-e2-v1",
+  "server_package_generated": false,
+  "status": "LOCAL_NUMERIC_E2_COMPLETE"
+}

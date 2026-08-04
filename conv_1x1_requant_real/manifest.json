@@ -21,9 +21,9 @@
   },
   "physical_layout": {
     "profile": "group4x7_batch_channel",
-    "p_offset": 151760,
-    "canonical_d_offset": 753872,
-    "staged_d_offset": 904400,
+    "p_offset": 603344,
+    "canonical_d_offset": 1205456,
+    "staged_d_offset": 1355984,
     "staged_half_bytes": 75264,
     "staged_total_bytes": 150528,
     "staged_to_canonical_transform": "concatenate two NHWK8 halves, then reshape to NH-Qblock-Q8-Kblock-K8",
@@ -107,7 +107,7 @@
     {
       "shard_index": 0,
       "config_path": "conv_1x1_requant_real/shard-00.json",
-      "config_sha256": "a86426df7b70206d67a66a5a5d313676f85ea000777f37a292cee0ff7dea6054",
+      "config_sha256": "07c8f1485ccf019a57a13f30b4388a390e40db92f5005247ec0dcb1c39b8bc6f",
       "owner_step": 0,
       "local_half": 0,
       "selected_slices": [
@@ -159,15 +159,15 @@
         "0x3bb8f3b5",
         "0x3b79ade4"
       ],
-      "p_base_offset": 151760,
-      "staged_d_base_offset": 904400,
+      "p_base_offset": 603344,
+      "staged_d_base_offset": 1355984,
       "staged_d_size_bytes": 75264,
       "flush": "once_after_final_conv_reduction"
     },
     {
       "shard_index": 1,
       "config_path": "conv_1x1_requant_real/shard-01.json",
-      "config_sha256": "b42294eb8bc99d706e58589d07dd930ab15d4c0af99d2ec5fafd3dd43c39ccc1",
+      "config_sha256": "707f7f2efc49842022baedf182eba004de23619506ff6a7c99d2781ef818bc12",
       "owner_step": 0,
       "local_half": 1,
       "selected_slices": [
@@ -219,15 +219,15 @@
         "0x3c0aba45",
         "0x3c705228"
       ],
-      "p_base_offset": 151792,
-      "staged_d_base_offset": 979664,
+      "p_base_offset": 603376,
+      "staged_d_base_offset": 1431248,
       "staged_d_size_bytes": 75264,
       "flush": "once_after_final_conv_reduction"
     },
     {
       "shard_index": 2,
       "config_path": "conv_1x1_requant_real/shard-02.json",
-      "config_sha256": "78f22343f9d260b207bd110c6dd1ae8df959e570aa8b4d3143a0ac255dbf0832",
+      "config_sha256": "0e426380c491987ac0b0654018f31047c2333598884a7461ec19e7790b220457",
       "owner_step": 1,
       "local_half": 0,
       "selected_slices": [
@@ -279,15 +279,15 @@
         "0x3b8daae5",
         "0x346bb080"
       ],
-      "p_base_offset": 151760,
-      "staged_d_base_offset": 904400,
+      "p_base_offset": 603344,
+      "staged_d_base_offset": 1355984,
       "staged_d_size_bytes": 75264,
       "flush": "once_after_final_conv_reduction"
     },
     {
       "shard_index": 3,
       "config_path": "conv_1x1_requant_real/shard-03.json",
-      "config_sha256": "6d58275a0443b816062113d4df611c9b8c562ee0a7fc84f7c0ac57120818eb4b",
+      "config_sha256": "82699f4fc959fe2e6cebcc9875d290ca83e672786de58489100956d8d60da5dc",
       "owner_step": 1,
       "local_half": 1,
       "selected_slices": [
@@ -339,15 +339,15 @@
         "0x3c01b0c5",
         "0x3c3a2843"
       ],
-      "p_base_offset": 151792,
-      "staged_d_base_offset": 979664,
+      "p_base_offset": 603376,
+      "staged_d_base_offset": 1431248,
       "staged_d_size_bytes": 75264,
       "flush": "once_after_final_conv_reduction"
     },
     {
       "shard_index": 4,
       "config_path": "conv_1x1_requant_real/shard-04.json",
-      "config_sha256": "ed30555f27d5b75fdcf691d5d4dd4b5a6c9abb3c94ecb3ef03895092b178a13a",
+      "config_sha256": "5166359b580b90ec786a74f0da52b7851f151eedf29b8266ffb404cebdf6050c",
       "owner_step": 2,
       "local_half": 0,
       "selected_slices": [
@@ -399,15 +399,15 @@
         "0x3b60cbe7",
         "0x3c08beaa"
       ],
-      "p_base_offset": 151760,
-      "staged_d_base_offset": 904400,
+      "p_base_offset": 603344,
+      "staged_d_base_offset": 1355984,
       "staged_d_size_bytes": 75264,
       "flush": "once_after_final_conv_reduction"
     },
     {
       "shard_index": 5,
       "config_path": "conv_1x1_requant_real/shard-05.json",
-      "config_sha256": "c8e4cf8f62557faf48a9ab4c37b33961ec119164a575c335594bf080c6fae349",
+      "config_sha256": "e687002c092d26031deaf1ae3b166874d0c0fde73d206cf224bb41e4e5be48f1",
       "owner_step": 2,
       "local_half": 1,
       "selected_slices": [
@@ -459,15 +459,15 @@
         "0x3c52bf64",
         "0x3bccc1bf"
       ],
-      "p_base_offset": 151792,
-      "staged_d_base_offset": 979664,
+      "p_base_offset": 603376,
+      "staged_d_base_offset": 1431248,
       "staged_d_size_bytes": 75264,
       "flush": "once_after_final_conv_reduction"
     },
     {
       "shard_index": 6,
       "config_path": "conv_1x1_requant_real/shard-06.json",
-      "config_sha256": "447e29b749e3bbb714abfa422dab11db10de780821d9fdd896f5babba1ea6a2b",
+      "config_sha256": "3a7d1a2757da6b547b41e950a85ff5c69212e349e61869de1e93ebd79bb7e7b0",
       "owner_step": 3,
       "local_half": 0,
       "selected_slices": [
@@ -519,15 +519,15 @@
         "0x3ae2a4da",
         "0x3c4c42c0"
       ],
-      "p_base_offset": 151760,
-      "staged_d_base_offset": 904400,
+      "p_base_offset": 603344,
+      "staged_d_base_offset": 1355984,
       "staged_d_size_bytes": 75264,
       "flush": "once_after_final_conv_reduction"
     },
     {
       "shard_index": 7,
       "config_path": "conv_1x1_requant_real/shard-07.json",
-      "config_sha256": "ae1a330877bdceca6071d0dbd65d3cd845ebccc0f630b5de7f3d4d13a64ce89a",
+      "config_sha256": "a75fb0e9128dc4ffb3934a9bea45f507565a2b6998a606ea5d4e649c47abeb57",
       "owner_step": 3,
       "local_half": 1,
       "selected_slices": [
@@ -579,8 +579,8 @@
         "0x344ee2ac",
         "0x3c124e32"
       ],
-      "p_base_offset": 151792,
-      "staged_d_base_offset": 979664,
+      "p_base_offset": 603376,
+      "staged_d_base_offset": 1431248,
       "staged_d_size_bytes": 75264,
       "flush": "once_after_final_conv_reduction"
     }

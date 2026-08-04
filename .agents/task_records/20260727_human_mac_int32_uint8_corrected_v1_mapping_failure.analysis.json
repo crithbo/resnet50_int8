@@ -1,0 +1,64 @@
+{
+  "schema": "human_operator_json_mapping_failure_v1",
+  "status": "WAITING_FOR_SECOND_CORRECTION_AUTHORIZATION",
+  "candidate": {
+    "path": "artifacts/human_mac_int32_uint8_20260727_v1/mac_int32_uint8.corrected.json",
+    "bytes": 12163,
+    "sha256": "9b5319b2935a2b0886a59682d4375e36883a795b621bb1998451472915aec42a",
+    "human_authored_input": true,
+    "authorized_diff": {
+      "alu_opcode_mac_to_int32_mac": 8
+    }
+  },
+  "native_mapping_runs": [
+    {
+      "output": "artifacts/human_mac_int32_uint8_20260727_v1/bitstream_build_a",
+      "seed": 20260727,
+      "exit_code": 1,
+      "best_penalty": 4,
+      "valid_bitstream_generated": false
+    },
+    {
+      "output": "artifacts/human_mac_int32_uint8_20260727_v1/bitstream_build_b",
+      "seed": 20260727,
+      "exit_code": 1,
+      "best_penalty": 4,
+      "valid_bitstream_generated": false
+    }
+  ],
+  "first_divergence": {
+    "classification": "MAPPING_EXACT_ZERO_FAILURE",
+    "shared_source": "DRAM_LC.LC0",
+    "consumers": [
+      "READ_STREAM0",
+      "WRITE_STREAM0"
+    ],
+    "constraint": "LCtoStreamConstraint",
+    "violation_count": 4
+  },
+  "minimal_next_correction": {
+    "authorized": false,
+    "reference_path": "ndp-sim/jsons/quant_from_buffer_int32MN_uint8MN.json",
+    "actions": [
+      "add LC_PE.PE0 fed by DRAM_LC.LC0",
+      "add LC_PE.PE1 fed by LC_PE.PE0 for the read branch",
+      "add LC_PE.PE2 fed by LC_PE.PE0 for the write branch",
+      "replace stream0 second idx source with LC_PE.PE1",
+      "replace stream2 second idx source with LC_PE.PE2"
+    ]
+  },
+  "classification": {
+    "confirmed_reference": true,
+    "local_e2": false,
+    "structural_risk": true,
+    "dynamic_required": true
+  },
+  "release": {
+    "candidate_release": false,
+    "generated_package": false
+  },
+  "rule_ids": [
+    "CDA-CONFIG-FULL-REBUILD-PROVENANCE-001",
+    "CDA-CONFIG-MATERIALIZED-ROUNDTRIP-001"
+  ]
+}

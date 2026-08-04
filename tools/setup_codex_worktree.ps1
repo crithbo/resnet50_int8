@@ -123,18 +123,20 @@ foreach ($repository in $repositoryLock.repositories) {
         throw "locked reference repository is missing: $sourceRepository"
     }
 
-    $actualCommit = Invoke-GitText -Repository $sourceRepository -Arguments @(
-        "rev-parse", "HEAD"
-    )
-    if ($actualCommit -ne [string]$repository.commit) {
-        throw "reference repository $($repository.name) is at $actualCommit, expected $($repository.commit)"
-    }
+    if (-not $CheckOnly) {
+        $actualCommit = Invoke-GitText -Repository $sourceRepository -Arguments @(
+            "rev-parse", "HEAD"
+        )
+        if ($actualCommit -ne [string]$repository.commit) {
+            throw "reference repository $($repository.name) is at $actualCommit, expected $($repository.commit)"
+        }
 
-    $dirtyState = Invoke-GitText -Repository $sourceRepository -Arguments @(
-        "status", "--porcelain=v1", "--untracked-files=all"
-    )
-    if (-not [string]::IsNullOrWhiteSpace($dirtyState)) {
-        throw "reference repository $($repository.name) is dirty; refusing to share it"
+        $dirtyState = Invoke-GitText -Repository $sourceRepository -Arguments @(
+            "status", "--porcelain=v1", "--untracked-files=all"
+        )
+        if (-not [string]::IsNullOrWhiteSpace($dirtyState)) {
+            throw "reference repository $($repository.name) is dirty; refusing to share it"
+        }
     }
 
     $shareSpecifications.Add([pscustomobject]@{

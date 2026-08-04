@@ -1,0 +1,175 @@
+{
+  "artifact_report": {
+    "bytes": 7387,
+    "path": "artifacts/operator_config_validation/r5-node0075-df23e4d-compositional-e2-server-barrier-blocker-v1/report.json",
+    "sha256": "80a8526998afc8175812a00784662fd54c7621eb65c37e7c0ad540ece8f130ca"
+  },
+  "barrier_adjudication": {
+    "compositional_happens_before_precondition_present": true,
+    "consumer_first_configured_occurrence": "node0075_accum_pass00 first qualified READ_STREAM1 occurrence",
+    "cross_operator_visibility_barrier_materialized_in_final_execplan": false,
+    "dynamic_consumer_acceptance_observed": false,
+    "node0071_producer_occurrence_in_final_execplan": false,
+    "producer_event": "node0071 final uint8 D byte-set accepted AND node0071 completion/final barrier accepted",
+    "producer_visibility_receipt_accepted": true,
+    "server_fresh_memory_precondition_satisfied": false
+  },
+  "first_blocking_leaf": {
+    "first_missing_asset": "one authorized integrated execution stream containing the true node0071 producer-final event, an explicit happens-before barrier, then node0075 pass00",
+    "id": "B_MATMUL_NODE0075_SERVER_SELF_CONTAINED_PRODUCER_BARRIER_UNMATERIALIZED",
+    "reason": "the node0075-only execplan starts with its consumer and intentionally emits no A preload; a fresh simulator memory therefore has no legal writer for the aliased bytes",
+    "stage": "server package pre-simulation fresh-memory gate"
+  },
+  "input_receipts": [
+    {
+      "bytes": 106147,
+      "path": "artifacts/operator_config_validation/r5-node0075-df23e4d-eight-pass-materializer-v1/materializer_report.json",
+      "sha256": "11c05a26e2d4aecf9e22279383cb143b17e13b23d0bc18557b11b9ebc8cc1330"
+    },
+    {
+      "bytes": 71106,
+      "path": "artifacts/operator_config_validation/r5-node0075-df23e4d-eight-pass-materializer-v1/determinism_and_config_binding_validation.json",
+      "sha256": "3d6d8fd4836d81d914da8ff4e4fd4d70a58ab19aefb347a4d21e154d6826ea58"
+    },
+    {
+      "bytes": 44486,
+      "path": "artifacts/operator_config_validation/r5-node0075-df23e4d-eight-pass-materializer-v1/node0075_df23e4d_eight_pass_target.json",
+      "sha256": "ac01a5aba5aac67eeb214da76400b138d86a7e39c2e6ff9fb5d65bbfd40f4065"
+    },
+    {
+      "bytes": 25816,
+      "path": "ndp-sim/model_execplan/output/node0075_df23e4d_eight_pass_target/sca_cfg.json",
+      "sha256": "0e293fc982e06a7e7b61a40899792f0a1fe1329f9c48b9b350f47650ba656b98"
+    },
+    {
+      "bytes": 23733,
+      "path": "ndp-sim/model_execplan/output/node0075_df23e4d_eight_pass_target/sca_cfg_D.json",
+      "sha256": "174eb19a92b4de4a246a806544dd1126905dde0255180e24c783585fa32c742d"
+    },
+    {
+      "bytes": 24584,
+      "path": "contracts/operator_config/node0071_node0075_uint8_identity_alias_integration_v1.json",
+      "sha256": "73d831d075317c4bf05aa4ca2f8c541835884f6fa9124fbd9dd5199f591cb0e1"
+    },
+    {
+      "bytes": 3359,
+      "path": ".agents/task_records/20260803_node0075_materializer_mainline_authorization.md",
+      "sha256": "36be8174ec9afcb7430761812def6bcd5c78756197cf1fd9b6f449bf4d6077c7"
+    },
+    {
+      "bytes": 3403,
+      "path": ".agents/task_records/20260803_node0075_a_repeated_read_diagnostic_bypass_authorization.md",
+      "sha256": "be56cf012296f7efc37c76dd522adb2194c6dae467137bf6ceb1778db439b58c"
+    },
+    {
+      "bytes": 8996,
+      "path": ".agents/rules/生成前必读索引.md",
+      "sha256": "5146225e549942c4e25780ac4fc0120d7cac1ef355879284450dad2e48df237b"
+    },
+    {
+      "bytes": 18506,
+      "path": ".agents/rules/算子配置规则.md",
+      "sha256": "cbaffcc5fb3bea7da9f0c199bb2e7f06445a676ab456bdfd505b90dd89825171"
+    },
+    {
+      "bytes": 14974,
+      "path": ".agents/rules/NDP硬件字段语义.md",
+      "sha256": "603d57805bc5a5bdfca7406c402bc94db60c06ea6682493d672abb91671b1055"
+    },
+    {
+      "bytes": 57996,
+      "path": ".agents/rules/服务器测试包生成规则.md",
+      "sha256": "0916c655b0581cd99836d8cc1561a3f41b15b25e861692d596a4789c039b090e"
+    },
+    {
+      "bytes": 13258,
+      "path": ".agents/rules/INT8_SA点积专项规则.md",
+      "sha256": "54a1e12541aaeb6f62dadb19c47a6154eb0462b758a35a9a5bc4a0043cb37dce"
+    },
+    {
+      "bytes": 9310,
+      "path": ".agents/rules/精确UINT8量化尾专项规则.md",
+      "sha256": "1685bd6527111bf014a738dbef4ee85b5b8d3e54c0565cb63eda9417d5c9425e"
+    }
+  ],
+  "local_closure": {
+    "accumulator_mismatch_count": 0,
+    "config_bound_e2": true,
+    "configured_qualified_a_read_occurrences": 8192,
+    "configured_qualified_a_read_traffic_bytes": 262144,
+    "deterministic_double_rebuild": true,
+    "formal_d_fragment_count": 128,
+    "host_a_or_intermediate_preload_count": 0,
+    "reload_pass_count": 8,
+    "start_comp_count": 24,
+    "target_operator_count": 24,
+    "uint8_d_mismatch_count": 0,
+    "unique_a_bytes": 32768
+  },
+  "minimum_unblock_condition": "mainline supplies or authorizes a single integrated producer-prefix materializer whose boundary starts from a legal non-intermediate input and whose final write/barrier shares the same simulator execution stream with this node0075 consumer",
+  "outputs": {
+    "bitstream": true,
+    "config_bound_e2": true,
+    "execplan": true,
+    "handler_registry": true,
+    "mapping": true,
+    "sca": true,
+    "server_package": false,
+    "target_json": true
+  },
+  "owner": {
+    "mainline_thread": "019fbec2-fe93-7e03-9314-cff6f222f33d",
+    "operator_family": "QLinearMatMul/node0075",
+    "owner_thread": "019fc775-8de0-7f10-bc4a-026a4673776f"
+  },
+  "prohibited_substitution_matrix": [
+    {
+      "candidate": "preload frozen node0075 A bytes through SCA",
+      "disposition": "FORBIDDEN",
+      "reason": "intermediate tensor replay"
+    },
+    {
+      "candidate": "copy/precompute/relayout A into a new allocation",
+      "disposition": "FORBIDDEN",
+      "reason": "explicit authorization boundary"
+    },
+    {
+      "candidate": "assume producer-owned bases are initialized in a fresh simulator",
+      "disposition": "FORBIDDEN",
+      "reason": "producer base is not consumer acceptance or a runtime writer"
+    },
+    {
+      "candidate": "silently import/modify another operator family's server workload",
+      "disposition": "FORBIDDEN",
+      "reason": "node0075 owner scope and foreign-family asset ownership"
+    }
+  ],
+  "release": {
+    "candidate_release": false,
+    "evidence_level": "E2_LOCAL_ONLY_COMPOSITIONAL",
+    "lease_taken": false,
+    "package_release": "NONE",
+    "server_run": false,
+    "server_uploaded": false
+  },
+  "rule_feedback": {
+    "confirmed_rule_ids": [
+      "CDA-VIEW-ACCEPTED-LIFETIME-001",
+      "CDA-SERVER-WORKLOAD-PROVENANCE-001",
+      "CDA-SERVER-RUNTIME-READBACK-TARGET-ABSENT-001",
+      "CDA-SERVER-RESULT-GATE-CONJUNCTION-001",
+      "CDA-SERVER-DIAGNOSTIC-TIME-TO-ROOT-CAUSE-OPTIMIZATION-001"
+    ],
+    "evidence": "the current rules distinguish a compositional E2 precondition from a legal fresh-memory runtime writer, require a legal typed/checkpoint/frozen-stimulus boundary for a reduced execution, and prevent an A preload from escaping as replay",
+    "rule_delta_proposal": [],
+    "type": "RULE_CONFIRMATION"
+  },
+  "schema": "node0075-df23e4d-compositional-e2-server-barrier-blocker-v1",
+  "status": "COMPOSITIONAL_E2_PASS_SERVER_PACKAGE_BLOCKED",
+  "termination": {
+    "node0075_owner_can_continue_without_scope_expansion": false,
+    "reason": "the only legal unblock requires mainline authorization or supply of a cross-family true-producer prefix in the same execution stream",
+    "status": "WAIT_USER_DECISION"
+  },
+  "test_id": "r5-node0075-df23e4d-compositional-e2-server-barrier-blocker-v1"
+}

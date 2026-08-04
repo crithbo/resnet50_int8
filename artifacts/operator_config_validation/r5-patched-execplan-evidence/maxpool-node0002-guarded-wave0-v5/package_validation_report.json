@@ -1,0 +1,346 @@
+{
+  "schema": "operator-config-package-validation-report-v1",
+  "graph_root": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\_refresh-maxpool-after-deepseek-v1\\pipeline_output",
+  "valid": true,
+  "first_error": null,
+  "issues": [],
+  "facts": {
+    "target_profile": {
+      "slices": 28,
+      "banks_per_slice": 4,
+      "ddr_rows": 6144,
+      "ddr_columns": 64,
+      "subwords_per_column": 16,
+      "read_streams": 4,
+      "write_streams": 1,
+      "buffers": 6
+    },
+    "graph": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\_refresh-maxpool-after-deepseek-v1\\pipeline_output\\graph_withbaseaddr.json",
+    "graph_sha256": "871c665990e918a2d1280be5c11c45225d624353520aceb667bec039b59d63eb",
+    "operator_count": 1,
+    "expected_matrix_entry_count": 56,
+    "actual_matrix_entry_count": 56,
+    "memory_region_count": 58,
+    "peak_end_by_slice_bank": {
+      "slice00.bank0": 253392,
+      "slice01.bank0": 251344,
+      "slice02.bank0": 251344,
+      "slice03.bank0": 251344,
+      "slice04.bank0": 251344,
+      "slice05.bank0": 251344,
+      "slice06.bank0": 251344,
+      "slice07.bank0": 251344,
+      "slice08.bank0": 251344,
+      "slice09.bank0": 251344,
+      "slice10.bank0": 251344,
+      "slice11.bank0": 251344,
+      "slice12.bank0": 251344,
+      "slice13.bank0": 251344,
+      "slice14.bank0": 251344,
+      "slice15.bank0": 251344,
+      "slice16.bank0": 251344,
+      "slice17.bank0": 251344,
+      "slice18.bank0": 251344,
+      "slice19.bank0": 251344,
+      "slice20.bank0": 251344,
+      "slice21.bank0": 251344,
+      "slice22.bank0": 251344,
+      "slice23.bank0": 251344,
+      "slice24.bank0": 251344,
+      "slice25.bank0": 251344,
+      "slice26.bank0": 251344,
+      "slice27.bank0": 251344
+    },
+    "matrix_files_required": false,
+    "missing_matrix_files": [
+      "op0_matrixA_slice0",
+      "op0_matrixA_slice1",
+      "op0_matrixA_slice10",
+      "op0_matrixA_slice11",
+      "op0_matrixA_slice12",
+      "op0_matrixA_slice13",
+      "op0_matrixA_slice14",
+      "op0_matrixA_slice15",
+      "op0_matrixA_slice16",
+      "op0_matrixA_slice17",
+      "op0_matrixA_slice18",
+      "op0_matrixA_slice19",
+      "op0_matrixA_slice2",
+      "op0_matrixA_slice20",
+      "op0_matrixA_slice21",
+      "op0_matrixA_slice22",
+      "op0_matrixA_slice23",
+      "op0_matrixA_slice24",
+      "op0_matrixA_slice25",
+      "op0_matrixA_slice26",
+      "op0_matrixA_slice27",
+      "op0_matrixA_slice3",
+      "op0_matrixA_slice4",
+      "op0_matrixA_slice5",
+      "op0_matrixA_slice6",
+      "op0_matrixA_slice7",
+      "op0_matrixA_slice8",
+      "op0_matrixA_slice9",
+      "op0_matrixD_slice0",
+      "op0_matrixD_slice1",
+      "op0_matrixD_slice10",
+      "op0_matrixD_slice11",
+      "op0_matrixD_slice12",
+      "op0_matrixD_slice13",
+      "op0_matrixD_slice14",
+      "op0_matrixD_slice15",
+      "op0_matrixD_slice16",
+      "op0_matrixD_slice17",
+      "op0_matrixD_slice18",
+      "op0_matrixD_slice19",
+      "op0_matrixD_slice2",
+      "op0_matrixD_slice20",
+      "op0_matrixD_slice21",
+      "op0_matrixD_slice22",
+      "op0_matrixD_slice23",
+      "op0_matrixD_slice24",
+      "op0_matrixD_slice25",
+      "op0_matrixD_slice26",
+      "op0_matrixD_slice27",
+      "op0_matrixD_slice3",
+      "op0_matrixD_slice4",
+      "op0_matrixD_slice5",
+      "op0_matrixD_slice6",
+      "op0_matrixD_slice7",
+      "op0_matrixD_slice8",
+      "op0_matrixD_slice9"
+    ],
+    "file_facts": {
+      "op0_matrixA_slice0": {
+        "path": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\_refresh-maxpool-after-deepseek-v1\\pipeline_output\\install\\op0\\slice00\\matrix_A_linearized_128bit.txt",
+        "exists": false
+      },
+      "op0_matrixA_slice1": {
+        "path": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\_refresh-maxpool-after-deepseek-v1\\pipeline_output\\install\\op0\\slice01\\matrix_A_linearized_128bit.txt",
+        "exists": false
+      },
+      "op0_matrixA_slice10": {
+        "path": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\_refresh-maxpool-after-deepseek-v1\\pipeline_output\\install\\op0\\slice10\\matrix_A_linearized_128bit.txt",
+        "exists": false
+      },
+      "op0_matrixA_slice11": {
+        "path": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\_refresh-maxpool-after-deepseek-v1\\pipeline_output\\install\\op0\\slice11\\matrix_A_linearized_128bit.txt",
+        "exists": false
+      },
+      "op0_matrixA_slice12": {
+        "path": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\_refresh-maxpool-after-deepseek-v1\\pipeline_output\\install\\op0\\slice12\\matrix_A_linearized_128bit.txt",
+        "exists": false
+      },
+      "op0_matrixA_slice13": {
+        "path": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\_refresh-maxpool-after-deepseek-v1\\pipeline_output\\install\\op0\\slice13\\matrix_A_linearized_128bit.txt",
+        "exists": false
+      },
+      "op0_matrixA_slice14": {
+        "path": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\_refresh-maxpool-after-deepseek-v1\\pipeline_output\\install\\op0\\slice14\\matrix_A_linearized_128bit.txt",
+        "exists": false
+      },
+      "op0_matrixA_slice15": {
+        "path": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\_refresh-maxpool-after-deepseek-v1\\pipeline_output\\install\\op0\\slice15\\matrix_A_linearized_128bit.txt",
+        "exists": false
+      },
+      "op0_matrixA_slice16": {
+        "path": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\_refresh-maxpool-after-deepseek-v1\\pipeline_output\\install\\op0\\slice16\\matrix_A_linearized_128bit.txt",
+        "exists": false
+      },
+      "op0_matrixA_slice17": {
+        "path": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\_refresh-maxpool-after-deepseek-v1\\pipeline_output\\install\\op0\\slice17\\matrix_A_linearized_128bit.txt",
+        "exists": false
+      },
+      "op0_matrixA_slice18": {
+        "path": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\_refresh-maxpool-after-deepseek-v1\\pipeline_output\\install\\op0\\slice18\\matrix_A_linearized_128bit.txt",
+        "exists": false
+      },
+      "op0_matrixA_slice19": {
+        "path": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\_refresh-maxpool-after-deepseek-v1\\pipeline_output\\install\\op0\\slice19\\matrix_A_linearized_128bit.txt",
+        "exists": false
+      },
+      "op0_matrixA_slice2": {
+        "path": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\_refresh-maxpool-after-deepseek-v1\\pipeline_output\\install\\op0\\slice02\\matrix_A_linearized_128bit.txt",
+        "exists": false
+      },
+      "op0_matrixA_slice20": {
+        "path": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\_refresh-maxpool-after-deepseek-v1\\pipeline_output\\install\\op0\\slice20\\matrix_A_linearized_128bit.txt",
+        "exists": false
+      },
+      "op0_matrixA_slice21": {
+        "path": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\_refresh-maxpool-after-deepseek-v1\\pipeline_output\\install\\op0\\slice21\\matrix_A_linearized_128bit.txt",
+        "exists": false
+      },
+      "op0_matrixA_slice22": {
+        "path": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\_refresh-maxpool-after-deepseek-v1\\pipeline_output\\install\\op0\\slice22\\matrix_A_linearized_128bit.txt",
+        "exists": false
+      },
+      "op0_matrixA_slice23": {
+        "path": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\_refresh-maxpool-after-deepseek-v1\\pipeline_output\\install\\op0\\slice23\\matrix_A_linearized_128bit.txt",
+        "exists": false
+      },
+      "op0_matrixA_slice24": {
+        "path": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\_refresh-maxpool-after-deepseek-v1\\pipeline_output\\install\\op0\\slice24\\matrix_A_linearized_128bit.txt",
+        "exists": false
+      },
+      "op0_matrixA_slice25": {
+        "path": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\_refresh-maxpool-after-deepseek-v1\\pipeline_output\\install\\op0\\slice25\\matrix_A_linearized_128bit.txt",
+        "exists": false
+      },
+      "op0_matrixA_slice26": {
+        "path": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\_refresh-maxpool-after-deepseek-v1\\pipeline_output\\install\\op0\\slice26\\matrix_A_linearized_128bit.txt",
+        "exists": false
+      },
+      "op0_matrixA_slice27": {
+        "path": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\_refresh-maxpool-after-deepseek-v1\\pipeline_output\\install\\op0\\slice27\\matrix_A_linearized_128bit.txt",
+        "exists": false
+      },
+      "op0_matrixA_slice3": {
+        "path": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\_refresh-maxpool-after-deepseek-v1\\pipeline_output\\install\\op0\\slice03\\matrix_A_linearized_128bit.txt",
+        "exists": false
+      },
+      "op0_matrixA_slice4": {
+        "path": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\_refresh-maxpool-after-deepseek-v1\\pipeline_output\\install\\op0\\slice04\\matrix_A_linearized_128bit.txt",
+        "exists": false
+      },
+      "op0_matrixA_slice5": {
+        "path": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\_refresh-maxpool-after-deepseek-v1\\pipeline_output\\install\\op0\\slice05\\matrix_A_linearized_128bit.txt",
+        "exists": false
+      },
+      "op0_matrixA_slice6": {
+        "path": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\_refresh-maxpool-after-deepseek-v1\\pipeline_output\\install\\op0\\slice06\\matrix_A_linearized_128bit.txt",
+        "exists": false
+      },
+      "op0_matrixA_slice7": {
+        "path": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\_refresh-maxpool-after-deepseek-v1\\pipeline_output\\install\\op0\\slice07\\matrix_A_linearized_128bit.txt",
+        "exists": false
+      },
+      "op0_matrixA_slice8": {
+        "path": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\_refresh-maxpool-after-deepseek-v1\\pipeline_output\\install\\op0\\slice08\\matrix_A_linearized_128bit.txt",
+        "exists": false
+      },
+      "op0_matrixA_slice9": {
+        "path": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\_refresh-maxpool-after-deepseek-v1\\pipeline_output\\install\\op0\\slice09\\matrix_A_linearized_128bit.txt",
+        "exists": false
+      },
+      "op0_matrixD_slice0": {
+        "path": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\_refresh-maxpool-after-deepseek-v1\\pipeline_output\\install\\op0\\slice00\\matrix_D_linearized_128bit.txt",
+        "exists": false
+      },
+      "op0_matrixD_slice1": {
+        "path": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\_refresh-maxpool-after-deepseek-v1\\pipeline_output\\install\\op0\\slice01\\matrix_D_linearized_128bit.txt",
+        "exists": false
+      },
+      "op0_matrixD_slice10": {
+        "path": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\_refresh-maxpool-after-deepseek-v1\\pipeline_output\\install\\op0\\slice10\\matrix_D_linearized_128bit.txt",
+        "exists": false
+      },
+      "op0_matrixD_slice11": {
+        "path": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\_refresh-maxpool-after-deepseek-v1\\pipeline_output\\install\\op0\\slice11\\matrix_D_linearized_128bit.txt",
+        "exists": false
+      },
+      "op0_matrixD_slice12": {
+        "path": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\_refresh-maxpool-after-deepseek-v1\\pipeline_output\\install\\op0\\slice12\\matrix_D_linearized_128bit.txt",
+        "exists": false
+      },
+      "op0_matrixD_slice13": {
+        "path": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\_refresh-maxpool-after-deepseek-v1\\pipeline_output\\install\\op0\\slice13\\matrix_D_linearized_128bit.txt",
+        "exists": false
+      },
+      "op0_matrixD_slice14": {
+        "path": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\_refresh-maxpool-after-deepseek-v1\\pipeline_output\\install\\op0\\slice14\\matrix_D_linearized_128bit.txt",
+        "exists": false
+      },
+      "op0_matrixD_slice15": {
+        "path": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\_refresh-maxpool-after-deepseek-v1\\pipeline_output\\install\\op0\\slice15\\matrix_D_linearized_128bit.txt",
+        "exists": false
+      },
+      "op0_matrixD_slice16": {
+        "path": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\_refresh-maxpool-after-deepseek-v1\\pipeline_output\\install\\op0\\slice16\\matrix_D_linearized_128bit.txt",
+        "exists": false
+      },
+      "op0_matrixD_slice17": {
+        "path": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\_refresh-maxpool-after-deepseek-v1\\pipeline_output\\install\\op0\\slice17\\matrix_D_linearized_128bit.txt",
+        "exists": false
+      },
+      "op0_matrixD_slice18": {
+        "path": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\_refresh-maxpool-after-deepseek-v1\\pipeline_output\\install\\op0\\slice18\\matrix_D_linearized_128bit.txt",
+        "exists": false
+      },
+      "op0_matrixD_slice19": {
+        "path": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\_refresh-maxpool-after-deepseek-v1\\pipeline_output\\install\\op0\\slice19\\matrix_D_linearized_128bit.txt",
+        "exists": false
+      },
+      "op0_matrixD_slice2": {
+        "path": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\_refresh-maxpool-after-deepseek-v1\\pipeline_output\\install\\op0\\slice02\\matrix_D_linearized_128bit.txt",
+        "exists": false
+      },
+      "op0_matrixD_slice20": {
+        "path": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\_refresh-maxpool-after-deepseek-v1\\pipeline_output\\install\\op0\\slice20\\matrix_D_linearized_128bit.txt",
+        "exists": false
+      },
+      "op0_matrixD_slice21": {
+        "path": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\_refresh-maxpool-after-deepseek-v1\\pipeline_output\\install\\op0\\slice21\\matrix_D_linearized_128bit.txt",
+        "exists": false
+      },
+      "op0_matrixD_slice22": {
+        "path": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\_refresh-maxpool-after-deepseek-v1\\pipeline_output\\install\\op0\\slice22\\matrix_D_linearized_128bit.txt",
+        "exists": false
+      },
+      "op0_matrixD_slice23": {
+        "path": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\_refresh-maxpool-after-deepseek-v1\\pipeline_output\\install\\op0\\slice23\\matrix_D_linearized_128bit.txt",
+        "exists": false
+      },
+      "op0_matrixD_slice24": {
+        "path": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\_refresh-maxpool-after-deepseek-v1\\pipeline_output\\install\\op0\\slice24\\matrix_D_linearized_128bit.txt",
+        "exists": false
+      },
+      "op0_matrixD_slice25": {
+        "path": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\_refresh-maxpool-after-deepseek-v1\\pipeline_output\\install\\op0\\slice25\\matrix_D_linearized_128bit.txt",
+        "exists": false
+      },
+      "op0_matrixD_slice26": {
+        "path": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\_refresh-maxpool-after-deepseek-v1\\pipeline_output\\install\\op0\\slice26\\matrix_D_linearized_128bit.txt",
+        "exists": false
+      },
+      "op0_matrixD_slice27": {
+        "path": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\_refresh-maxpool-after-deepseek-v1\\pipeline_output\\install\\op0\\slice27\\matrix_D_linearized_128bit.txt",
+        "exists": false
+      },
+      "op0_matrixD_slice3": {
+        "path": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\_refresh-maxpool-after-deepseek-v1\\pipeline_output\\install\\op0\\slice03\\matrix_D_linearized_128bit.txt",
+        "exists": false
+      },
+      "op0_matrixD_slice4": {
+        "path": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\_refresh-maxpool-after-deepseek-v1\\pipeline_output\\install\\op0\\slice04\\matrix_D_linearized_128bit.txt",
+        "exists": false
+      },
+      "op0_matrixD_slice5": {
+        "path": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\_refresh-maxpool-after-deepseek-v1\\pipeline_output\\install\\op0\\slice05\\matrix_D_linearized_128bit.txt",
+        "exists": false
+      },
+      "op0_matrixD_slice6": {
+        "path": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\_refresh-maxpool-after-deepseek-v1\\pipeline_output\\install\\op0\\slice06\\matrix_D_linearized_128bit.txt",
+        "exists": false
+      },
+      "op0_matrixD_slice7": {
+        "path": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\_refresh-maxpool-after-deepseek-v1\\pipeline_output\\install\\op0\\slice07\\matrix_D_linearized_128bit.txt",
+        "exists": false
+      },
+      "op0_matrixD_slice8": {
+        "path": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\_refresh-maxpool-after-deepseek-v1\\pipeline_output\\install\\op0\\slice08\\matrix_D_linearized_128bit.txt",
+        "exists": false
+      },
+      "op0_matrixD_slice9": {
+        "path": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\_refresh-maxpool-after-deepseek-v1\\pipeline_output\\install\\op0\\slice09\\matrix_D_linearized_128bit.txt",
+        "exists": false
+      }
+    },
+    "semantic_contract": {
+      "bound": true,
+      "graph_sha256": "871c665990e918a2d1280be5c11c45225d624353520aceb667bec039b59d63eb",
+      "operator_count": 1
+    },
+    "issue_count": 0
+  }
+}

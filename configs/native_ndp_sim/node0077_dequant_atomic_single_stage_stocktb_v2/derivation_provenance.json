@@ -1,0 +1,55 @@
+{
+  "all_other_leaves_unchanged": true,
+  "changed_leaves": [
+    {
+      "derived_value": 1,
+      "owner": "logical schedule",
+      "path": "$.dram_loop_configs.LC1.end",
+      "source_value": 47
+    },
+    {
+      "derived_value": 1,
+      "owner": "logical schedule",
+      "path": "$.dram_loop_configs.LC3.end",
+      "source_value": 47
+    },
+    {
+      "derived_value": "0x00000000",
+      "owner": "address binder",
+      "path": "$.stream_engine.stream0.base_addr",
+      "source_value": "0b00000_00_0000000000000_000000_0000"
+    },
+    {
+      "derived_value": 16,
+      "owner": "typed CWH shape",
+      "path": "$.stream_engine.stream0.dim_stride[2]",
+      "source_value": 752
+    },
+    {
+      "derived_value": "0x00000010",
+      "owner": "address binder",
+      "path": "$.stream_engine.stream2.base_addr",
+      "source_value": "0b00000_11_0000000000000_000000_0000"
+    },
+    {
+      "derived_value": 64,
+      "owner": "typed CWH shape",
+      "path": "$.stream_engine.stream2.dim_stride[2]",
+      "source_value": 3008
+    }
+  ],
+  "d_buffer_supply": {
+    "buffer_bytes_per_request": 16,
+    "last_row_index": 3,
+    "row_trip_count": 4,
+    "supply_bytes": 64,
+    "transaction_bytes": 64
+  },
+  "derivation_mode": "exact_leaf_diff_from_corrected_v6_config",
+  "diagnostic_shape_change_only": true,
+  "source_config": {
+    "path": "configs/native_ndp_sim/resnet50_dequant_node0077_uint8_fp32_strict_v6/config.json",
+    "sha256": "72c871e3bb4583302961ead62cabefa8b125281be97b5df61b45a190f18998bb",
+    "size_bytes": 12374
+  }
+}

@@ -1,0 +1,148 @@
+{
+  "schema": "mandatory-server-package-read-receipt-v1",
+  "created_local_date": "2026-07-27",
+  "task": "Requant node0001 frozen guard-only SFU readiness and PE post-register diagnostic",
+  "status": "complete_before_generation",
+  "semantic_workload_policy": "freeze rq_node0001_guardonly_directsig_stock_v1 JSON, mapping, bitstream, execplan, inputs, RequantGuard, golden, formal D and expected writes byte-exact",
+  "read_files": [
+    {
+      "path": ".agents/rules/生成前必读索引.md",
+      "size_bytes": 5650,
+      "sha256": "539e8dfbe52ad9fc8bd9fdef8c69d448fb5fd713e938e3adc5f663f82fd806d7",
+      "coverage": "complete"
+    },
+    {
+      "path": ".agents/rules/服务器测试包生成规则.md",
+      "size_bytes": 15144,
+      "sha256": "b4019910c7ef65f334676a1b3a5679e63b8ac41dcde88b567ada4f096e50fe05",
+      "coverage": "complete"
+    },
+    {
+      "path": ".agents/rules/RequantizeUint8算子配置规则.md",
+      "size_bytes": 22670,
+      "sha256": "20883fad672123f6f6561633d58b5432ed453feb8f2695e5993f9bfe97b0756e",
+      "coverage": "complete"
+    },
+    {
+      "path": "NDP_copy01/README_HARDWARE_SIM_ENTRY.md",
+      "size_bytes": 5461,
+      "sha256": "4318f3a28de399fb522740315f11bdddf346e71969cf1e45686899a568b042d7",
+      "coverage": "complete"
+    },
+    {
+      "path": ".agents/plan.md",
+      "size_bytes": 11850,
+      "sha256": "1eaf9491aa345c4559915b937161f293d4aaa1bc4f135024632645b7453a7d95",
+      "coverage": "target Requant status, blockers and unique next action"
+    },
+    {
+      "path": ".agents/task_records/20260727_requant_guardonly_directsig_v1_return_analysis.md",
+      "coverage": "complete authoritative predecessor adjudication"
+    }
+  ],
+  "actual_consumers_reviewed": [
+    {
+      "path": "tools/build_requant_guard_only_onecmd_server_test.py",
+      "sha256": "b65723a129bf35c4fdace0011364a3403871f69973a3f235b112d4c98b64dc30",
+      "coverage": "frozen semantic copy, narrow observer, manifest, deterministic ZIP and fresh-extract validation"
+    },
+    {
+      "path": "tools/requant_atomic_server_runtime.py",
+      "sha256": "e33a16013320495878e306fce6d25590ae9b513d1bb1bb63391a0f06112fc836",
+      "coverage": "package preflight, readiness checkpoint parser, first-divergence routing, formal readback and return allowlist"
+    },
+    {
+      "path": "ndp-sim-ref/bitstream/config/general.py",
+      "size_bytes": 11738,
+      "sha256": "eb9d5ee9ef273182e05b718aca378f87d0a1ccb5366ae463d8482c8c94c3482f",
+      "coverage": "complete authoritative active opcode encoder map; sfu_activation is decimal 24 / 0x18"
+    },
+    {
+      "path": "native_ring4_repro_20260722/bitstream/config/general.py",
+      "size_bytes": 11738,
+      "sha256": "eb9d5ee9ef273182e05b718aca378f87d0a1ccb5366ae463d8482c8c94c3482f",
+      "coverage": "historical byte-identical copy used only as equivalence evidence"
+    },
+    {
+      "path": "tools/requant_node0001_server_runtime.py",
+      "size_bytes": 66753,
+      "sha256": "35434ce4406deb31eed26e07416246ddad1ae7c1902fc3a282f7ab6bc71ec542",
+      "coverage": "XMR gate, transactional observer install, focused identity and restore"
+    },
+    {
+      "path": "NDP_copy01/Makefile.tb_NDP_Top_new_phy",
+      "size_bytes": 17683,
+      "sha256": "528d93f3c7f458d256bdbaf1d9ec39edfbfe5bd8a924e2bf0786914a634f4aba",
+      "coverage": "complete compile/run consumer"
+    },
+    {
+      "path": "NDP_copy01/tb_NDP_Top_new_phy.sv",
+      "size_bytes": 342445,
+      "sha256": "e068f7500f0c71c2ba2c756f74a4519c33d13d4afe0fa4cc9f6c9e79b1e3f994",
+      "coverage": "SCA/SCA_D, lifecycle and observer include consumer"
+    },
+    {
+      "path": "NDP_copy01/native_return_observer.svh",
+      "size_bytes": 111824,
+      "sha256": "47f0d66728f47c92f9f93f8cf87b47a0ff8567d587c3a099e2d03f610af09f49",
+      "coverage": "tail marker, lifecycle and raw MSE4 monitor exports"
+    },
+    {
+      "path": "NDP_copy01/rtl/filelists/NDP_Top_phy_filelist.f",
+      "size_bytes": 357,
+      "sha256": "b6720607b2757d50d13de6efc109e240aa32e56b51c7dd7e30ec0150a34e4b6a",
+      "coverage": "complete active compile filelist"
+    }
+  ],
+  "read_only_rtl_signal_sources": [
+    {
+      "path": "NDP_copy01/rtl/Slice/General_Array/GA_PE_Group/GA_PE_Inbuffer.sv",
+      "sha256": "25fa4dd2c6fe8301bc3651d660df72059ea2787c0c26a2841a1d4e439586b518"
+    },
+    {
+      "path": "NDP_copy01/rtl/Slice/General_Array/GA_PE_Group/GA_SFU_LUT.sv",
+      "sha256": "617aa05513ccf183fbadfc49495113403dfa13d41c6dc51ea22870d8dbfb3566"
+    },
+    {
+      "path": "NDP_copy01/rtl/Slice/General_Array/GA_PE_Group/GA_PE_Group.sv",
+      "sha256": "ac6ce995896c1ac0ba4d6c45eae852f9637c0d86a72de038c33fc3f47d6ce77d"
+    },
+    {
+      "path": "NDP_copy01/rtl/Slice/General_Array/GA_PE_Group/GA_SFU_PE/GA_SFU_PE.sv",
+      "sha256": "fe09e7d44651cbc86dead5ee8bd406c90b8ffd4ad74b68acc3f46ea21781ffca"
+    },
+    {
+      "path": "NDP_copy01/rtl/Slice/General_Array/GA_PE_Group/GA_SFU_PE/GA_SFU_PE_Preprocess.sv",
+      "sha256": "79a285e4988e36b5fbb0ef4646131fd3ca559d7bc7ea0d4ee2751b544e2eb548"
+    }
+  ],
+  "rule_ids": [
+    "CDA-SERVER-PACKAGE-BOOTSTRAP-IMMUTABILITY-001",
+    "CDA-SERVER-OBSERVER-XMR-ELABORATION-CONSTANT-001",
+    "CDA-SERVER-OBSERVER-DECOUPLED-HANDSHAKE-001",
+    "CDA-SERVER-OBSERVER-EVIDENCE-DOMINANCE-001",
+    "CDA-REQUANT-GUARD-DIAGNOSTIC-EVIDENCE-BOUNDARY-001",
+    "CDA-REQUANT-GUARD-CHECKPOINT-ROUTING-001",
+    "CDA-REQUANT-DIRECTSIG-V1-DYNAMIC-EVIDENCE-001"
+  ],
+  "known_counterexamples": [
+    "directsig v1 proves PE_SELECTED_INPUT 64/64 with 62 nonzero but all 16 MSE4 write-data and both formal D payloads are zero"
+  ],
+  "open_dynamic_gates": [
+    "B_REQUANT_GUARD_DYNAMIC_DATA_PATH",
+    "B_REQUANT_SERVER_E4_E5"
+  ],
+  "omitted_files": [
+    {
+      "path": "round-only and alias-lifetime assets",
+      "reason": "explicitly disabled by current first-divergence routing"
+    }
+  ],
+  "prohibitions": {
+    "modify_tb_or_rtl": false,
+    "force_or_deposit": false,
+    "enable_round_or_alias_or_full_e4": false,
+    "candidate_release": false,
+    "upload_or_run": false
+  }
+}

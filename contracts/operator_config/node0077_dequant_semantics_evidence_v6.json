@@ -1,0 +1,94 @@
+{
+  "candidate_release": false,
+  "chain": [
+    "ONNX DequantizeLinear",
+    "typed lowering request",
+    "two-stage GA schedule",
+    "strict operator JSON",
+    "native bitstream mapping",
+    "typed execplan and SCA",
+    "server E4/E5 readback"
+  ],
+  "config": {
+    "normal_outbuffer_only": true,
+    "sha256": "72c871e3bb4583302961ead62cabefa8b125281be97b5df61b45a190f18998bb",
+    "strict_validation": true,
+    "two_stage_ga": true
+  },
+  "contract_sha256": "cf6cb3a7813ab84321e38710c17c87d28d0900bb362b495e76fc75bfc06d7cc3",
+  "evidence_level": {
+    "hardware": "pending E4/E5",
+    "local": "E2"
+  },
+  "generation_receipt_sha256": "a0ebe2fafee7c2258b107260f833730e4e3356ac13e207967b75b3f9c8a0c0b7",
+  "identity": {
+    "hw_op_id": "hwop-0077-00",
+    "node_id": "node-0077",
+    "onnx_name": "resnetv17_dense0_fwd_DequantizeLinear",
+    "op_type": "resnet50_dequant_node0077_uint8_fp32",
+    "request_id": "r5:hwop-0077-00",
+    "request_sha256": "cb8522a4ba2386ce3c303f5de274b2fa2e130d719c09933c686a11d28d9b7f63"
+  },
+  "layout": {
+    "a_bytes_per_slice": 752,
+    "d_bytes_per_slice": 3008,
+    "hardware_elements_per_slice": 752,
+    "hardware_shape_cwh": [
+      16,
+      47,
+      1
+    ],
+    "inverse_bit_exact": true,
+    "prefix_matches_existing_layout": true,
+    "profile_id": "w4_group4x7_batch_channel28_candidate_v1",
+    "rule": "CDA-DEQUANT-LAYOUT-HIGH4-001",
+    "slice_count": 28,
+    "valid_elements_per_slice": 750
+  },
+  "numeric": {
+    "affine_mac_bit_mismatch_count": 12976,
+    "element_count": 16000,
+    "input_shape": [
+      16,
+      1000
+    ],
+    "negative_zero_point_bits": "0xc2700000",
+    "rule": "CDA-DEQUANT-ONNX-ORDER-001",
+    "scale": 0.12635107338428497,
+    "scale_bits": "0x3e01622d",
+    "single_affine_mac_rejected": true,
+    "two_stage_bit_exact": true,
+    "two_stage_sha256": "d5aa938813ec8ef7fe51cc2288df5f0e1782c19729a184cef248718ce83a311d",
+    "w3_output_sha256": "d5aa938813ec8ef7fe51cc2288df5f0e1782c19729a184cef248718ce83a311d",
+    "zero_point": 60
+  },
+  "remaining_blockers": [
+    "B_DEQUANT_SERVER_E4_E5"
+  ],
+  "rules": [
+    "CDA-DEQUANT-ONNX-ORDER-001",
+    "CDA-DEQUANT-NO-AFFINE-MAC-001",
+    "CDA-DEQUANT-TWO-STAGE-GA-001",
+    "CDA-DEQUANT-NORMAL-OUTBUFFER-001",
+    "CDA-DEQUANT-LAYOUT-HIGH4-001",
+    "CDA-DEQUANT-STREAM-LIFECYCLE-001",
+    "CDA-DEQUANT-D-BUFFER-SUPPLY-CONSERVATION-001",
+    "CDA-DEQUANT-TYPED-CONSTANT-001",
+    "CDA-DEQUANT-MAPPING-BINDING-001",
+    "CDA-DEQUANT-E2-001",
+    "CDA-DEQUANT-E4-E5-001"
+  ],
+  "schema": "dequantize-linear-vertical-contract-v1",
+  "status": "local_e2_candidate_dynamic_e4_e5_pending",
+  "typed_transport": {
+    "config_artifact_count": 1,
+    "official_normalization_idempotent": true,
+    "operator_count": 1,
+    "raw_extensions_intentionally_not_roundtripped": [
+      "params"
+    ],
+    "status": "typed_transport_validated",
+    "target_binding_count": 8,
+    "typed_constant_count": 2
+  }
+}

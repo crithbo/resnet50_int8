@@ -1,0 +1,24 @@
+{
+  "schema": "operator-config-execplan-double-run-v1",
+  "equal": true,
+  "excluded_nondeterministic_outputs": [
+    "placement.png"
+  ],
+  "files": {
+    "config/op0/detailed_dump.txt": "68e6bf93c8bcdaad78d59ec214b8ae2e370bebb342f63c0a56f06e5fb70f38ea",
+    "config/op0/mapping_review.json": "622f5fe2a187eb6dd1b09b8c290fbac4ff841f30c3e8faf24d4e5225a7a11258",
+    "config/op0/modules_dump_128b.bin": "c185043c0239aa38a6a1a4459158ea95cc8376a8dd4dfe26ce4968296bc8dc37",
+    "config/op0/modules_dump_64b.bin": "4c722ababbe797a4d9adba9f68f95ff610a910591dbc36ed9cf66d67c222b091",
+    "config/op0/op0_node0004_accumulate_wave0_nopp_r1_bitstream_128b.bin": "c185043c0239aa38a6a1a4459158ea95cc8376a8dd4dfe26ce4968296bc8dc37",
+    "config/op0/op0_node0004_accumulate_wave0_nopp_r1_bitstream_64b.bin": "4c722ababbe797a4d9adba9f68f95ff610a910591dbc36ed9cf66d67c222b091",
+    "config/op0/parsed_bitstream.txt": "528eca6cfcc495e90a28a99507fa5b13e7df899226bde716aa8e639dc51fa5b0",
+    "graph_input_withbaseaddr.json": "bf7309a6dd5ce222f85efd65b39491e073473dfef97cc0544d67805e3e8a4f0d",
+    "install/cfg_pkg/op0_node0004_accumulate_wave0_nopp_r1_bitstream_128b.bin": "c185043c0239aa38a6a1a4459158ea95cc8376a8dd4dfe26ce4968296bc8dc37",
+    "install/execplan.txt": "a5d9edf2fbd51f2107b9fe7845f4716786a61797be7c9e38aca3ede9009a0711",
+    "install/execplan_op0.txt": "a5d9edf2fbd51f2107b9fe7845f4716786a61797be7c9e38aca3ede9009a0711",
+    "instructions_explained.txt": "e2471651e807d30136d9d85b991348b3e1d688239e95ea3ee3cfee691b4a99f0",
+    "jsons/op0_node0004_accumulate_wave0_nopp_r1.json": "12daf4c1a81d1634439374ea79dbb7972a28bd415da74e999ee9cfa87e7905ae",
+    "sca_cfg.json": "9380afb63a65ee07ccfb00b55da65e48b384579a2a71bdf7f15320b469841ffa",
+    "sca_cfg_D.json": "c7004766236195004737a30573576297605e487ea28d4b7b4efb03039b2ea185"
+  }
+}

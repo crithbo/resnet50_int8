@@ -1,0 +1,70 @@
+{
+  "authorization": {
+    "after": 0,
+    "before": null,
+    "formal_target_config": false,
+    "json_path": "$.stream_engine.stream0.padding_reg_value",
+    "normalized_canonical_sha256": "126a730406281748378fa15cf8f53d0c6e437da5e4fceeda16f6b52ba2df11ff",
+    "scope": "strict materialization of r5:hwop-0071-00 only; no server execution claim",
+    "server_execution_claim": false,
+    "source_authority_sha256": "431fda2a1b3e0fe66d4c248418458ff07213b139115de717ad22524ba02eddc0",
+    "source_path": "ndp-sim/jsons/avgpool_config_2048_7_7.json",
+    "source_sha256": "a3d19c7b1759eb40b66a6b786234865b61917e9cf74822a62dd469729c2497c5"
+  },
+  "contract_sha256": "a9649472c92f790361e9127c773eb38ef73c339cf3685aaeca61e6a1a9415016",
+  "evidence": {
+    "configuration_authority": {
+      "path": "contracts/operator_config/operator_config_authority_v1.json",
+      "sha256": "9cb79f871e39d5c431d8f3b401877231bd7a3fcf6eb48a904bbb90490e399f9a",
+      "source_provenance": {
+        "git_worktree_matches_pinned_blob": true,
+        "kind": "pinned_upstream_exact_blob",
+        "pinned_commit": "ec12424516ae0304228dd2321d4e604fe225e04e",
+        "pinned_git_blob_oid": "44604a8de4cc4aa4a45de9a83cd4b20d4a1fc005",
+        "repository_path": "jsons/avgpool_config_2048_7_7.json",
+        "working_tree_content_sha256": "a3d19c7b1759eb40b66a6b786234865b61917e9cf74822a62dd469729c2497c5"
+      }
+    },
+    "shared_stream_padding_rtl": {
+      "assignment": "rd_chl_queue_rd_padding_mask[PADDING_INDEX] ? mse_padding_reg_value",
+      "padding_source": {
+        "path": "NDP_copy01/rtl/Slice/LSU/Stream_Engine/Memory_Stream_Engine/Memory_RD_Stream_Engine/RD_Data_Channel.sv",
+        "sha256": "87d1c9a05e8a1a51a5b78f7838962b381da74e7d471297b6da68f8a449aefe08"
+      },
+      "path": "contracts/maxpool_rtl_semantics_evidence.json",
+      "sha256": "af186419bdc0728d60044ac751d2c873cd2b7a30485f335f0cfa620da2a817aa"
+    },
+    "typed_config_parameter_contract": {
+      "hw_op_id": "hwop-0071-00",
+      "path": "contracts/typed_config_parameter_contract.json",
+      "sha256": "abbc87b0b13c92611a90fe1767b32b15fe9c49f23bee616ca2bb51219dd181bd",
+      "stage_sha256": "b15631e17852aa6180b07426b580027b45eb042611ba8b24a1c2546ba8db4b5f"
+    }
+  },
+  "operator_semantics": {
+    "additive_identity_byte": 0,
+    "input_dtype": "uint8",
+    "input_shape": [
+      16,
+      2048,
+      7,
+      7
+    ],
+    "input_zero_point": 0,
+    "lane_count": 8,
+    "lane_opcode": "int32_sum",
+    "operator": "GlobalAverageSumInt32",
+    "output_dtype": "int32",
+    "output_shape": [
+      16,
+      2048,
+      1,
+      1
+    ],
+    "reason": "the exact request has x_zero_point=0, uint8 is converted to int32 before eight-lane summation, and zero is the additive identity for masked positions",
+    "request_id": "r5:hwop-0071-00",
+    "spatial_element_count": 49
+  },
+  "schema": "gap-sum-uint8-zero-padding-contract-v1",
+  "status": "approved_for_exact_gap_sum_strict_normalization"
+}

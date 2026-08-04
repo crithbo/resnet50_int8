@@ -1,0 +1,261 @@
+{
+  "contract_sha256": "cfe9461d5f3b39f979d545d0d4740d6b8800cfcf7e21706abc6fd66a3352139d",
+  "derived_config": {
+    "address_binding": "late_bound_unchanged_from_template_placeholder",
+    "canonical_sha256": "e5787c37ab9240500fbd22de37201e674a857491c926a5df496f0d6ea2c09945",
+    "formal_target_config": false,
+    "path": "configs/stage_codegen/hwop-0071-00-d-index-v1/config.json",
+    "semantic_patch_count": 4,
+    "semantic_patches": [
+      {
+        "after": 256,
+        "before": 1,
+        "json_path": "$.dram_loop_configs.LC2.end",
+        "reason": "leaf_value_changed"
+      },
+      {
+        "after": 0,
+        "before": 1,
+        "json_path": "$.dram_loop_configs.LC2.last_index",
+        "reason": "leaf_value_changed"
+      },
+      {
+        "after": 1,
+        "before": 0,
+        "json_path": "$.dram_loop_configs.LC2.outmost_loop",
+        "reason": "leaf_value_changed"
+      },
+      {
+        "after": null,
+        "before": "DRAM_LC.LC0",
+        "json_path": "$.dram_loop_configs.LC2.src_id",
+        "reason": "leaf_value_changed"
+      }
+    ],
+    "source_canonical_sha256": "126a730406281748378fa15cf8f53d0c6e437da5e4fceeda16f6b52ba2df11ff"
+  },
+  "inputs": {
+    "authorized_strict_config": {
+      "path": "configs/native_ndp_sim/avgpool_config_2048_7_7_strict_v1/config.json",
+      "sha256": "bc1c593106c0dd25251af67c5500983218051dc21d19d33f8c91942c9e412e76",
+      "size_bytes": 12083
+    },
+    "lowering_bundle": {
+      "path": "contracts/resnet50_r5_lowering_bundle.json",
+      "sha256": "bf661e4eda2011025d9922708ab46a64f8d1b3c279527b88aa7d630bb3545432",
+      "size_bytes": 1971200
+    },
+    "rtl": {
+      "lc_connect": {
+        "path": "NDP_copy01/rtl/Slice/Index_Generation_Array/IGA_LC/IGA_LC_Connect.sv",
+        "sha256": "ab8c52963eeffac15d0f9bc84010967e371a097a1b7790aec08820d7af705b4b",
+        "size_bytes": 1705
+      },
+      "pe": {
+        "path": "NDP_copy01/rtl/Slice/Index_Generation_Array/IGA_PE/IGA_PE.sv",
+        "sha256": "fea83b3b87dc33350fe6f583cf72fd8c2b98fe1775ef25f41a83788cf121c2fa",
+        "size_bytes": 7346
+      },
+      "pe_connect": {
+        "path": "NDP_copy01/rtl/Slice/Index_Generation_Array/IGA_PE/IGA_PE_Connect.sv",
+        "sha256": "79114247fa65cb70d776119178b29322a64bf1aabcdc4c0a8352d248070d2ba1",
+        "size_bytes": 2502
+      },
+      "stream_connect": {
+        "path": "NDP_copy01/rtl/Slice/LSU/Stream_Engine/Stream_Engine_Connect.sv",
+        "sha256": "0ca375c4af56f7f6fe9e7055a39ac7370d91e6048b2aa9f3ae0a4910deae5425",
+        "size_bytes": 27947
+      }
+    }
+  },
+  "native_mapping": {
+    "bundle_manifest": {
+      "path": "artifacts/operator_config_validation/r5-gap-d-index-mapping-v1/bundle_manifest.json",
+      "sha256": "fe0c4b52372109b3b74ddffa521b4ab343de5d579696e64ed2d3ef10bfc7c3b0",
+      "size_bytes": 2676
+    },
+    "mapping_review": {
+      "path": "artifacts/operator_config_validation/r5-gap-d-index-mapping-v1/mapping_review.json",
+      "sha256": "c6e146b5b76d0292b932b61cd470311dbc7236f7bfa3f9d81598973fb0a6fb3f",
+      "size_bytes": 3181
+    },
+    "path": "artifacts/operator_config_validation/r5-gap-d-index-mapping-v1",
+    "required_before_server_candidate": true,
+    "status": "zero_penalty_mapping_and_bitstream_generated",
+    "total_penalty": 0.0,
+    "validation_report": {
+      "path": "artifacts/operator_config_validation/r5-gap-d-index-mapping-v1/artifact_validation_report.json",
+      "sha256": "27d76a938bdc14c7b27bd5aada0886f9b846a4e26513f30dd2998a107decda11",
+      "size_bytes": 107725
+    }
+  },
+  "numeric_carrier": {
+    "address_bias_equation": "bias(k)=low30(uint16(k)*uint20(32))",
+    "coverage": {
+      "classification": "RTL_PROVEN",
+      "derived_distinct_transaction_bases": 256,
+      "dimensions": [
+        {
+          "dimension": 0,
+          "domain": {
+            "carrier": {
+              "end": 256,
+              "kind": "local_lc_counter_domain",
+              "source": "DRAM_LC.LC2",
+              "src_id_role": "trigger_tag_dependency_only",
+              "start": 0,
+              "stride": 1,
+              "value_count": 256
+            },
+            "constant_operands": [
+              1
+            ],
+            "kind": "lc_pe_identity_mul_domain",
+            "opcode": "mul",
+            "source": "LC_PE.PE1",
+            "value_count": 256
+          },
+          "source": "LC_PE.PE1",
+          "stride_bytes": 32
+        }
+      ],
+      "first_derived_biases_bytes": [
+        0,
+        32,
+        64,
+        96,
+        128,
+        160,
+        192,
+        224,
+        256,
+        288,
+        320,
+        352,
+        384,
+        416,
+        448,
+        480
+      ],
+      "necessary_condition_passed": true,
+      "output_bytes_per_sample": 8192,
+      "output_dtype": "int32",
+      "output_shape": [
+        16,
+        2048,
+        1,
+        1
+      ],
+      "request_id": "r5:hwop-0071-00",
+      "required_distinct_transaction_bases": 256,
+      "scope": "necessary D-address coverage only; passing does not prove ordering, tag/completion, payload, mapping, E4 or E5",
+      "transaction_bytes": 32,
+      "unresolved_dimensions": [],
+      "write_stream": "stream1"
+    },
+    "distinct_bias_count": 256,
+    "first_bias_bytes": [
+      0,
+      32,
+      64,
+      96,
+      128,
+      160,
+      192,
+      224,
+      256,
+      288,
+      320,
+      352,
+      384,
+      416,
+      448,
+      480
+    ],
+    "identity_equation": "PE1=uint16(LC2)*uint16(1)=LC2",
+    "identity_pe": "LC_PE.PE1",
+    "last_bias_bytes": 8160,
+    "root": "DRAM_LC.LC2",
+    "root_count": 256,
+    "root_domain": [
+      0,
+      255
+    ],
+    "root_equation": "value(k)=0+k for 0<=k<256",
+    "write_index": "stream1.idx[0]=LC_PE.PE1"
+  },
+  "release": {
+    "candidate_json_allowed": false,
+    "reason": "D indexing is locally closed, but active GA int32_sum can reuse stale invalid outbuffer data across channel blocks; the read-only v7 observer return must adjudicate the exact state transition before a server candidate is emitted",
+    "remaining_blockers": [
+      "B_GAP_GA_ACCUM_STATE",
+      "B_ADDRESS_MAPPING_EXECPLAN_SCA",
+      "B_SERVER_E4_E5"
+    ],
+    "resolved_blocker": "B_GAP_D_INDEX_CARRIER_SEMANTICS",
+    "server_d_index_gate": {
+      "coverage_complete": false,
+      "expected_lines_per_slice": 512,
+      "golden_complete": false,
+      "release_allowed": false,
+      "request_count_alone_is_sufficient": false,
+      "rule_id": "CDA-GAP-D-READBACK-COVERAGE-001",
+      "slice_count": 16,
+      "unique_lines_per_slice": [
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2
+      ]
+    }
+  },
+  "request": {
+    "output_dtype": "int32",
+    "output_shape": [
+      16,
+      2048,
+      1,
+      1
+    ],
+    "request_id": "r5:hwop-0071-00",
+    "request_sha256": "9df690a675c74d2d9e43a78b516ce4045f1d978014bca4ad2abcaaab9dc295f4"
+  },
+  "schema": "resnet50-gap-d-index-schedule-v1",
+  "status": "d_index_static_and_native_mapping_closed_ga_accumulator_blocked",
+  "strict_validation": {
+    "development_mode": true,
+    "issue_count": 0,
+    "valid": true
+  },
+  "trigger_and_tag_chain": {
+    "buffer_loop_trigger": "LC2 is an independent numeric root and also drives GROUP1 buffer addressing; the memory index and buffer read request therefore share one occurrence and one backpressure boundary",
+    "completion": {
+      "buffer_tag_carrier": "GROUP1.COL_LC",
+      "possible_last_indices": [
+        0,
+        2,
+        3
+      ],
+      "terminal_condition": "last=1 && last_index=0, then final DDR write-data handshake",
+      "write_stream": "stream1",
+      "write_target": "D"
+    },
+    "fanout_rule": "LC2 advances only when the AND of every configured destination backpressure input is ready; PE1 and GROUP1.ROW_LC therefore observe the same accepted D-index occurrence",
+    "last_index": 0,
+    "ordering": "accepted root values are monotonically 0..255; stream1 is backpressured through PE1 and LC2 fanout, so no later root value can overtake an earlier write-index occurrence",
+    "root_trigger": "slice_start_run because LC2.outmost_loop=1",
+    "tag_rule": "LC2 valid/last/last_index tag is selected by PE1, copied to iga_pe_alu_result_tag, buffered with the PE result and then queued by stream1 together with the numeric index"
+  }
+}

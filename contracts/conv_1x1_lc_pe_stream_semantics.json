@@ -1,7 +1,7 @@
 {
   "schema_version": "0.1",
   "contract_type": "conv_1x1_lc_pe_stream_semantics",
-  "transport_abi": "conv_sa_q8k8_v2",
+  "transport_abi": "conv_sa_s8a_u8b_local_v3",
   "status": "official_encoder_passed_unified_sa_physical_contract",
   "authority_order": [
     "operator confirmation that previous DeepSeek operator JSONs execute on target hardware",
@@ -101,14 +101,14 @@
   },
   "port_semantics": {
     "target_A": {
-      "logical_role": "activation_q8c4",
-      "project_port": "A",
-      "dtype": "uint8"
-    },
-    "target_B": {
-      "logical_role": "weight_k8c4_in_high_ring_prev_order",
+      "logical_role": "weight_k8c4_in_destination_prev_order",
       "project_port": "B",
       "dtype": "int8"
+    },
+    "target_B": {
+      "logical_role": "destination_local_activation_q8c4",
+      "project_port": "A",
+      "dtype": "uint8"
     },
     "target_C": {
       "logical_role": "bias",
@@ -125,6 +125,11 @@
       "project_port": "D",
       "dtype": "uint8",
       "encoding_status": "not represented by this SA-only JSON; executed by the bound NDP ActivationUnit candidate"
+    },
+    "target_B_prime": {
+      "logical_role": "destination_local_activation_q8c4_pingpong_replica",
+      "project_port": "A",
+      "dtype": "uint8"
     }
   },
   "lc_semantics": [
@@ -163,7 +168,18 @@
     },
     {
       "lc": "LC3",
-      "symbol": "local_c_quartet_activation",
+      "symbol": "unused",
+      "range": [
+        0,
+        0,
+        0
+      ],
+      "src_id": null,
+      "last_index": 0
+    },
+    {
+      "lc": "LC4",
+      "symbol": "destination_prev_step_activation",
       "range": [
         0,
         4,
@@ -173,26 +189,15 @@
       "last_index": 3
     },
     {
-      "lc": "LC4",
-      "symbol": "unused",
-      "range": [
-        0,
-        0,
-        0
-      ],
-      "src_id": null,
-      "last_index": 0
-    },
-    {
       "lc": "LC5",
-      "symbol": "unused",
+      "symbol": "local_c_quartet_activation",
       "range": [
         0,
-        0,
-        0
+        4,
+        1
       ],
-      "src_id": null,
-      "last_index": 0
+      "src_id": "DRAM_LC.LC4",
+      "last_index": 4
     },
     {
       "lc": "LC6",
@@ -328,6 +333,16 @@
           "constant:8",
           "LC9"
         ]
+      },
+      {
+        "pe": "PE2",
+        "result": "activation_prev_step_c_quartet",
+        "formula": "LC4*c_quartets+LC5",
+        "sources": [
+          "LC4",
+          "constant:c_quartets",
+          "LC5"
+        ]
       }
     ]
   },
@@ -335,29 +350,7 @@
     {
       "stream": "stream0",
       "target": "A",
-      "role": "activation_q8c4_read",
-      "idx": [
-        "DRAM_LC.LC3",
-        "DRAM_LC.LC2",
-        "DRAM_LC.LC1"
-      ],
-      "idx_size_minus_one": [
-        31,
-        0,
-        0
-      ],
-      "byte_stride": [
-        32,
-        128,
-        896
-      ],
-      "buf_full_last_index": 3,
-      "tail": null
-    },
-    {
-      "stream": "stream1",
-      "target": "B",
-      "role": "weight_k8c4_read",
+      "role": "signed_weight_k8c4_read",
       "idx": [
         "LC_PE.PE0",
         "DRAM_LC.LC0",
@@ -377,13 +370,13 @@
       "tail": null
     },
     {
-      "stream": "stream2",
-      "target": "D",
-      "role": "int32_p_k8_write",
+      "stream": "stream1",
+      "target": "B",
+      "role": "unsigned_activation_q8c4_read_buffer2",
       "idx": [
-        "DRAM_LC.LC13",
-        "LC_PE.PE1",
-        "DRAM_LC.LC14"
+        "LC_PE.PE2",
+        "DRAM_LC.LC2",
+        "DRAM_LC.LC1"
       ],
       "idx_size_minus_one": [
         31,
@@ -392,10 +385,32 @@
       ],
       "byte_stride": [
         32,
-        64,
+        512,
         3584
       ],
-      "buf_full_last_index": null,
+      "buf_full_last_index": 4,
+      "tail": null
+    },
+    {
+      "stream": "stream2",
+      "target": "B'",
+      "role": "unsigned_activation_q8c4_read_buffer3",
+      "idx": [
+        "LC_PE.PE2",
+        "DRAM_LC.LC2",
+        "DRAM_LC.LC1"
+      ],
+      "idx_size_minus_one": [
+        31,
+        0,
+        0
+      ],
+      "byte_stride": [
+        32,
+        512,
+        3584
+      ],
+      "buf_full_last_index": 4,
       "tail": null
     },
     {
@@ -418,6 +433,28 @@
         0
       ],
       "buf_full_last_index": 2,
+      "tail": null
+    },
+    {
+      "stream": "stream4",
+      "target": "D",
+      "role": "int32_p_k8_write",
+      "idx": [
+        "DRAM_LC.LC13",
+        "LC_PE.PE1",
+        "DRAM_LC.LC14"
+      ],
+      "idx_size_minus_one": [
+        31,
+        0,
+        0
+      ],
+      "byte_stride": [
+        32,
+        64,
+        3584
+      ],
+      "buf_full_last_index": null,
       "tail": null
     }
   ],
@@ -456,63 +493,65 @@
       },
       "register_rule": "1 selects the jump-4/HIGH route; 0 selects the non-jump/28-slice route"
     },
-    "neighbor_stream": 0,
-    "payload_role": "activation_q8c4",
-    "weight_order": "destination-relative PREV traversal: destination, prev1, prev2, prev3"
+    "neighbor_stream": null,
+    "payload_role": "no_runtime_neighbor_payload",
+    "weight_order": "destination-relative PREV traversal: destination, prev1, prev2, prev3",
+    "activation_order": "same destination-relative PREV traversal, replicated locally per destination"
   },
   "resolved_pseudocode_conflicts": [
-    "RTL group2 broadcasts by SA column, so activation is group0 and weight is group1",
-    "physical A/B/P ranges are transaction packed; encoder-valid v8 NHWC/NHWK strides are rejected",
+    "RTL DataA is signed and DataB is unsigned, so weight is target A/inport0 and activation is target B/B-prime/inport1",
+    "both activation ping-pong buffers have explicit local READ producers; runtime N2N is removed",
+    "RTL outport major=1 transposes K-row/Q-column compute order into the existing Q8xK8 P layout",
     "WRITE_STREAM0 uses a value-identical LC13-LC15 placement branch required by physical IGA connectivity",
     "READ_STREAM3 uses an independent LC10-LC12 Kblock/H/Qblock branch so every output tile receives four bias handshakes"
   ],
   "config": {
     "path": "conv_1x1_real.json",
-    "sha256": "f26a3346859601055abc9cb88dd0b7c3650e5fcc4fae6d1f85d2562aba0ad8ed",
+    "sha256": "df73611d0b3141b50a029c002c7ab0e61e8fa5a47bc0a74dcb3446be69e79c16",
     "generator": "tools/generate_conv_1x1_real.py",
     "source": "conv_full.json",
     "required_presence_mask": "11101110",
     "presence_mask_semantics": "SA-only, reference-compatible; GA and zero-presence blocks are absent"
   },
   "official_encoder": {
-    "repository_commit": "056b1c3c08b24e098636615d9001e8a974beb09f",
-    "mapping_cache_key": "2702bd9d31f9efc0",
-    "connection_count": 33,
+    "repository_commit": "d4ffc32c9b29a858d83e13706cd837c5549521a4",
+    "mapping_cache_key": "72d2720125714878",
+    "connection_count": 41,
     "constraint_cost": 0,
     "repeat_count": 2,
     "repeat_outputs_identical": true,
     "outputs": {
       "mapping_review.json": {
-        "size_bytes": 7068,
-        "sha256": "ce401e920d3187c70f3c7e4edd29659d7c9722b577f63a3890e57547952dfb22"
+        "size_bytes": 8625,
+        "sha256": "fe15337cef9ed06be1bc5babc92f704e302ff01f9f71988dc65e293634bac6e2"
       },
       "parsed_bitstream.txt": {
-        "size_bytes": 4104,
-        "sha256": "2c90f484d3e976bfe0ebcfbc7bc7f982611bb9054323a80fb437254204391c43"
+        "size_bytes": 4889,
+        "sha256": "dd880879c9f0fc4e8213eb2770d55ea8e602855d88d7b09f6afe7e986ac627c1"
       },
       "modules_dump_64b.bin": {
-        "size_bytes": 3828,
-        "sha256": "1941a00cd1d74259b0db943ec84ead57ddb3f2d5fc39b033ff5f4ee20bc9bca6",
-        "raw_size_bytes": 3828,
-        "raw_sha256": "1941a00cd1d74259b0db943ec84ead57ddb3f2d5fc39b033ff5f4ee20bc9bca6",
-        "logical_size_bytes": 3770,
-        "logical_sha256": "0dc587e837d4a2a0e27495146f0b7706c15e1359502b5a32c3d1214571dd7c16",
-        "line_count": 58,
+        "size_bytes": 4620,
+        "sha256": "185535ac2ea499197adc85a473341af69f61cc6577923ea47201d4ba05a3c6fb",
+        "raw_size_bytes": 4620,
+        "raw_sha256": "185535ac2ea499197adc85a473341af69f61cc6577923ea47201d4ba05a3c6fb",
+        "logical_size_bytes": 4550,
+        "logical_sha256": "9d3d170a1a4a1007646048477ec3de84dcea28f67d2578de5009ea02340a892f",
+        "line_count": 70,
         "line_width_bits": 64
       },
       "modules_dump_128b.bin": {
-        "size_bytes": 3770,
-        "sha256": "e9a9db42fdbe70f79d654c2137e25732092b0a7ef634e1eb599974d884e10cc7",
-        "raw_size_bytes": 3770,
-        "raw_sha256": "e9a9db42fdbe70f79d654c2137e25732092b0a7ef634e1eb599974d884e10cc7",
-        "logical_size_bytes": 3741,
-        "logical_sha256": "7d85938215a1d5a5622c38938b5adb64b982c631170604a4ba8285fb5397b255",
-        "line_count": 29,
+        "size_bytes": 4550,
+        "sha256": "29d28c1375b1205c16234cec6c62d46e364a7d5426f84d034a4234b511b2ce93",
+        "raw_size_bytes": 4550,
+        "raw_sha256": "29d28c1375b1205c16234cec6c62d46e364a7d5426f84d034a4234b511b2ce93",
+        "logical_size_bytes": 4515,
+        "logical_sha256": "2d22ec7f94867752a3bd6abe70842402ab943dd6142492f1d1c183556aba405a",
+        "line_count": 35,
         "line_width_bits": 128
       },
       "detailed_dump.txt": {
-        "size_bytes": 33523,
-        "sha256": "b02d292142149068315199ae6a3eb11265229d683fe083bb5ce81a592f897c27"
+        "size_bytes": 39053,
+        "sha256": "6c8841477b410f17e49fdfc2bb0be3f75e3c07037c0ad47f260a73a2ed323529"
       }
     }
   },
@@ -544,9 +583,6 @@
       0
     ],
     "transaction_bytes": 32,
-    "transaction_count": 784,
-    "unique_address_count": 2,
-    "physical_extent_bytes": 64,
     "sa_handshakes_per_tile": 4,
     "buffer4_json_lifetime": 4,
     "buffer4_encoded_lifetime": 3,

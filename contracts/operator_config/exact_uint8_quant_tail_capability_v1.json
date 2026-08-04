@@ -1,0 +1,445 @@
+{
+  "schema": "exact-uint8-quant-tail-capability-v1",
+  "status": "PROPOSAL_FAIL_CLOSED_NO_UNCONDITIONAL_PURE_CONFIG",
+  "planning_gap_id": "R5_GAP_EXACT_UINT8_QUANT_TAIL",
+  "owner_family": "QuantizeLinear",
+  "scope": {
+    "ingress_dtypes": [
+      "float32",
+      "int32"
+    ],
+    "output_dtype": "uint8",
+    "consumers": [
+      "QuantizeLinear",
+      "RequantizeUint8",
+      "QLinearAddUint8 output",
+      "AverageRequantizeUint8",
+      "QLinearMatMul output requant"
+    ],
+    "numeric_contract": "scaled=float32(input/scale) for QuantizeLinear or scaled=float32(float32(input)*multiplier) for integer-accumulator consumers; rounded=round_to_nearest_even(scaled); shifted=rounded+uint8_zero_point; output=clip(shifted,0,255)",
+    "server_files_inspected": false,
+    "target_artifacts_generated": false,
+    "server_package_generated": false,
+    "functional_rtl_modified": false,
+    "public_rules_modified": false
+  },
+  "read_receipt": [
+    {
+      "path": ".agents/plan.md",
+      "sha256": "697b1b5de15a713d7731dfea20d497e80f12852e08755d5fcd1b251eb616256e",
+      "reason": "P0-A dispatch and stop boundary"
+    },
+    {
+      "path": ".agents/task_records/20260727_ndpsim_resnet50_reuse_audit_and_replan.md",
+      "sha256": "dfd12a4e45c79ee51d104f939a7b8f07b7a5b4e94df62e54dfb395f9d5e9235f",
+      "reason": "reuse adjudication"
+    },
+    {
+      "path": "contracts/operator_config/resnet50_ndpsim_reuse_gap_audit_v1.json",
+      "sha256": "ca3daf485f4098793e1c4544139c22e62119dbe5743e0db02e4e07d7c301c7c5",
+      "reason": "machine-readable P0-A scope"
+    },
+    {
+      "path": ".agents/rules/生成前必读索引.md",
+      "sha256": "6ae4c7fe09fcdb39a48357cfef645c272f67e7a81d09b5547ebd9a929e6ce1a4",
+      "reason": "routing receipt for the published exact UINT8 quant-tail rule"
+    }
+  ],
+  "final_refresh_receipt": [
+    {
+      "path": ".agents/plan.md",
+      "sha256": "a1e19c6e84360641205836f6fa0b172fc0405472b8b2dfdc4c580cc2e0875516",
+      "reason": "final validation control-plane snapshot; mutable provenance only"
+    },
+    {
+      "path": ".agents/rules/生成前必读索引.md",
+      "sha256": "3940dc4d6f6d0b5d52347acd6fe5655281562dc09d4082c298cf70c7dbfb4f19",
+      "reason": "final validation routing snapshot including Flatten/View route; provenance only"
+    }
+  ],
+  "semantic_source_identities": [
+    {
+      "path": ".agents/rules/算子配置规则.md",
+      "sha256": "407fc0320d0587c362730c74e9b1d87cbd8e2ab686051173ceacadb6ac31c2cc",
+      "reason": "published semantic owner for config-only correctness bypass annotations and claim boundary"
+    },
+    {
+      "path": ".agents/rules/精确UINT8量化尾专项规则.md",
+      "sha256": "5593f9df3bbc5605e9b019b6cc53ee33b0edbeb203d657fdf974cb4b680c2df0",
+      "reason": "published semantic owner for P0-A numeric order, zero-point, magic domain and capability cells"
+    },
+    {
+      "path": "contracts/target_execplan_transport_audit.json",
+      "sha256": "f0537d65ca1ee97f061d69f7d002a6f35d336a80753ce03b470deace81903392",
+      "reason": "quant recipe and typed transport boundary"
+    },
+    {
+      "path": "contracts/typed_config_parameter_contract.json",
+      "sha256": "abbc87b0b13c92611a90fe1767b32b15fe9c49f23bee616ca2bb51219dd181bd",
+      "reason": "content-addressed typed qparams"
+    },
+    {
+      "path": "contracts/resnet50_r5_lowering_bundle.json",
+      "sha256": "bf661e4eda2011025d9922708ab46a64f8d1b3c279527b88aa7d630bb3545432",
+      "reason": "133 real typed requests"
+    },
+    {
+      "path": "contracts/operator_config/requant_family_classification_v1.json",
+      "sha256": "c92c14cdcd3b68f2f8c0aff7339602d7ab3784d9b454559ade2317eb5fb0c8c0",
+      "reason": "54-stage and nonzero-zero-point evidence"
+    },
+    {
+      "path": "ndp-sim/jsons/quant_from_buffer_int32MN_uint8MN.json",
+      "sha256": "db638f0640e74217e80e61350a2fe400f7b495e2201f17c39915328cdd455ba2",
+      "reason": "trusted INT32-to-UINT8 field and topology oracle"
+    },
+    {
+      "path": "ndp-sim/jsons/decode_mac_fp32N_fp32N_fp32N.json",
+      "sha256": "db4677ba13faacaf3a452170ed7d15ff1d0ea4fab4eb35e9982b963992c5f773",
+      "reason": "trusted FP32 GA ingress and MAC oracle"
+    },
+    {
+      "path": "ndp-sim/bitstream/config/general.py",
+      "sha256": "eb9d5ee9ef273182e05b718aca378f87d0a1ccb5366ae463d8482c8c94c3482f",
+      "reason": "GA opcode, conversion and raw constant encoder"
+    },
+    {
+      "path": "ndp-sim/model_execplan/src/execution_plan_generator/control_registers.py",
+      "sha256": "cd12ee5f31231e856f9f63f61746a8e43435228d0268813c3eb8c4630e09a941",
+      "reason": "active typed handler"
+    },
+    {
+      "path": "ndp-sim/address_remapping/tests/test_solver.py",
+      "sha256": "1336c1d5557802dd48acaee4ab23d059570364fdcb4474920bd28ab2d1a8c180",
+      "reason": "active mapper registry boundary"
+    },
+    {
+      "path": "NDP_copy01/rtl/Slice/General_Array/GA_Inport/GA_Inport.sv",
+      "sha256": "42a7ac1d740c758de9656ee0d41663ef1c8b11253e76ba2e20be6faee2d12e17",
+      "reason": "local read-only GA ingress consumer"
+    },
+    {
+      "path": "NDP_copy01/rtl/Slice/General_Array/GA_Outport/GA_Outport.sv",
+      "sha256": "8b1a3f12f44a2dbbe65ff41853397c06f7f591c1472b93ab8dd1698587b328db",
+      "reason": "local read-only UINT8 saturation consumer"
+    },
+    {
+      "path": "NDP_copy01/rtl/Slice/General_Array/GA_Outport/GA_Outport_Connect.sv",
+      "sha256": "54438ec1b6f612deaa427d6024ba044a52f09b2bd11a09335fbbece42560bcd7",
+      "reason": "local read-only even/odd column outport topology"
+    }
+  ],
+  "capability_matrix": [
+    {
+      "capability": "FP32 ingress",
+      "status": "REUSABLE_PRIMITIVE_NOT_COMPLETE_TAIL",
+      "directly_reusable": [
+        "32-bit buffer word passes through GA inport when all conversion flags are false",
+        "native FP32 MAC templates exercise this path"
+      ],
+      "new_recipe_or_proof": [
+        "bind physical FP32 layout and occurrence supply",
+        "prove exact scaling operation order before rounding"
+      ]
+    },
+    {
+      "capability": "nonnegative INT32 ingress",
+      "status": "CONDITIONAL_CANDIDATE",
+      "directly_reusable": [
+        "GA int32tofp32 conversion flag",
+        "quant_from_buffer buffer and GA topology"
+      ],
+      "new_recipe_or_proof": [
+        "positive-domain conversion replay",
+        "range bound before magic rounding"
+      ]
+    },
+    {
+      "capability": "signed INT32 ingress",
+      "status": "CONTRADICTED",
+      "directly_reusable": [],
+      "new_recipe_or_proof": [
+        "a different signed conversion route or compatible implementation"
+      ],
+      "counterexample_id": "CE_INT32_NEGATIVE_CONVERSION"
+    },
+    {
+      "capability": "float32 scale or multiplier",
+      "status": "ENCODABLE_NOT_END_TO_END_BOUND",
+      "directly_reusable": [
+        "eight per-lane FP32 GA constants",
+        "raw IEEE-754 constant encoding",
+        "content-addressed typed qparam schema"
+      ],
+      "new_recipe_or_proof": [
+        "operator-specific typed parameter to exact PE constant binding",
+        "per-channel tile scheduling",
+        "QuantizeLinear division-order compatibility"
+      ]
+    },
+    {
+      "capability": "arbitrary UINT8 zero-point",
+      "status": "NEW_PURE_CONFIG_RECIPE_PROPOSED",
+      "directly_reusable": [
+        "INT32_SUB raw constant",
+        "UINT8 saturation outport"
+      ],
+      "new_recipe_or_proof": [
+        "keep FP32 magic bias fixed at 12582912.0",
+        "encode INT32_SUB constant as raw_uint32(0x4b400000 - zero_point)"
+      ],
+      "rejected_oracle_patch": "placing zero_point in the FP32 magic bias changes half-tie parity for odd zero-points",
+      "counterexample_id": "CE_ODD_ZP_TIE_PARITY"
+    },
+    {
+      "capability": "nearest-even rounding",
+      "status": "HARDWARE_ORDER_UNKNOWN",
+      "directly_reusable": [
+        "magic-bias plus raw INT32_SUB concept"
+      ],
+      "new_recipe_or_proof": [
+        "distinguish one-round FP32 FMA from software multiply-then-add",
+        "use a three-PE chain MUL then ADD magic then INT32_SUB if one-round FMA is not equivalent"
+      ],
+      "first_hardware_unknown": true,
+      "counterexample_id": "CE_FMA_VS_SEQUENTIAL_ROUND"
+    },
+    {
+      "capability": "UINT8 saturation",
+      "status": "DIRECTLY_REUSABLE_AFTER_VALID_INTEGER_DECODE",
+      "directly_reusable": [
+        "decoded INT32 sign bit maps to 0",
+        "any decoded bit 30:8 maps to 255",
+        "otherwise low byte is retained"
+      ],
+      "new_recipe_or_proof": [
+        "ensure magic decode is valid before saturation"
+      ],
+      "counterexample_id": "CE_MAGIC_DOMAIN_UNDERFLOW"
+    },
+    {
+      "capability": "GA topology",
+      "status": "TWO_PE_ORACLE_REUSABLE_THREE_PE_RECIPE_UNPROVEN",
+      "directly_reusable": [
+        "eight two-PE lanes: FP32 MAC at even column then INT32_SUB at odd column",
+        "global even-or-odd column outport selection"
+      ],
+      "new_recipe_or_proof": [
+        "four-lane three-PE chain ending at even column for explicit MUL, ADD and INT32_SUB",
+        "producer/consumer and backpressure proof for the longer chain"
+      ]
+    },
+    {
+      "capability": "shape, layout, transactions and tail",
+      "status": "NEW_INSTANCE_SCHEDULE_REQUIRED",
+      "directly_reusable": [
+        "LC/MSE/Buffer field semantics",
+        "UINT8 outport packs four accepted values into one 32-bit word"
+      ],
+      "new_recipe_or_proof": [
+        "replace fixed [1,32,32] rank-3 loops",
+        "bind NCHW, NC and per-channel tiling",
+        "prove input/output transaction bytes, buffer supply, tail merge, lifetime and terminal"
+      ]
+    },
+    {
+      "capability": "typed handler",
+      "status": "PLACEHOLDER_BLOCKED",
+      "directly_reusable": [
+        "generic content-addressed typed parameter transport"
+      ],
+      "new_recipe_or_proof": [
+        "consume ingress dtype, shape/layout, multiplier or scale, zero-point and topology selection",
+        "remove rank-3-only assumptions",
+        "emit exact qparam-to-constant locations"
+      ]
+    },
+    {
+      "capability": "mapper",
+      "status": "REGISTRY_MISSING",
+      "directly_reusable": [
+        "generic mapper mechanics after registration"
+      ],
+      "new_recipe_or_proof": [
+        "registered quant-tail topology and exact-penalty placement",
+        "address-bound mapping for the final instance"
+      ]
+    },
+    {
+      "capability": "execplan transport",
+      "status": "GENERIC_TYPED_ENVELOPE_AVAILABLE_TARGET_BINDING_MISSING",
+      "directly_reusable": [
+        "content-addressed typed values",
+        "generic CONFIG and raw constant writes"
+      ],
+      "new_recipe_or_proof": [
+        "operator-specific qparam binding",
+        "Load_Config and Write_Reg replay for every tile",
+        "final materialized roundtrip"
+      ]
+    }
+  ],
+  "consumer_matrix": [
+    {
+      "consumer": "QuantizeLinear",
+      "ingress": "float32",
+      "scale_semantics": "float32 division by y_scale",
+      "zero_points_in_model": [
+        0,
+        114
+      ],
+      "pure_config_status": "NO_EXACT_DIVISION_ROUTE_PROVEN",
+      "blocking_counterexample": "CE_FP32_DIVISION_VS_RECIPROCAL_FMA"
+    },
+    {
+      "consumer": "RequantizeUint8",
+      "ingress": "int32 accumulator",
+      "scale_semantics": "float32 multiplier, including per-channel tensors",
+      "zero_point_summary": "54 stages; 33 zero-point-zero compatible, 21 current nonzero guard-contradicted",
+      "pure_config_status": "CONDITIONAL_ONLY_FOR_PROVEN_NONNEGATIVE_BOUNDED_DOMAIN"
+    },
+    {
+      "consumer": "QLinearAddUint8 output",
+      "ingress": "float32 affine sum",
+      "scale_semantics": "float32 division by output scale",
+      "zero_point_summary": "17 scalar output zero-points drawn from the ResNet UINT8 qdomain",
+      "pure_config_status": "DEPENDS_ON_EXACT_SCALING_ORDER_AND_COMPOSITE_DAG"
+    },
+    {
+      "consumer": "AverageRequantizeUint8",
+      "ingress": "int32 sum",
+      "scale_semantics": "float32 multiplier including divide-by-49",
+      "zero_points_in_model": [
+        0
+      ],
+      "pure_config_status": "CONDITIONAL_CANDIDATE_BECAUSE_TARGET_SUM_IS_NONNEGATIVE"
+    },
+    {
+      "consumer": "QLinearMatMul output requant",
+      "ingress": "signed int32 accumulator",
+      "scale_semantics": "float32 multiplier",
+      "zero_points_in_model": [
+        60
+      ],
+      "pure_config_status": "NO_SIGNED_INT32_INGRESS_ROUTE_PROVEN"
+    }
+  ],
+  "counterexamples": [
+    {
+      "id": "CE_ODD_ZP_TIE_PARITY",
+      "inputs": {
+        "scaled_fp32": 0.5,
+        "zero_point": 1
+      },
+      "expected_uint8": 1,
+      "oracle_bias_patch_uint8": 2,
+      "proposed_subtract_patch_uint8": 1,
+      "meaning": "zero-point must be added after nearest-even rounding, not inside the magic FP32 bias"
+    },
+    {
+      "id": "CE_FMA_VS_SEQUENTIAL_ROUND",
+      "inputs": {
+        "int32": 400,
+        "multiplier_fp32": 0.0637499988079071,
+        "multiplier_bits": "0x3d828f5c",
+        "zero_point": 0
+      },
+      "expected_sequential_uint8": 26,
+      "one_round_fused_model_uint8": 25,
+      "meaning": "the first hardware capability question is whether GA MAC preserves the software multiply rounding point"
+    },
+    {
+      "id": "CE_FP32_DIVISION_VS_RECIPROCAL_FMA",
+      "inputs": {
+        "x_fp32_bits": "0x3d0f81f1",
+        "x": 0.035036031156778336,
+        "scale_fp32_bits": "0x3cbf57ec",
+        "scale": 0.02335735410451889,
+        "reciprocal_fp32_bits": "0x422b4095",
+        "zero_point": 0
+      },
+      "expected_divide_then_rne_uint8": 2,
+      "reciprocal_fma_magic_uint8": 1,
+      "meaning": "a float32 reciprocal constant plus FMA is not a universal replacement for QuantizeLinear float32 division"
+    },
+    {
+      "id": "CE_INT32_NEGATIVE_CONVERSION",
+      "inputs": {
+        "int32": -1
+      },
+      "expected_fp32_bits": "0xbf800000",
+      "observed_rtl_static_bits": "0xcf000000",
+      "meaning": "the stock GA int32tofp32 path cannot support a shared signed-accumulator quant tail"
+    },
+    {
+      "id": "CE_MAGIC_DOMAIN_UNDERFLOW",
+      "inputs": {
+        "scaled_fp32": -12582913.0,
+        "zero_point": 0
+      },
+      "expected_uint8": 0,
+      "magic_decode_then_saturate_uint8": 255,
+      "meaning": "magic rounding requires an explicit finite scaled-domain bound or a proven pre-clamp recipe"
+    }
+  ],
+  "pure_configuration_decision": {
+    "unconditional_shared_solution_exists": false,
+    "decision": "NO_UNCONDITIONAL_PURE_CONFIG_PROVEN",
+    "reasons": [
+      "QuantizeLinear exact float32 division is not reproduced by reciprocal FMA for all binary32 inputs",
+      "signed INT32 ingress is statically contradicted for negative values",
+      "one-round FMA can differ from the required sequential float32 multiply then nearest-even rounding",
+      "magic decoding is not globally monotonic outside its valid scaled domain",
+      "typed handler, mapper registration, shape/layout and materialized transport remain absent"
+    ],
+    "conditional_pure_config_candidate": {
+      "scope": "finite, explicitly bounded pre-scaled FP32 or proven nonnegative INT32 multiplier paths",
+      "recipe": [
+        "perform the contract-required scaling with its explicit float32 rounding point",
+        "add fixed FP32 magic 12582912.0",
+        "INT32_SUB raw constant 0x4b400000-zero_point",
+        "reuse GA outport UINT8 saturation"
+      ],
+      "topology": "three-PE four-lane chain when scaling and magic add must be separate; two-PE eight-lane chain only when the input is already exactly pre-scaled",
+      "release_state": "PROPOSAL_ONLY_REQUIRES_HARDWARE_NUMERIC_AND_COMPILER_PROOF"
+    }
+  },
+  "rule_delta_proposal": [
+    {
+      "proposal_id": "CDA-QUANT-TAIL-NUMERIC-ORDER-001",
+      "text": "The shared tail must preserve the operator's explicit float32 scaling rounding point before nearest-even integer rounding; FMA contraction is forbidden unless exhaustive bounded-domain equivalence is proved."
+    },
+    {
+      "proposal_id": "CDA-QUANT-TAIL-ZP-AFTER-ROUND-001",
+      "text": "UINT8 zero-point is added after nearest-even rounding. For the magic decoder, keep the FP32 magic bias fixed and encode zero-point in the raw INT32_SUB constant."
+    },
+    {
+      "proposal_id": "CDA-QUANT-TAIL-MAGIC-DOMAIN-001",
+      "text": "Every magic-round instance must prove finite scaled input bounds that keep bitcast decoding monotonic, including saturation-edge counterexamples."
+    },
+    {
+      "proposal_id": "CDA-QUANT-TAIL-CAPABILITY-MATRIX-001",
+      "text": "Ingress dtype, signed domain, scale kind, zero-point, rounding order, saturation, topology, layout, handler, mapper and execplan binding are independent release cells; template similarity cannot close another cell."
+    }
+  ],
+  "blocker_delta": {
+    "add": [
+      "B_QUANT_TAIL_FMA_ROUNDING_POINT",
+      "B_QUANT_TAIL_MAGIC_DOMAIN_BOUND",
+      "B_QUANT_TAIL_EXACT_FP32_DIVISION",
+      "B_QUANT_TAIL_SIGNED_INT32_INGRESS",
+      "B_QUANT_TAIL_THREE_PE_TOPOLOGY",
+      "B_QUANT_TAIL_TYPED_BINDING",
+      "B_QUANT_TAIL_MAPPER_REGISTRATION"
+    ],
+    "retain": [
+      "B_QUANT_FP32_INPUT_PATH",
+      "B_QUANT_ROUNDING_EXECUTION",
+      "B_EXECPLAN_TYPED_TRANSPORT",
+      "B_LAYOUT_APPROVAL",
+      "B_REQUANT_NONZERO_ZP_SIGNED_DOMAIN",
+      "B_REQUANT_MAGIC_ZP_TIE_PARITY"
+    ],
+    "close": []
+  }
+}

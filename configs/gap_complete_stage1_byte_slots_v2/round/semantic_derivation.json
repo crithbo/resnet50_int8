@@ -1,0 +1,261 @@
+{
+  "all_changed_leaves_owned": true,
+  "changed_leaf_count": 25,
+  "changed_leaves": [
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": 1,
+      "field_class": "non_base_semantic",
+      "input_source": "typed shape [1,256,8] and element byte width",
+      "old_value": 4,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.dram_loop_configs.LC0.end",
+      "transform_formula": "derive LC cardinality, 32-byte transaction stride and packed uint8 coverage"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": 256,
+      "field_class": "non_base_semantic",
+      "input_source": "typed shape [1,256,8] and element byte width",
+      "old_value": 32,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.dram_loop_configs.LC1.end",
+      "transform_formula": "derive LC cardinality, 32-byte transaction stride and packed uint8 coverage"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": 64,
+      "field_class": "non_base_semantic",
+      "input_source": "typed shape [1,256,8] and element byte width",
+      "old_value": 8,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.dram_loop_configs.LC2.end",
+      "transform_formula": "derive LC cardinality, 32-byte transaction stride and packed uint8 coverage"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": 1,
+      "field_class": "non_base_semantic",
+      "input_source": "typed shape [1,256,8] and element byte width",
+      "old_value": 2,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.dram_loop_configs.LC2.last_index",
+      "transform_formula": "derive LC cardinality, 32-byte transaction stride and packed uint8 coverage"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": 1.0,
+      "field_class": "non_base_semantic",
+      "input_source": "shared exact RNE magic topology and y_zero_point=0",
+      "old_value": 0.06375,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE00.inport1.constant",
+      "transform_formula": "even PE MAC(x,1,2^23+2^22); odd PE raw int32 subtract"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": 12582912.0,
+      "field_class": "non_base_semantic",
+      "input_source": "shared exact RNE magic topology and y_zero_point=0",
+      "old_value": 12582975.75,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE00.inport2.constant",
+      "transform_formula": "even PE MAC(x,1,2^23+2^22); odd PE raw int32 subtract"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": 1.0,
+      "field_class": "non_base_semantic",
+      "input_source": "shared exact RNE magic topology and y_zero_point=0",
+      "old_value": 0.06375,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE02.inport1.constant",
+      "transform_formula": "even PE MAC(x,1,2^23+2^22); odd PE raw int32 subtract"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": 12582912.0,
+      "field_class": "non_base_semantic",
+      "input_source": "shared exact RNE magic topology and y_zero_point=0",
+      "old_value": 12582975.75,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE02.inport2.constant",
+      "transform_formula": "even PE MAC(x,1,2^23+2^22); odd PE raw int32 subtract"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": 1.0,
+      "field_class": "non_base_semantic",
+      "input_source": "shared exact RNE magic topology and y_zero_point=0",
+      "old_value": 0.06375,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE10.inport1.constant",
+      "transform_formula": "even PE MAC(x,1,2^23+2^22); odd PE raw int32 subtract"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": 12582912.0,
+      "field_class": "non_base_semantic",
+      "input_source": "shared exact RNE magic topology and y_zero_point=0",
+      "old_value": 12582975.75,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE10.inport2.constant",
+      "transform_formula": "even PE MAC(x,1,2^23+2^22); odd PE raw int32 subtract"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": 1.0,
+      "field_class": "non_base_semantic",
+      "input_source": "shared exact RNE magic topology and y_zero_point=0",
+      "old_value": 0.06375,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE12.inport1.constant",
+      "transform_formula": "even PE MAC(x,1,2^23+2^22); odd PE raw int32 subtract"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": 12582912.0,
+      "field_class": "non_base_semantic",
+      "input_source": "shared exact RNE magic topology and y_zero_point=0",
+      "old_value": 12582975.75,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE12.inport2.constant",
+      "transform_formula": "even PE MAC(x,1,2^23+2^22); odd PE raw int32 subtract"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": 1.0,
+      "field_class": "non_base_semantic",
+      "input_source": "shared exact RNE magic topology and y_zero_point=0",
+      "old_value": 0.06375,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE20.inport1.constant",
+      "transform_formula": "even PE MAC(x,1,2^23+2^22); odd PE raw int32 subtract"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": 12582912.0,
+      "field_class": "non_base_semantic",
+      "input_source": "shared exact RNE magic topology and y_zero_point=0",
+      "old_value": 12582975.75,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE20.inport2.constant",
+      "transform_formula": "even PE MAC(x,1,2^23+2^22); odd PE raw int32 subtract"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": 1.0,
+      "field_class": "non_base_semantic",
+      "input_source": "shared exact RNE magic topology and y_zero_point=0",
+      "old_value": 0.06375,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE22.inport1.constant",
+      "transform_formula": "even PE MAC(x,1,2^23+2^22); odd PE raw int32 subtract"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": 12582912.0,
+      "field_class": "non_base_semantic",
+      "input_source": "shared exact RNE magic topology and y_zero_point=0",
+      "old_value": 12582975.75,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE22.inport2.constant",
+      "transform_formula": "even PE MAC(x,1,2^23+2^22); odd PE raw int32 subtract"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": 1.0,
+      "field_class": "non_base_semantic",
+      "input_source": "shared exact RNE magic topology and y_zero_point=0",
+      "old_value": 0.06375,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE30.inport1.constant",
+      "transform_formula": "even PE MAC(x,1,2^23+2^22); odd PE raw int32 subtract"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": 12582912.0,
+      "field_class": "non_base_semantic",
+      "input_source": "shared exact RNE magic topology and y_zero_point=0",
+      "old_value": 12582975.75,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE30.inport2.constant",
+      "transform_formula": "even PE MAC(x,1,2^23+2^22); odd PE raw int32 subtract"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": 1.0,
+      "field_class": "non_base_semantic",
+      "input_source": "shared exact RNE magic topology and y_zero_point=0",
+      "old_value": 0.06375,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE32.inport1.constant",
+      "transform_formula": "even PE MAC(x,1,2^23+2^22); odd PE raw int32 subtract"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": 12582912.0,
+      "field_class": "non_base_semantic",
+      "input_source": "shared exact RNE magic topology and y_zero_point=0",
+      "old_value": 12582975.75,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE32.inport2.constant",
+      "transform_formula": "even PE MAC(x,1,2^23+2^22); odd PE raw int32 subtract"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": "false",
+      "field_class": "non_base_semantic",
+      "input_source": "FP32-to-exact-uint8 terminal stage ABI",
+      "old_value": "true",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.inport.inport0.int32tofp32",
+      "transform_formula": "derive conversion/outport semantics from typed stage boundary"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": "0x0",
+      "field_class": "logical_relative_base",
+      "input_source": "logical relative-address policy",
+      "old_value": "0b00000_00_0000000000000_000000_0000",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream0.base_addr",
+      "transform_formula": "logical_base = 0; physical allocation is deferred to binder"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": 8192,
+      "field_class": "non_base_semantic",
+      "input_source": "typed shape [1,256,8] and element byte width",
+      "old_value": 1024,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream0.dim_stride[1]",
+      "transform_formula": "derive LC cardinality, 32-byte transaction stride and packed uint8 coverage"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": "0x0",
+      "field_class": "logical_relative_base",
+      "input_source": "logical relative-address policy",
+      "old_value": "0b00000_11_0000000000000_000000_0000",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream2.base_addr",
+      "transform_formula": "logical_base = 0; physical allocation is deferred to binder"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": 2048,
+      "field_class": "non_base_semantic",
+      "input_source": "typed shape [1,256,8] and element byte width",
+      "old_value": 256,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream2.dim_stride[1]",
+      "transform_formula": "derive LC cardinality, 32-byte transaction stride and packed uint8 coverage"
+    }
+  ],
+  "logical_leaf_count": 516,
+  "non_base_changed_leaf_count": 23,
+  "schema": "gap-node0071-tail-template-to-logical-leaf-diff-v1",
+  "stage": "round",
+  "template_leaf_count": 516
+}

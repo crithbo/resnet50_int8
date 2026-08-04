@@ -1,0 +1,337 @@
+{
+  "audit_sha256": "39e787ac1be21bfc976c7d649c70e479c02665d4f8353f2c1f4b76e31d288fec",
+  "candidate_release": false,
+  "inputs": {
+    "crop_contract": {
+      "path": "contracts/operator_config/deepseek_ndpsim_crop_contract_v1.json",
+      "sha256": "4ad206b550757f6649feb39b6df6e46e1b8bc99062502b441dbc5e4ba5c1e392",
+      "size_bytes": 7384
+    },
+    "numeric_golden": {
+      "path": "ndp-sim/generate_python_golden/deepseek1.5b_3_time_golden_smallsize_0527.py",
+      "sha256": "4dc42e91a5869bb523fb86ba8caf92280df18de5487c1ce33b706361fa799540",
+      "size_bytes": 49401
+    },
+    "onnx_inventory": {
+      "path": "artifacts/operator_config_validation/r5-deepseek-onnx-stage-json-e2-v1/onnx_graph_inventory.json",
+      "sha256": "ae2f5ab015d1fd6be7961e3d3bcc32d41119a2a02e810bb6027f4b8e63136c14",
+      "size_bytes": 458979
+    },
+    "prefill_program": {
+      "path": "artifacts/operator_config_validation/r5-deepseek-onnx-stage-json-e2-v1/layer0_prefill.generated.json",
+      "sha256": "089d4a2edcbe8b8af049ad8d1dfb5c474cc251e76a3fa2a64880e8a344e70dea",
+      "size_bytes": 34462
+    },
+    "prefill_program_listing": {
+      "path": "artifacts/operator_config_validation/r5-deepseek-onnx-stage-json-e2-v1/layer0_prefill.generated_op_listing.json",
+      "sha256": "03afe7e7ae1e1d2231e33f4980f7f1e95be26f04ad40531bcfb6241e4b798956",
+      "size_bytes": 1390
+    },
+    "prefill_program_producer": {
+      "path": "ndp-sim/model_execplan/gen_layer0_oplist.py",
+      "sha256": "1fe5a6702684792098bcf29b35c4c9003ae7b32fefe36181c68159ff5b583324",
+      "size_bytes": 7444
+    },
+    "qkt_json": {
+      "path": "ndp-sim/jsons/prefill_gemm_local_qkt.json",
+      "sha256": "e2b4f2e8e119fa29b3a4202b4476f838fd071e106322809745169ee70cef4de6",
+      "size_bytes": 20242
+    },
+    "remote4_json": {
+      "path": "ndp-sim/jsons/prefill_remote_sum_4slice_fp32MN_fp32MN.json",
+      "sha256": "86930ae15d348b433eef49aef78878874ca809b39fe0bad09a1072f04e07afda",
+      "size_bytes": 13666
+    },
+    "scale_mask_json": {
+      "path": "ndp-sim/jsons/prefill_mac_fp32MN_fp32MN_fp32MN.json",
+      "sha256": "32521b8ed33e020019258911542929e1220c3326510fb6f7ce4867b6d09536a9",
+      "size_bytes": 16364
+    }
+  },
+  "locally_closed_semantics": {
+    "gqa_kv_replication": {
+      "closed_at_relayout_formula_level": true,
+      "logical_kv_heads": 1,
+      "physical_slice_occurrences": 28,
+      "query_heads": 7,
+      "relayout_replication_formula_present": true,
+      "slice_per_head": 4
+    },
+    "gqa_scale": {
+      "closed": true,
+      "formula": "1/sqrt(128)",
+      "onnx": 0.0883883461356163,
+      "softmax_scale_bin": 0.0883883461356163,
+      "trusted_json_constant": 0.0883883461356163
+    },
+    "prefill_current_kv_sources": {
+      "closed_at_program_source_level": true,
+      "current_k_stage": "op19",
+      "current_v_stage": "op21",
+      "qkt_k_source": "op19",
+      "sv_v_source": "op21"
+    },
+    "softmax_key_axis": {
+      "chain": [
+        {
+          "operator_id": "op24",
+          "output_shape": [
+            1,
+            32,
+            32
+          ],
+          "type": "prefill_mac_fp32MN_fp32MN_fp32MN"
+        },
+        {
+          "operator_id": "op25",
+          "output_shape": [
+            1,
+            1,
+            32
+          ],
+          "type": "prefill_max_fp32MN_fp32MN"
+        },
+        {
+          "operator_id": "op26",
+          "output_shape": [
+            1,
+            32,
+            32
+          ],
+          "type": "prefill_sub_SFU_fp32MN_fp32M_fp32MN"
+        },
+        {
+          "operator_id": "op27",
+          "output_shape": [
+            1,
+            1,
+            32
+          ],
+          "type": "prefill_sum_rec_fp32MN_fp32MN"
+        },
+        {
+          "operator_id": "op28",
+          "output_shape": [
+            1,
+            32,
+            32
+          ],
+          "type": "prefill_mul_fp32MN_fp32M_fp16MN"
+        }
+      ],
+      "closed_unconditionally": false,
+      "full_key_axis_per_slice": true,
+      "normalization_sum_equals_one_if_remote_input_valid": true,
+      "sequence_length": 32
+    }
+  },
+  "maximum_evidence_level": "E2",
+  "open_provenance_confirmations": [
+    {
+      "blocks_local_semantic_audit": false,
+      "blocks_release_identity": true,
+      "id": "B_DS_ONNX_ORIGINAL_SOURCE_IDENTITY"
+    },
+    {
+      "blocks_local_semantic_audit": false,
+      "blocks_release_identity": true,
+      "id": "B_DS_QKV_FUSED_EXTRACTION_IDENTITY"
+    }
+  ],
+  "policy_result": {
+    "onnx_to_prefill_stage_ready": false,
+    "reason": "prefill closes the scale, softmax-axis, GQA replication formula and current-KV source intent, but its generated runtime graph lacks a valid remote-reduction byte route, uses incompatible leader/source-slice IDs, encodes the top-level slice count as a mask, and leaves relayout aliases outside the graph identity contract",
+    "stage_to_json_forward_generation_allowed": false,
+    "trusted_individual_json_semantics_invalidated": false
+  },
+  "read_receipt_validation": {
+    "checked_file_count": 90,
+    "status": "SILU_HOLDOUT_MATERIALIZATION_READY"
+  },
+  "rule_ids": [
+    "CDA-DEEPSEEK-MODEL-IDENTITY-001",
+    "CDA-DEEPSEEK-CROP-EXPLICIT-001",
+    "CDA-DEEPSEEK-ONNX-STAGE-DAG-001",
+    "CDA-DEEPSEEK-QKV-ALIAS-001",
+    "CDA-DEEPSEEK-ATTENTION-NUMERIC-001",
+    "CDA-DEEPSEEK-CROSS-SLICE-ROUTE-001",
+    "CDA-DEEPSEEK-PROGRAM-GOLDEN-PARITY-001",
+    "CDA-DEEPSEEK-KV-LIFETIME-001"
+  ],
+  "schema": "deepseek-onnx-prefill-stage-audit-v1",
+  "semantic_blocker_ids": [
+    "B_DS_PREFILL_TOP_LEVEL_SLICE_MASK_ENCODING",
+    "B_DS_PREFILL_REMOTE_REDUCTION_BYTE_EXTENT",
+    "B_DS_PREFILL_LEADER_SLICE_ROUTING",
+    "B_DS_PREFILL_EXTERNAL_ALIAS_MANIFEST"
+  ],
+  "semantic_blockers": [
+    {
+      "classification": "STAGE_DAG_ENCODING",
+      "evidence": {
+        "native_enabled_slices": [
+          2,
+          3,
+          4
+        ],
+        "raw_value": 28,
+        "raw_value_intended_as_count": 28,
+        "required_mask": "0b1111111111111111111111111111"
+      },
+      "id": "B_DS_PREFILL_TOP_LEVEL_SLICE_MASK_ENCODING"
+    },
+    {
+      "classification": "STAGE_DAG_LIFETIME",
+      "evidence": {
+        "aliased_tensor": "op22.output.D",
+        "consumer": "op23",
+        "consumer_requested_bytes": 16384,
+        "extent_ratio": 4.0,
+        "producer": "op22",
+        "producer_allocation_bytes": 4096,
+        "qkt_n2n": null,
+        "remote_n2n": null,
+        "runtime_peer_slice_gather_proven": false
+      },
+      "id": "B_DS_PREFILL_REMOTE_REDUCTION_BYTE_EXTENT"
+    },
+    {
+      "classification": "STAGE_DAG_ROUTING",
+      "evidence": [
+        {
+          "consumer": "op2",
+          "consumer_input_type": "slice0",
+          "consumer_source_slices": [
+            0
+          ],
+          "missing_source_slices": [
+            0
+          ],
+          "producer": "op1",
+          "producer_enabled_slices": [
+            27
+          ]
+        },
+        {
+          "consumer": "op12",
+          "consumer_input_type": "slice4",
+          "consumer_source_slices": [
+            0,
+            4,
+            8,
+            12,
+            16,
+            20,
+            24
+          ],
+          "missing_source_slices": [
+            0,
+            4,
+            8,
+            12,
+            16,
+            20,
+            24
+          ],
+          "producer": "op11",
+          "producer_enabled_slices": [
+            3,
+            7,
+            11,
+            15,
+            19,
+            23,
+            27
+          ]
+        },
+        {
+          "consumer": "op24",
+          "consumer_input_type": "slice4",
+          "consumer_source_slices": [
+            0,
+            4,
+            8,
+            12,
+            16,
+            20,
+            24
+          ],
+          "missing_source_slices": [
+            0,
+            4,
+            8,
+            12,
+            16,
+            20,
+            24
+          ],
+          "producer": "op23",
+          "producer_enabled_slices": [
+            3,
+            7,
+            11,
+            15,
+            19,
+            23,
+            27
+          ]
+        },
+        {
+          "consumer": "op34",
+          "consumer_input_type": "slice0",
+          "consumer_source_slices": [
+            0
+          ],
+          "missing_source_slices": [
+            0
+          ],
+          "producer": "op33",
+          "producer_enabled_slices": [
+            27
+          ]
+        }
+      ],
+      "id": "B_DS_PREFILL_LEADER_SLICE_ROUTING"
+    },
+    {
+      "classification": "TENSOR_BINDING",
+      "evidence": {
+        "graph_or_manifest_binds_aliases": false,
+        "program_sources": {
+          "k_projection": "op14",
+          "kv_rms_external": null,
+          "q_projection": "op4",
+          "qkt_k": "op19",
+          "qkt_q": "op9",
+          "sv_probability": "op28",
+          "sv_value": "op21",
+          "v_projection": "op14"
+        },
+        "relayout_alias_evidence_present": true,
+        "residual_op31_is_external": true,
+        "rule": "hard-coded relayout filenames are evidence of intent, not a runtime producer/consumer identity contract"
+      },
+      "id": "B_DS_PREFILL_EXTERNAL_ALIAS_MANIFEST"
+    }
+  ],
+  "stage_graph": {
+    "native_top_level_enabled_slices": [
+      2,
+      3,
+      4
+    ],
+    "operator_count": 43,
+    "program_sources": {
+      "k_projection": "op14",
+      "kv_rms_external": null,
+      "q_projection": "op4",
+      "qkt_k": "op19",
+      "qkt_q": "op9",
+      "sv_probability": "op28",
+      "sv_value": "op21",
+      "v_projection": "op14"
+    },
+    "raw_top_level_used_slices": 28
+  },
+  "status": "blocked_before_stage_to_json_generation"
+}

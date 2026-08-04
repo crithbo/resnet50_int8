@@ -1,0 +1,153 @@
+{
+  "summary": {
+    "total_nodes": 14,
+    "mapped_nodes": 16,
+    "connections": 13
+  },
+  "node_to_resource": [
+    {
+      "node": "GROUP0.COL_LC",
+      "resource": "COL_LC0"
+    },
+    {
+      "node": "GROUP1.COL_LC",
+      "resource": "COL_LC4"
+    },
+    {
+      "node": "GA_PE.PE00",
+      "resource": "GENERIC"
+    },
+    {
+      "node": "GA_PE.PE01",
+      "resource": "GENERIC"
+    },
+    {
+      "node": "GROUP0",
+      "resource": "GROUP0"
+    },
+    {
+      "node": "GROUP1",
+      "resource": "GROUP4"
+    },
+    {
+      "node": "DRAM_LC.LC1",
+      "resource": "LC0"
+    },
+    {
+      "node": "DRAM_LC.LC0",
+      "resource": "LC2"
+    },
+    {
+      "node": "DRAM_LC.LC2",
+      "resource": "LC14"
+    },
+    {
+      "node": "DRAM_LC.LC3",
+      "resource": "LC16"
+    },
+    {
+      "node": "LC_PE.PE0",
+      "resource": "PE4"
+    },
+    {
+      "node": "LC_PE.PE1",
+      "resource": "PE6"
+    },
+    {
+      "node": "GROUP0.ROW_LC",
+      "resource": "ROW_LC0"
+    },
+    {
+      "node": "GROUP1.ROW_LC",
+      "resource": "ROW_LC4"
+    },
+    {
+      "node": "STREAM.stream0",
+      "resource": "READ_STREAM0"
+    },
+    {
+      "node": "STREAM.stream1",
+      "resource": "WRITE_STREAM0"
+    }
+  ],
+  "connection_mapping": [
+    {
+      "src_node": "DRAM_LC.LC0",
+      "src_resource": "LC2",
+      "dst_node": "DRAM_LC.LC1",
+      "dst_resource": "LC0"
+    },
+    {
+      "src_node": "DRAM_LC.LC0",
+      "src_resource": "LC2",
+      "dst_node": "DRAM_LC.LC2",
+      "dst_resource": "LC14"
+    },
+    {
+      "src_node": "DRAM_LC.LC2",
+      "src_resource": "LC14",
+      "dst_node": "DRAM_LC.LC3",
+      "dst_resource": "LC16"
+    },
+    {
+      "src_node": "DRAM_LC.LC1",
+      "src_resource": "LC0",
+      "dst_node": "GROUP0.ROW_LC",
+      "dst_resource": "ROW_LC0"
+    },
+    {
+      "src_node": "GROUP0.ROW_LC",
+      "src_resource": "ROW_LC0",
+      "dst_node": "GROUP0.COL_LC",
+      "dst_resource": "COL_LC0"
+    },
+    {
+      "src_node": "DRAM_LC.LC3",
+      "src_resource": "LC16",
+      "dst_node": "GROUP1.ROW_LC",
+      "dst_resource": "ROW_LC4"
+    },
+    {
+      "src_node": "GROUP1.ROW_LC",
+      "src_resource": "ROW_LC4",
+      "dst_node": "GROUP1.COL_LC",
+      "dst_resource": "COL_LC4"
+    },
+    {
+      "src_node": "DRAM_LC.LC2",
+      "src_resource": "LC14",
+      "dst_node": "LC_PE.PE0",
+      "dst_resource": "PE4"
+    },
+    {
+      "src_node": "LC_PE.PE0",
+      "src_resource": "PE4",
+      "dst_node": "LC_PE.PE1",
+      "dst_resource": "PE6"
+    },
+    {
+      "src_node": "DRAM_LC.LC1",
+      "src_resource": "LC0",
+      "dst_node": "STREAM.stream0",
+      "dst_resource": "READ_STREAM0"
+    },
+    {
+      "src_node": "DRAM_LC.LC0",
+      "src_resource": "LC2",
+      "dst_node": "STREAM.stream0",
+      "dst_resource": "READ_STREAM0"
+    },
+    {
+      "src_node": "LC_PE.PE1",
+      "src_resource": "PE6",
+      "dst_node": "STREAM.stream1",
+      "dst_resource": "WRITE_STREAM0"
+    },
+    {
+      "src_node": "GA_PE.PE00",
+      "src_resource": "GENERIC",
+      "dst_node": "GA_PE.PE01",
+      "dst_resource": "GENERIC"
+    }
+  ]
+}

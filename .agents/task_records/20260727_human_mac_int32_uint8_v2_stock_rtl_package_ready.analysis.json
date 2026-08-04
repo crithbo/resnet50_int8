@@ -1,0 +1,54 @@
+{
+  "schema": "human-json-stock-rtl-package-analysis-v1",
+  "status": "PACKAGE_READY_AWAITING_DYNAMIC_RETURN",
+  "candidate_release": false,
+  "evidence_level": "E2_LOCAL_ONLY",
+  "human_authored_input": true,
+  "functional_rtl_modified": false,
+  "package_rtl_entries": 0,
+  "input": {
+    "zip_absolute_path": "C:\\Users\\15383\\xwechat_files\\wxid_vwpfpfs4fgyk22_29b7\\msg\\file\\2026-07\\mac.zip",
+    "zip_size_bytes": 1620,
+    "zip_sha256": "7b6770dfe038d5e92b810c20fb4a8a620472afd1dc1e3d6837d4e3af54755a55",
+    "original_json_size_bytes": 12123,
+    "original_json_sha256": "d98929d1c31b6c55d12ea8b232cf76400024d60ebc29d8d4e39c6e3abc8e4db9",
+    "corrected_v2_json_size_bytes": 13942,
+    "corrected_v2_json_sha256": "24002ec87abd2e1c5f659003c61aa6176d2d7bd18dbfebeae890e11d80b36eb6"
+  },
+  "native_rebuild": {
+    "isolated_runs": 2,
+    "bytewise_match": true,
+    "mapping_cost": 0,
+    "execplan_commands": 57,
+    "formal_readbacks": 28
+  },
+  "test_data": {
+    "prng": "numpy.PCG64",
+    "seed": 20260727,
+    "slice_count": 28,
+    "shape_per_slice": [32, 32],
+    "input_dtype": "int32",
+    "input_inclusive_min": 0,
+    "input_inclusive_max": 254,
+    "output_dtype": "uint8",
+    "golden_expression": "(input + 1).astype(uint8)"
+  },
+  "package": {
+    "install_name": "human_mac_int32_uint8_v2_stock_rtl_fd1",
+    "zip_path": "artifacts/human_mac_int32_uint8_20260727_v1/server_package/human_mac_int32_uint8_v2_stock_rtl_fd1.zip",
+    "zip_size_bytes": 138950,
+    "zip_sha256": "5618d827dc3a64ca03699d9299ca0d71b44f53d1aecc2dc623f663d17b2a1fcf",
+    "manifest_sha256": "cb0e85b0bc251722eba6a1fa2a0a041cf64c4a1f584955e3c039f93a527ad7d3",
+    "zip_entries": 67,
+    "deterministic_rebuild_match": true,
+    "preflight_passed": true,
+    "only_command": "bash PREPARE_AND_RUN.sh /absolute/path/to/NDP_copyXX",
+    "expected_return_zip": "human_mac_int32_uint8_v2_stock_rtl_fd1_return.zip",
+    "expected_return_sidecar": "human_mac_int32_uint8_v2_stock_rtl_fd1_return.zip.sha256"
+  },
+  "dynamic_result": null,
+  "failure_classification_if_not_passed": [
+    "FIRST_DYNAMIC_FAILURE",
+    "NO_DYNAMIC_BASELINE"
+  ]
+}

@@ -1,0 +1,144 @@
+{
+  "schema": "mandatory-server-package-read-receipt-v1",
+  "created_local_date": "2026-07-27",
+  "task": "Requant node0001 guard-only v4 direct-signal successor package",
+  "status": "complete_before_generation",
+  "semantic_workload_policy": "freeze v4 guard JSON, mapping, bitstream, execplan, SCA/SCA_D, input, SFU payload, golden, and expected writes byte-exact",
+  "read_files": [
+    {
+      "path": ".agents/rules/生成前必读索引.md",
+      "size_bytes": 5650,
+      "sha256": "539e8dfbe52ad9fc8bd9fdef8c69d448fb5fd713e938e3adc5f663f82fd806d7",
+      "coverage": "complete"
+    },
+    {
+      "path": ".agents/rules/服务器测试包生成规则.md",
+      "size_bytes": 13908,
+      "sha256": "67018547fbe4e485d3d8c2420821e0c8f65bfec0bab0ecc1099ad9de37e55eb7",
+      "coverage": "complete"
+    },
+    {
+      "path": ".agents/rules/算子配置规则.md",
+      "size_bytes": 12168,
+      "sha256": "a5fbe2f0fa2e26d8cd4ebfe8772d5a3c69516d6918cfaa5087198706a352427b",
+      "coverage": "complete"
+    },
+    {
+      "path": ".agents/rules/NDP硬件字段语义.md",
+      "size_bytes": 12602,
+      "sha256": "7f446adb1719658ce75c2614c6d619fc2c7cdcabf5e4fd34945482645539158f",
+      "coverage": "complete"
+    },
+    {
+      "path": ".agents/rules/RequantizeUint8算子配置规则.md",
+      "size_bytes": 19995,
+      "sha256": "d1bd49486cc257fe4ab05b25c80ec42228c71090848207ef271f11053b9c0772",
+      "coverage": "complete"
+    },
+    {
+      "path": "NDP_copy01/README_HARDWARE_SIM_ENTRY.md",
+      "size_bytes": 5461,
+      "sha256": "4318f3a28de399fb522740315f11bdddf346e71969cf1e45686899a568b042d7",
+      "coverage": "complete"
+    },
+    {
+      "path": ".agents/plan.md",
+      "size_bytes": 23945,
+      "sha256": "52510f22511ca52fd0f0131d67c88497aee6b97c69816d934e4a62e4382bcdeb",
+      "coverage": "complete"
+    },
+    {
+      "path": "server_returns/rq_node0001_guardonly_stock_v4_return_analysis_20260726.json",
+      "size_bytes": 6185,
+      "sha256": "79ef9534c481ca1b436c2f815b6860feb91584cd3f0f77982b6fa1660a4f8da6",
+      "coverage": "complete"
+    },
+    {
+      "path": "ndp-sim/model_execplan/README.md",
+      "size_bytes": 40935,
+      "sha256": "992360e8cfc1a15d03abbbb70047de86548e07518e329248d17c61c130b9b11f",
+      "coverage": "complete"
+    },
+    {
+      "path": "ndp-sim/model_execplan/README_op_json.md",
+      "size_bytes": 6663,
+      "sha256": "261cd35b989dc44f9d783eaddef00744a9b0d2d7a3112f683ea3ed2502854107",
+      "coverage": "complete"
+    }
+  ],
+  "actual_consumers_reviewed": [
+    {
+      "path": "tools/requant_atomic_server_runtime.py",
+      "size_bytes": 55974,
+      "sha256": "99a76d5c5e808ffcad9e59588bfd449b9ed951e1e67825a10cad592a963e5f1f",
+      "coverage": "package preflight, lifecycle, observer/checkpoint parser, first-divergence routing, formal readback, return allowlist"
+    },
+    {
+      "path": "tools/requant_node0001_server_runtime.py",
+      "size_bytes": 66753,
+      "sha256": "35434ce4406deb31eed26e07416246ddad1ae7c1902fc3a282f7ab6bc71ec542",
+      "coverage": "observer XMR gate, transactional install/verify/restore, focused identity, five-phase identity receipt"
+    },
+    {
+      "path": "tools/build_requant_atomic_onecmd_server_test.py",
+      "size_bytes": 63987,
+      "sha256": "5318d204100fdb92dec561f3f412fd88bd1f45e49bb3cf60bf1447f1259cf1aa",
+      "coverage": "one-command runner, exact-set manifest, fresh identity, deterministic ZIP, bootstrap immutability"
+    },
+    {
+      "path": "NDP_copy01/Makefile.tb_NDP_Top_new_phy",
+      "size_bytes": 17683,
+      "sha256": "528d93f3c7f458d256bdbaf1d9ec39edfbfe5bd8a924e2bf0786914a634f4aba",
+      "coverage": "compile and run targets, VCS include path, RUN_DIR"
+    },
+    {
+      "path": "NDP_copy01/tb_NDP_Top_new_phy.sv",
+      "size_bytes": 342445,
+      "sha256": "e068f7500f0c71c2ba2c756f74a4519c33d13d4afe0fa4cc9f6c9e79b1e3f994",
+      "coverage": "SCA/SCA_D parsing, Start_Comp/Comp_Finish lifecycle, observer include boundary"
+    },
+    {
+      "path": "NDP_copy01/native_return_observer.svh",
+      "size_bytes": 111824,
+      "sha256": "47f0d66728f47c92f9f93f8cf87b47a0ff8567d587c3a099e2d03f610af09f49",
+      "coverage": "tail marker and existing MSE/Buffer proxy signals used by the transactional read-only observer"
+    },
+    {
+      "path": "NDP_copy01/rtl/filelists/NDP_Top_phy_filelist.f",
+      "size_bytes": 357,
+      "sha256": "b6720607b2757d50d13de6efc109e240aa32e56b51c7dd7e30ec0150a34e4b6a",
+      "coverage": "compile filelist consumer"
+    }
+  ],
+  "rtl_semantics_reviewed_read_only": [
+    "NDP_copy01/rtl/Slice/General_Array/GA_Inport/GA_Inport.sv",
+    "NDP_copy01/rtl/Slice/General_Array/GA_Inport/GA_Inport_Group.sv",
+    "NDP_copy01/rtl/Slice/General_Array/GA_Inport/GA_Inport_Group_Config.sv",
+    "NDP_copy01/rtl/Slice/General_Array/GA_PE_Group/GA_PE_Group.sv",
+    "NDP_copy01/rtl/Slice/General_Array/GA_PE_Group/GA_PE_Group_Interconnect.sv",
+    "NDP_copy01/rtl/Slice/General_Array/GA_PE_Group/GA_PE_Inbuffer.sv",
+    "NDP_copy01/rtl/Slice/General_Array/GA_PE_Group/GA_PE_Outbuffer.sv",
+    "NDP_copy01/rtl/Slice/General_Array/GA_PE_Group/GA_SFU_LUT.sv",
+    "NDP_copy01/rtl/Slice/General_Array/GA_PE_Group/GA_SFU_PE/GA_SFU_PE.sv",
+    "NDP_copy01/rtl/Slice/General_Array/GA_PE_Group/GA_SFU_PE/GA_SFU_PE_Preprocess.sv",
+    "NDP_copy01/rtl/Slice/General_Array/GA_PE_Group/GA_SFU_PE/GA_SFU_PE_Postprocess.sv",
+    "NDP_copy01/rtl/Slice/LSU/Stream_Engine/Memory_Stream_Engine/Memory_WR_Stream_Engine/WR_Memory_AG.sv"
+  ],
+  "rule_ids": [
+    "CDA-SERVER-PACKAGE-BOOTSTRAP-IMMUTABILITY-001",
+    "CDA-SERVER-OBSERVER-XMR-ELABORATION-CONSTANT-001",
+    "CDA-SERVER-OBSERVER-DECOUPLED-HANDSHAKE-001",
+    "CDA-REQUANT-GUARD-DIAGNOSTIC-EVIDENCE-BOUNDARY-001",
+    "CDA-REQUANT-GUARD-CHECKPOINT-ROUTING-001",
+    "CDA-REQUANT-GUARD-V4-DYNAMIC-EVIDENCE-001"
+  ],
+  "prohibitions": {
+    "modify_tb": false,
+    "modify_or_package_rtl": false,
+    "force_or_deposit": false,
+    "enable_round_only": false,
+    "enable_alias_lifetime": false,
+    "count_as_e4_or_e5": false,
+    "upload_or_run": false
+  }
+}

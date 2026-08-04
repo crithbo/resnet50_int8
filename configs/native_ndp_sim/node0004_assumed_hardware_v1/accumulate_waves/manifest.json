@@ -1,0 +1,76 @@
+{
+  "operator_allocation_bytes": 402496,
+  "records": [
+    {
+      "active_slice_count": 28,
+      "canonical_config_sha256": "431b552856f02ab4f50d3034727ce046fd7207a986a59f4a4d9431b95a1c799b",
+      "op_id": "op_w0",
+      "operator_type": "resnet50_conv_node0004_wave0",
+      "sample_ids": [
+        0,
+        3,
+        6,
+        8,
+        10,
+        12,
+        14
+      ],
+      "stream_base_addresses": {
+        "A": "0x00000000",
+        "B": "0x00000400",
+        "B'": "0x00000400",
+        "C": "0x00031400",
+        "D": "0x00031440"
+      },
+      "wave_index": 0
+    },
+    {
+      "active_slice_count": 28,
+      "canonical_config_sha256": "431b552856f02ab4f50d3034727ce046fd7207a986a59f4a4d9431b95a1c799b",
+      "op_id": "op_w1",
+      "operator_type": "resnet50_conv_node0004_wave1",
+      "sample_ids": [
+        1,
+        4,
+        7,
+        9,
+        11,
+        13,
+        15
+      ],
+      "stream_base_addresses": {
+        "A": "0x00000000",
+        "B": "0x00000400",
+        "B'": "0x00000400",
+        "C": "0x00031400",
+        "D": "0x00031440"
+      },
+      "wave_index": 1
+    },
+    {
+      "active_slice_count": 8,
+      "canonical_config_sha256": "431b552856f02ab4f50d3034727ce046fd7207a986a59f4a4d9431b95a1c799b",
+      "op_id": "op_w2",
+      "operator_type": "resnet50_conv_node0004_wave2",
+      "sample_ids": [
+        2,
+        5
+      ],
+      "stream_base_addresses": {
+        "A": "0x00000000",
+        "B": "0x00000400",
+        "B'": "0x00000400",
+        "C": "0x00031400",
+        "D": "0x00031440"
+      },
+      "wave_index": 2
+    }
+  ],
+  "schema": "resnet50-node0004-conv-three-wave-config-set-v1",
+  "source": {
+    "path": "configs/native_ndp_sim/node0004_assumed_hardware_v1/accumulate_base.json",
+    "policy": "current strict zero-ping-pong source; address-only three-wave specialization",
+    "sha256": "8e49e3207737ce92d9b83ec6f695d8c2a5f84ecbf01495a9cfe2e5d920237ec6"
+  },
+  "wave_address_policy": "reuse_same_local_allocation"
+}

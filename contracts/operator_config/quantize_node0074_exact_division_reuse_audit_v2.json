@@ -1,0 +1,301 @@
+{
+  "schema": "resnet50-quantize-node0074-exact-division-reuse-audit-v2",
+  "status": "FAIL_CLOSED_FIRST_MISSING_CAPABILITY_EXACT_BINARY32_DIVISION",
+  "test_id": "r5-quantize-node0074-exact-division-reuse-audit-v2",
+  "claim_boundary": "CAPABILITY_AND_INTERFACE_AUDIT_ONLY_NOT_TARGET_NOT_E2_NOT_E4_NOT_E5",
+  "node": {
+    "request_id": "r5:hwop-0074-00",
+    "node_id": "node-0074",
+    "hw_op_id": "hwop-0074-00",
+    "input": {
+      "dtype": "float32",
+      "shape": [16, 2048],
+      "element_count": 32768,
+      "logical_bytes": 131072
+    },
+    "scale_bits": "0x3cbf57ec",
+    "zero_point": 0,
+    "output": {
+      "dtype": "uint8",
+      "shape": [16, 2048],
+      "element_count": 32768,
+      "logical_bytes": 32768
+    },
+    "required_equation": "saturate_uint8(RNE(binary32_divide(x,scale))+zero_point)"
+  },
+  "reuse_class_and_boundary": {
+    "class": "STRUCTURE_OR_PRIMITIVE_ONLY",
+    "source": {
+      "path": "ndp-sim/jsons/quant_from_buffer_int32MN_uint8MN.json",
+      "sha256": "db638f0640e74217e80e61350a2fe400f7b495e2201f17c39915328cdd455ba2"
+    },
+    "reuse_status": "REUSE_ACCEPTED_FOR_INTEGRATION_WITH_OPEN_CAPABILITY_GAP",
+    "allowed": [
+      "matching LC field structure",
+      "matching MSE and Buffer field structure",
+      "matching GA two-PE transport topology",
+      "raw constant transport structure",
+      "nearest-even integer decode structure",
+      "UINT8 saturation structure"
+    ],
+    "forbidden": [
+      "treat INT32 ingress or int32tofp32 conversion as node0074 FP32 ingress",
+      "treat fixed rank-3 shape as node0074 rank-2 schedule",
+      "treat placeholder handler as typed node0074 transport",
+      "treat absent mapper registration as registered",
+      "rewrite x/scale as x*reciprocal or reciprocal-FMA",
+      "reuse static constants as node0074 qparams",
+      "claim complete QuantizeLinear support"
+    ],
+    "parameter_shape_layout_substitutions": {
+      "source_ingress": "INT32",
+      "target_ingress": "FP32",
+      "source_shape": [1, 32, 32],
+      "target_shape": [16, 2048],
+      "source_numeric_formula_reused": false,
+      "source_schedule_reused_as_final": false
+    },
+    "fallback_owner_on_first_divergence": "QuantizeLinear exact-tail capability owner"
+  },
+  "current_corpus_audit": {
+    "template_count": 55,
+    "quantize_template_count": 1,
+    "quantize_template_id": "quant_from_buffer_int32MN_uint8MN",
+    "observed_alu_opcodes": [
+      "add",
+      "int32_sub",
+      "int32_sum",
+      "int8_max",
+      "mac",
+      "max",
+      "mul",
+      "rec",
+      "rec_sqrt",
+      "sfu_activation",
+      "sub",
+      "sum",
+      "summac"
+    ],
+    "direct_division_opcode_present": false,
+    "direct_division_template_present": false
+  },
+  "candidate_entry_audit": [
+    {
+      "candidate": "direct binary32 division",
+      "config_entry": null,
+      "encoder_opcode": null,
+      "rtl_opcode": null,
+      "typed_handler": null,
+      "mapper": null,
+      "verdict": "ABSENT"
+    },
+    {
+      "candidate": "prefill/decode sum_rec",
+      "config_entries": [
+        "prefill_sum_rec_fp32MN_fp32MN",
+        "decode_sum_rec_fp32N_fp32N"
+      ],
+      "verdict": "STRUCTURE_OR_PRIMITIVE_ONLY",
+      "reason": "reduction followed by REC changes the elementwise boundary and shape"
+    },
+    {
+      "candidate": "REC then FP32 MUL",
+      "verdict": "CONTRADICTED",
+      "reason": "REC is breakpoint/slope/intercept affine approximation and rounded reciprocal multiplication has an accepted same-scale uint8-visible counterexample"
+    },
+    {
+      "candidate": "REC with iterative refinement or quotient correction",
+      "verdict": "NO_CURRENT_NATIVE_ENTRY_OR_TRANSPORT",
+      "reason": "no native JSON/handler/mapper implements a correctly-rounded quotient algorithm or exact remainder/quotient correction"
+    }
+  ],
+  "accepted_counterexample_binding": {
+    "source_contract": {
+      "path": "contracts/operator_config/quantize_node0074_exact_division_entry_audit_v1.json",
+      "sha256": "0fdf06ba2a5e6861566450acdadca52a41f9a1db00c8e15de648d4838ec293e3"
+    },
+    "retested": false,
+    "x_bits": "0x406cefe0",
+    "scale_bits": "0x3cbf57ec",
+    "divide_then_rne_uint8": 159,
+    "reciprocal_mul_then_rne_uint8": 158,
+    "applies_to": "same target scale and legal finite positive node0074 input"
+  },
+  "first_divergence": {
+    "id": "B_QUANT_NODE0074_EXACT_DIVISION",
+    "shared_id": "B_QUANT_TAIL_EXACT_FP32_DIVISION",
+    "status": "OPEN_NO_DIRECT_OR_BIT_EXACT_COMPOSED_ENTRY",
+    "stage": "FP32 x plus FP32 scale to correctly-rounded FP32 quotient",
+    "why_first": "the numeric operation is missing before typed shape, address, tail, terminal, or endpoint materialization can produce a target"
+  },
+  "minimum_missing_capability_contract": {
+    "capability": "EXACT_BINARY32_DIVIDE_RNE",
+    "input_interface": {
+      "x": "one FP32 lane from node0074 A",
+      "scale": "FP32 scalar constant with exact bits 0x3cbf57ec"
+    },
+    "legal_domain": {
+      "x": "all finite signed binary32 values admitted by the formal producer",
+      "scale": "fixed positive finite binary32 0x3cbf57ec"
+    },
+    "output_interface": {
+      "quotient": "RN-even binary32 result of x/scale",
+      "rounding_points": 1
+    },
+    "required_hardware_or_composition_evidence": [
+      "direct opcode and RTL implementation, or a complete composed algorithm",
+      "bit-exact proof over the legal domain",
+      "accepted counterexample 0x406cefe0 must produce quotient path leading to uint8 159",
+      "no host-precomputed scaled, rounded, saturated, or final tensor",
+      "typed handler and mapper transport only after numeric capability passes"
+    ],
+    "first_acceptance_gate": "config-bound implementation returns exact quotient bits before RNE/decode/saturation"
+  },
+  "endpoint_binding": {
+    "canonical": "contracts/operator_config/resnet50_node0072_node0074_shared_endpoint_v1.json",
+    "chain": "node0072-D -> node0073 metadata alias -> node0074-A",
+    "required_consumer_read_bytes": 131072,
+    "blocked_by": "B_QUANT_NODE0074_EXACT_DIVISION",
+    "consumer_owned_fields": {
+      "final_storage_identity": null,
+      "final_producer_base": null,
+      "final_view_offset": null,
+      "final_consumer_base": null,
+      "final_read_coverage": null,
+      "final_accepted_lifetime": null
+    },
+    "provisional_address_allowed": false,
+    "integrated_endpoint_closed": false
+  },
+  "downstream_deferred": [
+    "B_QUANT_NODE0074_FP32_INGRESS",
+    "B_QUANT_NODE0074_TYPED_HANDLER",
+    "B_QUANT_NODE0074_MAPPER",
+    "B_QUANT_NODE0074_SHAPE_TAIL",
+    "B_QUANT_NODE0074_MATERIALIZED_ROUNDTRIP",
+    "B_QUANT_NODE0074_TERMINAL_READBACK"
+  ],
+  "analysis_accounting": {
+    "accepted_w3_or_golden_retested": false,
+    "accepted_flatten_or_dequant_primitive_retested": false,
+    "accepted_counterexample_retested": false,
+    "current_structure_and_source_identity_audited": true,
+    "reuse_assets_consumed": true
+  },
+  "outputs": {
+    "target_json": false,
+    "mapping": false,
+    "bitstream": false,
+    "execplan": false,
+    "sca": false,
+    "server_package": false,
+    "candidate_release": false
+  },
+  "rule_ids": [
+    "CDA-REUSE-FIRST-DEFERRED-RETEST-001",
+    "CDA-QUANT-TAIL-NUMERIC-ORDER-001",
+    "CDA-QUANT-TAIL-ZP-AFTER-ROUND-001",
+    "CDA-QUANT-TAIL-MAGIC-DOMAIN-001",
+    "CDA-QUANT-TAIL-CAPABILITY-MATRIX-001"
+  ],
+  "current_match_sources": [
+    {
+      "path": ".agents/rules/生成前必读索引.md",
+      "sha256": "12583308ec9a16dbb8ea15571a5280291fed7e152167d2e4e8e00509a9a6370f"
+    },
+    {
+      "path": ".agents/rules/算子配置规则.md",
+      "sha256": "cbaffcc5fb3bea7da9f0c199bb2e7f06445a676ab456bdfd505b90dd89825171"
+    },
+    {
+      "path": ".agents/rules/NDP硬件字段语义.md",
+      "sha256": "603d57805bc5a5bdfca7406c402bc94db60c06ea6682493d672abb91671b1055"
+    },
+    {
+      "path": ".agents/rules/精确UINT8量化尾专项规则.md",
+      "sha256": "1685bd6527111bf014a738dbef4ee85b5b8d3e54c0565cb63eda9417d5c9425e"
+    },
+    {
+      "path": "contracts/operator_config/quantize_node0074_inventory_v1.json",
+      "sha256": "0a9c7c879b6e6c7b80468eb33876d1af7a786c4a2d72d259e40400056b59225e"
+    },
+    {
+      "path": "contracts/operator_config/ndpsim_json_corpus_v1.json",
+      "sha256": "bd2527db3470521e309acd43224dc15a694b210b293011e944f964e9b76270e3"
+    },
+    {
+      "path": "contracts/operator_config/resnet50_ndpsim_reuse_gap_audit_v1.json",
+      "sha256": "ca3daf485f4098793e1c4544139c22e62119dbe5743e0db02e4e07d7c301c7c5"
+    },
+    {
+      "path": "ndp-sim/jsons/quant_from_buffer_int32MN_uint8MN.json",
+      "sha256": "db638f0640e74217e80e61350a2fe400f7b495e2201f17c39915328cdd455ba2"
+    },
+    {
+      "path": "ndp-sim/jsons/prefill_sum_rec_fp32MN_fp32MN.json",
+      "sha256": "33f1332d15a659d3be5244b293edd341bd12a22c4427b2d16b1efcddd57c6522"
+    },
+    {
+      "path": "ndp-sim/jsons/decode_sum_rec_fp32N_fp32N.json",
+      "sha256": "310befa14072caf43d233ab7d3e892e187de94b64de8e77bef26696cec13ab30"
+    },
+    {
+      "path": "ndp-sim/jsons/prefill_mul_fp32MN_fp32M_fp32MN.json",
+      "sha256": "db66d5e8da6146eb743fe1006a6248daf040ba937d713a99f961c591325a272f"
+    },
+    {
+      "path": "ndp-sim/model_execplan/config/operator_base_info.json",
+      "sha256": "e408606006e5778997b015f6cf90608dad93ef45efe60d73c5a0b675eab096e0"
+    },
+    {
+      "path": "ndp-sim/model_execplan/src/execution_plan_generator/control_registers.py",
+      "sha256": "cd12ee5f31231e856f9f63f61746a8e43435228d0268813c3eb8c4630e09a941"
+    },
+    {
+      "path": "ndp-sim/model_execplan/src/execution_plan_generator/template_manager.py",
+      "sha256": "2d17fbdaa67c8f307739c1c90887d780d5b7037282c535e154239aca064d85ea"
+    },
+    {
+      "path": "ndp-sim/model_execplan/src/execution_plan_generator/instruction_generator.py",
+      "sha256": "cdc7d4dcdf41ec79571d53a909a2b2d8f1ab7897a404969b5cf49d416fc85315"
+    },
+    {
+      "path": "ndp-sim/bitstream/config/general.py",
+      "sha256": "eb9d5ee9ef273182e05b718aca378f87d0a1ccb5366ae463d8482c8c94c3482f"
+    },
+    {
+      "path": "ndp-sim/model_execplan/config/SFU_Coeff/REC.txt",
+      "sha256": "25cb4bb1782d26a402de49cf1dacfa5d972b8712809a1c7f1bb638125dd826b8"
+    },
+    {
+      "path": "ndp-sim/address_remapping/tests/test_solver.py",
+      "sha256": "1336c1d5557802dd48acaee4ab23d059570364fdcb4474920bd28ab2d1a8c180"
+    },
+    {
+      "path": "Trassic2.0_RTL/code/NDP_rtl/includes/NDP_Parameters.svh",
+      "sha256": "c7b2d96445f3351637ef611d5c03b23c006ebb9bb2a2e4d1212a09872ce5d767"
+    },
+    {
+      "path": "Trassic2.0_RTL/code/NDP_rtl/Slice/General_Array/GA_PE_Group/GA_SFU_PE/GA_SFU_PE.sv",
+      "sha256": "d58dd94aad3a3363f73a205b150ca0f32cafca76b72be00673c15b0d686f7c88"
+    },
+    {
+      "path": "Trassic2.0_RTL/code/NDP_rtl/Slice/General_Array/GA_PE_Group/GA_SFU_PE/GA_SFU_PE_Preprocess.sv",
+      "sha256": "79a285e4988e36b5fbb0ef4646131fd3ca559d7bc7ea0d4ee2751b544e2eb548"
+    },
+    {
+      "path": "Trassic2.0_RTL/code/NDP_rtl/Slice/General_Array/GA_PE_Group/GA_SFU_PE/GA_SFU_PE_Postprocess.sv",
+      "sha256": "d40ec99776a20800d61372b5060e850b6e75188b8b92dd5584e162feaa009394"
+    },
+    {
+      "path": "Trassic2.0_RTL/code/NDP_rtl/Slice/General_Array/GA_PE_Group/GA_SFU_LUT.sv",
+      "sha256": "617aa05513ccf183fbadfc49495113403dfa13d41c6dc51ea22870d8dbfb3566"
+    },
+    {
+      "path": "Trassic2.0_RTL/code/NDP_rtl/Slice/General_Array/GA_PE_Group/GA_PE_ALU.sv",
+      "sha256": "8a73c66755df0897034d7bdbc7183f663aeba630d16ccae07e8e879d689eb9aa"
+    }
+  ],
+  "rule_delta_proposal": null,
+  "package_release": "NONE"
+}

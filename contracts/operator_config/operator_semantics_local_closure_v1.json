@@ -1,0 +1,308 @@
+{
+  "claim_boundary": {
+    "candidate_json_release_allowed": false,
+    "formal_target_release_allowed": false,
+    "local_analysis_complete_for_plan_0_3_current_scope": true,
+    "reason": "all safe static comparisons and exact local tensor-domain replays in the current read-only RTL scope are bound, including the DequantizeLinear and exact node0001 RequantizeUint8 local E2 candidates plus one synthetic native two-stage producer/consumer lifecycle. Formal release still requires separately authorized E4/E5 readback; frozen GAP work and unrelated RTL defects remain independent."
+  },
+  "closed_local_work": {
+    "dequantize_linear": {
+      "affine_mac_mismatch_count": 12976,
+      "candidate_json_materialized": true,
+      "candidate_release": false,
+      "encoded_physical_pe_constants_verified": true,
+      "local_evidence_level": "E2",
+      "materialized_roundtrip": true,
+      "remaining_blockers": [
+        "B_DEQUANT_SERVER_E4_E5"
+      ],
+      "request_id": "r5:hwop-0077-00",
+      "w3_bit_exact": true,
+      "w3_element_count": 16000
+    },
+    "gap_d_index": {
+      "distinct_bias_count": 256,
+      "native_mapping_penalty": 0.0,
+      "resolved_blocker": "B_GAP_D_INDEX_CARRIER_SEMANTICS",
+      "transaction_count": 256
+    },
+    "json_to_rtl": {
+      "contradicted": 8,
+      "rtl_proven": 20,
+      "scope": [
+        "LC and LC_PE",
+        "MSE read/write",
+        "padding and tail",
+        "buffer",
+        "SA",
+        "GA",
+        "N2N"
+      ],
+      "stable_findings": 28
+    },
+    "minimal_two_stage_lifecycle": {
+      "dual_golden_bit_exact": true,
+      "full_network_projection_allowed": false,
+      "independent_config_reload": true,
+      "producer_backed_input_preloaded": false,
+      "producer_consumer_alias": true,
+      "repeat_start_barrier_completion_count": 2,
+      "runtime_sequence": [
+        "op0",
+        "op1"
+      ],
+      "stage_count": 2,
+      "status": "local_e2_complete_dynamic_hardware_pending",
+      "synthetic_probe_only": true
+    },
+    "requant_input_domain": {
+      "blocker_retained": "B_GA_INT32TOFP32_INPUT_DOMAIN",
+      "counterexample_hit_stage_count": 45,
+      "exact_element_count": 169442944,
+      "exact_stage_count": 55,
+      "int_min_element_count": 0,
+      "minus_one_element_count": 6640
+    },
+    "requantize_uint8_family": {
+      "candidate_release": false,
+      "guard_recipe_mismatch_count_for_nonzero_zp": 47844816,
+      "new_json_emission_allowed": false,
+      "nonzero_zero_point_guard_contradicted_stage_count": 21,
+      "odd_zero_point_magic_counterexample_stage_ids": [
+        "r5:hwop-0014-01"
+      ],
+      "physical_materialized_e2_stage_count": 1,
+      "request_count": 54,
+      "standard_w3_golden_exact_stage_count": 54,
+      "w3_element_count": 169410176,
+      "zero_point_zero_numeric_compatible_stage_count": 33
+    },
+    "requantize_uint8_node0001": {
+      "bitstream_decoded_stage_count": 48,
+      "candidate_json_set_materialized": true,
+      "candidate_release": false,
+      "consumer_intermediate_preload_count": 0,
+      "deterministic_rebuild_file_count": 486,
+      "local_evidence_level": "E2",
+      "occurrence_count": 24,
+      "physical_stage_count": 48,
+      "remaining_blockers": [
+        "B_REQUANT_SERVER_E4_E5"
+      ],
+      "request_id": "r5:hwop-0001-01",
+      "w3_bit_exact": true,
+      "w3_element_count": 12845056
+    },
+    "stage_to_json": {
+      "all_projection_leaves_owned": true,
+      "gap_projection_uses_corrected_d_index_config": true,
+      "gap_remaining_blockers": [
+        "B_GAP_GA_ACCUM_STATE"
+      ],
+      "representatives": [
+        "MaxPoolUint8",
+        "GlobalAverageSumInt32",
+        "RequantizeUint8",
+        "View",
+        "DequantizeLinear"
+      ]
+    },
+    "state_lifetime": {
+      "conv_shape_signature_count": 20,
+      "matmul_mnk": {
+        "K": 2048,
+        "M": 16,
+        "N": 1000
+      },
+      "n2n_selected": false,
+      "ordered_stage_count": 133,
+      "typed_tensor_edge_count": 148,
+      "view_exact_byte_equal": true,
+      "view_logical_zero_copy_proven": true,
+      "view_physical_zero_copy_proven": false
+    }
+  },
+  "contract_sha256": "4e83cc888fa0e6f53299e4094250d9903eabe3f5a62db28d5595f4ae0307267a",
+  "inputs": {
+    "dequant_local_e2": {
+      "path": "artifacts/operator_config_validation/r5-dequant-node0077-e2-v5/local_e2_report.json",
+      "sha256": "3d059a3e73192b85e37130f474bcfd93e23db9353e728dc9c4158479440487e8",
+      "size_bytes": 19693
+    },
+    "dequant_semantics": {
+      "path": "contracts/operator_config/node0077_dequant_semantics_evidence_v5.json",
+      "sha256": "c3cb412d61ce1c61af717d000dad1911fba7a37f0ab8917f9a717d65dc3da78a",
+      "size_bytes": 2886
+    },
+    "ga_int32_input_domain_matrix": {
+      "path": "contracts/operator_config/ga_int32_input_domain_matrix_v1.json",
+      "sha256": "4f1fad15849f00784be0e97cb9e5d7a8c11069096de9655c9ea77a68c997ecd8",
+      "size_bytes": 56158
+    },
+    "gap_d_index_schedule": {
+      "path": "contracts/operator_config/gap_d_index_schedule_v1.json",
+      "sha256": "be4be7debf8ebe5106e1eed2ac6b68ab8af328e35c47f83bf67ff0967525287b",
+      "size_bytes": 8679
+    },
+    "gap_ga_accumulator_state": {
+      "path": "contracts/operator_config/gap_ga_accumulator_state_v1.json",
+      "sha256": "48486ef7e3ebb167cbd54f9cc8c6d30033dc653d29bfeb7055745ee480a55d04",
+      "size_bytes": 9425
+    },
+    "minimal_two_stage_lifecycle": {
+      "path": "contracts/operator_config/minimal_two_stage_lifecycle_v1.json",
+      "sha256": "9775a06c4505a9c62d3c54301caecf9a8d3028f74c419c7c1b85d125e9f899c5",
+      "size_bytes": 1586
+    },
+    "node0004_requant_semantics": {
+      "path": "contracts/operator_config/node0004_requant_semantics_evidence_v1.json",
+      "sha256": "bc3c6814652f02da9e137bc5bba659e717b59b44e8fde16dae12d6f0bf515017",
+      "size_bytes": 18221
+    },
+    "requant_family_contract": {
+      "path": "contracts/operator_config/requant_family_classification_v1.json",
+      "sha256": "9dd2318cbd28f32300fc5f46156fe349c5dfeafcb44532c3de7370ef9ee62146",
+      "size_bytes": 1264
+    },
+    "requant_family_report": {
+      "path": "artifacts/operator_config_validation/r5-requant-family-classification-v1/report.json",
+      "sha256": "d39bb17d35babc400f0fbaa15d209a23e22170556c7621a0a69172501bdfc4eb",
+      "size_bytes": 146668
+    },
+    "requant_node0001_contract": {
+      "path": "contracts/operator_config/requant_node0001_two_stage_contract_v1.json",
+      "sha256": "a1e6c12d745e8cb8efa0758ca0a237d8ee9ee102b096b00fcd0a7ea3f66f27d9",
+      "size_bytes": 1093
+    },
+    "requant_node0001_local_e2": {
+      "path": "artifacts/operator_config_validation/r5-requant-node0001-two-stage-e2-v1/local_e2_report.json",
+      "sha256": "29b24ba2c0ca48348adb7e2c2b7a05508324474f506f0cabcadc1ded4f121990",
+      "size_bytes": 230039
+    },
+    "requant_node0001_stage_candidate": {
+      "path": "configs/stage_codegen/hwop-0001-01-requant-v1/manifest.json",
+      "sha256": "08613f1f42c7597f900ba93374c33bf5bc3d78a17bde3f98cb6326e6247051e3",
+      "size_bytes": 4386
+    },
+    "stage_config_system": {
+      "path": "contracts/operator_config/stage_config_system_v1.json",
+      "sha256": "79aa86fc958a2394c5161229378e490472bd5ea4273e40ea5d2139294038cf1e",
+      "size_bytes": 1008342
+    },
+    "stage_json_derivation_matrix": {
+      "path": "contracts/operator_config/stage_json_derivation_matrix_v1.json",
+      "sha256": "2d09511db13130044d5f33a4007c29df93b1237cf7bc0bc42c66d5fd8b8fb896",
+      "size_bytes": 2634785
+    },
+    "stage_operator_semantics_audit": {
+      "path": "contracts/operator_config/stage_operator_semantics_audit_v1.json",
+      "sha256": "27079b96ec9e5306807cb23f3718f9af5827607366eaab22c0fed817a45aa4aa",
+      "size_bytes": 113906
+    },
+    "stage_state_lifetime": {
+      "path": "contracts/operator_config/stage_state_lifetime_contract_v1.json",
+      "sha256": "67f8e7758128a0dfea4b3faf2eab700b01b602ca052c3301fec967d6d2604744",
+      "size_bytes": 244657
+    }
+  },
+  "remaining_gates": {
+    "frozen_server_gates": [
+      {
+        "blocker": "B_GAP_GA_ACCUM_STATE",
+        "exact_runtime_occurrence_proven": false,
+        "gate": "GAP_GA_EXACT_RUNTIME_OCCURRENCE",
+        "package": {
+          "expected_return_files": [
+            "gap_hwop0071_sum_probe_v7_return.zip",
+            "gap_hwop0071_sum_probe_v7_return.zip.sha256"
+          ],
+          "functional_rtl_modified_by_installer": false,
+          "functional_rtl_v_or_sv_included": false,
+          "manifest": {
+            "path": "artifacts/operator_config_validation/r5-server-test-packages/gap_hwop0071_sum_probe_v7/TEST_PACKAGE_MANIFEST.json",
+            "sha256": "b22da0386e7c96e3ed39ee5eb7e08242b72e60ecd5ca59e24cdabf1b177e1c56",
+            "size_bytes": 38117
+          },
+          "payload_file_count": 119,
+          "sha256_sidecar": {
+            "path": "artifacts/operator_config_validation/r5-server-test-packages/gap_hwop0071_sum_probe_v7.zip.sha256",
+            "sha256": "7a80c23fcce1e4e1aa5498d31c6d83cd587a4567a913999adf2d0c83b5e9ee29",
+            "size_bytes": 96
+          },
+          "status": "validated_ready_for_server",
+          "waveforms_enabled": false,
+          "zip": {
+            "path": "artifacts/operator_config_validation/r5-server-test-packages/gap_hwop0071_sum_probe_v7.zip",
+            "sha256": "c4462033fc4d59ad71121639daed70de1185c5f294264bc3847d22b6bc481893",
+            "size_bytes": 3280763
+          },
+          "zip_entry_count": 120
+        },
+        "static_state_counterexample_proven": true,
+        "status": "frozen_by_user"
+      }
+    ],
+    "not_selected": [
+      "N2N for current ResNet50 typed plan",
+      "functional RTL modification in the diagnostic package"
+    ],
+    "requires_functional_rtl_or_target_decision": [
+      "GA int32-to-fp32 conversion for -1 and INT_MIN",
+      "GA int32_sum invalid outbuffer-slot reuse",
+      "SA INT8 CSA double-shift arithmetic",
+      "GA INT8 max numeric/flow path"
+    ],
+    "requires_released_physical_configs_first": [
+      "per-stage CONFIG update/reuse/disable sequence",
+      "buffer allocation, byte offset and lifetime",
+      "View physical alias identity",
+      "physical Conv/MatMul tile, wave, psum and tail schedules",
+      "binding the proven two-stage lifecycle invariant to each real producer/consumer pair"
+    ],
+    "server_required_after_user_authorization": [
+      {
+        "blocker": "B_DEQUANT_SERVER_E4_E5",
+        "gate": "DEQUANT_E4_E5_READBACK",
+        "local_e2_proven": true,
+        "package_generated": false,
+        "required_readback": "28 slices x 752 fp32 values; first 750 bit-exact to W3 shard golden and final two +0.0f"
+      },
+      {
+        "blocker": "B_REQUANT_SERVER_E4_E5",
+        "gate": "REQUANT_NODE0001_E4_E5_READBACK",
+        "local_e2_proven": true,
+        "package_generated": false,
+        "required_readback": "24 occurrences across 48 barrierized stages; historical guard values use same-clock accepted-MSE4-write observer, final uint8 uses formal SCA_D, and each slice's last resident guard uses unique-address formal D; the three evidence classes must remain distinct",
+        "transient_alias_policy": "CDA-REQUANT-TRANSIENT-GUARD-E4-001"
+      }
+    ],
+    "server_required_now": []
+  },
+  "schema": "resnet50-operator-semantics-local-closure-v1",
+  "status": "local_static_analysis_dequant_requant_and_minimal_two_stage_e2_closed_formal_release_blocked",
+  "summary": {
+    "audit_finding_count": 28,
+    "candidate_json_count": 2,
+    "contradicted_finding_count": 8,
+    "conv_shape_signature_count": 20,
+    "formal_release_stage_count": 0,
+    "ga_int32_counterexample_hit_stage_count": 45,
+    "ga_int32_exact_w3_stage_count": 55,
+    "gap_d_index_locally_resolved": true,
+    "logical_view_alias_count": 1,
+    "minimal_two_stage_lifecycle_count": 1,
+    "projected_json_leaf_count": 1784,
+    "representative_derivation_stage_count": 5,
+    "requant_family_current_guard_compatible_stage_count": 33,
+    "requant_family_current_guard_contradicted_stage_count": 21,
+    "requant_family_materialized_e2_stage_count": 1,
+    "requant_family_numeric_classified_stage_count": 54,
+    "rtl_proven_finding_count": 20,
+    "sa_stage_count": 54,
+    "selected_n2n_config_count": 0,
+    "server_test_package_count": 1,
+    "stage_count": 133,
+    "stage_family_count": 10,
+    "typed_tensor_edge_count": 148
+  }
+}

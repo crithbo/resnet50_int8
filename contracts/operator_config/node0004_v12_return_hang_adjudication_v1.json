@@ -1,0 +1,156 @@
+{
+  "schema": "node0004-v12-return-hang-adjudication-v1",
+  "owner": "Conv/SA",
+  "source_thread": "019fa2ca-72bc-7753-8d58-81e59bc76c88",
+  "return_identity": {
+    "path": "C:/Users/15383/xwechat_files/wxid_vwpfpfs4fgyk22_29b7/msg/file/2026-07/r5_n4_hw_v12_hangloc_returngate_return.zip",
+    "bytes": 76005,
+    "sha256": "4c6913a037b3211fbacb1c6c81bad29ea854b71787969ca6becff40450045efb",
+    "sidecar_sha256": "afa15d897aa05d32e118fef7d2c4aa16847acc463ce63bc23fb519668ba3f769",
+    "sidecar_exact_name_and_hash": true
+  },
+  "source_package_identity": {
+    "path": "artifacts/operator_config_validation/r5-server-test-packages/r5_n4_hw_v12_hangloc_returngate.zip",
+    "sha256": "80d489798af019b00bba7ee7a7b6060de9f4cf77c2b6e57b11955995803e2e6d",
+    "consumed_read_only": true
+  },
+  "return_envelope": {
+    "crc_pass": true,
+    "exact_set_pass": true,
+    "allowlist_hash_size_pass": true,
+    "entry_count_including_allowlist": 14,
+    "package_preflight_valid": true,
+    "install_preflight_valid": true,
+    "observer_precompile_valid": true,
+    "observer_identity_match": true,
+    "observer_xmr_static_gate_pass": true
+  },
+  "dynamic": {
+    "compile_exit_status": 0,
+    "run_exit_status": 0,
+    "signal_status": "NONE",
+    "simulation_started": true,
+    "bounded_diagnostic_stop": true,
+    "natural_terminal": false,
+    "formal_d_readback": false,
+    "formal_d_missing": "all",
+    "formal_d_mismatch": 0,
+    "formal_d_interpretation": "all-missing with mismatch=0 is not PASS",
+    "progress_windows": [
+      {
+        "sample": 1,
+        "active_cycles": 262144,
+        "qualified_progress": 144,
+        "delta": 144
+      },
+      {
+        "sample": 2,
+        "active_cycles": 524288,
+        "qualified_progress": 144,
+        "delta": 0
+      },
+      {
+        "sample": 3,
+        "active_cycles": 786432,
+        "qualified_progress": 144,
+        "delta": 0
+      },
+      {
+        "sample": 4,
+        "active_cycles": 1048576,
+        "qualified_progress": 144,
+        "delta": 0
+      },
+      {
+        "sample": 5,
+        "active_cycles": 1310720,
+        "qualified_progress": 144,
+        "delta": 0
+      }
+    ],
+    "final_qualified_counters": {
+      "req0": 32,
+      "req1": 32,
+      "req3": 28,
+      "rdata0": 12,
+      "rdata1": 12,
+      "rdata3": 24,
+      "d_req": 4,
+      "d_wdata": 0,
+      "buffer4_write_edge": 2,
+      "buffer4_read_edge": 1,
+      "buffer5_write_edge": 0,
+      "buffer5_read_edge": 1,
+      "slice_finish": 0
+    },
+    "raw_level_counts_are_progress": false,
+    "canonical_decision_count": 1,
+    "canonical_decision": "LONG_RUNNING_HANG_AT_BUFFER4_READ_WITNESS_TO_BUFFER5_WRITE_WITNESS",
+    "canonical_reason": "STALL_WINDOW_EXCEEDED"
+  },
+  "first_divergence": {
+    "last_good": "c0 Start_Comp plus qualified A/B/C requests/read data and one Buffer4 read edge",
+    "first_bad": "no qualified Buffer5 write and no visible SA group result",
+    "coarse_boundary": "BUFFER4_READ_WITNESS_TO_BUFFER5_WRITE_WITNESS",
+    "root_cause_status": "UNRESOLVED_AFTER_EXHAUSTIVE_AUDIT"
+  },
+  "source_audit": {
+    "excluded": [
+      {
+        "candidate": "simulation merely slow",
+        "reason": "four consecutive 262144-cycle windows have zero qualified delta while wall clock and simulation time advance"
+      },
+      {
+        "candidate": "Buffer5 read-before-write deadlock",
+        "reason": "Buffer5 read request level does not create a write barrier; Buffer5 write requires a valid SA output tag, which remained absent"
+      },
+      {
+        "candidate": "one-sided stream/SA ping-pong mismatch",
+        "reason": "final JSON disables ping-pong on both memory streams and SA inports; active selectors therefore both stay on source 0"
+      },
+      {
+        "candidate": "output backpressure",
+        "reason": "final internal state reports Buffer5 accepts SA and the selected SA output tag contains no valid lane"
+      },
+      {
+        "candidate": "single bad slice or nondeterministic memory wait",
+        "reason": "all 28 slice MSE summaries are identical"
+      }
+    ],
+    "insufficient_observation": [
+      "qualified Buffer0/2-to-SA A/B group acceptance",
+      "per-PE masked A/B valid state",
+      "qualified ALU-result acceptance",
+      "qualified PE-outbuffer acceptance",
+      "qualified SA-group-output acceptance"
+    ]
+  },
+  "evidence_boundaries": {
+    "return_report": {
+      "path": "artifacts/operator_config_validation/return_analysis/r5_n4_hw_v12_hangloc_returngate_return_analysis_v1.json",
+      "sha256": "2a806e13e52a6025a948fc6073679182a1eed7a8a1f035f9e07cafa603a9c09f"
+    },
+    "numeric_analysis_repeated": false,
+    "node0004_workload_rebuilt": false,
+    "functional_rtl_modified": false,
+    "server_action": false
+  },
+  "successor": {
+    "classification": "DIAGNOSTIC_ONLY_NOT_FUNCTIONAL_FIX",
+    "path": "artifacts/operator_config_validation/r5-server-test-packages/r5_n4_hw_v13_abpe_boundary.zip",
+    "sha256": "a9e941dbb108f3672d05005ce04e02314dbfb87b410626a0233f1e07c830e5c9",
+    "sidecar_sha256": "b506e51d597bfd83ad9d8ecfa5906d72b813502cf1bbcb73093597257ac2765c",
+    "purpose": "close exactly the Buffer0/2 group acceptance to SA group output sub-boundary",
+    "json_bitstream_execplan_sca_golden_changed": false,
+    "qualified_progress_definition_changed": false,
+    "candidate_release": false,
+    "server_rtl_entries": 0,
+    "status": "PACKAGE_READY_NOT_RUN"
+  },
+  "evidence_levels": {
+    "E3": false,
+    "E4": false,
+    "E5": false
+  },
+  "package_release": "r5_n4_hw_v13_abpe_boundary.zip"
+}

@@ -1,0 +1,34 @@
+{
+  "schema": "maxpool-rtl-semantics-evidence-v1",
+  "status": "passed_static_and_isolated_kernel_only",
+  "operator": "MaxPoolUint8",
+  "source_identity": {
+    "scope": "local NDP_copy01 snapshot; user states server RTL matches GitHub/local, server-side hash remains unverified",
+    "arithmetic_path": {
+      "path": "NDP_copy01/rtl/Slice/General_Array/GA_PE_Group/GA_ALU/GA_PE_Float_CSA.v",
+      "sha256": "5bcc09111624f403cc2aab291f79fd32a6dd40ce7d9624db6306f8cde94906dc"
+    },
+    "padding_path": {
+      "path": "NDP_copy01/rtl/Slice/LSU/Stream_Engine/Memory_Stream_Engine/Memory_RD_Stream_Engine/RD_Data_Channel.sv",
+      "sha256": "87d1c9a05e8a1a51a5b78f7838962b381da74e7d471297b6da68f8a449aefe08"
+    }
+  },
+  "arithmetic_proof": {
+    "method": "Icarus elaboration of GA_PE_Float_CSA with a width-preserving behavioral DW01_add",
+    "input_pairs": 65536,
+    "byte_lane_checks": 262144,
+    "stdout": "PASS input_pairs=65536 byte_lane_checks=262144",
+    "stdout_sha256": "05c6a9da3c917974bc988021fa89496b270541b90624fa6094ae061392a3ebf1",
+    "proved": "the int8-labelled datapath selects unsigned max independently on four byte lanes"
+  },
+  "padding_replacement": {
+    "assignment": "rd_chl_queue_rd_padding_mask[PADDING_INDEX] ? mse_padding_reg_value",
+    "proved": "an asserted read padding mask replaces the DDR byte with the configured 8-bit padding register"
+  },
+  "limitations": [
+    "This is a tracked evidence record, not the RTL source tree.",
+    "This does not elaborate the complete target or prove stream/control completion.",
+    "This is not a server run, E4 result, E5 result, or third comparison leg.",
+    "A server-side RTL commit/filelist hash is still required before formal execution claims."
+  ]
+}

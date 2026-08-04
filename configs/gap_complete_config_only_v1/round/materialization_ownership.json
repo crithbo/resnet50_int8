@@ -1,0 +1,3645 @@
+{
+  "all_final_leaves_have_unique_owner": true,
+  "changed_leaves": [
+    {
+      "authorization": "CDA-CONFIG-SEMANTIC-OWNERSHIP-001",
+      "expected_new_value": "0xa0000",
+      "field_class": "physical_base",
+      "input_source": "typed eight-stage local-memory allocation",
+      "old_value": "0x0",
+      "owner": "gap-node0071-tail/address_binder",
+      "path": "$.stream_engine.stream0.base_addr",
+      "transform_formula": "final_base = allocated producer/consumer region base"
+    },
+    {
+      "authorization": "CDA-CONFIG-SEMANTIC-OWNERSHIP-001",
+      "expected_new_value": "0xa2000",
+      "field_class": "physical_base",
+      "input_source": "typed eight-stage local-memory allocation",
+      "old_value": "0x0",
+      "owner": "gap-node0071-tail/address_binder",
+      "path": "$.stream_engine.stream2.base_addr",
+      "transform_formula": "final_base = allocated producer/consumer region base"
+    }
+  ],
+  "diff_count": 2,
+  "final_leaf_count": 516,
+  "leaf_ownership": [
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": "11011101",
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.CONFIG"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 0,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.buffer_config.buffer0.buf_end_row_addr"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 2,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.buffer_config.buffer0.buf_full_last_index"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 1,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.buffer_config.buffer0.buffer_life_time"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 1,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.buffer_config.buffer0.dst_port"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 1,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.buffer_config.buffer0.enable"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 1,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.buffer_config.buffer0.mask[0]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 1,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.buffer_config.buffer0.mask[1]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 1,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.buffer_config.buffer0.mask[2]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 1,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.buffer_config.buffer0.mask[3]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 1,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.buffer_config.buffer0.mask[4]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 1,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.buffer_config.buffer0.mask[5]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 1,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.buffer_config.buffer0.mask[6]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 1,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.buffer_config.buffer0.mask[7]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 0,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.buffer_config.buffer0.mode"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 0,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.buffer_config.buffer0.nbr_enable"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 0,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.buffer_config.buffer5.buf_end_row_addr"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 2,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.buffer_config.buffer5.buf_full_last_index"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 1,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.buffer_config.buffer5.buffer_life_time"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 1,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.buffer_config.buffer5.dst_port"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 1,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.buffer_config.buffer5.enable"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 1,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.buffer_config.buffer5.mask[0]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 1,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.buffer_config.buffer5.mask[1]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 1,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.buffer_config.buffer5.mask[2]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 1,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.buffer_config.buffer5.mask[3]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 1,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.buffer_config.buffer5.mask[4]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 1,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.buffer_config.buffer5.mask[5]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 1,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.buffer_config.buffer5.mask[6]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 1,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.buffer_config.buffer5.mask[7]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 0,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.buffer_config.buffer5.mode"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 0,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.buffer_config.buffer5.nbr_enable"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 32,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.buffer_loop_configs.GROUP0.COL_LC.end"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 3,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.buffer_loop_configs.GROUP0.COL_LC.last_index"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": "GROUP0.ROW_LC",
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.buffer_loop_configs.GROUP0.COL_LC.src_id"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 0,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.buffer_loop_configs.GROUP0.COL_LC.start"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 16,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.buffer_loop_configs.GROUP0.COL_LC.stride"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 1,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.buffer_loop_configs.GROUP0.ROW_LC.end"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 2,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.buffer_loop_configs.GROUP0.ROW_LC.last_index"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": "DRAM_LC.LC1",
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.buffer_loop_configs.GROUP0.ROW_LC.src_id"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 0,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.buffer_loop_configs.GROUP0.ROW_LC.start"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 1,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.buffer_loop_configs.GROUP0.ROW_LC.stride"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": "A",
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.buffer_loop_configs.GROUP0.target"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 4,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.buffer_loop_configs.GROUP2.COL_LC.end"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 3,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.buffer_loop_configs.GROUP2.COL_LC.last_index"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": "GROUP2.ROW_LC",
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.buffer_loop_configs.GROUP2.COL_LC.src_id"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 0,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.buffer_loop_configs.GROUP2.COL_LC.start"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 2,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.buffer_loop_configs.GROUP2.COL_LC.stride"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 1,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.buffer_loop_configs.GROUP2.ROW_LC.end"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 2,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.buffer_loop_configs.GROUP2.ROW_LC.last_index"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": "DRAM_LC.LC2",
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.buffer_loop_configs.GROUP2.ROW_LC.src_id"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 0,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.buffer_loop_configs.GROUP2.ROW_LC.start"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 1,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.buffer_loop_configs.GROUP2.ROW_LC.stride"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": "D",
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.buffer_loop_configs.GROUP2.target"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 1,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.dram_loop_configs.LC0.end"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 0,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.dram_loop_configs.LC0.last_index"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 1,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.dram_loop_configs.LC0.outmost_loop"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.dram_loop_configs.LC0.src_id"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 0,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.dram_loop_configs.LC0.start"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 1,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.dram_loop_configs.LC0.stride"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 256,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.dram_loop_configs.LC1.end"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 1,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.dram_loop_configs.LC1.last_index"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 0,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.dram_loop_configs.LC1.outmost_loop"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": "DRAM_LC.LC0",
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.dram_loop_configs.LC1.src_id"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 0,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.dram_loop_configs.LC1.start"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 1,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.dram_loop_configs.LC1.stride"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 64,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.dram_loop_configs.LC2.end"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 1,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.dram_loop_configs.LC2.last_index"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 0,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.dram_loop_configs.LC2.outmost_loop"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": "DRAM_LC.LC0",
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.dram_loop_configs.LC2.src_id"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 0,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.dram_loop_configs.LC2.start"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 1,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.dram_loop_configs.LC2.stride"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": "mac",
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE00.alu_opcode"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 0,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE00.inport0.constant"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE00.inport0.keep_last_index"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": "buffer",
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE00.inport0.mode"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 0,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE00.inport0.src_id"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 1.0,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE00.inport1.constant"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE00.inport1.keep_last_index"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": "constant",
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE00.inport1.mode"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE00.inport1.src_id"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 12582912.0,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE00.inport2.constant"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE00.inport2.keep_last_index"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": "constant",
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE00.inport2.mode"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE00.inport2.src_id"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE00.transout_last_index"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": "int32_sub",
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE01.alu_opcode"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 0,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE01.inport0.constant"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE01.inport0.keep_last_index"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": "buffer",
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE01.inport0.mode"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": "GA_PE.PE00",
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE01.inport0.src_id"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 1262485504,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE01.inport1.constant"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE01.inport1.keep_last_index"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": "constant",
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE01.inport1.mode"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE01.inport1.src_id"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 0,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE01.inport2.constant"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE01.inport2.keep_last_index"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE01.inport2.mode"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE01.inport2.src_id"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE01.transout_last_index"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": "mac",
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE02.alu_opcode"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 0,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE02.inport0.constant"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE02.inport0.keep_last_index"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": "buffer",
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE02.inport0.mode"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 0,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE02.inport0.src_id"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 1.0,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE02.inport1.constant"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE02.inport1.keep_last_index"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": "constant",
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE02.inport1.mode"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE02.inport1.src_id"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 12582912.0,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE02.inport2.constant"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE02.inport2.keep_last_index"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": "constant",
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE02.inport2.mode"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE02.inport2.src_id"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE02.transout_last_index"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": "int32_sub",
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE03.alu_opcode"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 0,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE03.inport0.constant"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE03.inport0.keep_last_index"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": "buffer",
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE03.inport0.mode"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": "GA_PE.PE02",
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE03.inport0.src_id"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 1262485504,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE03.inport1.constant"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE03.inport1.keep_last_index"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": "constant",
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE03.inport1.mode"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE03.inport1.src_id"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 0,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE03.inport2.constant"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE03.inport2.keep_last_index"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE03.inport2.mode"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE03.inport2.src_id"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE03.transout_last_index"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": "mac",
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE10.alu_opcode"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 0,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE10.inport0.constant"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE10.inport0.keep_last_index"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": "buffer",
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE10.inport0.mode"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 0,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE10.inport0.src_id"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 1.0,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE10.inport1.constant"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE10.inport1.keep_last_index"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": "constant",
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE10.inport1.mode"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE10.inport1.src_id"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 12582912.0,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE10.inport2.constant"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE10.inport2.keep_last_index"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": "constant",
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE10.inport2.mode"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE10.inport2.src_id"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE10.transout_last_index"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": "int32_sub",
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE11.alu_opcode"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 0,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE11.inport0.constant"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE11.inport0.keep_last_index"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": "buffer",
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE11.inport0.mode"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": "GA_PE.PE10",
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE11.inport0.src_id"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 1262485504,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE11.inport1.constant"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE11.inport1.keep_last_index"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": "constant",
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE11.inport1.mode"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE11.inport1.src_id"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 0,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE11.inport2.constant"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE11.inport2.keep_last_index"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE11.inport2.mode"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE11.inport2.src_id"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE11.transout_last_index"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": "mac",
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE12.alu_opcode"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 0,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE12.inport0.constant"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE12.inport0.keep_last_index"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": "buffer",
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE12.inport0.mode"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 0,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE12.inport0.src_id"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 1.0,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE12.inport1.constant"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE12.inport1.keep_last_index"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": "constant",
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE12.inport1.mode"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE12.inport1.src_id"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 12582912.0,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE12.inport2.constant"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE12.inport2.keep_last_index"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": "constant",
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE12.inport2.mode"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE12.inport2.src_id"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE12.transout_last_index"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": "int32_sub",
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE13.alu_opcode"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 0,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE13.inport0.constant"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE13.inport0.keep_last_index"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": "buffer",
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE13.inport0.mode"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": "GA_PE.PE12",
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE13.inport0.src_id"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 1262485504,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE13.inport1.constant"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE13.inport1.keep_last_index"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": "constant",
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE13.inport1.mode"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE13.inport1.src_id"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 0,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE13.inport2.constant"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE13.inport2.keep_last_index"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE13.inport2.mode"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE13.inport2.src_id"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE13.transout_last_index"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": "mac",
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE20.alu_opcode"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 0,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE20.inport0.constant"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE20.inport0.keep_last_index"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": "buffer",
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE20.inport0.mode"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 0,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE20.inport0.src_id"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 1.0,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE20.inport1.constant"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE20.inport1.keep_last_index"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": "constant",
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE20.inport1.mode"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE20.inport1.src_id"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 12582912.0,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE20.inport2.constant"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE20.inport2.keep_last_index"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": "constant",
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE20.inport2.mode"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE20.inport2.src_id"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE20.transout_last_index"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": "int32_sub",
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE21.alu_opcode"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 0,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE21.inport0.constant"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE21.inport0.keep_last_index"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": "buffer",
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE21.inport0.mode"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": "GA_PE.PE20",
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE21.inport0.src_id"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 1262485504,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE21.inport1.constant"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE21.inport1.keep_last_index"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": "constant",
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE21.inport1.mode"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE21.inport1.src_id"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 0,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE21.inport2.constant"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE21.inport2.keep_last_index"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE21.inport2.mode"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE21.inport2.src_id"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE21.transout_last_index"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": "mac",
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE22.alu_opcode"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 0,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE22.inport0.constant"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE22.inport0.keep_last_index"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": "buffer",
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE22.inport0.mode"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 0,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE22.inport0.src_id"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 1.0,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE22.inport1.constant"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE22.inport1.keep_last_index"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": "constant",
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE22.inport1.mode"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE22.inport1.src_id"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 12582912.0,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE22.inport2.constant"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE22.inport2.keep_last_index"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": "constant",
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE22.inport2.mode"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE22.inport2.src_id"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE22.transout_last_index"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": "int32_sub",
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE23.alu_opcode"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 0,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE23.inport0.constant"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE23.inport0.keep_last_index"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": "buffer",
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE23.inport0.mode"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": "GA_PE.PE22",
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE23.inport0.src_id"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 1262485504,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE23.inport1.constant"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE23.inport1.keep_last_index"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": "constant",
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE23.inport1.mode"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE23.inport1.src_id"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 0,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE23.inport2.constant"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE23.inport2.keep_last_index"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE23.inport2.mode"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE23.inport2.src_id"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE23.transout_last_index"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": "mac",
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE30.alu_opcode"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 0,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE30.inport0.constant"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE30.inport0.keep_last_index"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": "buffer",
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE30.inport0.mode"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 0,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE30.inport0.src_id"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 1.0,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE30.inport1.constant"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE30.inport1.keep_last_index"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": "constant",
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE30.inport1.mode"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE30.inport1.src_id"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 12582912.0,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE30.inport2.constant"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE30.inport2.keep_last_index"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": "constant",
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE30.inport2.mode"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE30.inport2.src_id"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE30.transout_last_index"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": "int32_sub",
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE31.alu_opcode"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 0,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE31.inport0.constant"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE31.inport0.keep_last_index"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": "buffer",
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE31.inport0.mode"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": "GA_PE.PE30",
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE31.inport0.src_id"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 1262485504,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE31.inport1.constant"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE31.inport1.keep_last_index"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": "constant",
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE31.inport1.mode"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE31.inport1.src_id"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 0,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE31.inport2.constant"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE31.inport2.keep_last_index"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE31.inport2.mode"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE31.inport2.src_id"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE31.transout_last_index"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": "mac",
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE32.alu_opcode"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 0,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE32.inport0.constant"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE32.inport0.keep_last_index"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": "buffer",
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE32.inport0.mode"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 0,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE32.inport0.src_id"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 1.0,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE32.inport1.constant"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE32.inport1.keep_last_index"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": "constant",
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE32.inport1.mode"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE32.inport1.src_id"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 12582912.0,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE32.inport2.constant"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE32.inport2.keep_last_index"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": "constant",
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE32.inport2.mode"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE32.inport2.src_id"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE32.transout_last_index"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": "int32_sub",
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE33.alu_opcode"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 0,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE33.inport0.constant"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE33.inport0.keep_last_index"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": "buffer",
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE33.inport0.mode"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": "GA_PE.PE32",
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE33.inport0.src_id"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 1262485504,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE33.inport1.constant"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE33.inport1.keep_last_index"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": "constant",
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE33.inport1.mode"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE33.inport1.src_id"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 0,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE33.inport2.constant"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE33.inport2.keep_last_index"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE33.inport2.mode"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE33.inport2.src_id"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE33.transout_last_index"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": "false",
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.inport.inport0.bf16tofp32"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": "false",
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.inport.inport0.fp16tofp32"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": "false",
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.inport.inport0.int32tofp32"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 1,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.inport.inport0.mask[0]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 1,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.inport.inport0.mask[1]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 1,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.inport.inport0.mask[2]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 1,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.inport.inport0.mask[3]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 1,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.inport.inport0.mask[4]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 1,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.inport.inport0.mask[5]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 1,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.inport.inport0.mask[6]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 1,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.inport.inport0.mask[7]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 0,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.inport.inport0.nbr_enable"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 0,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.inport.inport0.pingpong_en"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.inport.inport0.pingpong_last_index"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 0,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.inport.inport0.src_id"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": "false",
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.inport.inport0.uint8tofp32"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": "false",
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.inport.inport0.uint8toint32"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": "false",
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.inport.inport1.bf16tofp32"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": "false",
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.inport.inport1.fp16tofp32"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": "false",
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.inport.inport1.int32tofp32"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 0,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.inport.inport1.mask[0]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 0,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.inport.inport1.mask[1]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 0,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.inport.inport1.mask[2]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 0,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.inport.inport1.mask[3]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 0,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.inport.inport1.mask[4]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 0,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.inport.inport1.mask[5]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 0,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.inport.inport1.mask[6]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 0,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.inport.inport1.mask[7]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 0,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.inport.inport1.nbr_enable"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 0,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.inport.inport1.pingpong_en"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.inport.inport1.pingpong_last_index"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 0,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.inport.inport1.src_id"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": "false",
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.inport.inport1.uint8tofp32"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": "false",
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.inport.inport1.uint8toint32"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": "false",
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.inport.inport2.bf16tofp32"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": "false",
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.inport.inport2.fp16tofp32"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": "false",
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.inport.inport2.int32tofp32"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 0,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.inport.inport2.mask[0]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 0,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.inport.inport2.mask[1]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 0,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.inport.inport2.mask[2]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 0,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.inport.inport2.mask[3]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 0,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.inport.inport2.mask[4]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 0,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.inport.inport2.mask[5]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 0,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.inport.inport2.mask[6]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 0,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.inport.inport2.mask[7]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 0,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.inport.inport2.nbr_enable"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 0,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.inport.inport2.pingpong_en"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.inport.inport2.pingpong_last_index"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 0,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.inport.inport2.src_id"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": "false",
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.inport.inport2.uint8tofp32"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": "false",
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.inport.inport2.uint8toint32"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": "false",
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.outport.fp32tobf16"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": "false",
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.outport.fp32tofp16"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": "true",
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.outport.int32touint8"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 1,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.outport.mask[0]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 1,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.outport.mask[1]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 1,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.outport.mask[2]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 1,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.outport.mask[3]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 1,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.outport.mask[4]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 1,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.outport.mask[5]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 1,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.outport.mask[6]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 1,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.outport.mask[7]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 1,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.outport.src_id"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": "mul",
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.lc_pe_configs.PE0.alu_opcode"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 0,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.lc_pe_configs.PE0.inport0.constant"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.lc_pe_configs.PE0.inport0.keep_last_index"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": "buffer",
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.lc_pe_configs.PE0.inport0.mode"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": "DRAM_LC.LC0",
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.lc_pe_configs.PE0.inport0.src_id"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 1,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.lc_pe_configs.PE0.inport1.constant"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.lc_pe_configs.PE0.inport1.keep_last_index"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": "constant",
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.lc_pe_configs.PE0.inport1.mode"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.lc_pe_configs.PE0.inport1.src_id"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 0,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.lc_pe_configs.PE0.inport2.constant"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.lc_pe_configs.PE0.inport2.keep_last_index"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.lc_pe_configs.PE0.inport2.mode"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.lc_pe_configs.PE0.inport2.src_id"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": "mul",
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.lc_pe_configs.PE1.alu_opcode"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 0,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.lc_pe_configs.PE1.inport0.constant"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.lc_pe_configs.PE1.inport0.keep_last_index"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": "buffer",
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.lc_pe_configs.PE1.inport0.mode"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": "LC_PE.PE0",
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.lc_pe_configs.PE1.inport0.src_id"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 1,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.lc_pe_configs.PE1.inport1.constant"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.lc_pe_configs.PE1.inport1.keep_last_index"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": "constant",
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.lc_pe_configs.PE1.inport1.mode"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.lc_pe_configs.PE1.inport1.src_id"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 0,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.lc_pe_configs.PE1.inport2.constant"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.lc_pe_configs.PE1.inport2.keep_last_index"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.lc_pe_configs.PE1.inport2.mode"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.lc_pe_configs.PE1.inport2.src_id"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": "mul",
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.lc_pe_configs.PE2.alu_opcode"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 0,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.lc_pe_configs.PE2.inport0.constant"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.lc_pe_configs.PE2.inport0.keep_last_index"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": "buffer",
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.lc_pe_configs.PE2.inport0.mode"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": "LC_PE.PE0",
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.lc_pe_configs.PE2.inport0.src_id"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 1,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.lc_pe_configs.PE2.inport1.constant"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.lc_pe_configs.PE2.inport1.keep_last_index"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": "constant",
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.lc_pe_configs.PE2.inport1.mode"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.lc_pe_configs.PE2.inport1.src_id"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 0,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.lc_pe_configs.PE2.inport2.constant"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.lc_pe_configs.PE2.inport2.keep_last_index"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.lc_pe_configs.PE2.inport2.mode"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.lc_pe_configs.PE2.inport2.src_id"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream0.address_remapping"
+    },
+    {
+      "authorization": "CDA-CONFIG-SEMANTIC-OWNERSHIP-001",
+      "final_value": "0xa0000",
+      "input_source": "typed local-memory allocation",
+      "owner": "gap-node0071-tail/address_binder",
+      "path": "$.stream_engine.stream0.base_addr"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 2,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream0.buf_full_last_index"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 3,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream0.buf_idx_keep_last_index[0]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream0.buf_idx_keep_last_index[1]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": "keep",
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream0.buf_idx_mode[0]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": "buffer",
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream0.buf_idx_mode[1]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 16,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream0.buf_spatial_size"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 0,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream0.buf_spatial_stride[0]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 10,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream0.buf_spatial_stride[10]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 11,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream0.buf_spatial_stride[11]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 12,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream0.buf_spatial_stride[12]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 13,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream0.buf_spatial_stride[13]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 14,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream0.buf_spatial_stride[14]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 15,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream0.buf_spatial_stride[15]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 1,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream0.buf_spatial_stride[1]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 2,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream0.buf_spatial_stride[2]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 3,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream0.buf_spatial_stride[3]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 4,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream0.buf_spatial_stride[4]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 5,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream0.buf_spatial_stride[5]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 6,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream0.buf_spatial_stride[6]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 7,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream0.buf_spatial_stride[7]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 8,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream0.buf_spatial_stride[8]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 9,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream0.buf_spatial_stride[9]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 32,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream0.dim_stride[0]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 8192,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream0.dim_stride[1]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream0.dim_stride[2]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": "DRAM_LC.LC1",
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream0.idx[0]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": "LC_PE.PE1",
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream0.idx[1]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream0.idx[2]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream0.idx_padding_range.low_bound[0]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream0.idx_padding_range.low_bound[1]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream0.idx_padding_range.low_bound[2]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream0.idx_padding_range.up_bound[0]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream0.idx_padding_range.up_bound[1]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream0.idx_padding_range.up_bound[2]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 0,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream0.idx_size[0]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 31,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream0.idx_size[1]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream0.idx_size[2]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream0.idx_tailing_range.low[0]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream0.idx_tailing_range.low[1]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream0.idx_tailing_range.low[2]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream0.idx_tailing_range.up[0]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream0.idx_tailing_range.up[1]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream0.idx_tailing_range.up[2]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream0.mem_idx_constant[0]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream0.mem_idx_constant[1]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream0.mem_idx_constant[2]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream0.mem_idx_keep_last_index[0]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 1,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream0.mem_idx_keep_last_index[1]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream0.mem_idx_keep_last_index[2]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": "buffer",
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream0.mem_idx_mode[0]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": "keep",
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream0.mem_idx_mode[1]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream0.mem_idx_mode[2]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": "read",
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream0.mode"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 0,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream0.padding_enable[0]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 0,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream0.padding_enable[1]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 0,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream0.padding_enable[2]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream0.padding_reg_value"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 0,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream0.ping_pong"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream0.pingpong_last_index"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 0,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream0.tailing_enable[0]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 0,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream0.tailing_enable[1]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 0,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream0.tailing_enable[2]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": "A",
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream0.target"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream2.address_remapping"
+    },
+    {
+      "authorization": "CDA-CONFIG-SEMANTIC-OWNERSHIP-001",
+      "final_value": "0xa2000",
+      "input_source": "typed local-memory allocation",
+      "owner": "gap-node0071-tail/address_binder",
+      "path": "$.stream_engine.stream2.base_addr"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 3,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream2.buf_idx_keep_last_index[0]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream2.buf_idx_keep_last_index[1]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": "keep",
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream2.buf_idx_mode[0]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": "buffer",
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream2.buf_idx_mode[1]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 16,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream2.buf_spatial_size"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 0,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream2.buf_spatial_stride[0]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 9,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream2.buf_spatial_stride[10]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 13,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream2.buf_spatial_stride[11]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 17,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream2.buf_spatial_stride[12]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 21,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream2.buf_spatial_stride[13]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 25,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream2.buf_spatial_stride[14]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 29,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream2.buf_spatial_stride[15]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 4,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream2.buf_spatial_stride[1]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 8,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream2.buf_spatial_stride[2]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 12,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream2.buf_spatial_stride[3]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 16,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream2.buf_spatial_stride[4]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 20,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream2.buf_spatial_stride[5]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 24,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream2.buf_spatial_stride[6]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 28,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream2.buf_spatial_stride[7]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 1,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream2.buf_spatial_stride[8]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 5,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream2.buf_spatial_stride[9]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 32,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream2.dim_stride[0]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 2048,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream2.dim_stride[1]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream2.dim_stride[2]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": "DRAM_LC.LC2",
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream2.idx[0]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": "LC_PE.PE2",
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream2.idx[1]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream2.idx[2]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 3,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream2.idx_size[0]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 7,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream2.idx_size[1]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream2.idx_size[2]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream2.idx_tailing_range.low[0]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream2.idx_tailing_range.low[1]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream2.idx_tailing_range.low[2]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream2.idx_tailing_range.up[0]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream2.idx_tailing_range.up[1]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream2.idx_tailing_range.up[2]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream2.mem_idx_constant[0]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream2.mem_idx_constant[1]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream2.mem_idx_constant[2]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream2.mem_idx_keep_last_index[0]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 1,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream2.mem_idx_keep_last_index[1]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream2.mem_idx_keep_last_index[2]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": "buffer",
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream2.mem_idx_mode[0]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": "keep",
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream2.mem_idx_mode[1]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream2.mem_idx_mode[2]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": "write",
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream2.mode"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 0,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream2.ping_pong"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": null,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream2.pingpong_last_index"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 0,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream2.tailing_enable[0]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 0,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream2.tailing_enable[1]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": 0,
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream2.tailing_enable[2]"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "final_value": "D",
+      "input_source": "typed node0071 parameters plus shared exact-tail template",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream2.target"
+    }
+  ],
+  "logical_leaf_count": 516,
+  "non_base_diff_count": 0,
+  "schema": "gap-node0071-tail-materialized-field-ownership-v1",
+  "stage": "round"
+}

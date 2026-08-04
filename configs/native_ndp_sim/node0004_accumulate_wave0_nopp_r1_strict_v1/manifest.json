@@ -1,0 +1,105 @@
+{
+  "schema": "operator-config-strict-materialization-v1",
+  "status": "strict_config_materialized_from_bit_equivalent_cleanup",
+  "source": {
+    "path": "ndp-sim/jsons/node0004_accumulate_wave0_nopp_r1.json",
+    "sha256": "0706ad05233d03f43b800797b1be40390c718f58d34c13df89a0208d75bba45e",
+    "read_only": true
+  },
+  "normalized": {
+    "path": "config.json",
+    "sha256": "2fe3fc865a6bfb8f37d0c34afe2adb730de35568d02892d9705895b0261b9ae8",
+    "canonical_sha256": "27ab4b5cb3addf9a2edb1b179fb0c33365f75ef687a6653c2168490e132d822d"
+  },
+  "changes": [
+    {
+      "kind": "remove_write_read_only_field",
+      "path": "$.stream_engine.stream4.padding_enable",
+      "before": [
+        0,
+        0,
+        0
+      ],
+      "after": "<absent>"
+    },
+    {
+      "kind": "remove_write_read_only_field",
+      "path": "$.stream_engine.stream4.idx_padding_range",
+      "before": {
+        "low_bound": [
+          null,
+          null,
+          null
+        ],
+        "up_bound": [
+          null,
+          null,
+          null
+        ]
+      },
+      "after": "<absent>"
+    }
+  ],
+  "change_set_sha256": "e43e2260a367ec153dd5dc56ed928ab8c30bc1c0508174b8c8575c6d1d7c9135",
+  "strict_validation": {
+    "valid": true,
+    "issue_count": 0,
+    "target_profile": {
+      "slices": 28,
+      "banks_per_slice": 4,
+      "ddr_rows": 6144,
+      "ddr_columns": 64,
+      "subwords_per_column": 16,
+      "read_streams": 4,
+      "write_streams": 1,
+      "buffers": 6
+    }
+  },
+  "native_field_probe": {
+    "returncode": 0,
+    "command": [
+      "<python>",
+      "-c",
+      "<native FIELD_MAP/_encode_field differential probe>",
+      "<original-config>",
+      "<normalized-config>",
+      "<changes>",
+      "<proof-output>"
+    ],
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "proof_sha256": "395ff728cdd8da02a28f0cf036ff49ef05fd25ff0a995a25fb95c5452ca348f0",
+    "proof": {
+      "all_equivalent": true,
+      "entries": [
+        {
+          "equal": true,
+          "native_module": "WriteStreamEngineConfig",
+          "native_status": "ignored-not-in-field-map",
+          "normalized_encoded": null,
+          "original_encoded": null,
+          "path": "$.stream_engine.stream4.padding_enable"
+        },
+        {
+          "equal": true,
+          "native_module": "WriteStreamEngineConfig",
+          "native_status": "ignored-not-in-field-map",
+          "normalized_encoded": null,
+          "original_encoded": null,
+          "path": "$.stream_engine.stream4.idx_padding_range"
+        }
+      ],
+      "schema": "operator-config-native-field-probe-v1",
+      "scope": "changed fields only; this is not a full mapping or bitstream proof"
+    },
+    "all_equivalent": true
+  },
+  "adjudication": {
+    "legacy_source_identity": "intentional-reject",
+    "normalization_decision": "approved-remove-native-ignored-write-fields",
+    "reason": "WriteStreamEngineConfig.FIELD_MAP does not consume these read-only fields",
+    "source_rewrite_authorized": false,
+    "activation_gate": "R3 full evidence closure and explicit source/generator remediation"
+  },
+  "source_rewrite_performed": false
+}

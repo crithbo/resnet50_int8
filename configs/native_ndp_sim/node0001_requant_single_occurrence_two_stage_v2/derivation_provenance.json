@@ -1,0 +1,73 @@
+{
+  "all_other_leaves_byte_semantically_unchanged": true,
+  "derivation_mode": "exact_leaf_diff_from_closed_final_json_topology",
+  "guard_changed_leaves": [
+    {
+      "derived_value": 4,
+      "owner": "single-occurrence four-spatial schedule",
+      "path": "$.dram_loop_configs.LC1.end",
+      "source_value": 12544
+    },
+    {
+      "derived_value": 4,
+      "owner": "single-occurrence four-spatial schedule",
+      "path": "$.dram_loop_configs.LC2.end",
+      "source_value": 12544
+    },
+    {
+      "derived_value": 128,
+      "owner": "single-occurrence four-spatial schedule",
+      "path": "$.stream_engine.stream0.dim_stride[1]",
+      "source_value": 401408
+    },
+    {
+      "derived_value": 128,
+      "owner": "single-occurrence four-spatial schedule",
+      "path": "$.stream_engine.stream2.dim_stride[1]",
+      "source_value": 401408
+    }
+  ],
+  "round_changed_leaves": [
+    {
+      "derived_value": 4,
+      "owner": "single-occurrence four-spatial schedule",
+      "path": "$.dram_loop_configs.LC1.end",
+      "source_value": 12544
+    },
+    {
+      "derived_value": 1,
+      "owner": "single-occurrence four-spatial schedule",
+      "path": "$.dram_loop_configs.LC2.end",
+      "source_value": 3136
+    },
+    {
+      "derived_value": 128,
+      "owner": "single-occurrence four-spatial schedule",
+      "path": "$.stream_engine.stream0.dim_stride[1]",
+      "source_value": 401408
+    },
+    {
+      "derived_value": 32,
+      "owner": "single-occurrence four-spatial schedule",
+      "path": "$.stream_engine.stream2.dim_stride[1]",
+      "source_value": 100352
+    }
+  ],
+  "source_guard": {
+    "path": "artifacts/operator_config_validation/r5-requant-node0001-two-stage-e2-v1/native_evidence/jsons/op_w0_s00_guard_resnet50_requant_guard_node0001.json",
+    "sha256": "c9bb71629553913fe15fe07dc89e24ac504afc4f5c45470199c33273a242abc6",
+    "size_bytes": 12542
+  },
+  "source_round": {
+    "path": "artifacts/operator_config_validation/r5-requant-node0001-two-stage-e2-v1/native_evidence/jsons/op_w0_s00_round_resnet50_requant_round_node0001_s00.json",
+    "sha256": "19f42dcd43d0a27f66ac189a2fb20cb475b39fc3bc276ba181fed1cf98120c1a",
+    "size_bytes": 17336
+  },
+  "superseded_v1_classification": "STOCK_TB_COMPLETION_MASK_INCOMPATIBLE",
+  "superseded_v1_dynamic_attempt": false,
+  "superseded_v1_manifest": {
+    "path": "configs/native_ndp_sim/node0001_requant_single_occurrence_two_stage_v1/manifest.json",
+    "sha256": "17ec522f48de0d31dea4212b03b4f97253b93e850731240a828705b5d056d1da",
+    "size_bytes": 4179
+  }
+}

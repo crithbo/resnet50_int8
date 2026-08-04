@@ -1,0 +1,713 @@
+{
+  "active_opcode_rtl_audit": {
+    "five_bit_decode_proof": {
+      "conclusion": "NO_RAW_SIGNED_INT32_MAX_ENCODING",
+      "int32_class_predicate": "opcode[4:2] == 3'b011",
+      "int32_class_values": [
+        12,
+        13,
+        14,
+        15
+      ],
+      "intersection": [],
+      "max_decode_values": [
+        3,
+        11,
+        19,
+        27
+      ],
+      "max_predicate": "opcode[2:0] == 3'b011"
+    },
+    "fp32_max_is_not_a_raw_guard": {
+      "alu_mode": "FP32",
+      "opcode": 3,
+      "reason": "The raw accumulator bits are not an IEEE FP32 value; using opcode 3 therefore cannot prove max(int32_acc,0) before the contradicted signed converter.",
+      "requires_conversion_before_numeric_fp32_compare": true
+    },
+    "int8_max_is_not_a_word_guard": {
+      "opcode": 11,
+      "precision": "four independent int8 lanes",
+      "preserves_signed_int32_word": false,
+      "reason": "The RTL selects per-byte integer results and is not a signed 32-bit comparison/select; current rules also contradict its numeric/flow behavior."
+    },
+    "raw_integer_fallback_limit": "Without compare/select/shift/bitwise state, these arithmetic operators cannot provide the required signed-word max0 claim.",
+    "raw_integer_fallback_set": [
+      "int32_sum",
+      "int32_sub",
+      "int32_mac"
+    ],
+    "status": "CONTRADICTED_NO_RAW_SIGNED_INT32_MAX0",
+    "symbolic_encoder_opcodes": {
+      "fp32_max": 3,
+      "int32_mac": 14,
+      "int32_max": null,
+      "int32_sub": 13,
+      "int32_sum": 12,
+      "int8_max": 11
+    }
+  },
+  "blockers": [
+    {
+      "id": "B_QUANT_TAIL_RAW_SIGNED_INT32_MAX0_OPCODE",
+      "minimum_counterexample": {
+        "encoder_int32_max_opcode": null,
+        "final_uint8_masking_is_not_intermediate_evidence": true,
+        "fp32_max_requires_prior_conversion": true,
+        "input_int32": -1,
+        "required_raw_max0": 0
+      },
+      "reason": "The max0 transform is mathematically exact for node0004, but the active encoder/RTL has no raw signed INT32 max opcode. FP32 max is downstream of conversion, and int8_max is per-byte.",
+      "status": "OPEN_CONTRADICTED"
+    },
+    {
+      "id": "B_QUANT_TAIL_NONNEGATIVE_INT32_TO_FP32_FULL_DOMAIN",
+      "status": "OPEN_DOWNSTREAM_NOT_REACHED"
+    },
+    {
+      "id": "B_QUANT_TAIL_FMA_ROUNDING_POINT",
+      "status": "OPEN_DOWNSTREAM_NOT_MATERIALIZED"
+    },
+    {
+      "id": "B_QUANT_TAIL_PER_CHANNEL_CONSTANT_TRANSPORT",
+      "status": "OPEN_PLACEHOLDER"
+    },
+    {
+      "id": "B_QUANT_TAIL_MAPPER_REGISTRATION",
+      "status": "OPEN_MISSING_OR_UNPROVEN"
+    },
+    {
+      "id": "B_NODE0004_COMPOSITE_ENDPOINT_BINDING",
+      "status": "OPEN_DEPENDENCY_INTERFACE"
+    }
+  ],
+  "bypass_annotation": {
+    "bypass_reason": "avoid contradicted signed INT32-to-FP32 conversion by clamping raw signed accumulator to zero first",
+    "claim_boundary": "Fail-closed capability audit only; no target JSON, tail configuration, full Conv assembly, server package, or release.",
+    "classification": "NOT_ACTIVATED",
+    "config_only_correctness_baseline": false,
+    "contradicted_or_missing_native_path": "raw signed INT32 compare/select max(acc,0)",
+    "exact_equivalence_scope": "all signed int32 inputs for node0004's finite positive per-channel multipliers and y_zp=0; confirmed on full frozen W3",
+    "materialized_configuration_mechanism": null,
+    "performance_and_resource_cost": "at least one additional serialized guard stage if a real signed-word compare/select primitive becomes available",
+    "unresolved_production_blocker": [
+      "B_QUANT_TAIL_RAW_SIGNED_INT32_MAX0_OPCODE",
+      "B_QUANT_TAIL_FMA_ROUNDING_POINT",
+      "B_QUANT_TAIL_PER_CHANNEL_CONSTANT_TRANSPORT",
+      "B_QUANT_TAIL_MAPPER_REGISTRATION",
+      "B_NODE0004_COMPOSITE_ENDPOINT_BINDING"
+    ]
+  },
+  "dependency_for_node0004_c1": {
+    "accumulate_leg_consumed_or_assembled": false,
+    "authorization": "PATH_FRESH_COMPOSITE_CONFIG_C1=AUTHORIZED",
+    "endpoint_interface": {
+      "accepted_lifetime": null,
+      "base": null,
+      "offset": null,
+      "read_coverage": null,
+      "same_storage": null,
+      "terminal": null
+    },
+    "provided_to_conv_consumer": [
+      "fresh qparam identity",
+      "full-domain mathematical max0 proof",
+      "full frozen W3 max0 replay",
+      "active opcode/RTL impossibility proof",
+      "first unavoidable capability"
+    ],
+    "tail_leg_status": "BLOCKED_AT_RAW_SIGNED_MAX0"
+  },
+  "downstream_capability_audit": {
+    "mapper_and_endpoint": {
+      "composite_int32_endpoint": {
+        "accepted_lifetime": null,
+        "base": null,
+        "offset": null,
+        "read_coverage": null,
+        "same_storage": null,
+        "terminal": null
+      },
+      "mapper_status": "B_QUANT_TAIL_MAPPER_REGISTRATION",
+      "status": "DEPENDENCY_INTERFACE_UNBOUND"
+    },
+    "nonnegative_int32_to_fp32": {
+      "active_primitive_present": true,
+      "claim_boundary": "This does not repair raw signed ingress and is not an end-to-end converter proof for the full legal INT32 domain.",
+      "formal_w3_conditional_domain": "[0,57876] <= 2^24",
+      "rtl_rounding_logic": "guard/sticky nearest-even",
+      "status": "CONDITIONALLY_REACHABLE_ONLY_AFTER_MISSING_MAX0"
+    },
+    "per_channel_constant_transport": {
+      "channel_count": 64,
+      "manual_materializer": "NOT_IMPLEMENTED_WITHOUT_A_REACHABLE_TAIL_PATH",
+      "native_per_channel_transport": false,
+      "qparam_identity_sha256": "e83328d8589db8cfc2c5a1ff033d3c0e08d9bd87d8d8fcf52b8cb22189956bb2",
+      "status": "BLOCKED",
+      "typed_handler_status": "PLACEHOLDER_BLOCKED"
+    },
+    "sequential_mul_then_rne_then_saturation": {
+      "fused_fma_accepted": false,
+      "inherited_counterexample": "400 * bits(0x3d828f5c): sequential=26, fused=25",
+      "required_stages": [
+        "materialized FP32 multiply result",
+        "separate rounded magic add/RNE decode",
+        "zero-point after rounding",
+        "UINT8 saturation"
+      ],
+      "status": "NOT_MATERIALIZED_AFTER_FIRST_BREAK"
+    }
+  },
+  "integration_refresh": {
+    "hardware_conclusion_changed": false,
+    "kind": "RECEIPT_ONLY_INTEGRATION_REFRESH",
+    "mainline_adjudication_bound": ".agents/task_records/20260728_conv_node0004_composite_c1_mainline_adjudication.md",
+    "mathematical_conclusion_changed": false,
+    "numeric_analysis_repeated": false,
+    "raw_signed_guard_rule_bound": "CDA-QUANT-TAIL-RAW-SIGNED-GUARD-001",
+    "target_or_package_generation_performed": false
+  },
+  "mainline_thread_id": "019fa2ca-72bc-7753-8d58-81e59bc76c88",
+  "max0_math_and_w3": {
+    "case_proof": [
+      {
+        "argument": "max(acc,0)=acc, so every later intermediate is identical.",
+        "case": "acc >= 0"
+      },
+      {
+        "argument": "positive multiplier keeps the scaled value non-positive; nearest-even is non-positive and UINT8 saturation returns zero, equal to the max0 branch.",
+        "case": "acc < 0"
+      }
+    ],
+    "domain_preconditions": {
+      "accumulator": "all signed int32 values",
+      "multiplier": "finite float32 and strictly positive for all 64 channels",
+      "rounding": "nearest-even after sequential float32 multiply",
+      "saturation": "[0,255]",
+      "y_zero_point": 0
+    },
+    "formal_w3": {
+      "accumulator_maximum": 57876,
+      "accumulator_minimum": -1148879,
+      "element_count": 3211264,
+      "host_tensor_use": "validation-only; never emitted, replayed, or supplied to hardware/configuration",
+      "max0_maximum": 57876,
+      "max0_minimum": 0,
+      "max0_tensor_sha256_validation_only": "3ee5e253696d2d64b30b75995ffd462e2645e9554903ade9413700861249f2ff",
+      "max0_values_exactly_representable_in_ieee_fp32": true,
+      "max0_vs_formal_golden_mismatch_count": 0,
+      "negative_count": 1262480,
+      "original_vs_max0_final_mismatch_count": 0,
+      "shape": [
+        16,
+        64,
+        56,
+        56
+      ]
+    },
+    "full_signed_domain_conclusion": "final_uint8(acc) == final_uint8(max(acc,0)) under the stated instance preconditions",
+    "hardware_materialization": false,
+    "mathematical_equivalence": true
+  },
+  "plan_read_receipt": {
+    "current_match_required": false,
+    "gate": "mutable_provenance_only",
+    "path": ".agents/plan.md",
+    "sha256": "971f3c7d479e6ad80cf39450d0f56bc3bad5a898daca152f2c859593cf27b017"
+  },
+  "pure_configuration_decision": {
+    "decision": "NO_CONFIG_ONLY_CORRECTNESS_BASELINE",
+    "exact_path_exists": false,
+    "first_unavoidable_capability": "B_QUANT_TAIL_RAW_SIGNED_INT32_MAX0_OPCODE",
+    "hardware_rewrite_materializable": false,
+    "mathematical_rewrite_valid": true
+  },
+  "qparam_identity": {
+    "requant_multiplier": {
+      "all_finite_positive": true,
+      "axis": 0,
+      "dtype": "float32",
+      "element_count": 64,
+      "float32_bits": [
+        "0x3b5e180f",
+        "0x3c23f2b4",
+        "0x3b891dab",
+        "0x32e9e69b",
+        "0x3b7e8fe1",
+        "0x3bf8bdd9",
+        "0x3bb8f3b5",
+        "0x3b79ade4",
+        "0x3b62a639",
+        "0x3b9f2031",
+        "0x3426682b",
+        "0x3c5b9ff0",
+        "0x3bdeca51",
+        "0x3c81cb3c",
+        "0x3c0aba45",
+        "0x3c705228",
+        "0x3c50c98d",
+        "0x3c58cbf7",
+        "0x3be6dd88",
+        "0x3c69dcb7",
+        "0x3c088635",
+        "0x3c196bb7",
+        "0x3b8daae5",
+        "0x346bb080",
+        "0x3bc06d78",
+        "0x3b340298",
+        "0x3c0f85b1",
+        "0x3bd440cd",
+        "0x3c913a84",
+        "0x3b95a88f",
+        "0x3c01b0c5",
+        "0x3c3a2843",
+        "0x3b7cf262",
+        "0x3b44b85f",
+        "0x3b7c138b",
+        "0x3b804a71",
+        "0x3bd102a2",
+        "0x3c44f8f1",
+        "0x3b60cbe7",
+        "0x3c08beaa",
+        "0x3bf987c3",
+        "0x3c3a84f2",
+        "0x3b82258b",
+        "0x3467b51a",
+        "0x3b12d374",
+        "0x3bc1774b",
+        "0x3c52bf64",
+        "0x3bccc1bf",
+        "0x3b72e25a",
+        "0x3bb8d398",
+        "0x3b6181c6",
+        "0x3b664d96",
+        "0x3c5845ab",
+        "0x3b6fb36f",
+        "0x3ae2a4da",
+        "0x3c4c42c0",
+        "0x349e7fb4",
+        "0x3bc124aa",
+        "0x3bd27e4b",
+        "0x3b3c0b23",
+        "0x3bb58ad8",
+        "0x3c1e51c3",
+        "0x344ee2ac",
+        "0x3c124e32"
+      ],
+      "formula": "float32(float32(x_scale * w_scale[c]) / y_scale)",
+      "maximum": 0.01772809773683548,
+      "minimum": 2.7229637211689806e-08,
+      "sha256": "e83328d8589db8cfc2c5a1ff033d3c0e08d9bd87d8d8fcf52b8cb22189956bb2",
+      "shape": [
+        64
+      ]
+    },
+    "scalar_shape_note": "The ONNX model stores scalar qparams with canonical shape []; the typed lowering transports them as [1].",
+    "source": "formal ONNX initializers cross-checked against typed lowering",
+    "w_scale": {
+      "axis": 0,
+      "dtype": "float32",
+      "element_count": 64,
+      "float32_bits": [
+        "0x3a96866a",
+        "0x3b5e3b9c",
+        "0x3ab9dc96",
+        "0x321e86f5",
+        "0x3aac87c8",
+        "0x3b2895e8",
+        "0x3afab42e",
+        "0x3aa93899",
+        "0x3a999cc9",
+        "0x3ad7b239",
+        "0x336190db",
+        "0x3b94d9fe",
+        "0x3b16ff3a",
+        "0x3bafefc6",
+        "0x3b3c0bde",
+        "0x3ba2e0e1",
+        "0x3b8d81a4",
+        "0x3b92ef51",
+        "0x3b1c784a",
+        "0x3b9e8041",
+        "0x3b390f47",
+        "0x3b4ff689",
+        "0x3ac0080f",
+        "0x339fbd4c",
+        "0x3b026b27",
+        "0x3a740150",
+        "0x3b428ba6",
+        "0x3b0fdafa",
+        "0x3bc4dbc3",
+        "0x3acadcf8",
+        "0x3b2fcbe7",
+        "0x3b7c566e",
+        "0x3aab6f88",
+        "0x3a8553ef",
+        "0x3aaad881",
+        "0x3aade62f",
+        "0x3b0da854",
+        "0x3b857fb3",
+        "0x3a985b50",
+        "0x3b395bcd",
+        "0x3b291ec1",
+        "0x3b7cd411",
+        "0x3ab06a2f",
+        "0x339d0a65",
+        "0x3a470615",
+        "0x3b031f51",
+        "0x3b8ed5c3",
+        "0x3b0ac654",
+        "0x3aa49d9e",
+        "0x3afa88a7",
+        "0x3a98d694",
+        "0x3a9c16bb",
+        "0x3b92944c",
+        "0x3aa2754e",
+        "0x3a199bdb",
+        "0x3b8a7042",
+        "0x33d6d8ae",
+        "0x3b02e750",
+        "0x3b0ea9a5",
+        "0x3a7ee4f9",
+        "0x3af61502",
+        "0x3b569a68",
+        "0x338c37a8",
+        "0x3b465173"
+      ],
+      "maximum": 0.006007642950862646,
+      "minimum": 9.22749610055007e-09,
+      "model_shape": [
+        64
+      ],
+      "onnx_name": "ConvBnFusion_W_resnetv17_stage1_conv0_weight_scale",
+      "sha256": "3abf120f4bc983427b0f9699d55fcfbc648a8884501832dbe874b3828968e9b9",
+      "typed_shape": [
+        64
+      ]
+    },
+    "x_scale": {
+      "dtype": "float32",
+      "float32_bits": "0x3cb0a5e9",
+      "model_shape": [],
+      "onnx_name": "resnetv17_relu0_fwd_scale",
+      "sha256": "a1aac7487d3e8f919770415333ea8456ee152f1a343819888671a4395e2e7d02",
+      "typed_shape": [
+        1
+      ],
+      "value": 0.021563487127423286
+    },
+    "y_scale": {
+      "dtype": "float32",
+      "float32_bits": "0x3bef72a6",
+      "model_shape": [],
+      "onnx_name": "resnetv17_stage1_relu0_fwd_scale",
+      "sha256": "9879e417a260e24ba16504cc33214bae92cfc35e5d12f85ba808d40c93a725e0",
+      "typed_shape": [
+        1
+      ],
+      "value": 0.007307368330657482
+    },
+    "y_zero_point": {
+      "dtype": "uint8",
+      "model_shape": [],
+      "onnx_name": "resnetv17_stage1_relu0_fwd_zero_point",
+      "sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d",
+      "typed_shape": [
+        1
+      ],
+      "value": 0
+    }
+  },
+  "request": {
+    "emission_policy": {
+      "candidate_files_may_satisfy_request": false,
+      "fail_closed": true,
+      "formal_target_instance_allowed": false,
+      "unresolved_blockers": [
+        "B_EXECPLAN_TYPED_TRANSPORT",
+        "B_LAYOUT_APPROVAL",
+        "B_REQUANT_TARGET_NUMERICS"
+      ]
+    },
+    "identity": {
+      "hw_op_id": "hwop-0004-01",
+      "hw_op_type": "RequantizeUint8",
+      "node_id": "node-0004",
+      "onnx_name": "fused resnetv17_stage1_conv0_fwd_quant",
+      "onnx_op_type": "QLinearConv",
+      "stage": "requantize"
+    },
+    "predecessor_hw_op_ids": [
+      "hwop-0004-00"
+    ],
+    "request_id": "r5:hwop-0004-01",
+    "request_sha256": "ed833d0512b0256756f3d7e39cfd79aac04a901d0095f11f103e7216e6dccb5b"
+  },
+  "schema": "node0004-exact-uint8-tail-max0-audit-v1",
+  "scope": {
+    "bitstream_generated": false,
+    "candidate_release": false,
+    "execplan_or_sca_generated": false,
+    "full_conv_assembled": false,
+    "host_internal_tensor_supplied_to_hardware": false,
+    "mapping_generated": false,
+    "old_node0004_assets_consumed": false,
+    "package_release": "NONE",
+    "server_files_inspected": false,
+    "server_package_generated": false,
+    "server_run_performed": false,
+    "tail_config_generated": false,
+    "target_json_generated": false
+  },
+  "shape_layout": {
+    "address_binding": null,
+    "channel_mod8": 0,
+    "channels": 64,
+    "claim_boundary": "Only logical NCHW bytes and the absence of a channel-mod-8 tail are closed. No physical HWC8 schedule, transaction, occurrence, address, lifetime, terminal, or readback endpoint is approved.",
+    "conditional_hwc8_lane_tail": 0,
+    "element_count": 3211264,
+    "input_bytes": 12845056,
+    "input_dtype": "int32",
+    "lifetime_binding": null,
+    "logical_layout": "NCHW",
+    "logical_shape": [
+      16,
+      64,
+      56,
+      56
+    ],
+    "occurrence_count": null,
+    "output_bytes": 3211264,
+    "output_dtype": "uint8",
+    "physical_layout": null,
+    "physical_layout_status": "B_LAYOUT_APPROVAL",
+    "readback_binding": null,
+    "terminal_binding": null,
+    "transaction_bytes": null
+  },
+  "source_identities": [
+    {
+      "gate": "current_match_fail_closed",
+      "path": ".agents/task_records/20260728_node0004_untrusted_fresh_rebuild_mainline_override.md",
+      "reason": "mainline fresh-rebuild override",
+      "sha256": "6626f3192390fe3b93483746f1dbd6a61cc13f21cd5b55559738cd3dfbad7c06"
+    },
+    {
+      "gate": "current_match_fail_closed",
+      "path": ".agents/rules/\u751f\u6210\u524d\u5fc5\u8bfb\u7d22\u5f15.md",
+      "reason": "generation routing",
+      "sha256": "12583308ec9a16dbb8ea15571a5280291fed7e152167d2e4e8e00509a9a6370f"
+    },
+    {
+      "gate": "current_match_fail_closed",
+      "path": ".agents/rules/\u7b97\u5b50\u914d\u7f6e\u89c4\u5219.md",
+      "reason": "common config and reuse gates",
+      "sha256": "cbaffcc5fb3bea7da9f0c199bb2e7f06445a676ab456bdfd505b90dd89825171"
+    },
+    {
+      "gate": "current_match_fail_closed",
+      "path": ".agents/rules/NDP\u786c\u4ef6\u5b57\u6bb5\u8bed\u4e49.md",
+      "reason": "GA/MSE/Buffer hardware semantics",
+      "sha256": "a955834fc059f08bada8131adc94db5c05112eb1e6acc0a0976eee7e6ae17c59"
+    },
+    {
+      "gate": "current_match_fail_closed",
+      "path": ".agents/rules/\u7cbe\u786eUINT8\u91cf\u5316\u5c3e\u4e13\u9879\u89c4\u5219.md",
+      "reason": "shared exact UINT8-tail gates",
+      "sha256": "32c47b83e98d9dd9cbf1f8be7f25dd99d86ddecb583d5972b61b1e72d3b931be"
+    },
+    {
+      "gate": "current_match_fail_closed",
+      "path": ".agents/rules/RequantizeUint8\u7b97\u5b50\u914d\u7f6e\u89c4\u5219.md",
+      "reason": "INT32-to-UINT8 family gates",
+      "sha256": "d9ec14cc6975e9596f3fe56e762cd4797c8ba6c70fa235503f5954e97c6f863f"
+    },
+    {
+      "gate": "current_match_fail_closed",
+      "path": "contracts/resnet50_r5_lowering_bundle.json",
+      "reason": "typed request and qparam binding",
+      "sha256": "bf661e4eda2011025d9922708ab46a64f8d1b3c279527b88aa7d630bb3545432"
+    },
+    {
+      "gate": "current_match_fail_closed",
+      "path": "artifacts/reference_model/resnet50-v1-12-int8.onnx",
+      "reason": "formal ONNX model",
+      "sha256": "c234f30975989788b4405f25253275aae247ab6dbdd34aaa69ab0a59ff76f6d0"
+    },
+    {
+      "gate": "current_match_fail_closed",
+      "path": "artifacts/w3/model_graph.json",
+      "reason": "formal model graph identity",
+      "sha256": "f030c5d4e43f63fbbcce771e4c4ea9e88b042be0a2c988e7f51de2c0e17ac410"
+    },
+    {
+      "gate": "current_match_fail_closed",
+      "path": "artifacts/w3/golden_batch16/manifest.json",
+      "reason": "formal W3 output manifest",
+      "sha256": "f7e90cf1f087acf255e93d98d1788e0fb0b4c77bbe935ea9addb17feea583180"
+    },
+    {
+      "gate": "current_match_fail_closed",
+      "path": "artifacts/w3/subop_batch16/manifest.json",
+      "reason": "formal W3 accumulator manifest",
+      "sha256": "8bfdd042570408c1df793044407a8e6262bfa261b3cc6f02f64b94ad47d9c1c2"
+    },
+    {
+      "gate": "current_match_fail_closed",
+      "path": "artifacts/w3/subop_batch16/tensors/tensor-internal-node-0004-accumulate.npy",
+      "reason": "formal W3 INT32 accumulator",
+      "sha256": "32de6ea94086ce09da37b4f3c5b12ee51275c7b0f6d7b4a9875b0b9900ca25ac"
+    },
+    {
+      "gate": "current_match_fail_closed",
+      "path": "artifacts/w3/golden_batch16/tensors/tensor-78b29737ada5ce7a.npy",
+      "reason": "formal W3 UINT8 golden",
+      "sha256": "b4a4fa9ca2f1384ede29a1c29ba15e21626ccb3f0d3387160942bc58d65f0899"
+    },
+    {
+      "gate": "current_match_fail_closed",
+      "path": "repos.lock.json",
+      "reason": "authorized native repository identity",
+      "sha256": "d1cebebb1896066b0d963717868938ab7b569985fbddb8bc387bb4f3a95314d7"
+    },
+    {
+      "gate": "current_match_fail_closed",
+      "path": "ndp-sim/jsons/quant_from_buffer_int32MN_uint8MN.json",
+      "reason": "authorized structural primitive",
+      "sha256": "db638f0640e74217e80e61350a2fe400f7b495e2201f17c39915328cdd455ba2"
+    },
+    {
+      "gate": "current_match_fail_closed",
+      "path": "ndp-sim/model_execplan/config/operator_base_info.json",
+      "reason": "native template registry",
+      "sha256": "e408606006e5778997b015f6cf90608dad93ef45efe60d73c5a0b675eab096e0"
+    },
+    {
+      "gate": "current_match_fail_closed",
+      "path": "ndp-sim/model_execplan/src/execution_plan_generator/models.py",
+      "reason": "native typed execplan model",
+      "sha256": "7e627747aa01daadc1a53887b1e501f9431527011bc60b6783145ace8a6c79fc"
+    },
+    {
+      "gate": "current_match_fail_closed",
+      "path": "ndp-sim/model_execplan/src/execution_plan_generator/template_manager.py",
+      "reason": "native template binding",
+      "sha256": "2d17fbdaa67c8f307739c1c90887d780d5b7037282c535e154239aca064d85ea"
+    },
+    {
+      "gate": "current_match_fail_closed",
+      "path": "ndp-sim/model_execplan/src/execution_plan_generator/control_registers.py",
+      "reason": "native control handler",
+      "sha256": "cd12ee5f31231e856f9f63f61746a8e43435228d0268813c3eb8c4630e09a941"
+    },
+    {
+      "gate": "current_match_fail_closed",
+      "path": "ndp-sim/model_execplan/src/execution_plan_generator/pipeline.py",
+      "reason": "native execplan pipeline",
+      "sha256": "1e59210c4401dbe6c694ffdb34939531238c0e3c949ff965a3f74667eb46cfae"
+    },
+    {
+      "gate": "current_match_fail_closed",
+      "path": "ndp-sim/model_execplan/src/execution_plan_generator/instruction_generator.py",
+      "reason": "native control-write consumer",
+      "sha256": "cdc7d4dcdf41ec79571d53a909a2b2d8f1ab7897a404969b5cf49d416fc85315"
+    },
+    {
+      "gate": "current_match_fail_closed",
+      "path": "ndp-sim/bitstream/config/mapper.py",
+      "reason": "native mapper",
+      "sha256": "c7685cc297e4e11ccafa23758a46d20986e5db931fcb3c4e21f5f4a0a2534226"
+    },
+    {
+      "gate": "current_match_fail_closed",
+      "path": "ndp-sim/bitstream/config/general.py",
+      "reason": "GA conversion encoder",
+      "sha256": "eb9d5ee9ef273182e05b718aca378f87d0a1ccb5366ae463d8482c8c94c3482f"
+    },
+    {
+      "gate": "current_match_fail_closed",
+      "path": ".agents/task_records/20260728_conv_c0_mainline_adjudication_and_composite_c1_authorization.md",
+      "reason": "mainline composite-C1 authorization",
+      "sha256": "6415f8adfdd163a6c360a46e9392371c386b900b85722b9eee8a8d3760a89e2a"
+    },
+    {
+      "gate": "current_match_fail_closed",
+      "path": ".agents/task_records/20260728_conv_node0004_composite_c1_mainline_adjudication.md",
+      "reason": "mainline composite-C1 final adjudication",
+      "sha256": "1f343efe8383b65ffb836427ba4994dcd78f7e0869b98882a831920ff34e9760"
+    },
+    {
+      "gate": "current_match_fail_closed",
+      "path": ".agents/rules/INT8_SA\u70b9\u79ef\u4e13\u9879\u89c4\u5219.md",
+      "reason": "current composite INT8-SA boundary",
+      "sha256": "af4eb4c3795c8a8dfaba7dca47839906eb02dbb46bb17ec040f893638005502b"
+    },
+    {
+      "gate": "current_match_fail_closed",
+      "path": "NDP_copy01/rtl/includes/NDP_Parameters.svh",
+      "reason": "active GA opcode constants",
+      "sha256": "c7b2d96445f3351637ef611d5c03b23c006ebb9bb2a2e4d1212a09872ce5d767"
+    },
+    {
+      "gate": "current_match_fail_closed",
+      "path": "NDP_copy01/rtl/Slice/General_Array/GA_PE_Group/GA_PE_ALU.sv",
+      "reason": "active GA opcode class decode",
+      "sha256": "8a73c66755df0897034d7bdbc7183f663aeba630d16ccae07e8e879d689eb9aa"
+    },
+    {
+      "gate": "current_match_fail_closed",
+      "path": "NDP_copy01/rtl/Slice/General_Array/GA_PE_Group/GA_ALU/GA_ALU.v",
+      "reason": "active GA ALU integration",
+      "sha256": "9ccbe59e35f55fca07ba159fb87185c5274de86b15618d781e3c0fec712d94f6"
+    },
+    {
+      "gate": "current_match_fail_closed",
+      "path": "NDP_copy01/rtl/Slice/General_Array/GA_PE_Group/GA_ALU/GA_PE_Float_Control.v",
+      "reason": "active GA mode/precision/opcode decode",
+      "sha256": "96802498b791085c182d7e22eeaf24075ff625eaebb6b4fe2579c07d9b160577"
+    },
+    {
+      "gate": "current_match_fail_closed",
+      "path": "NDP_copy01/rtl/Slice/General_Array/GA_PE_Group/GA_ALU/GA_PE_Float_Last.v",
+      "reason": "active FP32/int8 max result selection",
+      "sha256": "2e90094fd01155c0028ab1a414e7e10e9eaaf8ee46bc8f02af4d6ce9a841efa0"
+    },
+    {
+      "gate": "current_match_fail_closed",
+      "path": "NDP_copy01/rtl/Slice/General_Array/GA_Inport/GA_Inport.sv",
+      "reason": "active INT32-to-FP32 converter",
+      "sha256": "42a7ac1d740c758de9656ee0d41663ef1c8b11253e76ba2e20be6faee2d12e17"
+    }
+  ],
+  "source_policy": {
+    "allowed_classes": [
+      "typed lowering/request",
+      "formal ONNX model and W3 tensors/manifests",
+      "current rules and mainline authorization",
+      "hash-bound active local encoder/RTL/native source"
+    ],
+    "forbidden_source_fragments": [
+      "node0004_requant_semantics_evidence",
+      "node0004_requant_full_semantic_contract",
+      "node0004_server",
+      "node0004_accumulate_wave",
+      "node0004_conv_three_wave",
+      "node0004-nopp",
+      "requant_quant_tail_evidence_input",
+      "requant_family_classification",
+      "server_returns/",
+      "outputs/"
+    ],
+    "old_node0004_assets_consumed": false
+  },
+  "status": "FAIL_CLOSED_RAW_SIGNED_MAX0_NOT_MATERIALIZABLE",
+  "tail_class": {
+    "exact_division_required": false,
+    "ingress": "signed_int32",
+    "name": "REQUANT_INT32_PER_CHANNEL_FP32_MULTIPLIER_TO_UINT8_ZP0",
+    "output_qdomain": "uint8",
+    "rounding": "nearest_even_after_sequential_fp32_multiply",
+    "saturation": "[0,255]",
+    "scale_kind": "per_channel_float32_multiplier_axis0",
+    "zero_point_class": "scalar_zero"
+  }
+}

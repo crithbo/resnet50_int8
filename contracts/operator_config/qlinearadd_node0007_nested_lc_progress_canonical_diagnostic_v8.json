@@ -1,0 +1,92 @@
+{
+  "canonical_decision": {
+    "ambiguous_state": "PACKAGE_DIAGNOSTIC_DECISION_AMBIGUOUS",
+    "output": "evidence/CANONICAL_PROGRESS_DECISION.json",
+    "qualified_counters": [
+      "gexec",
+      "req",
+      "rdata",
+      "wdata"
+    ],
+    "raw_state_excluded_from_progress": [
+      "buf4_wr",
+      "buf4_rd",
+      "buf5_wr",
+      "buf5_rd"
+    ],
+    "rule_id": "CDA-SERVER-DIAGNOSTIC-DECISION-CANONICAL-RECORD-001",
+    "schema": "qlinearadd-progress-canonical-decision-v1",
+    "unique_complete_record_required": true,
+    "version": 1
+  },
+  "final_zip_rule_self_audit": {
+    "FINAL_ZIP_RULE_SELF_AUDIT_PASS": true,
+    "all_required_negative_controls_fail_closed": true,
+    "error_count": 0,
+    "errors_must_equal": 0,
+    "final_zip_and_sidecar_direct": true,
+    "report": "artifacts/operator_config_validation/r5-qlinearadd-node0007-progress-canonical-v8/report.json",
+    "report_sha256": "be25c468e605af0c1861ce50f99e692506499db5e4cd2dee1d1f653676335003",
+    "rule_id": "CDA-SERVER-FINAL-ZIP-RULE-SELF-AUDIT-001",
+    "status": "CANONICAL_DECISION_RULE_VALIDATED"
+  },
+  "frozen_workload": {
+    "bitstream_changed": false,
+    "consumed_reuse_assets": true,
+    "execplan_changed": false,
+    "final_json_changed": false,
+    "golden_changed": false,
+    "mapping_changed": false,
+    "numeric_analysis_repeated": false,
+    "request_count_with_multiplicity": 37352448,
+    "sca_changed_except_install_namespace": false,
+    "six_qparams_changed": false,
+    "w3_order_changed": false,
+    "workload_analysis_repeated": false
+  },
+  "functional_fix": false,
+  "functional_rtl_modified": false,
+  "hw_op_id": "hwop-0007-00",
+  "node_id": "node-0007",
+  "package_release": {
+    "candidate_release": false,
+    "evidence_level": "E2_LOCAL_ONLY",
+    "quarantine_reason": "v6 dynamic return proves the frozen v4/v6/v8 op_a_dequant workload stalls after accepted Start_Comp and before the first MSE address enqueue/request for 22 complete qualified stall windows; RTL review refutes shared DRAM_LC.LC0 AND-backpressure alone as a sufficient zero-request root cause, so the precise functional cause remains unresolved",
+    "return_analysis": "artifacts/operator_config_validation/r5-qlinearadd-node0007-progress-bind-v6-return-analysis/report.json",
+    "sidecar": "artifacts/operator_config_validation/r5-server-test-packages/r5_qadd_n7_progress_canon_v8.zip.sha256",
+    "status": "QUARANTINED_NOT_RUN_SAME_FROZEN_WORKLOAD_HAS_PROVEN_DYNAMIC_HANG",
+    "zip": "artifacts/operator_config_validation/r5-server-test-packages/r5_qadd_n7_progress_canon_v8.zip",
+    "zip_sha256": "b74b18f906fbf32851ce016906c599889236e7088ad7209607e52368bad69100"
+  },
+  "provenance": {
+    "generation_index": {
+      "path": ".agents/rules/生成前必读索引.md",
+      "policy": "current_match",
+      "sha256": "12583308ec9a16dbb8ea15571a5280291fed7e152167d2e4e8e00509a9a6370f"
+    },
+    "plan": {
+      "path": ".agents/plan.md",
+      "policy": "mutable_provenance",
+      "sha256": "ec237da2f2094f20b5f7dab12d0723ebe08f1453cbb775c72b1b61567198edb5"
+    },
+    "qlinearadd_rule": {
+      "path": ".agents/rules/QLinearAdd算子配置规则.md",
+      "policy": "current_match",
+      "sha256": "fea780962c9029e589ece90de2af8c70058aee25cffaf9822f1e16f28ff2ecba"
+    },
+    "server_package_rule": {
+      "path": ".agents/rules/服务器测试包生成规则.md",
+      "policy": "current_match",
+      "sha256": "7672b44bbcb7e130792d6b288188caa2509dc72b1ea3962bf44ffb82588009aa"
+    }
+  },
+  "schema": "qlinearadd-node0007-nested-lc-progress-canonical-diagnostic-v8",
+  "server_action_performed": false,
+  "source_package": {
+    "immutable": true,
+    "path": "artifacts/operator_config_validation/r5-server-test-packages/r5_qadd_n7_progress_canon_v7.zip",
+    "sha256": "1ed2ed3cb1015e62b585a77dbff0b82b45e592a27695ddd9331b47eb1196df1f",
+    "status": "QUARANTINED_NOT_RUN_ACTIVE_RULE_DRIFT_AFTER_BUILD"
+  },
+  "status": "DIAGNOSTIC_ONLY_NOT_FUNCTIONAL_FIX"
+}

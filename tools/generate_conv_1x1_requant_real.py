@@ -18,6 +18,7 @@ from resnet50_pipeline.conv_instance import (
 )
 from resnet50_pipeline.conv28_layout import (
     CONV28_HARDWARE_LAYOUT_ABI,
+    CONV28_SIGNED_A_LOCAL_LAYOUT_ABI,
     QLinearConvPhysicalLayout,
 )
 from resnet50_pipeline.topology28 import HIGH_RING_OWNERS
@@ -93,12 +94,14 @@ def build_bundle(
 ) -> tuple[dict[str, Any], dict[str, bytes]]:
     spec = spec or load_conv_instance_spec(PROJECT_ROOT, FIRST_REAL_CONV_NODE_ID)
     spec.validate()
-    if spec.kernel != (1, 1):
-        raise ValueError("real Conv requant generator currently requires a 1x1 instance")
     template = _load_json(TEMPLATE_PATH)
     multiplier, output_zero_point, multiplier_sha = _real_qparams(spec)
     plan = QLinearConvPhysicalLayout(
-        layout_abi=CONV28_HARDWARE_LAYOUT_ABI
+        layout_abi=(
+            CONV28_SIGNED_A_LOCAL_LAYOUT_ABI
+            if spec.node_id == FIRST_REAL_CONV_NODE_ID
+            else CONV28_HARDWARE_LAYOUT_ABI
+        )
     ).plan(
         activation_shape=spec.activation_shape,
         weight_shape=spec.weight_shape,
@@ -180,6 +183,8 @@ def build_bundle(
         raise ValueError("requant shards must cover every output channel exactly once")
     manifest = {
         "schema_version": "0.1",
+        # The validator-facing name is a frozen ABI label.  The requant stage
+        # consumes final INT32 P and is independent of the accumulation kernel.
         "contract_type": "conv_1x1_requant_config_bundle",
         "status": "real_qparams_sharded_candidate",
         "node_id": spec.node_id,

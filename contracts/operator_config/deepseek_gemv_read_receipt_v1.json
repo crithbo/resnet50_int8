@@ -1,0 +1,144 @@
+{
+  "schema": "deepseek-gemv-generation-read-receipt-v1",
+  "created_at": "2026-07-25",
+  "task": "DeepSeek crop-derived decode FFN gate GEMV local E2 validation",
+  "scope": {
+    "mode": "local_rule_validation",
+    "json_generation_allowed_after_receipt": true,
+    "server_package_generation_allowed": false,
+    "rtl_tree_mutation_allowed": false,
+    "maximum_evidence_level": "E2"
+  },
+  "source_identity_boundary": {
+    "onnx_repository_classification": "SEMANTIC_MODEL_MATCH",
+    "original_source_identity_claim_allowed": false,
+    "crop_required_for_ndpsim_shape": true,
+    "direct_onnx_shape_equals_hardware_stage_claim_allowed": false
+  },
+  "base_read_receipt": {
+    "path": "contracts/operator_config/deepseek_onnx_stage_validation_read_receipt_v1.json",
+    "sha256": "bab13378476bd715f416d7cdb9b9d9b753a5729132590322d44954f5ce8c1ce4",
+    "scope": "common rules, DeepSeek-specific rules, SA/N2N/LC/MSE/Buffer field semantics and shared native consumers"
+  },
+  "supplemental_rules_read": [
+    {
+      "path": ".agents/rules/DeepSeek_码流生命周期增量规则.md",
+      "sha256": "247f4469572359055af077b631d59f4193cb1735c8932c857f5de94e1a83518a",
+      "size_bytes": 5516,
+      "reason": "layout-hint ownership, B/B-prime allocation, 64b-owned config length and mapper seed propagation"
+    }
+  ],
+  "additional_sources_read": [
+    {
+      "path": "artifacts/operator_config_validation/r5-deepseek-onnx-stage-json-e2-v1/onnx_graph_inventory.json",
+      "sha256": "ae2f5ab015d1fd6be7961e3d3bcc32d41119a2a02e810bb6027f4b8e63136c14",
+      "size_bytes": 458979,
+      "reason": "layer-0 gate_proj MatMul and FP16 initializer metadata"
+    },
+    {
+      "path": "artifacts/operator_config_validation/r5-deepseek-onnx-stage-json-e2-v1/layer0_decode.generated.json",
+      "sha256": "041dc42cc591cd62681391c9d1dc201ba2d0b58ee20e55a89a9b2c0a8c6871b9",
+      "size_bytes": 31755,
+      "reason": "crop-derived decode Stage IR operator op37"
+    },
+    {
+      "path": "ndp-sim/generate_python_golden/decode_ops.py",
+      "sha256": "404412b8ee14299cf29ff725359a5627b663d372a13e86f639709c4572343d9e",
+      "size_bytes": 36017,
+      "read_scope": "gemv_fp32_accumulate and FFN gate op37 construction",
+      "reason": "native decode numerical decomposition"
+    },
+    {
+      "path": "ndp-sim/generate_python_golden/single_op_data/relayout_gemv.py",
+      "sha256": "3224d8d4cf41817bbdf8cd7d99d4ca6f510f106735510f6eb9d4cc972d8d7314",
+      "size_bytes": 9775,
+      "read_scope": "ring slice partition, B/B-prime split and A/B/D install layout",
+      "reason": "actual decode GEMV tensor relayout consumer"
+    },
+    {
+      "path": "ndp-sim/model_execplan/src/execution_plan_generator/address_planner.py",
+      "sha256": "2208ffa925c509d2479e2763f323551a36e1b6c1680a112e7519f6356a312ea0",
+      "size_bytes": 30150,
+      "read_scope": "decode GEMV B/B-prime independent half allocation",
+      "reason": "actual address planner"
+    },
+    {
+      "path": "ndp-sim/model_execplan/src/execution_plan_generator/control_registers.py",
+      "sha256": "cd12ee5f31231e856f9f63f61746a8e43435228d0268813c3eb8c4630e09a941",
+      "size_bytes": 85852,
+      "read_scope": "decode GEMV shape, ring and stream address lowering",
+      "reason": "actual control-register consumer"
+    },
+    {
+      "path": "ndp-sim/model_execplan/src/execution_plan_generator/pipeline.py",
+      "sha256": "1e59210c4401dbe6c694ffdb34939531238c0e3c949ff965a3f74667eb46cfae",
+      "size_bytes": 11797,
+      "read_scope": "regenerated config_length ownership and 64b/128b transport boundary",
+      "reason": "actual regenerated-bitstream lifecycle consumer"
+    },
+    {
+      "path": "NDP_copy01/rtl/Global/global_config_manager.sv",
+      "sha256": "5e0c585ee408f45a48dab52404b67f7b65635e35c12477a684b48dcb49c10a41",
+      "size_bytes": 8743,
+      "read_scope": "Load_Config word count and odd final-half suppression",
+      "reason": "RTL lifecycle boundary"
+    }
+  ],
+  "trusted_operator_json_oracle": {
+    "path": "ndp-sim/jsons/decode_gemv_ring.json",
+    "sha256": "1c5e2909dc486f1e4c712c0577bdeb69bee65f3269111bdd64f4a071cc574c1f",
+    "size_bytes": 26173
+  },
+  "trusted_numeric_oracle": {
+    "manifest": {
+      "path": "ndp-sim/generate_python_golden/python_golden_decode_hwverified/manifest.json",
+      "sha256": "3e7155e29c8b7fc72fadcb97b198545ea086d943a624cd6d448c4813ce2f8b8f",
+      "size_bytes": 40193
+    },
+    "weight": {
+      "path": "ndp-sim/generate_python_golden/python_golden_decode_hwverified/ffn_gate_gemv_in0_shape896x1792x1_dtype_f16.bin",
+      "sha256": "7db4786ea1adfeb9473f8fb51e4d0459eee938f47b6163714ce67fa213e5d4ce",
+      "size_bytes": 3211264
+    },
+    "activation": {
+      "path": "ndp-sim/generate_python_golden/python_golden_decode_hwverified/ffn_gate_gemv_in1_shape896x1x1_dtype_f16.bin",
+      "sha256": "ea7aac8148ca4298f8b588724c4696c183d64b4410890f0566278bbdac6ea34f",
+      "size_bytes": 1792
+    },
+    "output": {
+      "path": "ndp-sim/generate_python_golden/python_golden_decode_hwverified/ffn_gate_gemv_out_shape1792x1x1_dtype_f16.bin",
+      "sha256": "e1a9370ee62b78e5e88a9a9d974713aad8addca04b00011acdae7028a5f6dfab",
+      "size_bytes": 3584
+    },
+    "classification": "TRUSTED_CROP_DERIVED_HWVERIFIED_NUMERIC_ORACLE"
+  },
+  "onnx_anchor": {
+    "node_index": 15,
+    "name": "/model/layers.0/mlp/gate_proj/MatMul",
+    "op_type": "MatMul",
+    "source_weight_shape": [
+      1536,
+      8960
+    ],
+    "crop_decode_formula": "[896,1792].T @ [896] -> [1792]"
+  },
+  "known_counterexamples": [
+    "The crop-derived hwverified tensor oracle does not establish original ONNX external-data byte identity.",
+    "B and B-prime each carry one half of the relayout stream for decode GEMV; treating them as aliases loses half the weight payload.",
+    "A 28-slice ring name does not prove the programmed N2N loop, source selector or destination selector.",
+    "Physical 128-bit config storage rows do not directly equal the meaningful 64-bit Load_Config word count."
+  ],
+  "rule_ids": [
+    "CDA-CONFIG-SEMANTIC-OWNERSHIP-001",
+    "CDA-CONFIG-MATERIALIZED-ROUNDTRIP-001",
+    "CDA-CONFIG-FULL-REBUILD-PROVENANCE-001",
+    "CDA-DEEPSEEK-MODEL-IDENTITY-001",
+    "CDA-DEEPSEEK-CROP-EXPLICIT-001",
+    "CDA-DEEPSEEK-ONNX-STAGE-DAG-001",
+    "CDA-DEEPSEEK-STAGE-JSON-ORACLE-001",
+    "CDA-DEEPSEEK-BP-ALLOCATION-001",
+    "CDA-DEEPSEEK-CONFIG-LENGTH-PADDING-001",
+    "CDA-DEEPSEEK-MAPPER-SEED-PROPAGATION-001"
+  ],
+  "receipt_status": "GEMV_FFN_GATE_MATERIALIZATION_READY"
+}

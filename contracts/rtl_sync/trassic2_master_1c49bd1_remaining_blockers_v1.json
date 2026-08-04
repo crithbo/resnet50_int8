@@ -1,0 +1,88 @@
+{
+  "schema": "trassic2-master-1c49bd1-remaining-blockers-v1",
+  "source": {
+    "repository": "xlsjdjdk/Trassic2.0_RTL",
+    "branch": "master",
+    "commit": "1c49bd1155a89ff187e29016dc4415e59a55f991",
+    "snapshot_root": "Trassic2.0_RTL_master_1c49bd1_audit/Trassic2.0_RTL-master/code/NDP_rtl",
+    "snapshot_modified": false,
+    "active_rtl_modified": false
+  },
+  "findings": [
+    {
+      "id": "SA_FLOAT_CONTROL_ANSI_PORT_TRAILING_COMMA",
+      "classification": "CONFIRMED_GLOBAL_COMPILE_BLOCKER",
+      "priority": "P0",
+      "path": "code/NDP_rtl/Slice/Specialized_Array/SA_PE/SA_PE_ALU/SA_PE_Float_Control.v",
+      "lines": [50, 51],
+      "source_sha256": "c6018e762411e14346bfec672b273b826f893b11c5de0cfb38fca674f9d33c4b",
+      "mechanism": "The final ANSI port o_Config retains a comma immediately before the closing parenthesis.",
+      "minimal_fix": "Remove only the comma after o_Config.",
+      "server_effect": {
+        "conv_compile_exit": 2,
+        "conv_simulation_started": false,
+        "conv_readback": "0/320",
+        "gap_compile_exit": 2,
+        "gap_simulation_started": false,
+        "gap_readback": "0/48"
+      }
+    },
+    {
+      "id": "SA_INT32_NEGATIVE_PSUM_FULL_WIDTH_RECONSTRUCTION",
+      "classification": "CONFIRMED_FULL_DOMAIN_ARITHMETIC_DEFECT_NOT_OBSERVED_IN_FROZEN_RESNET50",
+      "priority": "P1",
+      "path": "code/NDP_rtl/Slice/Specialized_Array/SA_PE/SA_PE_ALU/SA_PE_Float_CSA.v",
+      "lines": [49, 50],
+      "related_path": "code/NDP_rtl/Slice/Specialized_Array/SA_PE/SA_PE_ALU/SA_PE_Float_Control.v",
+      "related_lines": [185, 190],
+      "counterexamples": [
+        {
+          "data_c_hex": "fffffffb",
+          "dot": 5,
+          "rtl_hex": "80000000",
+          "expected_hex": "00000000"
+        },
+        {
+          "data_c_hex": "80000000",
+          "dot": 0,
+          "rtl_hex": "00000000",
+          "expected_hex": "80000000"
+        }
+      ],
+      "current_resnet50_hit_proven": false
+    },
+    {
+      "id": "GA_INT8_PIPELINE0_READY_BRANCH_MISSING",
+      "classification": "CONFIRMED_MAXPOOL_RUNTIME_FLOW_BLOCKER",
+      "priority": "P1",
+      "path": "code/NDP_rtl/Slice/General_Array/GA_PE_Group/GA_PE_Inbuffer.sv",
+      "lines": [527, 557],
+      "source_sha256": "25fa4dd2c6fe8301bc3651d660df72059ea2787c0c26a2841a1d4e439586b518",
+      "mechanism": "alu_pipeline0_bp_post has INT32 and FP32 branches but no INT8 branch, so the first INT8 token leaves pipeline0 valid with bp_post/enable/clear all zero.",
+      "resnet50_consumer": "node0002 MaxPool",
+      "latest_snapshot_reproduced": true
+    },
+    {
+      "id": "SA_MUL_ARRAY_RESET_DATAPATH_ASYMMETRY",
+      "classification": "LOCAL_OBSERVABILITY_RISK_NOT_ACCEPTED_OUTPUT_PROOF",
+      "priority": "REVIEW",
+      "path": "code/NDP_rtl/Slice/Specialized_Array/SA_PE/SA_PE_ALU/SA_PE_Mul_Array.v",
+      "control_reset_lines": [184, 209],
+      "unreset_data_lines": [210, 236],
+      "resnet50_blocker_claimed": false
+    }
+  ],
+  "post_compile_fix_audit": {
+    "changed_files": 10,
+    "confirmed_changed_set_compile_blockers": 1,
+    "additional_changed_set_port_module_width_blockers": 0,
+    "highest_local_elaboration_pass": "SA_PE_Group",
+    "full_production_vcs_run": false,
+    "full_production_vcs_required": true
+  },
+  "package_effect": {
+    "conv_package_change_required": false,
+    "gap_package_change_required": false,
+    "rerun_after_rtl_fix": true
+  }
+}

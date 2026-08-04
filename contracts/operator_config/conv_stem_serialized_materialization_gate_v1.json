@@ -1,0 +1,181 @@
+{
+  "schema": "resnet50-stem-serialized-materialization-gate-v1",
+  "status": "BLOCKED_BEFORE_TARGET_JSON",
+  "active_rule_receipts": {
+    ".agents/rules/生成前必读索引.md": "12583308ec9a16dbb8ea15571a5280291fed7e152167d2e4e8e00509a9a6370f",
+    ".agents/rules/算子配置规则.md": "cbaffcc5fb3bea7da9f0c199bb2e7f06445a676ab456bdfd505b90dd89825171",
+    ".agents/rules/INT8_SA点积专项规则.md": "54a1e12541aaeb6f62dadb19c47a6154eb0462b758a35a9a5bc4a0043cb37dce",
+    ".agents/rules/NDP硬件字段语义.md": "18d71520dd4ededc5edd9bb316acd0cc0421a9a261cf14b28ea6997ddd0e844a",
+    ".agents/rules/精确UINT8量化尾专项规则.md": "1685bd6527111bf014a738dbef4ee85b5b8d3e54c0565cb63eda9417d5c9425e"
+  },
+  "mutable_plan_provenance": {
+    "path": ".agents/plan.md",
+    "sha256_at_build": "ca96023deebdc274d052fb3248143a5b8a3fa3c9ba5de0bee9d793bb0fcac54d",
+    "semantic_gate": false
+  },
+  "scope": {
+    "request_id": "r5:hwop-0001-00",
+    "request_sha256": "36b50b93353c995ea4392dc5bd535fcecfa70f4a032b860ec4cf81128e6824d6",
+    "node_id": "node-0001",
+    "new_target_json_generated": false,
+    "mapping_bitstream_execplan_sca_generated": false,
+    "server_package_generated": false,
+    "expected_materialized_paths_checked_absent": [
+      "configs/native_ndp_sim/r5_conv_stem_serialized_local_e2_v1",
+      "artifacts/operator_config_validation/r5_conv_stem_serialized_local_e2_v1",
+      "artifacts/operator_config_validation/r5-server-test-packages/r5_conv_stem_serialized_local_e2_v1.zip"
+    ]
+  },
+  "source_receipts": {
+    "contracts/resnet50_r5_lowering_bundle.json": "bf661e4eda2011025d9922708ab46a64f8d1b3c279527b88aa7d630bb3545432",
+    "contracts/operator_config/conv_sa_remaining52_expansion_v1.json": "31065f28bc5c9ec46d150c74a1c3370a6166a3f4bff3fa54c711f3d7b5ef7063",
+    "contracts/operator_config/requant_conv53_tail_signature_binding_v1.json": "0cb706c1f95de010e840b212d3fa7b22cb63e20c4939da1eec52afc56e957fee"
+  },
+  "numeric_domain_reused_without_repeat": {
+    "source_record_sha256": "9f6b8e0354a146f975ae994a5d4e2519f05fca5b7bcc6a10cb008e7f90889ac2",
+    "normal_dot4_count": 475267072,
+    "actual_dot4_range": [
+      -101231,
+      95485
+    ],
+    "signed17_violation_count": 2499984,
+    "numeric_analysis_repeated": false
+  },
+  "proposal_only_schedule": {
+    "logical_k": 147,
+    "serialized_padded_k": 148,
+    "active_lane": "k % 4 for k<147; padded k=147 has zero weight",
+    "raw_product_equation": "s8_weight[k] * u8_activation[n,c,ih,iw]",
+    "datac_initial_value": "bias[oc] - x_zp(114) * sum(weight[oc,0:147]), modulo 2^32",
+    "psum_recurrence": "psum[k+1] = psum[k] + product[k] modulo 2^32",
+    "wave_samples": [
+      [
+        0,
+        3,
+        6,
+        8,
+        10,
+        12,
+        14
+      ],
+      [
+        1,
+        4,
+        7,
+        9,
+        11,
+        13,
+        15
+      ],
+      [
+        2,
+        5
+      ]
+    ],
+    "slice_region_count": 64,
+    "serialized_occurrence_count": 1901068288,
+    "normal_dot4_count": 475267072,
+    "occurrence_ratio": 4.0,
+    "lane_utilization": 0.2483108108108108
+  },
+  "proposal_only_physical_regions": {
+    "per_slice_capacity_bytes": 25165824,
+    "per_region": {
+      "A_serialized_weight_bytes": 9472,
+      "B_serialized_im2col_replay_bytes": 7426048,
+      "C_correction_bytes": 64,
+      "D_int32_bytes": 802816,
+      "total_bytes": 8238400,
+      "fits_one_slice": true
+    },
+    "base_offsets": {
+      "A": 0,
+      "B": 9472,
+      "C": 7435520,
+      "D": 7435584
+    },
+    "derived_loop_fields": {
+      "LC1_LC11_LC14_end": 112,
+      "LC2_LC12_LC15_end": 14,
+      "LC4_LC6_end": 37,
+      "LC5_LC7_end": 4,
+      "B_dim_stride": [
+        32,
+        4736,
+        66304
+      ],
+      "D_dim_stride": [
+        32,
+        64,
+        7168
+      ]
+    },
+    "claim_boundary": "capacity and affine equations only; not final JSON, address coverage, mapping, bitstream, terminal or lifetime evidence"
+  },
+  "symbolic_output_coverage": {
+    "equation": "offset=row*7168 + (wblock*8+q)*64 + half*32 + byte",
+    "recomputed_byte_count": 802816,
+    "first_offset": 0,
+    "last_offset": 802815,
+    "contiguous": true,
+    "physical_coverage_claimed": false
+  },
+  "first_blocker": {
+    "id": "B_CONV_STEM_TYPED_MATERIALIZER_AND_HANDLER",
+    "classification": "SOURCE_TOOLCHAIN_SEMANTIC_OWNER_MISSING",
+    "evidence": {
+      "typed_generator_7x7_rejection": {
+        "path": "tools/generate_conv_instance.py",
+        "sha256": "fc6524b430a204cd7659a0d6a51b21f24582dd6765cdf9ff1dacbfaeb56df43a",
+        "line": 318,
+        "effect": "no authorized typed JSON emitter for 7x7/stride2/pad3"
+      },
+      "signed_a_layout_7x7_rejection": {
+        "path": "resnet50_pipeline/conv28_layout.py",
+        "sha256": "28ebc5eda3ec07e7b1e2dcf59d249f0ae97cd6e0058a8862de05fc96f76f1924",
+        "line": 428,
+        "effect": "no accepted final physical activation/weight packer for stem"
+      },
+      "serialized_handler_node0004_shape_lock": {
+        "path": "resnet50_pipeline/ndp_patch_toolchain.py",
+        "sha256": "05af9d7cf6efc9aef22f134c858a09a6cca498d62573766fe97a4f0cecf069f0",
+        "handler_line": 303,
+        "a_shape_line": 311,
+        "b_shape_line": 312,
+        "d_shape_line": 323,
+        "effect": "active execplan registry accepts only node0004 identity and 4096/802816/50176 shapes; stem needs 9472/7426048/200704"
+      },
+      "patchset_registry_has_no_stem_id": {
+        "path": "resnet50_pipeline/ndp_patch_toolchain.py",
+        "registry_line": 454,
+        "effect": "a fresh stem operator type cannot be lowered without adding a shared patchset/handler semantic owner"
+      }
+    },
+    "required_authorization_or_input": "authorize a fresh stem-specific typed generator, signed serialized im2col packer, and execplan patchset handler in the shared ndp patch registry; borrowing node0004 type is forbidden"
+  },
+  "requant_binding": {
+    "request_id": "r5:hwop-0001-01",
+    "classification": "FULL_LOCAL_E2_MATERIALIZED_EXACT_NODE0001",
+    "profile_id": "TAIL_N16_C64_H112_W112_HWC8",
+    "multiplier_bits_sha256": "7ed3f7e123f3f68c86a141ea0fa562a694ed8bfd4a5014907f8e551ff76e9790",
+    "numeric_classification_repeated": false,
+    "binding_status": "BLOCKED_ON_ACCUMULATE_PHYSICAL_IDENTITY",
+    "first_break": "accumulate final D layout/base/address/lifetime do not exist, so tail identity/address/lifetime compatibility cannot be proven"
+  },
+  "blocker_delta": {
+    "add": [
+      "B_CONV_STEM_TYPED_MATERIALIZER_AND_HANDLER"
+    ],
+    "keep": [
+      "B_CONV_STEM_PHYSICAL_COVERAGE",
+      "B_CONV_STEM_CONFIG_BOUND_W3",
+      "B_CONV_STEM_REQUANT_BINDING",
+      "B_NODE0004_DYNAMIC_RESULT_PENDING"
+    ],
+    "close": [
+      "B_CONV_STEM_SYMBOLIC_SCHEDULE",
+      "B_CONV_STEM_SLICE_CAPACITY_LOWER_BOUND"
+    ]
+  },
+  "package_release": "NONE"
+}

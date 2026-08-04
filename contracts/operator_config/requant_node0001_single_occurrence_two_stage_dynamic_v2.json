@@ -1,0 +1,50 @@
+{
+  "active_slices": [
+    0,
+    1
+  ],
+  "additional_atomic_contracts": {
+    "alias-lifetime": "disabled_until_matching_first_divergence",
+    "guard-only": "disabled_until_matching_first_divergence",
+    "round-only": "disabled_until_matching_first_divergence"
+  },
+  "candidate_release": false,
+  "config_manifest": {
+    "path": "configs/native_ndp_sim/node0001_requant_single_occurrence_two_stage_v2/manifest.json",
+    "sha256": "c6e50200d01209147851d990e824b3eead748ecfec9fb64aaaf6cd0cd97d4097",
+    "size_bytes": 5370
+  },
+  "contract_id": "requant-node0001-single-occurrence-two-stage-dynamic-v2",
+  "contract_sha256": "bcbb0a9a57395f0a88fd4d24ffe39412b2d41e618bba51e801d09a57b9dff168",
+  "counts_as_node0001_e4": false,
+  "counts_as_node0001_e5": false,
+  "default_dynamic_contract": "single-occurrence-two-stage",
+  "dynamic_release_ready": false,
+  "formal_target_instance_allowed": false,
+  "local_report": {
+    "path": "artifacts/operator_config_validation/r5-requant-node0001-single-occurrence-two-stage-v2/local_contract_report.json",
+    "sha256": "aa1acd52995cfa22dc6cbb9f8c2682fd50782dfdc80d893673237130dddeaeb3",
+    "size_bytes": 1839
+  },
+  "logical_occurrence_count": 1,
+  "physical_slice_instance_count": 2,
+  "remaining_blockers": [
+    "B_REQUANT_SERVER_E4_E5"
+  ],
+  "request_id": "r5:hwop-0001-01",
+  "rule_ids": [
+    "CDA-CONFIG-SEMANTIC-OWNERSHIP-001",
+    "CDA-CONFIG-MATERIALIZED-ROUNDTRIP-001",
+    "CDA-REQUANT-QPARAM-001",
+    "CDA-REQUANT-INT32-GUARD-001",
+    "CDA-REQUANT-SFU-LUT-001",
+    "CDA-REQUANT-TWO-STAGE-001",
+    "CDA-REQUANT-ROUND-MAGIC-001",
+    "CDA-REQUANT-ATOMIC-SINGLE-OCCURRENCE-001",
+    "CDA-REQUANT-ATOMIC-STOCK-TB-MASK-COMPAT-001"
+  ],
+  "schema": "operator-config-semantic-contract-v1",
+  "server_package": false,
+  "status": "LOCAL_DYNAMIC_CONTRACT_MATERIALIZED_NOT_RUN",
+  "stock_tb_completion_compatible": true
+}

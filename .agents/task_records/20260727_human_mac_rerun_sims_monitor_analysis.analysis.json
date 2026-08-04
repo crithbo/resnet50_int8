@@ -1,0 +1,67 @@
+{
+  "schema": "human-json-stock-rtl-monitor-analysis-v1",
+  "rerun_is_independent": true,
+  "source": {
+    "absolute_path": "C:\\Users\\15383\\xwechat_files\\wxid_vwpfpfs4fgyk22_29b7\\msg\\file\\2026-07\\sims.zip",
+    "size_bytes": 865782,
+    "sha256": "515b09ca64835e500830f62b275c8c5444a26df7c8ac8fc1883141d127c99026",
+    "entry_count": 1014,
+    "uncompressed_bytes": 3953893,
+    "archive_path_audit_passed": true
+  },
+  "formal_return": {
+    "identity_verified": false,
+    "receipt_present": false,
+    "sidecar_present": false,
+    "result_gate_present": false,
+    "formal_readback_count": 0,
+    "numeric_correctness": "NOT_ADJUDICABLE"
+  },
+  "dynamic_counts_per_slice": {
+    "slice_count": 28,
+    "gconfig_transfers": 50,
+    "mse0_read_requests": 128,
+    "mse0_read_returns": 128,
+    "mse1_requests": 0,
+    "mse2_requests": 0,
+    "mse3_requests": 0,
+    "mse4_write_requests": 2,
+    "mse4_write_data": 0
+  },
+  "timing_ps": {
+    "start": 58838000,
+    "first_memory_request": 58854000,
+    "last_mse0_request": 59234000,
+    "last_mse0_return": 59269000
+  },
+  "first_divergence": {
+    "upstream_confirmed": "MSE0 input requests and returns complete",
+    "missing_event": "first GA/output-buffer to MSE4 write-data handshake",
+    "replicated_slices": 28
+  },
+  "root_cause": {
+    "classification": "DYNAMIC_SUPPORTED_ROOT_CAUSE",
+    "confidence": "HIGH",
+    "field": "general_array.outport.src_id",
+    "candidate_value": 1,
+    "proposed_value": 0,
+    "reason": "single-stage int32_mac producers occupy source group 0 while outport selects source group 1"
+  },
+  "retracted_reference_transfer": {
+    "field": "dram_loop_configs.LC2.last_index",
+    "candidate_value": 1,
+    "trusted_native_value": 2,
+    "trusted_reference_sha256": "db638f0640e74217e80e61350a2fe400f7b495e2201f17c39915328cdd455ba2",
+    "status": "RETRACTED_NOT_A_RISK",
+    "reason": "last_index is a loop-terminal hierarchy tag, not connection depth; LC2 remains a sibling child loop of LC0 and identity LC_PE fanout adds no loop level",
+    "included_in_proposed_correction": false
+  },
+  "classification": [
+    "FIRST_DYNAMIC_FAILURE",
+    "NO_DYNAMIC_BASELINE",
+    "DETERMINISTIC_28_SLICE_STALL",
+    "DYNAMIC_SUPPORTED_ROOT_CAUSE"
+  ],
+  "candidate_modified": false,
+  "successor_package_generated": false
+}

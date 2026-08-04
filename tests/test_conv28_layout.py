@@ -17,6 +17,7 @@ from resnet50_pipeline.conv28_layout import (
     CONV28_HARDWARE_LAYOUT_ABI,
     CONV28_LAYOUT_IDS,
     CONV28_PUBLIC_LAYOUT_ABI,
+    CONV28_SIGNED_A_LOCAL_LAYOUT_ABI,
     QLinearConvPhysicalLayout,
 )
 from resnet50_pipeline.topology28 import HIGH_RING_OWNERS, LOW_RING_OWNERS
@@ -180,6 +181,43 @@ class Rtl28QLinearConvPhysicalLayoutTests(unittest.TestCase):
         )
         self.assertTrue(np.all(last_b[:, :, :, :, 0, 1:, :] == 0))
         self.assertEqual(layout.validate(bundle)["profile_id"], layout.profile_id)
+
+    def test_signed_a_local_activation_replicas_round_trip_and_fail_closed(self) -> None:
+        layout = QLinearConvPhysicalLayout(
+            layout_abi=CONV28_SIGNED_A_LOCAL_LAYOUT_ABI
+        )
+        values = _case(height=3, width=8, kernel=(1, 1))
+        bundle = layout.forward(**values)
+        recovered = layout.inverse(bundle)
+        np.testing.assert_array_equal(recovered["conv_a"], values["activation"])
+        np.testing.assert_array_equal(recovered["conv_b"], values["weight"])
+        self.assertEqual(
+            bundle.plan.port("A").physical_axis_order,
+            "NH-Qblock-destinationPREV-Cquartet-Q8-C4",
+        )
+        explanations = layout.explain_coordinate(
+            bundle, "conv_a", (0, 4, 1, 7)
+        )
+        self.assertEqual(
+            {item["slice_id"] for item in explanations},
+            set(HIGH_RING_OWNERS[0]),
+        )
+        self.assertTrue(
+            all(item["semantic"] == "destination_local_replica" for item in explanations)
+        )
+
+        owner = HIGH_RING_OWNERS[0][1]
+        payload = bytearray(bundle.read("A", owner))
+        coordinate = next(
+            item["physical_coordinate"]
+            for item in explanations
+            if item["slice_id"] == owner
+        )
+        flat = int(np.ravel_multi_index(coordinate, bundle.region("A", owner).physical_shape))
+        payload[flat] ^= 1
+        bundle.payloads[("A", owner)] = bytes(payload)
+        with self.assertRaisesRegex(ValueError, "activation replicas differ"):
+            layout.validate(bundle)
 
     def test_global_low_ring_round_trip_and_owner_order(self) -> None:
         layout = QLinearConvPhysicalLayout(profile_id=GLOBAL_RING28_PROFILE)

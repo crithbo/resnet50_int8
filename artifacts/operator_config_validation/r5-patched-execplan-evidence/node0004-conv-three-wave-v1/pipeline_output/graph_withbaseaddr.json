@@ -1,0 +1,191 @@
+{
+  "operators": [
+    {
+      "id": "op_w0",
+      "inputs": {
+        "A": {
+          "bank_interleave": 1,
+          "dtype": "int8",
+          "remapping": null,
+          "shape": [
+            1,
+            1,
+            1024
+          ],
+          "source": {
+            "type": "external"
+          },
+          "base_addr": "0x00000000"
+        },
+        "B": {
+          "bank_interleave": 1,
+          "dtype": "uint8",
+          "remapping": null,
+          "shape": [
+            1,
+            1,
+            200704
+          ],
+          "source": {
+            "type": "external"
+          },
+          "base_addr": "0x00000400"
+        },
+        "C": {
+          "bank_interleave": 1,
+          "dtype": "int32",
+          "remapping": null,
+          "shape": [
+            1,
+            1,
+            16
+          ],
+          "source": {
+            "type": "external"
+          },
+          "base_addr": "0x00031400"
+        }
+      },
+      "output": {
+        "bank_interleave": 1,
+        "dtype": "int32",
+        "remapping": null,
+        "shape": [
+          1,
+          1,
+          50176
+        ],
+        "base_addr": "0x00031440"
+      },
+      "type": "resnet50_conv_node0004_wave0",
+      "used_slices": "0b1111111111111111111111111111"
+    },
+    {
+      "id": "op_w1",
+      "inputs": {
+        "A": {
+          "bank_interleave": 1,
+          "dtype": "int8",
+          "remapping": null,
+          "shape": [
+            1,
+            1,
+            1024
+          ],
+          "source": {
+            "type": "external"
+          },
+          "base_addr": "0x00062440"
+        },
+        "B": {
+          "bank_interleave": 1,
+          "dtype": "uint8",
+          "remapping": null,
+          "shape": [
+            1,
+            1,
+            200704
+          ],
+          "source": {
+            "type": "external"
+          },
+          "base_addr": "0x00062840"
+        },
+        "C": {
+          "bank_interleave": 1,
+          "dtype": "int32",
+          "remapping": null,
+          "shape": [
+            1,
+            1,
+            16
+          ],
+          "source": {
+            "type": "external"
+          },
+          "base_addr": "0x00093840"
+        }
+      },
+      "output": {
+        "bank_interleave": 1,
+        "dtype": "int32",
+        "remapping": null,
+        "shape": [
+          1,
+          1,
+          50176
+        ],
+        "base_addr": "0x00093880"
+      },
+      "type": "resnet50_conv_node0004_wave1",
+      "used_slices": "0b1111111111111111111111111111"
+    },
+    {
+      "id": "op_w2",
+      "inputs": {
+        "A": {
+          "bank_interleave": 1,
+          "dtype": "int8",
+          "remapping": null,
+          "shape": [
+            1,
+            1,
+            1024
+          ],
+          "source": {
+            "type": "external"
+          },
+          "base_addr": "0x000C4880"
+        },
+        "B": {
+          "bank_interleave": 1,
+          "dtype": "uint8",
+          "remapping": null,
+          "shape": [
+            1,
+            1,
+            200704
+          ],
+          "source": {
+            "type": "external"
+          },
+          "base_addr": "0x000C4C80"
+        },
+        "C": {
+          "bank_interleave": 1,
+          "dtype": "int32",
+          "remapping": null,
+          "shape": [
+            1,
+            1,
+            16
+          ],
+          "source": {
+            "type": "external"
+          },
+          "base_addr": "0x000F5C80"
+        }
+      },
+      "output": {
+        "bank_interleave": 1,
+        "dtype": "int32",
+        "remapping": null,
+        "shape": [
+          1,
+          1,
+          50176
+        ],
+        "base_addr": "0x000F5CC0"
+      },
+      "type": "resnet50_conv_node0004_wave2",
+      "used_slices": "0b0000000000000000000011111111"
+    }
+  ],
+  "params": {
+    "hw_op_id": "hwop-0004-00",
+    "node_id": "node-0004",
+    "source": "W3 signed-A Conv28 physical bundle; complete batch16 three-wave dispatch",
+    "wave_count": 3
+  },
+  "used_slices": "0b1111111111111111111111111111"
+}

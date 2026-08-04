@@ -1,0 +1,75 @@
+{
+  "operators": [
+    {
+      "id": "op_atomic_guard",
+      "inputs": {
+        "A": {
+          "base_addr": "0x00000000",
+          "dtype": "int32",
+          "shape": [
+            1,
+            4,
+            8
+          ],
+          "source": {
+            "type": "external"
+          },
+          "tensor_id": "atomic.A_int32"
+        }
+      },
+      "output": {
+        "base_addr": "0x00800000",
+        "dtype": "fp32",
+        "shape": [
+          1,
+          4,
+          8
+        ],
+        "tensor_id": "atomic.guard_fp32"
+      },
+      "stage": "guard",
+      "type": "resnet50_requant_guard_node0001",
+      "used_slices": "0b0000000000000000000000000001"
+    },
+    {
+      "id": "op_atomic_round",
+      "inputs": {
+        "A": {
+          "base_addr": "0x00800000",
+          "dtype": "fp32",
+          "shape": [
+            1,
+            4,
+            8
+          ],
+          "source": {
+            "operator_id": "op_atomic_guard",
+            "type": "operator"
+          },
+          "tensor_id": "atomic.guard_fp32"
+        }
+      },
+      "output": {
+        "base_addr": "0x01000000",
+        "dtype": "uint8",
+        "shape": [
+          1,
+          4,
+          8
+        ],
+        "tensor_id": "atomic.D_uint8"
+      },
+      "stage": "round_saturate",
+      "type": "resnet50_requant_round_node0001_s00",
+      "used_slices": "0b0000000000000000000000000001"
+    }
+  ],
+  "params": {
+    "candidate_release": false,
+    "diagnostic_only": true,
+    "request_id": "r5:hwop-0001-01"
+  },
+  "plan_id": "node0001-requant-single-occurrence-two-stage-v1",
+  "schema_version": "0.1",
+  "used_slices": "0b0000000000000000000000000001"
+}

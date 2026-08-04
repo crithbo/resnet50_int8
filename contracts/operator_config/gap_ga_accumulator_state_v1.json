@@ -1,0 +1,213 @@
+{
+  "acceptance": {
+    "decisive_condition": "matched && trans_init>=2 && !calc && !ob_valid && input2==outbuffer_data[rd_ptr] && input2!=0",
+    "if_observed": "classify exact GAP root as ga_int32_sum_outbuffer_count_underflow_then_invalid_slot_reuse",
+    "observed": true
+  },
+  "contract_sha256": "5df1d28221b20287cb70651bf3242ffedee01d6aaf81abb9020f741f88a10340",
+  "inputs": {
+    "inbuffer_rtl": {
+      "path": "NDP_copy01/rtl/Slice/General_Array/GA_PE_Group/GA_PE_Inbuffer.sv",
+      "sha256": "25fa4dd2c6fe8301bc3651d660df72059ea2787c0c26a2841a1d4e439586b518",
+      "size_bytes": 34326
+    },
+    "outbuffer_rtl": {
+      "path": "NDP_copy01/rtl/Slice/General_Array/GA_PE_Group/GA_PE_Outbuffer.sv",
+      "sha256": "0e4c024c159cb02c2ec6425490fa09abf151a2cf99034b03c36d80dbc9a72de8",
+      "size_bytes": 19879
+    },
+    "v5_numeric_boundary": {
+      "path": "server_returns/gap_hwop0071_probe_v5_return_20260723/GAP_PROBE_V5_ANALYSIS.md",
+      "sha256": "a1d22b099c75916468309deca691a78b29b33e648b01e5aa418a96430da067d7",
+      "size_bytes": 6503
+    }
+  },
+  "reachability": {
+    "calculate_done_resets_transout_initial_to_zero": true,
+    "read_pointer_selects_cleared_slot_data": true,
+    "remaining_dynamic_question": null,
+    "tag_clear_without_data_clear": true,
+    "transout_initial_saturates_at_three_until_calculate_done": true,
+    "v5_exact_boundary": {
+      "block0_matches_golden": true,
+      "block1_first_c8_mismatches": true,
+      "first_wrong_boundary": "GA block1 final input0+input2 operands before MSE4",
+      "full_int32_match_count": 10,
+      "full_int32_mismatch_count": 2038
+    }
+  },
+  "release": {
+    "blocker": "B_GAP_GA_ACCUM_STATE",
+    "blocker_resolved": false,
+    "functional_rtl_modified": false,
+    "gap_candidate_allowed": false
+  },
+  "rtl_equations": {
+    "data_lifetime": "outbuffer data has only a write-enable assignment and is not cleared when its tag is cleared",
+    "int32_end_initial": "end_transout_initial=(transout_initial>=2)",
+    "match": "for transout with transout_initial bit0|bit1 set, inport2 valid is not required for ga_pe_inbuffer_matched",
+    "missing_guard": "the final branch does not test ga_pe_outbuffer2alu_valid_bit",
+    "noncalculate_input_c": "transout_initial==0 ? configured_C : !end_transout_initial ? 0 : outbuffer_data[rd_ptr]",
+    "selected_data": "ga_pe_outbuffer_rd_data always reads data[rd_ptr], independent of tag valid and count",
+    "tag_lifetime": "read/calculate/result-last branches clear outbuffer tags"
+  },
+  "rule_ids": [
+    "CDA-GA-OUTBUFFER-OCCUPANCY-001",
+    "CDA-GA-INVALID-SLOT-ISOLATION-001",
+    "CDA-GA-CROSS-BLOCK-INIT-001",
+    "CDA-GAP-ORTHOGONAL-DEFECTS-001",
+    "CDA-GAP-D-READBACK-COVERAGE-001",
+    "CDA-MSE4-MONITOR-EVIDENCE-001",
+    "CDA-SERVER-FOCUSED-IDENTITY-001"
+  ],
+  "schema": "resnet50-gap-ga-accumulator-state-v1",
+  "server_return": {
+    "bindings": {
+      "analysis": {
+        "path": "server_returns/gap_hwop0071_probe_v7_return_20260724/gap_probe_v7_analysis.json",
+        "sha256": "b100d94084ccec3f9abf03a9504335bc1c9e8cde19374359e74d9b3571b37dfc",
+        "size_bytes": 13023
+      },
+      "diagnosis": {
+        "path": "server_returns/gap_hwop0071_probe_v7_return_20260724/GAP_PROBE_V7_DIAGNOSIS.md",
+        "sha256": "81dbed4969ff850c1c58974feadd58b9f4b3602aaacafa7ac01266dddbbf4d81",
+        "size_bytes": 6658
+      },
+      "native_acceptance": {
+        "path": "server_returns/gap_hwop0071_probe_v7_return_20260724/native_return_acceptance_v7.json",
+        "sha256": "1f6f873f0ce9edbf3004c7a0cae21c1331859db86464dc65dfeb9486acae931d",
+        "size_bytes": 14272
+      },
+      "numeric": {
+        "path": "server_returns/gap_hwop0071_probe_v7_return_20260724/gap_numeric_path_report_v7.json",
+        "sha256": "c067a68029ec15ef3fdd66a45da3c4c1b597f5a7bc91d256258fc87fc602ba39",
+        "size_bytes": 9091
+      }
+    },
+    "classification": "ga_int32_sum_outbuffer_count_underflow_then_invalid_slot_reuse",
+    "ga": {
+      "depth": 2,
+      "event_count": 512,
+      "first_invalid_slot_c_reuse": {
+        "event_number": 241,
+        "input_c": "0x000000a6",
+        "outbuffer_count": "2",
+        "pe": "00",
+        "read_pointer": 1,
+        "selected_data": "0x000000a6",
+        "selected_tag": "0x0",
+        "time": 700318000,
+        "transout_initial": "0x2"
+      },
+      "first_underflow_transition": {
+        "after_count": 3,
+        "after_event_number": 233,
+        "after_time": 700316000,
+        "before_count": 1,
+        "before_event_number": 225,
+        "before_time": 700313000,
+        "calculate_count_inference": "int32 calc_v0=1 and calc_v2=1 implies transout_calculate_cnt=2",
+        "configured_depth": 2,
+        "observed_write_handshake": 0,
+        "pe": "00"
+      },
+      "illegal_count_event_count": 16,
+      "invalid_slot_c_reuse_count": 217,
+      "occupancy_validation": {
+        "accepted_write_count": 0,
+        "after_count": 3,
+        "before_count": 1,
+        "depth": 2,
+        "expected_count": -1,
+        "removed_valid_count": 2,
+        "rule_id": "CDA-GA-OUTBUFFER-OCCUPANCY-001",
+        "valid": false,
+        "violations": [
+          "remove_exceeds_occupancy",
+          "after_count_out_of_range",
+          "count_delta_not_explained_by_valid_items_and_handshakes"
+        ]
+      },
+      "underflow_transition_count": 8
+    },
+    "identity": {
+      "focused_rtl_expected_count": 14,
+      "focused_rtl_match_count": 14,
+      "pre_post_post_run_stable": true,
+      "whole_tree_hash_mismatch_is_rejection_by_itself": false
+    },
+    "independent_config_failure": {
+      "expected_lines_per_slice": 512,
+      "mse4_request_count": 512,
+      "passed_slice_count": 0,
+      "slice_count": 16,
+      "unique_d_address_count": 2
+    },
+    "monitor_boundary": {
+      "local_count_delta_is_drop_proof": false,
+      "local_wdata_records": 511,
+      "same_clock_v5_request_count": 512,
+      "same_clock_v5_wdata_count": 512
+    },
+    "status": "server_dynamic_counterexample_accepted"
+  },
+  "server_test": {
+    "event_limit": 512,
+    "expected_return_name": "gap_hwop0071_sum_probe_v7_return.zip",
+    "functional_rtl_included": false,
+    "manifest": {
+      "path": "artifacts/operator_config_validation/r5-server-test-packages/gap_hwop0071_sum_probe_v7/TEST_PACKAGE_MANIFEST.json",
+      "sha256": "b22da0386e7c96e3ed39ee5eb7e08242b72e60ecd5ca59e24cdabf1b177e1c56",
+      "size_bytes": 38117
+    },
+    "observer_event": "GA_ACCUM_STATE",
+    "sha256_sidecar": {
+      "path": "artifacts/operator_config_validation/r5-server-test-packages/gap_hwop0071_sum_probe_v7.zip.sha256",
+      "sha256": "7a80c23fcce1e4e1aa5498d31c6d83cd587a4567a913999adf2d0c83b5e9ee29",
+      "size_bytes": 96
+    },
+    "status": "generated_frozen_server_return_accepted",
+    "wave_dump_enabled": false,
+    "zip": {
+      "path": "artifacts/operator_config_validation/r5-server-test-packages/gap_hwop0071_sum_probe_v7.zip",
+      "sha256": "c4462033fc4d59ad71121639daed70de1185c5f294264bc3847d22b6bc481893",
+      "size_bytes": 3280763
+    }
+  },
+  "state_transition_counterexample": {
+    "classification": "CONTRADICTED",
+    "decision": {
+      "calculate": false,
+      "end_transout_initial": true,
+      "input_c": 76467,
+      "input_c_source": "outbuffer_data_without_valid_guard",
+      "invalid_slot_reused_as_c": true,
+      "matched": true,
+      "outbuffer_data": 76467,
+      "outbuffer_read_enable": true,
+      "outbuffer_valid": false,
+      "outbuffer_write_enable": true,
+      "transout_initial": 3
+    },
+    "precondition": {
+      "calculate": false,
+      "matched": true,
+      "opcode": "int32_sum",
+      "selected_outbuffer_data": "0x00012ab3",
+      "selected_outbuffer_tag_valid": false,
+      "transout_initial": 3
+    },
+    "result": "ALU input C is 0x00012ab3 even though the selected slot is invalid; the arithmetic result can therefore include stale state from a preceding reduction block",
+    "scope": "universal RTL state counterexample and reachability mechanism; not yet an observed v7 occurrence in the exact server run"
+  },
+  "status": "server_dynamic_root_cause_closed_release_blocked",
+  "validation_rules": {
+    "CDA-GA-CROSS-BLOCK-INIT-001": "a new block keeps C=0 until a new partial is valid; transout_initial alone never authorizes feedback",
+    "CDA-GA-INVALID-SLOT-ISOLATION-001": "an invalid tag/valid slot cannot drive an ALU tag or input C",
+    "CDA-GA-OUTBUFFER-OCCUPANCY-001": "0<=count<=DEPTH at every cycle; compaction removes only actually valid entries and accepted writes alone add entries",
+    "CDA-GAP-D-READBACK-COVERAGE-001": "each slice must cover all 512 expected D readback lines and pass golden; aggregate request count is insufficient",
+    "CDA-GAP-ORTHOGONAL-DEFECTS-001": "RTL_CONTROL and CONFIG_SEMANTICS failures are independent blockers and must be released independently",
+    "CDA-MSE4-MONITOR-EVIDENCE-001": "a local request/wdata delta cannot prove a lost write without same-clock observation or formal readback",
+    "CDA-SERVER-FOCUSED-IDENTITY-001": "server identity uses pre/post/post-run stability plus focused file matches; whole-tree hash mismatch alone is not rejection"
+  }
+}

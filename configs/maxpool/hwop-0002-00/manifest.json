@@ -1,0 +1,184 @@
+{
+  "identity": {
+    "hwop_id": "hwop-0002-00",
+    "input_tensor_id": "tensor-f6c1a8fb6fd529e8",
+    "model_sha256": "c234f30975989788b4405f25253275aae247ab6dbdd34aaa69ab0a59ff76f6d0",
+    "node_id": "node-0002",
+    "onnx_name": "resnetv17_pool0_fwd",
+    "output_tensor_id": "tensor-8d2f28c80ac24676"
+  },
+  "kind": "resnet50_uint8_maxpool_target_instance",
+  "limitations": [
+    "The three JSONs reuse one single-sample target program at three local DRAM offsets.",
+    "A target controller must load/start/wait the listed active slices for each wave.",
+    "This manifest does not itself prove full target simulator or hardware execution."
+  ],
+  "logical": {
+    "ceil_mode": 0,
+    "dilations": [
+      1,
+      1
+    ],
+    "dtype": "uint8",
+    "input_shape": [
+      16,
+      64,
+      112,
+      112
+    ],
+    "kernel_shape": [
+      3,
+      3
+    ],
+    "output_shape": [
+      16,
+      64,
+      56,
+      56
+    ],
+    "pads": [
+      1,
+      1,
+      1,
+      1
+    ],
+    "spatial_padding_value": 0,
+    "storage_order": 0,
+    "strides": [
+      2,
+      2
+    ]
+  },
+  "physical": {
+    "group_sample_counts": [
+      3,
+      3,
+      2,
+      2,
+      2,
+      2,
+      2
+    ],
+    "input_physical_shape": [
+      3,
+      112,
+      112,
+      16
+    ],
+    "input_region_bytes": 602112,
+    "input_sample_bytes": 200704,
+    "local_channels": 16,
+    "output_physical_shape": [
+      3,
+      56,
+      56,
+      16
+    ],
+    "output_region_offset": 602112,
+    "output_sample_bytes": 50176,
+    "slice_count": 28,
+    "storage_samples_per_slice": 3
+  },
+  "profile_id": "w4_group4x7_batch_channel28_candidate_v1",
+  "schema_version": "0.1",
+  "source_template": {
+    "commit": "d4ffc32c9b29a858d83e13706cd837c5549521a4",
+    "name": "maxpool_config_16_112_112_stride2_padding1.json",
+    "repository": "ndp-sim-ref",
+    "sha256": "a0091f3fae223abd5225c54b833cf3bb578b3fea6b202883c5cbf4be50d60cb1"
+  },
+  "status": "candidate_config_bound_not_target_executed",
+  "waves": [
+    {
+      "active_slices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27
+      ],
+      "config_sha256": "6587762f24080cfbc4fc209398779b7674c4fdaac636c1332a39bcb42026db71",
+      "input_offset": 0,
+      "output_offset": 602112,
+      "path": "wave-0.json",
+      "wave_index": 0
+    },
+    {
+      "active_slices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27
+      ],
+      "config_sha256": "bb057427b83bc9c6a767d9403cdd00e43ef583268a38b5aea43ea090c1dc05f1",
+      "input_offset": 200704,
+      "output_offset": 652288,
+      "path": "wave-1.json",
+      "wave_index": 1
+    },
+    {
+      "active_slices": [
+        0,
+        2,
+        3,
+        1,
+        4,
+        6,
+        7,
+        5
+      ],
+      "config_sha256": "16dcba073801afa667b23d0d61d31b339094e0d51e666b010c469ed95fa22339",
+      "input_offset": 401408,
+      "output_offset": 702464,
+      "path": "wave-2.json",
+      "wave_index": 2
+    }
+  ]
+}

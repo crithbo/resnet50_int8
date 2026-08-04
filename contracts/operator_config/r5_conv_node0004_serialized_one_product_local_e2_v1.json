@@ -1,0 +1,1626 @@
+{
+  "address_lifetime_terminal": {
+    "full_request_enumeration": {
+      "path": "artifacts/operator_config_validation/r5_conv_node0004_serialized_one_product_local_e2_v1/execplan_final/request_address_validation_report.json",
+      "request_count_with_multiplicity": 4130816,
+      "sampled_for_release": false,
+      "sha256": "b40a23f184aa44a34d6624eea9620112eb731595248e5196790274c1c3049381",
+      "unique_request_address_count": 4030720
+    },
+    "lifetime_boundary": "symbolic config/address/terminal conservation is closed for the local baseline; cycle-level server dynamic release remains false",
+    "per_output_region": [
+      {
+        "base_addr": "0x000C5040",
+        "first_byte_addr": "0x000C5040",
+        "last_byte_addr": "0x000F6030",
+        "recomputed_written_byte_count": 200704,
+        "region": "serialized_w0_matrixD_slice0",
+        "slice": 0,
+        "transaction_count": 12544,
+        "unique_16byte_base_count": 12544,
+        "wave": 0
+      },
+      {
+        "base_addr": "0x020C5040",
+        "first_byte_addr": "0x020C5040",
+        "last_byte_addr": "0x020F6030",
+        "recomputed_written_byte_count": 200704,
+        "region": "serialized_w0_matrixD_slice1",
+        "slice": 1,
+        "transaction_count": 12544,
+        "unique_16byte_base_count": 12544,
+        "wave": 0
+      },
+      {
+        "base_addr": "0x040C5040",
+        "first_byte_addr": "0x040C5040",
+        "last_byte_addr": "0x040F6030",
+        "recomputed_written_byte_count": 200704,
+        "region": "serialized_w0_matrixD_slice2",
+        "slice": 2,
+        "transaction_count": 12544,
+        "unique_16byte_base_count": 12544,
+        "wave": 0
+      },
+      {
+        "base_addr": "0x060C5040",
+        "first_byte_addr": "0x060C5040",
+        "last_byte_addr": "0x060F6030",
+        "recomputed_written_byte_count": 200704,
+        "region": "serialized_w0_matrixD_slice3",
+        "slice": 3,
+        "transaction_count": 12544,
+        "unique_16byte_base_count": 12544,
+        "wave": 0
+      },
+      {
+        "base_addr": "0x080C5040",
+        "first_byte_addr": "0x080C5040",
+        "last_byte_addr": "0x080F6030",
+        "recomputed_written_byte_count": 200704,
+        "region": "serialized_w0_matrixD_slice4",
+        "slice": 4,
+        "transaction_count": 12544,
+        "unique_16byte_base_count": 12544,
+        "wave": 0
+      },
+      {
+        "base_addr": "0x0A0C5040",
+        "first_byte_addr": "0x0A0C5040",
+        "last_byte_addr": "0x0A0F6030",
+        "recomputed_written_byte_count": 200704,
+        "region": "serialized_w0_matrixD_slice5",
+        "slice": 5,
+        "transaction_count": 12544,
+        "unique_16byte_base_count": 12544,
+        "wave": 0
+      },
+      {
+        "base_addr": "0x0C0C5040",
+        "first_byte_addr": "0x0C0C5040",
+        "last_byte_addr": "0x0C0F6030",
+        "recomputed_written_byte_count": 200704,
+        "region": "serialized_w0_matrixD_slice6",
+        "slice": 6,
+        "transaction_count": 12544,
+        "unique_16byte_base_count": 12544,
+        "wave": 0
+      },
+      {
+        "base_addr": "0x0E0C5040",
+        "first_byte_addr": "0x0E0C5040",
+        "last_byte_addr": "0x0E0F6030",
+        "recomputed_written_byte_count": 200704,
+        "region": "serialized_w0_matrixD_slice7",
+        "slice": 7,
+        "transaction_count": 12544,
+        "unique_16byte_base_count": 12544,
+        "wave": 0
+      },
+      {
+        "base_addr": "0x100C5040",
+        "first_byte_addr": "0x100C5040",
+        "last_byte_addr": "0x100F6030",
+        "recomputed_written_byte_count": 200704,
+        "region": "serialized_w0_matrixD_slice8",
+        "slice": 8,
+        "transaction_count": 12544,
+        "unique_16byte_base_count": 12544,
+        "wave": 0
+      },
+      {
+        "base_addr": "0x120C5040",
+        "first_byte_addr": "0x120C5040",
+        "last_byte_addr": "0x120F6030",
+        "recomputed_written_byte_count": 200704,
+        "region": "serialized_w0_matrixD_slice9",
+        "slice": 9,
+        "transaction_count": 12544,
+        "unique_16byte_base_count": 12544,
+        "wave": 0
+      },
+      {
+        "base_addr": "0x140C5040",
+        "first_byte_addr": "0x140C5040",
+        "last_byte_addr": "0x140F6030",
+        "recomputed_written_byte_count": 200704,
+        "region": "serialized_w0_matrixD_slice10",
+        "slice": 10,
+        "transaction_count": 12544,
+        "unique_16byte_base_count": 12544,
+        "wave": 0
+      },
+      {
+        "base_addr": "0x160C5040",
+        "first_byte_addr": "0x160C5040",
+        "last_byte_addr": "0x160F6030",
+        "recomputed_written_byte_count": 200704,
+        "region": "serialized_w0_matrixD_slice11",
+        "slice": 11,
+        "transaction_count": 12544,
+        "unique_16byte_base_count": 12544,
+        "wave": 0
+      },
+      {
+        "base_addr": "0x180C5040",
+        "first_byte_addr": "0x180C5040",
+        "last_byte_addr": "0x180F6030",
+        "recomputed_written_byte_count": 200704,
+        "region": "serialized_w0_matrixD_slice12",
+        "slice": 12,
+        "transaction_count": 12544,
+        "unique_16byte_base_count": 12544,
+        "wave": 0
+      },
+      {
+        "base_addr": "0x1A0C5040",
+        "first_byte_addr": "0x1A0C5040",
+        "last_byte_addr": "0x1A0F6030",
+        "recomputed_written_byte_count": 200704,
+        "region": "serialized_w0_matrixD_slice13",
+        "slice": 13,
+        "transaction_count": 12544,
+        "unique_16byte_base_count": 12544,
+        "wave": 0
+      },
+      {
+        "base_addr": "0x1C0C5040",
+        "first_byte_addr": "0x1C0C5040",
+        "last_byte_addr": "0x1C0F6030",
+        "recomputed_written_byte_count": 200704,
+        "region": "serialized_w0_matrixD_slice14",
+        "slice": 14,
+        "transaction_count": 12544,
+        "unique_16byte_base_count": 12544,
+        "wave": 0
+      },
+      {
+        "base_addr": "0x1E0C5040",
+        "first_byte_addr": "0x1E0C5040",
+        "last_byte_addr": "0x1E0F6030",
+        "recomputed_written_byte_count": 200704,
+        "region": "serialized_w0_matrixD_slice15",
+        "slice": 15,
+        "transaction_count": 12544,
+        "unique_16byte_base_count": 12544,
+        "wave": 0
+      },
+      {
+        "base_addr": "0x200C5040",
+        "first_byte_addr": "0x200C5040",
+        "last_byte_addr": "0x200F6030",
+        "recomputed_written_byte_count": 200704,
+        "region": "serialized_w0_matrixD_slice16",
+        "slice": 16,
+        "transaction_count": 12544,
+        "unique_16byte_base_count": 12544,
+        "wave": 0
+      },
+      {
+        "base_addr": "0x220C5040",
+        "first_byte_addr": "0x220C5040",
+        "last_byte_addr": "0x220F6030",
+        "recomputed_written_byte_count": 200704,
+        "region": "serialized_w0_matrixD_slice17",
+        "slice": 17,
+        "transaction_count": 12544,
+        "unique_16byte_base_count": 12544,
+        "wave": 0
+      },
+      {
+        "base_addr": "0x240C5040",
+        "first_byte_addr": "0x240C5040",
+        "last_byte_addr": "0x240F6030",
+        "recomputed_written_byte_count": 200704,
+        "region": "serialized_w0_matrixD_slice18",
+        "slice": 18,
+        "transaction_count": 12544,
+        "unique_16byte_base_count": 12544,
+        "wave": 0
+      },
+      {
+        "base_addr": "0x260C5040",
+        "first_byte_addr": "0x260C5040",
+        "last_byte_addr": "0x260F6030",
+        "recomputed_written_byte_count": 200704,
+        "region": "serialized_w0_matrixD_slice19",
+        "slice": 19,
+        "transaction_count": 12544,
+        "unique_16byte_base_count": 12544,
+        "wave": 0
+      },
+      {
+        "base_addr": "0x280C5040",
+        "first_byte_addr": "0x280C5040",
+        "last_byte_addr": "0x280F6030",
+        "recomputed_written_byte_count": 200704,
+        "region": "serialized_w0_matrixD_slice20",
+        "slice": 20,
+        "transaction_count": 12544,
+        "unique_16byte_base_count": 12544,
+        "wave": 0
+      },
+      {
+        "base_addr": "0x2A0C5040",
+        "first_byte_addr": "0x2A0C5040",
+        "last_byte_addr": "0x2A0F6030",
+        "recomputed_written_byte_count": 200704,
+        "region": "serialized_w0_matrixD_slice21",
+        "slice": 21,
+        "transaction_count": 12544,
+        "unique_16byte_base_count": 12544,
+        "wave": 0
+      },
+      {
+        "base_addr": "0x2C0C5040",
+        "first_byte_addr": "0x2C0C5040",
+        "last_byte_addr": "0x2C0F6030",
+        "recomputed_written_byte_count": 200704,
+        "region": "serialized_w0_matrixD_slice22",
+        "slice": 22,
+        "transaction_count": 12544,
+        "unique_16byte_base_count": 12544,
+        "wave": 0
+      },
+      {
+        "base_addr": "0x2E0C5040",
+        "first_byte_addr": "0x2E0C5040",
+        "last_byte_addr": "0x2E0F6030",
+        "recomputed_written_byte_count": 200704,
+        "region": "serialized_w0_matrixD_slice23",
+        "slice": 23,
+        "transaction_count": 12544,
+        "unique_16byte_base_count": 12544,
+        "wave": 0
+      },
+      {
+        "base_addr": "0x300C5040",
+        "first_byte_addr": "0x300C5040",
+        "last_byte_addr": "0x300F6030",
+        "recomputed_written_byte_count": 200704,
+        "region": "serialized_w0_matrixD_slice24",
+        "slice": 24,
+        "transaction_count": 12544,
+        "unique_16byte_base_count": 12544,
+        "wave": 0
+      },
+      {
+        "base_addr": "0x320C5040",
+        "first_byte_addr": "0x320C5040",
+        "last_byte_addr": "0x320F6030",
+        "recomputed_written_byte_count": 200704,
+        "region": "serialized_w0_matrixD_slice25",
+        "slice": 25,
+        "transaction_count": 12544,
+        "unique_16byte_base_count": 12544,
+        "wave": 0
+      },
+      {
+        "base_addr": "0x340C5040",
+        "first_byte_addr": "0x340C5040",
+        "last_byte_addr": "0x340F6030",
+        "recomputed_written_byte_count": 200704,
+        "region": "serialized_w0_matrixD_slice26",
+        "slice": 26,
+        "transaction_count": 12544,
+        "unique_16byte_base_count": 12544,
+        "wave": 0
+      },
+      {
+        "base_addr": "0x360C5040",
+        "first_byte_addr": "0x360C5040",
+        "last_byte_addr": "0x360F6030",
+        "recomputed_written_byte_count": 200704,
+        "region": "serialized_w0_matrixD_slice27",
+        "slice": 27,
+        "transaction_count": 12544,
+        "unique_16byte_base_count": 12544,
+        "wave": 0
+      },
+      {
+        "base_addr": "0x001BB080",
+        "first_byte_addr": "0x001BB080",
+        "last_byte_addr": "0x001EC070",
+        "recomputed_written_byte_count": 200704,
+        "region": "serialized_w1_matrixD_slice0",
+        "slice": 0,
+        "transaction_count": 12544,
+        "unique_16byte_base_count": 12544,
+        "wave": 1
+      },
+      {
+        "base_addr": "0x021BB080",
+        "first_byte_addr": "0x021BB080",
+        "last_byte_addr": "0x021EC070",
+        "recomputed_written_byte_count": 200704,
+        "region": "serialized_w1_matrixD_slice1",
+        "slice": 1,
+        "transaction_count": 12544,
+        "unique_16byte_base_count": 12544,
+        "wave": 1
+      },
+      {
+        "base_addr": "0x041BB080",
+        "first_byte_addr": "0x041BB080",
+        "last_byte_addr": "0x041EC070",
+        "recomputed_written_byte_count": 200704,
+        "region": "serialized_w1_matrixD_slice2",
+        "slice": 2,
+        "transaction_count": 12544,
+        "unique_16byte_base_count": 12544,
+        "wave": 1
+      },
+      {
+        "base_addr": "0x061BB080",
+        "first_byte_addr": "0x061BB080",
+        "last_byte_addr": "0x061EC070",
+        "recomputed_written_byte_count": 200704,
+        "region": "serialized_w1_matrixD_slice3",
+        "slice": 3,
+        "transaction_count": 12544,
+        "unique_16byte_base_count": 12544,
+        "wave": 1
+      },
+      {
+        "base_addr": "0x081BB080",
+        "first_byte_addr": "0x081BB080",
+        "last_byte_addr": "0x081EC070",
+        "recomputed_written_byte_count": 200704,
+        "region": "serialized_w1_matrixD_slice4",
+        "slice": 4,
+        "transaction_count": 12544,
+        "unique_16byte_base_count": 12544,
+        "wave": 1
+      },
+      {
+        "base_addr": "0x0A1BB080",
+        "first_byte_addr": "0x0A1BB080",
+        "last_byte_addr": "0x0A1EC070",
+        "recomputed_written_byte_count": 200704,
+        "region": "serialized_w1_matrixD_slice5",
+        "slice": 5,
+        "transaction_count": 12544,
+        "unique_16byte_base_count": 12544,
+        "wave": 1
+      },
+      {
+        "base_addr": "0x0C1BB080",
+        "first_byte_addr": "0x0C1BB080",
+        "last_byte_addr": "0x0C1EC070",
+        "recomputed_written_byte_count": 200704,
+        "region": "serialized_w1_matrixD_slice6",
+        "slice": 6,
+        "transaction_count": 12544,
+        "unique_16byte_base_count": 12544,
+        "wave": 1
+      },
+      {
+        "base_addr": "0x0E1BB080",
+        "first_byte_addr": "0x0E1BB080",
+        "last_byte_addr": "0x0E1EC070",
+        "recomputed_written_byte_count": 200704,
+        "region": "serialized_w1_matrixD_slice7",
+        "slice": 7,
+        "transaction_count": 12544,
+        "unique_16byte_base_count": 12544,
+        "wave": 1
+      },
+      {
+        "base_addr": "0x101BB080",
+        "first_byte_addr": "0x101BB080",
+        "last_byte_addr": "0x101EC070",
+        "recomputed_written_byte_count": 200704,
+        "region": "serialized_w1_matrixD_slice8",
+        "slice": 8,
+        "transaction_count": 12544,
+        "unique_16byte_base_count": 12544,
+        "wave": 1
+      },
+      {
+        "base_addr": "0x121BB080",
+        "first_byte_addr": "0x121BB080",
+        "last_byte_addr": "0x121EC070",
+        "recomputed_written_byte_count": 200704,
+        "region": "serialized_w1_matrixD_slice9",
+        "slice": 9,
+        "transaction_count": 12544,
+        "unique_16byte_base_count": 12544,
+        "wave": 1
+      },
+      {
+        "base_addr": "0x141BB080",
+        "first_byte_addr": "0x141BB080",
+        "last_byte_addr": "0x141EC070",
+        "recomputed_written_byte_count": 200704,
+        "region": "serialized_w1_matrixD_slice10",
+        "slice": 10,
+        "transaction_count": 12544,
+        "unique_16byte_base_count": 12544,
+        "wave": 1
+      },
+      {
+        "base_addr": "0x161BB080",
+        "first_byte_addr": "0x161BB080",
+        "last_byte_addr": "0x161EC070",
+        "recomputed_written_byte_count": 200704,
+        "region": "serialized_w1_matrixD_slice11",
+        "slice": 11,
+        "transaction_count": 12544,
+        "unique_16byte_base_count": 12544,
+        "wave": 1
+      },
+      {
+        "base_addr": "0x181BB080",
+        "first_byte_addr": "0x181BB080",
+        "last_byte_addr": "0x181EC070",
+        "recomputed_written_byte_count": 200704,
+        "region": "serialized_w1_matrixD_slice12",
+        "slice": 12,
+        "transaction_count": 12544,
+        "unique_16byte_base_count": 12544,
+        "wave": 1
+      },
+      {
+        "base_addr": "0x1A1BB080",
+        "first_byte_addr": "0x1A1BB080",
+        "last_byte_addr": "0x1A1EC070",
+        "recomputed_written_byte_count": 200704,
+        "region": "serialized_w1_matrixD_slice13",
+        "slice": 13,
+        "transaction_count": 12544,
+        "unique_16byte_base_count": 12544,
+        "wave": 1
+      },
+      {
+        "base_addr": "0x1C1BB080",
+        "first_byte_addr": "0x1C1BB080",
+        "last_byte_addr": "0x1C1EC070",
+        "recomputed_written_byte_count": 200704,
+        "region": "serialized_w1_matrixD_slice14",
+        "slice": 14,
+        "transaction_count": 12544,
+        "unique_16byte_base_count": 12544,
+        "wave": 1
+      },
+      {
+        "base_addr": "0x1E1BB080",
+        "first_byte_addr": "0x1E1BB080",
+        "last_byte_addr": "0x1E1EC070",
+        "recomputed_written_byte_count": 200704,
+        "region": "serialized_w1_matrixD_slice15",
+        "slice": 15,
+        "transaction_count": 12544,
+        "unique_16byte_base_count": 12544,
+        "wave": 1
+      },
+      {
+        "base_addr": "0x201BB080",
+        "first_byte_addr": "0x201BB080",
+        "last_byte_addr": "0x201EC070",
+        "recomputed_written_byte_count": 200704,
+        "region": "serialized_w1_matrixD_slice16",
+        "slice": 16,
+        "transaction_count": 12544,
+        "unique_16byte_base_count": 12544,
+        "wave": 1
+      },
+      {
+        "base_addr": "0x221BB080",
+        "first_byte_addr": "0x221BB080",
+        "last_byte_addr": "0x221EC070",
+        "recomputed_written_byte_count": 200704,
+        "region": "serialized_w1_matrixD_slice17",
+        "slice": 17,
+        "transaction_count": 12544,
+        "unique_16byte_base_count": 12544,
+        "wave": 1
+      },
+      {
+        "base_addr": "0x241BB080",
+        "first_byte_addr": "0x241BB080",
+        "last_byte_addr": "0x241EC070",
+        "recomputed_written_byte_count": 200704,
+        "region": "serialized_w1_matrixD_slice18",
+        "slice": 18,
+        "transaction_count": 12544,
+        "unique_16byte_base_count": 12544,
+        "wave": 1
+      },
+      {
+        "base_addr": "0x261BB080",
+        "first_byte_addr": "0x261BB080",
+        "last_byte_addr": "0x261EC070",
+        "recomputed_written_byte_count": 200704,
+        "region": "serialized_w1_matrixD_slice19",
+        "slice": 19,
+        "transaction_count": 12544,
+        "unique_16byte_base_count": 12544,
+        "wave": 1
+      },
+      {
+        "base_addr": "0x281BB080",
+        "first_byte_addr": "0x281BB080",
+        "last_byte_addr": "0x281EC070",
+        "recomputed_written_byte_count": 200704,
+        "region": "serialized_w1_matrixD_slice20",
+        "slice": 20,
+        "transaction_count": 12544,
+        "unique_16byte_base_count": 12544,
+        "wave": 1
+      },
+      {
+        "base_addr": "0x2A1BB080",
+        "first_byte_addr": "0x2A1BB080",
+        "last_byte_addr": "0x2A1EC070",
+        "recomputed_written_byte_count": 200704,
+        "region": "serialized_w1_matrixD_slice21",
+        "slice": 21,
+        "transaction_count": 12544,
+        "unique_16byte_base_count": 12544,
+        "wave": 1
+      },
+      {
+        "base_addr": "0x2C1BB080",
+        "first_byte_addr": "0x2C1BB080",
+        "last_byte_addr": "0x2C1EC070",
+        "recomputed_written_byte_count": 200704,
+        "region": "serialized_w1_matrixD_slice22",
+        "slice": 22,
+        "transaction_count": 12544,
+        "unique_16byte_base_count": 12544,
+        "wave": 1
+      },
+      {
+        "base_addr": "0x2E1BB080",
+        "first_byte_addr": "0x2E1BB080",
+        "last_byte_addr": "0x2E1EC070",
+        "recomputed_written_byte_count": 200704,
+        "region": "serialized_w1_matrixD_slice23",
+        "slice": 23,
+        "transaction_count": 12544,
+        "unique_16byte_base_count": 12544,
+        "wave": 1
+      },
+      {
+        "base_addr": "0x301BB080",
+        "first_byte_addr": "0x301BB080",
+        "last_byte_addr": "0x301EC070",
+        "recomputed_written_byte_count": 200704,
+        "region": "serialized_w1_matrixD_slice24",
+        "slice": 24,
+        "transaction_count": 12544,
+        "unique_16byte_base_count": 12544,
+        "wave": 1
+      },
+      {
+        "base_addr": "0x321BB080",
+        "first_byte_addr": "0x321BB080",
+        "last_byte_addr": "0x321EC070",
+        "recomputed_written_byte_count": 200704,
+        "region": "serialized_w1_matrixD_slice25",
+        "slice": 25,
+        "transaction_count": 12544,
+        "unique_16byte_base_count": 12544,
+        "wave": 1
+      },
+      {
+        "base_addr": "0x341BB080",
+        "first_byte_addr": "0x341BB080",
+        "last_byte_addr": "0x341EC070",
+        "recomputed_written_byte_count": 200704,
+        "region": "serialized_w1_matrixD_slice26",
+        "slice": 26,
+        "transaction_count": 12544,
+        "unique_16byte_base_count": 12544,
+        "wave": 1
+      },
+      {
+        "base_addr": "0x361BB080",
+        "first_byte_addr": "0x361BB080",
+        "last_byte_addr": "0x361EC070",
+        "recomputed_written_byte_count": 200704,
+        "region": "serialized_w1_matrixD_slice27",
+        "slice": 27,
+        "transaction_count": 12544,
+        "unique_16byte_base_count": 12544,
+        "wave": 1
+      },
+      {
+        "base_addr": "0x002B10C0",
+        "first_byte_addr": "0x002B10C0",
+        "last_byte_addr": "0x002E20B0",
+        "recomputed_written_byte_count": 200704,
+        "region": "serialized_w2_matrixD_slice0",
+        "slice": 0,
+        "transaction_count": 12544,
+        "unique_16byte_base_count": 12544,
+        "wave": 2
+      },
+      {
+        "base_addr": "0x022B10C0",
+        "first_byte_addr": "0x022B10C0",
+        "last_byte_addr": "0x022E20B0",
+        "recomputed_written_byte_count": 200704,
+        "region": "serialized_w2_matrixD_slice1",
+        "slice": 1,
+        "transaction_count": 12544,
+        "unique_16byte_base_count": 12544,
+        "wave": 2
+      },
+      {
+        "base_addr": "0x042B10C0",
+        "first_byte_addr": "0x042B10C0",
+        "last_byte_addr": "0x042E20B0",
+        "recomputed_written_byte_count": 200704,
+        "region": "serialized_w2_matrixD_slice2",
+        "slice": 2,
+        "transaction_count": 12544,
+        "unique_16byte_base_count": 12544,
+        "wave": 2
+      },
+      {
+        "base_addr": "0x062B10C0",
+        "first_byte_addr": "0x062B10C0",
+        "last_byte_addr": "0x062E20B0",
+        "recomputed_written_byte_count": 200704,
+        "region": "serialized_w2_matrixD_slice3",
+        "slice": 3,
+        "transaction_count": 12544,
+        "unique_16byte_base_count": 12544,
+        "wave": 2
+      },
+      {
+        "base_addr": "0x082B10C0",
+        "first_byte_addr": "0x082B10C0",
+        "last_byte_addr": "0x082E20B0",
+        "recomputed_written_byte_count": 200704,
+        "region": "serialized_w2_matrixD_slice4",
+        "slice": 4,
+        "transaction_count": 12544,
+        "unique_16byte_base_count": 12544,
+        "wave": 2
+      },
+      {
+        "base_addr": "0x0A2B10C0",
+        "first_byte_addr": "0x0A2B10C0",
+        "last_byte_addr": "0x0A2E20B0",
+        "recomputed_written_byte_count": 200704,
+        "region": "serialized_w2_matrixD_slice5",
+        "slice": 5,
+        "transaction_count": 12544,
+        "unique_16byte_base_count": 12544,
+        "wave": 2
+      },
+      {
+        "base_addr": "0x0C2B10C0",
+        "first_byte_addr": "0x0C2B10C0",
+        "last_byte_addr": "0x0C2E20B0",
+        "recomputed_written_byte_count": 200704,
+        "region": "serialized_w2_matrixD_slice6",
+        "slice": 6,
+        "transaction_count": 12544,
+        "unique_16byte_base_count": 12544,
+        "wave": 2
+      },
+      {
+        "base_addr": "0x0E2B10C0",
+        "first_byte_addr": "0x0E2B10C0",
+        "last_byte_addr": "0x0E2E20B0",
+        "recomputed_written_byte_count": 200704,
+        "region": "serialized_w2_matrixD_slice7",
+        "slice": 7,
+        "transaction_count": 12544,
+        "unique_16byte_base_count": 12544,
+        "wave": 2
+      }
+    ],
+    "stream_payload_bytes_with_multiplicity": {
+      "A": 262144,
+      "B": 51380224,
+      "C": 1605632,
+      "D": 12845056
+    },
+    "terminal_conservation": {
+      "D_bytes_per_region": 200704,
+      "D_regions_written_exactly_once": 64,
+      "all_no_pingpong": true,
+      "bias_initializations_per_output": 1,
+      "buffer_local_geometry_unchanged": true,
+      "products_per_output": 64,
+      "serialized_reduction_groups_per_output": 64,
+      "slice_schedule_count": 64,
+      "terminal_writes_per_output": 1,
+      "typed_output_bytes": 12845056,
+      "unique_logical_output_tiles": 64
+    },
+    "write_coverage_equation": "offset=row*3584 + (lc15*8+lc9)*64 + lc13*32 + byte; row=0..55, lc15=0..6, lc9=0..7, lc13=0..1, byte=0..31"
+  },
+  "blocker_delta": {
+    "add": [
+      "B_CONV_SERIALIZED_BASELINE_PERFORMANCE",
+      "B_CONV_SERVER_DYNAMIC_RELEASE"
+    ],
+    "close": [
+      "B_SA_SERIALIZED_FALLBACK_MATERIALIZATION"
+    ],
+    "keep": [
+      "B_CONV_INT8_SA",
+      "B_MATMUL_INT8_SA",
+      "B_CONV_STOCK_RTL_INT8_DOT_CAPABILITY",
+      "B_SA_INT8_DUPLICATE_CARRY_SHIFT",
+      "B_SA_INT8_REDUCTION_WIDTH"
+    ]
+  },
+  "bypass_annotation": {
+    "bypass_reason": "stock four-lane INT8 SA shifts CSA carry a second time and also constrains the legal four-product reduction to signed17",
+    "claim_boundary": "local accumulate-only CONFIG_ONLY_CORRECTNESS_BASELINE; not a target/production/performance release and does not close bias/psum/tiling/tail or requant gates beyond this instance",
+    "contradicted_or_missing_native_path": {
+      "carry_counterexample": "four products 1 yield stock 6, target 4",
+      "path": "stock four-lane s8*u8 dot4 -> psum32",
+      "range_counterexample": "legal dot4 range [-130560,129540] exceeds signed17 [-65536,65535] and cout17 is ignored"
+    },
+    "exact_equivalence_scope": "frozen node0004 ConvInt32Accumulate x_zp=0, W3 bias and INT32 modulo accumulation; synthetic holdouts cover nonzero x_zp correction, odd K/tail and wrap but do not release other nodes",
+    "materialized_configuration_mechanism": "expand each original K lane into a separate four-byte SA occurrence with the original lane retained and the other three lanes zero; LC4/LC6 group count 16->64",
+    "performance_and_resource_cost": {
+      "activation_payload_multiplier": 4,
+      "compute_occurrence_multiplier": 4,
+      "extra_barrier_count": 0,
+      "extra_scratch_stage_count": 0,
+      "maximum_useful_product_lane_utilization": "25%",
+      "product_lane_slots": 822083584,
+      "serialized_occurrences": 205520896,
+      "weight_payload_multiplier": 4
+    },
+    "rule_id": "CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+    "unresolved_production_blocker": [
+      "B_CONV_STOCK_RTL_INT8_DOT_CAPABILITY",
+      "B_SA_INT8_DUPLICATE_CARRY_SHIFT",
+      "B_SA_INT8_REDUCTION_WIDTH",
+      "B_CONV_SERIALIZED_BASELINE_PERFORMANCE",
+      "B_CONV_SERVER_DYNAMIC_RELEASE"
+    ]
+  },
+  "candidate_release": false,
+  "config_bound_simulator": {
+    "consumer_inputs": {
+      "config_manifest": {
+        "path": "configs/native_ndp_sim/r5_conv_node0004_serialized_one_product_local_e2_v1/manifest.json",
+        "sha256": "a618aaf3f454e72f9d157024414ced0d8a0f569d5fc3123f241e336d503c8b49"
+      },
+      "execplan_bundle": {
+        "path": "artifacts/operator_config_validation/r5_conv_node0004_serialized_one_product_local_e2_v1/execplan_final/bundle_manifest.json",
+        "sha256": "b9cf23d99646650ee5e8f46ae573cdc343b4464df041850150cb1ad45854fce9"
+      },
+      "graph": {
+        "path": "artifacts/operator_config_validation/r5_conv_node0004_serialized_one_product_local_e2_v1/graph.json",
+        "sha256": "c0bb65451e3891bcab97a8b99aecd283ea4f9fdc59f1b5f0ef9c6de0e01524a9"
+      },
+      "mapping_bundle_manifests": {
+        "serialized_w0": "a0dc0295bd9600b5300806734ba66248f3ab71c7124312e1d6fa098b8c5f200c",
+        "serialized_w1": "cec993d96c5dec33452991b1e2577506d89da13a69e5a630638c4331a7d83ce4",
+        "serialized_w2": "c33f2d2d9b110ff6b703ab591938d4e6d0df277075a4a0e1cb1d9a14b1ca59c5"
+      },
+      "physical_asset": {
+        "path": "artifacts/operator_config_validation/r5_conv_node0004_serialized_one_product_local_e2_v1/physical_assets.npz",
+        "sha256": "d9783701433e923433d2df4e4b598ccb6fed860f5f755a9182f44cad69268c1d"
+      },
+      "sca": {
+        "sca_cfg.json": "bdb064527d81ea06a8ea53e236a935ecd1627ccd9baa42bba5fa75f2b6ab8a01",
+        "sca_cfg_D.json": "ced0277d793235a0860aa615b49d39581dce4c007725409e2d929437691b82a4"
+      }
+    },
+    "inactive_lane_nonzero_value_count": 0,
+    "inverse": "physical [H,W/8,Q,K16] -> logical [N,C,H,W]",
+    "logical_output_payload_sha256": "1ec864892d82279beff561927500f55ebec636daf2fb7c624a1e153dd5e17532",
+    "logical_w3_mismatch_count": 0,
+    "physical_mismatch_count": 0,
+    "physical_output_payload_sha256": "fa36cf6417c4dfe0f6c31c1f6a1286ba20d431e84c13065201529327825d6785",
+    "possible_nonzero_product_lanes_per_occurrence_max": 1,
+    "serialized_occurrence_count": 205520896,
+    "stock_four_lane_negative_control": {
+      "first_activation_group": [
+        17,
+        27,
+        9,
+        28
+      ],
+      "first_weight_group": [
+        2,
+        -126,
+        -21,
+        -26
+      ],
+      "h": 0,
+      "local_output_channel": 0,
+      "output_step": 0,
+      "sample": 0,
+      "stock_four_lane_s32": -32483,
+      "w": 0,
+      "w3_target_s32": 1225
+    },
+    "w3_npy_file_sha256": "32de6ea94086ce09da37b4f3c5b12ee51275c7b0f6d7b4a9875b0b9900ca25ac"
+  },
+  "contract_sha256": "c9e0538d19a2174ead94286b84ca05444cc4773a5aba8090f22de163a778457a",
+  "field_ownership": {
+    "generator": {
+      "path": "resnet50_pipeline/conv_serialized_one_product_local_e2.py",
+      "sha256": "00032b9e4d02b25733f5c25abeb20569f706225b803e10ffafe599ced3a8f642"
+    },
+    "materialized_leaf_diff": {
+      "all_semantic_nonbase_fields_unchanged": true,
+      "allowlist": "$.stream_engine.*.base_addr lexical normalization only",
+      "nonbase_change_allowlist": [],
+      "records": [
+        {
+          "differences": [
+            {
+              "authorization": "planner/output-writer base materialization; CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+              "expected_new": "0x0",
+              "formula": "int(old,0) -> minimal lowercase hexadecimal",
+              "input": "0x00000000",
+              "new": "0x0",
+              "old": "0x00000000",
+              "owner": "native output_writer literal normalizer",
+              "path": "$.stream_engine.stream0.base_addr"
+            },
+            {
+              "authorization": "planner/output-writer base materialization; CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+              "expected_new": "0x1000",
+              "formula": "int(old,0) -> minimal lowercase hexadecimal",
+              "input": "0x00001000",
+              "new": "0x1000",
+              "old": "0x00001000",
+              "owner": "native output_writer literal normalizer",
+              "path": "$.stream_engine.stream1.base_addr"
+            },
+            {
+              "authorization": "planner/output-writer base materialization; CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+              "expected_new": "0xc5000",
+              "formula": "int(old,0) -> minimal lowercase hexadecimal",
+              "input": "0x000C5000",
+              "new": "0xc5000",
+              "old": "0x000C5000",
+              "owner": "native output_writer literal normalizer",
+              "path": "$.stream_engine.stream3.base_addr"
+            },
+            {
+              "authorization": "planner/output-writer base materialization; CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+              "expected_new": "0xc5040",
+              "formula": "int(old,0) -> minimal lowercase hexadecimal",
+              "input": "0x000C5040",
+              "new": "0xc5040",
+              "old": "0x000C5040",
+              "owner": "native output_writer literal normalizer",
+              "path": "$.stream_engine.stream4.base_addr"
+            }
+          ],
+          "materialized": {
+            "path": "artifacts/operator_config_validation/r5_conv_node0004_serialized_one_product_local_e2_v1/execplan_final/pipeline_output/jsons/serialized_w0_resnet50_conv_node0004_serialized_wave0.json",
+            "sha256": "dc12e0fc6b66f0dcddc836dbb16ddd465c5b7612efe1da68bcd9e6d85dfd5e77"
+          },
+          "raw_leaf_difference_count": 4,
+          "semantic_nonbase_leaf_difference_count": 0,
+          "source": {
+            "path": "configs/native_ndp_sim/r5_conv_node0004_serialized_one_product_local_e2_v1/wave-0.json",
+            "sha256": "559878e720ebec974a54dda4903d8ab0fd208e4fbb7fe973410ab81a8ebcd4c5"
+          },
+          "wave": 0
+        },
+        {
+          "differences": [
+            {
+              "authorization": "planner/output-writer base materialization; CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+              "expected_new": "0xf6040",
+              "formula": "int(old,0) -> minimal lowercase hexadecimal",
+              "input": "0x000F6040",
+              "new": "0xf6040",
+              "old": "0x000F6040",
+              "owner": "native output_writer literal normalizer",
+              "path": "$.stream_engine.stream0.base_addr"
+            },
+            {
+              "authorization": "planner/output-writer base materialization; CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+              "expected_new": "0xf7040",
+              "formula": "int(old,0) -> minimal lowercase hexadecimal",
+              "input": "0x000F7040",
+              "new": "0xf7040",
+              "old": "0x000F7040",
+              "owner": "native output_writer literal normalizer",
+              "path": "$.stream_engine.stream1.base_addr"
+            },
+            {
+              "authorization": "planner/output-writer base materialization; CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+              "expected_new": "0x1bb040",
+              "formula": "int(old,0) -> minimal lowercase hexadecimal",
+              "input": "0x001BB040",
+              "new": "0x1bb040",
+              "old": "0x001BB040",
+              "owner": "native output_writer literal normalizer",
+              "path": "$.stream_engine.stream3.base_addr"
+            },
+            {
+              "authorization": "planner/output-writer base materialization; CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+              "expected_new": "0x1bb080",
+              "formula": "int(old,0) -> minimal lowercase hexadecimal",
+              "input": "0x001BB080",
+              "new": "0x1bb080",
+              "old": "0x001BB080",
+              "owner": "native output_writer literal normalizer",
+              "path": "$.stream_engine.stream4.base_addr"
+            }
+          ],
+          "materialized": {
+            "path": "artifacts/operator_config_validation/r5_conv_node0004_serialized_one_product_local_e2_v1/execplan_final/pipeline_output/jsons/serialized_w1_resnet50_conv_node0004_serialized_wave1.json",
+            "sha256": "e27a0df2144fb0ebe8426b41fdf0bae08344d1952b66cc6cfe21068b32f00df9"
+          },
+          "raw_leaf_difference_count": 4,
+          "semantic_nonbase_leaf_difference_count": 0,
+          "source": {
+            "path": "configs/native_ndp_sim/r5_conv_node0004_serialized_one_product_local_e2_v1/wave-1.json",
+            "sha256": "44ebf50af3d2ad167cf1f65a466c24a3111bddeb381fccc45342a422aa0bfa10"
+          },
+          "wave": 1
+        },
+        {
+          "differences": [
+            {
+              "authorization": "planner/output-writer base materialization; CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+              "expected_new": "0x1ec080",
+              "formula": "int(old,0) -> minimal lowercase hexadecimal",
+              "input": "0x001EC080",
+              "new": "0x1ec080",
+              "old": "0x001EC080",
+              "owner": "native output_writer literal normalizer",
+              "path": "$.stream_engine.stream0.base_addr"
+            },
+            {
+              "authorization": "planner/output-writer base materialization; CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+              "expected_new": "0x1ed080",
+              "formula": "int(old,0) -> minimal lowercase hexadecimal",
+              "input": "0x001ED080",
+              "new": "0x1ed080",
+              "old": "0x001ED080",
+              "owner": "native output_writer literal normalizer",
+              "path": "$.stream_engine.stream1.base_addr"
+            },
+            {
+              "authorization": "planner/output-writer base materialization; CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+              "expected_new": "0x2b1080",
+              "formula": "int(old,0) -> minimal lowercase hexadecimal",
+              "input": "0x002B1080",
+              "new": "0x2b1080",
+              "old": "0x002B1080",
+              "owner": "native output_writer literal normalizer",
+              "path": "$.stream_engine.stream3.base_addr"
+            },
+            {
+              "authorization": "planner/output-writer base materialization; CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+              "expected_new": "0x2b10c0",
+              "formula": "int(old,0) -> minimal lowercase hexadecimal",
+              "input": "0x002B10C0",
+              "new": "0x2b10c0",
+              "old": "0x002B10C0",
+              "owner": "native output_writer literal normalizer",
+              "path": "$.stream_engine.stream4.base_addr"
+            }
+          ],
+          "materialized": {
+            "path": "artifacts/operator_config_validation/r5_conv_node0004_serialized_one_product_local_e2_v1/execplan_final/pipeline_output/jsons/serialized_w2_resnet50_conv_node0004_serialized_wave2.json",
+            "sha256": "356899faccaccc53620f4c32d7c066554558077d12223363d5f6579cf6ea902a"
+          },
+          "raw_leaf_difference_count": 4,
+          "semantic_nonbase_leaf_difference_count": 0,
+          "source": {
+            "path": "configs/native_ndp_sim/r5_conv_node0004_serialized_one_product_local_e2_v1/wave-2.json",
+            "sha256": "2f59b4984cc1551ddad904b85560f18dc6dce393d3c7f941170bc6875b57908d"
+          },
+          "wave": 2
+        }
+      ]
+    },
+    "structural_seed_is_not_semantic_owner": true,
+    "unique_owner_groups": [
+      {
+        "inputs": "K=64, four-byte word, PE=outer*4+inner",
+        "owner": "serialized logical ScheduleIR",
+        "paths": "$.dram_loop_configs, $.lc_pe_configs"
+      },
+      {
+        "inputs": "A=4096B, B=802816B, C=64B, D=200704B",
+        "owner": "serialized physical layout and address schedule",
+        "paths": "$.stream_engine"
+      },
+      {
+        "inputs": "one four-byte group per reduction occurrence",
+        "owner": "unchanged 4x4 local buffer micro-topology",
+        "paths": "$.buffer_loop_configs, $.buffer_config"
+      },
+      {
+        "inputs": "gemm, s8 A, u8 B, bias/psum C",
+        "owner": "INT8 SA rule plus mainline serialized authorization",
+        "paths": "$.special_array"
+      },
+      {
+        "inputs": "IGA/LSU/SA enabled+updated, GA disabled, no N2N",
+        "owner": "single-stage local baseline lifecycle ScheduleIR",
+        "paths": "$.CONFIG, $.n2n"
+      }
+    ]
+  },
+  "input_replay": {
+    "allowed_index_address_mapping": "value-preserving Conv28 physical permutation followed by K group g,lane l -> serialized group 4*g+l with the same byte in lane l and zeros in all other lanes",
+    "golden_is_oracle_only": {
+      "never_consumed_as_compute_input": true,
+      "path": "artifacts/w3/subop_batch16/tensors/tensor-internal-node-0004-accumulate.npy",
+      "tensor_id": "tensor-internal-node-0004-accumulate"
+    },
+    "rule_id": "CDA-CONFIG-ONLY-INPUT-REPLAY-NONCOMPUTATIONAL-001",
+    "sources": [
+      {
+        "dtype": "uint8",
+        "identity_sha256": "e4039c779c0083ff3cbe76845b4ba313e9b2e095e4faa72d329cbfa04f6cae1b",
+        "producer": "node-0003 formal W3 output",
+        "role": "activation",
+        "shape": [
+          16,
+          64,
+          56,
+          56
+        ],
+        "tensor_id": "tensor-8d2f28c80ac24676"
+      },
+      {
+        "dtype": "int8",
+        "identity_sha256": "ff6ee89cbc889e0708d483f22b2a8f0e09f2cde13f65dcac061eb30551f68b48",
+        "producer": "frozen ONNX initializer",
+        "role": "weight",
+        "shape": [
+          64,
+          64,
+          1,
+          1
+        ],
+        "tensor_id": "tensor-56b60866ff5ecb4a"
+      },
+      {
+        "dtype": "int32",
+        "identity_sha256": "40bc2a3acbd553ffc067ea1c7b1c31cb59f18fca30451f55809ff76d2594bc0b",
+        "producer": "frozen ONNX initializer",
+        "role": "bias",
+        "shape": [
+          64
+        ],
+        "tensor_id": "tensor-d72c70cfb6839a45"
+      }
+    ],
+    "uncrossed_computation_boundary": "no scaled, rounded, saturated, accumulated or requantized tensor is replayed as an input"
+  },
+  "native_roundtrip": {
+    "execplan": {
+      "deterministic_file_count": 35,
+      "double_run_equal": true,
+      "execplan_sha256": "2899167b216d47b0eca85fa4cd018972cd00b5fab068b61071703a65e40a532a",
+      "path": "artifacts/operator_config_validation/r5_conv_node0004_serialized_one_product_local_e2_v1/execplan_final/bundle_manifest.json",
+      "sha256": "b9cf23d99646650ee5e8f46ae573cdc343b4464df041850150cb1ad45854fce9"
+    },
+    "json_mapping_bitstream_execplan_sca": "PASS",
+    "mapping": {
+      "serialized_w0": {
+        "fallback_used": false,
+        "path": "artifacts/operator_config_validation/r5_conv_node0004_serialized_one_product_local_e2_v1/mapping/serialized_w0/bundle_manifest.json",
+        "penalty": 0,
+        "sha256": "a0dc0295bd9600b5300806734ba66248f3ab71c7124312e1d6fa098b8c5f200c"
+      },
+      "serialized_w1": {
+        "fallback_used": false,
+        "path": "artifacts/operator_config_validation/r5_conv_node0004_serialized_one_product_local_e2_v1/mapping/serialized_w1/bundle_manifest.json",
+        "penalty": 0,
+        "sha256": "cec993d96c5dec33452991b1e2577506d89da13a69e5a630638c4331a7d83ce4"
+      },
+      "serialized_w2": {
+        "fallback_used": false,
+        "path": "artifacts/operator_config_validation/r5_conv_node0004_serialized_one_product_local_e2_v1/mapping/serialized_w2/bundle_manifest.json",
+        "penalty": 0,
+        "sha256": "c33f2d2d9b110ff6b703ab591938d4e6d0df277075a4a0e1cb1d9a14b1ca59c5"
+      }
+    }
+  },
+  "occurrence_proof": {
+    "lane_padding": "three forced-zero lanes in every K occurrence",
+    "lanes_per_occurrence": 4,
+    "logical_products_per_output": 64,
+    "nonzero_product_lanes_per_occurrence_max": 1,
+    "serialized_occurrences_per_output": 64,
+    "synthetic_tail_and_xzp": {
+      "all_pass": true,
+      "cases": [
+        {
+          "bias": 17,
+          "case_id": "positive",
+          "corrected_initial_psum": 17,
+          "k": 5,
+          "occurrences": [
+            {
+              "activation_lanes": [
+                2,
+                0,
+                0,
+                0
+              ],
+              "index": 0,
+              "nonzero_product_lane_count": 1,
+              "psum_in": 17,
+              "psum_out": 23,
+              "weight_lanes": [
+                3,
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "activation_lanes": [
+                4,
+                0,
+                0,
+                0
+              ],
+              "index": 1,
+              "nonzero_product_lane_count": 1,
+              "psum_in": 23,
+              "psum_out": 43,
+              "weight_lanes": [
+                5,
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "activation_lanes": [
+                6,
+                0,
+                0,
+                0
+              ],
+              "index": 2,
+              "nonzero_product_lane_count": 1,
+              "psum_in": 43,
+              "psum_out": 85,
+              "weight_lanes": [
+                7,
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "activation_lanes": [
+                8,
+                0,
+                0,
+                0
+              ],
+              "index": 3,
+              "nonzero_product_lane_count": 1,
+              "psum_in": 85,
+              "psum_out": 173,
+              "weight_lanes": [
+                11,
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "activation_lanes": [
+                10,
+                0,
+                0,
+                0
+              ],
+              "index": 4,
+              "nonzero_product_lane_count": 1,
+              "psum_in": 173,
+              "psum_out": 303,
+              "weight_lanes": [
+                13,
+                0,
+                0,
+                0
+              ]
+            }
+          ],
+          "result": 303,
+          "target": 303,
+          "x_zero_point": 0
+        },
+        {
+          "bias": -19,
+          "case_id": "negative",
+          "corrected_initial_psum": -19,
+          "k": 5,
+          "occurrences": [
+            {
+              "activation_lanes": [
+                2,
+                0,
+                0,
+                0
+              ],
+              "index": 0,
+              "nonzero_product_lane_count": 1,
+              "psum_in": -19,
+              "psum_out": -25,
+              "weight_lanes": [
+                -3,
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "activation_lanes": [
+                4,
+                0,
+                0,
+                0
+              ],
+              "index": 1,
+              "nonzero_product_lane_count": 1,
+              "psum_in": -25,
+              "psum_out": -5,
+              "weight_lanes": [
+                5,
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "activation_lanes": [
+                6,
+                0,
+                0,
+                0
+              ],
+              "index": 2,
+              "nonzero_product_lane_count": 1,
+              "psum_in": -5,
+              "psum_out": -47,
+              "weight_lanes": [
+                -7,
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "activation_lanes": [
+                8,
+                0,
+                0,
+                0
+              ],
+              "index": 3,
+              "nonzero_product_lane_count": 1,
+              "psum_in": -47,
+              "psum_out": 41,
+              "weight_lanes": [
+                11,
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "activation_lanes": [
+                10,
+                0,
+                0,
+                0
+              ],
+              "index": 4,
+              "nonzero_product_lane_count": 1,
+              "psum_in": 41,
+              "psum_out": -89,
+              "weight_lanes": [
+                -13,
+                0,
+                0,
+                0
+              ]
+            }
+          ],
+          "result": -89,
+          "target": -89,
+          "x_zero_point": 0
+        },
+        {
+          "bias": 0,
+          "case_id": "k_tail_odd",
+          "corrected_initial_psum": 0,
+          "k": 3,
+          "occurrences": [
+            {
+              "activation_lanes": [
+                255,
+                0,
+                0,
+                0
+              ],
+              "index": 0,
+              "nonzero_product_lane_count": 1,
+              "psum_in": 0,
+              "psum_out": 32385,
+              "weight_lanes": [
+                127,
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "activation_lanes": [
+                255,
+                0,
+                0,
+                0
+              ],
+              "index": 1,
+              "nonzero_product_lane_count": 1,
+              "psum_in": 32385,
+              "psum_out": -255,
+              "weight_lanes": [
+                -128,
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "activation_lanes": [
+                1,
+                0,
+                0,
+                0
+              ],
+              "index": 2,
+              "nonzero_product_lane_count": 1,
+              "psum_in": -255,
+              "psum_out": -254,
+              "weight_lanes": [
+                1,
+                0,
+                0,
+                0
+              ]
+            }
+          ],
+          "result": -254,
+          "target": -254,
+          "x_zero_point": 0
+        },
+        {
+          "bias": 23,
+          "case_id": "nonzero_xzp",
+          "corrected_initial_psum": -32,
+          "k": 5,
+          "occurrences": [
+            {
+              "activation_lanes": [
+                9,
+                0,
+                0,
+                0
+              ],
+              "index": 0,
+              "nonzero_product_lane_count": 1,
+              "psum_in": -32,
+              "psum_out": -104,
+              "weight_lanes": [
+                -8,
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "activation_lanes": [
+                11,
+                0,
+                0,
+                0
+              ],
+              "index": 1,
+              "nonzero_product_lane_count": 1,
+              "psum_in": -104,
+              "psum_out": -71,
+              "weight_lanes": [
+                3,
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "activation_lanes": [
+                13,
+                0,
+                0,
+                0
+              ],
+              "index": 2,
+              "nonzero_product_lane_count": 1,
+              "psum_in": -71,
+              "psum_out": -6,
+              "weight_lanes": [
+                5,
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "activation_lanes": [
+                15,
+                0,
+                0,
+                0
+              ],
+              "index": 3,
+              "nonzero_product_lane_count": 1,
+              "psum_in": -6,
+              "psum_out": -36,
+              "weight_lanes": [
+                -2,
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "activation_lanes": [
+                17,
+                0,
+                0,
+                0
+              ],
+              "index": 4,
+              "nonzero_product_lane_count": 1,
+              "psum_in": -36,
+              "psum_out": 83,
+              "weight_lanes": [
+                7,
+                0,
+                0,
+                0
+              ]
+            }
+          ],
+          "result": 83,
+          "target": 83,
+          "x_zero_point": 11
+        },
+        {
+          "bias": 2147483632,
+          "case_id": "bias_wrap",
+          "corrected_initial_psum": 2147483632,
+          "k": 2,
+          "occurrences": [
+            {
+              "activation_lanes": [
+                255,
+                0,
+                0,
+                0
+              ],
+              "index": 0,
+              "nonzero_product_lane_count": 1,
+              "psum_in": 2147483632,
+              "psum_out": -2147451279,
+              "weight_lanes": [
+                127,
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "activation_lanes": [
+                255,
+                0,
+                0,
+                0
+              ],
+              "index": 1,
+              "nonzero_product_lane_count": 1,
+              "psum_in": -2147451279,
+              "psum_out": -2147418894,
+              "weight_lanes": [
+                127,
+                0,
+                0,
+                0
+              ]
+            }
+          ],
+          "result": -2147418894,
+          "target": -2147418894,
+          "x_zero_point": 0
+        }
+      ],
+      "oracle": "independent s32(psum+s8*u8) recurrence",
+      "stock_primitive_cross_check": "stock_rtl_sa_chunk"
+    },
+    "target_k_tail": "K=64 exact; no reduction tail"
+  },
+  "package_release": "NONE",
+  "read_receipts": {
+    ".agents/rules/INT8_SA点积专项规则.md": "f616db76c74c5a760ac5f02f7fb57f01379555b7dda885adebebf232cc8f8a1d",
+    ".agents/rules/生成前必读索引.md": "3940dc4d6f6d0b5d52347acd6fe5655281562dc09d4082c298cf70c7dbfb4f19",
+    ".agents/rules/算子配置规则.md": "407fc0320d0587c362730c74e9b1d87cbd8e2ab686051173ceacadb6ac31c2cc",
+    ".agents/task_records/20260727_conv_serialized_config_baseline_mainline_authorization.md": "c208dc45c652b0ca420bdf000690f8a32ce85858b53df5daca619d83d15477b1",
+    "contracts/resnet50_r5_lowering_bundle.json": "bf661e4eda2011025d9922708ab46a64f8d1b3c279527b88aa7d630bb3545432",
+    "typed_request_sha256": "e27e10169168f3889df4c03bf15cb21de074abf3f3767dc4bee288425165874b"
+  },
+  "rule_delta_proposal": [],
+  "schema": "resnet50-node0004-serialized-one-product-local-e2-v1",
+  "scope": {
+    "frozen_instance": {
+      "bias": [
+        "int32",
+        [
+          64
+        ]
+      ],
+      "output": [
+        "int32",
+        [
+          16,
+          64,
+          56,
+          56
+        ]
+      ],
+      "w": [
+        "int8",
+        [
+          64,
+          64,
+          1,
+          1
+        ]
+      ],
+      "weight_zero_points": "all zero",
+      "x": [
+        "uint8",
+        [
+          16,
+          64,
+          56,
+          56
+        ]
+      ],
+      "x_zero_point": 0
+    },
+    "hw_op_type": "ConvInt32Accumulate",
+    "node_id": "node-0004",
+    "not_in_scope": [
+      "QLinearConv requant",
+      "the remaining 52 Conv nodes",
+      "QLinearMatMul rank2/layout/tail",
+      "server dynamic execution",
+      "production/performance release"
+    ],
+    "request_id": "r5:hwop-0004-00",
+    "request_sha256": "e27e10169168f3889df4c03bf15cb21de074abf3f3767dc4bee288425165874b"
+  },
+  "stage_gates": {
+    "dynamic_release_ready": false,
+    "json_emitter_ready": true,
+    "rtl_semantics_compatible": true
+  },
+  "status": "CONFIG_ONLY_CORRECTNESS_BASELINE",
+  "test_id": "r5_conv_node0004_serialized_one_product_local_e2_v1"
+}

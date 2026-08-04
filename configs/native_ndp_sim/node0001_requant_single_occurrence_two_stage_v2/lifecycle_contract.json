@@ -1,0 +1,95 @@
+{
+  "active_slices": [
+    0,
+    1
+  ],
+  "dynamic_acceptance": {
+    "guard_sfu_load_count": 1,
+    "guard_sfu_loaded_before_first_start": true,
+    "mse4_total_accepted_write_beat_count": 20,
+    "natural_completion_required": true,
+    "per_slice_comp_finish_event_count": 4,
+    "per_slice_start_event_count": 4,
+    "stage_comp_finish_group_count": 2,
+    "stage_start_group_count": 2,
+    "unexpected_mse4_write_count": 0
+  },
+  "handoff": {
+    "barrier_scope": "all active slices",
+    "required_order": [
+      "load RequantGuard once",
+      "load guard config",
+      "start guard",
+      "guard Comp Finish",
+      "load round config",
+      "start round",
+      "round Comp Finish"
+    ],
+    "same_slice_mask": true,
+    "stage0_output_equals_stage1_input_address": true,
+    "stage0_write_visible_before_stage1_read": true,
+    "stage1_external_preload_count": 0,
+    "stage1_start_requires_stage0_comp_finish": true
+  },
+  "logical_occurrence_count": 1,
+  "physical_slice_instance_count": 2,
+  "repeat_num": 2,
+  "slice_mask": "0b0000000000000000000000000011",
+  "stage_count": 2,
+  "stage_sequence": [
+    {
+      "expected_mse4_accepted_write_beats_per_slice": 8,
+      "expected_mse4_accepted_write_beats_total": 16,
+      "expected_write_bytes_per_slice": 128,
+      "expected_write_bytes_total": 256,
+      "input_base_addr": "0x00000000",
+      "input_dtype": "int32",
+      "normal_outbuffer": true,
+      "output_base_addr": "0x00800000",
+      "output_dtype": "fp32",
+      "per_slice_input_shape": [
+        1,
+        4,
+        8
+      ],
+      "per_slice_output_shape": [
+        1,
+        4,
+        8
+      ],
+      "role": "guard",
+      "stage_index": 0
+    },
+    {
+      "expected_mse4_accepted_write_beats_per_slice": 2,
+      "expected_mse4_accepted_write_beats_total": 4,
+      "expected_write_bytes_per_slice": 32,
+      "expected_write_bytes_total": 64,
+      "input_base_addr": "0x00800000",
+      "input_dtype": "fp32",
+      "normal_outbuffer": true,
+      "output_base_addr": "0x01000000",
+      "output_dtype": "uint8",
+      "per_slice_input_shape": [
+        1,
+        4,
+        8
+      ],
+      "per_slice_output_shape": [
+        1,
+        4,
+        8
+      ],
+      "role": "round_saturate",
+      "stage_index": 1
+    }
+  ],
+  "stock_tb_completion_observer": {
+    "finish_sampled_slice": 1,
+    "mask_aware": false,
+    "repeat_num_counts_stages_not_slices": true,
+    "required_sampled_slices_enabled": true,
+    "start_sampled_slice": 0,
+    "tb_or_rtl_modification_authorized": false
+  }
+}

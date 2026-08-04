@@ -1,0 +1,24 @@
+{
+  "schema": "operator-config-execplan-double-run-v1",
+  "equal": true,
+  "excluded_nondeterministic_outputs": [
+    "placement.png"
+  ],
+  "files": {
+    "config/op0/detailed_dump.txt": "2368e7ebce07b1fbe5afa3577e1d52578b2af64447411871ddb3dff4438a41df",
+    "config/op0/mapping_review.json": "014a0c5e34026ce60856985fecfaf6ec9ae0d2f94fb0c9b762ffc46c18370472",
+    "config/op0/modules_dump_128b.bin": "a92d9a320c09fceaa37edea7ec71cff0d3aa46689a90ebbfe39aef9db83dcfd7",
+    "config/op0/modules_dump_64b.bin": "b1c3e1c8539c9c5ebbea2986e9dbf6ace67e7df282eb10378831855a4d06f5ea",
+    "config/op0/op0_decode_summac_fp32N_fp32N_bitstream_128b.bin": "a92d9a320c09fceaa37edea7ec71cff0d3aa46689a90ebbfe39aef9db83dcfd7",
+    "config/op0/op0_decode_summac_fp32N_fp32N_bitstream_64b.bin": "b1c3e1c8539c9c5ebbea2986e9dbf6ace67e7df282eb10378831855a4d06f5ea",
+    "config/op0/parsed_bitstream.txt": "c41b61f1e31d3a75f0afcf85422442e7ea9c2781009ebfc9724edd73a9e515b9",
+    "decode_summac_fp32N_fp32N_graph_withbaseaddr.json": "d186c163ca847aaec9a7cd606bb0963fd4a36e300c756fa809c7f13ea8b59061",
+    "install/cfg_pkg/op0_decode_summac_fp32N_fp32N_bitstream_128b.bin": "a92d9a320c09fceaa37edea7ec71cff0d3aa46689a90ebbfe39aef9db83dcfd7",
+    "install/execplan.txt": "a0d8d9ac24b2277ff0a7222605992bb6a3c81e00882daf2197d94fcbe6aaa87e",
+    "install/execplan_op0.txt": "a0d8d9ac24b2277ff0a7222605992bb6a3c81e00882daf2197d94fcbe6aaa87e",
+    "instructions_explained.txt": "c782dc3861f69821e96d2fe3e19c112177dc5e69dfa0d2d0d046404dccb23c07",
+    "jsons/op0_decode_summac_fp32N_fp32N.json": "4f488cc0370591953a46125953be0b64e8ca368df466ad4e6a416e05b6e33f39",
+    "sca_cfg.json": "d96cf5a1d9c0b69afc5020da819715a7a5f945dd3b6dde099905071bd02a366b",
+    "sca_cfg_D.json": "f6131fd01ae8ecb79878c9310c1df4e0c745b363ab5ad5bd533f390f29e20834"
+  }
+}

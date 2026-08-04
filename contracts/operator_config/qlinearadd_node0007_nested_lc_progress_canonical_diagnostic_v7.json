@@ -1,0 +1,79 @@
+{
+  "canonical_decision": {
+    "ambiguous_state": "PACKAGE_DIAGNOSTIC_DECISION_AMBIGUOUS",
+    "output": "evidence/CANONICAL_PROGRESS_DECISION.json",
+    "qualified_counters": [
+      "gexec",
+      "req",
+      "rdata",
+      "wdata"
+    ],
+    "raw_state_excluded_from_progress": [
+      "buf4_wr",
+      "buf4_rd",
+      "buf5_wr",
+      "buf5_rd"
+    ],
+    "rule_id": "CDA-SERVER-DIAGNOSTIC-DECISION-CANONICAL-RECORD-001",
+    "schema": "qlinearadd-progress-canonical-decision-v1",
+    "unique_complete_record_required": true,
+    "version": 1
+  },
+  "frozen_workload": {
+    "bitstream_changed": false,
+    "consumed_reuse_assets": true,
+    "execplan_changed": false,
+    "final_json_changed": false,
+    "golden_changed": false,
+    "mapping_changed": false,
+    "numeric_analysis_repeated": false,
+    "request_count_with_multiplicity": 37352448,
+    "sca_changed_except_install_namespace": false,
+    "six_qparams_changed": false,
+    "w3_order_changed": false,
+    "workload_analysis_repeated": false
+  },
+  "functional_fix": false,
+  "functional_rtl_modified": false,
+  "hw_op_id": "hwop-0007-00",
+  "node_id": "node-0007",
+  "package_release": {
+    "candidate_release": false,
+    "evidence_level": "E2_LOCAL_ONLY",
+    "sidecar": "artifacts/operator_config_validation/r5-server-test-packages/r5_qadd_n7_progress_canon_v7.zip.sha256",
+    "status": "PACKAGE_READY_NOT_RUN",
+    "zip": "artifacts/operator_config_validation/r5-server-test-packages/r5_qadd_n7_progress_canon_v7.zip",
+    "zip_sha256": "1ed2ed3cb1015e62b585a77dbff0b82b45e592a27695ddd9331b47eb1196df1f"
+  },
+  "provenance": {
+    "hardware_rule": {
+      "path": ".agents/rules/NDP硬件字段语义.md",
+      "policy": "current_match",
+      "sha256": "603d57805bc5a5bdfca7406c402bc94db60c06ea6682493d672abb91671b1055"
+    },
+    "plan": {
+      "path": ".agents/plan.md",
+      "policy": "mutable_provenance",
+      "sha256": "21dec7853cf9dc1610e51ede1366550b390bfc301d8dc8d5bf6c560d5ecae545"
+    },
+    "qlinearadd_rule": {
+      "path": ".agents/rules/QLinearAdd算子配置规则.md",
+      "policy": "current_match",
+      "sha256": "fea780962c9029e589ece90de2af8c70058aee25cffaf9822f1e16f28ff2ecba"
+    },
+    "server_package_rule": {
+      "path": ".agents/rules/服务器测试包生成规则.md",
+      "policy": "current_match",
+      "sha256": "ed3990f13c62ce67e5081458b0dfdcf6ca257908fe138fcc05a7000482afd2f8"
+    }
+  },
+  "schema": "qlinearadd-node0007-nested-lc-progress-canonical-diagnostic-v7",
+  "server_action_performed": false,
+  "source_package": {
+    "immutable": true,
+    "path": "artifacts/operator_config_validation/r5-server-test-packages/r5_qadd_n7_nested_lc_progress_bind_v6.zip",
+    "sha256": "9a48fb417b34afaa0835f8ee0bab8bb22a337808fb6e88d9e9b1205922f1ce90",
+    "status": "QUARANTINED_NOT_RUN_CANONICAL_DECISION_MISSING"
+  },
+  "status": "DIAGNOSTIC_ONLY_NOT_FUNCTIONAL_FIX"
+}

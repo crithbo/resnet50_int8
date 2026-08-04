@@ -1,0 +1,563 @@
+{
+  "manifest_sha256": "3f4134c7c6ff9ac9915c589af8a986344a6f3daceea14ebbdbe1712e7a4e17d2",
+  "records": [
+    {
+      "channels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "config_sha256": "542b504af7569a166b4c2be565e2fd790c2741e1118e357fd3c7a9134b636515",
+      "input_base_addr": "0x00000000",
+      "mapping_validation": null,
+      "operator_type": "resnet50_requant_node0004_w0_s00",
+      "output_base_addr": "0x00018800",
+      "shard_index": 0,
+      "wave_index": 0
+    },
+    {
+      "channels": [
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15
+      ],
+      "config_sha256": "413b81363e02321d6889f4c12e012ee1eb21616138a635b9a48a1c75fbf71182",
+      "input_base_addr": "0x0001EA00",
+      "mapping_validation": null,
+      "operator_type": "resnet50_requant_node0004_w0_s01",
+      "output_base_addr": "0x00037200",
+      "shard_index": 1,
+      "wave_index": 0
+    },
+    {
+      "channels": [
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23
+      ],
+      "config_sha256": "fe631856539503cd394071a31f6b8c954dee494d5812d9e61ac39d0da1f5c5c8",
+      "input_base_addr": "0x0003D400",
+      "mapping_validation": null,
+      "operator_type": "resnet50_requant_node0004_w0_s02",
+      "output_base_addr": "0x00055C00",
+      "shard_index": 2,
+      "wave_index": 0
+    },
+    {
+      "channels": [
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31
+      ],
+      "config_sha256": "7b5cb15b62359cc1b3447bdaf3784c6f37bb8d960c5756e8b2ad8b2ae4476773",
+      "input_base_addr": "0x0005BE00",
+      "mapping_validation": null,
+      "operator_type": "resnet50_requant_node0004_w0_s03",
+      "output_base_addr": "0x00074600",
+      "shard_index": 3,
+      "wave_index": 0
+    },
+    {
+      "channels": [
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39
+      ],
+      "config_sha256": "2fc2552166182417146b308adef87f7256b9b461e734676868bb04720a913d25",
+      "input_base_addr": "0x0007A800",
+      "mapping_validation": null,
+      "operator_type": "resnet50_requant_node0004_w0_s04",
+      "output_base_addr": "0x00093000",
+      "shard_index": 4,
+      "wave_index": 0
+    },
+    {
+      "channels": [
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47
+      ],
+      "config_sha256": "fa3764b46986e3b998337f32babd3503a346efd1e879b660de53984545d68f4c",
+      "input_base_addr": "0x00099200",
+      "mapping_validation": null,
+      "operator_type": "resnet50_requant_node0004_w0_s05",
+      "output_base_addr": "0x000B1A00",
+      "shard_index": 5,
+      "wave_index": 0
+    },
+    {
+      "channels": [
+        48,
+        49,
+        50,
+        51,
+        52,
+        53,
+        54,
+        55
+      ],
+      "config_sha256": "0a2f4f0f3548aa9bcf7f482300283429d079526f9ee335027ae9272f8edbc6fe",
+      "input_base_addr": "0x000B7C00",
+      "mapping_validation": null,
+      "operator_type": "resnet50_requant_node0004_w0_s06",
+      "output_base_addr": "0x000D0400",
+      "shard_index": 6,
+      "wave_index": 0
+    },
+    {
+      "channels": [
+        56,
+        57,
+        58,
+        59,
+        60,
+        61,
+        62,
+        63
+      ],
+      "config_sha256": "0e547c3acec6860df18409eae3b6d40d95206415d38ef622be9aecb450e6939d",
+      "input_base_addr": "0x000D6600",
+      "mapping_validation": null,
+      "operator_type": "resnet50_requant_node0004_w0_s07",
+      "output_base_addr": "0x000EEE00",
+      "shard_index": 7,
+      "wave_index": 0
+    },
+    {
+      "channels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "config_sha256": "95ddd64328d64aa53e86413670453d956f1283a097f86803f5191f43e6b509c6",
+      "input_base_addr": "0x000F5000",
+      "mapping_validation": null,
+      "operator_type": "resnet50_requant_node0004_w1_s00",
+      "output_base_addr": "0x0010D800",
+      "shard_index": 0,
+      "wave_index": 1
+    },
+    {
+      "channels": [
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15
+      ],
+      "config_sha256": "50fa7443678d383248fe90a2d6e3b907b4e0e112c1b08e7240aa62af23228a16",
+      "input_base_addr": "0x00113A00",
+      "mapping_validation": null,
+      "operator_type": "resnet50_requant_node0004_w1_s01",
+      "output_base_addr": "0x0012C200",
+      "shard_index": 1,
+      "wave_index": 1
+    },
+    {
+      "channels": [
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23
+      ],
+      "config_sha256": "152c214bec884bb2367590c8fc851622be736efd418afc48204befd61bb15ef9",
+      "input_base_addr": "0x00132400",
+      "mapping_validation": null,
+      "operator_type": "resnet50_requant_node0004_w1_s02",
+      "output_base_addr": "0x0014AC00",
+      "shard_index": 2,
+      "wave_index": 1
+    },
+    {
+      "channels": [
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31
+      ],
+      "config_sha256": "8a4238c03ac5da48747ea750ce3d3bdd50a70745e2e4d0f9e091314b1152ab8a",
+      "input_base_addr": "0x00150E00",
+      "mapping_validation": null,
+      "operator_type": "resnet50_requant_node0004_w1_s03",
+      "output_base_addr": "0x00169600",
+      "shard_index": 3,
+      "wave_index": 1
+    },
+    {
+      "channels": [
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39
+      ],
+      "config_sha256": "ce0a12e8be7c8b48df394fdb0f509fcbed35dfb1d3022b10a8348155063de41e",
+      "input_base_addr": "0x0016F800",
+      "mapping_validation": null,
+      "operator_type": "resnet50_requant_node0004_w1_s04",
+      "output_base_addr": "0x00188000",
+      "shard_index": 4,
+      "wave_index": 1
+    },
+    {
+      "channels": [
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47
+      ],
+      "config_sha256": "0582810dd9bd9011dfdbcaef9dbbb6e9eccb7b4635f3c93bcb654a8ff7f46306",
+      "input_base_addr": "0x0018E200",
+      "mapping_validation": null,
+      "operator_type": "resnet50_requant_node0004_w1_s05",
+      "output_base_addr": "0x001A6A00",
+      "shard_index": 5,
+      "wave_index": 1
+    },
+    {
+      "channels": [
+        48,
+        49,
+        50,
+        51,
+        52,
+        53,
+        54,
+        55
+      ],
+      "config_sha256": "c7b6378927c4468b8360a1b40bdd5f81e0a174a1a361fe3af3ad6b528f8de721",
+      "input_base_addr": "0x001ACC00",
+      "mapping_validation": null,
+      "operator_type": "resnet50_requant_node0004_w1_s06",
+      "output_base_addr": "0x001C5400",
+      "shard_index": 6,
+      "wave_index": 1
+    },
+    {
+      "channels": [
+        56,
+        57,
+        58,
+        59,
+        60,
+        61,
+        62,
+        63
+      ],
+      "config_sha256": "efa9e06e6761efab20b79372fbac8da142dd19a8490c03818c7c4dd5efb509ed",
+      "input_base_addr": "0x001CB600",
+      "mapping_validation": null,
+      "operator_type": "resnet50_requant_node0004_w1_s07",
+      "output_base_addr": "0x001E3E00",
+      "shard_index": 7,
+      "wave_index": 1
+    },
+    {
+      "channels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "config_sha256": "585cc6a87c096122208f2288c6c18c0d0b2def7e83006bab1fdc1e994a9e4098",
+      "input_base_addr": "0x001EA000",
+      "mapping_validation": null,
+      "operator_type": "resnet50_requant_node0004_w2_s00",
+      "output_base_addr": "0x00202800",
+      "shard_index": 0,
+      "wave_index": 2
+    },
+    {
+      "channels": [
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15
+      ],
+      "config_sha256": "dfd8e981eb74a78c4966d93f51f25458905170bfa194f769846f1e0402192733",
+      "input_base_addr": "0x00208A00",
+      "mapping_validation": null,
+      "operator_type": "resnet50_requant_node0004_w2_s01",
+      "output_base_addr": "0x00221200",
+      "shard_index": 1,
+      "wave_index": 2
+    },
+    {
+      "channels": [
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23
+      ],
+      "config_sha256": "569be2cb39902c6dc9b248b407bbc16f4001bd2d89e3d02034667ec3cef19ab3",
+      "input_base_addr": "0x00227400",
+      "mapping_validation": null,
+      "operator_type": "resnet50_requant_node0004_w2_s02",
+      "output_base_addr": "0x0023FC00",
+      "shard_index": 2,
+      "wave_index": 2
+    },
+    {
+      "channels": [
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31
+      ],
+      "config_sha256": "3834e3af738b9c3d0a860462db929f26ac8b106eb914bbc0fe90570eb83253f8",
+      "input_base_addr": "0x00245E00",
+      "mapping_validation": null,
+      "operator_type": "resnet50_requant_node0004_w2_s03",
+      "output_base_addr": "0x0025E600",
+      "shard_index": 3,
+      "wave_index": 2
+    },
+    {
+      "channels": [
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39
+      ],
+      "config_sha256": "7fb54b3d8c48f6a2e4b6fe633dbdbc667b5694c7ab6f392641238fbfda8e221b",
+      "input_base_addr": "0x00264800",
+      "mapping_validation": null,
+      "operator_type": "resnet50_requant_node0004_w2_s04",
+      "output_base_addr": "0x0027D000",
+      "shard_index": 4,
+      "wave_index": 2
+    },
+    {
+      "channels": [
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47
+      ],
+      "config_sha256": "f01bc9dfbd0de724fcd188d8730dbff4219f13853da8b628cbfb2df9c09ac242",
+      "input_base_addr": "0x00283200",
+      "mapping_validation": null,
+      "operator_type": "resnet50_requant_node0004_w2_s05",
+      "output_base_addr": "0x0029BA00",
+      "shard_index": 5,
+      "wave_index": 2
+    },
+    {
+      "channels": [
+        48,
+        49,
+        50,
+        51,
+        52,
+        53,
+        54,
+        55
+      ],
+      "config_sha256": "648010ecebc02b66a1e33501426f9923b6c92a641cab9c16b6a89d6d33388a4e",
+      "input_base_addr": "0x002A1C00",
+      "mapping_validation": null,
+      "operator_type": "resnet50_requant_node0004_w2_s06",
+      "output_base_addr": "0x002BA400",
+      "shard_index": 6,
+      "wave_index": 2
+    },
+    {
+      "channels": [
+        56,
+        57,
+        58,
+        59,
+        60,
+        61,
+        62,
+        63
+      ],
+      "config_sha256": "24e2733696e0bf521e2107a21af23a20c3fc2b02e4330a2f743eaab2f9b90ba8",
+      "input_base_addr": "0x002C0600",
+      "mapping_validation": null,
+      "operator_type": "resnet50_requant_node0004_w2_s07",
+      "output_base_addr": "0x002D8E00",
+      "shard_index": 7,
+      "wave_index": 2
+    }
+  ],
+  "rounding": {
+    "round_magic_bits": "0x4b400000",
+    "round_magic_float32": 12582912.0,
+    "saturation": "general_array.outport.int32touint8",
+    "subtract_magic_int32": 1262485504
+  },
+  "schema": "resnet50-node0004-requant-config-set-v1",
+  "shape_specialization": {
+    "covered_channels": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30,
+      31,
+      32,
+      33,
+      34,
+      35,
+      36,
+      37,
+      38,
+      39,
+      40,
+      41,
+      42,
+      43,
+      44,
+      45,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55,
+      56,
+      57,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63
+    ],
+    "input": [
+      1,
+      3136,
+      8
+    ],
+    "input_dtype": "int32",
+    "operator_config_count": 24,
+    "output": [
+      1,
+      3136,
+      8
+    ],
+    "output_dtype": "uint8",
+    "shard_count_per_wave": 8,
+    "wave_count": 3
+  },
+  "source_template": {
+    "path": "ndp-sim/jsons/quant_from_buffer_int32MN_uint8MN.json",
+    "provenance": "pinned upstream exact authorized reference",
+    "sha256": "db638f0640e74217e80e61350a2fe400f7b495e2201f17c39915328cdd455ba2"
+  },
+  "typed_identity": {
+    "multiplier_sha256": "e83328d8589db8cfc2c5a1ff033d3c0e08d9bd87d8d8fcf52b8cb22189956bb2",
+    "output_zero_point": 0,
+    "typed_contract_id": "w4-28-c7-resnet50-batch16-typed-parameters-v1",
+    "typed_contract_sha256": "abbc87b0b13c92611a90fe1767b32b15fe9c49f23bee616ca2bb51219dd181bd",
+    "typed_stage_sha256": "9a7671fdf34df5809a4e176aee16c3867479648f5b08c7fa41e271677081925d"
+  }
+}

@@ -18,7 +18,11 @@ from pathlib import Path
 
 import numpy as np
 
-from ..conv28_layout import Conv28PhysicalBundle, QLinearConvPhysicalLayout
+from ..conv28_layout import (
+    CONV28_SIGNED_A_LOCAL_LAYOUT_ABI,
+    Conv28PhysicalBundle,
+    QLinearConvPhysicalLayout,
+)
 from ..conv_instance import ConvTargetRequest
 from ..conv_layout import ConvPhysicalBundle, PhysicalRegion
 from ..errors import PipelineError
@@ -280,6 +284,13 @@ class NdpRtl28FunctionalAdapter:
             group_id = sample_to_group(sample).group_id
             ring = TOPOLOGY28.high_ring_for_group(group_id)
             destination = ring.owners[owner_step]
+            if bundle.plan.layout_abi == CONV28_SIGNED_A_LOCAL_LAYOUT_ABI:
+                return (
+                    "HIGH_LOCAL",
+                    group_id,
+                    destination,
+                    ring.traverse(destination, Direction.PREV),
+                )
             return (
                 "HIGH",
                 group_id,
@@ -379,7 +390,16 @@ class NdpRtl28FunctionalAdapter:
                     bundle, n, k
                 )
                 fallback_a_target = self._target_element_address(
-                    layout, bundle, "A", (n, 0, 0, 0)
+                    layout,
+                    bundle,
+                    "A",
+                    (n, 0, 0, 0),
+                    owner=(
+                        source_owners[0]
+                        if bundle.plan.layout_abi
+                        == CONV28_SIGNED_A_LOCAL_LAYOUT_ABI
+                        else None
+                    ),
                 )
                 fallback_b_target = self._target_element_address(
                     layout, bundle, "B", (k, 0, 0, 0), owner=destination
@@ -404,9 +424,28 @@ class NdpRtl28FunctionalAdapter:
                         channel_ranges: list[tuple[int, int]] = []
                         valid_weight_sum = 0
                         for source_owner in source_owners:
-                            region = bundle.region("A", source_owner)
-                            c_start = region.logical_start
-                            c_count = region.logical_count
+                            if (
+                                bundle.plan.layout_abi
+                                == CONV28_SIGNED_A_LOCAL_LAYOUT_ABI
+                            ):
+                                ring = TOPOLOGY28.high_ring_for_group(int(group_id))
+                                c_start = (
+                                    ring.owners.index(source_owner)
+                                    * bundle.plan.c_tile
+                                )
+                                c_count = max(
+                                    0,
+                                    min(
+                                        bundle.plan.c_tile,
+                                        channels - c_start,
+                                    ),
+                                )
+                                activation_owner = destination
+                            else:
+                                region = bundle.region("A", source_owner)
+                                c_start = region.logical_start
+                                c_count = region.logical_count
+                                activation_owner = source_owner
                             channel_ranges.append((c_start, c_count))
                             segment_start = len(activation_addresses)
                             for c in range(c_start, c_start + c_count):
@@ -417,11 +456,15 @@ class NdpRtl28FunctionalAdapter:
                                         if not (0 <= ih < input_h and 0 <= iw < input_w):
                                             continue
                                         a_target = self._target_element_address(
-                                            layout, bundle, "A", (n, c, ih, iw)
+                                            layout,
+                                            bundle,
+                                            "A",
+                                            (n, c, ih, iw),
+                                            owner=activation_owner,
                                         )
                                         if (
                                             bundle.plan.geometry.decode(a_target).slice_id
-                                            != source_owner
+                                            != activation_owner
                                         ):
                                             raise PipelineError(
                                                 "RTL28 activation owner disagrees with ring segment"
@@ -638,7 +681,12 @@ class NdpRtl28FunctionalAdapter:
             sample_range = group_to_sample_range(group_id)
             sources = []
             destinations = []
-            for owner in ring.owners:
+            activation_owners = (
+                ring.owners[:1]
+                if bundle.plan.layout_abi == CONV28_SIGNED_A_LOCAL_LAYOUT_ABI
+                else ring.owners
+            )
+            for owner in activation_owners:
                 activation = region_descriptor("A", owner)
                 sources.append(
                     {
@@ -647,8 +695,10 @@ class NdpRtl28FunctionalAdapter:
                         "physical_shape": activation["physical_shape"],
                         "logical_start": activation["logical_start"],
                         "logical_count": activation["logical_count"],
+                        "owner_step": ring.owners.index(owner),
                     }
                 )
+            for owner in ring.owners:
                 weight = region_descriptor("B", owner)
                 bias = region_descriptor("bias", owner)
                 w_scale = region_descriptor("w_scale", owner)

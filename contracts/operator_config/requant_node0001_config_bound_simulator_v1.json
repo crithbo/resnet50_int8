@@ -1,0 +1,45 @@
+{
+  "schema": "operator-config-bound-simulator-contract-v1",
+  "status": "CONFIG_BOUND_SIMULATOR_E2_COMPLETE_HARDWARE_PENDING",
+  "request_id": "r5:hwop-0001-01",
+  "candidate_release": false,
+  "formal_target_instance_allowed": false,
+  "evidence_level": "E2_LOCAL_ONLY",
+  "dynamic_baseline": "NO_DYNAMIC_BASELINE",
+  "artifact": {
+    "path": "artifacts/operator_config_validation/r5-requant-node0001-config-bound-sim-v1/three_way_report.json",
+    "size_bytes": 176987,
+    "sha256": "c9a874715ae5d58bba790c1e053d7487703df12e0edc9a98b037d44bb457dde9"
+  },
+  "executor_kind": "PROJECT_EQUIVALENT_CONFIG_BOUND_EXECUTOR",
+  "rule_ids": [
+    "CDA-REQUANT-QPARAM-001",
+    "CDA-REQUANT-INT32-GUARD-001",
+    "CDA-REQUANT-SFU-LUT-001",
+    "CDA-REQUANT-TWO-STAGE-001",
+    "CDA-REQUANT-ROUND-MAGIC-001",
+    "CDA-REQUANT-LAYOUT-HWC8-001",
+    "CDA-REQUANT-MATERIALIZED-ROUNDTRIP-001",
+    "CDA-REQUANT-CONFIG-BOUND-SIMULATOR-001"
+  ],
+  "final_json_count": 48,
+  "occurrence_count": 24,
+  "stage_count": 48,
+  "golden_vs_config_bound_simulator": {
+    "status": "PASS",
+    "mismatch_count": 0,
+    "bit_exact": true
+  },
+  "golden_vs_stock_rtl_hardware": {
+    "status": "EVIDENCE_MISSING",
+    "reason": "no naturally completed formal E4 readback"
+  },
+  "config_bound_simulator_vs_stock_rtl_hardware": {
+    "status": "EVIDENCE_MISSING",
+    "reason": "no naturally completed formal E4 readback"
+  },
+  "remaining_blockers": [
+    "B_REQUANT_SERVER_E4_E5"
+  ],
+  "contract_content_sha256": "3327b323cdb9a13963b5493f9dc29c41cf01be659062dc81af474e10bc16c2cb"
+}

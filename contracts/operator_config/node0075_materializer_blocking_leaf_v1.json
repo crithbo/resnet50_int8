@@ -1,0 +1,137 @@
+{
+  "schema": "resnet50-node0075-materializer-blocking-leaf-v1",
+  "test_id": "r5-node0075-materializer-blocking-leaf-v1",
+  "date": "2026-08-03",
+  "owner": {
+    "operator_family": "QLinearMatMul",
+    "node_id": "node-0075",
+    "owner_thread": "019fc775-8de0-7f10-bc4a-026a4673776f",
+    "mainline_thread": "019fbec2-fe93-7e03-9314-cff6f222f33d"
+  },
+  "scope": {
+    "requested_hw_op_type": "MatMulInt32Accumulate",
+    "requested_onnx_op_type": "QLinearMatMul",
+    "result": "TERMINATED_AT_FIRST_NONEXPRESSIBLE_HARDWARE_LEAF",
+    "claim_boundary": "Current-disk compile leaf plus frozen node0075 instance observations only; no handler, materializer, target, E2, package, RTL fix, or general-domain tail closure."
+  },
+  "first_blocking_leaf": {
+    "id": "SA_FLOAT_CONTROL_ANSI_PORT_TRAILING_COMMA",
+    "classification": "CURRENT_ACTIVE_RTL_COMPILE_STOP",
+    "config_expressibility": "NOT_EXPRESSIBLE_BY_NODE0075_NON_RTL_ASSETS",
+    "path": "NDP_copy01/rtl/Slice/Specialized_Array/SA_PE/SA_PE_ALU/SA_PE_Float_Control.v",
+    "sha256": "c6018e762411e14346bfec672b273b826f893b11c5de0cfb38fca674f9d33c4b",
+    "line": 50,
+    "focused_probe": {
+      "tool": "iverilog",
+      "language": "SystemVerilog-2012",
+      "top": "SA_PE_Float_Control",
+      "exit_code": 1,
+      "error": "Superfluous comma in port declaration list"
+    },
+    "minimum_fix_direction": "Remove only the comma after final o_Config port, then re-run the full current VCS NDP top filelist compile.",
+    "required_next_authority": "RTL owner"
+  },
+  "reload_accounting": {
+    "capacity_formula": "ceil(1000/(16*8))",
+    "authorized_minimum_passes": 8,
+    "actual_materialized_passes": 0,
+    "actual_accepted_32byte_read_occurrences": 0,
+    "actual_accepted_traffic_bytes": 0,
+    "actual_unique_consumer_accepted_bytes": 0,
+    "frozen_producer_owned_unique_storage_bytes": 32768,
+    "if_unblocked_exactly_8_passes": {
+      "accepted_32byte_reads_per_slice": 512,
+      "accepted_32byte_read_occurrences": 8192,
+      "accepted_traffic_bytes": 262144,
+      "unique_storage_bytes": 32768
+    },
+    "adjudication": "The eight-pass values are an authorized lower-bound counterfactual, not materialized traffic. Producer bases are not consumer acceptance evidence."
+  },
+  "frozen_w3_observation": {
+    "accumulator": {
+      "path": "artifacts/w3/subop_batch16/tensors/tensor-internal-node-0075-accumulate.npy",
+      "sha256": "ee8422fe7c20f0cc40adb18abcd0b8b0f9c433a6c2283e8c87262e3a7d419ec3",
+      "shape": [
+        16,
+        1000
+      ],
+      "dtype": "int32",
+      "element_count": 16000,
+      "unique_value_count": 993,
+      "minimum": -44906,
+      "maximum": 121219,
+      "negative_count": 8544,
+      "zero_count": 0,
+      "positive_count": 7456,
+      "rows_with_negative": 16
+    },
+    "current_ga_int32tofp32_model_element_mismatch_count": 0,
+    "multiplier_bits": "0x3a510db3",
+    "output_zero_point": 60,
+    "sequential_vs_frozen_d_mismatch_count": 0,
+    "one_round_fused_vs_frozen_d_mismatch_count": 0,
+    "one_round_fused_vs_sequential_mismatch_count": 0,
+    "frozen_d": {
+      "path": "artifacts/w3/golden_batch16/tensors/tensor-6cc774b369e8dea4.npy",
+      "sha256": "10d974cdab69904bfd3ed7749059e26e16388ba784872f0d432cd2ba14bcbdc8",
+      "shape": [
+        16,
+        1000
+      ],
+      "dtype": "uint8",
+      "minimum": 24,
+      "maximum": 157
+    },
+    "adjudication": "Frozen W3 avoidance is not a full legal signed-domain proof and does not close the general exact-UINT8-tail blocker."
+  },
+  "secondary_open_blockers_not_reordered_ahead_of_first_leaf": [
+    {
+      "id": "SA_INT32_NEGATIVE_PSUM_FULL_WIDTH_RECONSTRUCTION",
+      "state": "RETAIN_OPEN",
+      "reason": "Current RTL defect is confirmed; this stop did not claim an exact node0075 recurrence-hit audit."
+    },
+    {
+      "id": "B_QUANT_TAIL_SIGNED_INT32_INGRESS",
+      "state": "RETAIN_OPEN_GENERAL_DOMAIN",
+      "reason": "The frozen W3 values avoid current model mismatches, but the public specialized rule requires a legal signed-domain route rather than W3-only avoidance."
+    },
+    {
+      "id": "B_REQUANT_MATMUL_2D_LAYOUT",
+      "state": "NOT_REACHED"
+    },
+    {
+      "id": "NODE0075_HANDLER_MATERIALIZER_ENDPOINT",
+      "state": "NOT_EMITTED_AFTER_FAIL_CLOSED_STOP"
+    }
+  ],
+  "blocker_delta": {
+    "new_node0075_first_leaf": [
+      "SA_FLOAT_CONTROL_ANSI_PORT_TRAILING_COMMA"
+    ],
+    "retain_open": [
+      "SA_INT32_NEGATIVE_PSUM_FULL_WIDTH_RECONSTRUCTION",
+      "B_QUANT_TAIL_SIGNED_INT32_INGRESS",
+      "B_REQUANT_MATMUL_2D_LAYOUT",
+      "NODE0075_HANDLER_MATERIALIZER_ENDPOINT"
+    ],
+    "closed": []
+  },
+  "rule_feedback": {
+    "kind": "RULE_CONFIRMATION",
+    "statement": "Keep the INT8-SA and exact-UINT8-tail general-domain gates open. Frozen node0075 W3 avoidance is useful instance evidence but is not a production or family-domain proof.",
+    "rule_delta_proposal": "NONE"
+  },
+  "release": {
+    "target_json_generated": false,
+    "mapping_generated": false,
+    "bitstream_generated": false,
+    "execplan_or_sca_generated": false,
+    "config_bound_e2": "NOT_RUN",
+    "package_release": "NONE",
+    "server_accessed": false,
+    "functional_rtl_modified": false,
+    "public_rules_modified": false,
+    "plan_modified": false
+  }
+}
+

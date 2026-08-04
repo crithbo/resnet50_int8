@@ -103,6 +103,13 @@ def main() -> int:
         encoding="utf-8",
         newline="\n",
     )
+    # A changed connection graph needs one mapper pass to materialize its own
+    # content-addressed zero-cost seed.  Evidence A/B then both start from that
+    # settled seed; comparing a seed-discovery run with a seeded run makes the
+    # raw mapping review differ even when the emitted bitstream is identical.
+    _encode(config, output / "mapping-warmup")
+    if not cache.is_file():
+        raise ValueError("Conv instance encoder did not materialize its mapping seed")
     first = _encode(config, output / "encode-a")
     second = _encode(config, output / "encode-b")
     if first != second:

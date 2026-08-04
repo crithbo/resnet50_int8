@@ -1,0 +1,54 @@
+{
+  "schema": "trassic2-master-local-sync-v1",
+  "date": "2026-07-29",
+  "repository": "xlsjdjdk/Trassic2.0_RTL",
+  "branch": "master",
+  "commit": "b7acbe55340ca7e98ead70335156f555929c0777",
+  "commit_subject": "修复语法问题",
+  "source_acquisition": {
+    "method": "authenticated_github_web_download",
+    "archive_path": "C:/Users/15383/Downloads/Trassic2.0_RTL-master (1).zip",
+    "archive_sha256": "3573d0c03f24d6433a655536653caf45702a0b71441590a09e375f0ed0f7334c",
+    "source_root": "Trassic2.0_RTL_master_b7acbe5_sync/Trassic2.0_RTL-master/code/NDP_rtl",
+    "source_file_count": 2242,
+    "source_tree_sha256": "62cc16b630046e7a1ed09351de8065e37764e2afb4c881f44d2f84e57c55bdc7",
+    "skipped_git_archive_symlink_entries": 15,
+    "skipped_symlink_scope": "AXI_IF generated csrc archive objects only"
+  },
+  "local_activation": {
+    "active_root": "NDP_copy01/rtl",
+    "backup_root": "NDP_copy01/rtl_pre_github_b7acbe5_20260729",
+    "active_file_count": 2242,
+    "active_tree_sha256": "62cc16b630046e7a1ed09351de8065e37764e2afb4c881f44d2f84e57c55bdc7",
+    "source_to_active_identity_diff_count": 0,
+    "active_destructive_cleanup_performed": false,
+    "failed_staging_directory_recreated": true
+  },
+  "immediate_source_current_match_observation": {
+    "file": "Slice/Specialized_Array/SA_PE/SA_PE_ALU/SA_PE_Float_Control.v",
+    "sha256": "c6018e762411e14346bfec672b273b826f893b11c5de0cfb38fca674f9d33c4b",
+    "line_50": "output[1:0] o_Config,",
+    "line_51": ");",
+    "focused_iverilog_exit": 1,
+    "focused_iverilog_error": "Superfluous comma in port declaration list",
+    "classification": "LATEST_GITHUB_SOURCE_STILL_CONTAINS_CONFIRMED_COMPILE_BLOCKER"
+  },
+  "qlinearadd_return_dispatch": {
+    "input": "C:/Users/15383/xwechat_files/wxid_vwpfpfs4fgyk22_29b7/msg/file/2026-07/r5_qadd_n7_relocated_v2_return(1).zip",
+    "family_thread": "019fa2c0-b647-7a91-93bf-d21a173487e3",
+    "formal_receipt": "FAIL_CLOSED_ADJACENT_SIDECAR_MISSING",
+    "execution_first_divergence": "SERVER_TB_REQUIRED_INCLUDE_MISSING",
+    "missing_include": "native_return_observer.svh",
+    "compile_exit": 2,
+    "simulation_started": false,
+    "formal_readback": "0/28",
+    "package_side_fix_required": false
+  },
+  "claim_boundary": {
+    "github_sync_complete": true,
+    "full_vcs_compile_complete": false,
+    "server_source_identity_bound": false,
+    "qlinearadd_e4": false,
+    "qlinearadd_e5": false
+  }
+}

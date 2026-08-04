@@ -1,0 +1,317 @@
+{
+  "candidate_scope": {
+    "formal_target_config": false,
+    "hw_op_id": "hwop-0004-00",
+    "node_id": "node-0004",
+    "operator_count": 3,
+    "purpose": "complete node-0004 Conv accumulate native package; three-wave batch16 dispatch",
+    "server_execution_claim": false,
+    "unresolved_semantic_gates": [
+      "B_LAYOUT_APPROVAL",
+      "B_CONV_INT8_SA",
+      "B_CONV_BIAS_PSUM"
+    ],
+    "wave_count": 3
+  },
+  "contract_sha256": "7d6abe9a5492fa3868ee8085ed8cc1dd22cbdbf6c06bca6d30bfb5c187ba4f04",
+  "graph_sha256": "e2db77bbe17a07398e5092dea2a0714a75322d3bb2b1baf6730b250ea7e8500e",
+  "operators": {
+    "op_w0": {
+      "layouts": {
+        "A": "signed INT8 Conv28 weight tile; local K16 x C64; K-major/C-minor",
+        "B": "UINT8 Conv28 activation tile; one storage sample slot; HWC64",
+        "C": "INT32 local K16 bias vector",
+        "D": "INT32 local K16 partial-sum tile; HWK16"
+      },
+      "op_type": "resnet50_conv_node0004_wave0",
+      "provenance": {
+        "mapping_evidence": {
+          "artifact": "mapping_evidence/op_w0/mapping_evidence.json",
+          "sha256": "75e4e1a3d4bdddf6dd96beb0bc3aa49899ca9c181772261dca354c30255bc885"
+        },
+        "source_config": {
+          "artifact": "mapping_evidence/op_w0/source_config.json",
+          "sha256": "42aa4f09c3d992095f01721900272d58eaedca07d89916cf94886ad90cee7965"
+        }
+      },
+      "qparams": {
+        "bindings": {
+          "A": {
+            "scale": {
+              "axis": 0,
+              "dtype": "float32",
+              "element_count": 64,
+              "maximum": 0.006007642950862646,
+              "minimum": 9.22749610055007e-09,
+              "shape": [
+                64
+              ],
+              "value_kind": "per_channel",
+              "value_sha256": "3abf120f4bc983427b0f9699d55fcfbc648a8884501832dbe874b3828968e9b9"
+            },
+            "source": "typed_config_parameter_contract:hwop-0004-00@70a2f30e6f576e8fad1a3db23c3c001e78723a824aa15d4ebe632a284499379c",
+            "zero_point": {
+              "axis": 0,
+              "dtype": "int8",
+              "element_count": 64,
+              "maximum": 0,
+              "minimum": 0,
+              "shape": [
+                64
+              ],
+              "value_kind": "per_channel",
+              "value_sha256": "f5a5fd42d16a20302798ef6ed309979b43003d2320d9f0e8ea9831a92759fb4b"
+            }
+          },
+          "B": {
+            "scale": {
+              "dtype": "float32",
+              "element_count": 1,
+              "float32_bits": "0x3cb0a5e9",
+              "scalar": 0.021563487127423286,
+              "shape": [
+                1
+              ],
+              "value_kind": "scalar",
+              "value_sha256": "a1aac7487d3e8f919770415333ea8456ee152f1a343819888671a4395e2e7d02"
+            },
+            "source": "typed_config_parameter_contract:hwop-0004-00@70a2f30e6f576e8fad1a3db23c3c001e78723a824aa15d4ebe632a284499379c",
+            "zero_point": {
+              "dtype": "uint8",
+              "element_count": 1,
+              "scalar": 0,
+              "shape": [
+                1
+              ],
+              "value_kind": "scalar",
+              "value_sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d"
+            }
+          }
+        },
+        "policy": "explicit"
+      },
+      "stage": {
+        "dependencies": [],
+        "role": "QLinearConv INT32 accumulate complete dispatch; experimental zero-ping-pong config",
+        "sample_ids": [
+          0,
+          3,
+          6,
+          8,
+          10,
+          12,
+          14
+        ],
+        "wave_index": 0
+      },
+      "tail": {
+        "padding": null,
+        "policy": "exact"
+      }
+    },
+    "op_w1": {
+      "layouts": {
+        "A": "signed INT8 Conv28 weight tile; local K16 x C64; K-major/C-minor",
+        "B": "UINT8 Conv28 activation tile; one storage sample slot; HWC64",
+        "C": "INT32 local K16 bias vector",
+        "D": "INT32 local K16 partial-sum tile; HWK16"
+      },
+      "op_type": "resnet50_conv_node0004_wave1",
+      "provenance": {
+        "mapping_evidence": {
+          "artifact": "mapping_evidence/op_w1/mapping_evidence.json",
+          "sha256": "6f3aaf4c9c2f39127abe9a31a22ba422a4fd7106c3fa3077d5700f5082905e5c"
+        },
+        "source_config": {
+          "artifact": "mapping_evidence/op_w1/source_config.json",
+          "sha256": "2e9530d3b2d929dbde18fd72ce29e3b82f49827c85632b91e8d77d24653b1b74"
+        }
+      },
+      "qparams": {
+        "bindings": {
+          "A": {
+            "scale": {
+              "axis": 0,
+              "dtype": "float32",
+              "element_count": 64,
+              "maximum": 0.006007642950862646,
+              "minimum": 9.22749610055007e-09,
+              "shape": [
+                64
+              ],
+              "value_kind": "per_channel",
+              "value_sha256": "3abf120f4bc983427b0f9699d55fcfbc648a8884501832dbe874b3828968e9b9"
+            },
+            "source": "typed_config_parameter_contract:hwop-0004-00@70a2f30e6f576e8fad1a3db23c3c001e78723a824aa15d4ebe632a284499379c",
+            "zero_point": {
+              "axis": 0,
+              "dtype": "int8",
+              "element_count": 64,
+              "maximum": 0,
+              "minimum": 0,
+              "shape": [
+                64
+              ],
+              "value_kind": "per_channel",
+              "value_sha256": "f5a5fd42d16a20302798ef6ed309979b43003d2320d9f0e8ea9831a92759fb4b"
+            }
+          },
+          "B": {
+            "scale": {
+              "dtype": "float32",
+              "element_count": 1,
+              "float32_bits": "0x3cb0a5e9",
+              "scalar": 0.021563487127423286,
+              "shape": [
+                1
+              ],
+              "value_kind": "scalar",
+              "value_sha256": "a1aac7487d3e8f919770415333ea8456ee152f1a343819888671a4395e2e7d02"
+            },
+            "source": "typed_config_parameter_contract:hwop-0004-00@70a2f30e6f576e8fad1a3db23c3c001e78723a824aa15d4ebe632a284499379c",
+            "zero_point": {
+              "dtype": "uint8",
+              "element_count": 1,
+              "scalar": 0,
+              "shape": [
+                1
+              ],
+              "value_kind": "scalar",
+              "value_sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d"
+            }
+          }
+        },
+        "policy": "explicit"
+      },
+      "stage": {
+        "dependencies": [],
+        "role": "QLinearConv INT32 accumulate complete dispatch; experimental zero-ping-pong config",
+        "sample_ids": [
+          1,
+          4,
+          7,
+          9,
+          11,
+          13,
+          15
+        ],
+        "wave_index": 1
+      },
+      "tail": {
+        "padding": null,
+        "policy": "exact"
+      }
+    },
+    "op_w2": {
+      "layouts": {
+        "A": "signed INT8 Conv28 weight tile; local K16 x C64; K-major/C-minor",
+        "B": "UINT8 Conv28 activation tile; one storage sample slot; HWC64",
+        "C": "INT32 local K16 bias vector",
+        "D": "INT32 local K16 partial-sum tile; HWK16"
+      },
+      "op_type": "resnet50_conv_node0004_wave2",
+      "provenance": {
+        "mapping_evidence": {
+          "artifact": "mapping_evidence/op_w2/mapping_evidence.json",
+          "sha256": "caa64443dcf3837efbe4eae717fd1177c5bc00d687027c04a069f1ea37063785"
+        },
+        "source_config": {
+          "artifact": "mapping_evidence/op_w2/source_config.json",
+          "sha256": "6a164759aeeabedacd97db022384ab9cf9a77191f4b44b7f05e664649222d4be"
+        }
+      },
+      "qparams": {
+        "bindings": {
+          "A": {
+            "scale": {
+              "axis": 0,
+              "dtype": "float32",
+              "element_count": 64,
+              "maximum": 0.006007642950862646,
+              "minimum": 9.22749610055007e-09,
+              "shape": [
+                64
+              ],
+              "value_kind": "per_channel",
+              "value_sha256": "3abf120f4bc983427b0f9699d55fcfbc648a8884501832dbe874b3828968e9b9"
+            },
+            "source": "typed_config_parameter_contract:hwop-0004-00@70a2f30e6f576e8fad1a3db23c3c001e78723a824aa15d4ebe632a284499379c",
+            "zero_point": {
+              "axis": 0,
+              "dtype": "int8",
+              "element_count": 64,
+              "maximum": 0,
+              "minimum": 0,
+              "shape": [
+                64
+              ],
+              "value_kind": "per_channel",
+              "value_sha256": "f5a5fd42d16a20302798ef6ed309979b43003d2320d9f0e8ea9831a92759fb4b"
+            }
+          },
+          "B": {
+            "scale": {
+              "dtype": "float32",
+              "element_count": 1,
+              "float32_bits": "0x3cb0a5e9",
+              "scalar": 0.021563487127423286,
+              "shape": [
+                1
+              ],
+              "value_kind": "scalar",
+              "value_sha256": "a1aac7487d3e8f919770415333ea8456ee152f1a343819888671a4395e2e7d02"
+            },
+            "source": "typed_config_parameter_contract:hwop-0004-00@70a2f30e6f576e8fad1a3db23c3c001e78723a824aa15d4ebe632a284499379c",
+            "zero_point": {
+              "dtype": "uint8",
+              "element_count": 1,
+              "scalar": 0,
+              "shape": [
+                1
+              ],
+              "value_kind": "scalar",
+              "value_sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d"
+            }
+          }
+        },
+        "policy": "explicit"
+      },
+      "stage": {
+        "dependencies": [],
+        "role": "QLinearConv INT32 accumulate complete dispatch; experimental zero-ping-pong config",
+        "sample_ids": [
+          2,
+          5
+        ],
+        "wave_index": 2
+      },
+      "tail": {
+        "padding": null,
+        "policy": "exact"
+      }
+    }
+  },
+  "schema": "operator-config-semantic-contract-v1",
+  "source_identities": {
+    "mapping_bundle_manifest_sha256": {
+      "op_w0": "75b36b08311ebd4f86f10b190d6d9aecb64e780e083b2f8b2d4faa9759d0a9b6",
+      "op_w1": "9c8d41eb1a122608ca3d38791a3118ed352c0491e036fa7b69b6099b06e373ba",
+      "op_w2": "8ef0395f674194ae7c8c74bd2d9d3707384ec8fb2f00158c8687569c274dff7c"
+    },
+    "patchset_sha256": "c4916bd812840eb7a0878c5f0979aabfcb872014420e8ac2ab48684054713132",
+    "request_proof_content_sha256": "d607fcd21ce55342516b0bfcbc5004443ae05a3565726ad9df20829769c9b3e4",
+    "transport_manifest_sha256": "0c46e557b226514b5f7a627616f8822c90892a58d093c0b814a4e25d83f70c97",
+    "typed_config_parameter_contract_sha256": "abbc87b0b13c92611a90fe1767b32b15fe9c49f23bee616ca2bb51219dd181bd",
+    "typed_stage_sha256": "70a2f30e6f576e8fad1a3db23c3c001e78723a824aa15d4ebe632a284499379c"
+  },
+  "target_profile": {
+    "banks_per_slice": 4,
+    "buffers": 6,
+    "ddr_columns": 64,
+    "ddr_rows": 6144,
+    "read_streams": 4,
+    "slices": 28,
+    "subwords_per_column": 16,
+    "write_streams": 1
+  }
+}

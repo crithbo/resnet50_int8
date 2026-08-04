@@ -1,0 +1,46 @@
+{
+  "schema": "human-json-stock-rtl-return-analysis-v1",
+  "source": {
+    "absolute_path": "C:\\Users\\15383\\xwechat_files\\wxid_vwpfpfs4fgyk22_29b7\\msg\\file\\2026-07\\sim_results(4).zip",
+    "size_bytes": 71872360,
+    "sha256": "7516eaee2ae82625c4a2d5e0eed10e79acdf9fe9be36f81a54fbaeca1ff551f8"
+  },
+  "formal_return_identity_verified": false,
+  "sidecar_present": false,
+  "package_receipt_present": false,
+  "run_status_present": false,
+  "identity_gate_present": false,
+  "result_gate_present": false,
+  "formal_readback_count": 0,
+  "compile": {
+    "completed": true,
+    "errors": 0,
+    "warnings": 1
+  },
+  "start": {
+    "matrices_loaded": 30,
+    "exec_base": "0x00001800",
+    "exec_length": 29,
+    "slice_start_observed": true,
+    "slice_start_time_ps": 58838000
+  },
+  "finish": {
+    "normal_completion_observed": false,
+    "last_sim_time_ps": 6072101975,
+    "termination": "SIGHUP",
+    "vcs_cpu_seconds": 588.68
+  },
+  "process_state_in_archive": "EXITED",
+  "deadlock_proven": false,
+  "numeric_correctness": "NOT_ADJUDICABLE",
+  "first_divergence": {
+    "domain": "package_infrastructure",
+    "fact": "VCS received SIGHUP before completion and formal readback"
+  },
+  "classification": [
+    "PARTIAL_SNAPSHOT",
+    "EXTERNAL_SIGHUP",
+    "FIRST_DYNAMIC_FAILURE",
+    "NO_DYNAMIC_BASELINE"
+  ]
+}

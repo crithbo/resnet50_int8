@@ -1,0 +1,649 @@
+{
+  "alias_overlay_materialization": {
+    "allocation_owner": "r5:hwop-0071-01:D",
+    "allocation_owner_changed": false,
+    "consumer_tensor": {
+      "byte_strides": [
+        2048,
+        1
+      ],
+      "dtype": "uint8",
+      "shape": [
+        16,
+        2048
+      ],
+      "tensor_id": "tensor-6fbd5707d5f08110"
+    },
+    "copy_used": false,
+    "host_tensor_used": false,
+    "index_map": "[n,c,0,0] -> [n,c]",
+    "installed_in_native_execplan": false,
+    "metadata_only_view_preserved": true,
+    "new_allocation_created": false,
+    "old_fp32_131072_byte_endpoint_used": false,
+    "overlay_id": "r5:node0071-D->node0075-A:uint8-metadata-alias-v1",
+    "relocation_used": false,
+    "removed_arithmetic_stages": [
+      "r5:hwop-0072-00 DequantizeLinear arithmetic",
+      "r5:hwop-0074-00 QuantizeLinear arithmetic"
+    ],
+    "replay_used": false,
+    "source_tensor": {
+      "byte_strides": [
+        2048,
+        1,
+        1,
+        1
+      ],
+      "dtype": "uint8",
+      "shape": [
+        16,
+        2048,
+        1,
+        1
+      ],
+      "tensor_id": "tensor-ab32f279540568c3"
+    },
+    "status": "GRAPH_METADATA_AND_ALLOCATION_REQUIREMENT_MATERIALIZED",
+    "storage_id": "r5:activation:node-0071:D:tensor-ab32f279540568c3:batch-slice-sharded-16x2048-v1",
+    "storage_offset_bytes": 0
+  },
+  "analysis_accounting": {
+    "binary32_domain_retested": false,
+    "consumed_reuse_assets": true,
+    "dequant_view_rec_counterexample_retested": false,
+    "node0075_workload_built": false,
+    "numeric_analysis_repeated": false,
+    "w3_retested": false
+  },
+  "blocker_delta": {
+    "B_QUANT_NODE0074_IDENTITY_FUSION_NODE0075_BINDING": "REMAINS_OPEN",
+    "generic_exact_divider_blockers": "OPEN_BUT_OFF_THIS_FROZEN_PATH",
+    "new_precise_sub_blocker": "B_MATMUL_NODE0075_FINAL_A_CONSUMER_MATERIALIZER_MISSING",
+    "node0075_requant_and_e4_e5": "OPEN_DOWNSTREAM_NOT_RETESTED",
+    "node0075_sa_matmul_arithmetic_blockers": "OPEN_DOWNSTREAM_NOT_RETESTED"
+  },
+  "canonical_patch_handoff": {
+    "canonical_modified": false,
+    "foreign_owner_sections_modified": false,
+    "future_patch_scope_after_materializer_exists": [
+      "install this metadata alias overlay in graph/allocator/execplan",
+      "bind every final node0075 A occurrence to the 16 node0071 slice bases",
+      "prove consumer ordered-address/read-byte-set hashes",
+      "bind producer-final barrier to first accepted consumer read",
+      "bind last accepted/no-replay consumer read to allocation release",
+      "then close only B_QUANT_NODE0074_IDENTITY_FUSION_NODE0075_BINDING"
+    ],
+    "reason": "top-level endpoint gate cannot close until final node0075 consumer addresses and accepted lifetime are materialized"
+  },
+  "claim_boundary": "Machine-consumable graph/allocation metadata overlay and exact fail-closed handoff only; no node0075 physical address coverage, integrated E2, SA/MatMul arithmetic closure, E3/E4/E5, or package.",
+  "first_divergence": {
+    "after": "node0075 A occurrence address equation, mapping, bitstream, execplan/SCA, accepted-read terminal and release witness",
+    "before": "approved typed uint8 identity alias and exact node0071-owned storage requirements",
+    "first_missing_asset": "final registered MatMulInt32Accumulate/QLinearMatMul op-json handler capable of materializing node0075 A read occurrences",
+    "id": "B_MATMUL_NODE0075_FINAL_A_CONSUMER_MATERIALIZER_MISSING",
+    "kind": "WAIT_NODE0075_MATERIALIZER_CAPABILITY",
+    "not_yet_an_rtl_first_divergence": true,
+    "stage": "r5:hwop-0075-00 / ordinal 129 / A input"
+  },
+  "frozen_handoff": {
+    "approval": "APPROVED_EQUIVALENT",
+    "fusion_report_consumed_without_recalculation": true,
+    "known_source_storage": {
+      "active_slice_count": 16,
+      "alias_byte_strides": [
+        2048,
+        1
+      ],
+      "alias_offset_bytes": 0,
+      "alias_shape": [
+        16,
+        2048
+      ],
+      "allocation_owner": "r5:hwop-0071-01:D",
+      "bytes_per_active_slice": 2048,
+      "dtype": "uint8",
+      "ordered_address_sha256": "4d53305b6b1f2c48f8cf5043262f8866d5d82d2b207db9146ff09ab05ac38b2d",
+      "producer_local_visibility_evidence_accepted": true,
+      "producer_visibility_event": "node0071 final uint8 D byte-set accepted AND node0071 completion/final barrier accepted",
+      "shared_multi_operator_barrier_materialized": false,
+      "slice0_base_addr": "0x000a2000",
+      "slice_address_stride_bytes": 33554432,
+      "slice_base_formula": "D_base(slice)=0x000a2000+(slice_id<<25), 0<=slice_id<16",
+      "source_byte_strides": [
+        2048,
+        1,
+        1,
+        1
+      ],
+      "source_shape": [
+        16,
+        2048,
+        1,
+        1
+      ],
+      "storage_id": "r5:activation:node-0071:D:tensor-ab32f279540568c3:batch-slice-sharded-16x2048-v1",
+      "total_valid_bytes": 32768,
+      "transaction_bytes": 32,
+      "transactions_per_active_slice": 64,
+      "written_byte_set_sha256": "3d900ae696639cb65053a0de41d9504e10bdbab3d7cbce764f94b06812f14d06"
+    },
+    "numeric_analysis_repeated_by_this_integration": false,
+    "original_edge_gate": {
+      "byte_count": 32768,
+      "dtype": "uint8",
+      "edge_id": "r5:hwop-0074-00->r5:hwop-0075-00:tensor-6fbd5707d5f08110",
+      "implicit_reuse_allowed": false,
+      "original_logical_alias_eligible": false,
+      "physical_allocation_status": "blocked_until_address_offset_and_lifetime_are_bound",
+      "shape": [
+        16,
+        2048
+      ]
+    }
+  },
+  "functional_rtl_modified": false,
+  "input_receipts": {
+    "active_rules_and_plan": [
+      {
+        "bytes": 11097,
+        "path": ".agents/agent.md",
+        "sha256": "aae402d48b82d026c5512c8a6a5d4c9ff9db4bcc6a94576cd618c168f3fd188e"
+      },
+      {
+        "bytes": 25463,
+        "path": ".agents/plan.md",
+        "sha256": "160cfe7fb9fbc7d485081c2c8d7afbd7c02dafcbb324d418801c3a9cfc29b60c"
+      },
+      {
+        "bytes": 7525,
+        "path": ".agents/rules/\u751f\u6210\u524d\u5fc5\u8bfb\u7d22\u5f15.md",
+        "sha256": "f768a870d19699c87b66b735a759d3212db6ad51aace30e3a6305b2521a708c8"
+      },
+      {
+        "bytes": 18506,
+        "path": ".agents/rules/\u7b97\u5b50\u914d\u7f6e\u89c4\u5219.md",
+        "sha256": "cbaffcc5fb3bea7da9f0c199bb2e7f06445a676ab456bdfd505b90dd89825171"
+      },
+      {
+        "bytes": 14974,
+        "path": ".agents/rules/NDP\u786c\u4ef6\u5b57\u6bb5\u8bed\u4e49.md",
+        "sha256": "603d57805bc5a5bdfca7406c402bc94db60c06ea6682493d672abb91671b1055"
+      },
+      {
+        "bytes": 3625,
+        "path": ".agents/rules/Flatten_View\u7b97\u5b50\u914d\u7f6e\u89c4\u5219.md",
+        "sha256": "28ba3a92fecbb83149d494867429c34aa3124040a5c59fe99c4b9481feb3b7ee"
+      },
+      {
+        "bytes": 13258,
+        "path": ".agents/rules/INT8_SA\u70b9\u79ef\u4e13\u9879\u89c4\u5219.md",
+        "sha256": "54a1e12541aaeb6f62dadb19c47a6154eb0462b758a35a9a5bc4a0043cb37dce"
+      }
+    ],
+    "locked_current_match": [
+      {
+        "bytes": 22916,
+        "current_match": true,
+        "expected_sha256": "7f9dbfa7d92a70c310c04275ee7c1f90dfa763de975d68bf663d3f20cbc073db",
+        "path": "contracts/operator_config/quantize_node0074_dq_view_q_identity_fusion_v1.json",
+        "sha256": "7f9dbfa7d92a70c310c04275ee7c1f90dfa763de975d68bf663d3f20cbc073db"
+      },
+      {
+        "bytes": 188474,
+        "current_match": true,
+        "expected_sha256": "213ff272db06229451f2ccd5ca53c5533698dcfc8c28b14bf2cc189fe60ea8f8",
+        "path": "artifacts/operator_config_validation/r5-quantize-node0074-dq-view-q-identity-fusion-v1/report.json",
+        "sha256": "213ff272db06229451f2ccd5ca53c5533698dcfc8c28b14bf2cc189fe60ea8f8"
+      },
+      {
+        "bytes": 11002,
+        "current_match": true,
+        "expected_sha256": "3a63fd8b9403d35d5e8f76a89fd4faf812649f91767cfc71ebe59ffc3b0167f0",
+        "path": ".agents/task_records/20260803_quantize_node0074_dq_view_q_identity_fusion.md",
+        "sha256": "3a63fd8b9403d35d5e8f76a89fd4faf812649f91767cfc71ebe59ffc3b0167f0"
+      },
+      {
+        "bytes": 34551,
+        "current_match": true,
+        "expected_sha256": "04e3e6e7c5b27878cb021b653c1f6ec0df16b9a5530fdd11452bfe6eb2fcf89c",
+        "path": "contracts/operator_config/resnet50_node0072_node0074_shared_endpoint_v1.json",
+        "sha256": "04e3e6e7c5b27878cb021b653c1f6ec0df16b9a5530fdd11452bfe6eb2fcf89c"
+      },
+      {
+        "bytes": 29431,
+        "current_match": true,
+        "expected_sha256": "9a832711eccd406d32ce802268889ecd67a9944a841d8cd8445af206ec93c2b0",
+        "path": "contracts/operator_config/resnet50_node0071_node0072_shared_endpoint_v1.json",
+        "sha256": "9a832711eccd406d32ce802268889ecd67a9944a841d8cd8445af206ec93c2b0"
+      },
+      {
+        "bytes": 1971200,
+        "current_match": true,
+        "expected_sha256": "bf661e4eda2011025d9922708ab46a64f8d1b3c279527b88aa7d630bb3545432",
+        "path": "contracts/resnet50_r5_lowering_bundle.json",
+        "sha256": "bf661e4eda2011025d9922708ab46a64f8d1b3c279527b88aa7d630bb3545432"
+      },
+      {
+        "bytes": 1008342,
+        "current_match": true,
+        "expected_sha256": "79aa86fc958a2394c5161229378e490472bd5ea4273e40ea5d2139294038cf1e",
+        "path": "contracts/operator_config/stage_config_system_v1.json",
+        "sha256": "79aa86fc958a2394c5161229378e490472bd5ea4273e40ea5d2139294038cf1e"
+      },
+      {
+        "bytes": 244657,
+        "current_match": true,
+        "expected_sha256": "67f8e7758128a0dfea4b3faf2eab700b01b602ca052c3301fec967d6d2604744",
+        "path": "contracts/operator_config/stage_state_lifetime_contract_v1.json",
+        "sha256": "67f8e7758128a0dfea4b3faf2eab700b01b602ca052c3301fec967d6d2604744"
+      }
+    ]
+  },
+  "materializer_closure": {
+    "final_materialized_node0075_a_consumer_present": false,
+    "missing_native_candidates": [
+      "ndp-sim/model_execplan/op_json/MatMulInt32Accumulate.json",
+      "ndp-sim/model_execplan/op_json/QLinearMatMul.json"
+    ],
+    "ordered_lifetime_stage": {
+      "address_alias_or_copy_decision_available": false,
+      "blockers": [
+        "B_EXECPLAN_TYPED_TRANSPORT",
+        "B_MATMUL_INT8_SA",
+        "B_MATMUL_INT8_SA_RECIPE",
+        "B_MATMUL_PSUM",
+        "B_MATMUL_TAIL",
+        "B_MATMUL_TAIL_E5",
+        "B_SA_INT8_CSA_NUMERIC"
+      ],
+      "buffer_allocation_available": false,
+      "config_transition": "blocked_before_config_encoding",
+      "config_update_sequence_available": false,
+      "hw_op_type": "MatMulInt32Accumulate",
+      "implicit_prior_state_allowed": false,
+      "lifetime_release_available": false,
+      "ordinal": 129,
+      "request_id": "r5:hwop-0075-00",
+      "required_config_modules": [
+        "IGA",
+        "LSU",
+        "SA"
+      ]
+    },
+    "registry_hits": {
+      "MatMulInt32Accumulate": {
+        "control_registers": false,
+        "operator_base_info": false
+      },
+      "QLinearMatMul": {
+        "control_registers": false,
+        "operator_base_info": false
+      }
+    },
+    "registry_sources": [
+      {
+        "bytes": 15890,
+        "path": "ndp-sim/model_execplan/config/operator_base_info.json",
+        "sha256": "e408606006e5778997b015f6cf90608dad93ef45efe60d73c5a0b675eab096e0"
+      },
+      {
+        "bytes": 85852,
+        "path": "ndp-sim/model_execplan/src/execution_plan_generator/control_registers.py",
+        "sha256": "cd12ee5f31231e856f9f63f61746a8e43435228d0268813c3eb8c4630e09a941"
+      }
+    ],
+    "stage_config": {
+      "candidate_blockers": [
+        "B_EXECPLAN_TYPED_TRANSPORT",
+        "B_MATMUL_INT8_SA",
+        "B_MATMUL_INT8_SA_RECIPE",
+        "B_MATMUL_PSUM",
+        "B_MATMUL_TAIL",
+        "B_MATMUL_TAIL_E5",
+        "B_SA_INT8_CSA_NUMERIC"
+      ],
+      "readiness": "blocked",
+      "readiness_axes": {
+        "dynamic_release_ready": false,
+        "json_emitter_ready": false,
+        "rtl_semantics_compatible": false
+      }
+    },
+    "typed_edge": {
+      "byte_count": 32768,
+      "consumer_request_id": "r5:hwop-0075-00",
+      "dtype": "uint8",
+      "edge_id": "r5:hwop-0074-00->r5:hwop-0075-00:tensor-6fbd5707d5f08110",
+      "edge_kind": "inter_node",
+      "implicit_register_or_buffer_reuse_allowed": false,
+      "logical_alias_eligible": false,
+      "physical_allocation_status": "blocked_until_address_offset_and_lifetime_are_bound",
+      "producer_request_id": "r5:hwop-0074-00",
+      "shape": [
+        16,
+        2048
+      ],
+      "tensor_id": "tensor-6fbd5707d5f08110",
+      "typed_identity_exact": true
+    }
+  },
+  "node0075_consumer_address_coverage": {
+    "coverage_proven": false,
+    "final_consumer_address_equation": null,
+    "final_consumer_occurrence_count": null,
+    "final_consumer_ordered_address_sha256": null,
+    "final_consumer_read_byte_set_sha256": null,
+    "producer_base_projection_accepted_as_consumer_address": false,
+    "reason": "node0075 has a typed A port but no final JSON/registered handler/mapping/bitstream/execplan/SCA from which A occurrences can be inverted",
+    "required_ordered_address_sha256": "4d53305b6b1f2c48f8cf5043262f8866d5d82d2b207db9146ff09ab05ac38b2d",
+    "required_read_byte_set_sha256": "3d900ae696639cb65053a0de41d9504e10bdbab3d7cbce764f94b06812f14d06",
+    "required_slice_records": [
+      {
+        "consumer_accepted_witness": null,
+        "consumer_occurrence_addresses": null,
+        "consumer_ordered_address_sha256": null,
+        "consumer_read_byte_set_sha256": null,
+        "required_base_addr": "0x000a2000",
+        "required_bytes": 2048,
+        "required_transaction_bytes": 32,
+        "required_transaction_count": 64,
+        "slice_id": 0
+      },
+      {
+        "consumer_accepted_witness": null,
+        "consumer_occurrence_addresses": null,
+        "consumer_ordered_address_sha256": null,
+        "consumer_read_byte_set_sha256": null,
+        "required_base_addr": "0x020a2000",
+        "required_bytes": 2048,
+        "required_transaction_bytes": 32,
+        "required_transaction_count": 64,
+        "slice_id": 1
+      },
+      {
+        "consumer_accepted_witness": null,
+        "consumer_occurrence_addresses": null,
+        "consumer_ordered_address_sha256": null,
+        "consumer_read_byte_set_sha256": null,
+        "required_base_addr": "0x040a2000",
+        "required_bytes": 2048,
+        "required_transaction_bytes": 32,
+        "required_transaction_count": 64,
+        "slice_id": 2
+      },
+      {
+        "consumer_accepted_witness": null,
+        "consumer_occurrence_addresses": null,
+        "consumer_ordered_address_sha256": null,
+        "consumer_read_byte_set_sha256": null,
+        "required_base_addr": "0x060a2000",
+        "required_bytes": 2048,
+        "required_transaction_bytes": 32,
+        "required_transaction_count": 64,
+        "slice_id": 3
+      },
+      {
+        "consumer_accepted_witness": null,
+        "consumer_occurrence_addresses": null,
+        "consumer_ordered_address_sha256": null,
+        "consumer_read_byte_set_sha256": null,
+        "required_base_addr": "0x080a2000",
+        "required_bytes": 2048,
+        "required_transaction_bytes": 32,
+        "required_transaction_count": 64,
+        "slice_id": 4
+      },
+      {
+        "consumer_accepted_witness": null,
+        "consumer_occurrence_addresses": null,
+        "consumer_ordered_address_sha256": null,
+        "consumer_read_byte_set_sha256": null,
+        "required_base_addr": "0x0a0a2000",
+        "required_bytes": 2048,
+        "required_transaction_bytes": 32,
+        "required_transaction_count": 64,
+        "slice_id": 5
+      },
+      {
+        "consumer_accepted_witness": null,
+        "consumer_occurrence_addresses": null,
+        "consumer_ordered_address_sha256": null,
+        "consumer_read_byte_set_sha256": null,
+        "required_base_addr": "0x0c0a2000",
+        "required_bytes": 2048,
+        "required_transaction_bytes": 32,
+        "required_transaction_count": 64,
+        "slice_id": 6
+      },
+      {
+        "consumer_accepted_witness": null,
+        "consumer_occurrence_addresses": null,
+        "consumer_ordered_address_sha256": null,
+        "consumer_read_byte_set_sha256": null,
+        "required_base_addr": "0x0e0a2000",
+        "required_bytes": 2048,
+        "required_transaction_bytes": 32,
+        "required_transaction_count": 64,
+        "slice_id": 7
+      },
+      {
+        "consumer_accepted_witness": null,
+        "consumer_occurrence_addresses": null,
+        "consumer_ordered_address_sha256": null,
+        "consumer_read_byte_set_sha256": null,
+        "required_base_addr": "0x100a2000",
+        "required_bytes": 2048,
+        "required_transaction_bytes": 32,
+        "required_transaction_count": 64,
+        "slice_id": 8
+      },
+      {
+        "consumer_accepted_witness": null,
+        "consumer_occurrence_addresses": null,
+        "consumer_ordered_address_sha256": null,
+        "consumer_read_byte_set_sha256": null,
+        "required_base_addr": "0x120a2000",
+        "required_bytes": 2048,
+        "required_transaction_bytes": 32,
+        "required_transaction_count": 64,
+        "slice_id": 9
+      },
+      {
+        "consumer_accepted_witness": null,
+        "consumer_occurrence_addresses": null,
+        "consumer_ordered_address_sha256": null,
+        "consumer_read_byte_set_sha256": null,
+        "required_base_addr": "0x140a2000",
+        "required_bytes": 2048,
+        "required_transaction_bytes": 32,
+        "required_transaction_count": 64,
+        "slice_id": 10
+      },
+      {
+        "consumer_accepted_witness": null,
+        "consumer_occurrence_addresses": null,
+        "consumer_ordered_address_sha256": null,
+        "consumer_read_byte_set_sha256": null,
+        "required_base_addr": "0x160a2000",
+        "required_bytes": 2048,
+        "required_transaction_bytes": 32,
+        "required_transaction_count": 64,
+        "slice_id": 11
+      },
+      {
+        "consumer_accepted_witness": null,
+        "consumer_occurrence_addresses": null,
+        "consumer_ordered_address_sha256": null,
+        "consumer_read_byte_set_sha256": null,
+        "required_base_addr": "0x180a2000",
+        "required_bytes": 2048,
+        "required_transaction_bytes": 32,
+        "required_transaction_count": 64,
+        "slice_id": 12
+      },
+      {
+        "consumer_accepted_witness": null,
+        "consumer_occurrence_addresses": null,
+        "consumer_ordered_address_sha256": null,
+        "consumer_read_byte_set_sha256": null,
+        "required_base_addr": "0x1a0a2000",
+        "required_bytes": 2048,
+        "required_transaction_bytes": 32,
+        "required_transaction_count": 64,
+        "slice_id": 13
+      },
+      {
+        "consumer_accepted_witness": null,
+        "consumer_occurrence_addresses": null,
+        "consumer_ordered_address_sha256": null,
+        "consumer_read_byte_set_sha256": null,
+        "required_base_addr": "0x1c0a2000",
+        "required_bytes": 2048,
+        "required_transaction_bytes": 32,
+        "required_transaction_count": 64,
+        "slice_id": 14
+      },
+      {
+        "consumer_accepted_witness": null,
+        "consumer_occurrence_addresses": null,
+        "consumer_ordered_address_sha256": null,
+        "consumer_read_byte_set_sha256": null,
+        "required_base_addr": "0x1e0a2000",
+        "required_bytes": 2048,
+        "required_transaction_bytes": 32,
+        "required_transaction_count": 64,
+        "slice_id": 15
+      }
+    ],
+    "required_total_read_bytes": 32768,
+    "status": "BLOCKED_MISSING_FINAL_MATERIALIZED_NODE0075_A_CONSUMER"
+  },
+  "outputs": {
+    "bitstream": false,
+    "execplan": false,
+    "mapping": false,
+    "metadata_alias_overlay_contract": true,
+    "sca": false,
+    "server_package": false,
+    "target_json": false
+  },
+  "package_release": "NONE",
+  "plan_or_public_rules_modified": false,
+  "provenance": {
+    "analysis_owner_thread": "019fa2c1-17df-7122-bcbd-a727aaf173f5",
+    "return_target_thread": "019fbec2-fe93-7e03-9314-cff6f222f33d"
+  },
+  "rule_delta_proposal": {
+    "reason": "current typed-edge/view/coverage/lifetime rules are sufficient",
+    "required": false
+  },
+  "rule_ids": [
+    "CDA-REUSE-FIRST-DEFERRED-RETEST-001",
+    "CDA-CONFIG-SEMANTIC-OWNERSHIP-001",
+    "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+    "CDA-CONFIG-MATERIALIZED-ROUNDTRIP-001",
+    "CDA-VIEW-METADATA-ONLY-001",
+    "CDA-VIEW-PHYSICAL-IDENTITY-001",
+    "CDA-VIEW-ENDPOINT-COVERAGE-001",
+    "CDA-VIEW-ACCEPTED-LIFETIME-001",
+    "CDA-VIEW-INTEGRATED-CLAIM-BOUNDARY-001"
+  ],
+  "schema": "resnet50-node0071-node0075-uint8-identity-alias-integration-v1",
+  "server_inspected_uploaded_or_run": false,
+  "status": "ALIAS_OVERLAY_READY_EXECPLAN_BINDING_BLOCKED",
+  "test_id": "r5-node0071-node0075-uint8-identity-alias-integration-v1",
+  "typed_node0075_consumer": {
+    "a_port": {
+      "dtype": "uint8",
+      "identity_sha256": "c2d08ebd45a564d63e499b333a9576bbdafc71448ee693c8a199a7cf65193f12",
+      "identity_source": "artifacts/w3/golden_batch16/manifest.json",
+      "kind": "intermediate",
+      "onnx_name": "flatten_473_quantized",
+      "role": "a",
+      "shape": [
+        16,
+        2048
+      ],
+      "tensor_id": "tensor-6fbd5707d5f08110"
+    },
+    "effective_resolution": {
+      "candidate_config_emission_allowed": false,
+      "candidate_files_may_satisfy_request": false,
+      "candidate_zero_copy_binding_allowed": false,
+      "disposition": "blocked_by_unresolved_local_semantics",
+      "effective_blockers": [
+        "B_EXECPLAN_TYPED_TRANSPORT",
+        "B_MATMUL_INT8_SA",
+        "B_MATMUL_PSUM",
+        "B_MATMUL_TAIL",
+        "B_SA_INT8_CSA_NUMERIC"
+      ],
+      "formal_release_blockers": [
+        "B_EXECPLAN_TYPED_TRANSPORT",
+        "B_MATMUL_INT8_SA",
+        "B_MATMUL_PSUM",
+        "B_MATMUL_TAIL",
+        "B_SA_INT8_CSA_NUMERIC"
+      ],
+      "formal_target_instance_allowed": false,
+      "hw_op_id": "hwop-0075-00",
+      "local_lowering_resolved": false,
+      "readiness_axes": {
+        "dynamic_release_ready": false,
+        "json_emitter_ready": false,
+        "rtl_semantics_compatible": false
+      },
+      "request_id": "r5:hwop-0075-00",
+      "resolved_blockers": {
+        "B_LAYOUT_APPROVAL": "r5-resolution-layout-w4-approved-v1"
+      },
+      "rtl_semantic_blockers": [
+        "B_SA_INT8_CSA_NUMERIC"
+      ],
+      "unresolved_blockers": [
+        "B_EXECPLAN_TYPED_TRANSPORT",
+        "B_MATMUL_INT8_SA",
+        "B_MATMUL_PSUM",
+        "B_MATMUL_TAIL"
+      ]
+    },
+    "emission_policy": {
+      "candidate_files_may_satisfy_request": false,
+      "fail_closed": true,
+      "formal_target_instance_allowed": false,
+      "unresolved_blockers": [
+        "B_EXECPLAN_TYPED_TRANSPORT",
+        "B_LAYOUT_APPROVAL",
+        "B_MATMUL_INT8_SA",
+        "B_MATMUL_PSUM",
+        "B_MATMUL_TAIL"
+      ]
+    },
+    "hw_op_type": "MatMulInt32Accumulate",
+    "mnk": {
+      "K": 2048,
+      "M": 16,
+      "N": 1000
+    },
+    "node_id": "node-0075",
+    "onnx_op_type": "QLinearMatMul",
+    "ordinal": 129,
+    "request_id": "r5:hwop-0075-00",
+    "request_sha256": "67453b2893d8dcee976f871f21e35313d08949a45779c2a8aecc4e31d6c24553"
+  },
+  "visibility_and_lifetime": {
+    "allocation_kept_owned_by": "r5:hwop-0071-01:D",
+    "allocation_release_witness": null,
+    "conservative_release_fallback": "node0075 completion accepted",
+    "consumer_final_input_data_accepted_witness": null,
+    "consumer_first_read_accepted_witness": null,
+    "cross_operator_visibility_barrier_materialized": false,
+    "first_legal_read_requirement": "node0071 final D byte-set accepted AND node0071 completion/final barrier accepted",
+    "pending_or_replayed_read_empty_witness": null,
+    "producer_visibility_witness_accepted": true,
+    "release_requirement": "node0075 final A input-data accepted AND no pending/replayed read",
+    "status": "REQUIREMENT_MATERIALIZED_WITNESS_BLOCKED_WITH_CONSUMER"
+  },
+  "wait_state": "WAIT_NODE0075_MATERIALIZER_CAPABILITY"
+}

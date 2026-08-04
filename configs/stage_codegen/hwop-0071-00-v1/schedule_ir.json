@@ -1,0 +1,115 @@
+{
+  "dataflow": {
+    "completion": {
+      "buffer_tag_carrier": "GROUP1.COL_LC",
+      "possible_last_indices": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "terminal_condition": "last=1 && last_index=0, then final DDR write-data handshake",
+      "write_stream": "stream1",
+      "write_target": "D"
+    },
+    "compute_array": "general_array",
+    "lane_count": 8,
+    "operator": "eight-lane uint8-to-int32 spatial sum",
+    "padding_value": 0,
+    "read_target": "A",
+    "spatial_element_count": 49,
+    "write_target": "D"
+  },
+  "emission": {
+    "formal_target_config": false,
+    "kind": "address_unbound_candidate",
+    "remaining_blockers": [
+      "B_SERVER_E4_E5"
+    ],
+    "semantic_patches": []
+  },
+  "hw_op_type": "GlobalAverageSumInt32",
+  "logical_geometry": {
+    "attributes": {
+      "channels_last": 0
+    },
+    "input_dtypes": [
+      "uint8",
+      "uint8"
+    ],
+    "input_shapes": [
+      [
+        16,
+        2048,
+        7,
+        7
+      ],
+      [
+        1
+      ]
+    ],
+    "output_dtypes": [
+      "int32"
+    ],
+    "output_shapes": [
+      [
+        16,
+        2048,
+        1,
+        1
+      ]
+    ],
+    "reduction": {
+      "axes": [
+        2,
+        3
+      ],
+      "keepdims": true,
+      "spatial_element_count": 49
+    }
+  },
+  "physical_schedule": {
+    "active_slice_count": 16,
+    "address_binding": "deferred_to_model_execplan",
+    "batch_count": 16,
+    "cross_slice_reduction": false,
+    "idle_slice_count": 12,
+    "local_input_bytes": 100352,
+    "local_input_shape": [
+      2048,
+      7,
+      7
+    ],
+    "local_output_bytes": 8192,
+    "local_output_shape": [
+      2048,
+      1,
+      1
+    ],
+    "partition": "one complete NCHW batch sample per active slice; spatial reduction domain is never split",
+    "relative_input_base_addr": "0b00000_00_0000000000000_000000_0000",
+    "relative_output_base_addr": "0b00000_11_0000000000000_000000_0000",
+    "slice_capacity_per_wave": 28,
+    "wave_active_slice_counts": [
+      16
+    ]
+  },
+  "request_id": "r5:hwop-0071-00",
+  "request_sha256": "9df690a675c74d2d9e43a78b516ce4045f1d978014bca4ad2abcaaab9dc295f4",
+  "schedule_sha256": "92ab290bde66202003cef2217fc552f50c0ad21f2a59472e8e158590da431514",
+  "schema": "resnet50-ndp-schedule-ir-v1",
+  "stage_role": "sum",
+  "template": {
+    "path": "configs/native_ndp_sim/avgpool_config_2048_7_7_strict_v1/config.json",
+    "semantic_relation": "authorized exact upstream template, strict materialization",
+    "sha256": "bc1c593106c0dd25251af67c5500983218051dc21d19d33f8c91942c9e412e76",
+    "strict_validation": "passed"
+  },
+  "typed_parameter_consumption": {
+    "x_zero_point": {
+      "effect": "sum(uint8(x)-0) is emitted as uint8-to-int32 sum and zero padding",
+      "mode": "compile_time_specialization",
+      "value": 0
+    }
+  }
+}

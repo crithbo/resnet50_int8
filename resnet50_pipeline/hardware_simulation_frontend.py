@@ -444,6 +444,7 @@ def build_execution_stages(
     serialization_present = "runtime_serialization" in manifest
     serialization = manifest.get("runtime_serialization")
     barrier_required = False
+    four_independent_config_loads = False
     if serialization_present:
         if not isinstance(serialization, dict):
             raise HardwareSimulationPreparationError(
@@ -466,6 +467,16 @@ def build_execution_stages(
             raise HardwareSimulationPreparationError(
                 "runtime_serialization barrier_opcode is unsupported"
             )
+        configuration_strategy = serialization.get("configuration_strategy")
+        if configuration_strategy is not None:
+            if (
+                configuration_strategy
+                != "four_independent_config_loads_then_one_full_ring4_start"
+            ):
+                raise HardwareSimulationPreparationError(
+                    "runtime_serialization configuration_strategy is unsupported"
+                )
+            four_independent_config_loads = True
         barrier_required = True
     loads: list[DecodedCommand] = []
     writes: list[DecodedCommand] = []
@@ -503,7 +514,22 @@ def build_execution_stages(
                     f"Start_Comp has no preceding Load_Config at command {command.index}"
                 )
             stage_mask = int(command.fields["slice_mask"])
-            if any(int(load.fields["slice_mask"]) != stage_mask for load in loads):
+            if four_independent_config_loads:
+                load_masks = [int(load.fields["slice_mask"]) for load in loads]
+                combined_mask = 0
+                for load_mask in load_masks:
+                    if load_mask.bit_count() != 1 or combined_mask & load_mask:
+                        raise HardwareSimulationPreparationError(
+                            "Ring4 Load_Config masks must be disjoint single slices in "
+                            f"stage {len(raw_stages)}"
+                        )
+                    combined_mask |= load_mask
+                if len(load_masks) != 4 or combined_mask != stage_mask:
+                    raise HardwareSimulationPreparationError(
+                        "four Ring4 Load_Config masks must exactly cover Start_Comp in "
+                        f"stage {len(raw_stages)}"
+                    )
+            elif any(int(load.fields["slice_mask"]) != stage_mask for load in loads):
                 raise HardwareSimulationPreparationError(
                     f"Load_Config/Start_Comp slice masks differ in stage {len(raw_stages)}"
                 )
@@ -650,6 +676,496 @@ def build_stage_invocations(
     return invocations
 
 
+_LIFECYCLE_DTYPE_BYTES = {
+    "fp16": 2,
+    "float16": 2,
+    "fp32": 4,
+    "float32": 4,
+    "int8": 1,
+    "uint8": 1,
+    "int16": 2,
+    "uint16": 2,
+    "int32": 4,
+    "uint32": 4,
+}
+
+
+def _positive_int(value: object, *, location: str) -> int:
+    if isinstance(value, bool) or not isinstance(value, int) or value <= 0:
+        raise HardwareSimulationPreparationError(
+            f"{location} must be a positive integer"
+        )
+    return value
+
+
+def _contained_package_path(
+    package_root: Path, relative: object, *, location: str
+) -> Path:
+    if not isinstance(relative, str) or not relative:
+        raise HardwareSimulationPreparationError(f"{location} path is missing")
+    root = package_root.resolve()
+    path = (root / relative).resolve()
+    try:
+        path.relative_to(root)
+    except ValueError as error:
+        raise HardwareSimulationPreparationError(
+            f"{location} escapes the package root"
+        ) from error
+    if not path.is_file():
+        raise HardwareSimulationPreparationError(f"{location} is missing: {relative}")
+    return path
+
+
+def _operator_source_id(value: object) -> str | None:
+    if isinstance(value, str):
+        return value
+    if not isinstance(value, Mapping):
+        return None
+    source_type = value.get("type")
+    if source_type not in (None, "operator"):
+        return None
+    operator_id = value.get("operator_id")
+    return operator_id if isinstance(operator_id, str) else None
+
+
+def _lifecycle_tensor_bytes(tensor: Mapping[str, Any], *, location: str) -> int:
+    shape = tensor.get("shape")
+    dtype = tensor.get("dtype")
+    if (
+        not isinstance(shape, list)
+        or not shape
+        or any(
+            isinstance(dimension, bool)
+            or not isinstance(dimension, int)
+            or dimension <= 0
+            for dimension in shape
+        )
+        or not isinstance(dtype, str)
+        or dtype not in _LIFECYCLE_DTYPE_BYTES
+    ):
+        raise HardwareSimulationPreparationError(
+            f"{location} dtype/shape is not concrete"
+        )
+    elements = 1
+    for dimension in shape:
+        elements *= dimension
+    return elements * _LIFECYCLE_DTYPE_BYTES[dtype]
+
+
+def validate_runtime_lifecycle(
+    *,
+    package_root: Path,
+    manifest: Mapping[str, Any],
+    sca: Mapping[str, Any],
+    sca_d: Mapping[str, Any],
+    runner: Mapping[str, Any],
+    stages: list[ExecutionStage],
+    invocations: list[StageInvocation],
+) -> dict[str, Any]:
+    """Validate an explicitly declared producer-to-consumer stage lifecycle.
+
+    The contract is optional so legacy single-stage packages retain their
+    existing preparation behavior.  Once declared, every address, config,
+    completion and output claim is fail-closed against materialized files.
+    """
+
+    lifecycle = manifest.get("runtime_lifecycle")
+    if lifecycle is None:
+        return {
+            "status": "not_declared",
+            "validated": False,
+            "stage_count": len(stages),
+        }
+    if not isinstance(lifecycle, Mapping):
+        raise HardwareSimulationPreparationError(
+            "runtime_lifecycle must be an object when declared"
+        )
+    if lifecycle.get("strategy") != "producer_output_alias_to_consumer_input_v1":
+        raise HardwareSimulationPreparationError(
+            "runtime_lifecycle strategy is unsupported"
+        )
+    stage_count = _positive_int(
+        lifecycle.get("stage_count"), location="runtime_lifecycle.stage_count"
+    )
+    if stage_count != 2 or len(stages) != stage_count or len(invocations) != stage_count:
+        raise HardwareSimulationPreparationError(
+            "minimal runtime lifecycle must contain exactly two prepared stages"
+        )
+    runtime_sequence = manifest.get("runtime_sequence")
+    observed_sequence = [stage.operator_id for stage in stages]
+    if runtime_sequence != observed_sequence:
+        raise HardwareSimulationPreparationError(
+            "runtime_lifecycle stage sequence differs from the execplan"
+        )
+
+    termination = lifecycle.get("termination")
+    if not isinstance(termination, Mapping):
+        raise HardwareSimulationPreparationError(
+            "runtime_lifecycle termination contract is missing"
+        )
+    expected_counts = {
+        "start_comp_count": len(stages),
+        "completion_barrier_count": len(stages),
+        "repeat_num": len(stages),
+    }
+    for field, expected in expected_counts.items():
+        observed = _positive_int(
+            termination.get(field), location=f"runtime_lifecycle.termination.{field}"
+        )
+        if observed != expected:
+            raise HardwareSimulationPreparationError(
+                f"runtime_lifecycle termination {field} differs"
+            )
+    if termination.get("completion_operator_ids") != observed_sequence:
+        raise HardwareSimulationPreparationError(
+            "runtime_lifecycle completion order differs"
+        )
+    if termination.get("final_barrier_required") is not True:
+        raise HardwareSimulationPreparationError(
+            "runtime_lifecycle final barrier is not required"
+        )
+    repeat_num = _positive_int(sca.get("Repeat_Num"), location="sca_cfg.Repeat_Num")
+    if repeat_num != len(stages):
+        raise HardwareSimulationPreparationError(
+            "SCA Repeat_Num differs from the two-stage lifecycle"
+        )
+
+    try:
+        completion_gate = runner["execution"]["completion_gate"]
+    except (KeyError, TypeError) as error:
+        raise HardwareSimulationPreparationError(
+            "runner lifecycle completion gate is missing"
+        ) from error
+    if not isinstance(completion_gate, Mapping):
+        raise HardwareSimulationPreparationError(
+            "runner lifecycle completion gate is malformed"
+        )
+    runner_expected = {
+        "expected_runtime_stage_count": len(stages),
+        "expected_testbench_repeat_num": len(stages),
+        "expected_start_comp_count": len(stages),
+        "expected_completion_barrier_count": len(stages),
+    }
+    for field, expected in runner_expected.items():
+        if _positive_int(
+            completion_gate.get(field),
+            location=f"runner.execution.completion_gate.{field}",
+        ) != expected:
+            raise HardwareSimulationPreparationError(
+                f"runner lifecycle completion {field} differs"
+            )
+    if (
+        completion_gate.get("completion_barrier_opcode")
+        != f"0b{OPCODE_BARRIER:03b}"
+        or completion_gate.get("expected_runtime_sequence") != observed_sequence
+        or completion_gate.get("final_barrier_required") is not True
+    ):
+        raise HardwareSimulationPreparationError(
+            "runner lifecycle completion sequence/barrier differs"
+        )
+    for stage in stages:
+        barrier = stage.completion_barrier
+        if (
+            barrier is None
+            or barrier.index != stage.start_command.index + 1
+            or int(barrier.fields["slice_mask"]) != stage.slice_mask
+        ):
+            raise HardwareSimulationPreparationError(
+                f"runtime lifecycle barrier differs for stage {stage.index}"
+            )
+
+    reload_contract = lifecycle.get("config_reload")
+    if not isinstance(reload_contract, Mapping) or (
+        reload_contract.get("required_each_stage") is not True
+        or reload_contract.get("distinct_main_config_address") is not True
+        or reload_contract.get("distinct_main_config_payload") is not True
+    ):
+        raise HardwareSimulationPreparationError(
+            "runtime_lifecycle config reload contract is incomplete"
+        )
+    config_records: list[dict[str, Any]] = []
+    for invocation in invocations:
+        main_loads = [
+            command
+            for command in invocation.stage.load_configs
+            if command.fields.get("config_sfu") is False
+        ]
+        if len(main_loads) != 1:
+            raise HardwareSimulationPreparationError(
+                "each lifecycle stage must explicitly load exactly one main config: "
+                f"stage={invocation.stage.index}"
+            )
+        command_index = main_loads[0].index
+        loaded_by_command = {
+            loaded.command_index: loaded
+            for loaded in invocation.loaded_configs.values()
+            if not loaded.config_sfu
+        }
+        loaded = loaded_by_command.get(command_index)
+        if loaded is None:
+            raise HardwareSimulationPreparationError(
+                f"lifecycle main config snapshot is missing for stage {invocation.stage.index}"
+            )
+        config_records.append(
+            {
+                "operator_id": invocation.stage.operator_id,
+                "command_index": command_index,
+                "address": loaded.address,
+                "sha256": loaded.sha256,
+                "length_64bit_words": loaded.length_64bit_words,
+            }
+        )
+    if (
+        len({record["address"] for record in config_records}) != len(stages)
+        or len({record["sha256"] for record in config_records}) != len(stages)
+    ):
+        raise HardwareSimulationPreparationError(
+            "two-stage lifecycle main configs are not independently addressed and identified"
+        )
+
+    addressed = lifecycle.get("addressed_request")
+    if not isinstance(addressed, Mapping):
+        raise HardwareSimulationPreparationError(
+            "runtime_lifecycle addressed request binding is missing"
+        )
+    addressed_path = _contained_package_path(
+        package_root,
+        addressed.get("path"),
+        location="runtime_lifecycle.addressed_request",
+    )
+    addressed_sha = addressed.get("sha256")
+    if not isinstance(addressed_sha, str) or _sha256_file(addressed_path) != addressed_sha:
+        raise HardwareSimulationPreparationError(
+            "runtime_lifecycle addressed request identity differs"
+        )
+    addressed_request = _read_json_object(addressed_path)
+    raw_operators = addressed_request.get("operators")
+    if not isinstance(raw_operators, list):
+        raise HardwareSimulationPreparationError(
+            "runtime_lifecycle addressed request operators are missing"
+        )
+    operators = {
+        str(operator.get("id")): operator
+        for operator in raw_operators
+        if isinstance(operator, Mapping) and isinstance(operator.get("id"), str)
+    }
+    if set(observed_sequence) - set(operators):
+        raise HardwareSimulationPreparationError(
+            "runtime_lifecycle addressed request stage identity differs"
+        )
+
+    dependencies = lifecycle.get("dependencies")
+    if not isinstance(dependencies, list) or len(dependencies) != 1:
+        raise HardwareSimulationPreparationError(
+            "minimal runtime lifecycle must declare one producer/consumer dependency"
+        )
+    dependency = dependencies[0]
+    if not isinstance(dependency, Mapping):
+        raise HardwareSimulationPreparationError(
+            "runtime_lifecycle dependency is malformed"
+        )
+    producer_id = dependency.get("producer_operator_id")
+    consumer_id = dependency.get("consumer_operator_id")
+    if (
+        producer_id != observed_sequence[0]
+        or consumer_id != observed_sequence[1]
+        or dependency.get("producer_port") != "D"
+        or dependency.get("consumer_port") != "A"
+        or dependency.get("visibility_fence")
+        != "post_start_same_mask_barrier"
+    ):
+        raise HardwareSimulationPreparationError(
+            "runtime_lifecycle producer/consumer edge differs"
+        )
+    producer = operators[str(producer_id)]
+    consumer = operators[str(consumer_id)]
+    producer_tensor = producer.get("output")
+    consumer_inputs = consumer.get("inputs")
+    consumer_tensor = (
+        consumer_inputs.get("A") if isinstance(consumer_inputs, Mapping) else None
+    )
+    if not isinstance(producer_tensor, Mapping) or not isinstance(
+        consumer_tensor, Mapping
+    ):
+        raise HardwareSimulationPreparationError(
+            "runtime_lifecycle addressed D/A ports are missing"
+        )
+    if _operator_source_id(consumer_tensor.get("source")) != producer_id:
+        raise HardwareSimulationPreparationError(
+            "runtime_lifecycle consumer A is not sourced from producer D"
+        )
+    producer_bytes = _lifecycle_tensor_bytes(
+        producer_tensor, location=f"{producer_id}.output.D"
+    )
+    consumer_bytes = _lifecycle_tensor_bytes(
+        consumer_tensor, location=f"{consumer_id}.input.A"
+    )
+    producer_address = _parse_address(
+        producer_tensor.get("base_addr"),
+        location=f"{producer_id}.output.D.base_addr",
+    )
+    consumer_address = _parse_address(
+        consumer_tensor.get("base_addr"),
+        location=f"{consumer_id}.input.A.base_addr",
+    )
+    if (
+        producer_tensor.get("dtype") != consumer_tensor.get("dtype")
+        or producer_tensor.get("shape") != consumer_tensor.get("shape")
+        or producer_bytes != consumer_bytes
+        or producer_address != consumer_address
+        or dependency.get("dtype") != producer_tensor.get("dtype")
+        or dependency.get("shape") != producer_tensor.get("shape")
+        or dependency.get("byte_count") != producer_bytes
+        or _parse_address(
+            dependency.get("producer_base_addr"),
+            location="runtime_lifecycle.dependencies[0].producer_base_addr",
+        )
+        != producer_address
+        or _parse_address(
+            dependency.get("consumer_base_addr"),
+            location="runtime_lifecycle.dependencies[0].consumer_base_addr",
+        )
+        != consumer_address
+    ):
+        raise HardwareSimulationPreparationError(
+            "runtime_lifecycle D-to-A dtype/shape/bytes/address alias differs"
+        )
+    producer_sca_d_key = dependency.get("producer_sca_d_key")
+    producer_sca_d = (
+        sca_d.get(producer_sca_d_key)
+        if isinstance(producer_sca_d_key, str)
+        else None
+    )
+    if (
+        not isinstance(producer_sca_d, Mapping)
+        or _parse_address(
+            producer_sca_d.get("base_addr"),
+            location=f"sca_cfg_D.{producer_sca_d_key}.base_addr",
+        )
+        != producer_address
+        or _positive_int(
+            producer_sca_d.get("length"),
+            location=f"sca_cfg_D.{producer_sca_d_key}.length",
+        )
+        * 16
+        != producer_bytes
+    ):
+        raise HardwareSimulationPreparationError(
+            "runtime_lifecycle producer D readback contract differs"
+        )
+    forbidden_preload_key = dependency.get("consumer_preload_sca_key")
+    if not isinstance(forbidden_preload_key, str) or forbidden_preload_key in sca:
+        raise HardwareSimulationPreparationError(
+            "runtime_lifecycle consumer A must not be externally preloaded"
+        )
+    if stages[0].completion_barrier is None or (
+        stages[0].completion_barrier.index >= stages[1].load_configs[0].index
+    ):
+        raise HardwareSimulationPreparationError(
+            "runtime_lifecycle producer barrier does not precede consumer configuration"
+        )
+
+    outputs = lifecycle.get("outputs")
+    if not isinstance(outputs, list) or len(outputs) != len(stages):
+        raise HardwareSimulationPreparationError(
+            "runtime_lifecycle must bind one formal output per stage"
+        )
+    output_records: list[dict[str, Any]] = []
+    for index, output in enumerate(outputs):
+        if not isinstance(output, Mapping):
+            raise HardwareSimulationPreparationError(
+                f"runtime_lifecycle outputs[{index}] is malformed"
+            )
+        operator_id = output.get("operator_id")
+        if operator_id != observed_sequence[index]:
+            raise HardwareSimulationPreparationError(
+                "runtime_lifecycle output order differs"
+            )
+        operator_output = operators[str(operator_id)].get("output")
+        if not isinstance(operator_output, Mapping):
+            raise HardwareSimulationPreparationError(
+                f"runtime_lifecycle output port is missing for {operator_id}"
+            )
+        byte_count = _lifecycle_tensor_bytes(
+            operator_output, location=f"{operator_id}.output.D"
+        )
+        sca_key = output.get("sca_d_key")
+        sca_entry = sca_d.get(sca_key) if isinstance(sca_key, str) else None
+        if not isinstance(sca_entry, Mapping):
+            raise HardwareSimulationPreparationError(
+                f"runtime_lifecycle SCA_D entry is missing for {operator_id}"
+            )
+        address = _parse_address(
+            operator_output.get("base_addr"),
+            location=f"{operator_id}.output.D.base_addr",
+        )
+        golden_path = _contained_package_path(
+            package_root,
+            output.get("golden_path"),
+            location=f"runtime_lifecycle.outputs[{index}].golden",
+        )
+        golden_sha = output.get("golden_sha256")
+        if (
+            output.get("dtype") != operator_output.get("dtype")
+            or output.get("shape") != operator_output.get("shape")
+            or output.get("byte_count") != byte_count
+            or _parse_address(
+                output.get("base_addr"),
+                location=f"runtime_lifecycle.outputs[{index}].base_addr",
+            )
+            != address
+            or _parse_address(
+                sca_entry.get("base_addr"),
+                location=f"sca_cfg_D.{sca_key}.base_addr",
+            )
+            != address
+            or _positive_int(
+                sca_entry.get("length"),
+                location=f"sca_cfg_D.{sca_key}.length",
+            )
+            * 16
+            != byte_count
+            or golden_path.stat().st_size != byte_count
+            or not isinstance(golden_sha, str)
+            or _sha256_file(golden_path) != golden_sha
+        ):
+            raise HardwareSimulationPreparationError(
+                f"runtime_lifecycle formal output contract differs for {operator_id}"
+            )
+        output_records.append(
+            {
+                "operator_id": operator_id,
+                "base_addr": f"0x{address:08X}",
+                "byte_count": byte_count,
+                "golden_sha256": golden_sha,
+            }
+        )
+
+    return {
+        "status": "validated",
+        "validated": True,
+        "rule_ids": list(lifecycle.get("rule_ids", [])),
+        "stage_count": len(stages),
+        "runtime_sequence": observed_sequence,
+        "repeat_num": repeat_num,
+        "start_comp_count": len(stages),
+        "completion_barrier_count": len(stages),
+        "final_barrier_command_index": stages[-1].completion_barrier.index,
+        "config_reload": config_records,
+        "dependency": {
+            "producer_operator_id": producer_id,
+            "consumer_operator_id": consumer_id,
+            "dtype": producer_tensor.get("dtype"),
+            "shape": producer_tensor.get("shape"),
+            "byte_count": producer_bytes,
+            "base_addr": f"0x{producer_address:08X}",
+            "consumer_external_preload": False,
+            "visibility_fence": "post_start_same_mask_barrier",
+        },
+        "outputs": output_records,
+    }
+
+
 @runtime_checkable
 class HardwareNumericExecutor(Protocol):
     """Operator-family backend plugged in after generic transport preparation."""
@@ -665,6 +1181,7 @@ class PreparedHardwareSimulation:
     package_root: Path
     manifest: dict[str, Any]
     sca: dict[str, Any]
+    sca_d: dict[str, Any]
     runner_contract: dict[str, Any]
     memory: BankedMemory
     commands: list[DecodedCommand]
@@ -674,6 +1191,7 @@ class PreparedHardwareSimulation:
     exec_base: int
     exec_length_128bit_beats: int
     package_manifest_sha256: str
+    runtime_lifecycle: dict[str, Any]
 
     def report(self) -> dict[str, Any]:
         command_counts: dict[str, int] = {}
@@ -701,6 +1219,7 @@ class PreparedHardwareSimulation:
             "command_counts": command_counts,
             "bank_images": self.memory.describe(),
             "runtime_stage_count": len(self.stages),
+            "runtime_lifecycle": self.runtime_lifecycle,
             "runtime_stages": [
                 {
                     "index": invocation.stage.index,
@@ -809,6 +1328,8 @@ def prepare_hardware_simulation(package_root: Path) -> PreparedHardwareSimulatio
     manifest = _read_json_object(manifest_path)
     _validate_package_files(package, manifest)
     sca = _read_json_object(package / "sca_cfg.json")
+    sca_d_path = package / "sca_cfg_D.json"
+    sca_d = _read_json_object(sca_d_path) if sca_d_path.is_file() else {}
     runner_path = package / "runner_contract.json"
     runner = _read_json_object(runner_path) if runner_path.is_file() else {}
     memory = BankedMemory.from_directory(package / "Bank_data")
@@ -827,10 +1348,20 @@ def prepare_hardware_simulation(package_root: Path) -> PreparedHardwareSimulatio
     commands = load_execplan_commands(package / execution["path"], expected_beats=exec_length)
     global_commands, stages = build_execution_stages(commands, manifest)
     invocations = build_stage_invocations(stages, memory)
+    runtime_lifecycle = validate_runtime_lifecycle(
+        package_root=package,
+        manifest=manifest,
+        sca=sca,
+        sca_d=sca_d,
+        runner=runner,
+        stages=stages,
+        invocations=invocations,
+    )
     return PreparedHardwareSimulation(
         package_root=package,
         manifest=manifest,
         sca=sca,
+        sca_d=sca_d,
         runner_contract=runner,
         memory=memory,
         commands=commands,
@@ -840,6 +1371,7 @@ def prepare_hardware_simulation(package_root: Path) -> PreparedHardwareSimulatio
         exec_base=exec_base,
         exec_length_128bit_beats=exec_length,
         package_manifest_sha256=_sha256_file(manifest_path),
+        runtime_lifecycle=runtime_lifecycle,
     )
 
 

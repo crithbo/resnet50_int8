@@ -1,0 +1,68 @@
+{
+  "artifact_manifest": {
+    "path": "artifacts/operator_config_validation/r5-gap-node0071-complete-config-only-local-e2-v1/manifest.json",
+    "semantic_self_hash": "c85d1b003af441700076dd001f0adb8c4d1f32ef0c50107fb55be88dbd0ee0d6",
+    "sha256": "d457345b355c84a05639b95e0f4c5685ac974c936bef98c229afc27b57a45223"
+  },
+  "bypass_annotation": {
+    "bypass_reason": "The real node-0071 QLinearGlobalAveragePool must be numerically runnable while every functional RTL repair route remains frozen.",
+    "claim_boundary": "CONFIG_ONLY_CORRECTNESS_BASELINE for this exact node-0071 instance at local E2 only; not production, not a performance release, and not E3/E4/E5.",
+    "contradicted_or_missing_native_path": "The historical int32_sum/transout path is contradicted by occupancy, stale-C and D-coverage evidence. repair_v9, RTL_CONTROL and CONFIG_SEMANTICS repairs remain frozen. The generic one-stage multiply-plus-magic topology violates the required ordered FP32 materialization boundary.",
+    "exact_equivalence_scope": "Only r5 node-0071 with uint8[16,2048,7,7], x_zp=0, spatial_count=49, INT32 sums in [0,2477], FP32 multiplier bits 0x3d878c94, y_zp=0 and uint8 output[16,2048,1,1]. It does not establish an unconditional AverageRequant or QuantizeLinear capability.",
+    "materialized_configuration_mechanism": "Reuse the hash-bound six-stage non-transout int32_mac sum tree, then serialize INT32-to-FP32 MUL into explicit scratch at 0xa0000 and a separate magic-bias RNE/int32-sub/saturating uint8 stage at 0xa2000. All eight stages reload configuration and end in a same-mask barrier.",
+    "performance_and_resource_cost": "Adds two Start_Comp operations, two barriers, 8192 bytes of FP32 scratch per active slice and one extra full INT32/FP32 read-write pass; total serialized stage count is eight. No throughput claim.",
+    "unresolved_production_blocker": "No final Trassic2.0_RTL commit is bound; dynamic dual-stream, barrier/readback and native server integration are not executed here. E4/E5 and production timing/resource closure remain open."
+  },
+  "contract_sha256": "5d98e0493eeb8c7caa9a34e8a3cc733db8def2b01de28698b0b05c4440ac4e90",
+  "release": {
+    "candidate_release": false,
+    "e4_e5_claimed": false,
+    "evidence_level": "E2_LOCAL_COMPLETE_NODE",
+    "formal_target_instance_allowed": true,
+    "functional_rtl_modified": false,
+    "repair_v9_consumed": false,
+    "server_package_allowed": true,
+    "server_source_identity_bound": false,
+    "transout_consumed": false
+  },
+  "rule_ids": [
+    "CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+    "CDA-CONFIG-ONLY-INPUT-REPLAY-NONCOMPUTATIONAL-001",
+    "CDA-CONFIG-SEMANTIC-OWNERSHIP-001",
+    "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+    "CDA-CONFIG-MATERIALIZED-ROUNDTRIP-001",
+    "CDA-REUSE-FIRST-DEFERRED-RETEST-001",
+    "CDA-GAP-INT32MAC-STAGE1-ALIGNED-EVEN-ODD-001",
+    "CDA-GAP-INT32MAC-SUM-STAGE-LOCAL-E2-001",
+    "CDA-QUANT-TAIL-NUMERIC-ORDER-001",
+    "CDA-QUANT-TAIL-ZP-AFTER-ROUND-001",
+    "CDA-QUANT-TAIL-MAGIC-DOMAIN-001",
+    "CDA-TWO-STAGE-BARRIER-001"
+  ],
+  "schema": "resnet50-gap-node0071-complete-config-only-local-e2-v1",
+  "scope": "complete r5 node-0071 QLinearGlobalAveragePool local E2",
+  "status": "CONFIG_ONLY_CORRECTNESS_BASELINE",
+  "sum_reuse_binding": {
+    "artifact_manifest_path": "artifacts/operator_config_validation/r5-gap-sum-config-only-local-e2-v1/manifest.json",
+    "artifact_manifest_sha256": "f11ef01a4d804cb58440fb90e45789cd351a405cae15dba37f05986fd9eefefa",
+    "config_manifest_sha256": "4f812ef2d13acf4920dfd30fa3bc67d5e5c4113fdbe9f7ec1a9baf472a32c445",
+    "contract_file_sha256": "15318caf31dc13e702b66c9b0e7849a844210a5a887ef52cf3d84610e04be697",
+    "contract_path": "contracts/operator_config/gap_sum_config_only_local_e2_v1.json",
+    "contract_semantic_sha256": "6756d6aeae24418847ad9fc32beaedb9826dd64699379e12ad5f18892a4ba32d",
+    "reuse_class": "IMMUTABLE_FULL_BINDING",
+    "scope": "r5:hwop-0071-00 six-stage non-transout int32_mac sum tree",
+    "sum_mapping_rebuilt": false,
+    "sum_numeric_analysis_repeated": false,
+    "sum_validator_reexecuted": false,
+    "validation_report_sha256": "b19157bc875d6d28b0ac8014e55abe94d0e6044227346019a64541b3d09bc019"
+  },
+  "tail_config_manifest": {
+    "path": "configs/gap_complete_config_only_v1/manifest.json",
+    "sha256": "bf3744a1b9564c50f43555c07d4df99157b216a921103366095daf6255c592bd"
+  },
+  "validation_report": {
+    "path": "artifacts/operator_config_validation/r5-gap-node0071-complete-config-only-local-e2-v1/validation_report.json",
+    "sha256": "90dc38576379e4cd847367a2713863a078a00e133d8ef965b1d0fe33065b5a16",
+    "valid": true
+  }
+}

@@ -1,0 +1,103 @@
+{
+  "schema": "resnet50-gap-rtl-three-way-reference-v1",
+  "captured_on": "2026-07-23",
+  "github": {
+    "repository": "https://github.com/xlsjdjdk/Trassic2.0_RTL",
+    "branch": "master",
+    "commit": "e3bdebba95dec36ee8eba43caa92a326a88392cd",
+    "comparison_url": "https://github.com/xlsjdjdk/Trassic2.0_RTL/compare/e3bdebba95dec36ee8eba43caa92a326a88392cd...master",
+    "locked_commit_matches_master": true
+  },
+  "local": {
+    "root": "NDP_copy01/rtl",
+    "git_metadata_available": false
+  },
+  "canonical_text_policy": {
+    "encoding": "utf-8",
+    "normalize_crlf_and_cr_to_lf": true,
+    "remove_all_trailing_lf": true,
+    "preserve_all_other_bytes": true
+  },
+  "summary": {
+    "focused_file_count": 14,
+    "github_local_match_count": 10,
+    "github_local_difference_count": 4,
+    "gap_hwop0071_assessment": "The four local differences expose GA outbuffer write-enable and change the SFU-only delay FIFO read enable. GAP uses int32_sum opcode 5'b01100, so ga_pe_sfu_valid=opcode[4]=0 and the behavioral SFU change is inactive for this workload. Server identity remains independent and must be measured."
+  },
+  "files": {
+    "rtl/Slice/LSU/Stream_Engine/Memory_Stream_Engine/Memory_RD_Stream_Engine/RD_Memory_AG.sv": {
+      "github_canonical_text_sha256": "4a4e6d591099113eebdcce5b9231f209e1bc3166038132eb0448c0f65e30c4f6",
+      "local_canonical_text_sha256": "4a4e6d591099113eebdcce5b9231f209e1bc3166038132eb0448c0f65e30c4f6",
+      "github_local_match": true
+    },
+    "rtl/Slice/LSU/Stream_Engine/Memory_Stream_Engine/Memory_RD_Stream_Engine/RD_Data_Channel.sv": {
+      "github_canonical_text_sha256": "16a107bd0c7ccae8b929a532ae31fe06abe6b9e6d94ae6af7664ccdffa7e5120",
+      "local_canonical_text_sha256": "16a107bd0c7ccae8b929a532ae31fe06abe6b9e6d94ae6af7664ccdffa7e5120",
+      "github_local_match": true
+    },
+    "rtl/Slice/LSU/Buffer_Manager_Cluster/Buffer.sv": {
+      "github_canonical_text_sha256": "461736f72dc25c79b0f12f310f00d90c1da0f1be0d89d3bcc0f8d4cf4a7ca690",
+      "local_canonical_text_sha256": "461736f72dc25c79b0f12f310f00d90c1da0f1be0d89d3bcc0f8d4cf4a7ca690",
+      "github_local_match": true
+    },
+    "rtl/Slice/LSU/Buffer_Manager_Cluster/Buffer_Manager.sv": {
+      "github_canonical_text_sha256": "bca4456b9ff3203b52a81b3e5a0cbf064f993f38d5bc7398c39d1e43f0cd395d",
+      "local_canonical_text_sha256": "bca4456b9ff3203b52a81b3e5a0cbf064f993f38d5bc7398c39d1e43f0cd395d",
+      "github_local_match": true
+    },
+    "rtl/Slice/General_Array/GA_PE_Group/GA_PE_Inbuffer.sv": {
+      "github_canonical_text_sha256": "32c7a9043a68a67a2e25c71a7ab8c67271c4d9def31722624590a275f309ac40",
+      "local_canonical_text_sha256": "32c7a9043a68a67a2e25c71a7ab8c67271c4d9def31722624590a275f309ac40",
+      "github_local_match": true
+    },
+    "rtl/Slice/General_Array/GA_PE_Group/GA_PE_ALU.sv": {
+      "github_canonical_text_sha256": "8a73c66755df0897034d7bdbc7183f663aeba630d16ccae07e8e879d689eb9aa",
+      "local_canonical_text_sha256": "8a73c66755df0897034d7bdbc7183f663aeba630d16ccae07e8e879d689eb9aa",
+      "github_local_match": true
+    },
+    "rtl/Slice/General_Array/GA_PE_Group/GA_PE_Outbuffer.sv": {
+      "github_canonical_text_sha256": "7c04b8461c20e147a0cedeb8c4234694ba61f3b61cfa20966fdd9192621eda77",
+      "local_canonical_text_sha256": "f7c4dca23355b8cfba44e17c07692c5d587fc1b49f9ea15385ac21e3d91cadf1",
+      "github_local_match": false,
+      "difference": "Local exposes the existing ga_pe_outbuffer_wr_en net as an output port; the assignment and write logic are unchanged."
+    },
+    "rtl/Slice/LSU/Stream_Engine/Memory_Stream_Engine/Memory_WR_Stream_Engine/WR_Memory_AG.sv": {
+      "github_canonical_text_sha256": "7ecfdf2e4a9493f1f470cac03b4b581f6bde95126ab163a55dff8918d3aaa09f",
+      "local_canonical_text_sha256": "7ecfdf2e4a9493f1f470cac03b4b581f6bde95126ab163a55dff8918d3aaa09f",
+      "github_local_match": true
+    },
+    "rtl/Slice/LSU/Stream_Engine/Memory_Stream_Engine/Memory_WR_Stream_Engine/WR_Data_Channel.sv": {
+      "github_canonical_text_sha256": "4c838398e4f7c4ae300fd1c1dfc6cdf1a6365854e2c0946c38e17845f366e02e",
+      "local_canonical_text_sha256": "4c838398e4f7c4ae300fd1c1dfc6cdf1a6365854e2c0946c38e17845f366e02e",
+      "github_local_match": true
+    },
+    "rtl/Slice/General_Array/General_Array.sv": {
+      "github_canonical_text_sha256": "2a979bb61ce6470f1b312d6236f4539462cd555b0f5c3cf95899b620d3fdd622",
+      "local_canonical_text_sha256": "2a979bb61ce6470f1b312d6236f4539462cd555b0f5c3cf95899b620d3fdd622",
+      "github_local_match": true
+    },
+    "rtl/Slice/General_Array/GA_PE_Group/GA_PE_Group.sv": {
+      "github_canonical_text_sha256": "b82814375e9b8a51a2ded962faa5d3a9c42d69e5b43c0ad0b1875838a3b17fa0",
+      "local_canonical_text_sha256": "b82814375e9b8a51a2ded962faa5d3a9c42d69e5b43c0ad0b1875838a3b17fa0",
+      "github_local_match": true
+    },
+    "rtl/Slice/General_Array/GA_PE_Group/GA_PE/GA_PE.sv": {
+      "github_canonical_text_sha256": "f9145aa180ef811e1c7d52d57d8ee3fbef24821e05fa2dbb75d90dd208f7e0fa",
+      "local_canonical_text_sha256": "6cbce65264885ae7c211e217511e047b8c999cca9c2369f043a5586bb0fc0fd3",
+      "github_local_match": false,
+      "difference": "Local wires the newly exposed ga_pe_outbuffer_wr_en output to a wrapper-local net; datapath and control assignments are unchanged."
+    },
+    "rtl/Slice/General_Array/GA_PE_Group/GA_SFU_PE/GA_SFU_PE.sv": {
+      "github_canonical_text_sha256": "d58dd94aad3a3363f73a205b150ca0f32cafca76b72be00673c15b0d686f7c88",
+      "local_canonical_text_sha256": "fe09e7d44651cbc86dead5ee8bd406c90b8ffd4ad74b68acc3f46ea21781ffca",
+      "github_local_match": false,
+      "difference": "Local routes ga_pe_outbuffer_wr_en into SFU postprocess instead of ga_pe_alu_pipeline0_enable and wires the newly exposed outbuffer signal."
+    },
+    "rtl/Slice/General_Array/GA_PE_Group/GA_SFU_PE/GA_SFU_PE_Postprocess.sv": {
+      "github_canonical_text_sha256": "630fc7e7cd38e7c2893a93dae42a2ed4d49ba4fadabe13f4fa4d25f5d37b0e29",
+      "local_canonical_text_sha256": "a11837b0ae6cd933e39876f6836f36b94d2abef089fcc25c06507632bc26eeb3",
+      "github_local_match": false,
+      "difference": "Local advances the SFU delay FIFO read pointer on valid ALU output actually accepted by the outbuffer rather than pipeline0 enable."
+    }
+  }
+}

@@ -1,0 +1,119 @@
+{
+  "schema": "node0004-v14-return-analysis-v1",
+  "status": "PACKAGE_LOCAL_OBSERVER_VCS_SYNTAX_COMPILE_FAILURE",
+  "valid": true,
+  "errors": [],
+  "identity": {
+    "return_zip": "C:\\Users\\15383\\xwechat_files\\wxid_vwpfpfs4fgyk22_29b7\\msg\\file\\2026-07\\r5_n4_hw_v14_a_pingpong_fix_return.zip",
+    "return_zip_bytes": 28346,
+    "return_zip_sha256": "5a075ae69e0f89aa2da356c9968ea79de099ec7b38e1ba20b19c8a6757d2525d",
+    "sidecar": "C:\\Users\\15383\\xwechat_files\\wxid_vwpfpfs4fgyk22_29b7\\msg\\file\\2026-07\\r5_n4_hw_v14_a_pingpong_fix_return.zip.sha256",
+    "sidecar_sha256": "bf75592cb96420b5ab155a91b750ad31f40f0488f19addb1c72792a9a62cda8f",
+    "sidecar_valid": true,
+    "source_zip": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-server-test-packages\\r5_n4_hw_v14_a_pingpong_fix.zip",
+    "source_zip_sha256": "4bf890b5ad57d8952226125de4979e96e0c00a1d347d2fb59aec7cabb1cf44b2",
+    "install_name": "r5_n4_hw_v14_a_pingpong_fix",
+    "package_identity_valid": true,
+    "observer_sha256": "a40c522fc3dc962dedcda76291df97bb856315c82ff71fbd593127c541322b0a",
+    "observer_identity_valid": true
+  },
+  "return_envelope": {
+    "crc_pass": true,
+    "single_root": "r5_n4_hw_v14_a_pingpong_fix_return",
+    "entry_count": 10,
+    "exact_set_valid": true,
+    "allowlist_record_count": 9,
+    "hash_size_mismatches": []
+  },
+  "preflight": {
+    "valid": true,
+    "package": {
+      "schema": "node0004-hang-localization-preflight-v7",
+      "valid": true,
+      "install_name": "r5_n4_hw_v14_a_pingpong_fix",
+      "package_file_count": 95,
+      "c0_input_leaf_count": 86,
+      "c0_absent_d_leaf_count": 28,
+      "observer_sha256": "a40c522fc3dc962dedcda76291df97bb856315c82ff71fbd593127c541322b0a",
+      "observer_runtime_enabled": true,
+      "progress_log_return_bound": true,
+      "host_monotonic_log_return_bound": true
+    },
+    "install": {
+      "schema": "node0004-hang-localization-install-v7",
+      "valid": true,
+      "file_count": 89,
+      "runtime_d_initially_absent": true
+    },
+    "observer": {
+      "schema": "node0004-package-local-observer-precompile-v1",
+      "valid": true,
+      "errors": [],
+      "package_root": "/home/panqs/ndp/r5_n4_hw_v14_a_pingpong_fix",
+      "observer_relative_path": "tb_probe/native_return_observer.svh",
+      "observer_path": "/home/panqs/ndp/r5_n4_hw_v14_a_pingpong_fix/tb_probe/native_return_observer.svh",
+      "observer_readable": true,
+      "observer_symlink": false,
+      "expected_sha256": "a40c522fc3dc962dedcda76291df97bb856315c82ff71fbd593127c541322b0a",
+      "observed_sha256": "a40c522fc3dc962dedcda76291df97bb856315c82ff71fbd593127c541322b0a",
+      "identity_match": true,
+      "compile_include_directory": "/home/panqs/ndp/r5_n4_hw_v14_a_pingpong_fix/tb_probe",
+      "xmr_static_gate": {
+        "rule_id": "CDA-SERVER-OBSERVER-XMR-ELABORATION-CONSTANT-001",
+        "status": "pass",
+        "checked_generated_instance_reference_count": 208,
+        "declared_genvars": [
+          "return_obs_abpe_col",
+          "return_obs_abpe_group",
+          "return_obs_abpe_row",
+          "return_obs_abpe_slice",
+          "return_obs_buf_slot",
+          "return_obs_group",
+          "return_obs_row",
+          "return_obs_slice"
+        ],
+        "runtime_indexed_generated_instance_reference_count": 0
+      },
+      "server_file_written": false,
+      "functional_rtl_modified": false
+    }
+  },
+  "dynamic": {
+    "compile_exit_status": 2,
+    "run_exit_status": 125,
+    "signal_status": "NONE",
+    "simulation_started": false,
+    "natural_terminal": false,
+    "canonical_progress_is_actual": false,
+    "canonical_fallback_used": true,
+    "formal_d_member_count": 0,
+    "formal_d_readback": false,
+    "mismatch_zero_with_all_missing_is_pass": false
+  },
+  "first_divergence": {
+    "boundary": "COMPILE_PACKAGE_LOCAL_RETURN_OBSERVER",
+    "file": "tb_probe/native_return_observer.svh",
+    "line": 2405,
+    "tool": "VCS",
+    "token": "[",
+    "expression": "runtime group/slice packed selects followed by whole ROW/COL packed ranges and final bit select",
+    "compile_log_match": true,
+    "driver_make_exit2": true
+  },
+  "evidence_levels": {
+    "E3": false,
+    "E4": false,
+    "E5": false,
+    "joint_gate_passed": false,
+    "reason": "compile failed before elaboration and simulation"
+  },
+  "adjudication": {
+    "root_cause": "PACKAGE_LOCAL_READ_ONLY_OBSERVER_SYNTAX",
+    "functional_rtl_implicated": false,
+    "conv_configuration_implicated": false,
+    "legal_minimal_fix": "replace the rejected post-index packed slice with elaboration-time per-PE A/B aggregate monitor nets"
+  },
+  "numeric_analysis_repeated": false,
+  "node0004_workload_rebuilt": false,
+  "frozen_source_consumed_read_only": true
+}

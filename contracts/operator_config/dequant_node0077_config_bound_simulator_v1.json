@@ -1,0 +1,185 @@
+{
+  "schema": "dequant-node0077-config-bound-simulator-contract-v1",
+  "status": "THREE_PARTY_CONFIG_BOUND_CLOSURE_PASS",
+  "operator": "DequantizeLinear",
+  "node_id": "node0077",
+  "config_generation": "v6",
+  "artifact": {
+    "path": "artifacts/operator_config_validation/r5-dequant-node0077-config-bound-simulator-v1/three_party_report.json",
+    "size_bytes": 30468,
+    "sha256": "f0db3202d250bbba3b40ccd02731ad1a676938bca9e54a2a9de988c5798fde95"
+  },
+  "executor": {
+    "kind": "PROJECT_EQUIVALENT_CONFIG_BOUND_PE_GRAPH_EXECUTOR",
+    "ndpfuncmodel_generic_dequant_executor_available": false,
+    "consumes_final_strict_json": true,
+    "consumes_final_bitstream_and_mapping": true,
+    "consumes_execplan_sca_sca_d": true,
+    "consumes_physical_a": true,
+    "produces_physical_d": true,
+    "uses_frozen_high4_inverse": true,
+    "software_formula_substitution": false,
+    "claim_boundary": "functional config-bound execution; RTL timing is supplied only by formal E4/E5 evidence"
+  },
+  "hardware_evidence_chain": {
+    "handoff": {
+      "path": ".agents/task_records/20260727_test_repair_to_family_threads_handoff.md",
+      "size_bytes": 11601,
+      "sha256": "a3712fab2927a4be7f264c1887ef2e00cd241df08b3ebd2e2170e7d93a332e04"
+    },
+    "atomic_v3": {
+      "classification": "ATOMIC_FUNCTIONAL_PASS_OBSERVER_TEMPORAL_EVIDENCE_INCOMPLETE",
+      "role": "MINIMAL_NUMERIC_FUNCTIONAL_PASS_ONLY",
+      "formal_d_status": "pass",
+      "formal_d_bit_exact": true,
+      "observer_temporal_status": "evidence_incomplete",
+      "observer_does_not_override_formal_d": true,
+      "counts_as_e4": false,
+      "counts_as_e5": false,
+      "task_record": {
+        "path": ".agents/task_records/20260726_dequant_atomic1_v3_return_analysis.md",
+        "size_bytes": 3971,
+        "sha256": "a8cf20787a195e2b12328525d683b14b564f0c0e6c5961aaab5f0e3b4482e527"
+      },
+      "analysis": {
+        "path": "server_returns/dq_node0077_atomic1_stock_v3_return_analysis_20260726.json",
+        "size_bytes": 5644,
+        "sha256": "e4dda9f7c3c7fdb978b1d4df72f4200a6e7e57ef050436ee55e54ec7b5ba0132"
+      },
+      "return_sha256": "b08755adfb3dd0665f34d9a0f320accdd9506ac043f7896eab8c62e1ad02e256",
+      "source_package_sha256": "f77d92165cc32af41e157da27ce4b7141882c8d49871961cab22a41ba668742c"
+    },
+    "full_v6_e4": {
+      "classification": "FIRST_DYNAMIC_PASS",
+      "role": "FORMAL_HARDWARE_FIRST_DYNAMIC_PASS",
+      "counts_as_e4": true,
+      "counts_as_simulator": false,
+      "formal_d_lines": 5264,
+      "task_record": {
+        "path": ".agents/task_records/20260727_dequant_node0077_full_v6_e4_pass.md",
+        "size_bytes": 1798,
+        "sha256": "e7fe4ceaf9a9581b68b5ddf16d57f7bc19a9f5ee6a34aa4b4b9235f16c81cc28"
+      },
+      "analysis": {
+        "path": "server_returns/dequant_node0077_stockrtl_e4_onecmd_v2_return_analysis_20260727.json",
+        "size_bytes": 3570,
+        "sha256": "c7d1380f6dd365b6349e050390a5e112125906eb04a73fcd54a3dec412bfe35f"
+      },
+      "return_sha256": "79b3ea77d7a1651ee77181cffe7264d86da59f47fffa17277d603d8a727272d4",
+      "source_package_sha256": "2ac27a4856b36bb660c0293ff53f84794464283712f20fe0d84dabfa16b699e0"
+    },
+    "full_v6_e5": {
+      "classification": "REPEATED_DYNAMIC_PASS",
+      "role": "FORMAL_HARDWARE_REPEATED_DYNAMIC_PASS",
+      "counts_as_e5": true,
+      "counts_as_simulator": false,
+      "formal_d_lines": 5264,
+      "task_record": {
+        "path": ".agents/task_records/20260727_dequant_node0077_full_v6_e5_pass.md",
+        "size_bytes": 1861,
+        "sha256": "96ddaeaacfecb6d7d2b3dff4be4ab5b37ef69ea0f47f8a1633893a5f02141556"
+      },
+      "analysis": {
+        "path": "server_returns/dequant_node0077_stockrtl_e5_onecmd_v1_return_analysis_20260727.json",
+        "size_bytes": 4016,
+        "sha256": "544761cb91681f1b45a611ef92f05de49e771bb354da3c8a43817a8ca0b7728d"
+      },
+      "return_sha256": "ae993cbf7cc51757a6be24f89e72a3e77ac98cba8953ef1510f93e736a71ca66",
+      "source_package_sha256": "83cd2db78f99d27f02c2b65a46f9f5c43e94b9ff9a5c50ef0273a0409f1cab68"
+    },
+    "adjudication": "atomic observer temporal incompleteness does not overturn bit-exact formal D; atomic v3 is not E4/E5; full E4/E5 are hardware evidence and never substitute for the independent config-bound simulator leg"
+  },
+  "comparisons": {
+    "golden_vs_simulator": {
+      "status": "PASS",
+      "element_count": 16000,
+      "bit_mismatch_count": 0,
+      "first_bit_mismatch_index": null,
+      "atol": 0.0,
+      "rtol": 0.0,
+      "max_abs_error": 0.0,
+      "nan_count_left": 0,
+      "nan_count_right": 0,
+      "nan_bit_pattern_match": true,
+      "bit_exact": true
+    },
+    "golden_vs_e4_hardware": {
+      "status": "PASS",
+      "element_count": 16000,
+      "bit_mismatch_count": 0,
+      "first_bit_mismatch_index": null,
+      "atol": 0.0,
+      "rtol": 0.0,
+      "max_abs_error": 0.0,
+      "nan_count_left": 0,
+      "nan_count_right": 0,
+      "nan_bit_pattern_match": true,
+      "bit_exact": true
+    },
+    "golden_vs_e5_hardware": {
+      "status": "PASS",
+      "element_count": 16000,
+      "bit_mismatch_count": 0,
+      "first_bit_mismatch_index": null,
+      "atol": 0.0,
+      "rtol": 0.0,
+      "max_abs_error": 0.0,
+      "nan_count_left": 0,
+      "nan_count_right": 0,
+      "nan_bit_pattern_match": true,
+      "bit_exact": true
+    },
+    "simulator_vs_e4_hardware": {
+      "status": "PASS",
+      "element_count": 16000,
+      "bit_mismatch_count": 0,
+      "first_bit_mismatch_index": null,
+      "atol": 0.0,
+      "rtol": 0.0,
+      "max_abs_error": 0.0,
+      "nan_count_left": 0,
+      "nan_count_right": 0,
+      "nan_bit_pattern_match": true,
+      "bit_exact": true
+    },
+    "simulator_vs_e5_hardware": {
+      "status": "PASS",
+      "element_count": 16000,
+      "bit_mismatch_count": 0,
+      "first_bit_mismatch_index": null,
+      "atol": 0.0,
+      "rtol": 0.0,
+      "max_abs_error": 0.0,
+      "nan_count_left": 0,
+      "nan_count_right": 0,
+      "nan_bit_pattern_match": true,
+      "bit_exact": true
+    },
+    "e4_vs_e5_hardware": {
+      "status": "PASS",
+      "element_count": 16000,
+      "bit_mismatch_count": 0,
+      "first_bit_mismatch_index": null,
+      "atol": 0.0,
+      "rtol": 0.0,
+      "max_abs_error": 0.0,
+      "nan_count_left": 0,
+      "nan_count_right": 0,
+      "nan_bit_pattern_match": true,
+      "bit_exact": true
+    }
+  },
+  "project_ledger_delta": {
+    "before": "0/78",
+    "after": "1/78"
+  },
+  "remaining_blockers": [],
+  "rule_delta_proposal": "Record a reusable gate requiring config-bound executors to bind final JSON, encoded bitstream identity, execplan/SCA, physical input/output, and the same approved inverse before a node enters the three-party ledger.",
+  "blocker_delta": {
+    "close": [
+      "B_DEQUANT_CONFIG_BOUND_SIMULATOR_LEG"
+    ],
+    "open": []
+  },
+  "contract_content_sha256": "5425804255518cbfd560cbb0d7c8f033884687132a5d0e01f5201a3ce86cc4f2"
+}

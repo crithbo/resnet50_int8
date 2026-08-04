@@ -1,0 +1,83 @@
+{
+  "schema": "operator-config-mapping-evidence-v2",
+  "mapping_mode": "frozen-zero-penalty",
+  "penalty": 0.0,
+  "penalty_source": {
+    "artifact": "native_mapping_state.json",
+    "json_path": "$.last_mapping_cost",
+    "sha256": "9b57f22520e7819b77fd464b91e1151848d028d7ffd63a0f43cdd2e26a096238"
+  },
+  "fallback_used": false,
+  "mapping_review_sha256": "9d5fe3762dbc8c901237105bc42a7706137a1a9dd73e579abf0c64c7464e464b",
+  "encoder": {
+    "repository": "ndp-sim",
+    "commit": "ec12424516ae0304228dd2321d4e604fe225e04e",
+    "bitstream_tree_sha256": "fb3d5ccfaa4fe632b5326a0316948b58462751e9f57efc813e00d83668fbebad",
+    "source_manifest": "encoder_source_manifest.json",
+    "source_manifest_sha256": "89f2f11f8429d917f9bc7e15cc6a74365ed14f075cd8428bfb78f2e971d4dac1",
+    "patchset": {
+      "manifest": "patchset_manifest.json",
+      "manifest_sha256": "421141410bf1c4fab0beeb65291da5e402ca99797b1bbac92de0e3b0e437431e",
+      "patchset_id": "resnet50-ndp-toolchain-6144-v1",
+      "patchset_sha256": "eea36da87fefaa3758bf4cbd7018c8a8346d31d47bae3a09abfb47eafd93389c"
+    }
+  },
+  "source_config": {
+    "artifact": "source_config.json",
+    "sha256": "f5ae3d62eba31d734561050365e39745fd5929759710d24f998fd7ff5c7d1e7b",
+    "original_path": "config.json"
+  },
+  "cache": {
+    "policy": "frozen",
+    "initial_file_count": 1,
+    "final_file_count": 1,
+    "loaded": true,
+    "loaded_origin": "frozen-bundled-seed",
+    "portable": true,
+    "bundled": true,
+    "sha256": "8d1930ee3f73b1481b15de24cc21967c1460ee98e7a0bafe54e13b52a0f12849",
+    "seed": {
+      "artifact": "mapping_cache/c55c0de0dc1460f4.json",
+      "sha256": "96d8ac1741e498818ae22e9740883f90d71c977db23057f5dbde89c70e14a9b7",
+      "origin": {
+        "repository": "resnet50_int8",
+        "commit": "0e5f9aaab254ba7d783652662f80bbd8d36e8c8e",
+        "path": "artifacts/operator_config_validation/r5-patched-mapping-evidence/maxpool-node0002-strict-address-bound-v1/mapping_cache/c55c0de0dc1460f4.json"
+      },
+      "validation": "native mapper recomputed total constraint cost as exactly zero"
+    }
+  },
+  "run": {
+    "returncode": 0,
+    "seed": 20260723,
+    "heuristic_iterations": 10000,
+    "heuristic_restarts": 2,
+    "python_version": "3.12.13",
+    "pythonhashseed": 0,
+    "command": [
+      "<python>",
+      "-c",
+      "<operator-config-evidence-native-wrapper-v1>",
+      "<source-config>",
+      "<temporary-output>",
+      "20260723",
+      "10000",
+      "2"
+    ],
+    "stdout": {
+      "artifact": "native_stdout.log",
+      "sha256": "7982b14138fdb22cdce5a70a61f2bd35db970699b259610f6d94c9552b270c7d"
+    },
+    "stderr": {
+      "artifact": "native_stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "native_wrapper_missing_return_observed": false
+  },
+  "artifacts": {
+    "mapping_review.json": "9d5fe3762dbc8c901237105bc42a7706137a1a9dd73e579abf0c64c7464e464b",
+    "parsed_bitstream.txt": "ee212abb29190586adee66f00cf7b904eb14677784ab4f67aaa0884c86bed8e6",
+    "modules_dump_64b.bin": "1058cc7f41376aed59ea86de015edd7ff59bb2c6cffa18cc40d0af7b7e507737",
+    "modules_dump_128b.bin": "f7dd01b39f03121b4512affd99b63f383c66e02f1a0e4e55c9cec9525b6e7f90"
+  }
+}

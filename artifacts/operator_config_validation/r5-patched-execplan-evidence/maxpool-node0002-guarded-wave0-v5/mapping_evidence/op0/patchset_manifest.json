@@ -1,0 +1,40 @@
+{
+  "schema": "resnet50-ndp-patchset-v1",
+  "patchset_id": "resnet50-ndp-toolchain-6144-v1",
+  "base_repository": "https://github.com/uSFrances/ndp-sim.git",
+  "base_commit": "ec12424516ae0304228dd2321d4e604fe225e04e",
+  "target_profile": {
+    "slices": 28,
+    "banks_per_slice": 4,
+    "rows_per_bank": 6144,
+    "columns_per_row": 64,
+    "bytes_per_column": 16
+  },
+  "policy": {
+    "active_source_read_only": true,
+    "fail_closed_mapping": true,
+    "zero_penalty_required": true,
+    "direct_mapping_is_not_evidence": true
+  },
+  "files": [
+    {
+      "path": "model_execplan/src/execution_plan_generator/address_planner.py",
+      "base_sha256_lf": "0c122a03b2c1b4b75ca2d04006c41d11d081dbf3b1977e90809a728e6fea7f59",
+      "patched_sha256_lf": "52095a34e6fecf20813cf5a2a2492ca1681ca0b6386808df6b7b456ee741be69",
+      "replacement_ids": [
+        "target-profile-row-count-6144"
+      ]
+    },
+    {
+      "path": "bitstream/config/mapper.py",
+      "base_sha256_lf": "9889c1433849ac1a536d9fe4aa85b46b808da472f58bc5f1137cdc3fe00a0a39",
+      "patched_sha256_lf": "aed98569f784cecde99bae7b937e9eb9e0e90cbfe00d9032a1cdbe637da5ece1",
+      "replacement_ids": [
+        "direct-dram-lc-unmatched-name",
+        "zero-penalty-search-return",
+        "preserve-explicit-nonconnected-bindings"
+      ]
+    }
+  ],
+  "patchset_sha256": "eea36da87fefaa3758bf4cbd7018c8a8346d31d47bae3a09abfb47eafd93389c"
+}

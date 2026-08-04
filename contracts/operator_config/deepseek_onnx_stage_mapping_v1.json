@@ -1,0 +1,560 @@
+{
+  "blocker_ids": [
+    "B_DS_QKV_SHARED_NORMALIZED_INPUT_IDENTITY",
+    "B_DS_KV_GQA_REPLICATION_IDENTITY",
+    "B_DS_GQA_SCALE_MISSING",
+    "B_DS_QKT_VECTOR_REDUCTION_ROUTE",
+    "B_DS_SOFTMAX_GLOBAL_NORMALIZATION",
+    "B_DS_DECODE_PROGRAM_GOLDEN_PARITY",
+    "B_DS_RESIDUAL_TENSOR_IDENTITY",
+    "B_DS_CURRENT_TOKEN_KV_LIFECYCLE",
+    "B_DS_DECODE_REGISTRY_JSON_IDENTITY"
+  ],
+  "blockers": [
+    {
+      "classification": "STAGE_DAG",
+      "evidence": {
+        "k_projection_source": "op14",
+        "q_projection_source": "op4",
+        "second_kv_norm_source": null,
+        "v_projection_source": "op14"
+      },
+      "id": "B_DS_QKV_SHARED_NORMALIZED_INPUT_IDENTITY"
+    },
+    {
+      "classification": "TENSOR_LAYOUT",
+      "evidence": {
+        "expected_physical_occurrences_if_replicated": 28,
+        "logical_kv_heads": 1,
+        "logical_kv_width": 128,
+        "op15_output_per_slice": [
+          1,
+          1,
+          32
+        ],
+        "program_slice_counts": {
+          "op10": 28,
+          "op11": 1,
+          "op12": 28,
+          "op13": 28,
+          "op14": 28,
+          "op15": 28,
+          "op20": 28
+        },
+        "query_heads": 7,
+        "replication_manifest_bound": false,
+        "slice_per_head": 4
+      },
+      "id": "B_DS_KV_GQA_REPLICATION_IDENTITY"
+    },
+    {
+      "classification": "NUMERIC_SEMANTICS",
+      "evidence": {
+        "decode_gemv_local_ga_opcodes": [
+          "sum"
+        ],
+        "decode_gemv_local_n2n": null,
+        "explicit_scale_stage": false,
+        "head_dim": 128,
+        "onnx_scale": 0.0883883461356163,
+        "required_formula": "1/sqrt(head_dim)"
+      },
+      "id": "B_DS_GQA_SCALE_MISSING"
+    },
+    {
+      "classification": "STAGE_DAG",
+      "evidence": {
+        "consumer_stage": "op23",
+        "consumer_stage_slices": 1,
+        "partial_stage": "op22",
+        "partial_stage_slices": 28,
+        "route_or_n2n_proven": false,
+        "source": "op22"
+      },
+      "id": "B_DS_QKT_VECTOR_REDUCTION_ROUTE"
+    },
+    {
+      "classification": "NUMERIC_SEMANTICS",
+      "evidence": {
+        "actual_probability_sum_per_head": [
+          4.000000325962901,
+          4.000000325962901,
+          4.000000325962901,
+          4.000000325962901,
+          4.000000325962901,
+          4.000000325962901,
+          4.000000325962901
+        ],
+        "counterexample_proven": true,
+        "input_shape": [
+          32,
+          7
+        ],
+        "local_width": 8,
+        "required_probability_sum_per_head": [
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "slices_per_head": 4
+      },
+      "id": "B_DS_SOFTMAX_GLOBAL_NORMALIZATION"
+    },
+    {
+      "classification": "GOLDEN",
+      "evidence": {
+        "golden_attn_sv_uses_op28": false,
+        "golden_op23_is_scalar": true,
+        "program_op23_output_shape": [
+          1,
+          1,
+          32
+        ],
+        "program_op29_a_source": "op28"
+      },
+      "id": "B_DS_DECODE_PROGRAM_GOLDEN_PARITY"
+    },
+    {
+      "classification": "TENSOR_BINDING",
+      "evidence": {
+        "golden_op31_actual_value": "res_q (Q bias)",
+        "op31_external_port": "A",
+        "program_manifest_usage": {
+          "loads_after_parse": 0,
+          "stores": 1
+        },
+        "required_value": "layer input residual"
+      },
+      "id": "B_DS_RESIDUAL_TENSOR_IDENTITY"
+    },
+    {
+      "classification": "LIFETIME",
+      "evidence": {
+        "current_k_stage": "op19",
+        "current_kv_visible_to_attention": false,
+        "current_v_stage": "op21",
+        "ndp_decode_attention_length": 32,
+        "onnx_total_length_after_current_token": 33,
+        "past_length": 32,
+        "qkt_k_source": null,
+        "sv_v_source": null
+      },
+      "id": "B_DS_CURRENT_TOKEN_KV_LIFECYCLE"
+    },
+    {
+      "classification": "CONFIG_PROVENANCE",
+      "evidence": {
+        "mismatch_count": 11,
+        "mismatches": [
+          {
+            "exact_stage_json": "decode_mul_fp32N_fp32_fp32N.json",
+            "registry_hardware_json": "decode_mul_fp32N_fp32N_fp16N.json",
+            "stage_type": "decode_mul_fp32N_fp32_fp32N"
+          },
+          {
+            "exact_stage_json": "decode_mul_fp32N_fp32N_fp32N.json",
+            "registry_hardware_json": "decode_mul_fp32N_fp32N_fp16N.json",
+            "stage_type": "decode_mul_fp32N_fp32N_fp32N"
+          },
+          {
+            "exact_stage_json": "decode_mul_fp32N_fp32N_fp32N.json",
+            "registry_hardware_json": "decode_mul_fp32N_fp32N_fp16N.json",
+            "stage_type": "decode_mul_fp32N_fp32N_fp32N"
+          },
+          {
+            "exact_stage_json": "decode_add_fp32N_fp32N_fp16N.json",
+            "registry_hardware_json": "decode_add_fp16N_fp32N_fp32N.json",
+            "stage_type": "decode_add_fp32N_fp32N_fp16N"
+          },
+          {
+            "exact_stage_json": "decode_sub_SFU_fp32N_fp32_fp32N.json",
+            "registry_hardware_json": "decode_max_fp32N_fp32N.json",
+            "stage_type": "decode_sub_SFU_fp32N_fp32_fp32N"
+          },
+          {
+            "exact_stage_json": "decode_mul_fp32N_fp32_fp16N.json",
+            "registry_hardware_json": "decode_mul_fp32N_fp32N_fp16N.json",
+            "stage_type": "decode_mul_fp32N_fp32_fp16N"
+          },
+          {
+            "exact_stage_json": "decode_add_fp32N_fp16N_fp32N.json",
+            "registry_hardware_json": "decode_add_fp16N_fp32N_fp32N.json",
+            "stage_type": "decode_add_fp32N_fp16N_fp32N"
+          },
+          {
+            "exact_stage_json": "decode_silu_fp16N_fp32N.json",
+            "registry_hardware_json": "decode_sum_rec_fp32N_fp32N.json",
+            "stage_type": "decode_silu_fp16N_fp32N"
+          },
+          {
+            "exact_stage_json": "decode_mul_fp32N_fp16N_fp16N.json",
+            "registry_hardware_json": "decode_mul_fp32N_fp32N_fp16N.json",
+            "stage_type": "decode_mul_fp32N_fp16N_fp16N"
+          },
+          {
+            "exact_stage_json": "decode_add_fp16N_fp32N_fp16N.json",
+            "registry_hardware_json": "decode_add_fp16N_fp32N_fp32N.json",
+            "stage_type": "decode_add_fp16N_fp32N_fp16N"
+          },
+          {
+            "exact_stage_json": "decode_add_fp32N_fp32N_fp32N.json",
+            "registry_hardware_json": "decode_add_fp16N_fp32N_fp32N.json",
+            "stage_type": "decode_add_fp32N_fp32N_fp32N"
+          }
+        ]
+      },
+      "id": "B_DS_DECODE_REGISTRY_JSON_IDENTITY"
+    }
+  ],
+  "candidate_release": false,
+  "inputs": {
+    "crop_contract": {
+      "path": "contracts/operator_config/deepseek_ndpsim_crop_contract_v1.json",
+      "sha256": "4ad206b550757f6649feb39b6df6e46e1b8bc99062502b441dbc5e4ba5c1e392",
+      "size_bytes": 7384
+    },
+    "decode_gemv_local_json": {
+      "path": "ndp-sim/jsons/decode_gemv_local.json",
+      "sha256": "87fc60851d463ca555b796adb8d49fd445a43a0a8cb4d302fd6cb5b414cd808e",
+      "size_bytes": 25784
+    },
+    "decode_golden": {
+      "path": "ndp-sim/generate_python_golden/decode_ops.py",
+      "sha256": "404412b8ee14299cf29ff725359a5627b663d372a13e86f639709c4572343d9e",
+      "size_bytes": 36017
+    },
+    "decode_program": {
+      "path": "artifacts/operator_config_validation/r5-deepseek-onnx-stage-json-e2-v1/layer0_decode.generated.json",
+      "sha256": "041dc42cc591cd62681391c9d1dc201ba2d0b58ee20e55a89a9b2c0a8c6871b9",
+      "size_bytes": 31755
+    },
+    "decode_program_producer": {
+      "path": "ndp-sim/generate_python_golden/generate_decode_program_json.py",
+      "sha256": "73dd40d35a4250ff543703669f390c6888d0223ccc59584713fbadd9dee848b9",
+      "size_bytes": 22074
+    },
+    "onnx_inventory": {
+      "path": "artifacts/operator_config_validation/r5-deepseek-onnx-stage-json-e2-v1/onnx_graph_inventory.json",
+      "sha256": "ae2f5ab015d1fd6be7961e3d3bcc32d41119a2a02e810bb6027f4b8e63136c14",
+      "size_bytes": 458979
+    },
+    "read_receipt": {
+      "path": "contracts/operator_config/deepseek_onnx_stage_validation_read_receipt_v1.json",
+      "sha256": "bab13378476bd715f416d7cdb9b9d9b753a5729132590322d44954f5ce8c1ce4",
+      "size_bytes": 25969
+    },
+    "specialty_rule": {
+      "path": ".agents/rules/DeepSeek_ONNX到Stage验证规则.md",
+      "sha256": "1b36b9844bfcbd3b8f153556543fb9f2cda8975719675106f4cd9997821873ea",
+      "size_bytes": 6698
+    },
+    "trusted_stage_ir": {
+      "path": "contracts/operator_config/deepseek_stage_ir_crosswalk_v1.json",
+      "sha256": "80e3570045f549b572a0b0a5de820006775dfc37be46bcd498fec772ba8c3782",
+      "size_bytes": 674233
+    }
+  },
+  "mapping_sha256": "4d1af57e6ae7b05c26c88bce22d7511406732b029574b4ec6bd61eb98efec688",
+  "maximum_evidence_level": "E2",
+  "ndpsim_stage_dag": {
+    "all_stage_types_have_trusted_json_authority": true,
+    "operator_count": 43,
+    "stage_type_counts": {
+      "decode_add_fp16N_fp32N_fp16N": 1,
+      "decode_add_fp16N_fp32N_fp32N": 2,
+      "decode_add_fp32N_fp16N_fp32N": 2,
+      "decode_add_fp32N_fp32N_fp16N": 2,
+      "decode_add_fp32N_fp32N_fp32N": 1,
+      "decode_gemv_local": 2,
+      "decode_gemv_ring": 7,
+      "decode_mac_SFU_fp32N_fp32N": 3,
+      "decode_max_fp32N_fp32N": 1,
+      "decode_mul_fp32N_fp16N_fp16N": 1,
+      "decode_mul_fp32N_fp32N_fp16N": 3,
+      "decode_mul_fp32N_fp32N_fp32N": 4,
+      "decode_mul_fp32N_fp32_fp16N": 1,
+      "decode_mul_fp32N_fp32_fp32N": 3,
+      "decode_remote_sum_fp32N_fp32N": 4,
+      "decode_silu_fp16N_fp32N": 1,
+      "decode_sub_SFU_fp32N_fp32_fp32N": 1,
+      "decode_sum_rec_fp32N_fp32N": 1,
+      "decode_summac_fp32N_fp32N": 3
+    },
+    "trusted_stage_types": [
+      "decode_add_fp16N_fp32N_fp16N",
+      "decode_add_fp16N_fp32N_fp32N",
+      "decode_add_fp32N_fp16N_fp32N",
+      "decode_add_fp32N_fp32N_fp16N",
+      "decode_add_fp32N_fp32N_fp32N",
+      "decode_gemv_local",
+      "decode_gemv_ring",
+      "decode_mac_SFU_fp32N_fp32N",
+      "decode_max_fp32N_fp32N",
+      "decode_mul_fp32N_fp16N_fp16N",
+      "decode_mul_fp32N_fp32N_fp16N",
+      "decode_mul_fp32N_fp32N_fp32N",
+      "decode_mul_fp32N_fp32_fp16N",
+      "decode_mul_fp32N_fp32_fp32N",
+      "decode_remote_sum_fp32N_fp32N",
+      "decode_silu_fp16N_fp32N",
+      "decode_sub_SFU_fp32N_fp32_fp32N",
+      "decode_sum_rec_fp32N_fp32N",
+      "decode_summac_fp32N_fp32N"
+    ],
+    "unique_stage_type_count": 19
+  },
+  "onnx_layer0": {
+    "gqa_attributes": {
+      "do_rotary": 1,
+      "kv_num_heads": 2,
+      "num_heads": 12,
+      "rotary_interleaved": 0,
+      "scale": 0.0883883461356163,
+      "softcap": 0.0
+    },
+    "node_indices": [
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20
+    ],
+    "node_names": [
+      "/model/layers.0/input_layernorm/LayerNorm",
+      "/model/layers.0/attn/qkv_proj/MatMul",
+      "/model/layers.0/attn/qkv_proj/Add",
+      "/model/layers.0/attn/GroupQueryAttention",
+      "/model/layers.0/attn/o_proj/MatMul",
+      "/model/layers.0/post_attention_layernorm/SkipLayerNorm",
+      "/model/layers.0/mlp/gate_proj/MatMul",
+      "/model/layers.0/mlp/up_proj/MatMul",
+      "/model/layers.0/mlp/act_fn/Sigmoid",
+      "/model/layers.0/mlp/act_fn/Mul",
+      "/model/layers.0/mlp/Mul",
+      "/model/layers.0/mlp/down_proj/MatMul"
+    ],
+    "node_types": [
+      "SimplifiedLayerNormalization",
+      "MatMul",
+      "Add",
+      "GroupQueryAttention",
+      "MatMul",
+      "SkipSimplifiedLayerNormalization",
+      "MatMul",
+      "MatMul",
+      "Sigmoid",
+      "Mul",
+      "Mul",
+      "MatMul"
+    ],
+    "qkv_bias": {
+      "data_location": "DEFAULT",
+      "data_type": 10,
+      "data_type_name": "FLOAT16",
+      "dims": [
+        2048
+      ],
+      "double_data_count": 0,
+      "external_data": {},
+      "float_data_count": 0,
+      "int32_data_count": 0,
+      "int64_data_count": 0,
+      "name": "model.layers.0.attn.qkv_proj.Add.bias",
+      "raw_data_bytes": 4096,
+      "uint64_data_count": 0
+    },
+    "qkv_weight": {
+      "data_location": "EXTERNAL",
+      "data_type": 10,
+      "data_type_name": "FLOAT16",
+      "dims": [
+        1536,
+        2048
+      ],
+      "double_data_count": 0,
+      "external_data": {
+        "length": "6291456",
+        "location": "model_fp16.onnx_data",
+        "offset": "466747392"
+      },
+      "float_data_count": 0,
+      "int32_data_count": 0,
+      "int64_data_count": 0,
+      "name": "model.layers.0.attn.qkv_proj.MatMul.weight",
+      "raw_data_bytes": 0,
+      "uint64_data_count": 0
+    }
+  },
+  "open_provenance_confirmations": [
+    {
+      "blocks_local_semantic_audit": false,
+      "blocks_release_identity": true,
+      "id": "B_DS_ONNX_ORIGINAL_SOURCE_IDENTITY"
+    },
+    {
+      "blocks_local_semantic_audit": false,
+      "blocks_release_identity": true,
+      "evidence": {
+        "byte_extraction_proven": false,
+        "ndp_target_widths": {
+          "K": 128,
+          "Q": 896,
+          "V": 128
+        },
+        "onnx_bias_shape": [
+          2048
+        ],
+        "onnx_weight_shape": [
+          1536,
+          2048
+        ],
+        "semantic_ranges": {
+          "K": [
+            1536,
+            1792
+          ],
+          "Q": [
+            0,
+            1536
+          ],
+          "V": [
+            1792,
+            2048
+          ]
+        }
+      },
+      "id": "B_DS_QKV_FUSED_EXTRACTION_IDENTITY"
+    }
+  ],
+  "policy_result": {
+    "next_action": "close tensor identity, QKV split/crop, KV slice mask, GQA scale, cross-slice reduction, global softmax, current-KV lifetime and program/golden parity before materializing representative stage JSON",
+    "onnx_to_stage_ir_ready": false,
+    "reason": "the individual JSON oracle remains trusted, but the current 43-stage decode composition and golden do not implement the pinned ONNX layer semantics",
+    "stage_to_json_forward_generation_allowed": false,
+    "trusted_individual_json_semantics_invalidated": false
+  },
+  "read_receipt_validation": {
+    "checked_file_count": 90,
+    "status": "SILU_HOLDOUT_MATERIALIZATION_READY"
+  },
+  "rule_ids": [
+    "CDA-DEEPSEEK-MODEL-IDENTITY-001",
+    "CDA-DEEPSEEK-CROP-EXPLICIT-001",
+    "CDA-DEEPSEEK-ONNX-STAGE-DAG-001",
+    "CDA-DEEPSEEK-STAGE-JSON-ORACLE-001"
+  ],
+  "schema": "deepseek-onnx-to-ndpsim-stage-mapping-v1",
+  "status": "blocked_before_stage_to_json_generation",
+  "structurally_mapped_groups": [
+    {
+      "ndp_stages": [
+        "op0",
+        "op1",
+        "op2",
+        "op3",
+        "op4"
+      ],
+      "onnx_nodes": [
+        "/model/layers.0/input_layernorm/LayerNorm"
+      ],
+      "semantic": "input RMSNorm",
+      "status": "STRUCTURAL_MATCH"
+    },
+    {
+      "ndp_stages": [
+        "op5",
+        "op6",
+        "op15",
+        "op16",
+        "op20",
+        "op21"
+      ],
+      "onnx_nodes": [
+        "/model/layers.0/attn/qkv_proj/MatMul",
+        "/model/layers.0/attn/qkv_proj/Add"
+      ],
+      "semantic": "fused QKV projection and bias",
+      "status": "BLOCKED"
+    },
+    {
+      "ndp_stages": [
+        "op7",
+        "op8",
+        "op9",
+        "op10",
+        "op11",
+        "op12",
+        "op13",
+        "op14",
+        "op15",
+        "op16",
+        "op17",
+        "op18",
+        "op19",
+        "op20",
+        "op21",
+        "op22",
+        "op23",
+        "op24",
+        "op25",
+        "op26",
+        "op27",
+        "op28",
+        "op29"
+      ],
+      "onnx_nodes": [
+        "/model/layers.0/attn/GroupQueryAttention"
+      ],
+      "semantic": "GQA RoPE, QKT, mask, Softmax and SV",
+      "status": "BLOCKED"
+    },
+    {
+      "ndp_stages": [
+        "op30",
+        "op31",
+        "op32",
+        "op33",
+        "op34",
+        "op35",
+        "op36"
+      ],
+      "onnx_nodes": [
+        "/model/layers.0/attn/o_proj/MatMul",
+        "/model/layers.0/post_attention_layernorm/SkipLayerNorm"
+      ],
+      "semantic": "attention output projection and residual RMSNorm",
+      "status": "BLOCKED"
+    },
+    {
+      "ndp_stages": [
+        "op37",
+        "op38",
+        "op39",
+        "op40",
+        "op41",
+        "op42"
+      ],
+      "onnx_nodes": [
+        "/model/layers.0/mlp/gate_proj/MatMul",
+        "/model/layers.0/mlp/up_proj/MatMul",
+        "/model/layers.0/mlp/act_fn/Sigmoid",
+        "/model/layers.0/mlp/act_fn/Mul",
+        "/model/layers.0/mlp/Mul",
+        "/model/layers.0/mlp/down_proj/MatMul"
+      ],
+      "semantic": "SwiGLU MLP and residual",
+      "status": "STRUCTURAL_MATCH_WITH_NUMERIC_GATE_OPEN"
+    }
+  ]
+}

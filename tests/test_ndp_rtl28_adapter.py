@@ -9,7 +9,10 @@ import numpy as np
 from resnet50_pipeline.adapters.ndp_rtl28_functional import (
     NdpRtl28FunctionalAdapter,
 )
-from resnet50_pipeline.conv28_layout import QLinearConvPhysicalLayout
+from resnet50_pipeline.conv28_layout import (
+    CONV28_SIGNED_A_LOCAL_LAYOUT_ABI,
+    QLinearConvPhysicalLayout,
+)
 from resnet50_pipeline.errors import PipelineError
 from resnet50_pipeline.golden.qlinear_conv import qlinear_conv_scalar
 from resnet50_pipeline.profile28 import (
@@ -130,7 +133,12 @@ class NdpRtl28FunctionalAdapterTests(unittest.TestCase):
                         probe.weight_addresses[lane]
                     )
                     self.assertEqual(
-                        target_geometry.decode(a_target).slice_id, source_owner
+                        target_geometry.decode(a_target).slice_id,
+                        (
+                            plan.destination_owner
+                            if plan.ring_kind == "HIGH_LOCAL"
+                            else source_owner
+                        ),
                     )
                     self.assertEqual(
                         target_geometry.decode(b_target).slice_id,
@@ -231,6 +239,43 @@ class NdpRtl28FunctionalAdapterTests(unittest.TestCase):
                 and [state["last"] for state in item["ring_loop_states"]]
                 == [0] * 27 + [1]
                 for item in result.physical_probe.int8_dot_probes
+            )
+        )
+
+    def test_signed_a_local_profile_uses_destination_replica_without_n2n(self) -> None:
+        values = _fixture()
+        values["weight"] = np.ascontiguousarray(values["weight"][:, :, :1, :1])
+        golden = qlinear_conv_scalar(
+            values["activation"],
+            values["weight"],
+            bias=values["bias"],
+            w_scale=values["w_scale"],
+            w_zero_point=values["w_zero_point"],
+            x_scale=values["x_scale"],
+            x_zero_point=values["x_zero_point"],
+            y_scale=values["y_scale"],
+            y_zero_point=values["y_zero_point"],
+        )
+        layout = QLinearConvPhysicalLayout(
+            layout_abi=CONV28_SIGNED_A_LOCAL_LAYOUT_ABI
+        )
+        bundle = layout.forward(
+            **values,
+            accumulator=np.zeros_like(golden.accumulator),
+            output=np.full_like(golden.output, values["y_zero_point"][0]),
+        )
+        result = self.adapter.run_qlinear_conv(layout, bundle)
+        self._assert_functional_result(result, golden, values, layout)
+        self._assert_ring_address_provenance(result, bundle)
+        self.assertEqual({plan.ring_kind for plan in result.probe_plans}, {"HIGH_LOCAL"})
+        self.assertTrue(all(len(plan.source_owners) == 4 for plan in result.probe_plans))
+        self.assertTrue(
+            all(
+                plan.source_owners
+                == TOPOLOGY28.high_ring_for_group(
+                    int(plan.group_id)
+                ).traverse(plan.destination_owner, Direction.PREV)
+                for plan in result.probe_plans
             )
         )
 

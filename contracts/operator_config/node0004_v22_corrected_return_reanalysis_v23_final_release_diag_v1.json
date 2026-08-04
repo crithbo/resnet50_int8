@@ -1,0 +1,75 @@
+{
+  "schema": "resnet50-conv-node0004-v22-corrected-successor-v23-contract-v1",
+  "test_id": "r5-node0004-v22-corrected-final-release-diagnostic-successor-v23",
+  "provenance": {
+    "owner": "019fa2c1-17df-7122-bcbd-a727aaf173f5",
+    "return_target": "019fbec2-fe93-7e03-9314-cff6f222f33d"
+  },
+  "classification": "DIAGNOSTIC_ONLY_NOT_FUNCTIONAL_FIX",
+  "candidate_release": false,
+  "invalidation_receipt": {
+    "invalidated_blocker": "B_CONV_SA_PE_OUTBUFFER_ALU_WRITE_OCCUPANCY_NOT_COUNTED",
+    "invalidated_status": "WAIT_RTL_FIX",
+    "disposition": "INVALIDATED_NOT_RTL_BUG",
+    "withdrawn_equation": "delta=4*initial_accept+1*alu_accept-1*output_read_accept",
+    "correct_semantics": "initial population creates four live slots; alu2ob writes replace an existing live slot; final output consumption retires one live slot",
+    "task_record_sha256": "0eaa10c0e7f97daf3c0765fdea83489733f9061a2749b548654bd65b3a781cb2",
+    "machine_report_sha256": "2369d9eb4976b67d54a34b5eacfb1e24877b3a2a7000d29967ab082a3d960b8c"
+  },
+  "return_reanalysis": {
+    "v22_return_sha256": "70d0db137b78a329965c9fb841bcc3d8abafbb1b54871fd73566f397884c4bfe",
+    "source_v22_zip_sha256": "caf96850ceb5dcf66233dd736757bb2e0b3fbb3b63b066dc9c0194022f1ac68b",
+    "last_proven_good": "SA_ALU_RESULT_ACCEPT_AND_OUTBUFFER_WRITE",
+    "first_divergence": "SA_ALU_RESULT_WRITE_TO_FINAL_RESULT_RELEASE_AND_PE_OUTPUT_VALID",
+    "open_blocker": "B_CONV_NODE0004_SA_FINAL_RESULT_RELEASE_PATH_UNOBSERVED",
+    "rtl_defect_classification": "NOT_YET_PROVEN"
+  },
+  "frozen": {
+    "numeric": true,
+    "W3": true,
+    "qparams": true,
+    "tail": true,
+    "workload": true,
+    "configuration": true,
+    "golden": true,
+    "functional_rtl": true,
+    "timeout": true,
+    "backpressure": true
+  },
+  "observer_scope": {
+    "feature": "RETURN_OBS_FINAL_RELEASE",
+    "runtime_enable": "+RETURN_OBS_FINAL_RELEASE",
+    "limit": "+RETURN_OBS_FINAL_RELEASE_LIMIT=256",
+    "qualified_or_edge_evidence": [
+      "input last/index and matched/out",
+      "ALU last/matched and alu2ob write handshake",
+      "ob_out_rd_ready set/clear",
+      "initial/ob2alu/alu2ob/outport ping-pong selectors",
+      "initial/ob2alu/alu2ob/output pointer changes and wrap",
+      "first PE output valid and accept",
+      "first SA group output accept",
+      "first Buffer5 write edge"
+    ],
+    "corroborating_state_only": [
+      "outbuffer_group_count",
+      "outbuffer_group_empty"
+    ],
+    "old_occupancy_python_model_positive_control_forbidden": true
+  },
+  "package_release": {
+    "install_name": "r5_n4_hw_v23_final_release_diag",
+    "zip_sha256": "9ec61dda9d1d1729b1896b94e86c92747fbec4b2077a7d779a75d186329e2a27",
+    "status": "PACKAGE_READY_NOT_RUN",
+    "server_command": "bash r5_n4_hw_v23_final_release_diag/PREPARE_AND_RUN.sh /absolute/path/to/NDP_copy",
+    "expected_return": "r5_n4_hw_v23_final_release_diag_return.zip"
+  },
+  "scope_receipt": {
+    "numeric_analysis_repeated": false,
+    "node0004_workload_rebuilt": false,
+    "configuration_rebuilt": false,
+    "functional_rtl_modified": false,
+    "public_rules_modified": false,
+    "plan_modified": false,
+    "server_action": false
+  }
+}

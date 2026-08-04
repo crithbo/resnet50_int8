@@ -1,0 +1,284 @@
+{
+  "contract_sha256": "cb0bb26855e883b512813ecbd2d6a77634a66f14f2b9978d6de1ea6ea55c93f9",
+  "identity_boundary": {
+    "crop_required": true,
+    "direct_equal_shape_claim": false,
+    "ndpsim_weight_origin_proven": false,
+    "onnx_identity_classification": "SEMANTIC_MODEL_MATCH",
+    "original_source_identity": false
+  },
+  "inputs": {
+    "layer0_consumer": {
+      "path": "ndp-sim/generate_python_golden/decode_data_loader.py",
+      "sha256": "b6fc6e53b259b7fe737950872ee35e08e401646110a5f7deaff0d5266bda4e1e",
+      "size_bytes": 8630
+    },
+    "official_source_model_config": {
+      "path": "artifacts/operator_config_validation/r5-deepseek-onnx-stage-json-e2-v1/source/official_model/config.json",
+      "sha256": "37bd455e9679d2959536270fed49d25cc7c290a64f6e52abb97c71345a9cee41",
+      "size_bytes": 679
+    },
+    "onnx_conversion_config": {
+      "path": "artifacts/operator_config_validation/r5-deepseek-onnx-stage-json-e2-v1/source/config.json",
+      "sha256": "032502bca49436f59bdcf12dbb63433f3eb8dd611ef4d1a71b6331e27bd3c66f",
+      "size_bytes": 903
+    },
+    "read_receipt": {
+      "path": "contracts/operator_config/deepseek_onnx_stage_validation_read_receipt_v1.json",
+      "sha256": "bab13378476bd715f416d7cdb9b9d9b753a5729132590322d44954f5ce8c1ce4",
+      "size_bytes": 25969
+    },
+    "specialty_rule": {
+      "path": ".agents/rules/DeepSeek_ONNX到Stage验证规则.md",
+      "sha256": "1b36b9844bfcbd3b8f153556543fb9f2cda8975719675106f4cd9997821873ea",
+      "size_bytes": 6698
+    },
+    "target_ndp_config": {
+      "path": "ndp-sim/generate_python_golden/config.json",
+      "sha256": "cb55a90b5c81dad0981c1bb9e11cc4d2851bdba62fd522ae2f9c95a80022a68f",
+      "size_bytes": 508
+    },
+    "weight_crop_producer": {
+      "path": "ndp-sim/generate_python_golden/weight_gen.py",
+      "sha256": "d6435369c1e52903d41d57eb5d941b82ea714bb5e3864b2c2659974a4041e476",
+      "size_bytes": 5495
+    }
+  },
+  "layer_selection": {
+    "consumer_selects_layer0_by_name": true,
+    "crop_producer_removes_unselected_layers": false,
+    "rule": "dimension cropping and layer selection are separate; num_hidden_layers=1 alone is not layer-selection evidence",
+    "selected_source_layers": [
+      0
+    ],
+    "source_layer_count": 28,
+    "target_layer_count": 1
+  },
+  "layout": {
+    "axis_order_change": false,
+    "cropped_weight_output": "numpy flatten(order='F')",
+    "decode_consumer": "numpy reshape(order='F')",
+    "raw_weight_input": "numpy reshape(order='F')"
+  },
+  "model_dimensions": {
+    "derived": {
+      "active_slice_count": 28,
+      "hidden_elements_per_slice": 32,
+      "intermediate_elements_per_slice": 64,
+      "kv_width": 128,
+      "query_width": 896
+    },
+    "source": {
+      "head_dim": 128,
+      "hidden_size": 1536,
+      "intermediate_size": 8960,
+      "num_attention_heads": 12,
+      "num_hidden_layers": 28,
+      "num_key_value_heads": 2
+    },
+    "target": {
+      "head_dim": 128,
+      "hidden_size": 896,
+      "intermediate_size": 1792,
+      "num_attention_heads": 7,
+      "num_hidden_layers": 1,
+      "num_key_value_heads": 1,
+      "slice_per_head": 4,
+      "used_slices": 28
+    }
+  },
+  "read_receipt_validation": {
+    "checked_file_count": 90,
+    "status": "SILU_HOLDOUT_MATERIALIZATION_READY"
+  },
+  "release_boundary": {
+    "formal_target_config": false,
+    "maximum_evidence_level": "E2",
+    "open_confirmation": [
+      "ONNX Community conversion is not proven as the byte-identical source of ndp-sim extracted weights.",
+      "The crop contract must remain explicit until its model/source provenance is independently confirmed."
+    ],
+    "server_dynamic_claim": false
+  },
+  "rule_ids": [
+    "CDA-DEEPSEEK-MODEL-IDENTITY-001",
+    "CDA-DEEPSEEK-CROP-EXPLICIT-001"
+  ],
+  "schema": "deepseek-ndpsim-explicit-crop-contract-v1",
+  "semantic_model_match": {
+    "conversion_declared_source": "deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B",
+    "exact_fields": [
+      "architectures",
+      "attention_dropout",
+      "bos_token_id",
+      "eos_token_id",
+      "hidden_act",
+      "hidden_size",
+      "intermediate_size",
+      "max_position_embeddings",
+      "max_window_layers",
+      "model_type",
+      "num_attention_heads",
+      "num_hidden_layers",
+      "num_key_value_heads",
+      "rms_norm_eps",
+      "rope_theta",
+      "tie_word_embeddings",
+      "torch_dtype",
+      "use_cache",
+      "use_mrope",
+      "use_sliding_window",
+      "vocab_size"
+    ],
+    "non_semantic_or_inactive_deltas": {
+      "sliding_window": {
+        "inactive_because_use_sliding_window": false,
+        "official": 4096,
+        "onnx_conversion": null
+      },
+      "transformers_version": {
+        "official": "4.44.0",
+        "onnx_conversion": "4.46.3"
+      }
+    }
+  },
+  "status": "explicit_crop_contract_locally_closed",
+  "tensor_crop_rules": [
+    {
+      "axis_slices": [
+        [
+          0,
+          896
+        ]
+      ],
+      "consumer_layout": "Fortran-order, trailing singleton axes allowed",
+      "source_shape": [
+        1536
+      ],
+      "target_shape": [
+        896
+      ],
+      "tensor_family": "attention_or_ffn_norm_weight"
+    },
+    {
+      "axis_slices": [
+        [
+          0,
+          896
+        ],
+        [
+          0,
+          896
+        ]
+      ],
+      "consumer_layout": "Fortran-order",
+      "source_shape": [
+        1536,
+        1536
+      ],
+      "target_shape": [
+        896,
+        896
+      ],
+      "tensor_family": "attention_q_or_output_weight"
+    },
+    {
+      "axis_slices": [
+        [
+          0,
+          896
+        ],
+        [
+          0,
+          128
+        ]
+      ],
+      "consumer_layout": "Fortran-order",
+      "source_shape": [
+        1536,
+        256
+      ],
+      "target_shape": [
+        896,
+        128
+      ],
+      "tensor_family": "attention_k_or_v_weight"
+    },
+    {
+      "axis_slices": [
+        [
+          0,
+          896
+        ],
+        [
+          0,
+          1792
+        ]
+      ],
+      "consumer_layout": "Fortran-order",
+      "source_shape": [
+        1536,
+        8960
+      ],
+      "target_shape": [
+        896,
+        1792
+      ],
+      "tensor_family": "ffn_gate_or_up_weight"
+    },
+    {
+      "axis_slices": [
+        [
+          0,
+          1792
+        ],
+        [
+          0,
+          896
+        ]
+      ],
+      "consumer_layout": "Fortran-order",
+      "source_shape": [
+        8960,
+        1536
+      ],
+      "target_shape": [
+        1792,
+        896
+      ],
+      "tensor_family": "ffn_down_weight"
+    },
+    {
+      "axis_slices": [
+        [
+          0,
+          896
+        ]
+      ],
+      "consumer_layout": "Fortran-order",
+      "source_shape": [
+        1536
+      ],
+      "target_shape": [
+        896
+      ],
+      "tensor_family": "attention_q_bias"
+    },
+    {
+      "axis_slices": [
+        [
+          0,
+          128
+        ]
+      ],
+      "consumer_layout": "Fortran-order",
+      "source_shape": [
+        256
+      ],
+      "target_shape": [
+        128
+      ],
+      "tensor_family": "attention_k_or_v_bias"
+    }
+  ]
+}

@@ -1,0 +1,88 @@
+{
+  "frozen_workload": {
+    "bitstream_changed": false,
+    "consumed_reuse_assets": true,
+    "execplan_changed": false,
+    "final_json_changed": false,
+    "golden_changed": false,
+    "mapping_changed": false,
+    "numeric_analysis_repeated": false,
+    "request_count_with_multiplicity": 37352448,
+    "sca_changed_except_install_namespace": false,
+    "six_qparams_changed": false,
+    "w3_order_changed": false
+  },
+  "functional_fix": false,
+  "functional_rtl_modified": false,
+  "hw_op_id": "hwop-0007-00",
+  "node_id": "node-0007",
+  "package_release": {
+    "candidate_release": false,
+    "evidence_level": "E2_LOCAL_ONLY",
+    "sidecar": "artifacts/operator_config_validation/r5-server-test-packages/r5_qadd_n7_nested_lc_progress_v5.zip.sha256",
+    "status": "PACKAGE_READY_NOT_RUN",
+    "zip": "artifacts/operator_config_validation/r5-server-test-packages/r5_qadd_n7_nested_lc_progress_v5.zip",
+    "zip_sha256": "f184410ced99830d4737bea58ccd0590e87ae0525c77d95265b0ef756a184a8e"
+  },
+  "progress_localization": {
+    "claim": "DIAGNOSTIC_ONLY_NOT_FUNCTIONAL_FIX",
+    "deep_checkpoint_limit": 64,
+    "enabled_by_default": true,
+    "heartbeat_cycles": 262144,
+    "host_sample_period_seconds": 60,
+    "minimum_monotonic_windows_for_progress": 2,
+    "observation_outcomes": {
+      "accepted_or_completion_counts_advance_in_two_consecutive_windows": "INTERRUPTED_WHILE_STILL_PROGRESSING; do not classify as a stalled hang",
+      "all_accepted_and_completion_counts_are_flat_beyond_stall_window": "LONG_RUNNING_HANG_AT_LAST_RECORDED_BOUNDARY",
+      "observer_log_absent_or_not_bound": "PACKAGE_RUNTIME_OBSERVER_BINDING_FAILURE; no functional inference",
+      "rdata_and_ga_advance_but_write_completion_does_not": "GA/buffer5/writeback boundary",
+      "requests_advance_but_rdata_or_wdata_do_not": "memory request/data response boundary",
+      "write_completion_reaches_expected_count_but_finish_is_absent": "LC last/slice completion propagation boundary"
+    },
+    "observer_plusarg": "+RETURN_OBSERVER",
+    "read_only": true,
+    "stall_window_cycles": 1048576,
+    "target_slice": 0,
+    "unique_error_interval": "op_a_dequant first Start_Comp: LC/read accepted progress -> GA/buffer5/write completion -> LC last -> slice_cmpt_finish"
+  },
+  "provenance": {
+    "hardware_rule": {
+      "path": ".agents/rules/NDP硬件字段语义.md",
+      "policy": "current_match",
+      "sha256": "603d57805bc5a5bdfca7406c402bc94db60c06ea6682493d672abb91671b1055"
+    },
+    "plan": {
+      "path": ".agents/plan.md",
+      "policy": "mutable_provenance",
+      "sha256": "0a32926c67670a2e1d43cddf809ae7284eb62b8f859772647703bf6ecde36010"
+    },
+    "qlinearadd_rule": {
+      "path": ".agents/rules/QLinearAdd算子配置规则.md",
+      "policy": "current_match",
+      "sha256": "fea780962c9029e589ece90de2af8c70058aee25cffaf9822f1e16f28ff2ecba"
+    },
+    "server_package_rule": {
+      "path": ".agents/rules/服务器测试包生成规则.md",
+      "policy": "current_match",
+      "sha256": "2e5cf649cd721f4444b0caca2d1ea6670823c02d9d86784d6d228351ea8c7227"
+    }
+  },
+  "return_analysis": {
+    "first_unproven_boundary": "op_a_dequant slice_cmpt_finish",
+    "hang_root_cause": "UNRESOLVED_AFTER_EXHAUSTIVE_AUDIT",
+    "last_proven_boundary": "op_a_dequant Start_Comp / slice start",
+    "path": "artifacts/operator_config_validation/r5-qlinearadd-node0007-nested-lc-v4-return-analysis/report.json",
+    "sha256": "678122baa575c45d276758e7e5fd91cbf9c51ba1c2582083c2ecb2eb8a5ad3fa",
+    "status": "LONG_RUNNING_HANG_PENDING_ROOT_CAUSE"
+  },
+  "schema": "qlinearadd-node0007-nested-lc-progress-diagnostic-v5",
+  "server_action_performed": false,
+  "server_rtl_entries": 0,
+  "server_tb_or_observer_entries": 0,
+  "source_package": {
+    "immutable": true,
+    "path": "artifacts/operator_config_validation/r5-server-test-packages/r5_qadd_n7_nested_lc_v4.zip",
+    "sha256": "dfe6ab0e11482d9af7954ba3e87911b770f8d80efa4148352b63d27bf7df2361"
+  },
+  "status": "DIAGNOSTIC_ONLY_NOT_FUNCTIONAL_FIX"
+}

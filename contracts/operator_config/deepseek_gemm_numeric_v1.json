@@ -1,0 +1,72 @@
+{
+  "candidate_release": false,
+  "contract_sha256": "3dac8cb9c3fa765017dbdfaf39ef6da1460054382d3e71440299c7e5b31cb9d3",
+  "coverage": {
+    "K_chunk_count_per_output_slice": 28,
+    "logical_file_count": 4,
+    "nonempty_file_count": 88,
+    "per_slice_bytes": {
+      "A": 2048,
+      "B": 114688,
+      "D": 4096
+    },
+    "physical_file_count": 84,
+    "physical_mapping_is_permutation": true,
+    "ring_order_is_permutation": true,
+    "slice_count": 28
+  },
+  "formal_target_config": false,
+  "identity_boundary": {
+    "hardware_readback": false,
+    "onnx_original_weight_payload": false,
+    "payload_kind": "DETERMINISTIC_SYNTHETIC"
+  },
+  "inputs": {
+    "active_stage_producer_contract": {
+      "path": "contracts/operator_config/deepseek_prefill_rule_normalized_stage_v1.json",
+      "sha256": "b59312280d0e11cdae398b4ab7c3cd467061e2b8db48bfb7c37d0373c0a334c1",
+      "size_bytes": 5517
+    },
+    "gemm_rule": {
+      "path": ".agents/rules/DeepSeek_GEMM\u589e\u91cf\u89c4\u5219.md",
+      "sha256": "9745e0517efa26315fc9682cbceb4abd579bac6d9b40a52ab627feef8ee49b97",
+      "size_bytes": 1356
+    },
+    "manifest": {
+      "path": "artifacts/operator_config_validation/ds_gemm_numeric_v1/manifest.json",
+      "sha256": "ef5e42ab466114d0fd6e87aa20edf836266433b5bd729023afb39064d096ebb5",
+      "size_bytes": 34856
+    },
+    "materialized_json": {
+      "path": "artifacts/operator_config_validation/ds_gemm_ffn_gate_v1/a/t/model_execplan/output/ds_gemm_ffn_gate_v1/jsons/op0_prefill_gemm_ring_4slice.json",
+      "sha256": "475c3739d1aa3224e3caf6022ab6c6ae890433dabefdce51c2afe843d69cbf5f",
+      "size_bytes": 14995
+    },
+    "native_formula_consumer": {
+      "path": "ndp-sim/generate_python_golden/deepseek1.5b_3_time_golden_smallsize.py",
+      "sha256": "4dde1877861b9feec6c4650a662d1c9b633cfe5be9abcabfa1839bde6e776053",
+      "size_bytes": 53478
+    },
+    "native_relayout_consumer": {
+      "path": "ndp-sim/generate_python_golden/single_op_data/relayout_gemm_ring.py",
+      "sha256": "26f368f09dc92b3a1dc2fb1f2b9ab39f8c3a4a3dfd9877a8ac7cfd3352660f28",
+      "size_bytes": 30355
+    }
+  },
+  "numeric_result": {
+    "all_28_K_chunks_covered_per_output_slice": true,
+    "logical_formula": "D_NM=transpose(fp16(fp32(A_KM.T @ B_KN)))",
+    "max_ring_partial_error": 0.0,
+    "physical_payload_matches_native_relayout": true,
+    "stored_fp16_output_exact": true,
+    "stored_fp32_accumulator_exact": true
+  },
+  "rule_ids": [
+    "CDA-DEEPSEEK-GEMM-NUMERIC-PAYLOAD-001",
+    "CDA-DEEPSEEK-GEMM-RING-PARTIAL-COVERAGE-001",
+    "CDA-DEEPSEEK-LAYOUT-HINT-OWNER-001"
+  ],
+  "schema": "deepseek-gemm-ffn-gate-synthetic-numeric-e2-v1",
+  "server_package_generated": false,
+  "status": "LOCAL_NUMERIC_E2_COMPLETE"
+}

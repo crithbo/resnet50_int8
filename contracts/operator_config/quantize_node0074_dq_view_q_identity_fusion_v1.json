@@ -1,0 +1,635 @@
+{
+  "accepted_rec_mul_counterexample": {
+    "divide_then_rne_uint8": 159,
+    "reciprocal_mul_then_rne_uint8": 158,
+    "retested": false,
+    "scale_bits": "0x3cbf57ec",
+    "scope": "rejects generic REC/MUL as exact binary32 division; does not execute in paired-elimination bypass",
+    "source": {
+      "bytes": 11622,
+      "path": "contracts/operator_config/quantize_node0074_exact_division_reuse_audit_v2.json",
+      "sha256": "7892b1dc2b54161ee2d5cab3c033d2a72bec19bbabaf269a38099674e2e45bdf"
+    },
+    "x_bits": "0x406cefe0"
+  },
+  "analysis_accounting": {
+    "accepted_dequant_primitive_retested": false,
+    "accepted_flatten_view_primitive_retested": false,
+    "accepted_rec_mul_counterexample_retested": false,
+    "consumed_reuse_assets": true,
+    "numeric_analysis_repeated": true,
+    "reason": "new independent full-domain binary32 proof required by this task",
+    "reuse_assets": [
+      "typed lowering and model graph",
+      "node0071 producer endpoint address/coverage evidence",
+      "original node0074->node0075 lifetime gate",
+      "accepted REC/MUL counterexample"
+    ],
+    "w3_or_golden_tensor_values_retested": false
+  },
+  "canonical_binding": {
+    "foreign_owner_section_sha256": {
+      "DequantizeLinear": "e372f7b0fa434845a8199830c3c46a9467fc71d5687fa103750a86408191b371",
+      "Flatten_View": "21e9f13fe422d7e6a6f4a0dae729380fc523c3030faad380d71d6ce6f9781d86"
+    },
+    "path": "contracts/operator_config/resnet50_node0072_node0074_shared_endpoint_v1.json",
+    "quantize_owner_only_write_authorized": true
+  },
+  "claim_boundary": "Local deterministic bit-exact semantic proof and Quantize-owned rewrite handoff only. Not a generic divider, target, integrated E2, E3, E4, E5, or server package.",
+  "current_match_sources": [
+    {
+      "bytes": 7525,
+      "path": ".agents/rules/\u751f\u6210\u524d\u5fc5\u8bfb\u7d22\u5f15.md",
+      "sha256": "f768a870d19699c87b66b735a759d3212db6ad51aace30e3a6305b2521a708c8"
+    },
+    {
+      "bytes": 18506,
+      "path": ".agents/rules/\u7b97\u5b50\u914d\u7f6e\u89c4\u5219.md",
+      "sha256": "cbaffcc5fb3bea7da9f0c199bb2e7f06445a676ab456bdfd505b90dd89825171"
+    },
+    {
+      "bytes": 14974,
+      "path": ".agents/rules/NDP\u786c\u4ef6\u5b57\u6bb5\u8bed\u4e49.md",
+      "sha256": "603d57805bc5a5bdfca7406c402bc94db60c06ea6682493d672abb91671b1055"
+    },
+    {
+      "bytes": 3625,
+      "path": ".agents/rules/Flatten_View\u7b97\u5b50\u914d\u7f6e\u89c4\u5219.md",
+      "sha256": "28ba3a92fecbb83149d494867429c34aa3124040a5c59fe99c4b9481feb3b7ee"
+    },
+    {
+      "bytes": 13919,
+      "path": ".agents/rules/DequantizeLinear\u7b97\u5b50\u914d\u7f6e\u89c4\u5219.md",
+      "sha256": "f8cf7d2a041426f2b3348f3d02b570e3e559fe1a77c643a8393e77a2583e15a1"
+    },
+    {
+      "bytes": 9310,
+      "path": ".agents/rules/\u7cbe\u786eUINT8\u91cf\u5316\u5c3e\u4e13\u9879\u89c4\u5219.md",
+      "sha256": "1685bd6527111bf014a738dbef4ee85b5b8d3e54c0565cb63eda9417d5c9425e"
+    },
+    {
+      "bytes": 25816052,
+      "path": "artifacts/reference_model/resnet50-v1-12-int8.onnx",
+      "sha256": "c234f30975989788b4405f25253275aae247ab6dbdd34aaa69ab0a59ff76f6d0"
+    },
+    {
+      "bytes": 339932,
+      "path": "artifacts/w3/model_graph.json",
+      "sha256": "f030c5d4e43f63fbbcce771e4c4ea9e88b042be0a2c988e7f51de2c0e17ac410"
+    },
+    {
+      "bytes": 1971200,
+      "path": "contracts/resnet50_r5_lowering_bundle.json",
+      "sha256": "bf661e4eda2011025d9922708ab46a64f8d1b3c279527b88aa7d630bb3545432"
+    },
+    {
+      "bytes": 11622,
+      "path": "contracts/operator_config/quantize_node0074_exact_division_reuse_audit_v2.json",
+      "sha256": "7892b1dc2b54161ee2d5cab3c033d2a72bec19bbabaf269a38099674e2e45bdf"
+    },
+    {
+      "bytes": 29431,
+      "path": "contracts/operator_config/resnet50_node0071_node0072_shared_endpoint_v1.json",
+      "sha256": "9a832711eccd406d32ce802268889ecd67a9944a841d8cd8445af206ec93c2b0"
+    },
+    {
+      "bytes": 244657,
+      "path": "contracts/operator_config/stage_state_lifetime_contract_v1.json",
+      "sha256": "67f8e7758128a0dfea4b3faf2eab700b01b602ca052c3301fec967d6d2604744"
+    }
+  ],
+  "endpoint_handoff": {
+    "consumer_owned_endpoint_fields": {
+      "final_accepted_lifetime": null,
+      "final_consumer_base": null,
+      "final_producer_base": null,
+      "final_read_coverage": null,
+      "final_storage_identity": null,
+      "final_view_offset": null
+    },
+    "first_integration_blocker": {
+      "id": "B_QUANT_NODE0074_IDENTITY_FUSION_NODE0075_BINDING",
+      "kind": "WAIT_INTEGRATION_OWNER",
+      "reason": "node0075 A final occurrence addresses/read acceptance, shared allocator alias overlay, multi-operator visibility barrier, and release lifetime are not materialized"
+    },
+    "known_source_storage": {
+      "active_slice_count": 16,
+      "alias_byte_strides": [
+        2048,
+        1
+      ],
+      "alias_offset_bytes": 0,
+      "alias_shape": [
+        16,
+        2048
+      ],
+      "allocation_owner": "r5:hwop-0071-01:D",
+      "bytes_per_active_slice": 2048,
+      "dtype": "uint8",
+      "ordered_address_sha256": "4d53305b6b1f2c48f8cf5043262f8866d5d82d2b207db9146ff09ab05ac38b2d",
+      "producer_local_visibility_evidence_accepted": true,
+      "producer_visibility_event": "node0071 final uint8 D byte-set accepted AND node0071 completion/final barrier accepted",
+      "shared_multi_operator_barrier_materialized": false,
+      "slice0_base_addr": "0x000a2000",
+      "slice_address_stride_bytes": 33554432,
+      "slice_base_formula": "D_base(slice)=0x000a2000+(slice_id<<25), 0<=slice_id<16",
+      "source_byte_strides": [
+        2048,
+        1,
+        1,
+        1
+      ],
+      "source_shape": [
+        16,
+        2048,
+        1,
+        1
+      ],
+      "storage_id": "r5:activation:node-0071:D:tensor-ab32f279540568c3:batch-slice-sharded-16x2048-v1",
+      "total_valid_bytes": 32768,
+      "transaction_bytes": 32,
+      "transactions_per_active_slice": 64,
+      "written_byte_set_sha256": "3d900ae696639cb65053a0de41d9504e10bdbab3d7cbce764f94b06812f14d06"
+    },
+    "next_owner": "QLinearMatMul/integration allocator+execplan owner",
+    "original_edge_gate": {
+      "byte_count": 32768,
+      "dtype": "uint8",
+      "edge_id": "r5:hwop-0074-00->r5:hwop-0075-00:tensor-6fbd5707d5f08110",
+      "implicit_reuse_allowed": false,
+      "original_logical_alias_eligible": false,
+      "physical_allocation_status": "blocked_until_address_offset_and_lifetime_are_bound",
+      "shape": [
+        16,
+        2048
+      ]
+    },
+    "provisional_address_allowed": false,
+    "required_patch_proposal": {
+      "active_slice_count": 16,
+      "allocation_owner": "r5:hwop-0071-01:D",
+      "base_formula": "0x000a2000+(slice_id<<25), 0<=slice_id<16",
+      "canonical_top_level_handoff": {
+        "current_stale_reason_fields": {
+          "cross_owner_gates.producer_write_vs_consumer_read_coverage": "PRODUCER_READY_CONSUMER_PENDING_EXACT_DIVISION",
+          "cross_owner_gates.quantize_exact_division": "OPEN",
+          "cross_owner_gates.same_storage_match": "BLOCKED_BY_NULL_QUANTIZE_ENDPOINT"
+        },
+        "not_modified_by_quantize_owner": true,
+        "required_integration_owner_update": "replace exact-division-on-path wording with approved frozen identity-fusion plus node0075 binding state; do not close the generic divider blockers"
+      },
+      "first_legal_read": "after node0071 final uint8 D byte-set accepted and node0071 completion/final barrier accepted",
+      "node0075_a_scale_bits": "0x3cbf57ec",
+      "node0075_a_zero_point": 0,
+      "release_event": "node0075 final A input-data accepted and no pending/replayed read; fallback=node0075 completion accepted",
+      "required_ordered_address_sha256": "4d53305b6b1f2c48f8cf5043262f8866d5d82d2b207db9146ff09ab05ac38b2d",
+      "required_owner_actions": [
+        "materialize graph rewrite/alias overlay",
+        "bind node0075 A occurrence addresses to the exact producer byte set",
+        "prove 32768-byte consumer read coverage and element-order inverse",
+        "bind allocator ownership without relocation or copy",
+        "bind producer visibility and consumer accepted-lifetime barriers",
+        "update canonical top-level cross-owner gates and claim boundary after integration proof"
+      ],
+      "required_read_bytes_per_slice": 2048,
+      "required_total_read_bytes": 32768,
+      "required_written_byte_set_sha256": "3d900ae696639cb65053a0de41d9504e10bdbab3d7cbce764f94b06812f14d06",
+      "storage_id": "r5:activation:node-0071:D:tensor-ab32f279540568c3:batch-slice-sharded-16x2048-v1",
+      "typed_edge": "node0071 D tensor-ab32f279540568c3 uint8[16,2048,1,1] aliases node0075 A tensor-6fbd5707d5f08110 uint8[16,2048]",
+      "view_offset_bytes": 0
+    }
+  },
+  "exact_equivalence_expected": {
+    "domain_value_count": 256,
+    "identity_for_all_values": true,
+    "input_domain": [
+      0,
+      255
+    ],
+    "maximum_binary32_quotient_error": {
+      "exact_fraction": "1/65536",
+      "float": 1.52587890625e-05,
+      "u": 172
+    },
+    "maximum_pre_division_rounding_error": {
+      "exact_fraction": "1/4194304",
+      "float": 2.384185791015625e-07,
+      "u": 224
+    },
+    "maximum_unrounded_quotient_error": {
+      "exact_fraction": "32/3134971",
+      "float": 1.0207430945932196e-05,
+      "u": 224
+    },
+    "minimum_margin_to_wrong_nearest_even_boundary": {
+      "exact_fraction": "32767/65536",
+      "float": 0.4999847412109375
+    },
+    "mismatch_count": 0,
+    "noninteger_binary32_quotient_count": 50,
+    "noninteger_unrounded_exact_quotient_count": 234,
+    "operation_order": [
+      "binary32(uint8-zp)",
+      "binary32_multiply_by_exact_scale",
+      "metadata_only_view",
+      "binary32_divide_by_same_exact_scale",
+      "nearest_even_integer",
+      "add_zero_point",
+      "clamp_uint8"
+    ],
+    "per_value_records_sha256": "d074a345d23915884423ab5279e0f58d327ffec44b94dbea5d703910228fa59a",
+    "scale_bits": "0x3cbf57ec",
+    "scale_exact_fraction": "3134971/134217728",
+    "zero_point": 0
+  },
+  "functional_rtl_modified": false,
+  "generic_capability_blockers": {
+    "B_QUANT_NODE0074_EXACT_DIVISION": {
+      "on_this_frozen_chain_execution_path": false,
+      "status": "OPEN_GENERIC_FAMILY_CAPABILITY"
+    },
+    "B_QUANT_TAIL_EXACT_FP32_DIVISION": {
+      "on_this_frozen_chain_execution_path": false,
+      "status": "OPEN_GENERIC_FAMILY_CAPABILITY"
+    }
+  },
+  "graph_rewrite": {
+    "adjudication": "APPROVED_EQUIVALENT",
+    "host_precompute_used": false,
+    "old_fp32_endpoint_reused": false,
+    "physical_integration_closed": false,
+    "reciprocal_or_multiply_used_as_division": false,
+    "remove_from_execution": [
+      "r5:hwop-0072-00 arithmetic",
+      "r5:hwop-0074-00 arithmetic"
+    ],
+    "replacement": "metadata-only UINT8 alias from node0071 D/node0072 A source storage [16,2048,1,1] to node0075 A [16,2048]",
+    "scaled_rounded_saturated_or_final_tensor_replayed": false,
+    "scope": "frozen node0072->node0073->node0074 instance only",
+    "typed_rewrite_closed": true
+  },
+  "instance_descriptor": {
+    "dequant": {
+      "axis": null,
+      "hw_op_id": "hwop-0072-00",
+      "input_dtype": "uint8",
+      "input_shape": [
+        16,
+        2048,
+        1,
+        1
+      ],
+      "input_tensor_id": "tensor-ab32f279540568c3",
+      "node_id": "node-0072",
+      "operation_order": [
+        "cast_uint8_to_binary32",
+        "subtract_zero_point_exact",
+        "binary32_multiply_scale"
+      ],
+      "output_dtype": "float32",
+      "output_shape": [
+        16,
+        2048,
+        1,
+        1
+      ],
+      "output_tensor_id": "tensor-50c285690f899b1b",
+      "quantization_granularity": "per_tensor",
+      "scale_bits": "0x3cbf57ec",
+      "scale_dtype": "float32",
+      "scale_shape": [
+        1
+      ],
+      "scale_value_sha256": "a0da76078599a1809616c74430a869c573c530c8f89dec21191c963aadb321bc",
+      "zero_point": 0,
+      "zero_point_dtype": "uint8",
+      "zero_point_shape": [
+        1
+      ],
+      "zero_point_value_sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d"
+    },
+    "downstream": {
+      "a_scale_bits": "0x3cbf57ec",
+      "a_scale_dtype": "float32",
+      "a_scale_shape": [
+        1
+      ],
+      "a_scale_tensor_id": "tensor-f65fcc89b57d931f",
+      "a_scale_value_sha256": "a0da76078599a1809616c74430a869c573c530c8f89dec21191c963aadb321bc",
+      "a_zero_point": 0,
+      "a_zero_point_dtype": "uint8",
+      "a_zero_point_shape": [
+        1
+      ],
+      "a_zero_point_value_sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d",
+      "hw_op_id": "hwop-0075-00",
+      "input_dtype": "uint8",
+      "input_shape": [
+        16,
+        2048
+      ],
+      "input_tensor_id": "tensor-6fbd5707d5f08110",
+      "node_id": "node-0075"
+    },
+    "graph_nodes": [
+      {
+        "attributes": {
+          "channels_last": 0
+        },
+        "input_tensor_ids": [
+          "tensor-55360f2ec724d2f3",
+          "tensor-bdd32534497d9913",
+          "tensor-1cc0294c70090e58",
+          "tensor-2cc427657ec3a8ed",
+          "tensor-03b21228355c36d2"
+        ],
+        "node_id": "node-0071",
+        "op_type": "QLinearGlobalAveragePool",
+        "output_tensor_ids": [
+          "tensor-ab32f279540568c3"
+        ]
+      },
+      {
+        "attributes": {},
+        "input_tensor_ids": [
+          "tensor-ab32f279540568c3",
+          "tensor-2cc427657ec3a8ed",
+          "tensor-03b21228355c36d2"
+        ],
+        "node_id": "node-0072",
+        "op_type": "DequantizeLinear",
+        "output_tensor_ids": [
+          "tensor-50c285690f899b1b"
+        ]
+      },
+      {
+        "attributes": {
+          "axis": 1
+        },
+        "input_tensor_ids": [
+          "tensor-50c285690f899b1b"
+        ],
+        "node_id": "node-0073",
+        "op_type": "Flatten",
+        "output_tensor_ids": [
+          "tensor-9b1363d3baf474c8"
+        ]
+      },
+      {
+        "attributes": {},
+        "input_tensor_ids": [
+          "tensor-9b1363d3baf474c8",
+          "tensor-f65fcc89b57d931f",
+          "tensor-fb899ce9723da4d7"
+        ],
+        "node_id": "node-0074",
+        "op_type": "QuantizeLinear",
+        "output_tensor_ids": [
+          "tensor-6fbd5707d5f08110"
+        ]
+      },
+      {
+        "attributes": {},
+        "input_tensor_ids": [
+          "tensor-6fbd5707d5f08110",
+          "tensor-f65fcc89b57d931f",
+          "tensor-fb899ce9723da4d7",
+          "tensor-111c078096769aec",
+          "tensor-c0561b35a07232f5",
+          "tensor-741a82ccf303b4a4",
+          "tensor-4ee4af3963971db8",
+          "tensor-2e2dfe5611779700"
+        ],
+        "node_id": "node-0075",
+        "op_type": "QLinearMatMul",
+        "output_tensor_ids": [
+          "tensor-6cc774b369e8dea4"
+        ]
+      }
+    ],
+    "model_sha256": "c234f30975989788b4405f25253275aae247ab6dbdd34aaa69ab0a59ff76f6d0",
+    "quant": {
+      "axis": null,
+      "hw_op_id": "hwop-0074-00",
+      "input_dtype": "float32",
+      "input_shape": [
+        16,
+        2048
+      ],
+      "input_tensor_id": "tensor-9b1363d3baf474c8",
+      "node_id": "node-0074",
+      "operation_order": [
+        "binary32_divide_scale",
+        "nearest_even_integer",
+        "add_zero_point",
+        "clamp_uint8"
+      ],
+      "output_dtype": "uint8",
+      "output_shape": [
+        16,
+        2048
+      ],
+      "output_tensor_id": "tensor-6fbd5707d5f08110",
+      "quantization_granularity": "per_tensor",
+      "scale_bits": "0x3cbf57ec",
+      "scale_dtype": "float32",
+      "scale_shape": [
+        1
+      ],
+      "scale_value_sha256": "a0da76078599a1809616c74430a869c573c530c8f89dec21191c963aadb321bc",
+      "zero_point": 0,
+      "zero_point_dtype": "uint8",
+      "zero_point_shape": [
+        1
+      ],
+      "zero_point_value_sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d"
+    },
+    "rewrite": {
+      "alias_byte_strides": [
+        2048,
+        1
+      ],
+      "alias_dtype": "uint8",
+      "alias_shape": [
+        16,
+        2048
+      ],
+      "alias_tensor_id": "tensor-6fbd5707d5f08110",
+      "axis": 1,
+      "element_order": "C_NCHW_trailing_unit_dims_to_C_NC",
+      "source_dtype": "uint8",
+      "source_shape": [
+        16,
+        2048,
+        1,
+        1
+      ],
+      "source_tensor_id": "tensor-ab32f279540568c3",
+      "storage_offset_bytes": 0
+    },
+    "view": {
+      "axis": 1,
+      "bypass_element_order": "C_NC",
+      "bypass_transform": "metadata_only_drop_trailing_unit_dimensions",
+      "hw_op_id": "hwop-0073-00",
+      "input_dtype": "float32",
+      "input_shape": [
+        16,
+        2048,
+        1,
+        1
+      ],
+      "input_tensor_id": "tensor-50c285690f899b1b",
+      "node_id": "node-0073",
+      "original_element_order": "C_NCHW_trailing_unit_dims",
+      "output_dtype": "float32",
+      "output_shape": [
+        16,
+        2048
+      ],
+      "output_tensor_id": "tensor-9b1363d3baf474c8"
+    }
+  },
+  "outputs": {
+    "bitstream": false,
+    "candidate_release": false,
+    "execplan": false,
+    "mapping": false,
+    "sca": false,
+    "server_package": false,
+    "target_json": false
+  },
+  "package_release": "NONE",
+  "package_release_reason": "WAIT_INTEGRATION_OWNER",
+  "provenance": {
+    "analysis_owner_thread": "019fa2c0-572b-7f21-ac5a-96e773dde534",
+    "mode": "validate",
+    "model_sha256": "c234f30975989788b4405f25253275aae247ab6dbdd34aaa69ab0a59ff76f6d0",
+    "origin_skill": "academic-research-suite/experiment-agent",
+    "return_target_thread": "019fbec2-fe93-7e03-9314-cff6f222f33d",
+    "verification_status": "VERIFIED_LOCAL_STATIC_AND_NUMERIC",
+    "version_label": "v1"
+  },
+  "qparam_identity": {
+    "axis": null,
+    "bitwise_identical": true,
+    "downstream_node0075_a_qdomain_identical": true,
+    "quantization_granularity": "per_tensor",
+    "scale_bits": "0x3cbf57ec",
+    "scale_dtype": "float32",
+    "scale_shape": [
+      1
+    ],
+    "scale_value_sha256": "a0da76078599a1809616c74430a869c573c530c8f89dec21191c963aadb321bc",
+    "zero_point": 0,
+    "zero_point_dtype": "uint8",
+    "zero_point_shape": [
+      1
+    ],
+    "zero_point_value_sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d"
+  },
+  "read_receipts": [
+    {
+      "bytes": 11097,
+      "gate": "historical_read_receipt",
+      "path": ".agents/agent.md",
+      "sha256": "aae402d48b82d026c5512c8a6a5d4c9ff9db4bcc6a94576cd618c168f3fd188e"
+    },
+    {
+      "bytes": 23316,
+      "gate": "mutable_provenance_only",
+      "path": ".agents/plan.md",
+      "sha256": "918b43a8ff1333f6535806cda5c75d2273fe2663ebbc5370e4ff53c4784a17b4"
+    },
+    {
+      "bytes": 7525,
+      "gate": "historical_read_receipt",
+      "path": ".agents/rules/\u751f\u6210\u524d\u5fc5\u8bfb\u7d22\u5f15.md",
+      "sha256": "f768a870d19699c87b66b735a759d3212db6ad51aace30e3a6305b2521a708c8"
+    },
+    {
+      "bytes": 18506,
+      "gate": "historical_read_receipt",
+      "path": ".agents/rules/\u7b97\u5b50\u914d\u7f6e\u89c4\u5219.md",
+      "sha256": "cbaffcc5fb3bea7da9f0c199bb2e7f06445a676ab456bdfd505b90dd89825171"
+    },
+    {
+      "bytes": 14974,
+      "gate": "historical_read_receipt",
+      "path": ".agents/rules/NDP\u786c\u4ef6\u5b57\u6bb5\u8bed\u4e49.md",
+      "sha256": "603d57805bc5a5bdfca7406c402bc94db60c06ea6682493d672abb91671b1055"
+    },
+    {
+      "bytes": 3625,
+      "gate": "historical_read_receipt",
+      "path": ".agents/rules/Flatten_View\u7b97\u5b50\u914d\u7f6e\u89c4\u5219.md",
+      "sha256": "28ba3a92fecbb83149d494867429c34aa3124040a5c59fe99c4b9481feb3b7ee"
+    },
+    {
+      "bytes": 13919,
+      "gate": "historical_read_receipt",
+      "path": ".agents/rules/DequantizeLinear\u7b97\u5b50\u914d\u7f6e\u89c4\u5219.md",
+      "sha256": "f8cf7d2a041426f2b3348f3d02b570e3e559fe1a77c643a8393e77a2583e15a1"
+    },
+    {
+      "bytes": 9310,
+      "gate": "historical_read_receipt",
+      "path": ".agents/rules/\u7cbe\u786eUINT8\u91cf\u5316\u5c3e\u4e13\u9879\u89c4\u5219.md",
+      "sha256": "1685bd6527111bf014a738dbef4ee85b5b8d3e54c0565cb63eda9417d5c9425e"
+    },
+    {
+      "bytes": 25816052,
+      "gate": "historical_read_receipt",
+      "path": "artifacts/reference_model/resnet50-v1-12-int8.onnx",
+      "sha256": "c234f30975989788b4405f25253275aae247ab6dbdd34aaa69ab0a59ff76f6d0"
+    },
+    {
+      "bytes": 339932,
+      "gate": "historical_read_receipt",
+      "path": "artifacts/w3/model_graph.json",
+      "sha256": "f030c5d4e43f63fbbcce771e4c4ea9e88b042be0a2c988e7f51de2c0e17ac410"
+    },
+    {
+      "bytes": 1971200,
+      "gate": "historical_read_receipt",
+      "path": "contracts/resnet50_r5_lowering_bundle.json",
+      "sha256": "bf661e4eda2011025d9922708ab46a64f8d1b3c279527b88aa7d630bb3545432"
+    },
+    {
+      "bytes": 11622,
+      "gate": "historical_read_receipt",
+      "path": "contracts/operator_config/quantize_node0074_exact_division_reuse_audit_v2.json",
+      "sha256": "7892b1dc2b54161ee2d5cab3c033d2a72bec19bbabaf269a38099674e2e45bdf"
+    },
+    {
+      "bytes": 29431,
+      "gate": "historical_read_receipt",
+      "path": "contracts/operator_config/resnet50_node0071_node0072_shared_endpoint_v1.json",
+      "sha256": "9a832711eccd406d32ce802268889ecd67a9944a841d8cd8445af206ec93c2b0"
+    },
+    {
+      "bytes": 244657,
+      "gate": "historical_read_receipt",
+      "path": "contracts/operator_config/stage_state_lifetime_contract_v1.json",
+      "sha256": "67f8e7758128a0dfea4b3faf2eab700b01b602ca052c3301fec967d6d2604744"
+    }
+  ],
+  "reuse_class": "APPROVED_EQUIVALENT",
+  "rule_delta_proposal": {
+    "reason": "Current APPROVED_EQUIVALENT, typed-edge, endpoint, lifetime, and fail-closed rules already cover the adjudication.",
+    "required": false
+  },
+  "rule_ids": [
+    "CDA-CONFIG-ONLY-INPUT-REPLAY-NONCOMPUTATIONAL-001",
+    "CDA-REUSE-FIRST-DEFERRED-RETEST-001",
+    "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+    "CDA-CONFIG-MATERIALIZED-ROUNDTRIP-001",
+    "CDA-QUANT-TAIL-RAW-SIGNED-GUARD-001"
+  ],
+  "schema": "resnet50-quantize-node0074-dq-view-q-identity-fusion-v1",
+  "server_files_inspected": false,
+  "server_lease": false,
+  "server_upload_or_run": false,
+  "status": "APPROVED_EQUIVALENT_WAIT_INTEGRATION_OWNER",
+  "test_id": "r5-quantize-node0074-dq-view-q-identity-fusion-v1"
+}

@@ -1,0 +1,524 @@
+
+=== Loading Configurations from JSON ===
+
+=== Resource Allocation & Mapping ===
+
+=== Using Heuristic Search (Simulated Annealing) ===
+[Heuristic Search] Using 36 connections
+  Connection: DRAM_LC.LC0 -> DRAM_LC.LC1
+  Connection: DRAM_LC.LC10 -> DRAM_LC.LC11
+  Connection: DRAM_LC.LC11 -> DRAM_LC.LC12
+  Connection: DRAM_LC.LC13 -> DRAM_LC.LC14
+  Connection: DRAM_LC.LC14 -> DRAM_LC.LC15
+  Connection: DRAM_LC.LC1 -> DRAM_LC.LC2
+  Connection: DRAM_LC.LC2 -> DRAM_LC.LC4
+  Connection: DRAM_LC.LC4 -> DRAM_LC.LC5
+  Connection: DRAM_LC.LC2 -> DRAM_LC.LC6
+  Connection: DRAM_LC.LC6 -> DRAM_LC.LC7
+  Connection: DRAM_LC.LC15 -> DRAM_LC.LC9
+  Connection: DRAM_LC.LC6 -> GROUP0.ROW_LC
+  Connection: GROUP0.ROW_LC -> GROUP0.COL_LC
+  Connection: DRAM_LC.LC4 -> GROUP1.ROW_LC
+  Connection: GROUP1.ROW_LC -> GROUP1.COL_LC
+  Connection: DRAM_LC.LC12 -> GROUP3.ROW_LC
+  Connection: GROUP3.ROW_LC -> GROUP3.COL_LC
+  Connection: DRAM_LC.LC9 -> GROUP4.ROW_LC
+  Connection: GROUP4.ROW_LC -> GROUP4.COL_LC
+  Connection: DRAM_LC.LC6 -> LC_PE.PE0
+  Connection: DRAM_LC.LC7 -> LC_PE.PE0
+  Connection: DRAM_LC.LC15 -> LC_PE.PE1
+  Connection: DRAM_LC.LC9 -> LC_PE.PE1
+  Connection: DRAM_LC.LC4 -> LC_PE.PE2
+  Connection: DRAM_LC.LC5 -> LC_PE.PE2
+  Connection: LC_PE.PE0 -> STREAM.stream0
+  Connection: DRAM_LC.LC0 -> STREAM.stream0
+  Connection: LC_PE.PE2 -> STREAM.stream1
+  Connection: DRAM_LC.LC2 -> STREAM.stream1
+  Connection: DRAM_LC.LC1 -> STREAM.stream1
+  Connection: DRAM_LC.LC10 -> STREAM.stream3
+  Connection: DRAM_LC.LC11 -> STREAM.stream3
+  Connection: DRAM_LC.LC12 -> STREAM.stream3
+  Connection: DRAM_LC.LC13 -> STREAM.stream4
+  Connection: LC_PE.PE1 -> STREAM.stream4
+  Connection: DRAM_LC.LC14 -> STREAM.stream4
+[Simulated Annealing] Starting search with 36 connections
+[Simulated Annealing] Parameters: iterations=10000, T0=100.0, cooling=0.995, repair_prob=0.2
+[Simulated Annealing] Processing 17 nodes
+[Simulated Annealing] Nodes in connections: ['DRAM_LC.LC0', 'DRAM_LC.LC1', 'DRAM_LC.LC10', 'DRAM_LC.LC11', 'DRAM_LC.LC12', 'DRAM_LC.LC13', 'DRAM_LC.LC14', 'DRAM_LC.LC15', 'DRAM_LC.LC2', 'DRAM_LC.LC4', 'DRAM_LC.LC5', 'DRAM_LC.LC6', 'DRAM_LC.LC7', 'DRAM_LC.LC9', 'GROUP0.COL_LC', 'GROUP0.ROW_LC', 'GROUP1.COL_LC', 'GROUP1.ROW_LC', 'GROUP3.COL_LC', 'GROUP3.ROW_LC', 'GROUP4.COL_LC', 'GROUP4.ROW_LC', 'LC_PE.PE0', 'LC_PE.PE1', 'LC_PE.PE2', 'STREAM.stream0', 'STREAM.stream1', 'STREAM.stream3', 'STREAM.stream4']
+[Simulated Annealing] Nodes being searched: 17
+[Warning] Unmapped nodes in initial mapping: ['GROUP0.COL_LC', 'STREAM.stream1', 'GROUP3.COL_LC', 'STREAM.stream0', 'STREAM.stream3', 'GROUP1.ROW_LC', 'GROUP0.ROW_LC', 'GROUP1.COL_LC', 'GROUP4.ROW_LC', 'STREAM.stream4', 'GROUP4.COL_LC', 'GROUP3.ROW_LC']
+[Info] Adding pre-assigned node GROUP0.COL_LC → COL_LC0
+[Info] Adding pre-assigned node STREAM.stream1 → READ_STREAM1
+[Info] Adding pre-assigned node GROUP3.COL_LC → COL_LC3
+[Info] Adding pre-assigned node STREAM.stream0 → READ_STREAM0
+[Info] Adding pre-assigned node STREAM.stream3 → READ_STREAM3
+[Info] Adding pre-assigned node GROUP1.ROW_LC → ROW_LC1
+[Info] Adding pre-assigned node GROUP0.ROW_LC → ROW_LC0
+[Info] Adding pre-assigned node GROUP1.COL_LC → COL_LC1
+[Info] Adding pre-assigned node GROUP4.ROW_LC → ROW_LC4
+[Info] Adding pre-assigned node STREAM.stream4 → WRITE_STREAM0
+[Info] Adding pre-assigned node GROUP4.COL_LC → COL_LC4
+[Info] Adding pre-assigned node GROUP3.ROW_LC → ROW_LC3
+[Simulated Annealing] Initial cost: 282.00 (penalty sum)
+[Simulated Annealing] Reassigning DRAM_LC.LC12 -> LC15 (unused resource) at iter 0
+[Simulated Annealing] Iteration 500/10000, T=8.16, cost=17.0, best=6.0, accepted=354, rejected=146
+[Simulated Annealing] Reassigning LC_PE.PE2 -> PE6 (unused resource) at iter 500
+[Simulated Annealing] Iteration 1000/10000, T=0.67, cost=3.0, best=3.0, accepted=560, rejected=440
+[Simulated Annealing] Found optimal solution at iteration 1418
+[Simulated Annealing] Success: Found valid mapping with 0 violations
+[Simulated Annealing] Cached mapping (29 nodes)
+[Success] Heuristic search completed with 33 nodes
+[✓] Mapping successful with zero violations
+=== Resource Mapping Summary ===
+GROUP0                    -> GROUP0
+GROUP0.ROW_LC             -> ROW_LC0
+GROUP0.COL_LC             -> COL_LC0
+GROUP1                    -> GROUP1
+GROUP1.ROW_LC             -> ROW_LC1
+GROUP1.COL_LC             -> COL_LC1
+GROUP3                    -> GROUP3
+GROUP3.ROW_LC             -> ROW_LC3
+GROUP3.COL_LC             -> COL_LC3
+GROUP4                    -> GROUP4
+GROUP4.ROW_LC             -> ROW_LC4
+GROUP4.COL_LC             -> COL_LC4
+STREAM.stream0            -> READ_STREAM0
+STREAM.stream1            -> READ_STREAM1
+STREAM.stream3            -> READ_STREAM3
+STREAM.stream4            -> WRITE_STREAM0
+LC_PE.PE2                 -> PE4
+LC_PE.PE0                 -> PE2
+DRAM_LC.LC0               -> LC2
+DRAM_LC.LC10              -> LC5
+DRAM_LC.LC12              -> LC7
+DRAM_LC.LC14              -> LC17
+DRAM_LC.LC4               -> LC3
+DRAM_LC.LC15              -> LC15
+DRAM_LC.LC11              -> LC6
+DRAM_LC.LC6               -> LC13
+DRAM_LC.LC13              -> LC18
+DRAM_LC.LC1               -> LC0
+DRAM_LC.LC7               -> LC12
+DRAM_LC.LC9               -> LC16
+DRAM_LC.LC5               -> LC4
+LC_PE.PE1                 -> PE6
+DRAM_LC.LC2               -> LC1
+===============================
+Mapping review JSON written to C:\Users\15383\Desktop\Codex\project\resnet50_int8\artifacts\operator_config_validation\r5-patched-mapping-evidence\operator-config-evidence-syc2p4we\native-output\mapping_review.json
+
+=== Detailed Module Configuration Dump ===
+=== Dump: DramLoopControlConfig ===
+src_id                         | value=None                                | encoded=['0000']
+outmost_loop                   | value=1                                   | encoded=['1']
+start                          | value=0                                   | encoded=['00000000000000000']
+stride                         | value=1                                   | encoded=['00000000000000001']
+end                            | value=2                                   | encoded=['00000000000000010']
+last_index                     | value=0                                   | encoded=['0000']
+
+=== Dump: DramLoopControlConfig ===
+src_id                         | value=Connect(DRAM_LC.LC0 -> DRAM_LC.LC1) | encoded=['1000']
+outmost_loop                   | value=0                                   | encoded=['0']
+start                          | value=0                                   | encoded=['00000000000000000']
+stride                         | value=1                                   | encoded=['00000000000000001']
+end                            | value=56                                  | encoded=['00000000000111000']
+last_index                     | value=1                                   | encoded=['0001']
+
+=== Dump: DramLoopControlConfig ===
+src_id                         | value=None                                | encoded=['0000']
+outmost_loop                   | value=1                                   | encoded=['1']
+start                          | value=0                                   | encoded=['00000000000000000']
+stride                         | value=1                                   | encoded=['00000000000000001']
+end                            | value=2                                   | encoded=['00000000000000010']
+last_index                     | value=0                                   | encoded=['0000']
+
+=== Dump: DramLoopControlConfig ===
+src_id                         | value=Connect(DRAM_LC.LC10 -> DRAM_LC.LC11) | encoded=['0110']
+outmost_loop                   | value=0                                   | encoded=['0']
+start                          | value=0                                   | encoded=['00000000000000000']
+stride                         | value=1                                   | encoded=['00000000000000001']
+end                            | value=56                                  | encoded=['00000000000111000']
+last_index                     | value=1                                   | encoded=['0001']
+
+=== Dump: DramLoopControlConfig ===
+src_id                         | value=Connect(DRAM_LC.LC11 -> DRAM_LC.LC12) | encoded=['0110']
+outmost_loop                   | value=0                                   | encoded=['0']
+start                          | value=0                                   | encoded=['00000000000000000']
+stride                         | value=1                                   | encoded=['00000000000000001']
+end                            | value=7                                   | encoded=['00000000000000111']
+last_index                     | value=2                                   | encoded=['0010']
+
+=== Dump: DramLoopControlConfig ===
+src_id                         | value=None                                | encoded=['0000']
+outmost_loop                   | value=1                                   | encoded=['1']
+start                          | value=0                                   | encoded=['00000000000000000']
+stride                         | value=1                                   | encoded=['00000000000000001']
+end                            | value=2                                   | encoded=['00000000000000010']
+last_index                     | value=0                                   | encoded=['0000']
+
+=== Dump: DramLoopControlConfig ===
+src_id                         | value=Connect(DRAM_LC.LC13 -> DRAM_LC.LC14) | encoded=['0111']
+outmost_loop                   | value=0                                   | encoded=['0']
+start                          | value=0                                   | encoded=['00000000000000000']
+stride                         | value=1                                   | encoded=['00000000000000001']
+end                            | value=56                                  | encoded=['00000000000111000']
+last_index                     | value=1                                   | encoded=['0001']
+
+=== Dump: DramLoopControlConfig ===
+src_id                         | value=Connect(DRAM_LC.LC14 -> DRAM_LC.LC15) | encoded=['1000']
+outmost_loop                   | value=0                                   | encoded=['0']
+start                          | value=0                                   | encoded=['00000000000000000']
+stride                         | value=1                                   | encoded=['00000000000000001']
+end                            | value=7                                   | encoded=['00000000000000111']
+last_index                     | value=2                                   | encoded=['0010']
+
+=== Dump: DramLoopControlConfig ===
+src_id                         | value=Connect(DRAM_LC.LC1 -> DRAM_LC.LC2) | encoded=['0110']
+outmost_loop                   | value=0                                   | encoded=['0']
+start                          | value=0                                   | encoded=['00000000000000000']
+stride                         | value=1                                   | encoded=['00000000000000001']
+end                            | value=7                                   | encoded=['00000000000000111']
+last_index                     | value=2                                   | encoded=['0010']
+
+=== Dump: DramLoopControlConfig ===
+src_id                         | value=Connect(DRAM_LC.LC2 -> DRAM_LC.LC4) | encoded=['0101']
+outmost_loop                   | value=0                                   | encoded=['0']
+start                          | value=0                                   | encoded=['00000000000000000']
+stride                         | value=1                                   | encoded=['00000000000000001']
+end                            | value=4                                   | encoded=['00000000000000100']
+last_index                     | value=3                                   | encoded=['0011']
+
+=== Dump: DramLoopControlConfig ===
+src_id                         | value=Connect(DRAM_LC.LC4 -> DRAM_LC.LC5) | encoded=['0110']
+outmost_loop                   | value=0                                   | encoded=['0']
+start                          | value=0                                   | encoded=['00000000000000000']
+stride                         | value=1                                   | encoded=['00000000000000001']
+end                            | value=4                                   | encoded=['00000000000000100']
+last_index                     | value=4                                   | encoded=['0100']
+
+=== Dump: DramLoopControlConfig ===
+src_id                         | value=Connect(DRAM_LC.LC2 -> DRAM_LC.LC6) | encoded=['0000']
+outmost_loop                   | value=0                                   | encoded=['0']
+start                          | value=0                                   | encoded=['00000000000000000']
+stride                         | value=1                                   | encoded=['00000000000000001']
+end                            | value=4                                   | encoded=['00000000000000100']
+last_index                     | value=3                                   | encoded=['0011']
+
+=== Dump: DramLoopControlConfig ===
+src_id                         | value=Connect(DRAM_LC.LC6 -> DRAM_LC.LC7) | encoded=['0111']
+outmost_loop                   | value=0                                   | encoded=['0']
+start                          | value=0                                   | encoded=['00000000000000000']
+stride                         | value=1                                   | encoded=['00000000000000001']
+end                            | value=4                                   | encoded=['00000000000000100']
+last_index                     | value=4                                   | encoded=['0100']
+
+=== Dump: DramLoopControlConfig ===
+src_id                         | value=Connect(DRAM_LC.LC15 -> DRAM_LC.LC9) | encoded=['0110']
+outmost_loop                   | value=0                                   | encoded=['0']
+start                          | value=0                                   | encoded=['00000000000000000']
+stride                         | value=1                                   | encoded=['00000000000000001']
+end                            | value=8                                   | encoded=['00000000000001000']
+last_index                     | value=3                                   | encoded=['0011']
+
+=== Dump: BufferLoopControlGroupConfig ===
+  === Dump: BufferRowLCConfig ===
+  src_id                         | value=Connect(DRAM_LC.LC6 -> GROUP0.ROW_LC) | encoded=['1011']
+  start                          | value=0                                   | encoded=['000']
+  stride                         | value=1                                   | encoded=['001']
+  end                            | value=4                                   | encoded=['100']
+  last_index                     | value=4                                   | encoded=['0100']
+  === Dump: BufferColLCConfig ===
+  src_id                         | value=Connect(GROUP0.ROW_LC -> GROUP0.COL_LC) | encoded=['1100']
+  start                          | value=0                                   | encoded=['000000']
+  stride                         | value=16                                  | encoded=['010000']
+  end                            | value=32                                  | encoded=['100000']
+  last_index                     | value=5                                   | encoded=['0101']
+
+=== Dump: BufferLoopControlGroupConfig ===
+  === Dump: BufferRowLCConfig ===
+  src_id                         | value=Connect(DRAM_LC.LC4 -> GROUP1.ROW_LC) | encoded=['0011']
+  start                          | value=0                                   | encoded=['000']
+  stride                         | value=1                                   | encoded=['001']
+  end                            | value=4                                   | encoded=['100']
+  last_index                     | value=4                                   | encoded=['0100']
+  === Dump: BufferColLCConfig ===
+  src_id                         | value=Connect(GROUP1.ROW_LC -> GROUP1.COL_LC) | encoded=['1100']
+  start                          | value=0                                   | encoded=['000000']
+  stride                         | value=16                                  | encoded=['010000']
+  end                            | value=32                                  | encoded=['100000']
+  last_index                     | value=5                                   | encoded=['0101']
+
+=== Dump: BufferLoopControlGroupConfig ===
+  === Dump: BufferRowLCConfig ===
+  src_id                         | value=Connect(DRAM_LC.LC12 -> GROUP3.ROW_LC) | encoded=['0011']
+  start                          | value=0                                   | encoded=['000']
+  stride                         | value=1                                   | encoded=['001']
+  end                            | value=1                                   | encoded=['001']
+  last_index                     | value=3                                   | encoded=['0011']
+  === Dump: BufferColLCConfig ===
+  src_id                         | value=Connect(GROUP3.ROW_LC -> GROUP3.COL_LC) | encoded=['1100']
+  start                          | value=0                                   | encoded=['000000']
+  stride                         | value=16                                  | encoded=['010000']
+  end                            | value=32                                  | encoded=['100000']
+  last_index                     | value=4                                   | encoded=['0100']
+
+=== Dump: BufferLoopControlGroupConfig ===
+  === Dump: BufferRowLCConfig ===
+  src_id                         | value=Connect(DRAM_LC.LC9 -> GROUP4.ROW_LC) | encoded=['0110']
+  start                          | value=0                                   | encoded=['000']
+  stride                         | value=1                                   | encoded=['001']
+  end                            | value=4                                   | encoded=['100']
+  last_index                     | value=4                                   | encoded=['0100']
+  === Dump: BufferColLCConfig ===
+  src_id                         | value=Connect(GROUP4.ROW_LC -> GROUP4.COL_LC) | encoded=['1100']
+  start                          | value=0                                   | encoded=['000000']
+  stride                         | value=16                                  | encoded=['010000']
+  end                            | value=32                                  | encoded=['100000']
+  last_index                     | value=5                                   | encoded=['0101']
+
+=== Dump: LCPEConfig ===
+_padding                       | value=0                                   | encoded=['0000000000000000']
+opcode                         | value=mac                                 | encoded=['10']
+inport2_src                    | value=Connect(DRAM_LC.LC7 -> LC_PE.PE0)   | encoded=['0100']
+inport2_last_index             | value=None                                | encoded=['0000']
+inport2_mode                   | value=buffer                              | encoded=['01']
+inport1_src                    | value=0                                   | encoded=['0000']
+inport1_last_index             | value=None                                | encoded=['0000']
+inport1_mode                   | value=constant                            | encoded=['11']
+inport0_src                    | value=Connect(DRAM_LC.LC6 -> LC_PE.PE0)   | encoded=['0101']
+inport0_last_index             | value=3                                   | encoded=['0011']
+inport0_mode                   | value=keep                                | encoded=['10']
+constant2                      | value=0                                   | encoded=['0000000000000000']
+constant1                      | value=4                                   | encoded=['0000000000000100']
+constant0                      | value=0                                   | encoded=['0000000000000000']
+
+=== Dump: LCPEConfig ===
+_padding                       | value=0                                   | encoded=['0000000000000000']
+opcode                         | value=mac                                 | encoded=['10']
+inport2_src                    | value=Connect(DRAM_LC.LC9 -> LC_PE.PE1)   | encoded=['0100']
+inport2_last_index             | value=None                                | encoded=['0000']
+inport2_mode                   | value=buffer                              | encoded=['01']
+inport1_src                    | value=0                                   | encoded=['0000']
+inport1_last_index             | value=None                                | encoded=['0000']
+inport1_mode                   | value=constant                            | encoded=['11']
+inport0_src                    | value=Connect(DRAM_LC.LC15 -> LC_PE.PE1)  | encoded=['0011']
+inport0_last_index             | value=2                                   | encoded=['0010']
+inport0_mode                   | value=keep                                | encoded=['10']
+constant2                      | value=0                                   | encoded=['0000000000000000']
+constant1                      | value=8                                   | encoded=['0000000000001000']
+constant0                      | value=0                                   | encoded=['0000000000000000']
+
+=== Dump: LCPEConfig ===
+_padding                       | value=0                                   | encoded=['0000000000000000']
+opcode                         | value=mac                                 | encoded=['10']
+inport2_src                    | value=Connect(DRAM_LC.LC5 -> LC_PE.PE2)   | encoded=['0001']
+inport2_last_index             | value=None                                | encoded=['0000']
+inport2_mode                   | value=buffer                              | encoded=['01']
+inport1_src                    | value=0                                   | encoded=['0000']
+inport1_last_index             | value=None                                | encoded=['0000']
+inport1_mode                   | value=constant                            | encoded=['11']
+inport0_src                    | value=Connect(DRAM_LC.LC4 -> LC_PE.PE2)   | encoded=['0000']
+inport0_last_index             | value=3                                   | encoded=['0011']
+inport0_mode                   | value=keep                                | encoded=['10']
+constant2                      | value=0                                   | encoded=['0000000000000000']
+constant1                      | value=4                                   | encoded=['0000000000000100']
+constant0                      | value=0                                   | encoded=['0000000000000000']
+
+=== Dump: StreamConfig ===
+  === Dump: ReadStreamEngineConfig ===
+  mem_idx_mode                   | value=['buffer', 'keep', None]            | encoded=['011000']
+  mem_idx_keep_last_index        | value=[4, 0, None]                        | encoded=['010000000000']
+  idx                            | value=[Connect(LC_PE.PE0 -> STREAM.stream0), Connect(DRAM_LC.LC0 -> STREAM.stream0), None] | encoded=['100000010000000']
+  mem_idx_constant               | value=[None, None, None]                  | encoded=['000000000000000000000000']
+  buf_idx_mode                   | value=['keep', 'buffer']                  | encoded=['10']
+  buf_idx_keep_last_index        | value=[4, 5]                              | encoded=['01000101']
+  ping_pong                      | value=0                                   | encoded=['0']
+  pingpong_last_index            | value=None                                | encoded=['0000']
+  base_addr                      | value=0x000C4880                          | encoded=['000000000011000100100010000000']
+  idx_size                       | value=[31, 0, 0]                          | encoded=['000111110000000000000000']
+  idx_size_log                   | value=[5, 5, 0]                           | encoded=['101101000']
+  total_size                     | value=32                                  | encoded=['00100000']
+  dim_stride                     | value=[64, 32, None]                      | encoded=['000000000000010000000000000000000010000000000000000000000000']
+  address_remapping              | value=None                                | encoded=['11001110001011110110101011010010011100101000110000011110111001101011000101101010010010100000111001100010100100000110001000001000', '00']
+  padding_reg_value              | value=None                                | encoded=['00000000']
+  padding_enable                 | value=[0, 0, 0]                           | encoded=['000']
+  idx_padding_range              | value=[None, None, None, None, None, None] | encoded=['000000000000000000000000000000000000000000000000000000000000000000000000']
+  tailing_enable                 | value=[0, 0, 0]                           | encoded=['000']
+  idx_tailing_range              | value=[None, None, None, None, None, None] | encoded=['000000000000000000000000000000000000000000000000000000000000000000000000']
+  buf_spatial_stride             | value=[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15] | encoded=['01111011100110101100010110101001001010000011100110001010010000011000100000100000']
+  buf_spatial_size               | value=16                                  | encoded=['10000']
+  buf_full_last_index            | value=4                                   | encoded=['0100']
+
+=== Dump: StreamConfig ===
+  === Dump: ReadStreamEngineConfig ===
+  mem_idx_mode                   | value=['buffer', 'keep', 'keep']          | encoded=['011010']
+  mem_idx_keep_last_index        | value=[4, 2, 1]                           | encoded=['010000100001']
+  idx                            | value=[Connect(LC_PE.PE2 -> STREAM.stream1), Connect(DRAM_LC.LC2 -> STREAM.stream1), Connect(DRAM_LC.LC1 -> STREAM.stream1)] | encoded=['100000000100000']
+  mem_idx_constant               | value=[None, None, None]                  | encoded=['000000000000000000000000']
+  buf_idx_mode                   | value=['keep', 'buffer']                  | encoded=['10']
+  buf_idx_keep_last_index        | value=[4, 5]                              | encoded=['01000101']
+  ping_pong                      | value=0                                   | encoded=['0']
+  pingpong_last_index            | value=None                                | encoded=['0000']
+  base_addr                      | value=0x000C4C80                          | encoded=['000000000011000100110010000000']
+  idx_size                       | value=[31, 0, 0]                          | encoded=['000111110000000000000000']
+  idx_size_log                   | value=[5, 5, 0]                           | encoded=['101101000']
+  total_size                     | value=32                                  | encoded=['00100000']
+  dim_stride                     | value=[32, 512, 3584]                     | encoded=['000000000000001000000000000000100000000000000000111000000000']
+  address_remapping              | value=None                                | encoded=['11001110001011110110101011010010011100101000110000011110111001101011000101101010010010100000111001100010100100000110001000001000', '00']
+  padding_reg_value              | value=None                                | encoded=['00000000']
+  padding_enable                 | value=[0, 0, 0]                           | encoded=['000']
+  idx_padding_range              | value=[None, None, None, None, None, None] | encoded=['000000000000000000000000000000000000000000000000000000000000000000000000']
+  tailing_enable                 | value=[0, 0, 0]                           | encoded=['000']
+  idx_tailing_range              | value=[None, None, None, None, None, None] | encoded=['000000000000000000000000000000000000000000000000000000000000000000000000']
+  buf_spatial_stride             | value=[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15] | encoded=['01111011100110101100010110101001001010000011100110001010010000011000100000100000']
+  buf_spatial_size               | value=16                                  | encoded=['10000']
+  buf_full_last_index            | value=4                                   | encoded=['0100']
+
+=== Dump: StreamConfig ===
+  === Dump: ReadStreamEngineConfig ===
+  mem_idx_mode                   | value=['keep', 'keep', 'buffer']          | encoded=['101001']
+  mem_idx_keep_last_index        | value=[0, 1, 2]                           | encoded=['000000010010']
+  idx                            | value=[Connect(DRAM_LC.LC10 -> STREAM.stream3), Connect(DRAM_LC.LC11 -> STREAM.stream3), Connect(DRAM_LC.LC12 -> STREAM.stream3)] | encoded=['000010001000011']
+  mem_idx_constant               | value=[None, None, None]                  | encoded=['000000000000000000000000']
+  buf_idx_mode                   | value=['keep', 'buffer']                  | encoded=['10']
+  buf_idx_keep_last_index        | value=[3, 4]                              | encoded=['00110100']
+  ping_pong                      | value=0                                   | encoded=['0']
+  pingpong_last_index            | value=None                                | encoded=['0000']
+  base_addr                      | value=0x000F5C80                          | encoded=['000000000011110101110010000000']
+  idx_size                       | value=[31, 0, 0]                          | encoded=['000111110000000000000000']
+  idx_size_log                   | value=[5, 5, 0]                           | encoded=['101101000']
+  total_size                     | value=32                                  | encoded=['00100000']
+  dim_stride                     | value=[32, 0, 0]                          | encoded=['000000000000001000000000000000000000000000000000000000000000']
+  address_remapping              | value=None                                | encoded=['11001110001011110110101011010010011100101000110000011110111001101011000101101010010010100000111001100010100100000110001000001000', '00']
+  padding_reg_value              | value=None                                | encoded=['00000000']
+  padding_enable                 | value=[0, 0, 0]                           | encoded=['000']
+  idx_padding_range              | value=[None, None, None, None, None, None] | encoded=['000000000000000000000000000000000000000000000000000000000000000000000000']
+  tailing_enable                 | value=[0, 0, 0]                           | encoded=['000']
+  idx_tailing_range              | value=[None, None, None, None, None, None] | encoded=['000000000000000000000000000000000000000000000000000000000000000000000000']
+  buf_spatial_stride             | value=[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15] | encoded=['01111011100110101100010110101001001010000011100110001010010000011000100000100000']
+  buf_spatial_size               | value=16                                  | encoded=['10000']
+  buf_full_last_index            | value=2                                   | encoded=['0010']
+
+=== Dump: StreamConfig ===
+  === Dump: WriteStreamEngineConfig ===
+  _padding                       | value=0                                   | encoded=['000']
+  mem_idx_mode                   | value=['keep', 'buffer', 'keep']          | encoded=['100110']
+  mem_idx_keep_last_index        | value=[0, 3, 1]                           | encoded=['000000110001']
+  idx                            | value=[Connect(DRAM_LC.LC13 -> STREAM.stream4), Connect(LC_PE.PE1 -> STREAM.stream4), Connect(DRAM_LC.LC14 -> STREAM.stream4)] | encoded=['010000110000111']
+  mem_idx_constant               | value=[None, None, None]                  | encoded=['000000000000000000000000']
+  buf_idx_mode                   | value=['keep', 'buffer']                  | encoded=['10']
+  buf_idx_keep_last_index        | value=[4, 5]                              | encoded=['01000101']
+  ping_pong                      | value=0                                   | encoded=['0']
+  pingpong_last_index            | value=None                                | encoded=['0000']
+  base_addr                      | value=0x000F5CC0                          | encoded=['000000000011110101110011000000']
+  idx_size                       | value=[31, 0, 0]                          | encoded=['000111110000000000000000']
+  idx_size_log                   | value=[5, 5, 0]                           | encoded=['101101000']
+  total_size                     | value=32                                  | encoded=['00100000']
+  dim_stride                     | value=[32, 64, 3584]                      | encoded=['000000000000001000000000000000000100000000000000111000000000']
+  address_remapping              | value=None                                | encoded=['11001110001011110110101011010010011100101000110000011110111001101011000101101010010010100000111001100010100100000110001000001000', '00']
+  tailing_enable                 | value=[0, 0, 0]                           | encoded=['000']
+  idx_tailing_range              | value=[None, None, None, None, None, None] | encoded=['000000000000000000000000000000000000000000000000000000000000000000000000']
+  buf_spatial_stride             | value=[0, 4, 8, 12, 1, 5, 9, 13, 2, 6, 10, 14, 3, 7, 11, 15] | encoded=['01111010110011100011011100101000110000100110101001001010000101100010000010000000']
+  buf_spatial_size               | value=16                                  | encoded=['10000']
+
+=== Dump: BufferConfig ===
+dst_port                       | value=0                                   | encoded=['0']
+buf_full_last_index            | value=4                                   | encoded=['0100']
+buffer_nbr_cnt                 | value=0                                   | encoded=['00000']
+nbr_enable                     | value=0                                   | encoded=['0']
+buffer_life_time               | value=4                                   | encoded=['0011']
+mode                           | value=0                                   | encoded=['0']
+mask                           | value=[1, 1, 1, 1, 1, 1, 1, 1]            | encoded=['11111111']
+buf_end_row_addr               | value=3                                   | encoded=['11']
+
+=== Dump: BufferConfig ===
+dst_port                       | value=0                                   | encoded=['0']
+buf_full_last_index            | value=4                                   | encoded=['0100']
+buffer_nbr_cnt                 | value=0                                   | encoded=['00000']
+nbr_enable                     | value=0                                   | encoded=['0']
+buffer_life_time               | value=4                                   | encoded=['0011']
+mode                           | value=0                                   | encoded=['0']
+mask                           | value=[1, 1, 1, 1, 1, 1, 1, 1]            | encoded=['11111111']
+buf_end_row_addr               | value=3                                   | encoded=['11']
+
+=== Dump: BufferConfig ===
+dst_port                       | value=0                                   | encoded=['0']
+buf_full_last_index            | value=4                                   | encoded=['0100']
+buffer_nbr_cnt                 | value=0                                   | encoded=['00000']
+nbr_enable                     | value=0                                   | encoded=['0']
+buffer_life_time               | value=4                                   | encoded=['0011']
+mode                           | value=1                                   | encoded=['1']
+mask                           | value=[1, 1, 1, 1, 1, 1, 1, 1]            | encoded=['11111111']
+buf_end_row_addr               | value=3                                   | encoded=['11']
+
+=== Dump: BufferConfig ===
+dst_port                       | value=0                                   | encoded=['0']
+buf_full_last_index            | value=4                                   | encoded=['0100']
+buffer_nbr_cnt                 | value=0                                   | encoded=['00000']
+nbr_enable                     | value=0                                   | encoded=['0']
+buffer_life_time               | value=4                                   | encoded=['0011']
+mode                           | value=1                                   | encoded=['1']
+mask                           | value=[1, 1, 1, 1, 1, 1, 1, 1]            | encoded=['11111111']
+buf_end_row_addr               | value=3                                   | encoded=['11']
+
+=== Dump: BufferConfig ===
+dst_port                       | value=0                                   | encoded=['0']
+buf_full_last_index            | value=2                                   | encoded=['0010']
+buffer_nbr_cnt                 | value=0                                   | encoded=['00000']
+nbr_enable                     | value=0                                   | encoded=['0']
+buffer_life_time               | value=4                                   | encoded=['0011']
+mode                           | value=0                                   | encoded=['0']
+mask                           | value=[1, 1, 1, 1, 1, 1, 1, 1]            | encoded=['11111111']
+buf_end_row_addr               | value=0                                   | encoded=['00']
+
+=== Dump: BufferConfig ===
+dst_port                       | value=0                                   | encoded=['0']
+buf_full_last_index            | value=2                                   | encoded=['0010']
+buffer_nbr_cnt                 | value=0                                   | encoded=['00000']
+nbr_enable                     | value=0                                   | encoded=['0']
+buffer_life_time               | value=1                                   | encoded=['0000']
+mode                           | value=0                                   | encoded=['0']
+mask                           | value=[1, 1, 1, 1, 1, 1, 1, 1]            | encoded=['11111111']
+buf_end_row_addr               | value=3                                   | encoded=['11']
+
+=== Dump: SpecialArrayConfig ===
+  === Dump: Modeconfig ===
+  mode                           | value=gemm                                | encoded=['0']
+  === Dump: InportConfig ===
+  enable                         | value=1                                   | encoded=['1']
+  pingpong_en                    | value=0                                   | encoded=['0']
+  pingpong_last_index            | value=None                                | encoded=['0000']
+  nbr_enable                     | value=0                                   | encoded=['0']
+  === Dump: InportConfig ===
+  enable                         | value=1                                   | encoded=['1']
+  pingpong_en                    | value=0                                   | encoded=['0']
+  pingpong_last_index            | value=None                                | encoded=['0000']
+  nbr_enable                     | value=0                                   | encoded=['0']
+  === Dump: InportConfig ===
+  enable                         | value=1                                   | encoded=['1']
+  pingpong_en                    | value=0                                   | encoded=['0']
+  pingpong_last_index            | value=None                                | encoded=['0000']
+  nbr_enable                     | value=0                                   | encoded=['0']
+  === Dump: PEConfig ===
+  data_type                      | value=int8                                | encoded=['00']
+  transout_last_index            | value=2                                   | encoded=['0010']
+  bias_enable                    | value=1                                   | encoded=['1']
+  === Dump: OutportConfig ===
+  mode                           | value=col                                 | encoded=['0']
+  fp32tofp16                     | value=false                               | encoded=['0']
+  fp32tobf16                     | value=false                               | encoded=['0']
+
+Detailed dump written to C:\Users\15383\Desktop\Codex\project\resnet50_int8\artifacts\operator_config_validation\r5-patched-mapping-evidence\operator-config-evidence-syc2p4we\native-output\detailed_dump.txt
+
+=== Building Bitstream Entries ===
+Processing iga_lc with 20 entries, max lines: 1
+Processing iga_row_lc with 5 entries, max lines: 1
+Processing iga_col_lc with 5 entries, max lines: 1
+Processing iga_pe with 10 entries, max lines: 2
+Processing se_rd_mse with 4 entries, max lines: 10
+Processing se_wr_mse with 1 entries, max lines: 8
+Processing se_nse with 2 entries, max lines: 1
+Processing buffer_manager_cluster with 6 entries, max lines: 1
+Processing special_array with 1 entries, max lines: 1
+Bitstream written to C:\Users\15383\Desktop\Codex\project\resnet50_int8\artifacts\operator_config_validation\r5-patched-mapping-evidence\operator-config-evidence-syc2p4we\native-output\parsed_bitstream.txt
+Binary dump (64b) written to C:\Users\15383\Desktop\Codex\project\resnet50_int8\artifacts\operator_config_validation\r5-patched-mapping-evidence\operator-config-evidence-syc2p4we\native-output\modules_dump_64b.bin
+Binary dump (128b) written to C:\Users\15383\Desktop\Codex\project\resnet50_int8\artifacts\operator_config_validation\r5-patched-mapping-evidence\operator-config-evidence-syc2p4we\native-output\modules_dump_128b.bin

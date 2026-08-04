@@ -1,0 +1,142 @@
+{
+  "candidate_release": false,
+  "claim_boundary": "This asset is a minimal diagnostic dynamic contract.  It is not a bitstream, server package, stock-RTL result, or formal E4/E5.",
+  "counts": {
+    "element_per_slice": 32,
+    "element_total": 64,
+    "final_bytes_per_slice": 32,
+    "final_bytes_total": 64,
+    "guard_bytes_per_slice": 128,
+    "guard_bytes_total": 256,
+    "guard_mse4_accepted_write_beats_per_slice": 8,
+    "guard_mse4_accepted_write_beats_total": 16,
+    "logical_occurrence": 1,
+    "physical_slice_instance": 2,
+    "round_mse4_accepted_write_beats_per_slice": 2,
+    "round_mse4_accepted_write_beats_total": 4,
+    "stage": 2
+  },
+  "diagnostic_only": true,
+  "dynamic_baseline": "NO_DYNAMIC_BASELINE",
+  "dynamic_release_ready": false,
+  "evidence_level": "E2_LOCAL_CONTRACT_ONLY",
+  "files": {
+    "RequantGuard.txt": {
+      "sha256": "19bfa9a258d3199d5280f3829e3a54dd7d06c4d95294f5b419246e5eb8eebf57",
+      "size_bytes": 6450
+    },
+    "coverage_contract.json": {
+      "sha256": "72db48ae3c9cfbbe3bd975e1cace709b865e9aa47d6442389f2b128e26aaa835",
+      "size_bytes": 992
+    },
+    "derivation_provenance.json": {
+      "sha256": "13b4d6dfc954a39b2fe468a5f08a936733cd3c5b9b78ae6ee3e8afa2daf1ad3f",
+      "size_bytes": 2554
+    },
+    "expected_mse4_writes.json": {
+      "sha256": "9575f48d166defa194a9523a31c4d162f053c23f081a5866bae9fac2d8f70e1c",
+      "size_bytes": 8553
+    },
+    "final_golden_slice00_128b.txt": {
+      "sha256": "b104cc8479775383479b7610d395fda948f1a71664dcc83e4ccff342e3dd16df",
+      "size_bytes": 258
+    },
+    "final_golden_slice01_128b.txt": {
+      "sha256": "77e294a828a15d72889bce7edc3f429ec95525cd20346e64ff29a7049e1df4a5",
+      "size_bytes": 258
+    },
+    "final_golden_uint8_hwc8.npy": {
+      "sha256": "6b17de98fc17033e085618dffea67695884847b38ffd0dd6b03110fa6ed47560",
+      "size_bytes": 192
+    },
+    "first_divergence_routing.json": {
+      "sha256": "e544c9662d080c9a68d6c5480fa895467d2fc7f5842e112ea6416cd41542a8ca",
+      "size_bytes": 867
+    },
+    "generation_receipt.json": {
+      "sha256": "0046cc4ad1e19e905b24b3b78524a5c80b991c5c4699bcd329c6d9c8063f7f25",
+      "size_bytes": 6242
+    },
+    "guard.json": {
+      "sha256": "defeca56b0c248eb1f4915b0338227580687d4e8c92cedf548ad727f6457d5d2",
+      "size_bytes": 11912
+    },
+    "guard_golden_fp32_hwc8.npy": {
+      "sha256": "4d074cad1deb4ca8aac586213fa3dcceaa38726cd0c6ef3f890c5bfe20bb6677",
+      "size_bytes": 384
+    },
+    "guard_golden_slice00_128b.txt": {
+      "sha256": "e9bd06473f6a24efb409725ef938f32c432f39f7db9235c7a080bb561567b85a",
+      "size_bytes": 1032
+    },
+    "guard_golden_slice01_128b.txt": {
+      "sha256": "3eedd8ed23cd98a973f32c9763a577dfa42978416544aa8ba72dc6be8cf4a2f2",
+      "size_bytes": 1032
+    },
+    "input_int32_hwc8.npy": {
+      "sha256": "f7c817184d47a976424a8754f0cd4102c59f8db45c9b715d6068745ec5a4771f",
+      "size_bytes": 384
+    },
+    "input_int32_slice00_128b.txt": {
+      "sha256": "35f9442ac0cc2a4bfcaaa70e60c83a64845093f98c9c5794abf83fbdaa70bf77",
+      "size_bytes": 1032
+    },
+    "input_int32_slice01_128b.txt": {
+      "sha256": "656e340be25e5862c514d9efd94c64557afe61b10f0d9b1655d6ed1921315714",
+      "size_bytes": 1032
+    },
+    "lifecycle_contract.json": {
+      "sha256": "c36fad83a4bf508e127563575b6fa8b1e0bb281a6f74e17103975c4b07210ca2",
+      "size_bytes": 2551
+    },
+    "round_saturate.json": {
+      "sha256": "e8e3d0f2ed67f77f8228aeb142e64b038f1f0ac4cdbc2e79f297ca4ee4be08b0",
+      "size_bytes": 16530
+    },
+    "typed_graph.json": {
+      "sha256": "0dd2d0549c02a538bd69cf48309be9bd26beefe070bf707f6266420894de3742",
+      "size_bytes": 1843
+    }
+  },
+  "formal_target_instance_allowed": false,
+  "generation_receipt_sha256": "7bb6d80cb73289e2d9a9fe870850323a2b9a3f42fae426e2657207c7445090ad",
+  "guard_sfu": {
+    "breakpoint_words": 65,
+    "execplan_length_64b": 100,
+    "intercept_words": 66,
+    "line_count_128b": 50,
+    "meaningful_word_count_32b": 197,
+    "padding_word_count_32b": 3,
+    "payload_sha256": "19bfa9a258d3199d5280f3829e3a54dd7d06c4d95294f5b419246e5eb8eebf57",
+    "slope65_bits": "0x3f800000",
+    "slope_words": 66,
+    "word_count_32b": 200
+  },
+  "manifest_sha256": "f4fc3d633ec4607d20e12e6d3f678a1c0bbd05bc95b06a4c603b2a1c79b7dcad",
+  "remaining_blockers": [
+    "B_REQUANT_SERVER_E4_E5"
+  ],
+  "request_id": "r5:hwop-0001-01",
+  "rule_ids": [
+    "CDA-CONFIG-SEMANTIC-OWNERSHIP-001",
+    "CDA-CONFIG-MATERIALIZED-ROUNDTRIP-001",
+    "CDA-REQUANT-QPARAM-001",
+    "CDA-REQUANT-INT32-GUARD-001",
+    "CDA-REQUANT-SFU-LUT-001",
+    "CDA-REQUANT-TWO-STAGE-001",
+    "CDA-REQUANT-ROUND-MAGIC-001",
+    "CDA-REQUANT-ATOMIC-SINGLE-OCCURRENCE-001",
+    "CDA-REQUANT-ATOMIC-STOCK-TB-MASK-COMPAT-001"
+  ],
+  "schema": "requant-node0001-single-occurrence-two-stage-dynamic-contract-v2",
+  "scope": "one logical HWC8 occurrence replicated across stock-TB-required slices0+1, guard then round_saturate",
+  "server_package": false,
+  "status": "LOCAL_DYNAMIC_CONTRACT_MATERIALIZED_NOT_RUN",
+  "supersedes_packaging_identity": {
+    "classification": "STOCK_TB_COMPLETION_MASK_INCOMPATIBLE",
+    "dynamic_attempt": false,
+    "path": "configs/native_ndp_sim/node0001_requant_single_occurrence_two_stage_v1/manifest.json",
+    "sha256": "17ec522f48de0d31dea4212b03b4f97253b93e850731240a828705b5d056d1da",
+    "size_bytes": 4179
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "schema": "resnet50-server-execution-protocol-v1",
+  "status": "template_not_approved",
+  "server_id": "REQUIRED_USER_VALUE",
+  "rtl_identity": {
+    "repository": "REQUIRED_USER_VALUE",
+    "commit": "REQUIRED_USER_VALUE_40_HEX",
+    "filelist_sha256": "REQUIRED_USER_VALUE_64_HEX"
+  },
+  "phases": [
+    {
+      "name": "load",
+      "cwd": "server_workspace",
+      "argv": ["REQUIRED_USER_VALUE"],
+      "timeout_seconds": 3600
+    },
+    {
+      "name": "start",
+      "cwd": "server_workspace",
+      "argv": ["REQUIRED_USER_VALUE"],
+      "timeout_seconds": 3600
+    },
+    {
+      "name": "wait",
+      "cwd": "server_workspace",
+      "argv": ["REQUIRED_USER_VALUE"],
+      "timeout_seconds": 86400
+    },
+    {
+      "name": "readback",
+      "cwd": "server_workspace",
+      "argv": ["REQUIRED_USER_VALUE"],
+      "timeout_seconds": 3600
+    }
+  ],
+  "return_paths": [
+    {
+      "path": "server_workspace/REQUIRED_USER_VALUE",
+      "kind": "readback",
+      "required": true
+    }
+  ]
+}

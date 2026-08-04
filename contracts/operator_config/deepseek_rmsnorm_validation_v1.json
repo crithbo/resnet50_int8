@@ -1,0 +1,400 @@
+{
+  "blockers": [],
+  "candidate_release": false,
+  "closed_previous_blockers": [
+    "B_DS_RMSNORM_LEADER_SLICE_ROUTING",
+    "B_DS_RMSNORM_REMOTE_SUM_GATHER",
+    "B_DS_RMSNORM_CONTROL_FIELD_RESOLUTION",
+    "B_DS_RMSNORM_STAGE_TOPOLOGY_GAP"
+  ],
+  "contract_sha256": "dce4aa379b71d5b3884976d41c24ba8d4356bdbfbdd77264ec2e30f3afef1f9f",
+  "formal_target_config": false,
+  "identity_boundary": {
+    "crop_contract_required": true,
+    "direct_onnx_shape_equals_stage": false,
+    "onnx_repository_classification": "SEMANTIC_MODEL_MATCH",
+    "original_source_identity": false
+  },
+  "inputs": {
+    "active_prefill_stage": {
+      "path": "artifacts/operator_config_validation/r5-deepseek-onnx-stage-json-e2-v1/layer0_prefill.rule_normalized.json",
+      "sha256": "2f1fc4def9d9332d4d3abb19fc711a4488d659ceac3b67a3e85b951ce43a423b",
+      "size_bytes": 34628
+    },
+    "active_stage_producer_contract": {
+      "path": "contracts/operator_config/deepseek_prefill_rule_normalized_stage_v1.json",
+      "sha256": "b59312280d0e11cdae398b4ab7c3cd467061e2b8db48bfb7c37d0373c0a334c1",
+      "size_bytes": 5517
+    },
+    "crop_contract": {
+      "path": "contracts/operator_config/deepseek_ndpsim_crop_contract_v1.json",
+      "sha256": "4ad206b550757f6649feb39b6df6e46e1b8bc99062502b441dbc5e4ba5c1e392",
+      "size_bytes": 7384
+    },
+    "gamma_fragment": {
+      "path": "ndp-sim/model_execplan/op_json/prefill_mul_fp32MN_fp32N_fp16MN.json",
+      "sha256": "f6a49417fb41916bb245f50b952fe4c7cb3c7aa0876406d2ccbcec8a5d781d33",
+      "size_bytes": 710
+    },
+    "normalized_graph": {
+      "path": "artifacts/operator_config_validation/ds_rms_v1/ds_rms_v1.json",
+      "sha256": "c0321e91bdf1537421906fe16e6dac479526ec1a055b7e44f4fd18b6e2cd3224",
+      "size_bytes": 3277
+    },
+    "onnx_inventory": {
+      "path": "artifacts/operator_config_validation/r5-deepseek-onnx-stage-json-e2-v1/onnx_graph_inventory.json",
+      "sha256": "ae2f5ab015d1fd6be7961e3d3bcc32d41119a2a02e810bb6027f4b8e63136c14",
+      "size_bytes": 458979
+    },
+    "raw_prefill_graph": {
+      "path": "artifacts/operator_config_validation/r5-deepseek-onnx-stage-json-e2-v1/layer0_prefill.generated.json",
+      "sha256": "089d4a2edcbe8b8af049ad8d1dfb5c474cc251e76a3fa2a64880e8a344e70dea",
+      "size_bytes": 34462
+    },
+    "raw_rmsnorm_fragment": {
+      "path": "ndp-sim/model_execplan/op_json/rmsnorm.json",
+      "sha256": "ad046825c4b4d3265a33b8614fcb0a179157d78321f79cb96a95541c7bcb4097",
+      "size_bytes": 2006
+    },
+    "read_receipt": {
+      "path": "contracts/operator_config/deepseek_rmsnorm_read_receipt_v1.json",
+      "sha256": "2aba2651a33888a0242920df76aa881b6c689bf2f81e7f8d8c37a6e52c5e5c8b",
+      "size_bytes": 6737
+    },
+    "trusted_package_graph": {
+      "path": "jsons/rmsnorm/rmsnorm_withbaseaddr.json",
+      "sha256": "1e433f028cde7c67121e2290bbb3572bd81dc6536a79bebefa4858cf8d4264a8",
+      "size_bytes": 2329
+    }
+  },
+  "onnx_to_stage": {
+    "active_slice_count": 28,
+    "crop_derived_hidden_size": 896,
+    "fused_semantics": "gamma * x / sqrt(mean(x*x, axis=-1) + 1e-6)",
+    "grouped_remote_sum": {
+      "head_count": 7,
+      "op1_A_shape": [
+        1,
+        4,
+        32
+      ],
+      "op1_active_slices": 28,
+      "op1_relative_source_selector": "slice0",
+      "op2_global_source_selector": null,
+      "slices_per_head": 4
+    },
+    "hidden_elements_per_slice": 32,
+    "normalized_stage_sequence": [
+      "prefill_summac_fp32MN_fp32MN",
+      "prefill_remote_sum_fp32MN_fp32MN",
+      "prefill_mac_SFU_fp32MN_fp32MN",
+      "prefill_mul_fp32MN_fp32M_fp32MN",
+      "prefill_mul_fp32MN_fp32N_fp16MN"
+    ],
+    "onnx_anchor": {
+      "attributes": [
+        {
+          "name": "epsilon",
+          "type": "FLOAT",
+          "value": 9.999999974752427e-07
+        },
+        {
+          "name": "axis",
+          "type": "INT",
+          "value": -1
+        },
+        {
+          "name": "stash_type",
+          "type": "INT",
+          "value": 1
+        }
+      ],
+      "domain": "",
+      "index": 9,
+      "inputs": [
+        "/model/embed_tokens/Gather/output_0",
+        "model.layers.0.input_layernorm.weight"
+      ],
+      "name": "/model/layers.0/input_layernorm/LayerNorm",
+      "op_type": "SimplifiedLayerNormalization",
+      "outputs": [
+        "/model/layers.0/input_layernorm/output_0"
+      ]
+    },
+    "raw_to_normalized_topology_gap": {
+      "normalized_op1_A_shape": [
+        1,
+        4,
+        32
+      ],
+      "normalized_op1_A_type": "slice0",
+      "normalized_op1_used_slices": "0b1111111111111111111111111111",
+      "normalized_op2_A_type": null,
+      "raw_op1_A_shape": [
+        1,
+        "used_slices",
+        "sequence_length"
+      ],
+      "raw_op1_A_type": null,
+      "raw_op1_used_slices": "0b1000000000000000000000000000",
+      "raw_op2_A_type": "slice0"
+    }
+  },
+  "policy_result": {
+    "active_stage_is_sufficient_for_automatic_generation": true,
+    "advance_to_server_test": false,
+    "individual_trusted_jsons_invalidated": false,
+    "local_e2_reference_conformant": true,
+    "maximum_evidence_level": "E2",
+    "onnx_to_five_stage_semantic_decomposition_closed": true,
+    "rule_normalized_five_stage_lifecycle_accepted": true,
+    "upstream_raw_stage_is_active_stage": false
+  },
+  "rule_ids": [
+    "CDA-CONFIG-MATERIALIZED-ROUNDTRIP-001",
+    "CDA-CONFIG-FULL-REBUILD-PROVENANCE-001",
+    "CDA-DEEPSEEK-MODEL-IDENTITY-001",
+    "CDA-DEEPSEEK-CROP-EXPLICIT-001",
+    "CDA-DEEPSEEK-ONNX-STAGE-DAG-001",
+    "CDA-DEEPSEEK-STAGE-JSON-ORACLE-001",
+    "CDA-DEEPSEEK-CONFIG-LENGTH-PADDING-001",
+    "CDA-DEEPSEEK-RMSNORM-GROUPED-REMOTE-SUM-001",
+    "CDA-DEEPSEEK-RMSNORM-STAGE-TOPOLOGY-OWNER-001"
+  ],
+  "schema": "deepseek-rmsnorm-five-stage-validation-v1",
+  "server_package_generated": false,
+  "stage_json_bitstream_lifecycle": {
+    "config_length": {
+      "instructions_explained": {
+        "path": "artifacts/operator_config_validation/ds_rms_v1/a/t/model_execplan/output/ds_rms_v1/instructions_explained.txt",
+        "sha256": "d0c919ba5d5ca8d808ae7863734926557e37ab97af3f6dd09398eb740883add4",
+        "size_bytes": 210830
+      },
+      "open_operator_ids": [],
+      "operator_count": 5,
+      "operators": {
+        "op0": {
+          "analysis": {
+            "last_row_high_half_is_transport_padding": true,
+            "matches_rtl_padding_contract": true,
+            "packing_matches_64bit_source": true,
+            "padding_classification": "ODD_ONE_TRANSPORT_PADDING_HALF",
+            "physical_128bit_rows": 34,
+            "physical_64bit_transport_slots": 68,
+            "programmed_load_config_length_64bit_words": 67,
+            "rtl_boundary": "global_config_manager sets gconfig_len_sent=len-1, uses ARLEN=(len-1)>>1, and for odd len suppresses the final 128-bit beat high half; the 64-bit generator output owns the meaningful word count",
+            "rtl_meaningful_64bit_word_count": 67,
+            "source_64bit_word_count": 67
+          },
+          "installed_128b_matches_transport": true,
+          "installed_128b_present": true,
+          "programmed_minus_source_words": 0,
+          "source_64b": {
+            "path": "artifacts/operator_config_validation/ds_rms_v1/a/t/model_execplan/output/ds_rms_v1/config/op0/op0_prefill_summac_fp32MN_fp32MN_bitstream_64b.bin",
+            "sha256": "f3a9523e5e4ddf7dd7c77c3e26c057c38f3b5044fc277a3d4078c49834ee5b0b",
+            "size_bytes": 4422
+          },
+          "status": "CLOSED",
+          "transport_128b": {
+            "path": "artifacts/operator_config_validation/ds_rms_v1/a/t/model_execplan/output/ds_rms_v1/config/op0/op0_prefill_summac_fp32MN_fp32MN_bitstream_128b.bin",
+            "sha256": "642569a14f3e866b2d85ea33603e7a66b0115f0d6c1ab17897b478b059a39f16",
+            "size_bytes": 4420
+          }
+        },
+        "op1": {
+          "analysis": {
+            "last_row_high_half_is_transport_padding": true,
+            "matches_rtl_padding_contract": true,
+            "packing_matches_64bit_source": true,
+            "padding_classification": "ODD_ONE_TRANSPORT_PADDING_HALF",
+            "physical_128bit_rows": 25,
+            "physical_64bit_transport_slots": 50,
+            "programmed_load_config_length_64bit_words": 49,
+            "rtl_boundary": "global_config_manager sets gconfig_len_sent=len-1, uses ARLEN=(len-1)>>1, and for odd len suppresses the final 128-bit beat high half; the 64-bit generator output owns the meaningful word count",
+            "rtl_meaningful_64bit_word_count": 49,
+            "source_64bit_word_count": 49
+          },
+          "installed_128b_matches_transport": true,
+          "installed_128b_present": true,
+          "programmed_minus_source_words": 0,
+          "source_64b": {
+            "path": "artifacts/operator_config_validation/ds_rms_v1/a/t/model_execplan/output/ds_rms_v1/config/op1/op1_prefill_remote_sum_fp32MN_fp32MN_bitstream_64b.bin",
+            "sha256": "7f36c5346f9dd8a2f2109b5739ffea0947219605002556f1f56d968b42e2bcfd",
+            "size_bytes": 3234
+          },
+          "status": "CLOSED",
+          "transport_128b": {
+            "path": "artifacts/operator_config_validation/ds_rms_v1/a/t/model_execplan/output/ds_rms_v1/config/op1/op1_prefill_remote_sum_fp32MN_fp32MN_bitstream_128b.bin",
+            "sha256": "6837a42c1e2d5667ba82bb06a3057bc986360b44e30d89ecaabb6d9310bf2dca",
+            "size_bytes": 3250
+          }
+        },
+        "op2": {
+          "analysis": {
+            "last_row_high_half_is_transport_padding": false,
+            "matches_rtl_padding_contract": true,
+            "packing_matches_64bit_source": true,
+            "padding_classification": "EVEN_NO_TRANSPORT_PADDING_HALF",
+            "physical_128bit_rows": 33,
+            "physical_64bit_transport_slots": 66,
+            "programmed_load_config_length_64bit_words": 66,
+            "rtl_boundary": "global_config_manager sets gconfig_len_sent=len-1, uses ARLEN=(len-1)>>1, and for odd len suppresses the final 128-bit beat high half; the 64-bit generator output owns the meaningful word count",
+            "rtl_meaningful_64bit_word_count": 66,
+            "source_64bit_word_count": 66
+          },
+          "installed_128b_matches_transport": true,
+          "installed_128b_present": true,
+          "programmed_minus_source_words": 0,
+          "source_64b": {
+            "path": "artifacts/operator_config_validation/ds_rms_v1/a/t/model_execplan/output/ds_rms_v1/config/op2/op2_prefill_mac_SFU_fp32MN_fp32MN_bitstream_64b.bin",
+            "sha256": "6eea2808bfceff1d0eecf8eddd85a5d859070d75b7d6406850e7eccd42198737",
+            "size_bytes": 4356
+          },
+          "status": "CLOSED",
+          "transport_128b": {
+            "path": "artifacts/operator_config_validation/ds_rms_v1/a/t/model_execplan/output/ds_rms_v1/config/op2/op2_prefill_mac_SFU_fp32MN_fp32MN_bitstream_128b.bin",
+            "sha256": "8c6cdba6de336c568f5c976c5c3a3c999d76de1635da8e10d00452fbf4f89064",
+            "size_bytes": 4290
+          }
+        },
+        "op3": {
+          "analysis": {
+            "last_row_high_half_is_transport_padding": false,
+            "matches_rtl_padding_contract": true,
+            "packing_matches_64bit_source": true,
+            "padding_classification": "EVEN_NO_TRANSPORT_PADDING_HALF",
+            "physical_128bit_rows": 30,
+            "physical_64bit_transport_slots": 60,
+            "programmed_load_config_length_64bit_words": 60,
+            "rtl_boundary": "global_config_manager sets gconfig_len_sent=len-1, uses ARLEN=(len-1)>>1, and for odd len suppresses the final 128-bit beat high half; the 64-bit generator output owns the meaningful word count",
+            "rtl_meaningful_64bit_word_count": 60,
+            "source_64bit_word_count": 60
+          },
+          "installed_128b_matches_transport": true,
+          "installed_128b_present": true,
+          "programmed_minus_source_words": 0,
+          "source_64b": {
+            "path": "artifacts/operator_config_validation/ds_rms_v1/a/t/model_execplan/output/ds_rms_v1/config/op3/op3_prefill_mul_fp32MN_fp32M_fp32MN_bitstream_64b.bin",
+            "sha256": "b63a01f66201fe415db3f21de51f380c7379e98ae50e6fa525c365898c873f05",
+            "size_bytes": 3960
+          },
+          "status": "CLOSED",
+          "transport_128b": {
+            "path": "artifacts/operator_config_validation/ds_rms_v1/a/t/model_execplan/output/ds_rms_v1/config/op3/op3_prefill_mul_fp32MN_fp32M_fp32MN_bitstream_128b.bin",
+            "sha256": "38fa2f2d270fd957a94ee89edac8afbf57ccad5949c7c7d90c1624dabc49c59a",
+            "size_bytes": 3900
+          }
+        },
+        "op4": {
+          "analysis": {
+            "last_row_high_half_is_transport_padding": false,
+            "matches_rtl_padding_contract": true,
+            "packing_matches_64bit_source": true,
+            "padding_classification": "EVEN_NO_TRANSPORT_PADDING_HALF",
+            "physical_128bit_rows": 25,
+            "physical_64bit_transport_slots": 50,
+            "programmed_load_config_length_64bit_words": 50,
+            "rtl_boundary": "global_config_manager sets gconfig_len_sent=len-1, uses ARLEN=(len-1)>>1, and for odd len suppresses the final 128-bit beat high half; the 64-bit generator output owns the meaningful word count",
+            "rtl_meaningful_64bit_word_count": 50,
+            "source_64bit_word_count": 50
+          },
+          "installed_128b_matches_transport": true,
+          "installed_128b_present": true,
+          "programmed_minus_source_words": 0,
+          "source_64b": {
+            "path": "artifacts/operator_config_validation/ds_rms_v1/a/t/model_execplan/output/ds_rms_v1/config/op4/op4_prefill_mul_fp32MN_fp32N_fp16MN_bitstream_64b.bin",
+            "sha256": "dbe8c1b8f1be3e9417334b7f027d2001cb156ace4c96e8a5eef063d1fb1b8101",
+            "size_bytes": 3300
+          },
+          "status": "CLOSED",
+          "transport_128b": {
+            "path": "artifacts/operator_config_validation/ds_rms_v1/a/t/model_execplan/output/ds_rms_v1/config/op4/op4_prefill_mul_fp32MN_fp32N_fp16MN_bitstream_128b.bin",
+            "sha256": "97efb73eac61ad8aceff0c97a636f32c3351a34e426e72476bc2e65deaa3d5f9",
+            "size_bytes": 3250
+          }
+        }
+      },
+      "output_root": "artifacts/operator_config_validation/ds_rms_v1/a/t/model_execplan/output/ds_rms_v1",
+      "status": "CLOSED"
+    },
+    "first_four_address_bound_stages_match_trusted_package": true,
+    "materialized_ga_opcodes": {
+      "op0": [
+        "mul",
+        "summac"
+      ],
+      "op1": [
+        "sum"
+      ],
+      "op2": [
+        "mac",
+        "rec_sqrt"
+      ],
+      "op3": [
+        "mul"
+      ],
+      "op4": [
+        "mul"
+      ]
+    },
+    "native_double_run": {
+      "deterministic_file_count": 56,
+      "deterministic_outputs_byte_identical": true,
+      "empty_mapping_cache_at_start": true,
+      "mapping_exact_penalties": {
+        "op0": 0.0,
+        "op1": 0.0,
+        "op2": 0.0,
+        "op3": 0.0,
+        "op4": 0.0
+      },
+      "output_file_count_per_run": 61,
+      "parsed_operator_count": 5,
+      "python_hash_seed": 0,
+      "random_seed": 42,
+      "returncode": 0,
+      "run_a": {
+        "path": "artifacts/operator_config_validation/ds_rms_v1/a/native_run_receipt.json",
+        "sha256": "62b7f62541ffb9d59f668266598b37be46001d1b76dfb1ad6a9b24c57d44fd36",
+        "size_bytes": 13570
+      },
+      "run_b": {
+        "path": "artifacts/operator_config_validation/ds_rms_v1/b/native_run_receipt.json",
+        "sha256": "be075b91426456869e49fd9bb584b600d63f16290455e4687ac13367605873dd",
+        "size_bytes": 13570
+      }
+    },
+    "op2_config_loaded_constants": {
+      "epsilon_1e_minus_6_fp32_occurrences": 8,
+      "expected_physical_mac_lane_count": 8,
+      "mean_1_div_896_fp32_occurrences": 8,
+      "unresolved_dynamic_control_names_are_config_load_owned": true
+    },
+    "op4_fp32tofp16": true,
+    "rule_normalized_lifecycle_accepted": true,
+    "sca_d": {
+      "op0": {
+        "lines_128b_per_slice": 8,
+        "slice_count": 28
+      },
+      "op1": {
+        "lines_128b_per_slice": 8,
+        "slice_count": 28
+      },
+      "op2": {
+        "lines_128b_per_slice": 8,
+        "slice_count": 28
+      },
+      "op3": {
+        "lines_128b_per_slice": 256,
+        "slice_count": 28
+      },
+      "op4": {
+        "lines_128b_per_slice": 128,
+        "slice_count": 28
+      }
+    },
+    "structurally_complete": true
+  },
+  "status": "LOCAL_E2_ACTIVE_STAGE_PRODUCER_CONFORMANT"
+}

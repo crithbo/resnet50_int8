@@ -1,0 +1,77 @@
+{
+  "Exec_Base": "0x0001_B000",
+  "Exec_Length": 17,
+  "Repeat_Num": 1,
+  "ExecutionPlan": {
+    "base_addr": "0x0001B000",
+    "path": "install/execplan.txt"
+  },
+  "op0_matrixA_slice0": {
+    "base_addr": "0x00000000",
+    "path": "install/op0/slice00/matrix_A_linearized_128bit.txt"
+  },
+  "op0_matrixA_slice1": {
+    "base_addr": "0x02000000",
+    "path": "install/op0/slice01/matrix_A_linearized_128bit.txt"
+  },
+  "op0_matrixA_slice2": {
+    "base_addr": "0x04000000",
+    "path": "install/op0/slice02/matrix_A_linearized_128bit.txt"
+  },
+  "op0_matrixA_slice3": {
+    "base_addr": "0x06000000",
+    "path": "install/op0/slice03/matrix_A_linearized_128bit.txt"
+  },
+  "op0_matrixA_slice4": {
+    "base_addr": "0x08000000",
+    "path": "install/op0/slice04/matrix_A_linearized_128bit.txt"
+  },
+  "op0_matrixA_slice5": {
+    "base_addr": "0x0A000000",
+    "path": "install/op0/slice05/matrix_A_linearized_128bit.txt"
+  },
+  "op0_matrixA_slice6": {
+    "base_addr": "0x0C000000",
+    "path": "install/op0/slice06/matrix_A_linearized_128bit.txt"
+  },
+  "op0_matrixA_slice7": {
+    "base_addr": "0x0E000000",
+    "path": "install/op0/slice07/matrix_A_linearized_128bit.txt"
+  },
+  "op0_matrixA_slice8": {
+    "base_addr": "0x10000000",
+    "path": "install/op0/slice08/matrix_A_linearized_128bit.txt"
+  },
+  "op0_matrixA_slice9": {
+    "base_addr": "0x12000000",
+    "path": "install/op0/slice09/matrix_A_linearized_128bit.txt"
+  },
+  "op0_matrixA_slice10": {
+    "base_addr": "0x14000000",
+    "path": "install/op0/slice10/matrix_A_linearized_128bit.txt"
+  },
+  "op0_matrixA_slice11": {
+    "base_addr": "0x16000000",
+    "path": "install/op0/slice11/matrix_A_linearized_128bit.txt"
+  },
+  "op0_matrixA_slice12": {
+    "base_addr": "0x18000000",
+    "path": "install/op0/slice12/matrix_A_linearized_128bit.txt"
+  },
+  "op0_matrixA_slice13": {
+    "base_addr": "0x1A000000",
+    "path": "install/op0/slice13/matrix_A_linearized_128bit.txt"
+  },
+  "op0_matrixA_slice14": {
+    "base_addr": "0x1C000000",
+    "path": "install/op0/slice14/matrix_A_linearized_128bit.txt"
+  },
+  "op0_matrixA_slice15": {
+    "base_addr": "0x1E000000",
+    "path": "install/op0/slice15/matrix_A_linearized_128bit.txt"
+  },
+  "op0_config": {
+    "base_addr": "0x0001AC00",
+    "path": "install/cfg_pkg/op0_resnet50_gap_sum_uint8_int32_bitstream_128b.bin"
+  }
+}

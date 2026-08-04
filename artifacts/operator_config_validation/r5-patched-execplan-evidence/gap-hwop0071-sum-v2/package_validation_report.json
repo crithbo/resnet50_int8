@@ -1,0 +1,214 @@
+{
+  "schema": "operator-config-package-validation-report-v1",
+  "graph_root": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\gap-hwop0071-sum-v2\\pipeline_output",
+  "valid": true,
+  "first_error": null,
+  "issues": [],
+  "facts": {
+    "target_profile": {
+      "slices": 28,
+      "banks_per_slice": 4,
+      "ddr_rows": 6144,
+      "ddr_columns": 64,
+      "subwords_per_column": 16,
+      "read_streams": 4,
+      "write_streams": 1,
+      "buffers": 6
+    },
+    "graph": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\gap-hwop0071-sum-v2\\pipeline_output\\graph_address_seed_withbaseaddr.json",
+    "graph_sha256": "66928400ee70b761c776f1b42638f613bb4651579e6eda6bb315541894ca816f",
+    "operator_count": 1,
+    "expected_matrix_entry_count": 32,
+    "actual_matrix_entry_count": 32,
+    "memory_region_count": 34,
+    "peak_end_by_slice_bank": {
+      "slice00.bank0": 110864,
+      "slice01.bank0": 108608,
+      "slice02.bank0": 108608,
+      "slice03.bank0": 108608,
+      "slice04.bank0": 108608,
+      "slice05.bank0": 108608,
+      "slice06.bank0": 108608,
+      "slice07.bank0": 108608,
+      "slice08.bank0": 108608,
+      "slice09.bank0": 108608,
+      "slice10.bank0": 108608,
+      "slice11.bank0": 108608,
+      "slice12.bank0": 108608,
+      "slice13.bank0": 108608,
+      "slice14.bank0": 108608,
+      "slice15.bank0": 108608
+    },
+    "matrix_files_required": false,
+    "missing_matrix_files": [
+      "op0_matrixA_slice0",
+      "op0_matrixA_slice1",
+      "op0_matrixA_slice10",
+      "op0_matrixA_slice11",
+      "op0_matrixA_slice12",
+      "op0_matrixA_slice13",
+      "op0_matrixA_slice14",
+      "op0_matrixA_slice15",
+      "op0_matrixA_slice2",
+      "op0_matrixA_slice3",
+      "op0_matrixA_slice4",
+      "op0_matrixA_slice5",
+      "op0_matrixA_slice6",
+      "op0_matrixA_slice7",
+      "op0_matrixA_slice8",
+      "op0_matrixA_slice9",
+      "op0_matrixD_slice0",
+      "op0_matrixD_slice1",
+      "op0_matrixD_slice10",
+      "op0_matrixD_slice11",
+      "op0_matrixD_slice12",
+      "op0_matrixD_slice13",
+      "op0_matrixD_slice14",
+      "op0_matrixD_slice15",
+      "op0_matrixD_slice2",
+      "op0_matrixD_slice3",
+      "op0_matrixD_slice4",
+      "op0_matrixD_slice5",
+      "op0_matrixD_slice6",
+      "op0_matrixD_slice7",
+      "op0_matrixD_slice8",
+      "op0_matrixD_slice9"
+    ],
+    "file_facts": {
+      "op0_matrixA_slice0": {
+        "path": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\gap-hwop0071-sum-v2\\pipeline_output\\install\\op0\\slice00\\matrix_A_linearized_128bit.txt",
+        "exists": false
+      },
+      "op0_matrixA_slice1": {
+        "path": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\gap-hwop0071-sum-v2\\pipeline_output\\install\\op0\\slice01\\matrix_A_linearized_128bit.txt",
+        "exists": false
+      },
+      "op0_matrixA_slice10": {
+        "path": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\gap-hwop0071-sum-v2\\pipeline_output\\install\\op0\\slice10\\matrix_A_linearized_128bit.txt",
+        "exists": false
+      },
+      "op0_matrixA_slice11": {
+        "path": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\gap-hwop0071-sum-v2\\pipeline_output\\install\\op0\\slice11\\matrix_A_linearized_128bit.txt",
+        "exists": false
+      },
+      "op0_matrixA_slice12": {
+        "path": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\gap-hwop0071-sum-v2\\pipeline_output\\install\\op0\\slice12\\matrix_A_linearized_128bit.txt",
+        "exists": false
+      },
+      "op0_matrixA_slice13": {
+        "path": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\gap-hwop0071-sum-v2\\pipeline_output\\install\\op0\\slice13\\matrix_A_linearized_128bit.txt",
+        "exists": false
+      },
+      "op0_matrixA_slice14": {
+        "path": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\gap-hwop0071-sum-v2\\pipeline_output\\install\\op0\\slice14\\matrix_A_linearized_128bit.txt",
+        "exists": false
+      },
+      "op0_matrixA_slice15": {
+        "path": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\gap-hwop0071-sum-v2\\pipeline_output\\install\\op0\\slice15\\matrix_A_linearized_128bit.txt",
+        "exists": false
+      },
+      "op0_matrixA_slice2": {
+        "path": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\gap-hwop0071-sum-v2\\pipeline_output\\install\\op0\\slice02\\matrix_A_linearized_128bit.txt",
+        "exists": false
+      },
+      "op0_matrixA_slice3": {
+        "path": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\gap-hwop0071-sum-v2\\pipeline_output\\install\\op0\\slice03\\matrix_A_linearized_128bit.txt",
+        "exists": false
+      },
+      "op0_matrixA_slice4": {
+        "path": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\gap-hwop0071-sum-v2\\pipeline_output\\install\\op0\\slice04\\matrix_A_linearized_128bit.txt",
+        "exists": false
+      },
+      "op0_matrixA_slice5": {
+        "path": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\gap-hwop0071-sum-v2\\pipeline_output\\install\\op0\\slice05\\matrix_A_linearized_128bit.txt",
+        "exists": false
+      },
+      "op0_matrixA_slice6": {
+        "path": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\gap-hwop0071-sum-v2\\pipeline_output\\install\\op0\\slice06\\matrix_A_linearized_128bit.txt",
+        "exists": false
+      },
+      "op0_matrixA_slice7": {
+        "path": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\gap-hwop0071-sum-v2\\pipeline_output\\install\\op0\\slice07\\matrix_A_linearized_128bit.txt",
+        "exists": false
+      },
+      "op0_matrixA_slice8": {
+        "path": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\gap-hwop0071-sum-v2\\pipeline_output\\install\\op0\\slice08\\matrix_A_linearized_128bit.txt",
+        "exists": false
+      },
+      "op0_matrixA_slice9": {
+        "path": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\gap-hwop0071-sum-v2\\pipeline_output\\install\\op0\\slice09\\matrix_A_linearized_128bit.txt",
+        "exists": false
+      },
+      "op0_matrixD_slice0": {
+        "path": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\gap-hwop0071-sum-v2\\pipeline_output\\install\\op0\\slice00\\matrix_D_linearized_128bit.txt",
+        "exists": false
+      },
+      "op0_matrixD_slice1": {
+        "path": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\gap-hwop0071-sum-v2\\pipeline_output\\install\\op0\\slice01\\matrix_D_linearized_128bit.txt",
+        "exists": false
+      },
+      "op0_matrixD_slice10": {
+        "path": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\gap-hwop0071-sum-v2\\pipeline_output\\install\\op0\\slice10\\matrix_D_linearized_128bit.txt",
+        "exists": false
+      },
+      "op0_matrixD_slice11": {
+        "path": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\gap-hwop0071-sum-v2\\pipeline_output\\install\\op0\\slice11\\matrix_D_linearized_128bit.txt",
+        "exists": false
+      },
+      "op0_matrixD_slice12": {
+        "path": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\gap-hwop0071-sum-v2\\pipeline_output\\install\\op0\\slice12\\matrix_D_linearized_128bit.txt",
+        "exists": false
+      },
+      "op0_matrixD_slice13": {
+        "path": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\gap-hwop0071-sum-v2\\pipeline_output\\install\\op0\\slice13\\matrix_D_linearized_128bit.txt",
+        "exists": false
+      },
+      "op0_matrixD_slice14": {
+        "path": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\gap-hwop0071-sum-v2\\pipeline_output\\install\\op0\\slice14\\matrix_D_linearized_128bit.txt",
+        "exists": false
+      },
+      "op0_matrixD_slice15": {
+        "path": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\gap-hwop0071-sum-v2\\pipeline_output\\install\\op0\\slice15\\matrix_D_linearized_128bit.txt",
+        "exists": false
+      },
+      "op0_matrixD_slice2": {
+        "path": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\gap-hwop0071-sum-v2\\pipeline_output\\install\\op0\\slice02\\matrix_D_linearized_128bit.txt",
+        "exists": false
+      },
+      "op0_matrixD_slice3": {
+        "path": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\gap-hwop0071-sum-v2\\pipeline_output\\install\\op0\\slice03\\matrix_D_linearized_128bit.txt",
+        "exists": false
+      },
+      "op0_matrixD_slice4": {
+        "path": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\gap-hwop0071-sum-v2\\pipeline_output\\install\\op0\\slice04\\matrix_D_linearized_128bit.txt",
+        "exists": false
+      },
+      "op0_matrixD_slice5": {
+        "path": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\gap-hwop0071-sum-v2\\pipeline_output\\install\\op0\\slice05\\matrix_D_linearized_128bit.txt",
+        "exists": false
+      },
+      "op0_matrixD_slice6": {
+        "path": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\gap-hwop0071-sum-v2\\pipeline_output\\install\\op0\\slice06\\matrix_D_linearized_128bit.txt",
+        "exists": false
+      },
+      "op0_matrixD_slice7": {
+        "path": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\gap-hwop0071-sum-v2\\pipeline_output\\install\\op0\\slice07\\matrix_D_linearized_128bit.txt",
+        "exists": false
+      },
+      "op0_matrixD_slice8": {
+        "path": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\gap-hwop0071-sum-v2\\pipeline_output\\install\\op0\\slice08\\matrix_D_linearized_128bit.txt",
+        "exists": false
+      },
+      "op0_matrixD_slice9": {
+        "path": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\gap-hwop0071-sum-v2\\pipeline_output\\install\\op0\\slice09\\matrix_D_linearized_128bit.txt",
+        "exists": false
+      }
+    },
+    "semantic_contract": {
+      "bound": true,
+      "graph_sha256": "66928400ee70b761c776f1b42638f613bb4651579e6eda6bb315541894ca816f",
+      "operator_count": 1
+    },
+    "issue_count": 0
+  }
+}

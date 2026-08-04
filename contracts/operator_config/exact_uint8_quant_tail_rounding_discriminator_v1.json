@@ -1,0 +1,270 @@
+{
+  "schema": "exact-uint8-quant-tail-rounding-discriminator-v1",
+  "status": "LOCAL_CONFIG_BOUND_DIAGNOSTIC_CANDIDATE",
+  "owner_family": "QuantizeLinear/shared exact uint8 quant-tail",
+  "candidate_release": false,
+  "claim": "LOCAL_CONFIG_BOUND_DIAGNOSTIC_NOT_BASELINE",
+  "rule_ids": [
+    "CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+    "CDA-CONFIG-ONLY-INPUT-REPLAY-NONCOMPUTATIONAL-001",
+    "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+    "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001",
+    "CDA-EXACT-UINT8-QUANT-TAIL-ZP-001",
+    "CDA-EXACT-UINT8-QUANT-TAIL-FMA-001",
+    "CDA-EXACT-UINT8-QUANT-TAIL-DOMAIN-001"
+  ],
+  "read_receipt": [
+    {
+      "path": ".agents/plan.md",
+      "sha256": "c5120b1cfaf3b97a055f6958d5a76b3c31d1f842a545e5a8c00bb626f52636ec",
+      "reason": "generation-time dispatch receipt; mutable provenance only"
+    },
+    {
+      "path": ".agents/rules/生成前必读索引.md",
+      "sha256": "6ae4c7fe09fcdb39a48357cfef645c272f67e7a81d09b5547ebd9a929e6ce1a4",
+      "reason": "generation-time routing receipt; mutable provenance only"
+    }
+  ],
+  "final_refresh_receipt": [
+    {
+      "path": ".agents/plan.md",
+      "sha256": "a1e19c6e84360641205836f6fa0b172fc0405472b8b2dfdc4c580cc2e0875516",
+      "reason": "final validation control-plane snapshot; mutable provenance only"
+    },
+    {
+      "path": ".agents/rules/生成前必读索引.md",
+      "sha256": "3940dc4d6f6d0b5d52347acd6fe5655281562dc09d4082c298cf70c7dbfb4f19",
+      "reason": "final validation routing snapshot including Flatten/View route; provenance only"
+    }
+  ],
+  "semantic_source_identities": [
+    {
+      "path": ".agents/rules/算子配置规则.md",
+      "sha256": "407fc0320d0587c362730c74e9b1d87cbd8e2ab686051173ceacadb6ac31c2cc",
+      "reason": "config-only bypass, noncomputational replay, claim boundary and materialized non-base leaf ownership"
+    },
+    {
+      "path": ".agents/rules/精确UINT8量化尾专项规则.md",
+      "sha256": "5593f9df3bbc5605e9b019b6cc53ee33b0edbeb203d657fdf974cb4b680c2df0",
+      "reason": "required numeric order, 26-vs-25 discriminator, zero-point and domain gates"
+    },
+    {
+      "path": ".agents/rules/NDP硬件字段语义.md",
+      "sha256": "a955834fc059f08bada8131adc94db5c05112eb1e6acc0a0976eee7e6ae17c59",
+      "reason": "GA opcodes, conversion flags, outport packing and buffer lifetime semantics"
+    },
+    {
+      "path": "ndp-sim/jsons/quant_from_buffer_int32MN_uint8MN.json",
+      "sha256": "db638f0640e74217e80e61350a2fe400f7b495e2201f17c39915328cdd455ba2",
+      "reason": "trusted native INT32-to-UINT8 topology oracle"
+    },
+    {
+      "path": "ndp-sim/jsons/decode_mul_fp32N_fp32_fp32N.json",
+      "sha256": "34d0d083a57b1c57a08c581e50643db75b2361a134befa8187921c39cf211f2b",
+      "reason": "trusted native FP32 MUL and FP32 write geometry oracle"
+    },
+    {
+      "path": "ndp-sim/bitstream/config/general.py",
+      "sha256": "eb9d5ee9ef273182e05b718aca378f87d0a1ccb5366ae463d8482c8c94c3482f",
+      "reason": "active GA opcode, conversion flag and constant encoder"
+    },
+    {
+      "path": "NDP_copy01/rtl/Slice/General_Array/GA_Inport/GA_Inport.sv",
+      "sha256": "42a7ac1d740c758de9656ee0d41663ef1c8b11253e76ba2e20be6faee2d12e17",
+      "reason": "read-only INT32 and raw FP32 ingress consumer"
+    },
+    {
+      "path": "NDP_copy01/rtl/Slice/General_Array/GA_Outport/GA_Outport.sv",
+      "sha256": "8b1a3f12f44a2dbbe65ff41853397c06f7f591c1472b93ab8dd1698587b328db",
+      "reason": "read-only UINT8 saturation and packing consumer"
+    }
+  ],
+  "configuration_oracle": {
+    "path": "ndp-sim/jsons/quant_from_buffer_int32MN_uint8MN.json",
+    "sha256": "db638f0640e74217e80e61350a2fe400f7b495e2201f17c39915328cdd455ba2",
+    "use": "field/topology oracle only; not a ResNet target substitute"
+  },
+  "materialized_leaf_ownership_policy": {
+    "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+    "trusted_static_config": "ndp-sim/jsons/quant_from_buffer_int32MN_uint8MN.json",
+    "diff_granularity": "every JSON leaf including removed leaves and list elements",
+    "base_owner": "planner/address binder",
+    "logical_schedule_owner": "logical ScheduleIR",
+    "numeric_layout_owner": "operator numeric/layout contract",
+    "unknown_diff_action": "fail closed",
+    "multiple_owner_action": "fail closed",
+    "coverage_source": "final materialized occurrence/address equations only"
+  },
+  "bypass_annotation": {
+    "rule_id": "CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+    "bypass_reason": "The available one-stage quant_from_buffer recipe contracts multiplier and magic-bias addition into one MAC, while W3 requires the binary32 multiplier result to be rounded before nearest-even decode; the frozen-RTL policy excludes a functional RTL fix.",
+    "contradicted_or_missing_native_path": "The fused one-stage path is contradicted by input=400 and multiplier_bits=0x3d828f5c: sequential binary32 MUL then RNE yields 26, but the one-round fused magic model yields 25. No existing typed registry entry materializes a non-contracted shared tail.",
+    "exact_equivalence_scope": "Exactly the frozen 32-element diagnostic occurrence with every lane input int32 400, multiplier binary32 bits 0x3d828f5c, uint8 zero_point 0, finite nonnegative ingress, HWC8 lane order, no tail, and scratch preserving the stage0 binary32 words bit-for-bit. This is not a proof over the shared production domain.",
+    "materialized_configuration_mechanism": "Two serialized native JSON configurations with explicit FP32 scratch: stage0 enables INT32-to-FP32 and uses GA MUL only, writing 32 rounded FP32 words to 0x800000; stage1 reads raw FP32 from 0x800000, uses GA MAC with exact multiplier 1.0 plus magic 12582912.0, applies INT32_SUB raw constant 0x4b400000-zero_point, then enables UINT8 saturation/packing. A separately materialized one-stage fused configuration is the negative control.",
+    "performance_and_resource_cost": "For 32 elements: two configuration launches instead of one; 128-byte scratch allocation; 128-byte scratch write plus 128-byte scratch read (256 extra DRAM bytes); a barrier/lifetime edge between stages; lower utilization and no fusion. Mapping, cycle and contention cost are not measured.",
+    "unresolved_production_blocker": "Full-domain sequential-equivalence, signed INT32 ingress, magic-domain bounds, occurrence/tail generalization, typed handler, mapper, execplan/SCA transport, address allocation, terminal/readback and config-bound RTL simulation remain open. QuantizeLinear additionally lacks an exact binary32 division primitive.",
+    "claim_boundary": "LOCAL_CONFIG_BOUND_DIAGNOSTIC_NOT_BASELINE"
+  },
+  "discriminator": {
+    "input_int32": 400,
+    "input_shape": [
+      1,
+      1,
+      32
+    ],
+    "layout": "logical HWC8, eight GA lanes over four issue cycles",
+    "multiplier_bits": "0x3d828f5c",
+    "zero_point": 0,
+    "expected_stage0_scratch_bits": "0x41cc0000",
+    "expected_sequential_uint8": 26,
+    "expected_fused_uint8": 25,
+    "negative_control_required": true
+  },
+  "stage_contract": [
+    {
+      "stage": 0,
+      "name": "mul_to_fp32_scratch",
+      "ingress": "int32",
+      "ga_operation": "binary32 MUL",
+      "egress": "raw fp32",
+      "rounding_point": "stage output materialization",
+      "input_address": "0x0",
+      "output_address": "0x800000"
+    },
+    {
+      "stage": 1,
+      "name": "magic_decode_to_uint8",
+      "ingress": "raw fp32 scratch",
+      "ga_operations": [
+        "MAC(input, 1.0, 12582912.0)",
+        "INT32_SUB(encoded, 0x4b400000-zero_point)"
+      ],
+      "egress": "saturated packed uint8",
+      "input_address": "0x800000",
+      "output_address": "0x1000000"
+    }
+  ],
+  "transaction_contract": {
+    "logical_element_count": 32,
+    "ga_lane_count": 8,
+    "issue_cycles": 4,
+    "input_bytes": 128,
+    "scratch_write_bytes": 128,
+    "scratch_read_bytes": 128,
+    "output_bytes": 32,
+    "stage0_output_words": 32,
+    "stage1_output_words": 8,
+    "stage1_pack_factor": 4,
+    "supply_demand": "stage0: 32 int32 supplied -> 32 fp32 demanded/written; stage1: 32 fp32 supplied -> 32 uint8 demanded/packed",
+    "tail": "none in the frozen diagnostic occurrence",
+    "terminal_readback": "not executed; output span is reserved only"
+  },
+  "lifetime_contract": {
+    "scratch_span": "[0x800000,0x800080)",
+    "output_span": "[0x1000000,0x1000020)",
+    "scratch_birth": "first accepted stage0 FP32 write",
+    "scratch_complete": "all 32 stage0 FP32 words accepted",
+    "scratch_consume": "stage1 may start only after scratch_complete",
+    "scratch_death": "all 32 stage1 FP32 reads completed",
+    "barrier_required": true,
+    "overlap_forbidden": true
+  },
+  "replay_contract": {
+    "rule_id": "CDA-CONFIG-ONLY-INPUT-REPLAY-NONCOMPUTATIONAL-001",
+    "classification": "formal_producer_output_delivery_not_host_precompute",
+    "source_producer": "stage0_mul_to_fp32_scratch.json",
+    "consumer": "stage1_magic_decode_to_uint8.json",
+    "tensor_identity": {
+      "name": "rounding_discriminator_stage0_fp32",
+      "dtype": "float32",
+      "shape": [
+        1,
+        1,
+        32
+      ],
+      "layout": "logical HWC8, eight GA lanes over four issue cycles",
+      "bytes": 128
+    },
+    "allowed_index_address_mapping": "identity: producer word i at 0x800000+4*i is consumer word i at 0x800000+4*i for i in [0,32)",
+    "unmodified_properties": [
+      "dtype",
+      "binary32 word bits",
+      "element order",
+      "shape",
+      "layout"
+    ],
+    "computation_boundary_not_crossed": "stage0 owns only INT32-to-FP32 plus binary32 MUL; stage1 owns magic ADD/RNE decode, zero-point-after-round and saturation",
+    "host_precomputed_scaled_tensor": false,
+    "host_precomputed_rounded_tensor": false,
+    "host_precomputed_saturated_tensor": false,
+    "host_precomputed_final_output": false
+  },
+  "node0074_first_unavoidable_break": {
+    "node_id": 74,
+    "hwop": "hwop-0074-00",
+    "operator": "QuantizeLinear",
+    "shape": [
+      16,
+      2048
+    ],
+    "layout": "logical MN / flattened NCHW output",
+    "input_dtype": "float32",
+    "output_dtype": "uint8",
+    "scale_bits": "0x3cbf57ec",
+    "scale": 0.02335735410451889,
+    "zero_point": 0,
+    "capability": "exact_binary32_division",
+    "why_first": "The positive finite counterexample already passes raw FP32 ingress and avoids signed INT32 conversion. Therefore exact division fails before signed-domain, typed-handler, mapper, occurrence, tail or terminal gates can establish a target.",
+    "minimal_counterexample": {
+      "x_bits": "0x3d0f81f1",
+      "scale_bits": "0x3cbf57ec",
+      "reciprocal_bits": "0x422b4095",
+      "divide_then_rne_uint8": 2,
+      "reciprocal_fma_magic_uint8": 1
+    },
+    "separate_open_gates": {
+      "fp32_ingress": "field-expressible via all conversion flags false; not dynamically proven for node0074",
+      "signed_and_finite_domain": "counterexample is positive finite, so it does not rely on the signed INT32 contradiction; full finite-domain proof remains open",
+      "typed_handler": "missing for QuantizeLinear target transport",
+      "mapper": "missing QuantizeLinear registry/shape-layout route",
+      "execplan_and_sca": "not generated and not proven"
+    },
+    "target_json_generated": false
+  },
+  "node0074_flatten_endpoint_dependency": {
+    "producer_node": 73,
+    "producer_operator": "Flatten/View metadata-only zero-copy alias",
+    "consumer_node": 74,
+    "consumer_port": "A",
+    "status": "DEPENDENCY_RECORDED_ENDPOINT_NOT_MATERIALIZED",
+    "blocked_by": "B_QUANT_NODE0074_EXACT_DIVISION",
+    "required_final_interface": {
+      "same_storage_identity": "node0073 output storage identity must equal node0074-A input storage identity",
+      "base_plus_offset": "final addressed execplan must prove consumer_base=producer_base+flatten_view_offset",
+      "read_coverage": {
+        "element_count": 32768,
+        "dtype": "float32",
+        "required_bytes": 131072,
+        "condition": "node0074-A accepted reads cover the entire final Flatten alias span exactly"
+      },
+      "accepted_lifetime": "the aliased producer storage remains live until the final accepted node0074-A read"
+    },
+    "final_storage_identity": null,
+    "final_producer_base": null,
+    "final_view_offset": null,
+    "final_consumer_base": null,
+    "final_read_coverage": null,
+    "final_accepted_lifetime": null,
+    "provisional_address_allowed": false,
+    "dependency_only": true,
+    "target_endpoint_claimed": false
+  },
+  "forbidden_outputs": {
+    "target_json": false,
+    "mapping": false,
+    "bitstream": false,
+    "execplan": false,
+    "sca": false,
+    "server_package": false
+  }
+}

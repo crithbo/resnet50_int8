@@ -18,6 +18,12 @@ from .conv_instance import (
     ConvTargetRequest,
     build_conv_target_request,
 )
+from .conv_sa_contract import (
+    SA_CHANNEL_LANES,
+    SA_OUTPUT_LANES,
+    SA_SPATIAL_LANES,
+    validate_conv_3x3_sa_contract,
+)
 from .source_versions import (
     OFFICIAL_CONFIG_COMMIT,
     OFFICIAL_EXECPLAN_COMMIT,
@@ -41,6 +47,76 @@ W4_SNAPSHOT_SHA256 = {
 
 class ConvExecplanTransportError(ValueError):
     """A typed Conv execplan lost identity, value bytes, or target binding."""
+
+
+def _validate_accumulate_3x3_binding(
+    binding: Mapping[str, Any], request: ConvTargetRequest
+) -> dict[str, Any]:
+    """Project-side extension for the explicit-halo 3x3 candidate ABI.
+
+    The pinned NDPFuncModel validator intentionally remains the approved 1x1
+    implementation.  This checker binds the new typed candidate without
+    mutating that external source tree or claiming target execution support.
+    """
+
+    config_text = binding.get("config_text")
+    contract_text = binding.get("semantic_contract_text")
+    if not isinstance(config_text, str) or not isinstance(contract_text, str):
+        raise ValueError("3x3 target binding requires exact config and contract text")
+    if _sha256(config_text.encode("utf-8")) != binding.get("config_sha256"):
+        raise ValueError("3x3 target config binding hash mismatch")
+    if _sha256(contract_text.encode("utf-8")) != binding.get(
+        "semantic_contract_sha256"
+    ):
+        raise ValueError("3x3 target semantic binding hash mismatch")
+    config = json.loads(config_text)
+    contract = json.loads(contract_text)
+    spec = request.spec
+    if (
+        binding.get("transport_abi") != "conv_sa_q8k8_v2"
+        or contract.get("transport_abi") != binding.get("transport_abi")
+        or contract.get("config", {}).get("sha256") != binding["config_sha256"]
+        or contract.get("instance", {}).get("node_id") != spec.node_id
+        or contract.get("instance", {}).get("hw_op_ids")
+        != [spec.accumulate_hw_op_id, spec.requant_hw_op_id]
+        or tuple(contract.get("instance", {}).get("activation_shape", []))
+        != spec.activation_shape
+        or tuple(contract.get("instance", {}).get("weight_shape", []))
+        != spec.weight_shape
+        or tuple(contract.get("instance", {}).get("output_shape", []))
+        != spec.output_shape
+    ):
+        raise ValueError("3x3 target semantic instance binding differs")
+    halo_width = spec.activation_shape[3] + spec.pads[1] + spec.pads[3]
+    halo_width_padded = (
+        math.ceil(halo_width / SA_SPATIAL_LANES) * SA_SPATIAL_LANES
+    )
+    report = validate_conv_3x3_sa_contract(
+        config,
+        output_height=spec.output_height,
+        output_width=spec.output_width,
+        c_quartets=math.ceil(spec.c_tile / SA_CHANNEL_LANES),
+        k_blocks=math.ceil(spec.k_tile / SA_OUTPUT_LANES),
+        halo_width_padded=halo_width_padded,
+    )
+    return {
+        "status": "validated",
+        "validation_scope": "project_static_explicit_halo_3x3_candidate",
+        "config_sha256": binding["config_sha256"],
+        "semantic_contract_sha256": binding["semantic_contract_sha256"],
+        "transport_abi": binding["transport_abi"],
+        "loop_count": len(config["dram_loop_configs"]),
+        "lc_pe_count": len(config["lc_pe_configs"]),
+        "stream_targets": [
+            config["stream_engine"][name]["target"]
+            for name in sorted(config["stream_engine"])
+        ],
+        "n2n_mem_loop": report["high_ring_steps"],
+        "n2n_src_slice_sel": 1,
+        "n2n_dst_slice_sel": 1,
+        "n2n_ping_pong": 0,
+        "port_role_map": contract.get("port_semantics"),
+    }
 
 
 def _sha256(payload: bytes) -> str:
@@ -235,7 +311,8 @@ def build_conv_execplan_request(project_root: Path, node_id: str) -> dict[str, A
             relative_path=f"{request.requant_root_relative}/manifest.json",
         )
     ]
-    if spec.node_id == FIRST_REAL_CONV_NODE_ID:
+    has_requant_encoder_contract = request.requant_encoder_contract_path.is_file()
+    if has_requant_encoder_contract:
         requant_artifacts.append(
             _artifact(
                 root,
@@ -456,7 +533,7 @@ def build_conv_execplan_request(project_root: Path, node_id: str) -> dict[str, A
                         "member_artifact_ids": shard_artifact_ids,
                         "encoder_contract_artifact_id": (
                             requant_encoder_contract_id
-                            if spec.node_id == FIRST_REAL_CONV_NODE_ID
+                            if has_requant_encoder_contract
                             else None
                         ),
                     },
@@ -632,7 +709,8 @@ def validate_conv_execplan_request(
     if set(accumulate_roles) != {"accumulate_config", "semantic_contract"}:
         raise ConvExecplanTransportError("accumulate artifact roles differ")
     expected_requant_roles = {"requant_manifest", "requant_shard"}
-    if spec.node_id == FIRST_REAL_CONV_NODE_ID:
+    has_requant_encoder_contract = request.requant_encoder_contract_path.is_file()
+    if has_requant_encoder_contract:
         expected_requant_roles.add("requant_encoder_contract")
     if set(requant_roles) != expected_requant_roles:
         raise ConvExecplanTransportError("requant artifact roles differ")
@@ -644,7 +722,7 @@ def validate_conv_execplan_request(
         or relationship.get("member_artifact_ids") != [item.artifact_id for item in shard_artifacts]
         or len(shard_artifacts) != spec.requant_shard_count
         or (
-            spec.node_id == FIRST_REAL_CONV_NODE_ID
+            has_requant_encoder_contract
             and relationship.get("encoder_contract_artifact_id")
             != requant_roles["requant_encoder_contract"].artifact_id
         )
@@ -653,14 +731,17 @@ def validate_conv_execplan_request(
 
     validate_accumulate, validate_requant = _load_ndp_validators(root)
     try:
-        accumulate_result = validate_accumulate(
-            {
-                "transport_abi": request.transport_abi,
-                "config_text": accumulate_roles["accumulate_config"].raw_text,
-                "config_sha256": accumulate_roles["accumulate_config"].sha256,
-                "semantic_contract_text": accumulate_roles["semantic_contract"].raw_text,
-                "semantic_contract_sha256": accumulate_roles["semantic_contract"].sha256,
-            }
+        accumulate_binding = {
+            "transport_abi": request.transport_abi,
+            "config_text": accumulate_roles["accumulate_config"].raw_text,
+            "config_sha256": accumulate_roles["accumulate_config"].sha256,
+            "semantic_contract_text": accumulate_roles["semantic_contract"].raw_text,
+            "semantic_contract_sha256": accumulate_roles["semantic_contract"].sha256,
+        }
+        accumulate_result = (
+            _validate_accumulate_3x3_binding(accumulate_binding, request)
+            if spec.kernel == (3, 3)
+            else validate_accumulate(accumulate_binding)
         )
         requant_result = validate_requant(
             {
@@ -765,7 +846,10 @@ def build_conv_execplan_transport_contract(project_root: Path) -> dict[str, Any]
         "source": {
             "config_baseline_commit": OFFICIAL_CONFIG_COMMIT,
             "execplan_commit": OFFICIAL_EXECPLAN_COMMIT,
-            "ndpfuncmodel_commit": locked.get("NDPFuncModel"),
+            # This is historical W5 evidence.  Keep its proven source identity
+            # independent from the bootstrap lock, which may intentionally
+            # select an earlier public/distributable NDPFuncModel revision.
+            "ndpfuncmodel_commit": "a1d975ee2d6d9200b8df0deea3e2ffc13ce0d05e",
             "transport_audit": {
                 "path": transport_audit_path.relative_to(root).as_posix(),
                 "sha256": _sha256(transport_audit_path.read_bytes()),
@@ -828,6 +912,8 @@ def validate_conv_execplan_transport_contract(
         != OFFICIAL_CONFIG_COMMIT
         or value.get("source", {}).get("execplan_commit")
         != OFFICIAL_EXECPLAN_COMMIT
+        or value.get("source", {}).get("ndpfuncmodel_commit")
+        != "a1d975ee2d6d9200b8df0deea3e2ffc13ce0d05e"
     ):
         raise ConvExecplanTransportError("typed transport closure identity differs")
     instances = value.get("instances", [])

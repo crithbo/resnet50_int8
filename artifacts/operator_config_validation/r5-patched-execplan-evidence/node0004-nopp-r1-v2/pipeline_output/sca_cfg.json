@@ -1,0 +1,349 @@
+{
+  "Exec_Base": "0x0006_2C00",
+  "Exec_Length": 56,
+  "Repeat_Num": 1,
+  "ExecutionPlan": {
+    "base_addr": "0x00062C00",
+    "path": "install/execplan.txt"
+  },
+  "op0_matrixA_slice0": {
+    "base_addr": "0x00000000",
+    "path": "install/op0/slice00/matrix_A_linearized_128bit.txt"
+  },
+  "op0_matrixA_slice1": {
+    "base_addr": "0x02000000",
+    "path": "install/op0/slice01/matrix_A_linearized_128bit.txt"
+  },
+  "op0_matrixA_slice2": {
+    "base_addr": "0x04000000",
+    "path": "install/op0/slice02/matrix_A_linearized_128bit.txt"
+  },
+  "op0_matrixA_slice3": {
+    "base_addr": "0x06000000",
+    "path": "install/op0/slice03/matrix_A_linearized_128bit.txt"
+  },
+  "op0_matrixA_slice4": {
+    "base_addr": "0x08000000",
+    "path": "install/op0/slice04/matrix_A_linearized_128bit.txt"
+  },
+  "op0_matrixA_slice5": {
+    "base_addr": "0x0A000000",
+    "path": "install/op0/slice05/matrix_A_linearized_128bit.txt"
+  },
+  "op0_matrixA_slice6": {
+    "base_addr": "0x0C000000",
+    "path": "install/op0/slice06/matrix_A_linearized_128bit.txt"
+  },
+  "op0_matrixA_slice7": {
+    "base_addr": "0x0E000000",
+    "path": "install/op0/slice07/matrix_A_linearized_128bit.txt"
+  },
+  "op0_matrixA_slice8": {
+    "base_addr": "0x10000000",
+    "path": "install/op0/slice08/matrix_A_linearized_128bit.txt"
+  },
+  "op0_matrixA_slice9": {
+    "base_addr": "0x12000000",
+    "path": "install/op0/slice09/matrix_A_linearized_128bit.txt"
+  },
+  "op0_matrixA_slice10": {
+    "base_addr": "0x14000000",
+    "path": "install/op0/slice10/matrix_A_linearized_128bit.txt"
+  },
+  "op0_matrixA_slice11": {
+    "base_addr": "0x16000000",
+    "path": "install/op0/slice11/matrix_A_linearized_128bit.txt"
+  },
+  "op0_matrixA_slice12": {
+    "base_addr": "0x18000000",
+    "path": "install/op0/slice12/matrix_A_linearized_128bit.txt"
+  },
+  "op0_matrixA_slice13": {
+    "base_addr": "0x1A000000",
+    "path": "install/op0/slice13/matrix_A_linearized_128bit.txt"
+  },
+  "op0_matrixA_slice14": {
+    "base_addr": "0x1C000000",
+    "path": "install/op0/slice14/matrix_A_linearized_128bit.txt"
+  },
+  "op0_matrixA_slice15": {
+    "base_addr": "0x1E000000",
+    "path": "install/op0/slice15/matrix_A_linearized_128bit.txt"
+  },
+  "op0_matrixA_slice16": {
+    "base_addr": "0x20000000",
+    "path": "install/op0/slice16/matrix_A_linearized_128bit.txt"
+  },
+  "op0_matrixA_slice17": {
+    "base_addr": "0x22000000",
+    "path": "install/op0/slice17/matrix_A_linearized_128bit.txt"
+  },
+  "op0_matrixA_slice18": {
+    "base_addr": "0x24000000",
+    "path": "install/op0/slice18/matrix_A_linearized_128bit.txt"
+  },
+  "op0_matrixA_slice19": {
+    "base_addr": "0x26000000",
+    "path": "install/op0/slice19/matrix_A_linearized_128bit.txt"
+  },
+  "op0_matrixA_slice20": {
+    "base_addr": "0x28000000",
+    "path": "install/op0/slice20/matrix_A_linearized_128bit.txt"
+  },
+  "op0_matrixA_slice21": {
+    "base_addr": "0x2A000000",
+    "path": "install/op0/slice21/matrix_A_linearized_128bit.txt"
+  },
+  "op0_matrixA_slice22": {
+    "base_addr": "0x2C000000",
+    "path": "install/op0/slice22/matrix_A_linearized_128bit.txt"
+  },
+  "op0_matrixA_slice23": {
+    "base_addr": "0x2E000000",
+    "path": "install/op0/slice23/matrix_A_linearized_128bit.txt"
+  },
+  "op0_matrixA_slice24": {
+    "base_addr": "0x30000000",
+    "path": "install/op0/slice24/matrix_A_linearized_128bit.txt"
+  },
+  "op0_matrixA_slice25": {
+    "base_addr": "0x32000000",
+    "path": "install/op0/slice25/matrix_A_linearized_128bit.txt"
+  },
+  "op0_matrixA_slice26": {
+    "base_addr": "0x34000000",
+    "path": "install/op0/slice26/matrix_A_linearized_128bit.txt"
+  },
+  "op0_matrixA_slice27": {
+    "base_addr": "0x36000000",
+    "path": "install/op0/slice27/matrix_A_linearized_128bit.txt"
+  },
+  "op0_matrixB_slice0": {
+    "base_addr": "0x00000400",
+    "path": "install/op0/slice00/matrix_B_linearized_128bit.txt"
+  },
+  "op0_matrixB_slice1": {
+    "base_addr": "0x02000400",
+    "path": "install/op0/slice01/matrix_B_linearized_128bit.txt"
+  },
+  "op0_matrixB_slice2": {
+    "base_addr": "0x04000400",
+    "path": "install/op0/slice02/matrix_B_linearized_128bit.txt"
+  },
+  "op0_matrixB_slice3": {
+    "base_addr": "0x06000400",
+    "path": "install/op0/slice03/matrix_B_linearized_128bit.txt"
+  },
+  "op0_matrixB_slice4": {
+    "base_addr": "0x08000400",
+    "path": "install/op0/slice04/matrix_B_linearized_128bit.txt"
+  },
+  "op0_matrixB_slice5": {
+    "base_addr": "0x0A000400",
+    "path": "install/op0/slice05/matrix_B_linearized_128bit.txt"
+  },
+  "op0_matrixB_slice6": {
+    "base_addr": "0x0C000400",
+    "path": "install/op0/slice06/matrix_B_linearized_128bit.txt"
+  },
+  "op0_matrixB_slice7": {
+    "base_addr": "0x0E000400",
+    "path": "install/op0/slice07/matrix_B_linearized_128bit.txt"
+  },
+  "op0_matrixB_slice8": {
+    "base_addr": "0x10000400",
+    "path": "install/op0/slice08/matrix_B_linearized_128bit.txt"
+  },
+  "op0_matrixB_slice9": {
+    "base_addr": "0x12000400",
+    "path": "install/op0/slice09/matrix_B_linearized_128bit.txt"
+  },
+  "op0_matrixB_slice10": {
+    "base_addr": "0x14000400",
+    "path": "install/op0/slice10/matrix_B_linearized_128bit.txt"
+  },
+  "op0_matrixB_slice11": {
+    "base_addr": "0x16000400",
+    "path": "install/op0/slice11/matrix_B_linearized_128bit.txt"
+  },
+  "op0_matrixB_slice12": {
+    "base_addr": "0x18000400",
+    "path": "install/op0/slice12/matrix_B_linearized_128bit.txt"
+  },
+  "op0_matrixB_slice13": {
+    "base_addr": "0x1A000400",
+    "path": "install/op0/slice13/matrix_B_linearized_128bit.txt"
+  },
+  "op0_matrixB_slice14": {
+    "base_addr": "0x1C000400",
+    "path": "install/op0/slice14/matrix_B_linearized_128bit.txt"
+  },
+  "op0_matrixB_slice15": {
+    "base_addr": "0x1E000400",
+    "path": "install/op0/slice15/matrix_B_linearized_128bit.txt"
+  },
+  "op0_matrixB_slice16": {
+    "base_addr": "0x20000400",
+    "path": "install/op0/slice16/matrix_B_linearized_128bit.txt"
+  },
+  "op0_matrixB_slice17": {
+    "base_addr": "0x22000400",
+    "path": "install/op0/slice17/matrix_B_linearized_128bit.txt"
+  },
+  "op0_matrixB_slice18": {
+    "base_addr": "0x24000400",
+    "path": "install/op0/slice18/matrix_B_linearized_128bit.txt"
+  },
+  "op0_matrixB_slice19": {
+    "base_addr": "0x26000400",
+    "path": "install/op0/slice19/matrix_B_linearized_128bit.txt"
+  },
+  "op0_matrixB_slice20": {
+    "base_addr": "0x28000400",
+    "path": "install/op0/slice20/matrix_B_linearized_128bit.txt"
+  },
+  "op0_matrixB_slice21": {
+    "base_addr": "0x2A000400",
+    "path": "install/op0/slice21/matrix_B_linearized_128bit.txt"
+  },
+  "op0_matrixB_slice22": {
+    "base_addr": "0x2C000400",
+    "path": "install/op0/slice22/matrix_B_linearized_128bit.txt"
+  },
+  "op0_matrixB_slice23": {
+    "base_addr": "0x2E000400",
+    "path": "install/op0/slice23/matrix_B_linearized_128bit.txt"
+  },
+  "op0_matrixB_slice24": {
+    "base_addr": "0x30000400",
+    "path": "install/op0/slice24/matrix_B_linearized_128bit.txt"
+  },
+  "op0_matrixB_slice25": {
+    "base_addr": "0x32000400",
+    "path": "install/op0/slice25/matrix_B_linearized_128bit.txt"
+  },
+  "op0_matrixB_slice26": {
+    "base_addr": "0x34000400",
+    "path": "install/op0/slice26/matrix_B_linearized_128bit.txt"
+  },
+  "op0_matrixB_slice27": {
+    "base_addr": "0x36000400",
+    "path": "install/op0/slice27/matrix_B_linearized_128bit.txt"
+  },
+  "op0_matrixC_slice0": {
+    "base_addr": "0x00031400",
+    "path": "install/op0/slice00/matrix_C_linearized_128bit.txt"
+  },
+  "op0_matrixC_slice1": {
+    "base_addr": "0x02031400",
+    "path": "install/op0/slice01/matrix_C_linearized_128bit.txt"
+  },
+  "op0_matrixC_slice2": {
+    "base_addr": "0x04031400",
+    "path": "install/op0/slice02/matrix_C_linearized_128bit.txt"
+  },
+  "op0_matrixC_slice3": {
+    "base_addr": "0x06031400",
+    "path": "install/op0/slice03/matrix_C_linearized_128bit.txt"
+  },
+  "op0_matrixC_slice4": {
+    "base_addr": "0x08031400",
+    "path": "install/op0/slice04/matrix_C_linearized_128bit.txt"
+  },
+  "op0_matrixC_slice5": {
+    "base_addr": "0x0A031400",
+    "path": "install/op0/slice05/matrix_C_linearized_128bit.txt"
+  },
+  "op0_matrixC_slice6": {
+    "base_addr": "0x0C031400",
+    "path": "install/op0/slice06/matrix_C_linearized_128bit.txt"
+  },
+  "op0_matrixC_slice7": {
+    "base_addr": "0x0E031400",
+    "path": "install/op0/slice07/matrix_C_linearized_128bit.txt"
+  },
+  "op0_matrixC_slice8": {
+    "base_addr": "0x10031400",
+    "path": "install/op0/slice08/matrix_C_linearized_128bit.txt"
+  },
+  "op0_matrixC_slice9": {
+    "base_addr": "0x12031400",
+    "path": "install/op0/slice09/matrix_C_linearized_128bit.txt"
+  },
+  "op0_matrixC_slice10": {
+    "base_addr": "0x14031400",
+    "path": "install/op0/slice10/matrix_C_linearized_128bit.txt"
+  },
+  "op0_matrixC_slice11": {
+    "base_addr": "0x16031400",
+    "path": "install/op0/slice11/matrix_C_linearized_128bit.txt"
+  },
+  "op0_matrixC_slice12": {
+    "base_addr": "0x18031400",
+    "path": "install/op0/slice12/matrix_C_linearized_128bit.txt"
+  },
+  "op0_matrixC_slice13": {
+    "base_addr": "0x1A031400",
+    "path": "install/op0/slice13/matrix_C_linearized_128bit.txt"
+  },
+  "op0_matrixC_slice14": {
+    "base_addr": "0x1C031400",
+    "path": "install/op0/slice14/matrix_C_linearized_128bit.txt"
+  },
+  "op0_matrixC_slice15": {
+    "base_addr": "0x1E031400",
+    "path": "install/op0/slice15/matrix_C_linearized_128bit.txt"
+  },
+  "op0_matrixC_slice16": {
+    "base_addr": "0x20031400",
+    "path": "install/op0/slice16/matrix_C_linearized_128bit.txt"
+  },
+  "op0_matrixC_slice17": {
+    "base_addr": "0x22031400",
+    "path": "install/op0/slice17/matrix_C_linearized_128bit.txt"
+  },
+  "op0_matrixC_slice18": {
+    "base_addr": "0x24031400",
+    "path": "install/op0/slice18/matrix_C_linearized_128bit.txt"
+  },
+  "op0_matrixC_slice19": {
+    "base_addr": "0x26031400",
+    "path": "install/op0/slice19/matrix_C_linearized_128bit.txt"
+  },
+  "op0_matrixC_slice20": {
+    "base_addr": "0x28031400",
+    "path": "install/op0/slice20/matrix_C_linearized_128bit.txt"
+  },
+  "op0_matrixC_slice21": {
+    "base_addr": "0x2A031400",
+    "path": "install/op0/slice21/matrix_C_linearized_128bit.txt"
+  },
+  "op0_matrixC_slice22": {
+    "base_addr": "0x2C031400",
+    "path": "install/op0/slice22/matrix_C_linearized_128bit.txt"
+  },
+  "op0_matrixC_slice23": {
+    "base_addr": "0x2E031400",
+    "path": "install/op0/slice23/matrix_C_linearized_128bit.txt"
+  },
+  "op0_matrixC_slice24": {
+    "base_addr": "0x30031400",
+    "path": "install/op0/slice24/matrix_C_linearized_128bit.txt"
+  },
+  "op0_matrixC_slice25": {
+    "base_addr": "0x32031400",
+    "path": "install/op0/slice25/matrix_C_linearized_128bit.txt"
+  },
+  "op0_matrixC_slice26": {
+    "base_addr": "0x34031400",
+    "path": "install/op0/slice26/matrix_C_linearized_128bit.txt"
+  },
+  "op0_matrixC_slice27": {
+    "base_addr": "0x36031400",
+    "path": "install/op0/slice27/matrix_C_linearized_128bit.txt"
+  },
+  "op0_config": {
+    "base_addr": "0x00062800",
+    "path": "install/cfg_pkg/op0_node0004_accumulate_wave0_nopp_r1_bitstream_128b.bin"
+  }
+}

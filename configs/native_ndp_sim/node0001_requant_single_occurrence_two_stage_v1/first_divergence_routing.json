@@ -1,0 +1,27 @@
+{
+  "activation": [
+    {
+      "enable_only": "guard-only",
+      "first_divergence": "guard accepted write/data or guard completion"
+    },
+    {
+      "enable_only": "alias-lifetime",
+      "first_divergence": "guard completion to round start, same-address visibility, or stage1 external-preload isolation"
+    },
+    {
+      "enable_only": "round-only",
+      "first_divergence": "round accepted write/data after round has started"
+    }
+  ],
+  "both_writes_correct_but_completion_missing": "retain combined completion evidence; do not expand unrelated tests",
+  "combined_pass_action": "keep_all_additional_atomic_contracts_disabled",
+  "default_disabled_contracts": [
+    "guard-only",
+    "round-only",
+    "alias-lifetime"
+  ],
+  "default_enabled_contracts": [
+    "single-occurrence-two-stage"
+  ],
+  "schema": "requant-atomic-first-divergence-routing-v1"
+}

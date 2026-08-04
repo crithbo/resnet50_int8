@@ -1,0 +1,383 @@
+{
+  "schema": "qlinearadd_composite_backend_predesign_v1",
+  "status": "PREDESIGN_COMPLETE_MATERIALIZATION_FORBIDDEN",
+  "candidate_release": false,
+  "formal_target_instance_allowed": false,
+  "evidence_level": "E1_PREDESIGN_ONLY",
+  "mutable_read_receipt": {
+    ".agents/plan.md": {
+      "sha256": "a1e19c6e84360641205836f6fa0b172fc0405472b8b2dfdc4c580cc2e0875516",
+      "reason": "latest P1-A dispatch and fail-closed boundary receipt",
+      "drift_policy": "report warning and require mainline scope review; do not invalidate unchanged family semantic sources"
+    }
+  },
+  "provenance": {
+    ".agents/rules/生成前必读索引.md": "3940dc4d6f6d0b5d52347acd6fe5655281562dc09d4082c298cf70c7dbfb4f19",
+    ".agents/rules/QLinearAdd算子配置规则.md": "981afd5aa0a0ee240c8e6c863cbac0c89dc299344554eb893d707cf96fe0b4ee",
+    ".agents/rules/精确UINT8量化尾专项规则.md": "5593f9df3bbc5605e9b019b6cc53ee33b0edbeb203d657fdf974cb4b680c2df0",
+    "contracts/typed_config_parameter_contract.json": "abbc87b0b13c92611a90fe1767b32b15fe9c49f23bee616ca2bb51219dd181bd",
+    "contracts/operator_config/stage_state_lifetime_contract_v1.json": "67f8e7758128a0dfea4b3faf2eab700b01b602ca052c3301fec967d6d2604744",
+    "contracts/operator_config/stage_config_system_v1.json": "79aa86fc958a2394c5161229378e490472bd5ea4273e40ea5d2139294038cf1e",
+    "contracts/operator_config/resnet50_ndpsim_reuse_gap_audit_v1.json": "ca3daf485f4098793e1c4544139c22e62119dbe5743e0db02e4e07d7c301c7c5",
+    "contracts/operator_config/exact_uint8_quant_tail_capability_v1.json": "d75f5aa3bfd5038ca4e53da1568fb651358d6f34f5de20fdfb01cc095f0e0b69",
+    "resnet50_pipeline/golden/subops.py": "43fbd08d86844a9a689196ad1d1b47ef923559b624b57bf929c0ac3ef5c880c3",
+    "ndp-sim/jsons/add_dequant_uint8CWH_uint8CWH_fp32CWH.json": "15f5321ab57cb73ca2f650693859657759f834389677451a9a89e66217e9e6da",
+    "ndp-sim/jsons/prefill_add_fp32MN_fp32MN_fp32MN.json": "d78e184c92f3f88875f8ef6caea13d88e8e35f514226e893bb6078ed2f4e4a85",
+    "ndp-sim/model_execplan/src/execution_plan_generator/models.py": "7e627747aa01daadc1a53887b1e501f9431527011bc60b6783145ace8a6c79fc",
+    "ndp-sim/model_execplan/src/execution_plan_generator/json_loader.py": "f1f6e0316812ebc8382f445b780e3143383ea0c034485d4393711302ab691ffc",
+    "ndp-sim/model_execplan/src/execution_plan_generator/control_registers.py": "cd12ee5f31231e856f9f63f61746a8e43435228d0268813c3eb8c4630e09a941",
+    "ndp-sim/bitstream/config/mapper.py": "c7685cc297e4e11ccafa23758a46d20986e5db931fcb3c4e21f5f4a0a2534226"
+  },
+  "current_match_rule_dependencies": [
+    {
+      "path": ".agents/rules/QLinearAdd算子配置规则.md",
+      "sha256": "981afd5aa0a0ee240c8e6c863cbac0c89dc299344554eb893d707cf96fe0b4ee",
+      "required_rule_ids": [
+        "CDA-QADD-W3-OPERATION-ORDER-001",
+        "CDA-QADD-SIX-QPARAM-TYPED-TRANSPORT-001",
+        "CDA-QADD-RESIDUAL-BROADCAST-DAG-001",
+        "CDA-QADD-STAGE0-THREE-PHYSICAL-STAGES-001",
+        "CDA-QADD-BROADCAST-REPLAY-TAIL-ACCOUNTING-001",
+        "CDA-QADD-STAGE0-CLAIM-BOUNDARY-001",
+        "CDA-QADD-READINESS-LIFETIME-001",
+        "CDA-QADD-EXACT-QUANT-TAIL-DEPENDENCY-001"
+      ]
+    },
+    {
+      "path": ".agents/rules/精确UINT8量化尾专项规则.md",
+      "sha256": "5593f9df3bbc5605e9b019b6cc53ee33b0edbeb203d657fdf974cb4b680c2df0",
+      "required_rule_ids": [
+        "CDA-QUANT-TAIL-NUMERIC-ORDER-001",
+        "CDA-QUANT-TAIL-ZP-AFTER-ROUND-001",
+        "CDA-QUANT-TAIL-MAGIC-DOMAIN-001",
+        "CDA-QUANT-TAIL-CAPABILITY-MATRIX-001"
+      ]
+    }
+  ],
+  "coverage": {
+    "instance_count": 17,
+    "same_shape_residual_add_count": 16,
+    "broadcast_bias_add_count": 1,
+    "instance_manifest_sha256": "d7c9f0266527d25a0b166df6788720fa38f24a31061c5cef2c92eb0dd7bc2cca",
+    "instances": [
+      "node-0007/hwop-0007-00",
+      "node-0011/hwop-0011-00",
+      "node-0015/hwop-0015-00",
+      "node-0020/hwop-0020-00",
+      "node-0024/hwop-0024-00",
+      "node-0028/hwop-0028-00",
+      "node-0032/hwop-0032-00",
+      "node-0037/hwop-0037-00",
+      "node-0041/hwop-0041-00",
+      "node-0045/hwop-0045-00",
+      "node-0049/hwop-0049-00",
+      "node-0053/hwop-0053-00",
+      "node-0057/hwop-0057-00",
+      "node-0062/hwop-0062-00",
+      "node-0066/hwop-0066-00",
+      "node-0070/hwop-0070-00",
+      "node-0076/hwop-0076-00"
+    ],
+    "shape_classes": [
+      {
+        "a": [16, 256, 56, 56],
+        "b": [16, 256, 56, 56],
+        "y": [16, 256, 56, 56],
+        "count": 3
+      },
+      {
+        "a": [16, 512, 28, 28],
+        "b": [16, 512, 28, 28],
+        "y": [16, 512, 28, 28],
+        "count": 4
+      },
+      {
+        "a": [16, 1024, 14, 14],
+        "b": [16, 1024, 14, 14],
+        "y": [16, 1024, 14, 14],
+        "count": 6
+      },
+      {
+        "a": [16, 2048, 7, 7],
+        "b": [16, 2048, 7, 7],
+        "y": [16, 2048, 7, 7],
+        "count": 3
+      },
+      {
+        "a": [16, 1000],
+        "b": [1000],
+        "y": [16, 1000],
+        "count": 1
+      }
+    ]
+  },
+  "six_qparam_transport": {
+    "owner": "typed operator request; never mapper defaults",
+    "required_roles_in_order": [
+      "a_scale",
+      "a_zero_point",
+      "b_scale",
+      "b_zero_point",
+      "y_scale",
+      "y_zero_point"
+    ],
+    "scale_descriptor": {
+      "dtype": "float32",
+      "shape": [1],
+      "transport": "exact float32_bits plus value_sha256"
+    },
+    "zero_point_descriptor": {
+      "dtype": "uint8",
+      "shape": [1],
+      "transport": "exact uint8 scalar plus value_sha256"
+    },
+    "native_interface_requirement": "OperatorSpec must gain a typed parameter map or an equivalent hash-bound companion descriptor; global integer params and A/B/Bprime/C tensor slots are insufficient.",
+    "handler_requirement": "The QLinearAdd composite handler consumes all six roles, rejects missing/extra/wrong dtype values, and binds their exact bit patterns to both stage configuration and provenance.",
+    "mapper_requirement": "The mapper places an already typed stage DAG; it must not infer qparams, substitute template constants, or silently default output quantization."
+  },
+  "w3_numeric_contract": {
+    "arithmetic_order": [
+      "a_center_i32 = int32(A) - int32(a_zero_point)",
+      "b_center_i32 = int32(B) - int32(b_zero_point)",
+      "a_center_f32 = float32(a_center_i32)",
+      "b_center_f32 = float32(b_center_i32)",
+      "a_scaled_f32 = round_float32(a_center_f32 * float32(a_scale))",
+      "b_scaled_f32 = round_float32(b_center_f32 * float32(b_scale))",
+      "sum_f32 = round_float32(a_scaled_f32 + b_scaled_f32)",
+      "quotient_f32 = round_float32(sum_f32 / float32(y_scale))",
+      "rounded_i64 = round_nearest_even_to_int64(quotient_f32)",
+      "shifted_i64 = rounded_i64 + int64(y_zero_point)",
+      "Y = uint8(clamp(shifted_i64, 0, 255))"
+    ],
+    "rounding": "IEEE-754 round-to-nearest-even at each float32 operation; final integer rounding is nearest-even",
+    "saturation": "clamp after adding y_zero_point",
+    "algebraic_reassociation_allowed": false
+  },
+  "front_half_reuse": {
+    "reusable": [
+      "two independent UINT8 read streams",
+      "buffer0 and buffer2 supply",
+      "GA uint8-to-float32 ingress",
+      "paired branch matching",
+      "normal outbuffer through buffer5 to write MSE",
+      "LC/MSE/Buffer/GA structural field patterns"
+    ],
+    "not_reusable_without_new_proof": [
+      "template constant value 1",
+      "affine decomposition x*scale + float32(-zero_point*scale)",
+      "output dtype and output quantization",
+      "target loop ranges, occurrence, tail, addresses, banks, lifetime, mapper cache, bitstream"
+    ],
+    "affine_reassociation_exhaustive_counterexamples": {
+      "domain": "all 65,536 uint8 A/B scalar pairs for every one of the 17 qparam sets",
+      "branch_bit_difference_exists_for_all_nonzero-zero-point branches": true,
+      "final_uint8_difference": [
+        {
+          "node_id": "node-0007",
+          "mismatch_pair_count": 2,
+          "first": {"a": 120, "b": 232, "w3": 246, "affine_reassociated": 245}
+        },
+        {
+          "node_id": "node-0070",
+          "mismatch_pair_count": 1,
+          "first": {"a": 213, "b": 1, "w3": 151, "affine_reassociated": 152}
+        }
+      ]
+    }
+  },
+  "stage_feasibility": {
+    "single_stage_fused": {
+      "status": "UNDECIDABLE_UNTIL_P0_A",
+      "requirements": [
+        "P0-A exact FP32-to-UINT8 tail is placeable after the W3-ordered add in the same occurrence",
+        "GA/SFU placement, normal-outbuffer conversion, rounding and saturation are all proven",
+        "A/B matching and Y write preserve one accepted output per logical element",
+        "no intermediate result is rounded or reordered differently"
+      ],
+      "benefit": "no FP32 scratch edge",
+      "release_allowed": false
+    },
+    "two_stage_explicit_scratch": {
+      "status": "STRUCTURALLY_FEASIBLE_NUMERIC_TAIL_PENDING_P0_A",
+      "stage0": "W3-ordered UINT8 A/B dequantize and FP32 add",
+      "stage1": "P0-A exact FP32-to-UINT8 quant tail",
+      "scratch": {
+        "dtype": "float32",
+        "logical_shape": "same as Y",
+        "logical_bytes": "4 * product(Y.shape)",
+        "alignment_bytes": 16,
+        "alias_allowed": false,
+        "lifetime": "stage0 first write through stage1 final accepted read",
+        "visibility": "explicit DRAM write, completion barrier, and stage1 read; implicit cross-stage buffer reuse forbidden"
+      },
+      "release_allowed": false
+    },
+    "selection": "DEFERRED_TO_P0_A_EXACT_TAIL_CAPABILITY_AND_PLACEMENT"
+  },
+  "edge_allocation_address_lifetime": {
+    "global_constraints": {
+      "base_alignment_bytes": 16,
+      "concrete_base_addresses_allowed_in_predesign": false,
+      "a_b_y_alias_allowed": false,
+      "per_slice_base_must_be_replayed_from_execplan": true,
+      "readiness_before_reuse": "last accepted read, not request issue",
+      "y_release": "after last consumer accepted final read"
+    },
+    "A": {
+      "stream": "read stream0 -> buffer0 -> GA inport0",
+      "region_bytes": "product(A.shape)",
+      "allocation": "producer-owned inter-node tensor region",
+      "lifetime": "producer visibility through QLinearAdd final accepted A read"
+    },
+    "B": {
+      "stream": "read stream1 -> buffer2 -> GA inport1",
+      "same_shape": {
+        "region_bytes": "product(B.shape)",
+        "allocation": "producer-owned inter-node tensor region",
+        "lifetime": "producer visibility through QLinearAdd final accepted B read"
+      },
+      "node0076_broadcast": {
+        "region_bytes": 1000,
+        "logical_consumption_bytes": 16000,
+        "allocation": "immutable initializer region",
+        "address_policy": "replay the same 1000-byte row for each of 16 batches; do not materialize a 16x copy",
+        "lifetime": "preload visibility through node0076 final accepted B read",
+        "validation": "enumerate all B request occurrences and prove address sequence repeats exactly per batch"
+      }
+    },
+    "Y": {
+      "stream": "GA normal outport -> buffer5 -> write stream0",
+      "region_bytes": "product(Y.shape)",
+      "allocation": "fresh non-alias output region",
+      "visibility": "only after the final accepted write and stage completion",
+      "lifetime": "first accepted write through last downstream consumer accepted read"
+    },
+    "current_machine_contract_state": "all QLinearAdd inter-node edges remain blocked_until_address_offset_and_lifetime_are_bound"
+  },
+  "readiness_and_backpressure": {
+    "A_B_lockstep": "A and B share a logical occurrence carrier so GA accepts a pair only when both mapped buffers are ready",
+    "shared_LC_rule": "Shared LC ready is the AND of every downstream branch; prove the complete ready graph acyclic and prove progress for both read streams.",
+    "preferred_topology": "Share only the A/B occurrence carrier; keep Y write occurrence on an independent authorized branch as in native add structures.",
+    "broadcast_rule": "node0076 B replay must produce one B element for every A occurrence; a cached/keep value may be used only with exact release and multiplicity proof.",
+    "terminal_rule": "A, B and Y must agree on ordered logical occurrence count, last and last_index after tail expansion.",
+    "materialized_checks": [
+      "full occurrence enumeration",
+      "read bytes = Buffer AG supply = GA accepted pair count",
+      "GA output count = buffer5 supply = MSE write count",
+      "first/stall/resume progress",
+      "tail and partial-line read-modify-write behavior"
+    ]
+  },
+  "parallel_design_complete_now": [
+    "17-instance typed inventory and five shape classes",
+    "six-qparam typed transport envelope",
+    "W3 float32 operation order",
+    "same-shape and broadcast logical DAG",
+    "A/B/Y symbolic allocation, address and lifetime constraints",
+    "two-stage explicit scratch lifetime",
+    "shared A/B LC readiness and independent Y branch requirements",
+    "native OperatorSpec/handler/mapper interface gap"
+  ],
+  "dependency_on_quant_tail": {
+    "dependency_id": "R5_GAP_EXACT_UINT8_QUANT_TAIL",
+    "owner": "P0-A QuantizeLinear family/mainline-approved shared contract",
+    "p0a_receipt": {
+      "path": "contracts/operator_config/exact_uint8_quant_tail_capability_v1.json",
+      "sha256": "d75f5aa3bfd5038ca4e53da1568fb651358d6f34f5de20fdfb01cc095f0e0b69",
+      "status": "PROPOSAL_FAIL_CLOSED_NO_UNCONDITIONAL_PURE_CONFIG",
+      "decision": "NO_UNCONDITIONAL_PURE_CONFIG_PROVEN"
+    },
+    "p0a_first_common_unknown": {
+      "id": "CE_FMA_VS_SEQUENTIAL_ROUND",
+      "int32": 400,
+      "multiplier_bits": "0x3d828f5c",
+      "zero_point": 0,
+      "required_sequential_uint8": 26,
+      "one_round_fused_uint8": 25
+    },
+    "p0a_conditional_candidate": {
+      "rounding_bias": "fixed FP32 magic 12582912.0",
+      "zero_point_encoding": "INT32_SUB raw constant 0x4b400000-zero_point",
+      "topology": "three-PE four-lane when scaling and magic add are separate",
+      "release_state": "PROPOSAL_ONLY",
+      "unproven": [
+        "explicit GA multiply rounding boundary",
+        "three-PE four-lane placement",
+        "finite scaled-domain bound",
+        "typed binding",
+        "mapper registration"
+      ]
+    },
+    "required_exports": [
+      "exact FP32 ingress contract",
+      "float32 division or reciprocal-multiply order",
+      "nearest-even tie behavior",
+      "arbitrary output zero-point addition",
+      "UINT8 saturation",
+      "GA/SFU opcode and placement capability",
+      "typed coefficient transport",
+      "normal outbuffer and MSE occurrence contract",
+      "config-bound simulator interpretation"
+    ],
+    "waiting_decisions": [
+      "single-stage fused versus two-stage explicit scratch",
+      "final output-tail PE/SFU graph",
+      "tail transaction width and occurrence",
+      "concrete handler control-register updates",
+      "final mapper constraints"
+    ],
+    "qlinearadd_impact": {
+      "single_stage_fused": "REMAINS_UNDECIDABLE",
+      "two_stage_explicit_scratch": "REMAINS_STRUCTURALLY_FEASIBLE_NUMERIC_TAIL_UNCLOSED",
+      "materialization": "FORBIDDEN",
+      "mapped_shared_blockers": [
+        "B_QUANT_TAIL_FMA_ROUNDING_POINT",
+        "B_QUANT_TAIL_MAGIC_DOMAIN_BOUND",
+        "B_QUANT_TAIL_EXACT_FP32_DIVISION",
+        "B_QUANT_TAIL_THREE_PE_TOPOLOGY",
+        "B_QUANT_TAIL_TYPED_BINDING",
+        "B_QUANT_TAIL_MAPPER_REGISTRATION"
+      ]
+    },
+    "node0076_is_mandatory_nonzero_y_zero_point_holdout": true,
+    "materialization_must_remain_blocked": true
+  },
+  "blocker_delta": {
+    "add": [
+      {
+        "id": "B_QADD_FLOAT32_OPERATION_ORDER",
+        "reason": "The reusable add-dequant affine reassociation is not W3 bit-exact; node0007 and node0070 have exhaustive final-UINT8 counterexamples."
+      },
+      {
+        "id": "B_QADD_NATIVE_TYPED_HANDLER",
+        "reason": "Native OperatorSpec/json_loader/control handler has no approved six-qparam typed transport for complete QLinearAdd."
+      },
+      {
+        "id": "B_QADD_BROADCAST_ADDRESS_LIFETIME",
+        "reason": "node0076 requires exact 1000-byte B-region replay across 16 batches and nonzero output zero-point closure."
+      },
+      {
+        "id": "B_QADD_QUANT_TAIL_P0A_UNRESOLVED",
+        "reason": "P0-A proves no unconditional pure-config tail; GA multiply rounding, exact FP32 scaling, bounded magic topology, typed binding and mapper remain unresolved."
+      }
+    ],
+    "keep_open": [
+      "B_ADD_DUAL_QDOMAIN",
+      "B_ADD_UINT8_REQUANT",
+      "B_EXECPLAN_TYPED_TRANSPORT",
+      "B_ADD_REQUANT_E5",
+      "B_SERVER_E4_E5",
+      "B_QADD_SPECIALTY_AND_MATERIALIZATION_CONTRACT"
+    ],
+    "close": []
+  },
+  "forbidden_outputs": {
+    "target_json": false,
+    "mapping": false,
+    "bitstream": false,
+    "execplan": false,
+    "sca": false,
+    "server_package": false,
+    "server_check_or_run": false
+  }
+}

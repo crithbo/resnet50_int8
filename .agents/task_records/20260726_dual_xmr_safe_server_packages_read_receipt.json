@@ -1,0 +1,50 @@
+{
+  "schema": "dual-xmr-safe-server-package-mandatory-read-receipt-v1",
+  "recorded_on": "2026-07-26",
+  "status": "complete_before_package_generation",
+  "scope": [
+    "rq_node0001_guardonly_stock_v4",
+    "dq_node0077_atomic1_stock_v3"
+  ],
+  "rules": {
+    ".agents/rules/生成前必读索引.md": "539e8dfbe52ad9fc8bd9fdef8c69d448fb5fd713e938e3adc5f663f82fd806d7",
+    ".agents/rules/服务器测试包生成规则.md": "2ceeb45736ac4d6a887024642c71bfc1fa40cf35646e7fc93e5a751d3d4d98d0",
+    ".agents/rules/RequantizeUint8算子配置规则.md": "695c9a505758bd804ac662cd780cd56eb5fbcb9628869865557639d4d095b1ce",
+    ".agents/rules/DequantizeLinear算子配置规则.md": "b6c6586422706287625c39792e33eda6b39dc4f8a4cbd24f363b921cbc526b09",
+    ".agents/rules/DequantizeLinear原子动态合同规则.md": "0785af08353894f42aa703f06929d2c05944898698fdc819a7b8e0ae6a737199"
+  },
+  "server_consumers": {
+    "NDP_copy01/README_HARDWARE_SIM_ENTRY.md": "4318f3a28de399fb522740315f11bdddf346e71969cf1e45686899a568b042d7",
+    "NDP_copy01/Makefile.tb_NDP_Top_new_phy": "528d93f3c7f458d256bdbaf1d9ec39edfbfe5bd8a924e2bf0786914a634f4aba",
+    "NDP_copy01/tb_NDP_Top_new_phy.sv": "e068f7500f0c71c2ba2c756f74a4519c33d13d4afe0fa4cc9f6c9e79b1e3f994",
+    "NDP_copy01/native_return_observer.svh": "47f0d66728f47c92f9f93f8cf87b47a0ff8567d587c3a099e2d03f610af09f49",
+    "NDP_copy01/rtl/Slice/LSU/Stream_Engine/Memory_Stream_Engine/Memory_WR_Stream_Engine/WR_Memory_AG.sv": "7ecfdf2e4a9493f1f470cac03b4b581f6bde95126ab163a55dff8918d3aaa09f"
+  },
+  "package_consumers_read_before_edit": {
+    "tools/build_requant_guard_only_onecmd_server_test.py": "210173c718d59a229d1d7486ccf393c655ec64a657ed69c6a58117876ea9cb36",
+    "tools/build_requant_atomic_onecmd_server_test.py": "5318d204100fdb92dec561f3f412fd88bd1f45e49bb3cf60bf1447f1259cf1aa",
+    "tools/requant_atomic_server_runtime.py": "b910a7b6a985f17fc8e144578b5728c106f9e2b30c0865ee113de4ef41645009",
+    "tools/requant_node0001_server_runtime.py": "9c91cac49673f1c79545a210ce83547dc0882069aeedc0333d2d7dfc646fa9eb",
+    "tools/build_dequant_atomic_onecmd_server_test.py": "391587ea60c95d2f59eb89768beecbcd1ad3d7f54e366dd7bb0f6b681cd433bf",
+    "tools/dequant_atomic_server_runtime.py": "ccc9ff31cc5625389f4d922c3e8ed79d53ff08c757299f3ab1267258339c3414"
+  },
+  "failure_evidence": {
+    "server_returns/rq_node0001_guardonly_stock_v3_return_analysis_20260726.json": "db3fc56bbe19f810a889e8b7f94dfb8bbbbcf74deda89fb15162aa09bb8b6ba0",
+    ".agents/task_records/20260726_requant_guard_only_v3_observer_xmr_compile_failure.md": "04ac338861c3534a4bbca55312f009bbe8d01a3eae4ff738285a4c89dee1dc3b",
+    "server_returns/dq_node0077_atomic1_stock_v2_return_analysis_20260726.json": "1c802e43a58df45e84a6c16a3ec067d055238c3be039d608b4baf1742cb9e7b9",
+    ".agents/task_records/20260726_dequant_atomic_v2_predicted_xmr_return.md": "67e13a7f275a78a658029ed9e8c4eaa41f4d3d50ee102b772ae46527dcfd2236"
+  },
+  "plan_sha256": "bedd259ae1140a245c1f5e78d707e9542ce4489168f0264cd195e6f5ee6fab52",
+  "rule_ids": [
+    "CDA-SERVER-OBSERVER-XMR-ELABORATION-CONSTANT-001",
+    "CDA-REQUANT-GUARD-DIAGNOSTIC-EVIDENCE-BOUNDARY-001",
+    "CDA-DEQUANT-ATOMIC-STOCK-TB-001"
+  ],
+  "boundaries": {
+    "upload_or_server_run_authorized": false,
+    "tb_or_rtl_modification_authorized": false,
+    "semantic_workload_change_authorized": false,
+    "candidate_release": false,
+    "counts_as_e4_or_e5": false
+  }
+}

@@ -1,0 +1,470 @@
+{
+  "schema": "deepseek-onnx-stage-validation-read-receipt-v1",
+  "created_at": "2026-07-25",
+  "task": "DeepSeek ONNX -> hardware Stage IR -> authorized operator JSON local E2 rule validation",
+  "scope": {
+    "mode": "local_rule_validation",
+    "json_generation_allowed_after_receipt": true,
+    "server_package_generation_allowed": false,
+    "rtl_tree_mutation_allowed": false,
+    "maximum_evidence_level": "E2"
+  },
+  "source_identity_boundary": {
+    "onnx_repository_classification": "SEMANTIC_MODEL_MATCH",
+    "onnx_repository_is_original_ndpsim_weight_source": false,
+    "original_source_identity_claim_allowed": false,
+    "crop_required_for_ndpsim_shape": true,
+    "direct_onnx_shape_equals_hardware_stage_claim_allowed": false
+  },
+  "rules_read": [
+    {
+      "path": ".agents/agent.md",
+      "sha256": "367f4f4260246d40531d83cc6d24fe94946cb05bce6fbef18c428f05b634c083",
+      "size_bytes": 3439,
+      "reason": "task routing and immutable RTL/server-package boundaries"
+    },
+    {
+      "path": ".agents/rules/生成前必读索引.md",
+      "sha256": "539e8dfbe52ad9fc8bd9fdef8c69d448fb5fd713e938e3adc5f663f82fd806d7",
+      "size_bytes": 5650,
+      "reason": "mandatory read routing and E0-E5 evidence definitions"
+    },
+    {
+      "path": ".agents/rules/算子配置规则.md",
+      "sha256": "a5fbe2f0fa2e26d8cd4ebfe8772d5a3c69516d6918cfaa5087198706a352427b",
+      "size_bytes": 12168,
+      "reason": "shared provenance, semantic ownership, materialized roundtrip and rebuild gates"
+    },
+    {
+      "path": ".agents/rules/NDP硬件字段语义.md",
+      "sha256": "7f446adb1719658ce75c2614c6d619fc2c7cdcabf5e4fd34945482645539158f",
+      "size_bytes": 12602,
+      "reason": "LC, LC_PE, MSE, padding/tail, Buffer, SA, GA and N2N semantics used by the representative stages"
+    },
+    {
+      "path": ".agents/rules/DeepSeek_ONNX到Stage验证规则.md",
+      "sha256": "1b36b9844bfcbd3b8f153556543fb9f2cda8975719675106f4cd9997821873ea",
+      "size_bytes": 6698,
+      "reason": "DeepSeek model identity, explicit crop, Stage DAG, oracle and holdout boundaries"
+    }
+  ],
+  "native_sources_read": [
+    {
+      "path": "ndp-sim/generate_python_golden/README.md",
+      "sha256": "4d6cc73fa99b283d557e5fe11cba40d1044e09ade3740e73efaad1ddef1f2d60",
+      "size_bytes": 43056,
+      "reason": "declared DeepSeek model, stage decomposition, relayout and decode/prefill topology"
+    },
+    {
+      "path": "ndp-sim/generate_python_golden/config.json",
+      "sha256": "cb55a90b5c81dad0981c1bb9e11cc4d2851bdba62fd522ae2f9c95a80022a68f",
+      "size_bytes": 508,
+      "reason": "derived hardware model dimensions and slice topology"
+    },
+    {
+      "path": "ndp-sim/generate_python_golden/weight_gen.py",
+      "sha256": "d6435369c1e52903d41d57eb5d941b82ea714bb5e3864b2c2659974a4041e476",
+      "size_bytes": 5495,
+      "reason": "actual crop axes and output layout producer"
+    },
+    {
+      "path": "ndp-sim/generate_python_golden/decode_data_loader.py",
+      "sha256": "b6fc6e53b259b7fe737950872ee35e08e401646110a5f7deaff0d5266bda4e1e",
+      "size_bytes": 8630,
+      "reason": "actual layer-0 tensor-name selection and Fortran-order crop consumer"
+    },
+    {
+      "path": "ndp-sim/generate_python_golden/decode_ops.py",
+      "sha256": "404412b8ee14299cf29ff725359a5627b663d372a13e86f639709c4572343d9e",
+      "size_bytes": 36017,
+      "reason": "actual 43-occurrence decode numeric model and operator registry"
+    },
+    {
+      "path": "ndp-sim/generate_python_golden/generate_decode_program_json.py",
+      "sha256": "73dd40d35a4250ff543703669f390c6888d0223ccc59584713fbadd9dee848b9",
+      "size_bytes": 22074,
+      "reason": "actual 43-occurrence decode Stage DAG producer"
+    },
+    {
+      "path": "ndp-sim/generate_python_golden/model_execplan/op_json/decode_all.json",
+      "sha256": "16fa5853f1b56fec02c28434f7270190c7cddeba9c8464026887f96a28ddde61",
+      "size_bytes": 32171,
+      "reason": "generated native decode representative graph used to cross-check stage shapes and ports"
+    },
+    {
+      "path": "ndp-sim/model_execplan/README.md",
+      "sha256": "992360e8cfc1a15d03abbbb70047de86548e07518e329248d17c61c130b9b11f",
+      "size_bytes": 40935,
+      "reason": "native graph, address, config, bitstream and execplan lifecycle"
+    },
+    {
+      "path": "ndp-sim/model_execplan/README_op_json.md",
+      "sha256": "261cd35b989dc44f9d783eaddef00744a9b0d2d7a3112f683ea3ed2502854107",
+      "size_bytes": 6663,
+      "reason": "op_json composition, remapping and layer graph lifecycle"
+    },
+    {
+      "path": "ndp-sim/model_execplan/main.py",
+      "sha256": "661623ebf37f0c2fe31a530fc53c756e58408000a371d7cc528301314a4dac7e",
+      "size_bytes": 7346,
+      "reason": "actual native command entry and output consumers"
+    },
+    {
+      "path": "ndp-sim/model_execplan/src/execution_plan_generator/json_loader.py",
+      "sha256": "f1f6e0316812ebc8382f445b780e3143383ea0c034485d4393711302ab691ffc",
+      "size_bytes": 19576,
+      "reason": "actual graph shape/source/remapping parser"
+    },
+    {
+      "path": "ndp-sim/model_execplan/src/execution_plan_generator/pipeline.py",
+      "sha256": "1e59210c4401dbe6c694ffdb34939531238c0e3c949ff965a3f74667eb46cfae",
+      "size_bytes": 11797,
+      "reason": "actual address-bound JSON and bitstream regeneration orchestration"
+    },
+    {
+      "path": "ndp-sim/model_execplan/gen_layer0_oplist.py",
+      "sha256": "1fe5a6702684792098bcf29b35c4c9003ae7b32fefe36181c68159ff5b583324",
+      "size_bytes": 7444,
+      "reason": "actual native prefill layer-0 graph composer and source-reference rewriter"
+    },
+    {
+      "path": "ndp-sim/model_execplan/src/execution_plan_generator/address_planner.py",
+      "sha256": "2208ffa925c509d2479e2763f323551a36e1b6c1680a112e7519f6356a312ea0",
+      "size_bytes": 30150,
+      "reason": "actual producer-output allocation and consumer IO aliasing semantics"
+    },
+    {
+      "path": "ndp-sim/model_execplan/src/execution_plan_generator/slice_routing.py",
+      "sha256": "10431a3f47057988eaaf2b56de6723dedd4d75efa6449ac1b7fe1c02de307599",
+      "size_bytes": 2220,
+      "reason": "actual slice0, slice4 and xor source-slice routing semantics"
+    },
+    {
+      "path": "ndp-sim/model_execplan/src/execution_plan_generator/models.py",
+      "sha256": "7e627747aa01daadc1a53887b1e501f9431527011bc60b6783145ace8a6c79fc",
+      "size_bytes": 3280,
+      "reason": "actual tensor, source, slice mask and address-plan data model"
+    },
+    {
+      "path": "ndp-sim/model_execplan/src/execution_plan_generator/control_registers.py",
+      "sha256": "cd12ee5f31231e856f9f63f61746a8e43435228d0268813c3eb8c4630e09a941",
+      "size_bytes": 85852,
+      "read_scope": "prefill remote-sum, ring-GEMM, local-QKT, Softmax scale-mask/sub-exp and prefill SiLU handlers plus registry",
+      "reason": "actual shape-to-register and explicit layout-hint derivation for the audited prefill attention stages, Softmax and SiLU holdout"
+    },
+    {
+      "path": "ndp-sim/model_execplan/src/execution_plan_generator/template_manager.py",
+      "sha256": "2d17fbdaa67c8f307739c1c90887d780d5b7037282c535e154239aca064d85ea",
+      "size_bytes": 13462,
+      "reason": "actual operator metadata, initial bitstream, config length and SiLU SFU coefficient consumer"
+    },
+    {
+      "path": "ndp-sim/model_execplan/src/execution_plan_generator/output_writer.py",
+      "sha256": "434dde3c5a34ab8f3992095771876e7fad56e443eec08eb469c093b30f87beae",
+      "size_bytes": 48029,
+      "read_scope": "operator JSON patching, stream base-address patching, control-field projection, execplan/SCA/SCA_D output and config/SFU install copy",
+      "reason": "actual materialized JSON and downstream artifact writer for the SiLU holdout"
+    },
+    {
+      "path": "ndp-sim/model_execplan/src/execution_plan_generator/instruction_generator.py",
+      "sha256": "cdc7d4dcdf41ec79571d53a909a2b2d8f1ab7897a404969b5cf49d416fc85315",
+      "size_bytes": 35666,
+      "read_scope": "Clock_Enable, Load_Config, Write_Reg, Start_Comp, base-address composition, control-write merge and enabled-register gate",
+      "reason": "actual execplan instruction encoder and lifecycle consumer"
+    },
+    {
+      "path": "ndp-sim/model_execplan/src/execution_plan_generator/config_stream_decoder.py",
+      "sha256": "d4de6c7099d651ea119926eaf3f5f23e4e623bd6daccd3166049b1d67fb4a6bb",
+      "size_bytes": 14203,
+      "reason": "actual parsed-bitstream section/chunk decoder and enabled-register reconstruction"
+    },
+    {
+      "path": "ndp-sim/model_execplan/src/execution_plan_generator/register_mapping.py",
+      "sha256": "1e792768915a5473fbe4c7a98b3655e907dcc2c1802595a3fc2b3feb16bd97d4",
+      "size_bytes": 14791,
+      "reason": "actual field-to-register segment mapping and masked write roundtrip"
+    },
+    {
+      "path": "ndp-sim/model_execplan/config/operator_base_info.json",
+      "sha256": "e408606006e5778997b015f6cf90608dad93ef45efe60d73c5a0b675eab096e0",
+      "size_bytes": 15890,
+      "read_scope": "prefill_silu_fp16MN_fp32MN metadata entry",
+      "reason": "SiLU initial shape, config metadata and SFU type owner"
+    },
+    {
+      "path": "ndp-sim/model_execplan/config/register_map_with_groups1.csv",
+      "sha256": "006ca83f282a9d61e2003466a7f75d190452a504466f60f7e70240932ae4ffdc",
+      "size_bytes": 14788,
+      "reason": "field widths and register-map input used by the native decoder and instruction generator"
+    },
+    {
+      "path": "ndp-sim/model_execplan/config/config_output.csv",
+      "sha256": "bf991706fe9a2a05a2e2e74ecb31e25c88107db9e077dbd1d99c9bae7c063032",
+      "size_bytes": 8463,
+      "reason": "physical register segment and enabled-chunk input used by the native decoder"
+    },
+    {
+      "path": "ndp-sim/model_execplan/config/SFU_Coeff/SiLU.txt",
+      "sha256": "20e704022e4c7e745193983cf54ca317190b312b4c148cfe66891ce2678d988d",
+      "size_bytes": 6500,
+      "reason": "native SiLU SFU coefficient payload copied into SCA and addressed by Load_Config"
+    },
+    {
+      "path": "ndp-sim/bitstream/main.py",
+      "sha256": "067723b4ef118932b3a69623fa8bb4f2ed70d06eda3a5a24886c9562611ff415",
+      "size_bytes": 13598,
+      "reason": "actual JSON-to-mapping-to-parsed/64b/128b bitstream command entry"
+    },
+    {
+      "path": "ndp-sim/bitstream/parse.py",
+      "sha256": "a6bd0f9dc288b518389a677570cf34a08ebec72a430e9a85c085570d3be869f0",
+      "size_bytes": 22540,
+      "read_scope": "module initialization, zero-penalty mapping gate, physical entry order and parsed/64b/128b writers",
+      "reason": "actual bitstream lifecycle and module/chunk order"
+    },
+    {
+      "path": "ndp-sim/bitstream/index.py",
+      "sha256": "2b71290671cef1c137e31fdf7e35e89454e3614a3e620f1f5f387f193a128306",
+      "size_bytes": 20443,
+      "reason": "actual logical-to-physical node resolution and relative connection encoding"
+    },
+    {
+      "path": "ndp-sim/bitstream/bit.py",
+      "sha256": "6ba6b9b3a0a8f4baed9daa89af8c781db92a3f84b575a1e97126e7a5c9029fad",
+      "size_bytes": 8145,
+      "reason": "actual width-bounded bit-vector encoding primitive"
+    },
+    {
+      "path": "ndp-sim/bitstream/config/__init__.py",
+      "sha256": "f27f2b12c621534317204bc66f3db1b622de5a20e87c86e3b0885d3d5ce79e78",
+      "size_bytes": 367,
+      "reason": "actual bitstream module registry"
+    },
+    {
+      "path": "ndp-sim/bitstream/config/base.py",
+      "sha256": "100d44403386f17327da1938888156291891f1d564d151c8eb02127e829459cc",
+      "size_bytes": 8754,
+      "reason": "actual ordered field/list encoder and empty-module semantics"
+    },
+    {
+      "path": "ndp-sim/bitstream/config/mapper.py",
+      "sha256": "c7685cc297e4e11ccafa23758a46d20986e5db931fcb3c4e21f5f4a0a2534226",
+      "size_bytes": 68728,
+      "read_scope": "allocation, constraint cost, empty-cache heuristic search, cache validation/persistence, NodeGraph mapping and resource registration",
+      "reason": "actual physical mapper and exact-penalty owner"
+    },
+    {
+      "path": "ndp-sim/bitstream/config/loop.py",
+      "sha256": "7a25a5e6e29e35ce07c437a6e44ac654cda0dcc110fda1ba82cdeacb0b12aa35",
+      "size_bytes": 13871,
+      "reason": "actual DRAM LC, LC_PE and Buffer LC JSON encoder"
+    },
+    {
+      "path": "ndp-sim/bitstream/config/stream.py",
+      "sha256": "00e0610719670f24e22139ee0a3a453ae6e90f90e5d572f578c5f489f5a813d1",
+      "size_bytes": 14083,
+      "reason": "actual read/write MSE field, transaction, stride, base and Buffer AG encoder"
+    },
+    {
+      "path": "ndp-sim/bitstream/config/buffer.py",
+      "sha256": "39b6c32786ca83a1ffd247a99dafea2f966aa1c490ef587fa1594759456355a4",
+      "size_bytes": 1847,
+      "reason": "actual Buffer Manager lifetime/mask encoder"
+    },
+    {
+      "path": "ndp-sim/bitstream/config/general.py",
+      "sha256": "eb9d5ee9ef273182e05b718aca378f87d0a1ccb5366ae463d8482c8c94c3482f",
+      "size_bytes": 11738,
+      "reason": "actual GA inport/outport/PE opcode and conversion encoder"
+    },
+    {
+      "path": "ndp-sim/bitstream/config/special.py",
+      "sha256": "0c989cf657eaa429f9b2b37848105abe3448b3926e22e09ae98c42ddd4f8447a",
+      "size_bytes": 3436,
+      "reason": "instantiated but CONFIG-disabled SA encoder; read to verify it contributes no SiLU field"
+    },
+    {
+      "path": "ndp-sim/bitstream/config/neighbor.py",
+      "sha256": "9b85d41ef6e4ce1bbd5118e54814993b02f3075ba108db6b1ea4dd79985264e0",
+      "size_bytes": 1038,
+      "reason": "instantiated empty N2N encoder; read to verify it contributes no SiLU route"
+    },
+    {
+      "path": "ndp-sim/generate_python_golden/deepseek1.5b_3_time_golden_smallsize_0527.py",
+      "sha256": "4dc42e91a5869bb523fb86ba8caf92280df18de5487c1ce33b706361fa799540",
+      "size_bytes": 49401,
+      "read_scope": "QKV shared-input, QKT partials, softmax, KV-cache and residual consumers",
+      "reason": "actual native prefill numeric and operand identity evidence"
+    },
+    {
+      "path": "ndp-sim/generate_python_golden/softmax_scale.bin",
+      "sha256": "08334c86b963804acd3bea683d9a8f57e81da5594d278ced1d8644a7a85198ab",
+      "size_bytes": 4,
+      "decoded_fp32_le": 0.0883883461356163,
+      "reason": "native QKT scale, equal to float32 1/sqrt(128)"
+    },
+    {
+      "path": "ndp-sim/generate_python_golden/single_op_data/relayout_layer0.py",
+      "sha256": "f820c3217609e08bf29c74ff92aa81272270a6eca75461120265074f9c2b5ee9",
+      "size_bytes": 13352,
+      "reason": "actual template-to-golden-prefix aliasing and physical slice assembly"
+    },
+    {
+      "path": "ndp-sim/generate_python_golden/single_op_data/relayout_rmsnorm.py",
+      "sha256": "3cf1e7e5e3576dc44f61ff4dabf0337a1775b6ecca3aed9e1329622d962e99c0",
+      "size_bytes": 23319,
+      "read_scope": "KV padding, four-way split, seven-head replication and replacement-source construction",
+      "reason": "actual KV RMSNorm physical layout producer"
+    },
+    {
+      "path": "ndp-sim/generate_python_golden/single_op_data/relayout_mul_MN_N_kv.py",
+      "sha256": "2f1261960beda9a7c9337fa18f2ea6b19f3676447d496ebf34f226f8a4c53800",
+      "size_bytes": 14076,
+      "read_scope": "attention-norm input/output padding and seven-head replication",
+      "reason": "actual KV normalized-input physical layout producer"
+    },
+    {
+      "path": "ndp-sim/generate_python_golden/single_op_data/relayout_gemm_ring.py",
+      "sha256": "26f368f09dc92b3a1dc2fb1f2b9ab39f8c3a4a3dfd9877a8ac7cfd3352660f28",
+      "size_bytes": 30355,
+      "read_scope": "Q/K/V operator specs, KV power-of-two padding and install-target replication",
+      "reason": "actual Q/K/V ring tensor layout producer"
+    },
+    {
+      "path": "ndp-sim/generate_python_golden/single_op_data/relayout_regular.py",
+      "sha256": "5e2de1c523622f9df5ac742b97c6c369695271c6391aad7e55a98059dd322b35",
+      "size_bytes": 14687,
+      "read_scope": "K/V add slicing and four-slice-to-seven-head replication",
+      "reason": "actual K/V bias and output physical layout producer"
+    },
+    {
+      "path": "ndp-sim/generate_python_golden/single_op_data/relayout_gemm_local.py",
+      "sha256": "00985873d74b866529be8eb8a00272b77f488fb3ca0e6072a17ccf1e35237f61",
+      "size_bytes": 22485,
+      "read_scope": "QKT partials, remote-sum input and SV head/slice distribution",
+      "reason": "actual local-attention tensor physical layout producer"
+    }
+  ],
+  "prefill_graph_fragments_read": [
+    {"path": "ndp-sim/model_execplan/op_json/rmsnorm.json", "size_bytes": 2006, "sha256": "ad046825c4b4d3265a33b8614fcb0a179157d78321f79cb96a95541c7bcb4097"},
+    {"path": "ndp-sim/model_execplan/op_json/prefill_mul_fp32MN_fp32N_fp16MN.json", "size_bytes": 710, "sha256": "f6a49417fb41916bb245f50b952fe4c7cb3c7aa0876406d2ccbcec8a5d781d33"},
+    {"path": "ndp-sim/model_execplan/op_json/gemm_ring.json", "size_bytes": 1063, "sha256": "1dc9ea427fc2eb6bfe1362e047da0e9e8d0709376fed4e129e9e8446bbb088ee"},
+    {"path": "ndp-sim/model_execplan/op_json/prefill_add_fp16MN_fp32N_fp32MN.json", "size_bytes": 712, "sha256": "3f7fb61d123998d6a76cb9ed1d978f8be4db831587cae38bda41fb692685fb74"},
+    {"path": "ndp-sim/model_execplan/op_json/rope.json", "size_bytes": 2235, "sha256": "0f141f95c08a3803ae0c000cb25c01198b4d86e8c827d0b27104463e9ec63747"},
+    {"path": "ndp-sim/model_execplan/op_json/rmsnorm_kv.json", "size_bytes": 1758, "sha256": "903415113e1c44bd2949e63f3ab66cedb00f7281689d55a5d1ac85fc89ac3337"},
+    {"path": "ndp-sim/model_execplan/op_json/prefill_mul_fp32MN_fp32N_fp16MN_kv.json", "size_bytes": 674, "sha256": "e8c2e65f607b47272cf42eeea7b4f20a587cbd57984b95716084d69b90142f10"},
+    {"path": "ndp-sim/model_execplan/op_json/gemm_ring_k.json", "size_bytes": 1113, "sha256": "3e1536ff286ab980b453526dade7577af76cabb9dff3900a9b6eb73710d1f4e9"},
+    {"path": "ndp-sim/model_execplan/op_json/prefill_add_fp16MN_fp32N_fp32MN_k.json", "size_bytes": 772, "sha256": "1fa1fb34d53057114b16ea87b6d4a22ac53239b872e6474494672e089bf7d7b6"},
+    {"path": "ndp-sim/model_execplan/op_json/rope_k.json", "size_bytes": 2121, "sha256": "abd247b69a4497166298b44d7a4bcdd8b29a60c633c00643e392024c3ee97f6e"},
+    {"path": "ndp-sim/model_execplan/op_json/gemm_ring_v.json", "size_bytes": 1113, "sha256": "81ca9cedb4dad10a443c4ebea3e1b0b4848fd0ecf040348d60fe35e13d72e1a3"},
+    {"path": "ndp-sim/model_execplan/op_json/prefill_add_V_fp16MN_fp32N_fp16MN.json", "size_bytes": 800, "sha256": "1597bb14783d26610f3dd451e85dfd7dc14b2607accb795f60b476fb376899af"},
+    {"path": "ndp-sim/model_execplan/op_json/gemm_local_qkt.json", "size_bytes": 1133, "sha256": "fa6bc890214b80a30b0c0351929cc118e06131f3a14375a5788efd4d5fdbd910"},
+    {"path": "ndp-sim/model_execplan/op_json/prefill_remote_sum_4slice_fp32MN_fp32MN.json", "size_bytes": 507, "sha256": "905be2817b2b1d51b341e3179c59ed10e36b04a6d00f6e8740a9892bfd133dab"},
+    {"path": "ndp-sim/model_execplan/op_json/softmax.json", "size_bytes": 2696, "sha256": "6b4f61f1880912c6c501694b715991d8a8c54dd1040902378a927b735fca46e7"},
+    {"path": "ndp-sim/model_execplan/op_json/gemm_local_sv.json", "size_bytes": 977, "sha256": "e31641625d34c7385adb80402b0304157062fa096872e9b28087b60681c39cea"},
+    {"path": "ndp-sim/model_execplan/op_json/prefill_add_fp32MN_fp16MN_fp32MN_residual.json", "size_bytes": 729, "sha256": "d7b870cf170ab84303bf5f9ddf01799c6e83a0b83964d4901704f0b6ca6aefb8"},
+    {"path": "ndp-sim/model_execplan/op_json/gemm_ring_ffn_gate.json", "size_bytes": 1081, "sha256": "f65fb9094ece53eec92610761a23e152e4438f0f993355f56363f59e457c1016"},
+    {"path": "ndp-sim/model_execplan/op_json/gemm_ring_ffn_up.json", "size_bytes": 1081, "sha256": "72c5b87a083772710f3b72e952264d19f7f31ec0d8fad41424430af03e4fd1d4"},
+    {"path": "ndp-sim/model_execplan/op_json/prefill_silu_fp16MN_fp32MN.json", "size_bytes": 831, "sha256": "fbab4a91df27071404b45aedcd6a68dbb2847fe9494f75a8b3f7c4ea5bc251dd"},
+    {"path": "ndp-sim/model_execplan/op_json/prefill_mul_fp32MN_fp16MN_fp16MN.json", "size_bytes": 733, "sha256": "7fadb04400679a6869357c1b22f14c3714e3d7c461bd60950c791c5c5c994ae8"},
+    {"path": "ndp-sim/model_execplan/op_json/gemm_ring_ffn_out.json", "size_bytes": 1081, "sha256": "bbe8614d5ba7107caca54b772915a22a851b3eea80f6e44cd7b2c3e4f9b14886"},
+    {"path": "ndp-sim/model_execplan/op_json/prefill_add_fp32MN_fp16MN_fp32MN_out.json", "size_bytes": 690, "sha256": "305a800724b3033fe3d3321f2b0532c17e16dee1e3249b071d966ebca47c5ffb"}
+  ],
+  "trusted_prefill_jsons_inspected": [
+    {"path": "ndp-sim/jsons/prefill_gemm_local_qkt.json", "size_bytes": 20242, "sha256": "e2b4f2e8e119fa29b3a4202b4476f838fd071e106322809745169ee70cef4de6"},
+    {"path": "ndp-sim/jsons/prefill_remote_sum_4slice_fp32MN_fp32MN.json", "size_bytes": 13666, "sha256": "86930ae15d348b433eef49aef78878874ca809b39fe0bad09a1072f04e07afda"},
+    {"path": "ndp-sim/jsons/prefill_mac_fp32MN_fp32MN_fp32MN.json", "size_bytes": 16364, "sha256": "32521b8ed33e020019258911542929e1220c3326510fb6f7ce4867b6d09536a9"},
+    {"path": "ndp-sim/jsons/prefill_max_fp32MN_fp32MN.json", "size_bytes": 13577, "sha256": "2d20d87f5bbd14546c346bb54e1200ffd07299c193aded766dbeb59ea704921b"},
+    {"path": "ndp-sim/jsons/prefill_sub_SFU_fp32MN_fp32M_fp32MN.json", "size_bytes": 22689, "sha256": "a745ce74782b2f3598e246b5646102e835299196a626e6b8d219e0d0b48e4fc9"},
+    {"path": "ndp-sim/jsons/prefill_sum_rec_fp32MN_fp32MN.json", "size_bytes": 19521, "sha256": "33f1332d15a659d3be5244b293edd341bd12a22c4427b2d16b1efcddd57c6522"},
+    {"path": "ndp-sim/jsons/prefill_mul_fp32MN_fp32M_fp16MN.json", "size_bytes": 16004, "sha256": "31d4369b393a39435349adb687a1a0dab63835f3a5f246f02e40a2af5f8923de"},
+    {"path": "ndp-sim/jsons/prefill_gemm_local.json", "size_bytes": 20243, "sha256": "9d0f72bc1a32f5b3fb2fff44c7fe4585adfb00d393ccf38bffb9f2e239f2761e"},
+    {"path": "ndp-sim/jsons/prefill_silu_fp16MN_fp32MN.json", "size_bytes": 14107, "sha256": "08101bdc82d615741d6262db57098b3ba3acd04cc427c1d0c1297cc68da5cdbd"}
+  ],
+  "project_consumers_read": [
+    {
+      "path": "resnet50_pipeline/ndpsim_native.py",
+      "sha256": "2a5da4a125b854ab1277739fc3cb01e65593e10a7adca462a5506163be272658",
+      "size_bytes": 3106,
+      "reason": "project bridge to the active native parser and handler registry"
+    },
+    {
+      "path": "resnet50_pipeline/deepseek_stage_ir.py",
+      "sha256": "2acec199bf5ed272857e8e878d02a30af10901425faae346274c5955fec0184c",
+      "size_bytes": 18482,
+      "reason": "existing trusted JSON to Stage IR crosswalk builder"
+    },
+    {
+      "path": "resnet50_pipeline/deepseek_primitive_rules.py",
+      "sha256": "effed7e9d850a9b42632949176fe3ea1c9786f89236cb7590fcb0d2788d821c7",
+      "size_bytes": 18064,
+      "reason": "existing GA, SA and N2N rule extraction"
+    },
+    {
+      "path": "resnet50_pipeline/deepseek_reduction_rules.py",
+      "sha256": "8aef07e5975c73d2be7959ec163982ea66fc01c493ab6905c4d7304411366213",
+      "size_bytes": 15336,
+      "reason": "existing local/remote reduction stage-DAG rule extraction"
+    }
+  ],
+  "machine_inputs_bound": [
+    {
+      "path": "contracts/operator_config/deepseek_stage_ir_crosswalk_v1.json",
+      "sha256": "80e3570045f549b572a0b0a5de820006775dfc37be46bcd498fec772ba8c3782",
+      "size_bytes": 674233,
+      "reason": "current Stage IR to authorized JSON inventory"
+    },
+    {
+      "path": "contracts/operator_config/ndpsim_json_corpus_v1.json",
+      "sha256": "bd2527db3470521e309acd43224dc15a694b210b293011e944f964e9b76270e3",
+      "size_bytes": 185427,
+      "reason": "trusted upstream/operator configuration authority inventory"
+    }
+  ],
+  "rules_triggered": [
+    "CDA-CONFIG-SEMANTIC-OWNERSHIP-001",
+    "CDA-CONFIG-MATERIALIZED-ROUNDTRIP-001",
+    "CDA-CONFIG-FULL-REBUILD-PROVENANCE-001",
+    "CDA-DEEPSEEK-MODEL-IDENTITY-001",
+    "CDA-DEEPSEEK-CROP-EXPLICIT-001",
+    "CDA-DEEPSEEK-ONNX-STAGE-DAG-001",
+    "CDA-DEEPSEEK-STAGE-JSON-ORACLE-001",
+    "CDA-DEEPSEEK-HOLDOUT-ROUNDTRIP-001",
+    "CDA-DEEPSEEK-QKV-ALIAS-001",
+    "CDA-DEEPSEEK-ATTENTION-NUMERIC-001",
+    "CDA-DEEPSEEK-CROSS-SLICE-ROUTE-001",
+    "CDA-DEEPSEEK-PROGRAM-GOLDEN-PARITY-001",
+    "CDA-DEEPSEEK-KV-LIFETIME-001"
+  ],
+  "known_counterexamples": [
+    "A semantically corresponding ONNX conversion is not proof of byte-identical ndp-sim weight provenance.",
+    "The 896/1792/7Q/1KV/1-layer target is crop-derived from the 1536/8960/12Q/2KV/28-layer model and is not an equal-shape ONNX instance.",
+    "A trusted static template does not authorize derived shape, address, lifetime or CONFIG values.",
+    "The native pipeline logs and continues after a bitstream subprocess failure; downstream validation must fail closed on missing or stale artifacts.",
+    "A leader-only remote reduction shape does not gather peer-slice partials: the producer allocation, source-slice mapping and read byte extent must prove the route."
+  ],
+  "open_dynamic_gates": [
+    "No target stage produced by this validation is E4/E5 hardware released.",
+    "No SEMANTIC_MODEL_MATCH result can close ORIGINAL_SOURCE_IDENTITY.",
+    "Hardware dynamic tests, if later needed, belong to the separate 测试修复 task."
+  ],
+  "omitted_files": [
+    {
+      "scope": "server package rules and scripts",
+      "reason": "this task explicitly forbids server package generation"
+    },
+    {
+      "scope": "RTL files",
+      "reason": "no RTL mutation or new RTL adjudication is needed for source acquisition and Stage IR validation"
+    },
+    {
+      "scope": "unrelated operator handlers, templates and golden generators",
+      "reason": "not called by the isolated prefill SiLU holdout and do not own any affected field"
+    },
+    {
+      "scope": "model_execplan/config/prefill_silu_fp16MN_fp32MN/parsed_bitstream.txt",
+      "reason": "absent in the source checkout; the native pipeline must regenerate it from the trusted static JSON and fail closed if the new parsed/64b/128b artifacts are incomplete"
+    }
+  ],
+  "receipt_status": "SILU_HOLDOUT_MATERIALIZATION_READY"
+}

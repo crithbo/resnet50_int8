@@ -1,0 +1,155 @@
+{
+  "dataflow": {
+    "compute_array": "general_array",
+    "first_stage": [
+      "PE00",
+      "PE02",
+      "PE20",
+      "PE22"
+    ],
+    "first_stage_opcode": "add",
+    "links": [
+      [
+        "PE00",
+        "PE10"
+      ],
+      [
+        "PE02",
+        "PE12"
+      ],
+      [
+        "PE20",
+        "PE30"
+      ],
+      [
+        "PE22",
+        "PE32"
+      ]
+    ],
+    "outbuffer_path": "normal_non_transout",
+    "output_mask": [
+      0,
+      1,
+      0,
+      1,
+      0,
+      1,
+      0,
+      1
+    ],
+    "read_target": "A",
+    "second_stage": [
+      "PE10",
+      "PE12",
+      "PE30",
+      "PE32"
+    ],
+    "second_stage_opcode": "mul",
+    "write_target": "D"
+  },
+  "emission": {
+    "candidate_release": false,
+    "formal_target_config": false,
+    "kind": "address_unbound_candidate",
+    "remaining_blockers": [
+      "B_DEQUANT_SERVER_E4_E5"
+    ],
+    "semantic_patches": []
+  },
+  "hw_op_type": "DequantizeLinear",
+  "local_e2": {
+    "encoded_physical_pe_constants_verified": true,
+    "path": "artifacts/operator_config_validation/r5-dequant-node0077-e2-v5/local_e2_report.json",
+    "sha256": "3d059a3e73192b85e37130f474bcfd93e23db9353e728dc9c4158479440487e8",
+    "status": "local_e2_passed_server_e4_e5_pending",
+    "two_isolated_toolchains": true
+  },
+  "logical_geometry": {
+    "attributes": {},
+    "input_dtypes": [
+      "uint8",
+      "float32",
+      "uint8"
+    ],
+    "input_shapes": [
+      [
+        16,
+        1000
+      ],
+      [
+        1
+      ],
+      [
+        1
+      ]
+    ],
+    "output_dtypes": [
+      "float32"
+    ],
+    "output_shapes": [
+      [
+        16,
+        1000
+      ]
+    ]
+  },
+  "numeric_order": {
+    "affine_mac_counterexample_count": 12976,
+    "first_rounding_point": "fp32 subtract",
+    "formula": "(float32(uint8(x))-60.0f)*float32(x_scale)",
+    "second_rounding_point": "fp32 multiply",
+    "single_affine_mac_allowed": false,
+    "w3_bit_exact_element_count": 16000
+  },
+  "physical_schedule": {
+    "a_bytes_per_slice": 752,
+    "a_tail_bytes": "3c3c",
+    "a_transaction_bytes": 16,
+    "address_binding": "deferred_to_model_execplan",
+    "d_bytes_per_slice": 3008,
+    "d_tail_fp32_bits": [
+      "0x00000000",
+      "0x00000000"
+    ],
+    "d_transaction_bytes": 64,
+    "hardware_elements_per_slice": 752,
+    "hardware_shape_cwh": [
+      16,
+      47,
+      1
+    ],
+    "layout_profile": "w4_group4x7_batch_channel28_candidate_v1",
+    "occurrences_per_slice": 47,
+    "slice_count": 28,
+    "valid_elements_per_slice": 750
+  },
+  "request_id": "r5:hwop-0077-00",
+  "request_sha256": "cb8522a4ba2386ce3c303f5de274b2fa2e130d719c09933c686a11d28d9b7f63",
+  "schedule_sha256": "eba80f70628a15ebdc269edb8619db8b74ae1af33ed63997bd25270e3287ab4e",
+  "schema": "resnet50-ndp-schedule-ir-v1",
+  "stage_role": "dequantize",
+  "template": {
+    "path": "configs/native_ndp_sim/resnet50_dequant_node0077_uint8_fp32_strict_v5/config.json",
+    "semantic_relation": "exact node-0077 local-E2 standalone materialization derived from the authorized embedded Dequant branch",
+    "sha256": "812c6d861bf41ce89233e16b2bdd1d9d8328aed9e07941070872d6409668bba1",
+    "strict_validation": "passed"
+  },
+  "typed_parameter_consumption": {
+    "affine_offset": {
+      "consumed": false,
+      "parameter_id": "hwop-0077-00.derived.affine_offset",
+      "reason": "historical affine offset changes ONNX rounding order and is retained only as a typed counterexample"
+    },
+    "x_scale": {
+      "float32_bits": "0x3e01622d",
+      "parameter_id": "hwop-0077-00.initializer.x_scale",
+      "target": "PE10/PE12/PE30/PE32.inport1.constant"
+    },
+    "x_zero_point": {
+      "derived_negative_fp32_bits": "0xc2700000",
+      "parameter_id": "hwop-0077-00.initializer.x_zero_point",
+      "scalar": 60,
+      "target": "PE00/PE02/PE20/PE22.inport1.constant"
+    }
+  }
+}

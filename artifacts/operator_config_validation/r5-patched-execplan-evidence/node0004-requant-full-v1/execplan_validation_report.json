@@ -1,0 +1,758 @@
+{
+  "schema": "operator-config-execplan-validation-report-v1",
+  "graph_root": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\node0004-requant-full-v1\\pipeline_output",
+  "valid": true,
+  "first_error": null,
+  "issues": [],
+  "facts": {
+    "target_profile": {
+      "slices": 28,
+      "banks_per_slice": 4,
+      "ddr_rows": 6144,
+      "ddr_columns": 64,
+      "subwords_per_column": 16,
+      "read_streams": 4,
+      "write_streams": 1,
+      "buffers": 6
+    },
+    "graph": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\node0004-requant-full-v1\\pipeline_output\\graph_withbaseaddr.json",
+    "graph_sha256": "ca6d50ee433adbfce6f686a42ef0726c9a578e4ebc1a5e7ccf954ad275735640",
+    "execplan": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\node0004-requant-full-v1\\pipeline_output\\install\\execplan.txt",
+    "execplan_sha256": "3fc2851fb0dbc3dff255fd5c530f0a9f139fc8e9c5e5a127ec0a8c3b68b65662",
+    "instruction_count_64bit": 293,
+    "execplan_lines_128bit": 147,
+    "operator_count": 24,
+    "load_config_count": 24,
+    "sfu_load_config_count": 0,
+    "start_comp_count": 24,
+    "stages": [
+      {
+        "stage_index": 0,
+        "op_id": "op_w0_s00",
+        "op_type": "resnet50_requant_node0004_w0_s00",
+        "load_instruction_index": 1,
+        "start_instruction_index": 14,
+        "slice_mask": "0x1111111",
+        "source_config": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\node0004-requant-full-v1\\mapping_evidence\\op_w0_s00\\source_config.json",
+        "source_config_sha256": "daea673d398cc3774d249f655d132f612afcad5a6e9b4d395271cba6891277e2",
+        "artifact_dir": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\node0004-requant-full-v1\\mapping_evidence\\op_w0_s00",
+        "artifact_valid": true,
+        "next_config_state": {
+          "IGA": "8580bde66190023c2f4559aa4e9862462d42502dbb87977def4ce0fc70d5bb47",
+          "LSU": "42a375f426f146f34e7e79fe376430d9fc782ad21f33d7089619b79c662a3888",
+          "SA": null,
+          "GA": "36a7df74d641afff9ef51e3596ab2e1ec5073411ce8a814d942834ad1a1c9f55"
+        },
+        "pipeline_json": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\node0004-requant-full-v1\\pipeline_output\\jsons\\op_w0_s00_resnet50_requant_node0004_w0_s00.json",
+        "pipeline_json_sha256": "8b9e022d411d8f39581388d5a0b671ed3de02b72890a66807e3857e154ee22f6",
+        "pipeline_artifact_sha256": {
+          "mapping_review.json": "45265e39cc7bcd32bcae9adde60fee3cb693cf9bd3d7cacf3dbee2f6c7572ac3",
+          "parsed_bitstream.txt": "cfbde84abff47164a72e88cdf36b5b85bdeb3cacb5de978b49dd5b03a1e29804",
+          "modules_dump_64b.bin": "3e9c8f10e1c9f9ac6685a5cd1a349f1c0471348ee5d5a8db0bf7f87300ae0a26",
+          "modules_dump_128b.bin": "bd2a61886aadbb83327bdc39ccbab4ce42293716e0f175ec5b5c8aa306e62e6d"
+        },
+        "config_base_addr": "0x002DF000",
+        "config_length_64bit_words": 68,
+        "config_path": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\node0004-requant-full-v1\\pipeline_output\\install\\cfg_pkg\\op_w0_s00_resnet50_requant_node0004_w0_s00_bitstream_128b.bin",
+        "config_sha256": "bd2a61886aadbb83327bdc39ccbab4ce42293716e0f175ec5b5c8aa306e62e6d"
+      },
+      {
+        "stage_index": 1,
+        "op_id": "op_w0_s01",
+        "op_type": "resnet50_requant_node0004_w0_s01",
+        "load_instruction_index": 15,
+        "start_instruction_index": 28,
+        "slice_mask": "0x1111111",
+        "source_config": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\node0004-requant-full-v1\\mapping_evidence\\op_w0_s01\\source_config.json",
+        "source_config_sha256": "14837ea534223222f518eea0001c60ce1c951ea3a9ba930f50e1312619444459",
+        "artifact_dir": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\node0004-requant-full-v1\\mapping_evidence\\op_w0_s01",
+        "artifact_valid": true,
+        "next_config_state": {
+          "IGA": "8580bde66190023c2f4559aa4e9862462d42502dbb87977def4ce0fc70d5bb47",
+          "LSU": "69635621f105c9cd6ee38e14effeffd8fd8d51174304e397c852bac46e717a78",
+          "SA": null,
+          "GA": "27553ccdfa68231ffc62e154187db4a73f07bdabb9580b6ae85f85aa2e882f46"
+        },
+        "pipeline_json": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\node0004-requant-full-v1\\pipeline_output\\jsons\\op_w0_s01_resnet50_requant_node0004_w0_s01.json",
+        "pipeline_json_sha256": "9aa9f38ee6b47f36071a79a99c730cf721833f669dbb2cbf253901a7cb7cf755",
+        "pipeline_artifact_sha256": {
+          "mapping_review.json": "45265e39cc7bcd32bcae9adde60fee3cb693cf9bd3d7cacf3dbee2f6c7572ac3",
+          "parsed_bitstream.txt": "0fddec73fbd8ca3bdb2b3a7582c1ef60440d10ad9afeb32a9d706d0572ffd1d2",
+          "modules_dump_64b.bin": "f395e6ca603ed238199fbc6e05c5681d9531d4b9b48aed50c8e5997128814597",
+          "modules_dump_128b.bin": "bde86e0f38a013523ed583d484c833f54b27e4256a5d58d1a7c9ed4ce02db763"
+        },
+        "config_base_addr": "0x002DF400",
+        "config_length_64bit_words": 68,
+        "config_path": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\node0004-requant-full-v1\\pipeline_output\\install\\cfg_pkg\\op_w0_s01_resnet50_requant_node0004_w0_s01_bitstream_128b.bin",
+        "config_sha256": "bde86e0f38a013523ed583d484c833f54b27e4256a5d58d1a7c9ed4ce02db763"
+      },
+      {
+        "stage_index": 2,
+        "op_id": "op_w0_s02",
+        "op_type": "resnet50_requant_node0004_w0_s02",
+        "load_instruction_index": 29,
+        "start_instruction_index": 44,
+        "slice_mask": "0x4444444",
+        "source_config": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\node0004-requant-full-v1\\mapping_evidence\\op_w0_s02\\source_config.json",
+        "source_config_sha256": "c1047382b565b4f517f9a9cf699e994a735289c7068ec9add482e6bd3fe84d86",
+        "artifact_dir": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\node0004-requant-full-v1\\mapping_evidence\\op_w0_s02",
+        "artifact_valid": true,
+        "next_config_state": {
+          "IGA": "8580bde66190023c2f4559aa4e9862462d42502dbb87977def4ce0fc70d5bb47",
+          "LSU": "194286ee2a8e24849eb70bff06ff9e3c3e2a23ab73a595c8899a773cba2cca01",
+          "SA": null,
+          "GA": "d33316be7a7825d779cc014652ac3bcbb599466c3720c4df8452e961ab564da7"
+        },
+        "pipeline_json": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\node0004-requant-full-v1\\pipeline_output\\jsons\\op_w0_s02_resnet50_requant_node0004_w0_s02.json",
+        "pipeline_json_sha256": "cb3a9501eabb021fe54fbdbe4b377fd8190fdc0309c5c660c81f7dedf3248ffe",
+        "pipeline_artifact_sha256": {
+          "mapping_review.json": "45265e39cc7bcd32bcae9adde60fee3cb693cf9bd3d7cacf3dbee2f6c7572ac3",
+          "parsed_bitstream.txt": "532b32e4a8a4f89de32f314c25e78254ecc38bf0395004cbc6d4e6ccd206a478",
+          "modules_dump_64b.bin": "4ae98aef342bfc41f2476a50210d792c4df2c186c57c9c8cd48437729ab977d7",
+          "modules_dump_128b.bin": "d0c7e7755654ca9752175f3e9e863645f5db41f9e5b0d85daf9919b2b12c0bb6"
+        },
+        "config_base_addr": "0x002DF800",
+        "config_length_64bit_words": 68,
+        "config_path": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\node0004-requant-full-v1\\pipeline_output\\install\\cfg_pkg\\op_w0_s02_resnet50_requant_node0004_w0_s02_bitstream_128b.bin",
+        "config_sha256": "d0c7e7755654ca9752175f3e9e863645f5db41f9e5b0d85daf9919b2b12c0bb6"
+      },
+      {
+        "stage_index": 3,
+        "op_id": "op_w0_s03",
+        "op_type": "resnet50_requant_node0004_w0_s03",
+        "load_instruction_index": 45,
+        "start_instruction_index": 60,
+        "slice_mask": "0x4444444",
+        "source_config": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\node0004-requant-full-v1\\mapping_evidence\\op_w0_s03\\source_config.json",
+        "source_config_sha256": "c18107067f3a1d6367d13ef1dfa498c720ebf0f8f365be4a61eee57958c83f69",
+        "artifact_dir": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\node0004-requant-full-v1\\mapping_evidence\\op_w0_s03",
+        "artifact_valid": true,
+        "next_config_state": {
+          "IGA": "8580bde66190023c2f4559aa4e9862462d42502dbb87977def4ce0fc70d5bb47",
+          "LSU": "5855f2085ec801c1c48c9de8b6d0c964965b4c9adc0b538b89a2b9e445689b45",
+          "SA": null,
+          "GA": "af12e7e1c28fcb0a2c5325704d6afdc13c03c7be019a95daad9acabde14111b4"
+        },
+        "pipeline_json": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\node0004-requant-full-v1\\pipeline_output\\jsons\\op_w0_s03_resnet50_requant_node0004_w0_s03.json",
+        "pipeline_json_sha256": "d8b471185a79146c264a73d0a1399fe9e2d8e00f1bf89f3294eb9b4fd6beda33",
+        "pipeline_artifact_sha256": {
+          "mapping_review.json": "45265e39cc7bcd32bcae9adde60fee3cb693cf9bd3d7cacf3dbee2f6c7572ac3",
+          "parsed_bitstream.txt": "b668bbd9a55b5b08d233e5a607196a6693cac5ccbfbe22f7979c0662431f82d9",
+          "modules_dump_64b.bin": "6f50df2c1cd798c624563ba464538cf3358476413699a271a14a30951d5e40eb",
+          "modules_dump_128b.bin": "6ccf86ddb33fa8bd7a27e3fca329dda6b43ee0089748d8e266576fae15d32365"
+        },
+        "config_base_addr": "0x002DFC00",
+        "config_length_64bit_words": 68,
+        "config_path": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\node0004-requant-full-v1\\pipeline_output\\install\\cfg_pkg\\op_w0_s03_resnet50_requant_node0004_w0_s03_bitstream_128b.bin",
+        "config_sha256": "6ccf86ddb33fa8bd7a27e3fca329dda6b43ee0089748d8e266576fae15d32365"
+      },
+      {
+        "stage_index": 4,
+        "op_id": "op_w0_s04",
+        "op_type": "resnet50_requant_node0004_w0_s04",
+        "load_instruction_index": 61,
+        "start_instruction_index": 76,
+        "slice_mask": "0x8888888",
+        "source_config": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\node0004-requant-full-v1\\mapping_evidence\\op_w0_s04\\source_config.json",
+        "source_config_sha256": "21857b15db6398a3f34e25a7eb1f6e75c1b7304b7426d44f653d5e8fbb07d102",
+        "artifact_dir": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\node0004-requant-full-v1\\mapping_evidence\\op_w0_s04",
+        "artifact_valid": true,
+        "next_config_state": {
+          "IGA": "8580bde66190023c2f4559aa4e9862462d42502dbb87977def4ce0fc70d5bb47",
+          "LSU": "ff3243772ccf415fb3b064cf2f52b5325e1f7d4189292cd14870bb5d6524975f",
+          "SA": null,
+          "GA": "acf53550f20b1cee6a1fd8b309d26b4e405e4954a17b70ae9d89d640aefa7559"
+        },
+        "pipeline_json": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\node0004-requant-full-v1\\pipeline_output\\jsons\\op_w0_s04_resnet50_requant_node0004_w0_s04.json",
+        "pipeline_json_sha256": "97b823b2bd7a08647742b74bab4b94a441690dabb1b72e18928374e2d9e86442",
+        "pipeline_artifact_sha256": {
+          "mapping_review.json": "45265e39cc7bcd32bcae9adde60fee3cb693cf9bd3d7cacf3dbee2f6c7572ac3",
+          "parsed_bitstream.txt": "d77f4f84f50c0a342729bdfb184e91ba2211c8c3b16e212c96ccad2c91c856b6",
+          "modules_dump_64b.bin": "6015d0a8e009b932bcb7beecb531f5bd80fc0e3903b34feb9336eb9d22c97f1b",
+          "modules_dump_128b.bin": "a945b7891355483f7e43b0ab6c910bacc11b9b53e85512203b0bc52a48ae9982"
+        },
+        "config_base_addr": "0x002E0000",
+        "config_length_64bit_words": 68,
+        "config_path": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\node0004-requant-full-v1\\pipeline_output\\install\\cfg_pkg\\op_w0_s04_resnet50_requant_node0004_w0_s04_bitstream_128b.bin",
+        "config_sha256": "a945b7891355483f7e43b0ab6c910bacc11b9b53e85512203b0bc52a48ae9982"
+      },
+      {
+        "stage_index": 5,
+        "op_id": "op_w0_s05",
+        "op_type": "resnet50_requant_node0004_w0_s05",
+        "load_instruction_index": 77,
+        "start_instruction_index": 92,
+        "slice_mask": "0x8888888",
+        "source_config": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\node0004-requant-full-v1\\mapping_evidence\\op_w0_s05\\source_config.json",
+        "source_config_sha256": "6b5693b507d040093032dbd26e5727f3b16f18ad785472884f2b87c8b754a0e7",
+        "artifact_dir": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\node0004-requant-full-v1\\mapping_evidence\\op_w0_s05",
+        "artifact_valid": true,
+        "next_config_state": {
+          "IGA": "8580bde66190023c2f4559aa4e9862462d42502dbb87977def4ce0fc70d5bb47",
+          "LSU": "6562e779db9766a11625e71fc39c9fa565f44b4e2d0650c42900654b6f06759b",
+          "SA": null,
+          "GA": "673336e00f98ce6af669bde5b40d4460ec9469490d121f17ad27d892faeb462c"
+        },
+        "pipeline_json": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\node0004-requant-full-v1\\pipeline_output\\jsons\\op_w0_s05_resnet50_requant_node0004_w0_s05.json",
+        "pipeline_json_sha256": "a6ca0b2cebc147e7226b1f0b72dc024b9a6f2910ebc57555f6a48360da360cd6",
+        "pipeline_artifact_sha256": {
+          "mapping_review.json": "45265e39cc7bcd32bcae9adde60fee3cb693cf9bd3d7cacf3dbee2f6c7572ac3",
+          "parsed_bitstream.txt": "e392e21372a65a4faa0d47897c797e3822339d3a881aabc05c02469eb3291278",
+          "modules_dump_64b.bin": "63f0fe76c092890d19f3edf3a2d8ec1622cb893d8969f4161e795ac488a870e2",
+          "modules_dump_128b.bin": "9a0c18de9233fa75fb47cdadf65ad1b8941db897a5076e8b468dc4a3e1a26f4d"
+        },
+        "config_base_addr": "0x002E0400",
+        "config_length_64bit_words": 68,
+        "config_path": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\node0004-requant-full-v1\\pipeline_output\\install\\cfg_pkg\\op_w0_s05_resnet50_requant_node0004_w0_s05_bitstream_128b.bin",
+        "config_sha256": "9a0c18de9233fa75fb47cdadf65ad1b8941db897a5076e8b468dc4a3e1a26f4d"
+      },
+      {
+        "stage_index": 6,
+        "op_id": "op_w0_s06",
+        "op_type": "resnet50_requant_node0004_w0_s06",
+        "load_instruction_index": 93,
+        "start_instruction_index": 108,
+        "slice_mask": "0x2222222",
+        "source_config": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\node0004-requant-full-v1\\mapping_evidence\\op_w0_s06\\source_config.json",
+        "source_config_sha256": "47c9f4412453773f1f85a1e20b635c32aa728f6993d43462b758610a2f62a103",
+        "artifact_dir": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\node0004-requant-full-v1\\mapping_evidence\\op_w0_s06",
+        "artifact_valid": true,
+        "next_config_state": {
+          "IGA": "8580bde66190023c2f4559aa4e9862462d42502dbb87977def4ce0fc70d5bb47",
+          "LSU": "a7ab9c66ab141620c6c99d762f09d480e521c387bc25ed58a3137db7f1d8b347",
+          "SA": null,
+          "GA": "c74db60b54b146eba40186be9b8b5da4ee0fc030d42d1962974df7e302038dba"
+        },
+        "pipeline_json": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\node0004-requant-full-v1\\pipeline_output\\jsons\\op_w0_s06_resnet50_requant_node0004_w0_s06.json",
+        "pipeline_json_sha256": "189c1efe0c29e229426b5c8b004176d0928788ac9fc51a803a8a2c404c89de19",
+        "pipeline_artifact_sha256": {
+          "mapping_review.json": "45265e39cc7bcd32bcae9adde60fee3cb693cf9bd3d7cacf3dbee2f6c7572ac3",
+          "parsed_bitstream.txt": "766a6b15aace0064bd033bb4120c813f577ee8dd18112892e589b87bbac20003",
+          "modules_dump_64b.bin": "dd7580b0222e1bccd1d8aed3fd3518a7f9af3b49afa79f99c8d40c2bef238daa",
+          "modules_dump_128b.bin": "861a4193ad04f26339e2923586af55e2a5a80c1f6a874c8355bfc5b2188d5d4f"
+        },
+        "config_base_addr": "0x002E0800",
+        "config_length_64bit_words": 68,
+        "config_path": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\node0004-requant-full-v1\\pipeline_output\\install\\cfg_pkg\\op_w0_s06_resnet50_requant_node0004_w0_s06_bitstream_128b.bin",
+        "config_sha256": "861a4193ad04f26339e2923586af55e2a5a80c1f6a874c8355bfc5b2188d5d4f"
+      },
+      {
+        "stage_index": 7,
+        "op_id": "op_w0_s07",
+        "op_type": "resnet50_requant_node0004_w0_s07",
+        "load_instruction_index": 109,
+        "start_instruction_index": 124,
+        "slice_mask": "0x2222222",
+        "source_config": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\node0004-requant-full-v1\\mapping_evidence\\op_w0_s07\\source_config.json",
+        "source_config_sha256": "0066bf5a7f67bf77d0062dcad76348e68f1bc3ba2ca412709b75ea835e1dffaf",
+        "artifact_dir": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\node0004-requant-full-v1\\mapping_evidence\\op_w0_s07",
+        "artifact_valid": true,
+        "next_config_state": {
+          "IGA": "8580bde66190023c2f4559aa4e9862462d42502dbb87977def4ce0fc70d5bb47",
+          "LSU": "c39bdd907489affd9eb6225463094b92643aad4169c8fb1ac93a8d635fe623f3",
+          "SA": null,
+          "GA": "330e1ade16393f73c71311c4bd1a8ac3422d3079f762c6e25f8c062321e04c6d"
+        },
+        "pipeline_json": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\node0004-requant-full-v1\\pipeline_output\\jsons\\op_w0_s07_resnet50_requant_node0004_w0_s07.json",
+        "pipeline_json_sha256": "70de2253b57dbecb2298ecefd35acbcf81d28eb2da3d974530360bc9b3de51ec",
+        "pipeline_artifact_sha256": {
+          "mapping_review.json": "45265e39cc7bcd32bcae9adde60fee3cb693cf9bd3d7cacf3dbee2f6c7572ac3",
+          "parsed_bitstream.txt": "5e56f5d6a529e9a431e1c94cd08b5e0d06511fccfd9056727bbe949555bb0062",
+          "modules_dump_64b.bin": "b5c5af681eeb6681dce58718b7ea776a7d1031bd0e252a45f7eddde764e0c34e",
+          "modules_dump_128b.bin": "dceb455af1d5b22601c727523dabe77bacbf14f769821d2c205abb4c53b8e298"
+        },
+        "config_base_addr": "0x002E0C00",
+        "config_length_64bit_words": 68,
+        "config_path": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\node0004-requant-full-v1\\pipeline_output\\install\\cfg_pkg\\op_w0_s07_resnet50_requant_node0004_w0_s07_bitstream_128b.bin",
+        "config_sha256": "dceb455af1d5b22601c727523dabe77bacbf14f769821d2c205abb4c53b8e298"
+      },
+      {
+        "stage_index": 8,
+        "op_id": "op_w1_s00",
+        "op_type": "resnet50_requant_node0004_w1_s00",
+        "load_instruction_index": 125,
+        "start_instruction_index": 138,
+        "slice_mask": "0x1111111",
+        "source_config": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\node0004-requant-full-v1\\mapping_evidence\\op_w1_s00\\source_config.json",
+        "source_config_sha256": "316390d37d02d5896951a1a8ba3551c265a4a35d700b83124f09b9f197e270a4",
+        "artifact_dir": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\node0004-requant-full-v1\\mapping_evidence\\op_w1_s00",
+        "artifact_valid": true,
+        "next_config_state": {
+          "IGA": "8580bde66190023c2f4559aa4e9862462d42502dbb87977def4ce0fc70d5bb47",
+          "LSU": "b8ee34c4524b83f8ffd7d6c610bbafe81dc7fd493af7706a31af6c97c9ce1a9f",
+          "SA": null,
+          "GA": "36a7df74d641afff9ef51e3596ab2e1ec5073411ce8a814d942834ad1a1c9f55"
+        },
+        "pipeline_json": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\node0004-requant-full-v1\\pipeline_output\\jsons\\op_w1_s00_resnet50_requant_node0004_w1_s00.json",
+        "pipeline_json_sha256": "9f6e63ac186493de4fcd651e82ab57c3771bd4df31101d5a24969b471b9cc9ce",
+        "pipeline_artifact_sha256": {
+          "mapping_review.json": "45265e39cc7bcd32bcae9adde60fee3cb693cf9bd3d7cacf3dbee2f6c7572ac3",
+          "parsed_bitstream.txt": "4afb0d49b48b6cebbd69b99d1d330596b8f87eae86ef6e805be9d1b9cf3aa9d8",
+          "modules_dump_64b.bin": "48e22e7f60971ce071a0b19c5712caef447f1e9799336f741a1ba53ff47db3d4",
+          "modules_dump_128b.bin": "19ee9f792f3b7fb896b9c1addd853d58035cf2c2835da3988d5c991d062836d6"
+        },
+        "config_base_addr": "0x002E1000",
+        "config_length_64bit_words": 68,
+        "config_path": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\node0004-requant-full-v1\\pipeline_output\\install\\cfg_pkg\\op_w1_s00_resnet50_requant_node0004_w1_s00_bitstream_128b.bin",
+        "config_sha256": "19ee9f792f3b7fb896b9c1addd853d58035cf2c2835da3988d5c991d062836d6"
+      },
+      {
+        "stage_index": 9,
+        "op_id": "op_w1_s01",
+        "op_type": "resnet50_requant_node0004_w1_s01",
+        "load_instruction_index": 139,
+        "start_instruction_index": 152,
+        "slice_mask": "0x1111111",
+        "source_config": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\node0004-requant-full-v1\\mapping_evidence\\op_w1_s01\\source_config.json",
+        "source_config_sha256": "2accf70041fe15129eeb0440d63cb0af7c87e3fc113a3dffaa103f060626d12c",
+        "artifact_dir": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\node0004-requant-full-v1\\mapping_evidence\\op_w1_s01",
+        "artifact_valid": true,
+        "next_config_state": {
+          "IGA": "8580bde66190023c2f4559aa4e9862462d42502dbb87977def4ce0fc70d5bb47",
+          "LSU": "0f9cd1d184375ede4ddda692fb29af20afef2c4b60d762f55f7e5d019b38edba",
+          "SA": null,
+          "GA": "27553ccdfa68231ffc62e154187db4a73f07bdabb9580b6ae85f85aa2e882f46"
+        },
+        "pipeline_json": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\node0004-requant-full-v1\\pipeline_output\\jsons\\op_w1_s01_resnet50_requant_node0004_w1_s01.json",
+        "pipeline_json_sha256": "5c36bddeda35051b119bc2fb78be2af25bcebf40fb4a79a0f07d01ac8c642234",
+        "pipeline_artifact_sha256": {
+          "mapping_review.json": "45265e39cc7bcd32bcae9adde60fee3cb693cf9bd3d7cacf3dbee2f6c7572ac3",
+          "parsed_bitstream.txt": "4f54fcf3fb78efc649e432f9b8667750e5a64a70fbc36711cf6a5230647a5463",
+          "modules_dump_64b.bin": "f0d5bf09b134f9bf973776fb06149a5c13d5d08457c80af0348c15943893fb3a",
+          "modules_dump_128b.bin": "10da3e0976326b361bb719087855b6c2f4263c0e670bc24dc6477be798a9d53d"
+        },
+        "config_base_addr": "0x002E1400",
+        "config_length_64bit_words": 68,
+        "config_path": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\node0004-requant-full-v1\\pipeline_output\\install\\cfg_pkg\\op_w1_s01_resnet50_requant_node0004_w1_s01_bitstream_128b.bin",
+        "config_sha256": "10da3e0976326b361bb719087855b6c2f4263c0e670bc24dc6477be798a9d53d"
+      },
+      {
+        "stage_index": 10,
+        "op_id": "op_w1_s02",
+        "op_type": "resnet50_requant_node0004_w1_s02",
+        "load_instruction_index": 153,
+        "start_instruction_index": 168,
+        "slice_mask": "0x4444444",
+        "source_config": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\node0004-requant-full-v1\\mapping_evidence\\op_w1_s02\\source_config.json",
+        "source_config_sha256": "e8626e1de4dd3f6946cb51a1ce9879bb0b759790495e0a15db885fbd50fd80f3",
+        "artifact_dir": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\node0004-requant-full-v1\\mapping_evidence\\op_w1_s02",
+        "artifact_valid": true,
+        "next_config_state": {
+          "IGA": "8580bde66190023c2f4559aa4e9862462d42502dbb87977def4ce0fc70d5bb47",
+          "LSU": "08947f314fab181140075e6ca55d852e6ea132cd34ba5982b251fe6e00449585",
+          "SA": null,
+          "GA": "d33316be7a7825d779cc014652ac3bcbb599466c3720c4df8452e961ab564da7"
+        },
+        "pipeline_json": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\node0004-requant-full-v1\\pipeline_output\\jsons\\op_w1_s02_resnet50_requant_node0004_w1_s02.json",
+        "pipeline_json_sha256": "e0e98f348cf8a84d87d63bd3f42467eff2686ba161b693198f4c2a6502d980ac",
+        "pipeline_artifact_sha256": {
+          "mapping_review.json": "45265e39cc7bcd32bcae9adde60fee3cb693cf9bd3d7cacf3dbee2f6c7572ac3",
+          "parsed_bitstream.txt": "0f38b98d43bc3f61743d1cbf462b3f5f2bf7984c8c4c58e8e0c8c4c8ea992437",
+          "modules_dump_64b.bin": "fc1afc459d15c1701b08754bb3cf304b56e61b27cb120474725330664e63d2e5",
+          "modules_dump_128b.bin": "5f15ab596f223b82b3c75c2d3def79ad2439a5ccb3ef73283978d942346e7707"
+        },
+        "config_base_addr": "0x002E1800",
+        "config_length_64bit_words": 68,
+        "config_path": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\node0004-requant-full-v1\\pipeline_output\\install\\cfg_pkg\\op_w1_s02_resnet50_requant_node0004_w1_s02_bitstream_128b.bin",
+        "config_sha256": "5f15ab596f223b82b3c75c2d3def79ad2439a5ccb3ef73283978d942346e7707"
+      },
+      {
+        "stage_index": 11,
+        "op_id": "op_w1_s03",
+        "op_type": "resnet50_requant_node0004_w1_s03",
+        "load_instruction_index": 169,
+        "start_instruction_index": 184,
+        "slice_mask": "0x4444444",
+        "source_config": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\node0004-requant-full-v1\\mapping_evidence\\op_w1_s03\\source_config.json",
+        "source_config_sha256": "3bdbd4b85a7446ea52cb73a5758c1f4a5ca7d763571c85124a5774ae96208d37",
+        "artifact_dir": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\node0004-requant-full-v1\\mapping_evidence\\op_w1_s03",
+        "artifact_valid": true,
+        "next_config_state": {
+          "IGA": "8580bde66190023c2f4559aa4e9862462d42502dbb87977def4ce0fc70d5bb47",
+          "LSU": "dafc01a01a7f41c68c0264cc1ec3401f4ba6fb05763c8134fa08522a8724d2c5",
+          "SA": null,
+          "GA": "af12e7e1c28fcb0a2c5325704d6afdc13c03c7be019a95daad9acabde14111b4"
+        },
+        "pipeline_json": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\node0004-requant-full-v1\\pipeline_output\\jsons\\op_w1_s03_resnet50_requant_node0004_w1_s03.json",
+        "pipeline_json_sha256": "38aa1b9ace45e36dd4390915408f70a3884b5632d7b3fedf205d186f5975e652",
+        "pipeline_artifact_sha256": {
+          "mapping_review.json": "45265e39cc7bcd32bcae9adde60fee3cb693cf9bd3d7cacf3dbee2f6c7572ac3",
+          "parsed_bitstream.txt": "818614dd247b00dc6aee6c7df38601541aaf94be422008a7e329154d3df05e3a",
+          "modules_dump_64b.bin": "0267c4d61217a56c01dd7a460f618aecc47f87d3d28e15ff9e5325dfe9c7d55b",
+          "modules_dump_128b.bin": "38111d03e0370320d445f070a113ffaeb4d7e85f8fe8da09e620f2e84d193382"
+        },
+        "config_base_addr": "0x002E1C00",
+        "config_length_64bit_words": 68,
+        "config_path": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\node0004-requant-full-v1\\pipeline_output\\install\\cfg_pkg\\op_w1_s03_resnet50_requant_node0004_w1_s03_bitstream_128b.bin",
+        "config_sha256": "38111d03e0370320d445f070a113ffaeb4d7e85f8fe8da09e620f2e84d193382"
+      },
+      {
+        "stage_index": 12,
+        "op_id": "op_w1_s04",
+        "op_type": "resnet50_requant_node0004_w1_s04",
+        "load_instruction_index": 185,
+        "start_instruction_index": 200,
+        "slice_mask": "0x8888888",
+        "source_config": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\node0004-requant-full-v1\\mapping_evidence\\op_w1_s04\\source_config.json",
+        "source_config_sha256": "48919dfe2a831afb461174f0343aaea5fcb0ffcfdb37258d545134e76ef4cec8",
+        "artifact_dir": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\node0004-requant-full-v1\\mapping_evidence\\op_w1_s04",
+        "artifact_valid": true,
+        "next_config_state": {
+          "IGA": "8580bde66190023c2f4559aa4e9862462d42502dbb87977def4ce0fc70d5bb47",
+          "LSU": "66bae137ded1ad9793d1e23abc20acbc57328b1e55c7f19d093c3fd1da8d3722",
+          "SA": null,
+          "GA": "acf53550f20b1cee6a1fd8b309d26b4e405e4954a17b70ae9d89d640aefa7559"
+        },
+        "pipeline_json": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\node0004-requant-full-v1\\pipeline_output\\jsons\\op_w1_s04_resnet50_requant_node0004_w1_s04.json",
+        "pipeline_json_sha256": "23dc4a7092631f1fa15b0a37ca20a3724b4aa737302a18463b1016c91b4e9fa5",
+        "pipeline_artifact_sha256": {
+          "mapping_review.json": "45265e39cc7bcd32bcae9adde60fee3cb693cf9bd3d7cacf3dbee2f6c7572ac3",
+          "parsed_bitstream.txt": "13d057611114be3409f46c2321127dd65696fceea6d16ce50110a0f0dac34375",
+          "modules_dump_64b.bin": "6a8a83f5dc1f27d5f810c242c66c5bb3c1584cd49a4db09a2bc9ab8a3ed7e694",
+          "modules_dump_128b.bin": "ce42c9dbfad346f96cbfbd35cf79a8036edb57cff59ce343d308ba3d58b40a21"
+        },
+        "config_base_addr": "0x002E2000",
+        "config_length_64bit_words": 68,
+        "config_path": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\node0004-requant-full-v1\\pipeline_output\\install\\cfg_pkg\\op_w1_s04_resnet50_requant_node0004_w1_s04_bitstream_128b.bin",
+        "config_sha256": "ce42c9dbfad346f96cbfbd35cf79a8036edb57cff59ce343d308ba3d58b40a21"
+      },
+      {
+        "stage_index": 13,
+        "op_id": "op_w1_s05",
+        "op_type": "resnet50_requant_node0004_w1_s05",
+        "load_instruction_index": 201,
+        "start_instruction_index": 216,
+        "slice_mask": "0x8888888",
+        "source_config": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\node0004-requant-full-v1\\mapping_evidence\\op_w1_s05\\source_config.json",
+        "source_config_sha256": "b2ce4eb165140a353631909aa094a44e15a928f2724162295fc5c9764cfd95b2",
+        "artifact_dir": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\node0004-requant-full-v1\\mapping_evidence\\op_w1_s05",
+        "artifact_valid": true,
+        "next_config_state": {
+          "IGA": "8580bde66190023c2f4559aa4e9862462d42502dbb87977def4ce0fc70d5bb47",
+          "LSU": "3a4304b1787373ceb6191005e1bc41e259f3ace6eddbcc08611d5bedb31a6907",
+          "SA": null,
+          "GA": "673336e00f98ce6af669bde5b40d4460ec9469490d121f17ad27d892faeb462c"
+        },
+        "pipeline_json": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\node0004-requant-full-v1\\pipeline_output\\jsons\\op_w1_s05_resnet50_requant_node0004_w1_s05.json",
+        "pipeline_json_sha256": "5add1733511aafc167b4584e1cdca2936a7c0fa3e96a8faa27e14146bfe46df0",
+        "pipeline_artifact_sha256": {
+          "mapping_review.json": "45265e39cc7bcd32bcae9adde60fee3cb693cf9bd3d7cacf3dbee2f6c7572ac3",
+          "parsed_bitstream.txt": "ee002700b830298cd3abcbb630472793d944b2092f71fd98d7b014be1c3ab020",
+          "modules_dump_64b.bin": "bba8a7d9aa3f45fd7be291429a822a9e3b9bb1396767808c26be1138900fcf20",
+          "modules_dump_128b.bin": "feee7c3daa6ad67a70387b9409b8e5fb5bbb4124829f74ff2e30ba51a9481e0c"
+        },
+        "config_base_addr": "0x002E2400",
+        "config_length_64bit_words": 68,
+        "config_path": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\node0004-requant-full-v1\\pipeline_output\\install\\cfg_pkg\\op_w1_s05_resnet50_requant_node0004_w1_s05_bitstream_128b.bin",
+        "config_sha256": "feee7c3daa6ad67a70387b9409b8e5fb5bbb4124829f74ff2e30ba51a9481e0c"
+      },
+      {
+        "stage_index": 14,
+        "op_id": "op_w1_s06",
+        "op_type": "resnet50_requant_node0004_w1_s06",
+        "load_instruction_index": 217,
+        "start_instruction_index": 232,
+        "slice_mask": "0x2222222",
+        "source_config": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\node0004-requant-full-v1\\mapping_evidence\\op_w1_s06\\source_config.json",
+        "source_config_sha256": "caf7d5fdae001843070331edf3c639d241659777b8c26e634342b9f9e3c13143",
+        "artifact_dir": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\node0004-requant-full-v1\\mapping_evidence\\op_w1_s06",
+        "artifact_valid": true,
+        "next_config_state": {
+          "IGA": "8580bde66190023c2f4559aa4e9862462d42502dbb87977def4ce0fc70d5bb47",
+          "LSU": "7b3510b26901c6774d576a4b686c20027a26842f84fdee267745490f26049c8e",
+          "SA": null,
+          "GA": "c74db60b54b146eba40186be9b8b5da4ee0fc030d42d1962974df7e302038dba"
+        },
+        "pipeline_json": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\node0004-requant-full-v1\\pipeline_output\\jsons\\op_w1_s06_resnet50_requant_node0004_w1_s06.json",
+        "pipeline_json_sha256": "9480f1931bfefd5a51721c370f7b19c852fde880d082eb0526a9ae03f6c1d697",
+        "pipeline_artifact_sha256": {
+          "mapping_review.json": "45265e39cc7bcd32bcae9adde60fee3cb693cf9bd3d7cacf3dbee2f6c7572ac3",
+          "parsed_bitstream.txt": "032427542c0d0d1ffdf023aa72e6014a2c3ced64a9f520a9d9a6bff6798896bc",
+          "modules_dump_64b.bin": "788b1ab3b37cb83d2aada391a5a339b1758fd99dcb3a00ebb3be7e5962e8b959",
+          "modules_dump_128b.bin": "0a31b14d8ced50bafa221b72d5fdfd9b8f0862304f58d7a570796628941812a2"
+        },
+        "config_base_addr": "0x002E2800",
+        "config_length_64bit_words": 68,
+        "config_path": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\node0004-requant-full-v1\\pipeline_output\\install\\cfg_pkg\\op_w1_s06_resnet50_requant_node0004_w1_s06_bitstream_128b.bin",
+        "config_sha256": "0a31b14d8ced50bafa221b72d5fdfd9b8f0862304f58d7a570796628941812a2"
+      },
+      {
+        "stage_index": 15,
+        "op_id": "op_w1_s07",
+        "op_type": "resnet50_requant_node0004_w1_s07",
+        "load_instruction_index": 233,
+        "start_instruction_index": 248,
+        "slice_mask": "0x2222222",
+        "source_config": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\node0004-requant-full-v1\\mapping_evidence\\op_w1_s07\\source_config.json",
+        "source_config_sha256": "3480b49e8c166663c70bd9c7b3fe8cbcb9991e28cb10ecc03a25bc430c06e583",
+        "artifact_dir": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\node0004-requant-full-v1\\mapping_evidence\\op_w1_s07",
+        "artifact_valid": true,
+        "next_config_state": {
+          "IGA": "8580bde66190023c2f4559aa4e9862462d42502dbb87977def4ce0fc70d5bb47",
+          "LSU": "82cd134d12f4cd36ff3fd8d21e1735f0ed61c3cbc5428b1a8ba8180e45daced9",
+          "SA": null,
+          "GA": "330e1ade16393f73c71311c4bd1a8ac3422d3079f762c6e25f8c062321e04c6d"
+        },
+        "pipeline_json": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\node0004-requant-full-v1\\pipeline_output\\jsons\\op_w1_s07_resnet50_requant_node0004_w1_s07.json",
+        "pipeline_json_sha256": "8ec654010cce95b48346be9eae548d733834345b21affc1381b853b1f9507bc5",
+        "pipeline_artifact_sha256": {
+          "mapping_review.json": "45265e39cc7bcd32bcae9adde60fee3cb693cf9bd3d7cacf3dbee2f6c7572ac3",
+          "parsed_bitstream.txt": "aeb2a5fda2fda14f26d49f98c2e69b6dac43d874ae54d2ccb94e7cefad12b7db",
+          "modules_dump_64b.bin": "67683df825f48b634722b3ec2a41bffa3c1c71c4e6062a55754353d3d03e2249",
+          "modules_dump_128b.bin": "827847f3f49ac00bc5bc6af6bd4f2acb921ce8a552cf46ddac5330a93ef9f993"
+        },
+        "config_base_addr": "0x002E2C00",
+        "config_length_64bit_words": 68,
+        "config_path": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\node0004-requant-full-v1\\pipeline_output\\install\\cfg_pkg\\op_w1_s07_resnet50_requant_node0004_w1_s07_bitstream_128b.bin",
+        "config_sha256": "827847f3f49ac00bc5bc6af6bd4f2acb921ce8a552cf46ddac5330a93ef9f993"
+      },
+      {
+        "stage_index": 16,
+        "op_id": "op_w2_s00",
+        "op_type": "resnet50_requant_node0004_w2_s00",
+        "load_instruction_index": 249,
+        "start_instruction_index": 252,
+        "slice_mask": "0x0000011",
+        "source_config": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\node0004-requant-full-v1\\mapping_evidence\\op_w2_s00\\source_config.json",
+        "source_config_sha256": "bfa99bfa294fffa0cc62602c5ae8f83022ae57f5b6d77b82d2810ecfe0154c28",
+        "artifact_dir": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\node0004-requant-full-v1\\mapping_evidence\\op_w2_s00",
+        "artifact_valid": true,
+        "next_config_state": {
+          "IGA": "8580bde66190023c2f4559aa4e9862462d42502dbb87977def4ce0fc70d5bb47",
+          "LSU": "e9a6c2e538cdda7bb117d43023f8fb78e3a3016e40505b4242c81cf5822ce93b",
+          "SA": null,
+          "GA": "36a7df74d641afff9ef51e3596ab2e1ec5073411ce8a814d942834ad1a1c9f55"
+        },
+        "pipeline_json": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\node0004-requant-full-v1\\pipeline_output\\jsons\\op_w2_s00_resnet50_requant_node0004_w2_s00.json",
+        "pipeline_json_sha256": "f37982c15440155754d3cd4422aad105416a6e1c3ce05305aceb043dcb447c5e",
+        "pipeline_artifact_sha256": {
+          "mapping_review.json": "45265e39cc7bcd32bcae9adde60fee3cb693cf9bd3d7cacf3dbee2f6c7572ac3",
+          "parsed_bitstream.txt": "cc9a1b65ce5e1a1aa5de91b8fd70d4d6b8febf653614be93252941d2aced017a",
+          "modules_dump_64b.bin": "0535529fc4d8ba2977100c30dc7e12483e8c6bfcbf51351a5d9f575f317f050b",
+          "modules_dump_128b.bin": "4a773d91d9f3cd04901bc7ec29bc997bcf608132da2f897eec4f408e53071370"
+        },
+        "config_base_addr": "0x002E3000",
+        "config_length_64bit_words": 68,
+        "config_path": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\node0004-requant-full-v1\\pipeline_output\\install\\cfg_pkg\\op_w2_s00_resnet50_requant_node0004_w2_s00_bitstream_128b.bin",
+        "config_sha256": "4a773d91d9f3cd04901bc7ec29bc997bcf608132da2f897eec4f408e53071370"
+      },
+      {
+        "stage_index": 17,
+        "op_id": "op_w2_s01",
+        "op_type": "resnet50_requant_node0004_w2_s01",
+        "load_instruction_index": 253,
+        "start_instruction_index": 256,
+        "slice_mask": "0x0000011",
+        "source_config": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\node0004-requant-full-v1\\mapping_evidence\\op_w2_s01\\source_config.json",
+        "source_config_sha256": "98d0223603743ba16ed24df65629662ba04021aabda21f814899b9a41b1bc14e",
+        "artifact_dir": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\node0004-requant-full-v1\\mapping_evidence\\op_w2_s01",
+        "artifact_valid": true,
+        "next_config_state": {
+          "IGA": "8580bde66190023c2f4559aa4e9862462d42502dbb87977def4ce0fc70d5bb47",
+          "LSU": "7c541ca6b555a2f44e8583e484217fab0883eab75b61c8f229a0b1a7baf5da25",
+          "SA": null,
+          "GA": "27553ccdfa68231ffc62e154187db4a73f07bdabb9580b6ae85f85aa2e882f46"
+        },
+        "pipeline_json": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\node0004-requant-full-v1\\pipeline_output\\jsons\\op_w2_s01_resnet50_requant_node0004_w2_s01.json",
+        "pipeline_json_sha256": "b8aab329768460d56248db2f71d4d187e2c7cc99c2d835e195273523c9d8717f",
+        "pipeline_artifact_sha256": {
+          "mapping_review.json": "45265e39cc7bcd32bcae9adde60fee3cb693cf9bd3d7cacf3dbee2f6c7572ac3",
+          "parsed_bitstream.txt": "97ad9df3665d1707d775d0a96b240c57280d7105168097bbe5fe28862d6ccfb6",
+          "modules_dump_64b.bin": "4f116fbfaa03932e2f36eb95c6b9ce420e0be46e4359ada08f3e023a0ab4c5bc",
+          "modules_dump_128b.bin": "09ef80387fc4f9d5b0ad1297dabb6f109150ccc40f46c7fccb2c3a5c2c45ea68"
+        },
+        "config_base_addr": "0x002E3400",
+        "config_length_64bit_words": 68,
+        "config_path": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\node0004-requant-full-v1\\pipeline_output\\install\\cfg_pkg\\op_w2_s01_resnet50_requant_node0004_w2_s01_bitstream_128b.bin",
+        "config_sha256": "09ef80387fc4f9d5b0ad1297dabb6f109150ccc40f46c7fccb2c3a5c2c45ea68"
+      },
+      {
+        "stage_index": 18,
+        "op_id": "op_w2_s02",
+        "op_type": "resnet50_requant_node0004_w2_s02",
+        "load_instruction_index": 257,
+        "start_instruction_index": 262,
+        "slice_mask": "0x0000044",
+        "source_config": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\node0004-requant-full-v1\\mapping_evidence\\op_w2_s02\\source_config.json",
+        "source_config_sha256": "6cd797086d174f8e390a2495d94216d9ca1160f5d7cde9f0bd908c2d2c0ff575",
+        "artifact_dir": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\node0004-requant-full-v1\\mapping_evidence\\op_w2_s02",
+        "artifact_valid": true,
+        "next_config_state": {
+          "IGA": "8580bde66190023c2f4559aa4e9862462d42502dbb87977def4ce0fc70d5bb47",
+          "LSU": "defc080a5fa6d17c3287bac1db13e7eda8716ebdc0be8b12d2f8c56ee9d9321b",
+          "SA": null,
+          "GA": "d33316be7a7825d779cc014652ac3bcbb599466c3720c4df8452e961ab564da7"
+        },
+        "pipeline_json": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\node0004-requant-full-v1\\pipeline_output\\jsons\\op_w2_s02_resnet50_requant_node0004_w2_s02.json",
+        "pipeline_json_sha256": "df2c03ec303f65f7d48a1d606c5f7863164d520734e11f44f1c628b81ad89c89",
+        "pipeline_artifact_sha256": {
+          "mapping_review.json": "45265e39cc7bcd32bcae9adde60fee3cb693cf9bd3d7cacf3dbee2f6c7572ac3",
+          "parsed_bitstream.txt": "70abb7f5240408f25d92f3ff3fd40cee5d76be83fc2a6458bbbe010243b9f8ab",
+          "modules_dump_64b.bin": "9dc6c6f85dd96d42d6bccda9afb3f97417e297251b469dc7f9da805711c37caa",
+          "modules_dump_128b.bin": "25a1dee31a3ff8c7e95ee3abfb1066a733c73a40e134dd625aece510189ebd31"
+        },
+        "config_base_addr": "0x002E3800",
+        "config_length_64bit_words": 68,
+        "config_path": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\node0004-requant-full-v1\\pipeline_output\\install\\cfg_pkg\\op_w2_s02_resnet50_requant_node0004_w2_s02_bitstream_128b.bin",
+        "config_sha256": "25a1dee31a3ff8c7e95ee3abfb1066a733c73a40e134dd625aece510189ebd31"
+      },
+      {
+        "stage_index": 19,
+        "op_id": "op_w2_s03",
+        "op_type": "resnet50_requant_node0004_w2_s03",
+        "load_instruction_index": 263,
+        "start_instruction_index": 268,
+        "slice_mask": "0x0000044",
+        "source_config": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\node0004-requant-full-v1\\mapping_evidence\\op_w2_s03\\source_config.json",
+        "source_config_sha256": "b9de4dedde897e928b845834c285cdc7e6d92a73b8f58e16db2c462cc43dcb9d",
+        "artifact_dir": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\node0004-requant-full-v1\\mapping_evidence\\op_w2_s03",
+        "artifact_valid": true,
+        "next_config_state": {
+          "IGA": "8580bde66190023c2f4559aa4e9862462d42502dbb87977def4ce0fc70d5bb47",
+          "LSU": "6f55e510a89b8eb8621e2da79f388dd432b2f3ed17e6a3dbf160dad94cf59b78",
+          "SA": null,
+          "GA": "af12e7e1c28fcb0a2c5325704d6afdc13c03c7be019a95daad9acabde14111b4"
+        },
+        "pipeline_json": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\node0004-requant-full-v1\\pipeline_output\\jsons\\op_w2_s03_resnet50_requant_node0004_w2_s03.json",
+        "pipeline_json_sha256": "d7cc7e2d8cb81b1ee2709c57b1b4ce51c87b626f518e0018cf35aed2fb7802cf",
+        "pipeline_artifact_sha256": {
+          "mapping_review.json": "45265e39cc7bcd32bcae9adde60fee3cb693cf9bd3d7cacf3dbee2f6c7572ac3",
+          "parsed_bitstream.txt": "a76cc6adc6b14f0a4215c0681995cd6fbbc02b02914e2a20cae8ce6aca92d1f1",
+          "modules_dump_64b.bin": "f135e10fe44509b73b45b45e4ab7872623006b13ab1eee238747ef846972eb19",
+          "modules_dump_128b.bin": "887620eb8c7a26357c26ee00067b65e8c5b5581d9b5366faca6f87ba23a7a0c0"
+        },
+        "config_base_addr": "0x002E3C00",
+        "config_length_64bit_words": 68,
+        "config_path": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\node0004-requant-full-v1\\pipeline_output\\install\\cfg_pkg\\op_w2_s03_resnet50_requant_node0004_w2_s03_bitstream_128b.bin",
+        "config_sha256": "887620eb8c7a26357c26ee00067b65e8c5b5581d9b5366faca6f87ba23a7a0c0"
+      },
+      {
+        "stage_index": 20,
+        "op_id": "op_w2_s04",
+        "op_type": "resnet50_requant_node0004_w2_s04",
+        "load_instruction_index": 269,
+        "start_instruction_index": 274,
+        "slice_mask": "0x0000088",
+        "source_config": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\node0004-requant-full-v1\\mapping_evidence\\op_w2_s04\\source_config.json",
+        "source_config_sha256": "1823a9360f28968653aea0529bbad2547745f7191bc8cf9b54ba3f4e6aa00986",
+        "artifact_dir": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\node0004-requant-full-v1\\mapping_evidence\\op_w2_s04",
+        "artifact_valid": true,
+        "next_config_state": {
+          "IGA": "8580bde66190023c2f4559aa4e9862462d42502dbb87977def4ce0fc70d5bb47",
+          "LSU": "95a64b109dd66edddc0001bdebf4de0ab73934941f606c5b832ad18038fa303e",
+          "SA": null,
+          "GA": "acf53550f20b1cee6a1fd8b309d26b4e405e4954a17b70ae9d89d640aefa7559"
+        },
+        "pipeline_json": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\node0004-requant-full-v1\\pipeline_output\\jsons\\op_w2_s04_resnet50_requant_node0004_w2_s04.json",
+        "pipeline_json_sha256": "71b78b7ff0f4e68cb6fa120df4e764c8fd12aebad4ee1c4cfe2a9c6ba38833ce",
+        "pipeline_artifact_sha256": {
+          "mapping_review.json": "45265e39cc7bcd32bcae9adde60fee3cb693cf9bd3d7cacf3dbee2f6c7572ac3",
+          "parsed_bitstream.txt": "6d0a0fae90d18791d8fdcb10f3493e0cb0f79209cf4a93316ae85d6141af0119",
+          "modules_dump_64b.bin": "513121b0899d57ed465bc3e927a47bd684bc564ac6baf8b3150b340e169545a2",
+          "modules_dump_128b.bin": "373755214321665bc01a923503d65e4bd4192c878e9ed0bb8528d00e1e023daf"
+        },
+        "config_base_addr": "0x002E4000",
+        "config_length_64bit_words": 68,
+        "config_path": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\node0004-requant-full-v1\\pipeline_output\\install\\cfg_pkg\\op_w2_s04_resnet50_requant_node0004_w2_s04_bitstream_128b.bin",
+        "config_sha256": "373755214321665bc01a923503d65e4bd4192c878e9ed0bb8528d00e1e023daf"
+      },
+      {
+        "stage_index": 21,
+        "op_id": "op_w2_s05",
+        "op_type": "resnet50_requant_node0004_w2_s05",
+        "load_instruction_index": 275,
+        "start_instruction_index": 280,
+        "slice_mask": "0x0000088",
+        "source_config": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\node0004-requant-full-v1\\mapping_evidence\\op_w2_s05\\source_config.json",
+        "source_config_sha256": "04361e8e272297359ab0fe49bf073ccbf831b6f08c14f71ca9b83f6d0c91eaa6",
+        "artifact_dir": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\node0004-requant-full-v1\\mapping_evidence\\op_w2_s05",
+        "artifact_valid": true,
+        "next_config_state": {
+          "IGA": "8580bde66190023c2f4559aa4e9862462d42502dbb87977def4ce0fc70d5bb47",
+          "LSU": "78d559fc0c01c621ff163605fec70e0dd5bc608c59c18df19b0cead93974d131",
+          "SA": null,
+          "GA": "673336e00f98ce6af669bde5b40d4460ec9469490d121f17ad27d892faeb462c"
+        },
+        "pipeline_json": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\node0004-requant-full-v1\\pipeline_output\\jsons\\op_w2_s05_resnet50_requant_node0004_w2_s05.json",
+        "pipeline_json_sha256": "b512cabb83f390e463259331807673f646ecb5d1eda94e0711e094a53abb58ca",
+        "pipeline_artifact_sha256": {
+          "mapping_review.json": "45265e39cc7bcd32bcae9adde60fee3cb693cf9bd3d7cacf3dbee2f6c7572ac3",
+          "parsed_bitstream.txt": "aec17c9768be034efa7bd9e306b2f0c763ac6a60b3ffbb1300403c6e9b460847",
+          "modules_dump_64b.bin": "cc82bbf328c60a0c08365d343c70c0015ec4c0ded4e6d1bdbd2d87809fd48969",
+          "modules_dump_128b.bin": "c55e3ac5877901e515b3f8ea320a80a9ce432f90b58dac47d80eb014c704d76f"
+        },
+        "config_base_addr": "0x002E4400",
+        "config_length_64bit_words": 68,
+        "config_path": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\node0004-requant-full-v1\\pipeline_output\\install\\cfg_pkg\\op_w2_s05_resnet50_requant_node0004_w2_s05_bitstream_128b.bin",
+        "config_sha256": "c55e3ac5877901e515b3f8ea320a80a9ce432f90b58dac47d80eb014c704d76f"
+      },
+      {
+        "stage_index": 22,
+        "op_id": "op_w2_s06",
+        "op_type": "resnet50_requant_node0004_w2_s06",
+        "load_instruction_index": 281,
+        "start_instruction_index": 286,
+        "slice_mask": "0x0000022",
+        "source_config": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\node0004-requant-full-v1\\mapping_evidence\\op_w2_s06\\source_config.json",
+        "source_config_sha256": "5276c40bce4589e497b7aa8d90e894f3a0a3e735da21a3e2cf19fd80652994e7",
+        "artifact_dir": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\node0004-requant-full-v1\\mapping_evidence\\op_w2_s06",
+        "artifact_valid": true,
+        "next_config_state": {
+          "IGA": "8580bde66190023c2f4559aa4e9862462d42502dbb87977def4ce0fc70d5bb47",
+          "LSU": "fe2d19ee12c4df1aec1012e94fde6b3470377778d0d50e8d64ded15f74920087",
+          "SA": null,
+          "GA": "c74db60b54b146eba40186be9b8b5da4ee0fc030d42d1962974df7e302038dba"
+        },
+        "pipeline_json": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\node0004-requant-full-v1\\pipeline_output\\jsons\\op_w2_s06_resnet50_requant_node0004_w2_s06.json",
+        "pipeline_json_sha256": "165e95ce7be4d27e1144580897f2e8c3d1a96b5f79b503de05b2973d83cdfd47",
+        "pipeline_artifact_sha256": {
+          "mapping_review.json": "45265e39cc7bcd32bcae9adde60fee3cb693cf9bd3d7cacf3dbee2f6c7572ac3",
+          "parsed_bitstream.txt": "82328da0ffe0cfd525299b867f971b8ceb258a4261764da97857fef6ad31682e",
+          "modules_dump_64b.bin": "2a5c1895de642d840f71531171ed98f906a20af0980b11eb5f0fc66ac9f92b07",
+          "modules_dump_128b.bin": "49a4e3f1d5cd84fe6d368ac608dad9a0992fea780f099cf9cd288ea50e19f176"
+        },
+        "config_base_addr": "0x002E4800",
+        "config_length_64bit_words": 68,
+        "config_path": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\node0004-requant-full-v1\\pipeline_output\\install\\cfg_pkg\\op_w2_s06_resnet50_requant_node0004_w2_s06_bitstream_128b.bin",
+        "config_sha256": "49a4e3f1d5cd84fe6d368ac608dad9a0992fea780f099cf9cd288ea50e19f176"
+      },
+      {
+        "stage_index": 23,
+        "op_id": "op_w2_s07",
+        "op_type": "resnet50_requant_node0004_w2_s07",
+        "load_instruction_index": 287,
+        "start_instruction_index": 292,
+        "slice_mask": "0x0000022",
+        "source_config": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\node0004-requant-full-v1\\mapping_evidence\\op_w2_s07\\source_config.json",
+        "source_config_sha256": "10f2a349738a3267e08d90e636337ec62255c728013bb6456f1e3eeff74da7f3",
+        "artifact_dir": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\node0004-requant-full-v1\\mapping_evidence\\op_w2_s07",
+        "artifact_valid": true,
+        "next_config_state": {
+          "IGA": "8580bde66190023c2f4559aa4e9862462d42502dbb87977def4ce0fc70d5bb47",
+          "LSU": "64e56c1c0b964ff4ff8db31578b9bdc6d55b78523df045cbf55798e848c4fc03",
+          "SA": null,
+          "GA": "330e1ade16393f73c71311c4bd1a8ac3422d3079f762c6e25f8c062321e04c6d"
+        },
+        "pipeline_json": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\node0004-requant-full-v1\\pipeline_output\\jsons\\op_w2_s07_resnet50_requant_node0004_w2_s07.json",
+        "pipeline_json_sha256": "5046d08bd41e327c8cfb473d8732e864757c924bdd819c594696108a730564a3",
+        "pipeline_artifact_sha256": {
+          "mapping_review.json": "45265e39cc7bcd32bcae9adde60fee3cb693cf9bd3d7cacf3dbee2f6c7572ac3",
+          "parsed_bitstream.txt": "726c5e46943e2d5dd3024ee6a874c4b3297f8459401b69fa5d5a49ec978afc5a",
+          "modules_dump_64b.bin": "531e09f8117b8ae32187a7c81f95b327b0e3fdab4becbd4fc7b472158ad236f9",
+          "modules_dump_128b.bin": "aa20f450aeca100dbfcc4744896488dc02f7cdefceb96b819fdd739e06f8d0d1"
+        },
+        "config_base_addr": "0x002E4C00",
+        "config_length_64bit_words": 68,
+        "config_path": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\node0004-requant-full-v1\\pipeline_output\\install\\cfg_pkg\\op_w2_s07_resnet50_requant_node0004_w2_s07_bitstream_128b.bin",
+        "config_sha256": "aa20f450aeca100dbfcc4744896488dc02f7cdefceb96b819fdd739e06f8d0d1"
+      }
+    ],
+    "final_config_state": {
+      "IGA": "8580bde66190023c2f4559aa4e9862462d42502dbb87977def4ce0fc70d5bb47",
+      "LSU": "64e56c1c0b964ff4ff8db31578b9bdc6d55b78523df045cbf55798e848c4fc03",
+      "SA": null,
+      "GA": "330e1ade16393f73c71311c4bd1a8ac3422d3079f762c6e25f8c062321e04c6d"
+    },
+    "issue_count": 0
+  }
+}

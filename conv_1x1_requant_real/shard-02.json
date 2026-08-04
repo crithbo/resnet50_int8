@@ -131,7 +131,7 @@
     "stream0": {
       "target": "A",
       "mode": "read",
-      "base_addr": 151760,
+      "base_addr": 603344,
       "mem_idx_mode": [
         "buffer",
         "keep",
@@ -232,7 +232,7 @@
     "stream2": {
       "target": "D",
       "mode": "write",
-      "base_addr": 904400,
+      "base_addr": 1355984,
       "mem_idx_mode": [
         "buffer",
         "keep",

@@ -1,0 +1,31 @@
+{
+  "artifact": {
+    "path": "artifacts/operator_config_validation/r5-requant-node0001-two-stage-e2-v1/local_e2_report.json",
+    "sha256": "29b24ba2c0ca48348adb7e2c2b7a05508324474f506f0cabcadc1ded4f121990",
+    "size_bytes": 230039
+  },
+  "candidate_release": false,
+  "config_root": "configs/native_ndp_sim/node0001_requant_two_stage_v1",
+  "contract_sha256": "7a88aa6ad258779f2adef8e42591bac9ee233b499feef9256dbdb7c65d50265c",
+  "dynamic_baseline": "NO_DYNAMIC_BASELINE",
+  "formal_target_instance_allowed": false,
+  "hw_op_id": "hwop-0001-01",
+  "node_id": "node-0001",
+  "remaining_blockers": [
+    "B_REQUANT_SERVER_E4_E5"
+  ],
+  "request_id": "r5:hwop-0001-01",
+  "rule_ids": [
+    "CDA-REQUANT-QPARAM-001",
+    "CDA-REQUANT-INT32-GUARD-001",
+    "CDA-REQUANT-SFU-LUT-001",
+    "CDA-REQUANT-TWO-STAGE-001",
+    "CDA-REQUANT-ROUND-MAGIC-001",
+    "CDA-REQUANT-LAYOUT-HWC8-001",
+    "CDA-REQUANT-MATERIALIZED-ROUNDTRIP-001",
+    "CDA-REQUANT-E4-E5-001"
+  ],
+  "schema": "operator-config-semantic-contract-v1",
+  "server_package": false,
+  "status": "LOCAL_E2_COMPLETE_DYNAMIC_PENDING"
+}

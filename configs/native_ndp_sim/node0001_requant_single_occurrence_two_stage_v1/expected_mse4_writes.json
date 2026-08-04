@@ -1,0 +1,123 @@
+{
+  "address_unit_note": "byte_address is the JSON/DRAM byte address; word_address_128b is the observer address",
+  "duplicate_or_extra_write_allowed": false,
+  "physical_engine": "MSE4_WRITE_STREAM0",
+  "schema": "requant-atomic-mse4-write-contract-v1",
+  "stages": [
+    {
+      "expected_accepted_write_count": 8,
+      "role": "guard",
+      "stage_index": 0,
+      "writes": [
+        {
+          "beat_index": 0,
+          "byte_address": "0x00800000",
+          "data": "0x3f800000000000000000000000000000",
+          "data_sha256": "7ab8f6c26e4f9862c95a18c8e5c50403eeb64d8869fbbf9a7a6397d9a63b7b0e",
+          "role": "guard",
+          "stage_index": 0,
+          "strobe": "0xffff",
+          "word_address_128b": "0x80000"
+        },
+        {
+          "beat_index": 1,
+          "byte_address": "0x00800010",
+          "data": "0x40a00000408000004040000040000000",
+          "data_sha256": "1180e36f58837887478f2d0dc12271b6ec4b103f20b533f8af7d44c313e27c18",
+          "role": "guard",
+          "stage_index": 0,
+          "strobe": "0xffff",
+          "word_address_128b": "0x80001"
+        },
+        {
+          "beat_index": 2,
+          "byte_address": "0x00800020",
+          "data": "0x485f180048db11a048dcbf8048f913a0",
+          "data_sha256": "beaa3a61ee7f82bffe84e2752b38e31146406c614e592f162f21c250e5b92ad8",
+          "role": "guard",
+          "stage_index": 0,
+          "strobe": "0xffff",
+          "word_address_128b": "0x80002"
+        },
+        {
+          "beat_index": 3,
+          "byte_address": "0x00800030",
+          "data": "0x4843be004826170048ef8dc0478e4980",
+          "data_sha256": "45149bef4544f189ea1af269795553f69979bbcaea41565735bffb60216b01a3",
+          "role": "guard",
+          "stage_index": 0,
+          "strobe": "0xffff",
+          "word_address_128b": "0x80003"
+        },
+        {
+          "beat_index": 4,
+          "byte_address": "0x00800040",
+          "data": "0x49f9bb5849b19f9849e78dd049148e00",
+          "data_sha256": "b86dc3f40f33df486883b2916145e273bffd3a8c7a83d661926cfc92a792d548",
+          "role": "guard",
+          "stage_index": 0,
+          "strobe": "0xffff",
+          "word_address_128b": "0x80004"
+        },
+        {
+          "beat_index": 5,
+          "byte_address": "0x00800050",
+          "data": "0x492fd10049b9ebe849e1fe80489bca00",
+          "data_sha256": "700659eb2ba667c90845ad6f3a720bdf6ad1a0066fc5e6ed5d1220c5931fa52a",
+          "role": "guard",
+          "stage_index": 0,
+          "strobe": "0xffff",
+          "word_address_128b": "0x80005"
+        },
+        {
+          "beat_index": 6,
+          "byte_address": "0x00800060",
+          "data": "0x4620e40045e1d8004549900044788000",
+          "data_sha256": "ce9a0d9d1859b5e6fec49b530156f77b6599a505e577709f6232d5ffe79e1eb0",
+          "role": "guard",
+          "stage_index": 0,
+          "strobe": "0xffff",
+          "word_address_128b": "0x80006"
+        },
+        {
+          "beat_index": 7,
+          "byte_address": "0x00800070",
+          "data": "0x491535a0499da95049403ee048045100",
+          "data_sha256": "7e2e3e04773331b0918b974f19df24ad7b499e44d53fbe09a246eb3dfe8a03bb",
+          "role": "guard",
+          "stage_index": 0,
+          "strobe": "0xffff",
+          "word_address_128b": "0x80007"
+        }
+      ]
+    },
+    {
+      "expected_accepted_write_count": 2,
+      "role": "round_saturate",
+      "stage_index": 1,
+      "writes": [
+        {
+          "beat_index": 0,
+          "byte_address": "0x01000000",
+          "data": "0x54225044225c48fc0000000000000000",
+          "data_sha256": "9172446595bbd1e3080898d00bf71e826f28b5493bbce6308a5e259f6215edf2",
+          "role": "round_saturate",
+          "stage_index": 1,
+          "strobe": "0xffff",
+          "word_address_128b": "0x100000"
+        },
+        {
+          "beat_index": 1,
+          "byte_address": "0x01000010",
+          "data": "0xfffe807f02010100ffffffffffffffff",
+          "data_sha256": "ac9b6436c5756e504a619d2b4c289faa268f109a2bd9929bbe7deac0a11b20b1",
+          "role": "round_saturate",
+          "stage_index": 1,
+          "strobe": "0xffff",
+          "word_address_128b": "0x100001"
+        }
+      ]
+    }
+  ],
+  "total_expected_accepted_write_count": 10
+}

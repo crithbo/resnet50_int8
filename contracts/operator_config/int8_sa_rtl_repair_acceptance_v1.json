@@ -1,0 +1,1062 @@
+{
+  "schema": "resnet50-int8-sa-rtl-repair-acceptance-v1",
+  "status": "LOCAL_BIT_EXACT_PROOF_PASS_RTL_IDENTITY_PENDING",
+  "candidate_release": false,
+  "server_package_allowed": false,
+  "functional_rtl_modified": false,
+  "target_json_generated": false,
+  "receipt_policy": {
+    "active_rule_current_match": [
+      {
+        "path": ".agents/rules/INT8_SA点积专项规则.md",
+        "sha256": "f616db76c74c5a760ac5f02f7fb57f01379555b7dda885adebebf232cc8f8a1d",
+        "current_match_required": true,
+        "on_mismatch": "FAIL_CLOSED"
+      }
+    ],
+    "routing_generation_receipt": {
+      "path": ".agents/rules/生成前必读索引.md",
+      "sha256": "6ae4c7fe09fcdb39a48357cfef645c272f67e7a81d09b5547ebd9a929e6ce1a4",
+      "current_match_required": false
+    },
+    "mutable_provenance": [
+      {
+        "path": ".agents/plan.md",
+        "sha256_at_generation": "23f5cef51f73ae4922581b95f04c15610a47b59f0d2fa55de241ce4efdb2449f",
+        "current_match_required": false,
+        "meaning": "historical mutable provenance only"
+      }
+    ]
+  },
+  "rule_ids": [
+    "CDA-SA-INT8-DOT-ARITHMETIC-RANGE-001",
+    "CDA-SA-INT8-SERIALIZED-FALLBACK-001",
+    "CDA-SA-INT8-RTL-COMPATIBILITY-001",
+    "CDA-SA-INT8-CONV-MATMUL-COMMON-GATE-001"
+  ],
+  "known_counterexamples": [
+    {
+      "id": "stock-four-ones",
+      "target_s32": 4,
+      "stock_s32": 6
+    },
+    {
+      "id": "signed17-positive-range",
+      "target_s32": 129540,
+      "signed17_narrowed_s32": -1532
+    },
+    {
+      "id": "signed17-negative-range",
+      "target_s32": -130560,
+      "signed17_narrowed_s32": 512
+    }
+  ],
+  "open_dynamic_gates": [
+    "explicit compatible RTL identity input",
+    "identity-bound independent RTL testbench",
+    "occurrence-by-occurrence bit-exact RTL comparison"
+  ],
+  "scope": {
+    "shared_stage_families": [
+      "QLinearConvInt32Accumulate",
+      "QLinearMatMulInt32Accumulate"
+    ],
+    "purpose": "acceptance contract for a future user-provided or explicitly authorized compatible RTL identity"
+  },
+  "model_columns": [
+    {
+      "id": "stock_four_lane",
+      "role": "contradicted negative control",
+      "equation": "stock CSA_4to2 carry handoff plus signed17 reduction, with static x_zero_point bias correction"
+    },
+    {
+      "id": "proposal_signed18",
+      "role": "future compatible RTL acceptance oracle",
+      "equation": "signed17 pair01 + signed17 pair23 -> signed18 dot4; int32_result=(psum32+signext32(dot4)) mod 2^32"
+    },
+    {
+      "id": "serialized_one_product",
+      "role": "stock-RTL correctness baseline",
+      "equation": "at most one nonzero product lane per occurrence, accumulating psum32 modulo 2^32"
+    }
+  ],
+  "defect_proofs": {
+    "duplicate_carry_shift": {
+      "input": "four lanes of 1*1, psum32=0",
+      "sum17": 2,
+      "carry17_already_shifted": 2,
+      "ordinary": 4,
+      "stock": 6,
+      "status": "STOCK_FAIL_PROPOSAL_PASS"
+    },
+    "signed17_width": {
+      "positive_dot4": 129540,
+      "positive_if_narrowed_to_signed17": -1532,
+      "negative_dot4": -130560,
+      "negative_if_narrowed_to_signed17": 512,
+      "status": "SIGNED18_REQUIRED"
+    }
+  },
+  "acceptance_vectors": [
+    {
+      "case_id": "carry_duplicate_positive",
+      "purpose": "duplicate-carry-shift positive witness",
+      "K": 4,
+      "weights_s8": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "activations_u8": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "x_zero_point_u8": 0,
+      "bias_s32": 0,
+      "target": {
+        "s32": 4,
+        "bits": "0x00000004"
+      },
+      "models": {
+        "stock_four_lane": {
+          "s32": 6,
+          "bits": "0x00000006",
+          "matches_target": false
+        },
+        "proposal_signed18": {
+          "s32": 4,
+          "bits": "0x00000004",
+          "matches_target": true
+        },
+        "serialized_one_product": {
+          "s32": 4,
+          "bits": "0x00000004",
+          "matches_target": true
+        }
+      },
+      "static_xzp_corrected_initial_psum_s32": 0,
+      "proposal_occurrences": [
+        {
+          "weight_word_msb_first": "0x01010101",
+          "activation_word_msb_first": "0x01010101",
+          "products_s16": [
+            1,
+            1,
+            1,
+            1
+          ],
+          "pair01_s17": 2,
+          "pair23_s17": 2,
+          "dot4_s18": 4,
+          "psum_in_s32": 0,
+          "psum_in_bits": "0x00000000",
+          "result_s32": 4,
+          "result_bits": "0x00000004",
+          "tail_lane_count": 4,
+          "occurrence_index": 0
+        }
+      ]
+    },
+    {
+      "case_id": "carry_duplicate_negative",
+      "purpose": "duplicate-carry-shift negative witness",
+      "K": 4,
+      "weights_s8": [
+        -1,
+        -1,
+        -1,
+        -1
+      ],
+      "activations_u8": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "x_zero_point_u8": 0,
+      "bias_s32": 0,
+      "target": {
+        "s32": -4,
+        "bits": "0xfffffffc"
+      },
+      "models": {
+        "stock_four_lane": {
+          "s32": -6,
+          "bits": "0xfffffffa",
+          "matches_target": false
+        },
+        "proposal_signed18": {
+          "s32": -4,
+          "bits": "0xfffffffc",
+          "matches_target": true
+        },
+        "serialized_one_product": {
+          "s32": -4,
+          "bits": "0xfffffffc",
+          "matches_target": true
+        }
+      },
+      "static_xzp_corrected_initial_psum_s32": 0,
+      "proposal_occurrences": [
+        {
+          "weight_word_msb_first": "0xffffffff",
+          "activation_word_msb_first": "0x01010101",
+          "products_s16": [
+            -1,
+            -1,
+            -1,
+            -1
+          ],
+          "pair01_s17": -2,
+          "pair23_s17": -2,
+          "dot4_s18": -4,
+          "psum_in_s32": 0,
+          "psum_in_bits": "0x00000000",
+          "result_s32": -4,
+          "result_bits": "0xfffffffc",
+          "tail_lane_count": 4,
+          "occurrence_index": 0
+        }
+      ]
+    },
+    {
+      "case_id": "signed18_positive_extreme",
+      "purpose": "positive legal dot4 extreme and signed17 overflow",
+      "K": 4,
+      "weights_s8": [
+        127,
+        127,
+        127,
+        127
+      ],
+      "activations_u8": [
+        255,
+        255,
+        255,
+        255
+      ],
+      "x_zero_point_u8": 0,
+      "bias_s32": 0,
+      "target": {
+        "s32": 129540,
+        "bits": "0x0001fa04"
+      },
+      "models": {
+        "stock_four_lane": {
+          "s32": 194310,
+          "bits": "0x0002f706",
+          "matches_target": false
+        },
+        "proposal_signed18": {
+          "s32": 129540,
+          "bits": "0x0001fa04",
+          "matches_target": true
+        },
+        "serialized_one_product": {
+          "s32": 129540,
+          "bits": "0x0001fa04",
+          "matches_target": true
+        }
+      },
+      "static_xzp_corrected_initial_psum_s32": 0,
+      "proposal_occurrences": [
+        {
+          "weight_word_msb_first": "0x7f7f7f7f",
+          "activation_word_msb_first": "0xffffffff",
+          "products_s16": [
+            32385,
+            32385,
+            32385,
+            32385
+          ],
+          "pair01_s17": 64770,
+          "pair23_s17": 64770,
+          "dot4_s18": 129540,
+          "psum_in_s32": 0,
+          "psum_in_bits": "0x00000000",
+          "result_s32": 129540,
+          "result_bits": "0x0001fa04",
+          "tail_lane_count": 4,
+          "occurrence_index": 0
+        }
+      ]
+    },
+    {
+      "case_id": "signed18_negative_extreme",
+      "purpose": "negative legal dot4 extreme and signed17 overflow",
+      "K": 4,
+      "weights_s8": [
+        -128,
+        -128,
+        -128,
+        -128
+      ],
+      "activations_u8": [
+        255,
+        255,
+        255,
+        255
+      ],
+      "x_zero_point_u8": 0,
+      "bias_s32": 0,
+      "target": {
+        "s32": -130560,
+        "bits": "0xfffe0200"
+      },
+      "models": {
+        "stock_four_lane": {
+          "s32": -195840,
+          "bits": "0xfffd0300",
+          "matches_target": false
+        },
+        "proposal_signed18": {
+          "s32": -130560,
+          "bits": "0xfffe0200",
+          "matches_target": true
+        },
+        "serialized_one_product": {
+          "s32": -130560,
+          "bits": "0xfffe0200",
+          "matches_target": true
+        }
+      },
+      "static_xzp_corrected_initial_psum_s32": 0,
+      "proposal_occurrences": [
+        {
+          "weight_word_msb_first": "0x80808080",
+          "activation_word_msb_first": "0xffffffff",
+          "products_s16": [
+            -32640,
+            -32640,
+            -32640,
+            -32640
+          ],
+          "pair01_s17": -65280,
+          "pair23_s17": -65280,
+          "dot4_s18": -130560,
+          "psum_in_s32": 0,
+          "psum_in_bits": "0x00000000",
+          "result_s32": -130560,
+          "result_bits": "0xfffe0200",
+          "tail_lane_count": 4,
+          "occurrence_index": 0
+        }
+      ]
+    },
+    {
+      "case_id": "psum_positive_wrap",
+      "purpose": "INT32_MAX plus one wraps modulo 2^32",
+      "K": 1,
+      "weights_s8": [
+        1
+      ],
+      "activations_u8": [
+        1
+      ],
+      "x_zero_point_u8": 0,
+      "bias_s32": 2147483647,
+      "target": {
+        "s32": -2147483648,
+        "bits": "0x80000000"
+      },
+      "models": {
+        "stock_four_lane": {
+          "s32": -2147483648,
+          "bits": "0x80000000",
+          "matches_target": true
+        },
+        "proposal_signed18": {
+          "s32": -2147483648,
+          "bits": "0x80000000",
+          "matches_target": true
+        },
+        "serialized_one_product": {
+          "s32": -2147483648,
+          "bits": "0x80000000",
+          "matches_target": true
+        }
+      },
+      "static_xzp_corrected_initial_psum_s32": 2147483647,
+      "proposal_occurrences": [
+        {
+          "weight_word_msb_first": "0x01000000",
+          "activation_word_msb_first": "0x01000000",
+          "products_s16": [
+            1,
+            0,
+            0,
+            0
+          ],
+          "pair01_s17": 1,
+          "pair23_s17": 0,
+          "dot4_s18": 1,
+          "psum_in_s32": 2147483647,
+          "psum_in_bits": "0x7fffffff",
+          "result_s32": -2147483648,
+          "result_bits": "0x80000000",
+          "tail_lane_count": 1,
+          "occurrence_index": 0
+        }
+      ]
+    },
+    {
+      "case_id": "psum_negative_wrap",
+      "purpose": "INT32_MIN minus one wraps modulo 2^32",
+      "K": 1,
+      "weights_s8": [
+        -1
+      ],
+      "activations_u8": [
+        1
+      ],
+      "x_zero_point_u8": 0,
+      "bias_s32": -2147483648,
+      "target": {
+        "s32": 2147483647,
+        "bits": "0x7fffffff"
+      },
+      "models": {
+        "stock_four_lane": {
+          "s32": 2147483647,
+          "bits": "0x7fffffff",
+          "matches_target": true
+        },
+        "proposal_signed18": {
+          "s32": 2147483647,
+          "bits": "0x7fffffff",
+          "matches_target": true
+        },
+        "serialized_one_product": {
+          "s32": 2147483647,
+          "bits": "0x7fffffff",
+          "matches_target": true
+        }
+      },
+      "static_xzp_corrected_initial_psum_s32": -2147483648,
+      "proposal_occurrences": [
+        {
+          "weight_word_msb_first": "0xff000000",
+          "activation_word_msb_first": "0x01000000",
+          "products_s16": [
+            -1,
+            0,
+            0,
+            0
+          ],
+          "pair01_s17": -1,
+          "pair23_s17": 0,
+          "dot4_s18": -1,
+          "psum_in_s32": -2147483648,
+          "psum_in_bits": "0x80000000",
+          "result_s32": 2147483647,
+          "result_bits": "0x7fffffff",
+          "tail_lane_count": 1,
+          "occurrence_index": 0
+        }
+      ]
+    },
+    {
+      "case_id": "tail_k3_bias_on",
+      "purpose": "three-lane tail and bias initialization",
+      "K": 3,
+      "weights_s8": [
+        1,
+        -2,
+        3
+      ],
+      "activations_u8": [
+        4,
+        5,
+        6
+      ],
+      "x_zero_point_u8": 0,
+      "bias_s32": 7,
+      "target": {
+        "s32": 19,
+        "bits": "0x00000013"
+      },
+      "models": {
+        "stock_four_lane": {
+          "s32": 83,
+          "bits": "0x00000053",
+          "matches_target": false
+        },
+        "proposal_signed18": {
+          "s32": 19,
+          "bits": "0x00000013",
+          "matches_target": true
+        },
+        "serialized_one_product": {
+          "s32": 19,
+          "bits": "0x00000013",
+          "matches_target": true
+        }
+      },
+      "static_xzp_corrected_initial_psum_s32": 7,
+      "proposal_occurrences": [
+        {
+          "weight_word_msb_first": "0x01fe0300",
+          "activation_word_msb_first": "0x04050600",
+          "products_s16": [
+            4,
+            -10,
+            18,
+            0
+          ],
+          "pair01_s17": -6,
+          "pair23_s17": 18,
+          "dot4_s18": 12,
+          "psum_in_s32": 7,
+          "psum_in_bits": "0x00000007",
+          "result_s32": 19,
+          "result_bits": "0x00000013",
+          "tail_lane_count": 3,
+          "occurrence_index": 0
+        }
+      ]
+    },
+    {
+      "case_id": "tail_k5",
+      "purpose": "full occurrence followed by one-lane tail",
+      "K": 5,
+      "weights_s8": [
+        1,
+        -2,
+        3,
+        -4,
+        5
+      ],
+      "activations_u8": [
+        6,
+        7,
+        8,
+        9,
+        10
+      ],
+      "x_zero_point_u8": 0,
+      "bias_s32": 0,
+      "target": {
+        "s32": 30,
+        "bits": "0x0000001e"
+      },
+      "models": {
+        "stock_four_lane": {
+          "s32": -10,
+          "bits": "0xfffffff6",
+          "matches_target": false
+        },
+        "proposal_signed18": {
+          "s32": 30,
+          "bits": "0x0000001e",
+          "matches_target": true
+        },
+        "serialized_one_product": {
+          "s32": 30,
+          "bits": "0x0000001e",
+          "matches_target": true
+        }
+      },
+      "static_xzp_corrected_initial_psum_s32": 0,
+      "proposal_occurrences": [
+        {
+          "weight_word_msb_first": "0x01fe03fc",
+          "activation_word_msb_first": "0x06070809",
+          "products_s16": [
+            6,
+            -14,
+            24,
+            -36
+          ],
+          "pair01_s17": -8,
+          "pair23_s17": -12,
+          "dot4_s18": -20,
+          "psum_in_s32": 0,
+          "psum_in_bits": "0x00000000",
+          "result_s32": -20,
+          "result_bits": "0xffffffec",
+          "tail_lane_count": 4,
+          "occurrence_index": 0
+        },
+        {
+          "weight_word_msb_first": "0x05000000",
+          "activation_word_msb_first": "0x0a000000",
+          "products_s16": [
+            50,
+            0,
+            0,
+            0
+          ],
+          "pair01_s17": 50,
+          "pair23_s17": 0,
+          "dot4_s18": 50,
+          "psum_in_s32": -20,
+          "psum_in_bits": "0xffffffec",
+          "result_s32": 30,
+          "result_bits": "0x0000001e",
+          "tail_lane_count": 1,
+          "occurrence_index": 1
+        }
+      ]
+    },
+    {
+      "case_id": "tail_k6",
+      "purpose": "full occurrence followed by two-lane tail",
+      "K": 6,
+      "weights_s8": [
+        1,
+        -2,
+        3,
+        -4,
+        5,
+        -6
+      ],
+      "activations_u8": [
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "x_zero_point_u8": 0,
+      "bias_s32": 0,
+      "target": {
+        "s32": -36,
+        "bits": "0xffffffdc"
+      },
+      "models": {
+        "stock_four_lane": {
+          "s32": -68,
+          "bits": "0xffffffbc",
+          "matches_target": false
+        },
+        "proposal_signed18": {
+          "s32": -36,
+          "bits": "0xffffffdc",
+          "matches_target": true
+        },
+        "serialized_one_product": {
+          "s32": -36,
+          "bits": "0xffffffdc",
+          "matches_target": true
+        }
+      },
+      "static_xzp_corrected_initial_psum_s32": 0,
+      "proposal_occurrences": [
+        {
+          "weight_word_msb_first": "0x01fe03fc",
+          "activation_word_msb_first": "0x06070809",
+          "products_s16": [
+            6,
+            -14,
+            24,
+            -36
+          ],
+          "pair01_s17": -8,
+          "pair23_s17": -12,
+          "dot4_s18": -20,
+          "psum_in_s32": 0,
+          "psum_in_bits": "0x00000000",
+          "result_s32": -20,
+          "result_bits": "0xffffffec",
+          "tail_lane_count": 4,
+          "occurrence_index": 0
+        },
+        {
+          "weight_word_msb_first": "0x05fa0000",
+          "activation_word_msb_first": "0x0a0b0000",
+          "products_s16": [
+            50,
+            -66,
+            0,
+            0
+          ],
+          "pair01_s17": -16,
+          "pair23_s17": 0,
+          "dot4_s18": -16,
+          "psum_in_s32": -20,
+          "psum_in_bits": "0xffffffec",
+          "result_s32": -36,
+          "result_bits": "0xffffffdc",
+          "tail_lane_count": 2,
+          "occurrence_index": 1
+        }
+      ]
+    },
+    {
+      "case_id": "tail_k7",
+      "purpose": "full occurrence followed by three-lane tail",
+      "K": 7,
+      "weights_s8": [
+        1,
+        -2,
+        3,
+        -4,
+        5,
+        -6,
+        7
+      ],
+      "activations_u8": [
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "x_zero_point_u8": 0,
+      "bias_s32": 0,
+      "target": {
+        "s32": 48,
+        "bits": "0x00000030"
+      },
+      "models": {
+        "stock_four_lane": {
+          "s32": 152,
+          "bits": "0x00000098",
+          "matches_target": false
+        },
+        "proposal_signed18": {
+          "s32": 48,
+          "bits": "0x00000030",
+          "matches_target": true
+        },
+        "serialized_one_product": {
+          "s32": 48,
+          "bits": "0x00000030",
+          "matches_target": true
+        }
+      },
+      "static_xzp_corrected_initial_psum_s32": 0,
+      "proposal_occurrences": [
+        {
+          "weight_word_msb_first": "0x01fe03fc",
+          "activation_word_msb_first": "0x06070809",
+          "products_s16": [
+            6,
+            -14,
+            24,
+            -36
+          ],
+          "pair01_s17": -8,
+          "pair23_s17": -12,
+          "dot4_s18": -20,
+          "psum_in_s32": 0,
+          "psum_in_bits": "0x00000000",
+          "result_s32": -20,
+          "result_bits": "0xffffffec",
+          "tail_lane_count": 4,
+          "occurrence_index": 0
+        },
+        {
+          "weight_word_msb_first": "0x05fa0700",
+          "activation_word_msb_first": "0x0a0b0c00",
+          "products_s16": [
+            50,
+            -66,
+            84,
+            0
+          ],
+          "pair01_s17": -16,
+          "pair23_s17": 84,
+          "dot4_s18": 68,
+          "psum_in_s32": -20,
+          "psum_in_bits": "0xffffffec",
+          "result_s32": 48,
+          "result_bits": "0x00000030",
+          "tail_lane_count": 3,
+          "occurrence_index": 1
+        }
+      ]
+    },
+    {
+      "case_id": "nonzero_xzp_bias_on",
+      "purpose": "static input-zero-point correction plus bias and K tail",
+      "K": 5,
+      "weights_s8": [
+        3,
+        -2,
+        1,
+        5,
+        -7
+      ],
+      "activations_u8": [
+        120,
+        114,
+        130,
+        90,
+        200
+      ],
+      "x_zero_point_u8": 114,
+      "bias_s32": -123456,
+      "target": {
+        "s32": -124144,
+        "bits": "0xfffe1b10"
+      },
+      "models": {
+        "stock_four_lane": {
+          "s32": -122700,
+          "bits": "0xfffe20b4",
+          "matches_target": false
+        },
+        "proposal_signed18": {
+          "s32": -124144,
+          "bits": "0xfffe1b10",
+          "matches_target": true
+        },
+        "serialized_one_product": {
+          "s32": -124144,
+          "bits": "0xfffe1b10",
+          "matches_target": true
+        }
+      },
+      "static_xzp_corrected_initial_psum_s32": -123456,
+      "proposal_occurrences": [
+        {
+          "weight_word_msb_first": "0x03fe0105",
+          "activation_word_msb_first": "0x7872825a",
+          "products_s16": [
+            360,
+            -228,
+            130,
+            450
+          ],
+          "pair01_s17": 132,
+          "pair23_s17": 580,
+          "dot4_s18": 712,
+          "psum_in_s32": -123456,
+          "psum_in_bits": "0xfffe1dc0",
+          "result_s32": -122744,
+          "result_bits": "0xfffe2088",
+          "tail_lane_count": 4,
+          "occurrence_index": 0
+        },
+        {
+          "weight_word_msb_first": "0xf9000000",
+          "activation_word_msb_first": "0xc8000000",
+          "products_s16": [
+            -1400,
+            0,
+            0,
+            0
+          ],
+          "pair01_s17": -1400,
+          "pair23_s17": 0,
+          "dot4_s18": -1400,
+          "psum_in_s32": -122744,
+          "psum_in_bits": "0xfffe2088",
+          "result_s32": -124144,
+          "result_bits": "0xfffe1b10",
+          "tail_lane_count": 1,
+          "occurrence_index": 1
+        }
+      ]
+    }
+  ],
+  "small_domain_exhaustive": {
+    "status": "PASS",
+    "weights_s8": [
+      -3,
+      0,
+      3
+    ],
+    "activations_u8": [
+      0,
+      1,
+      7
+    ],
+    "K": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "bias_s32": [
+      0,
+      -11,
+      2147483647
+    ],
+    "x_zero_point_u8": [
+      0,
+      2
+    ],
+    "case_count": 44280,
+    "proposal_mismatch_count": 0,
+    "serialized_mismatch_count": 0,
+    "stock_mismatch_count": 22134,
+    "first_stock_mismatch": {
+      "weights_s8": [
+        -3,
+        -3
+      ],
+      "activations_u8": [
+        1,
+        7
+      ],
+      "x_zero_point_u8": 0,
+      "bias_s32": 0,
+      "target_s32": -24,
+      "stock_s32": 12
+    },
+    "ordered_observation_sha256": "50f1ef08ed82512bf1b65621d05b6a526afa46234a04b33c285f00999cc97704"
+  },
+  "legal_boundary_proof": {
+    "status": "PASS",
+    "single_product_full_domain": {
+      "weight_range": [
+        -128,
+        127
+      ],
+      "activation_range": [
+        0,
+        255
+      ],
+      "bias_s32": 2147483647,
+      "case_count": 65536
+    },
+    "four_lane_corner_cross_product": {
+      "weight_values": [
+        -128,
+        127
+      ],
+      "activation_values": [
+        0,
+        255
+      ],
+      "case_count": 256,
+      "observed_dot4_s18_range": [
+        -130560,
+        129540
+      ],
+      "signed18_range": [
+        -131072,
+        131071
+      ]
+    }
+  },
+  "future_rtl_identity_input_interface": {
+    "authorization": "USER_PROVIDED_OR_EXPLICITLY_AUTHORIZED_ONLY",
+    "required_fields": [
+      "identity_label",
+      "immutable_source_manifest_with_sha256",
+      "top_module_and_int8_repair_module_binding",
+      "local_compile_or_simulator_command",
+      "testbench_adapter_mapping DataA/DataB/DataC/result and valid timing"
+    ],
+    "required_semantics": [
+      "DataA packs four signed int8 weights",
+      "DataB packs four unsigned uint8 activations",
+      "DataC is signed int32 psum bits",
+      "result equals signed18 dot4 plus psum32 modulo 2^32",
+      "one to three zero-padded tail lanes are neutral"
+    ],
+    "forbidden_automatic_discovery": [
+      "server filesystem paths",
+      "server directory names",
+      "current server RTL identity",
+      "server package or return artifacts"
+    ],
+    "current_binding": null
+  },
+  "acceptance_gate": {
+    "local_contract_pass_requires": [
+      "all proposal_signed18 acceptance vectors match target bits",
+      "small-domain exhaustive proposal mismatch count is zero",
+      "full single-product legal domain passes",
+      "four-lane signed18 legal extrema are reached and pass",
+      "psum32 positive and negative wrap cases pass",
+      "K tail 1/2/3 lanes, bias and nonzero x_zero_point pass"
+    ],
+    "future_rtl_pass_requires": [
+      "an explicitly supplied compatible RTL identity",
+      "the same acceptance vectors driven through an independent RTL testbench",
+      "bit-exact occurrence-by-occurrence result comparison",
+      "identity-bound compile and run receipts"
+    ],
+    "not_authorized": [
+      "functional RTL edit",
+      "Conv or MatMul target JSON materialization",
+      "server package generation",
+      "server filesystem or identity inspection"
+    ]
+  },
+  "blocker_delta": {
+    "keep": [
+      "B_CONV_INT8_SA",
+      "B_MATMUL_INT8_SA",
+      "B_CONV_CONFIG_BOUND_SIMULATOR_RTL_CSA_MISMATCH",
+      "B_CONV_STOCK_RTL_INT8_DOT_CAPABILITY",
+      "B_SA_INT8_DUPLICATE_CARRY_SHIFT",
+      "B_SA_INT8_REDUCTION_WIDTH",
+      "B_SA_SERIALIZED_FALLBACK_MATERIALIZATION"
+    ],
+    "add": [
+      "B_SA_COMPATIBLE_RTL_IDENTITY_PENDING"
+    ],
+    "close": []
+  },
+  "rule_delta_proposal": {
+    "proposal_only": true,
+    "items": [
+      "A compatible INT8 SA RTL identity must pass the identity-bound repair harness occurrence by occurrence; final-only equality is insufficient.",
+      "Acceptance must retain stock four-lane as a negative control and serialized one-product as an independent correctness baseline.",
+      "The future RTL identity is an explicit user-supplied interface input; its server location or current identity must never be auto-discovered."
+    ]
+  },
+  "read_receipt": [
+    {
+      "path": ".agents/plan.md",
+      "sha256": "23f5cef51f73ae4922581b95f04c15610a47b59f0d2fa55de241ce4efdb2449f",
+      "reason": "current P0-B status and stop gate"
+    },
+    {
+      "path": ".agents/rules/生成前必读索引.md",
+      "sha256": "6ae4c7fe09fcdb39a48357cfef645c272f67e7a81d09b5547ebd9a929e6ce1a4",
+      "reason": "generation routing"
+    },
+    {
+      "path": ".agents/rules/INT8_SA点积专项规则.md",
+      "sha256": "f616db76c74c5a760ac5f02f7fb57f01379555b7dda885adebebf232cc8f8a1d",
+      "reason": "operator-family acceptance gate"
+    },
+    {
+      "path": "contracts/operator_config/int8_sa_dot_product_adjudication_v1.json",
+      "sha256": "3495e752e2f9658672bf4ca2399a82c4e292e94ad5a6a3dc0983a664f152d8fe",
+      "reason": "accepted common-cause adjudication"
+    },
+    {
+      "path": "resnet50_pipeline/int8_sa_dot_product_adjudication.py",
+      "sha256": "7c02a1aa725f2103f787019d00f5aa1077b25c8da60f9a57b8d7383df73eca2e",
+      "reason": "stock CSA replay and serialized baseline"
+    },
+    {
+      "path": "NDP_copy01/rtl/Slice/Specialized_Array/SA_PE/SA_PE_ALU/SA_PE_Mul_Array.v",
+      "sha256": "89ea1999ffc4a8a8b1459ba86525664ce78baa19a04179b1154e3635e8d2ff35",
+      "reason": "read-only defect consumer and proposed repair boundary"
+    },
+    {
+      "path": "NDP_copy01/rtl/utils/CSA/CSA_4to2.v",
+      "sha256": "5d6aad5595e712bbfee6578e6986fc50b5d36f47d954c8ab2fa331a6ff0e6549",
+      "reason": "read-only first compressor carry semantics"
+    },
+    {
+      "path": "NDP_copy01/rtl/utils/CSA/CSA_3to2.v",
+      "sha256": "0a83da7c1cb3b37426db186290f079e80a2c71f024bf7174e9d516f69941a874",
+      "reason": "read-only psum compressor semantics"
+    }
+  ],
+  "omitted_files": [
+    {
+      "path": "server filesystem, package roots and current server identity",
+      "reason": "forbidden by the P0-B local-only acceptance-contract scope"
+    },
+    {
+      "path": "Conv/MatMul target JSON and packaging inputs",
+      "reason": "materialization remains blocked by the arithmetic compatibility gate"
+    }
+  ]
+}

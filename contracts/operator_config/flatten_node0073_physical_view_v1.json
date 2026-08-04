@@ -1,0 +1,44 @@
+{
+  "claim_enabled": false,
+  "claim_label": null,
+  "closed": [
+    "typed producer/View/consumer tensor identity",
+    "axis=1 shape/order/stride identity",
+    "32768-of-32768 element address-offset mapping",
+    "static/logical to materialized metadata leaf diff ownership",
+    "zero View instruction/request materialization",
+    "allocation ownership and accepted-handshake release contract"
+  ],
+  "contract_sha256": "7ada2bb8a57865d930af863adbe3649d572be206401d39511e3041e68ee1203e",
+  "eligible_claim_label_after_binding": "CONFIG_ONLY_CORRECTNESS_BASELINE",
+  "local_e2": {
+    "independent": false,
+    "integrated_target": false,
+    "reason": "View owns no allocation; target local E2 necessarily consumes node0072 D and node0074 A addressed bindings"
+  },
+  "machine_config": {
+    "arithmetic_json": false,
+    "kind": "execplan_metadata_zero_copy_alias",
+    "path": "configs/view/node0073_zero_copy_view_v1.json",
+    "sha256": "a63655c339ab68b7edad6d7c9a30776d369749dda80d3b5661152ec07582bddc"
+  },
+  "open": [
+    "B_VIEW_PRODUCER_ALLOCATION",
+    "B_VIEW_CONSUMER_ALLOCATION",
+    "B_VIEW_BYTE_OFFSET_IDENTITY",
+    "B_VIEW_BUFFER_LIFETIME"
+  ],
+  "package_release": {
+    "reason": "local metadata/contract task; no server authorization or lease",
+    "rtl_entries": 0,
+    "server_package": false,
+    "state": "NOT_BUILT"
+  },
+  "schema": "resnet50-flatten-physical-view-contract-v1",
+  "status": "ENDPOINT_BINDING_PENDING",
+  "test_id": "r5-flatten-node0073-zero-copy-view-v1",
+  "validator_report": {
+    "path": "artifacts/operator_config_validation/r5-flatten-node0073-view-v1/validation_report.json",
+    "sha256": "62b92ffad44bc89ea6e6a97c6f77110170e208ccefde0f63ffed1cabea61b13c"
+  }
+}

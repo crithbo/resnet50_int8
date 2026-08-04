@@ -1,11 +1,11 @@
 {
-  "schema_version": "0.3",
+  "schema_version": "0.4",
   "repositories": [
     {
       "name": "CGRA_SIM",
       "path": "CGRA_SIM",
       "upstream": "https://github.com/KingICCrab/CGRA_SIM.git",
-      "private_mirror": null,
+      "mirror": null,
       "branch": "main",
       "commit": "53c41e02c294bcc54379e686dc9d25bbb93919fa",
       "dirty": false,
@@ -15,7 +15,7 @@
       "name": "ndp-sim-ref",
       "path": "ndp-sim-ref",
       "upstream": "https://github.com/uSFrances/ndp-sim.git",
-      "private_mirror": null,
+      "mirror": null,
       "branch": "main",
       "commit": "d4ffc32c9b29a858d83e13706cd837c5549521a4",
       "dirty": false,
@@ -25,9 +25,19 @@
       "name": "NDPFuncModel",
       "path": "NDPFuncModel",
       "upstream": "https://github.com/runoobb/NDPFuncModel.git",
-      "private_mirror": "https://github.com/crithbo/NDPFuncModel-private.git",
+      "mirror": "https://github.com/crithbo/NDPFuncModel-private.git",
       "branch": "conv_func",
-      "commit": "a1d975ee2d6d9200b8df0deea3e2ffc13ce0d05e",
+      "commit": "1d3181d832d7a409af779215e4aa590d03bd8ed3",
+      "dirty": false,
+      "dirty_paths": []
+    },
+    {
+      "name": "ndp-sim",
+      "path": "ndp-sim",
+      "upstream": "https://github.com/uSFrances/ndp-sim.git",
+      "mirror": null,
+      "branch": "main",
+      "commit": "ec12424516ae0304228dd2321d4e604fe225e04e",
       "dirty": false,
       "dirty_paths": []
     }

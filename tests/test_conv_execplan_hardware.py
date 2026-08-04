@@ -354,11 +354,11 @@ class ConvHardwareExecplanTest(unittest.TestCase):
                 output,
                 node_id="node-0004",
                 freeze_root=(
-                    PROJECT_ROOT / "artifacts/w5/hwop-0004-00/v19/hardware_freeze"
+                    PROJECT_ROOT / "artifacts/w5/hwop-0004-00/v20/hardware_freeze"
                 ),
                 execplan_request_path=(
                     PROJECT_ROOT
-                    / "artifacts/w5/hwop-0004-00/v19/execplan_request.json"
+                    / "artifacts/w5/hwop-0004-00/v20/execplan_request.json"
                 ),
                 legacy_fixed_pair_observer=True,
             )
@@ -371,11 +371,11 @@ class ConvHardwareExecplanTest(unittest.TestCase):
                 for item in report["bitstream_bindings"]["records"]
                 if item["binding_id"].endswith(".accumulate")
             )
-            self.assertEqual(accumulate_binding["install"]["line_count"], 29)
+            self.assertEqual(accumulate_binding["install"]["line_count"], 35)
             self.assertEqual(accumulate_binding["install"]["line_width_bits"], 128)
             self.assertEqual(
                 accumulate_binding["install"]["logical_sha256"],
-                "7d85938215a1d5a5622c38938b5adb64b982c631170604a4ba8285fb5397b255",
+                "2d22ec7f94867752a3bd6abe70842402ab943dd6142492f1d1c183556aba405a",
             )
             self.assertEqual(report["instruction_metadata"]["load_config_count"], "12")
             self.assertEqual(report["instruction_metadata"]["start_comp_count"], "12")
@@ -387,7 +387,7 @@ class ConvHardwareExecplanTest(unittest.TestCase):
             self.assertEqual(report["preloaded_input_count"], 252)
             self.assertEqual(report["preloaded_runtime_scratch_count"], 84)
             self.assertEqual(report["preloaded_golden_or_output_count"], 0)
-            self.assertEqual(report["preload_transfer_segment_count"], 434)
+            self.assertEqual(report["preload_transfer_segment_count"], 433)
             self.assertEqual(report["semantic_dump_region_count"], 84)
             self.assertEqual(report["sca_d_transfer_segment_count"], 168)
             self.assertEqual(report["bank_data_file_count"], 28)
@@ -405,13 +405,19 @@ class ConvHardwareExecplanTest(unittest.TestCase):
                 report["runtime_io_bindings"][
                     "hwop-0004-00.accumulate-wave-0.input.A"
                 ],
-                "freeze/A local sample slot (activation -> READ_STREAM0)",
+                "freeze/B (signed weight -> READ_STREAM0)",
             )
             self.assertEqual(
                 report["runtime_io_bindings"][
                     "hwop-0004-00.accumulate-wave-0.input.B"
                 ],
-                "freeze/B (weight -> READ_STREAM1)",
+                "freeze/A local sample slot (unsigned activation -> READ_STREAM1)",
+            )
+            self.assertEqual(
+                report["runtime_io_bindings"][
+                    "hwop-0004-00.accumulate-wave-0.input.B'"
+                ],
+                "freeze/A same local sample slot (unsigned activation B-prime -> READ_STREAM2)",
             )
             waves = report["runtime_accumulate_waves"]
             self.assertEqual(
@@ -428,11 +434,11 @@ class ConvHardwareExecplanTest(unittest.TestCase):
             )
             self.assertEqual(
                 [wave["activation_local_offset"] for wave in waves],
-                [0, 50176, 100352],
+                [0, 200704, 401408],
             )
             self.assertEqual(
                 [wave["p_local_offset"] for wave in waves],
-                [151760, 352464, 553168],
+                [603344, 804048, 1004752],
             )
             self.assertEqual(checked["status"], "hardware_execplan_package_validated")
 
@@ -440,11 +446,11 @@ class ConvHardwareExecplanTest(unittest.TestCase):
             preparation = prepared.report()
             self.assertEqual(preparation["status"], "hardware_simulation_input_prepared")
             self.assertEqual(preparation["scope"], "transport_and_state_only_no_numeric_execution")
-            self.assertEqual(preparation["command_count"], 628)
+            self.assertEqual(preparation["command_count"], 767)
             self.assertEqual(preparation["runtime_stage_count"], 12)
             self.assertEqual(preparation["command_counts"]["clock_enable"], 1)
             self.assertEqual(preparation["command_counts"]["load_config"], 12)
-            self.assertEqual(preparation["command_counts"]["write_reg"], 591)
+            self.assertEqual(preparation["command_counts"]["write_reg"], 730)
             self.assertEqual(preparation["command_counts"]["start_comp"], 12)
             self.assertEqual(preparation["command_counts"]["barrier"], 12)
             start_and_barrier = [
@@ -476,7 +482,7 @@ class ConvHardwareExecplanTest(unittest.TestCase):
             )
             self.assertEqual(preparation["numeric_executor"]["status"], "not_run")
 
-            freeze = PROJECT_ROOT / "artifacts/w5/hwop-0004-00/v19/hardware_freeze"
+            freeze = PROJECT_ROOT / "artifacts/w5/hwop-0004-00/v20/hardware_freeze"
             accumulate = json.loads(
                 (freeze / "configs/conv_1x1_real.json").read_text(encoding="utf-8")
             )
@@ -494,11 +500,11 @@ class ConvHardwareExecplanTest(unittest.TestCase):
                 runner["execution"]["completion_gate"]["expected_runtime_stage_count"],
                 12,
             )
-            self.assertEqual(sca["Exec_Length"], 314)
-            self.assertEqual(report["exec_128bit_line_count"], 314)
+            self.assertEqual(sca["Exec_Length"], 384)
+            self.assertEqual(report["exec_128bit_line_count"], 384)
             self.assertEqual(
                 runner["execution"]["exec_length_128bit_beats"],
-                314,
+                384,
             )
             self.assertEqual(
                 runner["execution"]["completion_gate"][
@@ -512,8 +518,8 @@ class ConvHardwareExecplanTest(unittest.TestCase):
             )
 
             execution = sca["ExecutionPlan"]
-            execution_head = execution["chunked_transport"]
-            execution_tail = sca["ExecutionPlan__axi4_tail"]
+            self.assertNotIn("chunked_transport", execution)
+            self.assertNotIn("ExecutionPlan__axi4_tail", sca)
             tampered_paths = [output / execution["path"]]
             original_barrier_package_bytes = {
                 path: path.read_bytes() for path in tampered_paths
@@ -527,13 +533,16 @@ class ConvHardwareExecplanTest(unittest.TestCase):
                     )
                     for command in prepared.commands
                 ]
-                self.assertEqual(len(commands_without_barriers), 628)
+                self.assertEqual(len(commands_without_barriers), 767)
+                padded_commands = commands_without_barriers + (
+                    [0] if len(commands_without_barriers) % 2 else []
+                )
                 barrierless_lines = [
-                    f"{commands_without_barriers[index + 1]:064b}"
-                    f"{commands_without_barriers[index]:064b}"
-                    for index in range(0, len(commands_without_barriers), 2)
+                    f"{padded_commands[index + 1]:064b}"
+                    f"{padded_commands[index]:064b}"
+                    for index in range(0, len(padded_commands), 2)
                 ]
-                self.assertEqual(len(barrierless_lines), 314)
+                self.assertEqual(len(barrierless_lines), 384)
 
                 def write_execplan_lines(path: Path, lines: list[str]) -> None:
                     path.write_text(
@@ -554,51 +563,6 @@ class ConvHardwareExecplanTest(unittest.TestCase):
                 for path, payload in original_barrier_package_bytes.items():
                     path.write_bytes(payload)
 
-            original_parser_sca_text = (output / "sca_cfg.json").read_text(
-                encoding="utf-8"
-            )
-            original_parser_manifest_text = (output / "manifest.json").read_text(
-                encoding="utf-8"
-            )
-            reordered_sca = json.loads(original_parser_sca_text)
-            execution_descriptor = reordered_sca["ExecutionPlan"]
-            reordered_sca["ExecutionPlan"] = {
-                "chunked_transport": execution_descriptor["chunked_transport"],
-                "base_addr": execution_descriptor["base_addr"],
-                "path": execution_descriptor["path"],
-            }
-            (output / "sca_cfg.json").write_text(
-                json.dumps(reordered_sca, ensure_ascii=False, indent=2) + "\n",
-                encoding="utf-8",
-                newline="\n",
-            )
-            reordered_manifest = json.loads(original_parser_manifest_text)
-            sca_manifest_entry = next(
-                item
-                for item in reordered_manifest["files"]
-                if item["path"] == "sca_cfg.json"
-            )
-            sca_manifest_entry["size_bytes"] = (output / "sca_cfg.json").stat().st_size
-            sca_manifest_entry["sha256"] = hashlib.sha256(
-                (output / "sca_cfg.json").read_bytes()
-            ).hexdigest()
-            (output / "manifest.json").write_text(
-                json.dumps(reordered_manifest, ensure_ascii=False, indent=2, sort_keys=True)
-                + "\n",
-                encoding="utf-8",
-                newline="\n",
-            )
-            with self.assertRaisesRegex(
-                ConvHardwareExecplanError,
-                "immutable line-parser ABI",
-            ):
-                validate_conv_hardware_execplan_package(output)
-            (output / "sca_cfg.json").write_text(
-                original_parser_sca_text, encoding="utf-8", newline="\n"
-            )
-            (output / "manifest.json").write_text(
-                original_parser_manifest_text, encoding="utf-8", newline="\n"
-            )
             expected_rtl_revision = "1" * 40
             expected_server_testbench_sha256 = (
                 "52fb1c9e132b8a4b3bf3ff2700cdb8ce5021d4971118276ff5a02bfe2ec351d3"
@@ -720,10 +684,7 @@ class ConvHardwareExecplanTest(unittest.TestCase):
                 )
             )
 
-            self.assertEqual(execution["base_addr"], "0x00104C00")
-            self.assertEqual(execution_head["line_count_128bit"], 64)
-            self.assertEqual(execution_tail["base_addr"], "0x00105000")
-            self.assertEqual(execution_tail["line_count_128bit"], 250)
+            self.assertEqual(execution["base_addr"], "0x00173000")
             def decode_128bit_payload(path: Path) -> bytes:
                 return b"".join(
                     int(line, 2).to_bytes(16, byteorder="little")
@@ -731,12 +692,9 @@ class ConvHardwareExecplanTest(unittest.TestCase):
                     if line
                 )
 
-            reconstructed_execplan = decode_128bit_payload(
-                output / execution_head["path"]
-            ) + decode_128bit_payload(output / execution_tail["path"])
             self.assertEqual(
-                reconstructed_execplan,
-                decode_128bit_payload(output / execution["path"]),
+                len(decode_128bit_payload(output / execution["path"])),
+                384 * 16,
             )
 
             tb_transfers: list[dict[str, object]] = []
@@ -757,7 +715,7 @@ class ConvHardwareExecplanTest(unittest.TestCase):
                 parser_abi["name"], "line-oriented-json-close-resets-entry-v1"
             )
             self.assertTrue(parser_abi["serialized_order_is_authoritative"])
-            self.assertFalse(
+            self.assertTrue(
                 parser_abi["execution_plan_outer_close_loads_semantic_path"]
             )
             self.assertEqual(
@@ -851,16 +809,42 @@ class ConvHardwareExecplanTest(unittest.TestCase):
 
             sim_banks = Path(temp_dir) / "post_run_banks"
             sim_banks.mkdir()
+            dump_contract = json.loads(
+                (output / "dump_contract.json").read_text(encoding="utf-8")
+            )
+            dump_regions = dump_contract["P"] + dump_contract["staged_D"]
+            required_bank_bytes = max(
+                int(region["local_offset"]) + int(region["size_bytes"])
+                for region in dump_regions
+            )
             for slice_id in range(28):
-                image = bytearray(1_054_928)
+                image = bytearray(required_bank_bytes)
                 p = (freeze / "physical/P" / f"slice-{slice_id:02d}.bin").read_bytes()
                 d = np.frombuffer(
                     (freeze / "physical/D" / f"slice-{slice_id:02d}.bin").read_bytes(),
                     dtype=np.uint8,
                 ).reshape(3, 56, 56, 16)
-                image[151_760 : 151_760 + len(p)] = p
-                image[904_400:979_664] = np.ascontiguousarray(d[..., :8]).tobytes()
-                image[979_664:1_054_928] = np.ascontiguousarray(d[..., 8:]).tobytes()
+                p_region = next(
+                    region
+                    for region in dump_contract["P"]
+                    if int(region["slice_id"]) == slice_id
+                )
+                p_offset = int(p_region["local_offset"])
+                image[p_offset : p_offset + len(p)] = p
+                for local_half, payload in enumerate(
+                    (
+                        np.ascontiguousarray(d[..., :8]).tobytes(),
+                        np.ascontiguousarray(d[..., 8:]).tobytes(),
+                    )
+                ):
+                    staged_region = next(
+                        region
+                        for region in dump_contract["staged_D"]
+                        if int(region["slice_id"]) == slice_id
+                        and int(region["local_half"]) == local_half
+                    )
+                    staged_offset = int(staged_region["local_offset"])
+                    image[staged_offset : staged_offset + len(payload)] = payload
                 (sim_banks / f"slice{slice_id:02d}_Bank00_data.bin").write_bytes(image)
 
             comparison = compare_conv_hardware_bank_dump(

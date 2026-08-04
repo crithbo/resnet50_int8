@@ -8,14 +8,26 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Mapping
 
-from resnet50_pipeline.conv_sa_contract import validate_first_conv_sa_contract
+from resnet50_pipeline.conv_sa_contract import (
+    SA_CHANNEL_LANES,
+    SA_OUTPUT_LANES,
+    SA_SPATIAL_LANES,
+    validate_conv_3x3_sa_contract,
+    validate_first_conv_sa_contract,
+    validate_first_conv_signed_a_local_contract,
+)
 
 
 CONV_INSTANCE_SCHEMA_VERSION = "0.1"
 CONV_TRANSPORT_ABI_LEGACY = "conv_sa_legacy_v1"
 CONV_TRANSPORT_ABI_Q8K8 = "conv_sa_q8k8_v2"
+CONV_TRANSPORT_ABI_SIGNED_A_LOCAL = "conv_sa_s8a_u8b_local_v3"
 CONV_TRANSPORT_ABIS = frozenset(
-    {CONV_TRANSPORT_ABI_LEGACY, CONV_TRANSPORT_ABI_Q8K8}
+    {
+        CONV_TRANSPORT_ABI_LEGACY,
+        CONV_TRANSPORT_ABI_Q8K8,
+        CONV_TRANSPORT_ABI_SIGNED_A_LOCAL,
+    }
 )
 FIRST_REAL_CONV_NODE_ID = "node-0004"
 GROUP4X7_PROFILE_ID = "w4_group4x7_batch_channel28_candidate_v1"
@@ -26,6 +38,8 @@ BUFFER5_PRODUCER_PORT = {"special_array": 0, "general_array": 1}
 BUFFER5_PRODUCER_LABEL = {"special_array": "SpecArray", "general_array": "GeneArray"}
 CONV_GEMM_SA_OUTPORT_JSON_MODE = "col"
 CONV_GEMM_SA_OUTPORT_RTL_MAJOR = 0
+CONV_GEMM_TRANSPOSED_OUTPORT_JSON_MODE = "row"
+CONV_GEMM_TRANSPOSED_OUTPORT_RTL_MAJOR = 1
 SA_ONLY_CONFIG_MASK = "11101110"
 
 # E0 protects the package already being consumed by the hardware owner.  The
@@ -120,7 +134,11 @@ def validate_buffer5_output_route(
         )
 
 
-def validate_conv_accumulate_output_route(config: Mapping[str, Any]) -> None:
+def validate_conv_accumulate_output_route(
+    config: Mapping[str, Any],
+    *,
+    expected_json_mode: str = CONV_GEMM_SA_OUTPORT_JSON_MODE,
+) -> None:
     """Require the reviewed SA-only Conv output path and RTL row-major bit."""
 
     special = config.get("special_array")
@@ -136,12 +154,21 @@ def validate_conv_accumulate_output_route(config: Mapping[str, Any]) -> None:
     if not isinstance(outport, Mapping):
         raise ConvInstanceError("Conv accumulate SpecialArray outport is missing")
     mode = outport.get("mode")
-    if mode != CONV_GEMM_SA_OUTPORT_JSON_MODE:
+    rtl_major_by_mode = {
+        CONV_GEMM_SA_OUTPORT_JSON_MODE: CONV_GEMM_SA_OUTPORT_RTL_MAJOR,
+        CONV_GEMM_TRANSPOSED_OUTPORT_JSON_MODE: (
+            CONV_GEMM_TRANSPOSED_OUTPORT_RTL_MAJOR
+        ),
+    }
+    if expected_json_mode not in rtl_major_by_mode:
+        raise ConvInstanceError(
+            f"unsupported Conv GEMM outport invariant: {expected_json_mode!r}"
+        )
+    if mode != expected_json_mode:
         raise ConvInstanceError(
             "Conv GEMM SpecialArray outport must use JSON mode "
-            f"{CONV_GEMM_SA_OUTPORT_JSON_MODE!r}, which the official encoder "
-            f"maps to RTL sa_outport_major={CONV_GEMM_SA_OUTPORT_RTL_MAJOR} "
-            "(row-major)"
+            f"{expected_json_mode!r}, which the official encoder maps to RTL "
+            f"sa_outport_major={rtl_major_by_mode[expected_json_mode]}"
         )
 
 
@@ -258,7 +285,17 @@ def audit_generated_conv_output_routes(project_root: Path) -> dict[str, Any]:
             if not path.is_file():
                 raise ConvInstanceError(f"generated Conv route-audit file is missing: {path}")
             config = _load_json(path)
-            validator(config)
+            if (
+                stage == "accumulate"
+                and config.get("special_array", {}).get("outport", {}).get("mode")
+                == CONV_GEMM_TRANSPOSED_OUTPORT_JSON_MODE
+            ):
+                validate_conv_accumulate_output_route(
+                    config,
+                    expected_json_mode=CONV_GEMM_TRANSPOSED_OUTPORT_JSON_MODE,
+                )
+            else:
+                validator(config)
             records.append(
                 {
                     "path": path.relative_to(root).as_posix(),
@@ -635,7 +672,16 @@ class ConvTargetRequest:
             self.requant_manifest_path,
             *self.requant_config_paths,
         )
-        if self.spec.node_id == FIRST_REAL_CONV_NODE_ID:
+        if (
+            self.spec.node_id == FIRST_REAL_CONV_NODE_ID
+            or (
+                self.spec.kernel == (3, 3)
+                and self.spec.strides == (1, 1)
+                and self.spec.pads == (1, 1, 1, 1)
+                and self.spec.dilations == (1, 1)
+                and self.transport_abi == "conv_sa_q8k8_v2"
+            )
+        ):
             required = (*required, self.requant_encoder_contract_path)
         missing = [str(path) for path in required if not path.is_file()]
         if missing:
@@ -647,17 +693,58 @@ class ConvTargetRequest:
             or semantic_contract.get("transport_abi") != self.transport_abi
         ):
             raise ConvInstanceError("Conv semantic contract transport ABI differs")
-        validate_conv_accumulate_output_route(accumulate_config)
-        # Existing candidate instances remain frozen until node-0004 passes
-        # hardware.  The active first-operator entry and every newly generated
-        # config are fail-closed on the reference SA-only presence mask.
-        if self.spec.node_id == FIRST_REAL_CONV_NODE_ID:
+        signed_a_local = (
+            self.transport_abi == CONV_TRANSPORT_ABI_SIGNED_A_LOCAL
+        )
+        validate_conv_accumulate_output_route(
+            accumulate_config,
+            expected_json_mode=(
+                CONV_GEMM_TRANSPOSED_OUTPORT_JSON_MODE
+                if signed_a_local
+                else CONV_GEMM_SA_OUTPORT_JSON_MODE
+            ),
+        )
+        reviewed_first_conv = self.spec.node_id == FIRST_REAL_CONV_NODE_ID
+        reviewed_3x3 = (
+            semantic_contract.get("schema_version")
+            == "resnet50-conv-3x3-semantics-0.1"
+        )
+        if reviewed_first_conv or reviewed_3x3:
             validate_conv_accumulate_config_mask(accumulate_config)
+        if (reviewed_first_conv and not signed_a_local) or reviewed_3x3:
             validate_conv_accumulate_neighbor_ring(
                 accumulate_config,
                 expected_group_size=self.spec.n2n_mem_loop,
             )
-            validate_first_conv_sa_contract(accumulate_config)
+        if reviewed_first_conv:
+            if signed_a_local:
+                validate_first_conv_signed_a_local_contract(accumulate_config)
+            else:
+                validate_first_conv_sa_contract(accumulate_config)
+        elif reviewed_3x3 and (
+            self.spec.kernel == (3, 3)
+            and self.spec.strides == (1, 1)
+            and self.spec.pads == (1, 1, 1, 1)
+            and self.spec.dilations == (1, 1)
+        ):
+            halo_width = (
+                self.spec.activation_shape[3]
+                + self.spec.pads[1]
+                + self.spec.pads[3]
+            )
+            halo_width_padded = (
+                math.ceil(halo_width / SA_SPATIAL_LANES) * SA_SPATIAL_LANES
+            )
+            validate_conv_3x3_sa_contract(
+                accumulate_config,
+                output_height=self.spec.output_height,
+                output_width=self.spec.output_width,
+                c_quartets=math.ceil(self.spec.c_tile / SA_CHANNEL_LANES),
+                k_blocks=math.ceil(self.spec.k_tile / SA_OUTPUT_LANES),
+                halo_width_padded=halo_width_padded,
+            )
+        elif reviewed_3x3:
+            raise ConvInstanceError("checked-in Conv accumulation geometry is unsupported")
         for path in self.requant_config_paths:
             validate_conv_requant_output_route(_load_json(path))
         manifest = _load_json(self.requant_manifest_path)
@@ -676,7 +763,7 @@ class ConvTargetRequest:
         for path, shard in zip(self.requant_config_paths, shards, strict=True):
             if _sha256(path) != shard.get("config_sha256"):
                 raise ConvInstanceError(f"Conv requant config hash differs: {path}")
-        if self.spec.node_id == FIRST_REAL_CONV_NODE_ID:
+        if self.requant_encoder_contract_path.is_file():
             encoder_contract = _load_json(self.requant_encoder_contract_path)
             records = encoder_contract.get("records")
             if (
@@ -833,9 +920,9 @@ def make_conv_target_request(
             accumulate_config_relative="conv_1x1_real.json",
             semantic_contract_relative=semantic_contract_relative,
             requant_root_relative="conv_1x1_requant_real",
-            preflight_relative="artifacts/w5/hwop-0004-00/v19/preflight.json",
+            preflight_relative="artifacts/w5/hwop-0004-00/v20/preflight.json",
             hardware_freeze_manifest_relative=(
-                "artifacts/w5/hwop-0004-00/v19/hardware_freeze/manifest.json"
+                "artifacts/w5/hwop-0004-00/v20/hardware_freeze/manifest.json"
             ),
             target_job_name="hwop-0004_target_config_full",
         )
@@ -1031,6 +1118,7 @@ __all__ = [
     "CONV_INSTANCE_SCHEMA_VERSION",
     "CONV_TRANSPORT_ABI_LEGACY",
     "CONV_TRANSPORT_ABI_Q8K8",
+    "CONV_TRANSPORT_ABI_SIGNED_A_LOCAL",
     "BUFFER5_PRODUCER_PORT",
     "CONV_GEMM_SA_OUTPORT_JSON_MODE",
     "CONV_GEMM_SA_OUTPORT_RTL_MAJOR",

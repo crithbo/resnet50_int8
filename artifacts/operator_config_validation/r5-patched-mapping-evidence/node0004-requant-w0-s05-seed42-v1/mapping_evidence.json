@@ -1,0 +1,74 @@
+{
+  "schema": "operator-config-mapping-evidence-v2",
+  "mapping_mode": "heuristic",
+  "penalty": 0.0,
+  "penalty_source": {
+    "artifact": "native_mapping_state.json",
+    "json_path": "$.last_mapping_cost",
+    "sha256": "618b6d6980aa265219c696526eafab1cef9a750becda012396bc6b5949529a63"
+  },
+  "fallback_used": false,
+  "mapping_review_sha256": "45265e39cc7bcd32bcae9adde60fee3cb693cf9bd3d7cacf3dbee2f6c7572ac3",
+  "encoder": {
+    "repository": "ndp-sim",
+    "commit": "ec12424516ae0304228dd2321d4e604fe225e04e",
+    "bitstream_tree_sha256": "fb3d5ccfaa4fe632b5326a0316948b58462751e9f57efc813e00d83668fbebad",
+    "source_manifest": "encoder_source_manifest.json",
+    "source_manifest_sha256": "89f2f11f8429d917f9bc7e15cc6a74365ed14f075cd8428bfb78f2e971d4dac1",
+    "patchset": {
+      "manifest": "patchset_manifest.json",
+      "manifest_sha256": "e6a0fab2404ae0188ffe595803246a2a4c75184f6b58fce54f2b9e6012ff7b1e",
+      "patchset_id": "resnet50-ndp-toolchain-6144-requant-v1",
+      "patchset_sha256": "2142fc3b690625b4d28593ba072c5b4464fabcc2d0c2f058a03e2f899ba5bcaf"
+    }
+  },
+  "source_config": {
+    "artifact": "source_config.json",
+    "sha256": "6b5693b507d040093032dbd26e5727f3b16f18ad785472884f2b87c8b754a0e7",
+    "original_path": "wave-0-shard-05.json"
+  },
+  "cache": {
+    "policy": "same-run-generated-not-loaded",
+    "initial_file_count": 0,
+    "final_file_count": 1,
+    "loaded": false,
+    "loaded_origin": "none",
+    "portable": true,
+    "bundled": true,
+    "sha256": "ffc4d0ae5e45cfb467339bd67657fa3d6dc8025d3e8f19124df8e5d07c089502",
+    "seed": null
+  },
+  "run": {
+    "returncode": 0,
+    "seed": 42,
+    "heuristic_iterations": 10000,
+    "heuristic_restarts": 10,
+    "python_version": "3.12.13",
+    "pythonhashseed": 0,
+    "command": [
+      "<python>",
+      "-c",
+      "<operator-config-evidence-native-wrapper-v1>",
+      "<source-config>",
+      "<temporary-output>",
+      "42",
+      "10000",
+      "10"
+    ],
+    "stdout": {
+      "artifact": "native_stdout.log",
+      "sha256": "cc6bb3c6fcc8a0719ec66c96763a29130c680c50c9560e9010c768bbadf50b2a"
+    },
+    "stderr": {
+      "artifact": "native_stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "native_wrapper_missing_return_observed": false
+  },
+  "artifacts": {
+    "mapping_review.json": "45265e39cc7bcd32bcae9adde60fee3cb693cf9bd3d7cacf3dbee2f6c7572ac3",
+    "parsed_bitstream.txt": "e392e21372a65a4faa0d47897c797e3822339d3a881aabc05c02469eb3291278",
+    "modules_dump_64b.bin": "63f0fe76c092890d19f3edf3a2d8ec1622cb893d8969f4161e795ac488a870e2",
+    "modules_dump_128b.bin": "9a0c18de9233fa75fb47cdadf65ad1b8941db897a5076e8b468dc4a3e1a26f4d"
+  }
+}

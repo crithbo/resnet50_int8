@@ -1,0 +1,74 @@
+{
+  "params": {
+    "used_slices": 28,
+    "node_id": "node-0002",
+    "wave_index": 0,
+    "source": "W3 golden_batch16",
+    "transport_storage": "maxpool-guarded-c4hwc4-storage-v1"
+  },
+  "used_slices": 28,
+  "operators": [
+    {
+      "id": "op0",
+      "type": "maxpool_config_16_112_112_stride2_padding1",
+      "used_slices": "0b1111111111111111111111111111",
+      "inputs": {
+        "A": {
+          "shape": [
+            1,
+            1,
+            201168
+          ],
+          "dtype": "uint8",
+          "bank_interleave": 1,
+          "remapping": null,
+          "source": {
+            "type": "external"
+          },
+          "logical_storage": {
+            "schema": "maxpool-guarded-c4hwc4-storage-v1",
+            "logical_shape_nhwc": [
+              112,
+              112,
+              16
+            ],
+            "layout": "C4HWC4",
+            "channel_block": 4,
+            "coordinate_origin_xy": [
+              1,
+              1
+            ],
+            "padding_value": 0,
+            "payload_offset_bytes": 452,
+            "payload_bytes": 200704,
+            "allocation_bytes": 201168,
+            "prefix_guard_bytes": 452,
+            "suffix_guard_bytes": 12
+          },
+          "base_addr": "0x00000000"
+        }
+      },
+      "output": {
+        "shape": [
+          56,
+          56,
+          16
+        ],
+        "dtype": "uint8",
+        "bank_interleave": 1,
+        "remapping": null,
+        "logical_storage": {
+          "schema": "maxpool-c4hwc4-output-v1",
+          "logical_shape_nhwc": [
+            56,
+            56,
+            16
+          ],
+          "layout": "C4HWC4",
+          "payload_bytes": 50176
+        },
+        "base_addr": "0x000311D0"
+      }
+    }
+  ]
+}

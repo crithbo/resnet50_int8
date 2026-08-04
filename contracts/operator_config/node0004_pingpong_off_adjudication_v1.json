@@ -1,0 +1,127 @@
+{
+  "schema": "node0004-pingpong-off-adjudication-v1",
+  "status": "CURRENT_NODE0004_PINGPONG_OFF_NOT_EQUIVALENT",
+  "node_id": "node-0004",
+  "hw_op_id": "r5:hwop-0004-00",
+  "scope": "C0 ConvInt32Accumulate signed-A path and complete A/B/C ingress",
+  "three_way_adjudication": {
+    "architecturally_expressible": {
+      "value": true,
+      "meaning": "The producer and SA inport selectors can both remain on physical source/buffer0, and the normal buffer manager has clear/reuse and backpressure machinery for serialized single-buffer operation.",
+      "claim_boundary": "Expressibility is not equivalence to the materialized node0004 schedule."
+    },
+    "equivalent_to_current_node0004": {
+      "value": false,
+      "first_counterexample": "On the first accepted source0 tag with last=1 and last_index=4, matched ping-pong suppresses the outgoing logical terminal and advances to source1; both-off propagates the terminal immediately and stays on source0.",
+      "global_all_ingress_counterexample": "The current B path is materialized as fixed stream1 to physical buffer2 plus fixed stream2 to physical buffer3 while SA inport1 ping-pongs between them. Disabling SA inport1 without rebuilding the B producers strands buffer3 and consumes only buffer2."
+    },
+    "currently_proven_correct": {
+      "value": false,
+      "reason": "No fresh both-off JSON/mapping/bitstream/execplan/SCA/address/lifetime/terminal/local-E2 proof exists, and the current schedule has a deterministic tag/selector difference."
+    }
+  },
+  "v14_final_configuration": {
+    "path": "configs/native_ndp_sim/node0004_a_pingpong_fix_c0_v2/accumulate_waves/wave-0.json",
+    "sha256": "dff48df40fa6bade590a84f0dc2a5bf3f796d8bdf4b82f0572a555cf743aa3f6",
+    "signed_a": {
+      "stream0": {
+        "target": "A",
+        "ping_pong": 1,
+        "pingpong_last_index": 4,
+        "physical_buffers": [0, 1]
+      },
+      "sa_inport0": {
+        "pingpong_en": 1,
+        "pingpong_last_index": 4
+      },
+      "buffer0_and_buffer1": {
+        "buf_full_last_index": 4,
+        "buffer_life_time": 4,
+        "buf_end_row_addr": 3
+      }
+    },
+    "activation_b": {
+      "stream1_target": "B",
+      "stream1_ping_pong": 0,
+      "stream2_target": "B'",
+      "stream2_ping_pong": 0,
+      "physical_buffers": [2, 3],
+      "sa_inport1_pingpong_en": 1,
+      "sa_inport1_pingpong_last_index": 4
+    },
+    "psum_c": {
+      "stream3_target": "C",
+      "physical_buffer": 4,
+      "sa_inport2_pingpong_en": 0
+    }
+  },
+  "rtl_evidence": [
+    {
+      "path": "NDP_copy01/rtl/Slice/Specialized_Array/SA_Inport/SA_Inport_Connect.sv",
+      "sha256": "86c9bba21c7da019b4b4cc16ae6f26660932d6730ebb3a45cb6ca7887ad09c83",
+      "lines": [43, 64],
+      "claim": "The selected source drives tag/data/backpressure; ping-pong off permanently selects source0."
+    },
+    {
+      "path": "NDP_copy01/rtl/Slice/Specialized_Array/SA_Inport/SA_Inport_Connect.sv",
+      "sha256": "86c9bba21c7da019b4b4cc16ae6f26660932d6730ebb3a45cb6ca7887ad09c83",
+      "lines": [45, 46],
+      "claim": "Matched ping-pong emits logical last only on source1, while off mode emits source0 last directly."
+    },
+    {
+      "path": "NDP_copy01/rtl/Slice/Specialized_Array/SA_Inport/SA_Inport_Connect.sv",
+      "sha256": "86c9bba21c7da019b4b4cc16ae6f26660932d6730ebb3a45cb6ca7887ad09c83",
+      "lines": [75, 87],
+      "claim": "Only enabled ping-pong can toggle the consumer selector at the accepted terminal boundary."
+    },
+    {
+      "path": "NDP_copy01/rtl/Slice/LSU/Buffer_Manager_Cluster/Array_Request_Manager.sv",
+      "sha256": "112be21e7e1ec7e7c863086778d887cb09ac39a7f28d59f5e9b3e8c29ca71a49",
+      "lines": [72, 76, 110, 120, 201, 288],
+      "claim": "Backpressure, valid hold, address update, lifetime clear, and buffer clear make a serialized single-buffer schedule architecturally possible."
+    }
+  ],
+  "focused_counterexample": {
+    "source": "outputs/diagnostics/node0004_v14_return_v1/pingpong_off_terminal_counterexample_tb.sv",
+    "sha256": "88e670f18f020984cab54a2f15f7d120cac95365612958d25530846a987903e6",
+    "compile_exit_code": 0,
+    "run_exit_code": 0,
+    "result": "PASS node0004 ping-pong-off terminal counterexample",
+    "proves": [
+      "both modes initially accept source0",
+      "off mode propagates the first source0 terminal while matched mode suppresses it",
+      "after acceptance off stays on source0 while matched mode advances to source1"
+    ],
+    "does_not_prove": "It does not claim that no independently rebuilt serialized single-buffer node0004 schedule can ever be correct."
+  },
+  "required_if_future_single_buffer_rebuild_is_authorized": {
+    "a_leaf_changes": [
+      "stream_engine.stream0.ping_pong=0",
+      "stream_engine.stream0.pingpong_last_index=null",
+      "special_array.inport0.pingpong_en=0",
+      "special_array.inport0.pingpong_last_index=null"
+    ],
+    "not_leaf_only": true,
+    "required_rederivation": [
+      "A producer occurrence partition and physical buffer0 refill schedule",
+      "GROUP0 ROW/COL last ownership and logical terminal placement",
+      "buffer0 capacity, lifetime, clear, and reuse proof under backpressure",
+      "A/B/C accepted-tag alignment and SA occurrence count",
+      "mapping, bitstream, execplan, SCA, address coverage, lifetime, terminal, and config-bound local E2"
+    ],
+    "global_all_ingress_additional_work": [
+      "replace or rematerialize the current two-producer B/B' buffer2/buffer3 topology",
+      "prove that no activation half is stranded and that B terminal remains aligned with A and C"
+    ]
+  },
+  "recommendation": {
+    "replace_v14_or_v15_now": false,
+    "reason": "The existing matched v14 configuration is locally rebuilt and contract-bound; v14 dynamic execution stopped before simulation only because of package-local observer syntax. A both-off alternative would be a new schedule, not a default-value simplification, and has no equivalence proof."
+  },
+  "numeric_analysis_repeated": false,
+  "node0004_workload_rebuilt": false,
+  "functional_rtl_modified": false,
+  "rules_or_plan_modified": false,
+  "server_action": false,
+  "package_generated_for_pingpong_question": false
+}

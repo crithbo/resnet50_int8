@@ -1,0 +1,399 @@
+{
+  "accepted_lifetimes_and_barriers": [
+    "A_SCALED: stage0 accepted write through stage3 last accepted read",
+    "B_SCALED: stage1 accepted write through stage3 last accepted read",
+    "RELOCATION_PAD: stage2 only; hardware output is not consumed",
+    "SUM_F32: stage3 accepted write through stage4 last accepted read",
+    "TAIL_F32: stage4 accepted write through stage5 last accepted read",
+    "Y_UINT8: fresh stage5 terminal output",
+    "native sequential execplan completion is the inter-stage barrier"
+  ],
+  "candidate_release": false,
+  "claim": "CONFIG_ONLY_CORRECTNESS_BASELINE",
+  "config_bound_simulator": {
+    "active_slices": 28,
+    "golden_logical_sha256": "61dd40220d8439a030c6e586c102d035dd2ea981a681124477afa92c82c134f3",
+    "host_precomputed_internal_tensor": false,
+    "logical_elements": 12845056,
+    "logical_mismatch_count": 0,
+    "output_sha256": "5f82d13c57e39982d89b68b2c9ad767ad748fa81882d236f9d8652f4fa9c5146",
+    "padding_mismatch_count": 0,
+    "per_slice_physical_elements": 602112,
+    "physical_mismatch_count": 0,
+    "physical_output_bytes": 16859136,
+    "preloaded_tensors": [
+      "A",
+      "B",
+      "FROZEN_ZERO_RELOCATION_PAD"
+    ],
+    "relocation_pad": {
+      "hardware_operation": "FP32 multiply by 1.0",
+      "hardware_output_bytes_per_slice": 135168,
+      "input_bytes_per_slice": 135168,
+      "input_kind": "frozen FP32 zero constant",
+      "output_consumed_by_qlinearadd": false,
+      "qlinearadd_internal_tensor": false
+    },
+    "simulator": "final-config constants and five-stage W3 operation order"
+  },
+  "consumed_reuse_assets": true,
+  "contract_path": "contracts/operator_config/qlinearadd_node0007_relocated_full_e2_v2.json",
+  "errors": [],
+  "final_request_facts": {
+    "issue_count": 0,
+    "operator_count": 6,
+    "request_count_with_multiplicity": 37352448,
+    "unique_request_address_count": 20493312,
+    "unique_request_addresses_sha256": "e933bb1cd4f9f163174c8375fcbed841b7258f11dae542bb9beb97b6c7830034"
+  },
+  "first_error": null,
+  "hw_op_id": "hwop-0007-00",
+  "mapping_from_empty_state": {
+    "op_a_dequant": {
+      "bit_range_count": 529,
+      "cache_loaded_origin": "none",
+      "cache_policy": "same-run-generated-not-loaded",
+      "fallback_used": false,
+      "native_wrapper_missing_return_observed": false,
+      "penalty": 0.0,
+      "unpadded_bits": 3272,
+      "valid": true
+    },
+    "op_b_dequant": {
+      "bit_range_count": 529,
+      "cache_loaded_origin": "none",
+      "cache_policy": "same-run-generated-not-loaded",
+      "fallback_used": false,
+      "native_wrapper_missing_return_observed": false,
+      "penalty": 0.0,
+      "unpadded_bits": 3272,
+      "valid": true
+    },
+    "op_fp32_add": {
+      "bit_range_count": 506,
+      "cache_loaded_origin": "none",
+      "cache_policy": "same-run-generated-not-loaded",
+      "fallback_used": false,
+      "native_wrapper_missing_return_observed": false,
+      "penalty": 0.0,
+      "unpadded_bits": 3279,
+      "valid": true
+    },
+    "op_relocation_pad": {
+      "bit_range_count": 517,
+      "cache_loaded_origin": "none",
+      "cache_policy": "same-run-generated-not-loaded",
+      "fallback_used": false,
+      "native_wrapper_missing_return_observed": false,
+      "penalty": 0.0,
+      "unpadded_bits": 3152,
+      "valid": true
+    },
+    "op_tail_mul": {
+      "bit_range_count": 517,
+      "cache_loaded_origin": "none",
+      "cache_policy": "same-run-generated-not-loaded",
+      "fallback_used": false,
+      "native_wrapper_missing_return_observed": false,
+      "penalty": 0.0,
+      "unpadded_bits": 3152,
+      "valid": true
+    },
+    "op_tail_round": {
+      "bit_range_count": 653,
+      "cache_loaded_origin": "none",
+      "cache_policy": "same-run-generated-not-loaded",
+      "fallback_used": false,
+      "native_wrapper_missing_return_observed": false,
+      "penalty": 0.0,
+      "unpadded_bits": 4304,
+      "valid": true
+    }
+  },
+  "node_id": "node-0007",
+  "numeric_analysis_repeated": false,
+  "package_release": {
+    "candidate_release": false,
+    "evidence_level": "E2_LOCAL_ONLY",
+    "sidecar": "artifacts/operator_config_validation/r5-server-test-packages/r5_qadd_n7_relocated_v3.zip.sha256",
+    "simulation_timeout": "48h",
+    "status": "PACKAGE_READY_NOT_RUN",
+    "zip": "artifacts/operator_config_validation/r5-server-test-packages/r5_qadd_n7_relocated_v3.zip",
+    "zip_sha256": "265188700bca6c45d6d0894326f71b4e9c991cbaf3847f384785504ed7b2fc5c"
+  },
+  "per_slice_nonalias_ranges": [
+    {
+      "end": "0x00093000",
+      "start": "0x00000000",
+      "tensor": "A"
+    },
+    {
+      "end": "0x002df000",
+      "start": "0x00093000",
+      "tensor": "A_SCALED"
+    },
+    {
+      "end": "0x00372000",
+      "start": "0x002df000",
+      "tensor": "B"
+    },
+    {
+      "end": "0x005be000",
+      "start": "0x00372000",
+      "tensor": "B_SCALED"
+    },
+    {
+      "end": "0x005df000",
+      "start": "0x005be000",
+      "tensor": "RELOCATION_PAD_INPUT"
+    },
+    {
+      "end": "0x00600000",
+      "start": "0x005df000",
+      "tensor": "RELOCATION_PAD_OUTPUT"
+    },
+    {
+      "end": "0x00a4c000",
+      "start": "0x00800000",
+      "tensor": "SUM_F32"
+    },
+    {
+      "end": "0x00c98000",
+      "start": "0x00a4c000",
+      "tensor": "TAIL_F32"
+    },
+    {
+      "end": "0x00d2b000",
+      "start": "0x00c98000",
+      "tensor": "Y_UINT8"
+    }
+  ],
+  "provenance": {
+    "execplan_bundle_manifest": {
+      "path": "artifacts/operator_config_validation/r5-qlinearadd-node0007-relocated-full-e2-v2/execplan/bundle_manifest.json",
+      "sha256": "af42933b8effe80861ed22f605e6494eaef82bd1c088d60f78c54d51c8080b86"
+    },
+    "qlinearadd_rule": {
+      "path": ".agents/rules/QLinearAdd算子配置规则.md",
+      "sha256": "dd4a8122d771ed5f4dbb9995fd6463ba14b179a72a515d2af5e91d30f2c71269"
+    },
+    "row_boundary_adjudication": {
+      "path": ".agents/task_records/20260729_qlinearadd_node0007_row_boundary_mainline_adjudication.md",
+      "sha256": "a2216d7e39ec09a0d902336c49553c0744231587c45ddd63259984f71f357e8b"
+    },
+    "schema": "qlinearadd-node0007-full-local-e2-v1"
+  },
+  "relocation_mechanism": {
+    "arithmetic_semantics_changed": false,
+    "host_precomputed_internal_tensor": false,
+    "input_replay_changed": false,
+    "mechanism": "hardware FP32 zero multiply-by-1 spacer fills [0x005be000,0x00600000), forcing the next output to 0x00800000",
+    "qlinearadd_internal_tensor": false,
+    "reason": "move the complete 2,408,448-byte SUM_F32 scratch to a legal bank interval",
+    "tail_semantics_changed": false
+  },
+  "schema": "qlinearadd-node0007-relocated-full-e2-contract-v2",
+  "six_qparams": {
+    "a_scale": 0.017621304839849472,
+    "a_zero_point": 84,
+    "b_scale": 0.03495480865240097,
+    "b_zero_point": 150,
+    "y_scale": 0.01425931230187416,
+    "y_zero_point": 0
+  },
+  "static_to_final_leaf_diff": {
+    "authorization": "base_addr-only materialization",
+    "base_only_count": 13,
+    "non_base_count": 0,
+    "owner": "native execplan base-address allocator",
+    "records": [
+      {
+        "final": "0x0",
+        "operator_id": "op_a_dequant",
+        "path": "stream_engine.stream0.base_addr",
+        "static": "0x00000000"
+      },
+      {
+        "final": "0x93000",
+        "operator_id": "op_a_dequant",
+        "path": "stream_engine.stream2.base_addr",
+        "static": "0x00093000"
+      },
+      {
+        "final": "0x2df000",
+        "operator_id": "op_b_dequant",
+        "path": "stream_engine.stream0.base_addr",
+        "static": "0x002df000"
+      },
+      {
+        "final": "0x372000",
+        "operator_id": "op_b_dequant",
+        "path": "stream_engine.stream2.base_addr",
+        "static": "0x00372000"
+      },
+      {
+        "final": "0x5be000",
+        "operator_id": "op_relocation_pad",
+        "path": "stream_engine.stream0.base_addr",
+        "static": "0x005be000"
+      },
+      {
+        "final": "0x5df000",
+        "operator_id": "op_relocation_pad",
+        "path": "stream_engine.stream2.base_addr",
+        "static": "0x005df000"
+      },
+      {
+        "final": "0x93000",
+        "operator_id": "op_fp32_add",
+        "path": "stream_engine.stream0.base_addr",
+        "static": "0x00093000"
+      },
+      {
+        "final": "0x372000",
+        "operator_id": "op_fp32_add",
+        "path": "stream_engine.stream1.base_addr",
+        "static": "0x00372000"
+      },
+      {
+        "final": "0x800000",
+        "operator_id": "op_fp32_add",
+        "path": "stream_engine.stream2.base_addr",
+        "static": "0x00800000"
+      },
+      {
+        "final": "0x800000",
+        "operator_id": "op_tail_mul",
+        "path": "stream_engine.stream0.base_addr",
+        "static": "0x00800000"
+      },
+      {
+        "final": "0xa4c000",
+        "operator_id": "op_tail_mul",
+        "path": "stream_engine.stream2.base_addr",
+        "static": "0x00a4c000"
+      },
+      {
+        "final": "0xa4c000",
+        "operator_id": "op_tail_round",
+        "path": "stream_engine.stream0.base_addr",
+        "static": "0x00a4c000"
+      },
+      {
+        "final": "0xc98000",
+        "operator_id": "op_tail_round",
+        "path": "stream_engine.stream2.base_addr",
+        "static": "0x00c98000"
+      }
+    ],
+    "total_count": 13
+  },
+  "status": "E2_LOCAL_COMPLETE",
+  "stream_address_coverage": {
+    "op_a_dequant:READ_STREAM0": {
+      "logical_payload_bytes": 16859136,
+      "max_row": 587,
+      "min_row": 0,
+      "padding_masked_bytes": 0,
+      "request_count": 1053696,
+      "valid_bytes": 16859136
+    },
+    "op_a_dequant:WRITE_STREAM0": {
+      "logical_payload_bytes": 67436544,
+      "max_row": 2939,
+      "min_row": 588,
+      "padding_masked_bytes": 0,
+      "request_count": 4214784,
+      "valid_bytes": 67436544
+    },
+    "op_b_dequant:READ_STREAM0": {
+      "logical_payload_bytes": 16859136,
+      "max_row": 3527,
+      "min_row": 2940,
+      "padding_masked_bytes": 0,
+      "request_count": 1053696,
+      "valid_bytes": 16859136
+    },
+    "op_b_dequant:WRITE_STREAM0": {
+      "logical_payload_bytes": 67436544,
+      "max_row": 5879,
+      "min_row": 3528,
+      "padding_masked_bytes": 0,
+      "request_count": 4214784,
+      "valid_bytes": 67436544
+    },
+    "op_fp32_add:READ_STREAM0": {
+      "logical_payload_bytes": 67436544,
+      "max_row": 2939,
+      "min_row": 588,
+      "padding_masked_bytes": 0,
+      "request_count": 4214784,
+      "valid_bytes": 67436544
+    },
+    "op_fp32_add:READ_STREAM1": {
+      "logical_payload_bytes": 67436544,
+      "max_row": 5879,
+      "min_row": 3528,
+      "padding_masked_bytes": 0,
+      "request_count": 4214784,
+      "valid_bytes": 67436544
+    },
+    "op_fp32_add:WRITE_STREAM0": {
+      "logical_payload_bytes": 67436544,
+      "max_row": 2351,
+      "min_row": 0,
+      "padding_masked_bytes": 0,
+      "request_count": 4214784,
+      "valid_bytes": 67436544
+    },
+    "op_relocation_pad:READ_STREAM0": {
+      "logical_payload_bytes": 3784704,
+      "max_row": 6011,
+      "min_row": 5880,
+      "padding_masked_bytes": 0,
+      "request_count": 236544,
+      "valid_bytes": 3784704
+    },
+    "op_relocation_pad:WRITE_STREAM0": {
+      "logical_payload_bytes": 3784704,
+      "max_row": 6143,
+      "min_row": 6012,
+      "padding_masked_bytes": 0,
+      "request_count": 236544,
+      "valid_bytes": 3784704
+    },
+    "op_tail_mul:READ_STREAM0": {
+      "logical_payload_bytes": 67436544,
+      "max_row": 2351,
+      "min_row": 0,
+      "padding_masked_bytes": 0,
+      "request_count": 4214784,
+      "valid_bytes": 67436544
+    },
+    "op_tail_mul:WRITE_STREAM0": {
+      "logical_payload_bytes": 67436544,
+      "max_row": 4703,
+      "min_row": 2352,
+      "padding_masked_bytes": 0,
+      "request_count": 4214784,
+      "valid_bytes": 67436544
+    },
+    "op_tail_round:READ_STREAM0": {
+      "logical_payload_bytes": 67436544,
+      "max_row": 4703,
+      "min_row": 2352,
+      "padding_masked_bytes": 0,
+      "request_count": 4214784,
+      "valid_bytes": 67436544
+    },
+    "op_tail_round:WRITE_STREAM0": {
+      "logical_payload_bytes": 16859136,
+      "max_row": 5291,
+      "min_row": 4704,
+      "padding_masked_bytes": 0,
+      "request_count": 1053696,
+      "valid_bytes": 16859136
+    }
+  },
+  "valid": true
+}

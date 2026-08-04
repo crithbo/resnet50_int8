@@ -7,6 +7,7 @@ from copy import deepcopy
 from pathlib import Path
 
 from resnet50_pipeline.conv_instance import (
+    CONV_GEMM_TRANSPOSED_OUTPORT_JSON_MODE,
     FIRST_REAL_CONV_V1_BASELINE_SHA256,
     FIRST_REAL_CONV_V4_BASELINE_SHA256,
     FIRST_REAL_CONV_V5_BASELINE_SHA256,
@@ -24,6 +25,9 @@ from resnet50_pipeline.conv_instance import (
 )
 from tools.generate_conv_1x1_real import build_real_1x1
 from tools.generate_conv_1x1_requant_real import build_bundle
+from resnet50_pipeline.conv_sa_contract import (
+    validate_first_conv_signed_a_local_contract,
+)
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -53,18 +57,24 @@ class ConvInstanceSpecTests(unittest.TestCase):
         generated = build_real_1x1(source)
         self.assertEqual(generated["CONFIG"], "11101110")
         self.assertEqual(generated["buffer_config"]["buffer5"]["dst_port"], 0)
-        self.assertEqual(generated["special_array"]["outport"]["mode"], "col")
-        self.assertEqual(generated["buffer_config"]["buffer0"]["nbr_enable"], 1)
-        self.assertEqual(generated["buffer_config"]["buffer1"]["nbr_enable"], 1)
-        self.assertEqual(generated["buffer_config"]["buffer2"]["nbr_enable"], 0)
-        self.assertEqual(generated["buffer_config"]["buffer3"]["nbr_enable"], 0)
+        self.assertEqual(generated["special_array"]["outport"]["mode"], "row")
+        self.assertEqual(
+            {item["nbr_enable"] for item in generated["buffer_config"].values()},
+            {0},
+        )
         self.assertEqual(
             {item["buffer_nbr_cnt"] for item in generated["buffer_config"].values()},
-            {3},
+            {0},
+        )
+        self.assertEqual(
+            [generated["stream_engine"][f"stream{i}"]["target"] for i in range(5)],
+            ["A", "B", "B'", "C", "D"],
         )
         validate_conv_accumulate_config_mask(generated)
-        validate_conv_accumulate_neighbor_ring(generated, expected_group_size=4)
-        validate_conv_accumulate_output_route(generated)
+        validate_first_conv_signed_a_local_contract(generated)
+        validate_conv_accumulate_output_route(
+            generated, expected_json_mode=CONV_GEMM_TRANSPOSED_OUTPORT_JSON_MODE
+        )
 
     def test_first_request_rejects_kblock_only_bias_schedule(self) -> None:
         source = json.loads((ROOT / "conv_full.json").read_text(encoding="utf-8"))
@@ -77,31 +87,29 @@ class ConvInstanceSpecTests(unittest.TestCase):
             buf_idx_keep_last_index=[1, 2],
             buf_full_last_index=0,
         )
-        generated["buffer_loop_configs"]["GROUP2"]["ROW_LC"].update(
+        generated["buffer_loop_configs"]["GROUP3"]["ROW_LC"].update(
             src_id="DRAM_LC.LC13", last_index=1
         )
-        generated["buffer_loop_configs"]["GROUP2"]["COL_LC"]["last_index"] = 2
+        generated["buffer_loop_configs"]["GROUP3"]["COL_LC"]["last_index"] = 2
         generated["buffer_config"]["buffer4"].update(
             buf_full_last_index=0, buffer_life_time=1
         )
-        from resnet50_pipeline.conv_sa_contract import validate_first_conv_sa_contract
-
         with self.assertRaisesRegex(ValueError, "Kblock/H/Qblock bias tile branch"):
-            validate_first_conv_sa_contract(generated)
+            validate_first_conv_signed_a_local_contract(generated)
 
-    def test_sa_accumulate_neighbor_ring_rejects_missing_odd_buffer(self) -> None:
+    def test_sa_accumulate_rejects_missing_b_prime_producer(self) -> None:
         source = json.loads((ROOT / "conv_full.json").read_text(encoding="utf-8"))
         generated = build_real_1x1(source)
-        generated["buffer_config"]["buffer1"]["nbr_enable"] = 0
-        with self.assertRaisesRegex(ConvInstanceError, "buffer1.nbr_enable"):
-            validate_conv_accumulate_neighbor_ring(generated, expected_group_size=4)
+        generated["stream_engine"].pop("stream2")
+        with self.assertRaisesRegex(ValueError, "exactly five streams"):
+            validate_first_conv_signed_a_local_contract(generated)
 
-    def test_sa_accumulate_neighbor_ring_rejects_encoder_default_count(self) -> None:
+    def test_sa_accumulate_rejects_neighbor_dependent_buffer(self) -> None:
         source = json.loads((ROOT / "conv_full.json").read_text(encoding="utf-8"))
         generated = build_real_1x1(source)
-        generated["buffer_config"]["buffer0"]["buffer_nbr_cnt"] = 27
-        with self.assertRaisesRegex(ConvInstanceError, "buffer0.buffer_nbr_cnt"):
-            validate_conv_accumulate_neighbor_ring(generated, expected_group_size=4)
+        generated["buffer_config"]["buffer3"]["nbr_enable"] = 1
+        with self.assertRaisesRegex(ValueError, "buffer3 must be local"):
+            validate_first_conv_signed_a_local_contract(generated)
 
     def test_sa_accumulate_rejects_broad_sa_ga_presence_mask(self) -> None:
         source = json.loads((ROOT / "conv_full.json").read_text(encoding="utf-8"))
@@ -124,9 +132,12 @@ class ConvInstanceSpecTests(unittest.TestCase):
     def test_sa_accumulate_rejects_encoder_label_for_rtl_col_major(self) -> None:
         source = json.loads((ROOT / "conv_full.json").read_text(encoding="utf-8"))
         broken = build_real_1x1(source)
-        broken["special_array"]["outport"]["mode"] = "row"
-        with self.assertRaisesRegex(ConvInstanceError, "sa_outport_major=0"):
-            validate_conv_accumulate_output_route(broken)
+        broken["special_array"]["outport"]["mode"] = "col"
+        with self.assertRaisesRegex(ConvInstanceError, "JSON mode 'row'"):
+            validate_conv_accumulate_output_route(
+                broken,
+                expected_json_mode=CONV_GEMM_TRANSPOSED_OUTPORT_JSON_MODE,
+            )
 
     def test_ga_requant_route_invariant_rejects_special_array_producer(self) -> None:
         requant = json.loads(
@@ -141,9 +152,9 @@ class ConvInstanceSpecTests(unittest.TestCase):
     def test_all_mutable_generated_conv_routes_are_audited(self) -> None:
         report = audit_generated_conv_output_routes(ROOT)
         self.assertEqual(report["status"], "generated_conv_output_routes_passed")
-        self.assertEqual(report["accumulate_config_count"], 6)
-        self.assertEqual(report["requant_config_count"], 128)
-        self.assertEqual(report["config_count"], 134)
+        self.assertEqual(report["accumulate_config_count"], 7)
+        self.assertEqual(report["requant_config_count"], 136)
+        self.assertEqual(report["config_count"], 143)
         self.assertTrue(report["historical_freezes_excluded"])
 
     def test_first_real_instance_is_one_typed_source_for_all_consumers(self) -> None:
@@ -330,11 +341,13 @@ class ConvInstanceSpecTests(unittest.TestCase):
         }
         self.assertEqual(observed_v9, FIRST_REAL_CONV_V9_STATIC_SHA256)
 
-    def test_second_and_third_instances_are_bound_without_freezing_the_next(self) -> None:
+    def test_additional_checked_in_instances_are_bound(self) -> None:
         second_request = build_conv_target_request(ROOT, "node-0008")
         second = second_request.spec
         wide_output_request = build_conv_target_request(ROOT, "node-0003")
         wide_output = wide_output_request.spec
+        spatial_request = build_conv_target_request(ROOT, "node-0005")
+        spatial = spatial_request.spec
         self.assertEqual(second.activation_shape, (16, 256, 56, 56))
         self.assertEqual(second.output_shape, (16, 64, 56, 56))
         self.assertEqual((second.c_tile, second.k_tile), (64, 16))
@@ -342,10 +355,15 @@ class ConvInstanceSpecTests(unittest.TestCase):
         self.assertEqual(wide_output.output_shape, (16, 256, 56, 56))
         self.assertEqual((wide_output.c_tile, wide_output.k_tile), (16, 64))
         self.assertEqual(wide_output.requant_shard_count, 32)
+        self.assertEqual(spatial.activation_shape, (16, 64, 56, 56))
+        self.assertEqual(spatial.weight_shape, (64, 64, 3, 3))
+        self.assertEqual(spatial.output_shape, (16, 64, 56, 56))
+        self.assertEqual(spatial.kernel, (3, 3))
+        self.assertEqual(spatial.pads, (1, 1, 1, 1))
+        self.assertEqual(spatial_request.transport_abi, "conv_sa_q8k8_v2")
         second_request.validate_checked_in_bindings()
         wide_output_request.validate_checked_in_bindings()
-        with self.assertRaisesRegex(ConvInstanceError, "files are missing"):
-            build_conv_target_request(ROOT, "node-0005")
+        spatial_request.validate_checked_in_bindings()
 
     def test_non_conv_or_unknown_node_fails_closed(self) -> None:
         with self.assertRaises(ConvInstanceError):

@@ -1,0 +1,2339 @@
+{
+  "evidence_sha256": "4b68234dd28d679ddd49fc7b7459ed199c58e49a881236bd0d6eb5a1ec41a89b",
+  "inference_policy": {
+    "address_relocation_may_be_bound_late": true,
+    "derive_formulas_from_shape_and_dataflow": true,
+    "do_not_interpolate_register_values_blindly": true,
+    "every_rule_must_reproduce_known_configs": true,
+    "numeric_semantic_change_requires_typed_parameter_contract": true,
+    "topology_change_requires_schedule_rule": true
+  },
+  "pairs": [
+    {
+      "change_class_counts": {
+        "address_relocation": 2,
+        "schedule_or_boundary": 15,
+        "topology": 1
+      },
+      "difference_count": 18,
+      "differences": [
+        {
+          "class": "schedule_or_boundary",
+          "left": 5,
+          "left_present": true,
+          "path": "$.buffer_config.buffer0.buf_full_last_index",
+          "right": 6,
+          "right_present": true
+        },
+        {
+          "class": "schedule_or_boundary",
+          "left": 6,
+          "left_present": true,
+          "path": "$.buffer_loop_configs.GROUP0.COL_LC.last_index",
+          "right": 7,
+          "right_present": true
+        },
+        {
+          "class": "schedule_or_boundary",
+          "left": 5,
+          "left_present": true,
+          "path": "$.buffer_loop_configs.GROUP0.ROW_LC.last_index",
+          "right": 6,
+          "right_present": true
+        },
+        {
+          "class": "topology",
+          "left": "DRAM_LC.LC4",
+          "left_present": true,
+          "path": "$.buffer_loop_configs.GROUP0.ROW_LC.src_id",
+          "right": "DRAM_LC.LC5",
+          "right_present": true
+        },
+        {
+          "class": "schedule_or_boundary",
+          "left": 16,
+          "left_present": true,
+          "path": "$.dram_loop_configs.LC1.end",
+          "right": 112,
+          "right_present": true
+        },
+        {
+          "class": "schedule_or_boundary",
+          "left": 1,
+          "left_present": true,
+          "path": "$.dram_loop_configs.LC2.end",
+          "right": 7,
+          "right_present": true
+        },
+        {
+          "class": "schedule_or_boundary",
+          "left": 8,
+          "left_present": true,
+          "path": "$.dram_loop_configs.LC6.end",
+          "right": 56,
+          "right_present": true
+        },
+        {
+          "class": "schedule_or_boundary",
+          "left": 1,
+          "left_present": true,
+          "path": "$.dram_loop_configs.LC7.end",
+          "right": 7,
+          "right_present": true
+        },
+        {
+          "class": "address_relocation",
+          "left": "0b00000_00_0000000000000_000000_0000",
+          "left_present": true,
+          "path": "$.stream_engine.stream0.base_addr",
+          "right": 1024,
+          "right_present": true
+        },
+        {
+          "class": "schedule_or_boundary",
+          "left": 5,
+          "left_present": true,
+          "path": "$.stream_engine.stream0.buf_full_last_index",
+          "right": 6,
+          "right_present": true
+        },
+        {
+          "class": "schedule_or_boundary",
+          "left": 6,
+          "left_present": true,
+          "path": "$.stream_engine.stream0.buf_idx_keep_last_index[0]",
+          "right": 7,
+          "right_present": true
+        },
+        {
+          "class": "schedule_or_boundary",
+          "left": 64,
+          "left_present": true,
+          "path": "$.stream_engine.stream0.dim_stride[1]",
+          "right": 448,
+          "right_present": true
+        },
+        {
+          "class": "schedule_or_boundary",
+          "left": 1024,
+          "left_present": true,
+          "path": "$.stream_engine.stream0.dim_stride[2]",
+          "right": 50176,
+          "right_present": true
+        },
+        {
+          "class": "schedule_or_boundary",
+          "left": 16,
+          "left_present": true,
+          "path": "$.stream_engine.stream0.idx_padding_range.up_bound[0]",
+          "right": 112,
+          "right_present": true
+        },
+        {
+          "class": "schedule_or_boundary",
+          "left": 16,
+          "left_present": true,
+          "path": "$.stream_engine.stream0.idx_padding_range.up_bound[1]",
+          "right": 112,
+          "right_present": true
+        },
+        {
+          "class": "address_relocation",
+          "left": "0b00000_11_0000000000000_000000_0000",
+          "left_present": true,
+          "path": "$.stream_engine.stream1.base_addr",
+          "right": 201728,
+          "right_present": true
+        },
+        {
+          "class": "schedule_or_boundary",
+          "left": 256,
+          "left_present": true,
+          "path": "$.stream_engine.stream1.dim_stride[0]",
+          "right": 12544,
+          "right_present": true
+        },
+        {
+          "class": "schedule_or_boundary",
+          "left": 32,
+          "left_present": true,
+          "path": "$.stream_engine.stream1.dim_stride[1]",
+          "right": 224,
+          "right_present": true
+        }
+      ],
+      "left": {
+        "path": "ndp-sim/jsons/maxpool_config_16_16_16_stride2_padding1.json",
+        "sha256": "624d675ddde6f386474289d473d1c69559691794f3c1ea775dfc99325cc8f072"
+      },
+      "parameters": {
+        "left": {
+          "channels": 16,
+          "height": 16,
+          "padding": 1,
+          "stride": 2,
+          "width": 16
+        },
+        "right": {
+          "channels": 16,
+          "height": 112,
+          "padding": 1,
+          "stride": 2,
+          "width": 112
+        }
+      },
+      "relation": "same_operator_family_different_spatial_shape",
+      "relocation_only": false,
+      "right": {
+        "path": "ndp-sim/jsons/maxpool_config_16_112_112_stride2_padding1.json",
+        "sha256": "a0091f3fae223abd5225c54b833cf3bb578b3fea6b202883c5cbf4be50d60cb1"
+      },
+      "topology_changes": true
+    },
+    {
+      "change_class_counts": {
+        "address_relocation": 3
+      },
+      "difference_count": 3,
+      "differences": [
+        {
+          "class": "address_relocation",
+          "left": "0b00000_00_0000000000000_000000_0000",
+          "left_present": true,
+          "path": "$.stream_engine.stream0.base_addr",
+          "right": "0x2000",
+          "right_present": true
+        },
+        {
+          "class": "address_relocation",
+          "left": "0b00000_01_0000000000000_000000_0000",
+          "left_present": true,
+          "path": "$.stream_engine.stream1.base_addr",
+          "right": "0x5000",
+          "right_present": true
+        },
+        {
+          "class": "address_relocation",
+          "left": "0b00000_11_0000000000000_000000_0000",
+          "left_present": true,
+          "path": "$.stream_engine.stream2.base_addr",
+          "right": "0x6000",
+          "right_present": true
+        }
+      ],
+      "left": {
+        "path": "ndp-sim/jsons/prefill_add_fp32MN_fp32MN_fp32MN.json",
+        "sha256": "d78e184c92f3f88875f8ef6caea13d88e8e35f514226e893bb6078ed2f4e4a85"
+      },
+      "parameters": {
+        "operator_id": "op2",
+        "package_graph": "jsons/rope/rope_withbaseaddr.json",
+        "template_id": "prefill_add_fp32MN_fp32MN_fp32MN"
+      },
+      "relation": "source_template_to_server_package_instance",
+      "relocation_only": true,
+      "right": {
+        "path": "jsons/rope/jsons/op2_prefill_add_fp32MN_fp32MN_fp32MN.json",
+        "sha256": "119fa688f7f0ef2986aa88f53cf8efd9c435ae6685910426434d94139d888e59"
+      },
+      "topology_changes": false
+    },
+    {
+      "change_class_counts": {
+        "address_relocation": 4,
+        "numeric_semantics": 2,
+        "other": 114,
+        "schedule_or_boundary": 51,
+        "topology": 1
+      },
+      "difference_count": 172,
+      "differences": [
+        {
+          "class": "other",
+          "left": null,
+          "left_present": false,
+          "path": "$.buffer_config.buffer0.buffer_nbr_cnt",
+          "right": 3,
+          "right_present": true
+        },
+        {
+          "class": "other",
+          "left": null,
+          "left_present": false,
+          "path": "$.buffer_config.buffer1.buffer_nbr_cnt",
+          "right": 3,
+          "right_present": true
+        },
+        {
+          "class": "other",
+          "left": null,
+          "left_present": false,
+          "path": "$.buffer_config.buffer2.buffer_nbr_cnt",
+          "right": 3,
+          "right_present": true
+        },
+        {
+          "class": "other",
+          "left": null,
+          "left_present": false,
+          "path": "$.buffer_config.buffer3.buffer_nbr_cnt",
+          "right": 3,
+          "right_present": true
+        },
+        {
+          "class": "other",
+          "left": null,
+          "left_present": false,
+          "path": "$.buffer_config.buffer4.buffer_nbr_cnt",
+          "right": 3,
+          "right_present": true
+        },
+        {
+          "class": "other",
+          "left": null,
+          "left_present": false,
+          "path": "$.buffer_config.buffer5.buffer_nbr_cnt",
+          "right": 3,
+          "right_present": true
+        },
+        {
+          "class": "schedule_or_boundary",
+          "left": 32,
+          "left_present": true,
+          "path": "$.buffer_loop_configs.GROUP0.COL_LC.end",
+          "right": 4,
+          "right_present": true
+        },
+        {
+          "class": "schedule_or_boundary",
+          "left": 16,
+          "left_present": true,
+          "path": "$.buffer_loop_configs.GROUP0.COL_LC.stride",
+          "right": 2,
+          "right_present": true
+        },
+        {
+          "class": "schedule_or_boundary",
+          "left": 32,
+          "left_present": true,
+          "path": "$.buffer_loop_configs.GROUP1.COL_LC.end",
+          "right": 4,
+          "right_present": true
+        },
+        {
+          "class": "schedule_or_boundary",
+          "left": 16,
+          "left_present": true,
+          "path": "$.buffer_loop_configs.GROUP1.COL_LC.stride",
+          "right": 2,
+          "right_present": true
+        },
+        {
+          "class": "schedule_or_boundary",
+          "left": 32,
+          "left_present": true,
+          "path": "$.buffer_loop_configs.GROUP3.COL_LC.end",
+          "right": 4,
+          "right_present": true
+        },
+        {
+          "class": "schedule_or_boundary",
+          "left": 16,
+          "left_present": true,
+          "path": "$.buffer_loop_configs.GROUP3.COL_LC.stride",
+          "right": 2,
+          "right_present": true
+        },
+        {
+          "class": "schedule_or_boundary",
+          "left": 2,
+          "left_present": true,
+          "path": "$.dram_loop_configs.LC0.end",
+          "right": 1,
+          "right_present": true
+        },
+        {
+          "class": "schedule_or_boundary",
+          "left": 2,
+          "left_present": true,
+          "path": "$.dram_loop_configs.LC2.end",
+          "right": 128,
+          "right_present": true
+        },
+        {
+          "class": "schedule_or_boundary",
+          "left": 4,
+          "left_present": true,
+          "path": "$.dram_loop_configs.LC4.end",
+          "right": 256,
+          "right_present": true
+        },
+        {
+          "class": "numeric_semantics",
+          "left": 8,
+          "left_present": true,
+          "path": "$.lc_pe_configs.PE0.inport1.constant",
+          "right": 512,
+          "right_present": true
+        },
+        {
+          "class": "numeric_semantics",
+          "left": 32,
+          "left_present": true,
+          "path": "$.lc_pe_configs.PE1.inport1.constant",
+          "right": 2048,
+          "right_present": true
+        },
+        {
+          "class": "topology",
+          "left": "col",
+          "left_present": true,
+          "path": "$.special_array.outport.mode",
+          "right": "row",
+          "right_present": true
+        },
+        {
+          "class": "other",
+          "left": null,
+          "left_present": true,
+          "path": "$.stream_engine.stream0.address_remapping",
+          "right": null,
+          "right_present": false
+        },
+        {
+          "class": "other",
+          "left": null,
+          "left_present": false,
+          "path": "$.stream_engine.stream0.address_remapping[0]",
+          "right": 0,
+          "right_present": true
+        },
+        {
+          "class": "other",
+          "left": null,
+          "left_present": false,
+          "path": "$.stream_engine.stream0.address_remapping[10]",
+          "right": 10,
+          "right_present": true
+        },
+        {
+          "class": "other",
+          "left": null,
+          "left_present": false,
+          "path": "$.stream_engine.stream0.address_remapping[11]",
+          "right": 11,
+          "right_present": true
+        },
+        {
+          "class": "other",
+          "left": null,
+          "left_present": false,
+          "path": "$.stream_engine.stream0.address_remapping[12]",
+          "right": 12,
+          "right_present": true
+        },
+        {
+          "class": "other",
+          "left": null,
+          "left_present": false,
+          "path": "$.stream_engine.stream0.address_remapping[13]",
+          "right": 13,
+          "right_present": true
+        },
+        {
+          "class": "other",
+          "left": null,
+          "left_present": false,
+          "path": "$.stream_engine.stream0.address_remapping[14]",
+          "right": 14,
+          "right_present": true
+        },
+        {
+          "class": "other",
+          "left": null,
+          "left_present": false,
+          "path": "$.stream_engine.stream0.address_remapping[15]",
+          "right": 15,
+          "right_present": true
+        },
+        {
+          "class": "other",
+          "left": null,
+          "left_present": false,
+          "path": "$.stream_engine.stream0.address_remapping[16]",
+          "right": 16,
+          "right_present": true
+        },
+        {
+          "class": "other",
+          "left": null,
+          "left_present": false,
+          "path": "$.stream_engine.stream0.address_remapping[17]",
+          "right": 17,
+          "right_present": true
+        },
+        {
+          "class": "other",
+          "left": null,
+          "left_present": false,
+          "path": "$.stream_engine.stream0.address_remapping[18]",
+          "right": 18,
+          "right_present": true
+        },
+        {
+          "class": "other",
+          "left": null,
+          "left_present": false,
+          "path": "$.stream_engine.stream0.address_remapping[19]",
+          "right": 19,
+          "right_present": true
+        },
+        {
+          "class": "other",
+          "left": null,
+          "left_present": false,
+          "path": "$.stream_engine.stream0.address_remapping[1]",
+          "right": 1,
+          "right_present": true
+        },
+        {
+          "class": "other",
+          "left": null,
+          "left_present": false,
+          "path": "$.stream_engine.stream0.address_remapping[20]",
+          "right": 20,
+          "right_present": true
+        },
+        {
+          "class": "other",
+          "left": null,
+          "left_present": false,
+          "path": "$.stream_engine.stream0.address_remapping[21]",
+          "right": 21,
+          "right_present": true
+        },
+        {
+          "class": "other",
+          "left": null,
+          "left_present": false,
+          "path": "$.stream_engine.stream0.address_remapping[22]",
+          "right": 22,
+          "right_present": true
+        },
+        {
+          "class": "other",
+          "left": null,
+          "left_present": false,
+          "path": "$.stream_engine.stream0.address_remapping[23]",
+          "right": 23,
+          "right_present": true
+        },
+        {
+          "class": "other",
+          "left": null,
+          "left_present": false,
+          "path": "$.stream_engine.stream0.address_remapping[24]",
+          "right": 24,
+          "right_present": true
+        },
+        {
+          "class": "other",
+          "left": null,
+          "left_present": false,
+          "path": "$.stream_engine.stream0.address_remapping[25]",
+          "right": 25,
+          "right_present": true
+        },
+        {
+          "class": "other",
+          "left": null,
+          "left_present": false,
+          "path": "$.stream_engine.stream0.address_remapping[2]",
+          "right": 2,
+          "right_present": true
+        },
+        {
+          "class": "other",
+          "left": null,
+          "left_present": false,
+          "path": "$.stream_engine.stream0.address_remapping[3]",
+          "right": 3,
+          "right_present": true
+        },
+        {
+          "class": "other",
+          "left": null,
+          "left_present": false,
+          "path": "$.stream_engine.stream0.address_remapping[4]",
+          "right": 4,
+          "right_present": true
+        },
+        {
+          "class": "other",
+          "left": null,
+          "left_present": false,
+          "path": "$.stream_engine.stream0.address_remapping[5]",
+          "right": 5,
+          "right_present": true
+        },
+        {
+          "class": "other",
+          "left": null,
+          "left_present": false,
+          "path": "$.stream_engine.stream0.address_remapping[6]",
+          "right": 6,
+          "right_present": true
+        },
+        {
+          "class": "other",
+          "left": null,
+          "left_present": false,
+          "path": "$.stream_engine.stream0.address_remapping[7]",
+          "right": 7,
+          "right_present": true
+        },
+        {
+          "class": "other",
+          "left": null,
+          "left_present": false,
+          "path": "$.stream_engine.stream0.address_remapping[8]",
+          "right": 8,
+          "right_present": true
+        },
+        {
+          "class": "other",
+          "left": null,
+          "left_present": false,
+          "path": "$.stream_engine.stream0.address_remapping[9]",
+          "right": 9,
+          "right_present": true
+        },
+        {
+          "class": "address_relocation",
+          "left": "0b00011_00_0000000000000_000000_0000",
+          "left_present": true,
+          "path": "$.stream_engine.stream0.base_addr",
+          "right": "0x0",
+          "right_present": true
+        },
+        {
+          "class": "schedule_or_boundary",
+          "left": 10,
+          "left_present": true,
+          "path": "$.stream_engine.stream0.buf_spatial_stride[10]",
+          "right": 20,
+          "right_present": true
+        },
+        {
+          "class": "schedule_or_boundary",
+          "left": 11,
+          "left_present": true,
+          "path": "$.stream_engine.stream0.buf_spatial_stride[11]",
+          "right": 21,
+          "right_present": true
+        },
+        {
+          "class": "schedule_or_boundary",
+          "left": 12,
+          "left_present": true,
+          "path": "$.stream_engine.stream0.buf_spatial_stride[12]",
+          "right": 24,
+          "right_present": true
+        },
+        {
+          "class": "schedule_or_boundary",
+          "left": 13,
+          "left_present": true,
+          "path": "$.stream_engine.stream0.buf_spatial_stride[13]",
+          "right": 25,
+          "right_present": true
+        },
+        {
+          "class": "schedule_or_boundary",
+          "left": 14,
+          "left_present": true,
+          "path": "$.stream_engine.stream0.buf_spatial_stride[14]",
+          "right": 28,
+          "right_present": true
+        },
+        {
+          "class": "schedule_or_boundary",
+          "left": 15,
+          "left_present": true,
+          "path": "$.stream_engine.stream0.buf_spatial_stride[15]",
+          "right": 29,
+          "right_present": true
+        },
+        {
+          "class": "schedule_or_boundary",
+          "left": 2,
+          "left_present": true,
+          "path": "$.stream_engine.stream0.buf_spatial_stride[2]",
+          "right": 4,
+          "right_present": true
+        },
+        {
+          "class": "schedule_or_boundary",
+          "left": 3,
+          "left_present": true,
+          "path": "$.stream_engine.stream0.buf_spatial_stride[3]",
+          "right": 5,
+          "right_present": true
+        },
+        {
+          "class": "schedule_or_boundary",
+          "left": 4,
+          "left_present": true,
+          "path": "$.stream_engine.stream0.buf_spatial_stride[4]",
+          "right": 8,
+          "right_present": true
+        },
+        {
+          "class": "schedule_or_boundary",
+          "left": 5,
+          "left_present": true,
+          "path": "$.stream_engine.stream0.buf_spatial_stride[5]",
+          "right": 9,
+          "right_present": true
+        },
+        {
+          "class": "schedule_or_boundary",
+          "left": 6,
+          "left_present": true,
+          "path": "$.stream_engine.stream0.buf_spatial_stride[6]",
+          "right": 12,
+          "right_present": true
+        },
+        {
+          "class": "schedule_or_boundary",
+          "left": 7,
+          "left_present": true,
+          "path": "$.stream_engine.stream0.buf_spatial_stride[7]",
+          "right": 13,
+          "right_present": true
+        },
+        {
+          "class": "schedule_or_boundary",
+          "left": 8,
+          "left_present": true,
+          "path": "$.stream_engine.stream0.buf_spatial_stride[8]",
+          "right": 16,
+          "right_present": true
+        },
+        {
+          "class": "schedule_or_boundary",
+          "left": 9,
+          "left_present": true,
+          "path": "$.stream_engine.stream0.buf_spatial_stride[9]",
+          "right": 17,
+          "right_present": true
+        },
+        {
+          "class": "other",
+          "left": null,
+          "left_present": true,
+          "path": "$.stream_engine.stream1.address_remapping",
+          "right": null,
+          "right_present": false
+        },
+        {
+          "class": "other",
+          "left": null,
+          "left_present": false,
+          "path": "$.stream_engine.stream1.address_remapping[0]",
+          "right": 0,
+          "right_present": true
+        },
+        {
+          "class": "other",
+          "left": null,
+          "left_present": false,
+          "path": "$.stream_engine.stream1.address_remapping[10]",
+          "right": 10,
+          "right_present": true
+        },
+        {
+          "class": "other",
+          "left": null,
+          "left_present": false,
+          "path": "$.stream_engine.stream1.address_remapping[11]",
+          "right": 11,
+          "right_present": true
+        },
+        {
+          "class": "other",
+          "left": null,
+          "left_present": false,
+          "path": "$.stream_engine.stream1.address_remapping[12]",
+          "right": 12,
+          "right_present": true
+        },
+        {
+          "class": "other",
+          "left": null,
+          "left_present": false,
+          "path": "$.stream_engine.stream1.address_remapping[13]",
+          "right": 13,
+          "right_present": true
+        },
+        {
+          "class": "other",
+          "left": null,
+          "left_present": false,
+          "path": "$.stream_engine.stream1.address_remapping[14]",
+          "right": 14,
+          "right_present": true
+        },
+        {
+          "class": "other",
+          "left": null,
+          "left_present": false,
+          "path": "$.stream_engine.stream1.address_remapping[15]",
+          "right": 15,
+          "right_present": true
+        },
+        {
+          "class": "other",
+          "left": null,
+          "left_present": false,
+          "path": "$.stream_engine.stream1.address_remapping[16]",
+          "right": 16,
+          "right_present": true
+        },
+        {
+          "class": "other",
+          "left": null,
+          "left_present": false,
+          "path": "$.stream_engine.stream1.address_remapping[17]",
+          "right": 17,
+          "right_present": true
+        },
+        {
+          "class": "other",
+          "left": null,
+          "left_present": false,
+          "path": "$.stream_engine.stream1.address_remapping[18]",
+          "right": 18,
+          "right_present": true
+        },
+        {
+          "class": "other",
+          "left": null,
+          "left_present": false,
+          "path": "$.stream_engine.stream1.address_remapping[19]",
+          "right": 19,
+          "right_present": true
+        },
+        {
+          "class": "other",
+          "left": null,
+          "left_present": false,
+          "path": "$.stream_engine.stream1.address_remapping[1]",
+          "right": 1,
+          "right_present": true
+        },
+        {
+          "class": "other",
+          "left": null,
+          "left_present": false,
+          "path": "$.stream_engine.stream1.address_remapping[20]",
+          "right": 20,
+          "right_present": true
+        },
+        {
+          "class": "other",
+          "left": null,
+          "left_present": false,
+          "path": "$.stream_engine.stream1.address_remapping[21]",
+          "right": 21,
+          "right_present": true
+        },
+        {
+          "class": "other",
+          "left": null,
+          "left_present": false,
+          "path": "$.stream_engine.stream1.address_remapping[22]",
+          "right": 22,
+          "right_present": true
+        },
+        {
+          "class": "other",
+          "left": null,
+          "left_present": false,
+          "path": "$.stream_engine.stream1.address_remapping[23]",
+          "right": 23,
+          "right_present": true
+        },
+        {
+          "class": "other",
+          "left": null,
+          "left_present": false,
+          "path": "$.stream_engine.stream1.address_remapping[24]",
+          "right": 24,
+          "right_present": true
+        },
+        {
+          "class": "other",
+          "left": null,
+          "left_present": false,
+          "path": "$.stream_engine.stream1.address_remapping[25]",
+          "right": 25,
+          "right_present": true
+        },
+        {
+          "class": "other",
+          "left": null,
+          "left_present": false,
+          "path": "$.stream_engine.stream1.address_remapping[2]",
+          "right": 2,
+          "right_present": true
+        },
+        {
+          "class": "other",
+          "left": null,
+          "left_present": false,
+          "path": "$.stream_engine.stream1.address_remapping[3]",
+          "right": 3,
+          "right_present": true
+        },
+        {
+          "class": "other",
+          "left": null,
+          "left_present": false,
+          "path": "$.stream_engine.stream1.address_remapping[4]",
+          "right": 4,
+          "right_present": true
+        },
+        {
+          "class": "other",
+          "left": null,
+          "left_present": false,
+          "path": "$.stream_engine.stream1.address_remapping[5]",
+          "right": 5,
+          "right_present": true
+        },
+        {
+          "class": "other",
+          "left": null,
+          "left_present": false,
+          "path": "$.stream_engine.stream1.address_remapping[6]",
+          "right": 6,
+          "right_present": true
+        },
+        {
+          "class": "other",
+          "left": null,
+          "left_present": false,
+          "path": "$.stream_engine.stream1.address_remapping[7]",
+          "right": 7,
+          "right_present": true
+        },
+        {
+          "class": "other",
+          "left": null,
+          "left_present": false,
+          "path": "$.stream_engine.stream1.address_remapping[8]",
+          "right": 8,
+          "right_present": true
+        },
+        {
+          "class": "other",
+          "left": null,
+          "left_present": false,
+          "path": "$.stream_engine.stream1.address_remapping[9]",
+          "right": 9,
+          "right_present": true
+        },
+        {
+          "class": "address_relocation",
+          "left": "0b00000_00_0000000001000_000000_0000",
+          "left_present": true,
+          "path": "$.stream_engine.stream1.base_addr",
+          "right": "0x4000",
+          "right_present": true
+        },
+        {
+          "class": "schedule_or_boundary",
+          "left": 10,
+          "left_present": true,
+          "path": "$.stream_engine.stream1.buf_spatial_stride[10]",
+          "right": 20,
+          "right_present": true
+        },
+        {
+          "class": "schedule_or_boundary",
+          "left": 11,
+          "left_present": true,
+          "path": "$.stream_engine.stream1.buf_spatial_stride[11]",
+          "right": 21,
+          "right_present": true
+        },
+        {
+          "class": "schedule_or_boundary",
+          "left": 12,
+          "left_present": true,
+          "path": "$.stream_engine.stream1.buf_spatial_stride[12]",
+          "right": 24,
+          "right_present": true
+        },
+        {
+          "class": "schedule_or_boundary",
+          "left": 13,
+          "left_present": true,
+          "path": "$.stream_engine.stream1.buf_spatial_stride[13]",
+          "right": 25,
+          "right_present": true
+        },
+        {
+          "class": "schedule_or_boundary",
+          "left": 14,
+          "left_present": true,
+          "path": "$.stream_engine.stream1.buf_spatial_stride[14]",
+          "right": 28,
+          "right_present": true
+        },
+        {
+          "class": "schedule_or_boundary",
+          "left": 15,
+          "left_present": true,
+          "path": "$.stream_engine.stream1.buf_spatial_stride[15]",
+          "right": 29,
+          "right_present": true
+        },
+        {
+          "class": "schedule_or_boundary",
+          "left": 2,
+          "left_present": true,
+          "path": "$.stream_engine.stream1.buf_spatial_stride[2]",
+          "right": 4,
+          "right_present": true
+        },
+        {
+          "class": "schedule_or_boundary",
+          "left": 3,
+          "left_present": true,
+          "path": "$.stream_engine.stream1.buf_spatial_stride[3]",
+          "right": 5,
+          "right_present": true
+        },
+        {
+          "class": "schedule_or_boundary",
+          "left": 4,
+          "left_present": true,
+          "path": "$.stream_engine.stream1.buf_spatial_stride[4]",
+          "right": 8,
+          "right_present": true
+        },
+        {
+          "class": "schedule_or_boundary",
+          "left": 5,
+          "left_present": true,
+          "path": "$.stream_engine.stream1.buf_spatial_stride[5]",
+          "right": 9,
+          "right_present": true
+        },
+        {
+          "class": "schedule_or_boundary",
+          "left": 6,
+          "left_present": true,
+          "path": "$.stream_engine.stream1.buf_spatial_stride[6]",
+          "right": 12,
+          "right_present": true
+        },
+        {
+          "class": "schedule_or_boundary",
+          "left": 7,
+          "left_present": true,
+          "path": "$.stream_engine.stream1.buf_spatial_stride[7]",
+          "right": 13,
+          "right_present": true
+        },
+        {
+          "class": "schedule_or_boundary",
+          "left": 8,
+          "left_present": true,
+          "path": "$.stream_engine.stream1.buf_spatial_stride[8]",
+          "right": 16,
+          "right_present": true
+        },
+        {
+          "class": "schedule_or_boundary",
+          "left": 9,
+          "left_present": true,
+          "path": "$.stream_engine.stream1.buf_spatial_stride[9]",
+          "right": 17,
+          "right_present": true
+        },
+        {
+          "class": "other",
+          "left": null,
+          "left_present": true,
+          "path": "$.stream_engine.stream2.address_remapping",
+          "right": null,
+          "right_present": false
+        },
+        {
+          "class": "other",
+          "left": null,
+          "left_present": false,
+          "path": "$.stream_engine.stream2.address_remapping[0]",
+          "right": 0,
+          "right_present": true
+        },
+        {
+          "class": "other",
+          "left": null,
+          "left_present": false,
+          "path": "$.stream_engine.stream2.address_remapping[10]",
+          "right": 10,
+          "right_present": true
+        },
+        {
+          "class": "other",
+          "left": null,
+          "left_present": false,
+          "path": "$.stream_engine.stream2.address_remapping[11]",
+          "right": 11,
+          "right_present": true
+        },
+        {
+          "class": "other",
+          "left": null,
+          "left_present": false,
+          "path": "$.stream_engine.stream2.address_remapping[12]",
+          "right": 12,
+          "right_present": true
+        },
+        {
+          "class": "other",
+          "left": null,
+          "left_present": false,
+          "path": "$.stream_engine.stream2.address_remapping[13]",
+          "right": 13,
+          "right_present": true
+        },
+        {
+          "class": "other",
+          "left": null,
+          "left_present": false,
+          "path": "$.stream_engine.stream2.address_remapping[14]",
+          "right": 14,
+          "right_present": true
+        },
+        {
+          "class": "other",
+          "left": null,
+          "left_present": false,
+          "path": "$.stream_engine.stream2.address_remapping[15]",
+          "right": 15,
+          "right_present": true
+        },
+        {
+          "class": "other",
+          "left": null,
+          "left_present": false,
+          "path": "$.stream_engine.stream2.address_remapping[16]",
+          "right": 16,
+          "right_present": true
+        },
+        {
+          "class": "other",
+          "left": null,
+          "left_present": false,
+          "path": "$.stream_engine.stream2.address_remapping[17]",
+          "right": 17,
+          "right_present": true
+        },
+        {
+          "class": "other",
+          "left": null,
+          "left_present": false,
+          "path": "$.stream_engine.stream2.address_remapping[18]",
+          "right": 18,
+          "right_present": true
+        },
+        {
+          "class": "other",
+          "left": null,
+          "left_present": false,
+          "path": "$.stream_engine.stream2.address_remapping[19]",
+          "right": 19,
+          "right_present": true
+        },
+        {
+          "class": "other",
+          "left": null,
+          "left_present": false,
+          "path": "$.stream_engine.stream2.address_remapping[1]",
+          "right": 1,
+          "right_present": true
+        },
+        {
+          "class": "other",
+          "left": null,
+          "left_present": false,
+          "path": "$.stream_engine.stream2.address_remapping[20]",
+          "right": 20,
+          "right_present": true
+        },
+        {
+          "class": "other",
+          "left": null,
+          "left_present": false,
+          "path": "$.stream_engine.stream2.address_remapping[21]",
+          "right": 21,
+          "right_present": true
+        },
+        {
+          "class": "other",
+          "left": null,
+          "left_present": false,
+          "path": "$.stream_engine.stream2.address_remapping[22]",
+          "right": 22,
+          "right_present": true
+        },
+        {
+          "class": "other",
+          "left": null,
+          "left_present": false,
+          "path": "$.stream_engine.stream2.address_remapping[23]",
+          "right": 23,
+          "right_present": true
+        },
+        {
+          "class": "other",
+          "left": null,
+          "left_present": false,
+          "path": "$.stream_engine.stream2.address_remapping[24]",
+          "right": 24,
+          "right_present": true
+        },
+        {
+          "class": "other",
+          "left": null,
+          "left_present": false,
+          "path": "$.stream_engine.stream2.address_remapping[25]",
+          "right": 25,
+          "right_present": true
+        },
+        {
+          "class": "other",
+          "left": null,
+          "left_present": false,
+          "path": "$.stream_engine.stream2.address_remapping[2]",
+          "right": 2,
+          "right_present": true
+        },
+        {
+          "class": "other",
+          "left": null,
+          "left_present": false,
+          "path": "$.stream_engine.stream2.address_remapping[3]",
+          "right": 3,
+          "right_present": true
+        },
+        {
+          "class": "other",
+          "left": null,
+          "left_present": false,
+          "path": "$.stream_engine.stream2.address_remapping[4]",
+          "right": 4,
+          "right_present": true
+        },
+        {
+          "class": "other",
+          "left": null,
+          "left_present": false,
+          "path": "$.stream_engine.stream2.address_remapping[5]",
+          "right": 5,
+          "right_present": true
+        },
+        {
+          "class": "other",
+          "left": null,
+          "left_present": false,
+          "path": "$.stream_engine.stream2.address_remapping[6]",
+          "right": 6,
+          "right_present": true
+        },
+        {
+          "class": "other",
+          "left": null,
+          "left_present": false,
+          "path": "$.stream_engine.stream2.address_remapping[7]",
+          "right": 7,
+          "right_present": true
+        },
+        {
+          "class": "other",
+          "left": null,
+          "left_present": false,
+          "path": "$.stream_engine.stream2.address_remapping[8]",
+          "right": 8,
+          "right_present": true
+        },
+        {
+          "class": "other",
+          "left": null,
+          "left_present": false,
+          "path": "$.stream_engine.stream2.address_remapping[9]",
+          "right": 9,
+          "right_present": true
+        },
+        {
+          "class": "address_relocation",
+          "left": "0b00000_00_0000000010000_000000_0000",
+          "left_present": true,
+          "path": "$.stream_engine.stream2.base_addr",
+          "right": "0x14000",
+          "right_present": true
+        },
+        {
+          "class": "other",
+          "left": null,
+          "left_present": true,
+          "path": "$.stream_engine.stream3.address_remapping",
+          "right": null,
+          "right_present": false
+        },
+        {
+          "class": "other",
+          "left": null,
+          "left_present": false,
+          "path": "$.stream_engine.stream3.address_remapping[0]",
+          "right": 0,
+          "right_present": true
+        },
+        {
+          "class": "other",
+          "left": null,
+          "left_present": false,
+          "path": "$.stream_engine.stream3.address_remapping[10]",
+          "right": 10,
+          "right_present": true
+        },
+        {
+          "class": "other",
+          "left": null,
+          "left_present": false,
+          "path": "$.stream_engine.stream3.address_remapping[11]",
+          "right": 11,
+          "right_present": true
+        },
+        {
+          "class": "other",
+          "left": null,
+          "left_present": false,
+          "path": "$.stream_engine.stream3.address_remapping[12]",
+          "right": 12,
+          "right_present": true
+        },
+        {
+          "class": "other",
+          "left": null,
+          "left_present": false,
+          "path": "$.stream_engine.stream3.address_remapping[13]",
+          "right": 13,
+          "right_present": true
+        },
+        {
+          "class": "other",
+          "left": null,
+          "left_present": false,
+          "path": "$.stream_engine.stream3.address_remapping[14]",
+          "right": 14,
+          "right_present": true
+        },
+        {
+          "class": "other",
+          "left": null,
+          "left_present": false,
+          "path": "$.stream_engine.stream3.address_remapping[15]",
+          "right": 15,
+          "right_present": true
+        },
+        {
+          "class": "other",
+          "left": null,
+          "left_present": false,
+          "path": "$.stream_engine.stream3.address_remapping[16]",
+          "right": 16,
+          "right_present": true
+        },
+        {
+          "class": "other",
+          "left": null,
+          "left_present": false,
+          "path": "$.stream_engine.stream3.address_remapping[17]",
+          "right": 17,
+          "right_present": true
+        },
+        {
+          "class": "other",
+          "left": null,
+          "left_present": false,
+          "path": "$.stream_engine.stream3.address_remapping[18]",
+          "right": 18,
+          "right_present": true
+        },
+        {
+          "class": "other",
+          "left": null,
+          "left_present": false,
+          "path": "$.stream_engine.stream3.address_remapping[19]",
+          "right": 19,
+          "right_present": true
+        },
+        {
+          "class": "other",
+          "left": null,
+          "left_present": false,
+          "path": "$.stream_engine.stream3.address_remapping[1]",
+          "right": 1,
+          "right_present": true
+        },
+        {
+          "class": "other",
+          "left": null,
+          "left_present": false,
+          "path": "$.stream_engine.stream3.address_remapping[20]",
+          "right": 20,
+          "right_present": true
+        },
+        {
+          "class": "other",
+          "left": null,
+          "left_present": false,
+          "path": "$.stream_engine.stream3.address_remapping[21]",
+          "right": 21,
+          "right_present": true
+        },
+        {
+          "class": "other",
+          "left": null,
+          "left_present": false,
+          "path": "$.stream_engine.stream3.address_remapping[22]",
+          "right": 22,
+          "right_present": true
+        },
+        {
+          "class": "other",
+          "left": null,
+          "left_present": false,
+          "path": "$.stream_engine.stream3.address_remapping[23]",
+          "right": 23,
+          "right_present": true
+        },
+        {
+          "class": "other",
+          "left": null,
+          "left_present": false,
+          "path": "$.stream_engine.stream3.address_remapping[24]",
+          "right": 24,
+          "right_present": true
+        },
+        {
+          "class": "other",
+          "left": null,
+          "left_present": false,
+          "path": "$.stream_engine.stream3.address_remapping[25]",
+          "right": 25,
+          "right_present": true
+        },
+        {
+          "class": "other",
+          "left": null,
+          "left_present": false,
+          "path": "$.stream_engine.stream3.address_remapping[2]",
+          "right": 2,
+          "right_present": true
+        },
+        {
+          "class": "other",
+          "left": null,
+          "left_present": false,
+          "path": "$.stream_engine.stream3.address_remapping[3]",
+          "right": 3,
+          "right_present": true
+        },
+        {
+          "class": "other",
+          "left": null,
+          "left_present": false,
+          "path": "$.stream_engine.stream3.address_remapping[4]",
+          "right": 4,
+          "right_present": true
+        },
+        {
+          "class": "other",
+          "left": null,
+          "left_present": false,
+          "path": "$.stream_engine.stream3.address_remapping[5]",
+          "right": 5,
+          "right_present": true
+        },
+        {
+          "class": "other",
+          "left": null,
+          "left_present": false,
+          "path": "$.stream_engine.stream3.address_remapping[6]",
+          "right": 6,
+          "right_present": true
+        },
+        {
+          "class": "other",
+          "left": null,
+          "left_present": false,
+          "path": "$.stream_engine.stream3.address_remapping[7]",
+          "right": 7,
+          "right_present": true
+        },
+        {
+          "class": "other",
+          "left": null,
+          "left_present": false,
+          "path": "$.stream_engine.stream3.address_remapping[8]",
+          "right": 8,
+          "right_present": true
+        },
+        {
+          "class": "other",
+          "left": null,
+          "left_present": false,
+          "path": "$.stream_engine.stream3.address_remapping[9]",
+          "right": 9,
+          "right_present": true
+        },
+        {
+          "class": "address_relocation",
+          "left": "0b00011_00_0000000001000_001000_0000",
+          "left_present": true,
+          "path": "$.stream_engine.stream3.base_addr",
+          "right": "0x4080",
+          "right_present": true
+        },
+        {
+          "class": "schedule_or_boundary",
+          "left": 10,
+          "left_present": true,
+          "path": "$.stream_engine.stream3.buf_spatial_stride[10]",
+          "right": 20,
+          "right_present": true
+        },
+        {
+          "class": "schedule_or_boundary",
+          "left": 11,
+          "left_present": true,
+          "path": "$.stream_engine.stream3.buf_spatial_stride[11]",
+          "right": 21,
+          "right_present": true
+        },
+        {
+          "class": "schedule_or_boundary",
+          "left": 12,
+          "left_present": true,
+          "path": "$.stream_engine.stream3.buf_spatial_stride[12]",
+          "right": 24,
+          "right_present": true
+        },
+        {
+          "class": "schedule_or_boundary",
+          "left": 13,
+          "left_present": true,
+          "path": "$.stream_engine.stream3.buf_spatial_stride[13]",
+          "right": 25,
+          "right_present": true
+        },
+        {
+          "class": "schedule_or_boundary",
+          "left": 14,
+          "left_present": true,
+          "path": "$.stream_engine.stream3.buf_spatial_stride[14]",
+          "right": 28,
+          "right_present": true
+        },
+        {
+          "class": "schedule_or_boundary",
+          "left": 15,
+          "left_present": true,
+          "path": "$.stream_engine.stream3.buf_spatial_stride[15]",
+          "right": 29,
+          "right_present": true
+        },
+        {
+          "class": "schedule_or_boundary",
+          "left": 2,
+          "left_present": true,
+          "path": "$.stream_engine.stream3.buf_spatial_stride[2]",
+          "right": 4,
+          "right_present": true
+        },
+        {
+          "class": "schedule_or_boundary",
+          "left": 3,
+          "left_present": true,
+          "path": "$.stream_engine.stream3.buf_spatial_stride[3]",
+          "right": 5,
+          "right_present": true
+        },
+        {
+          "class": "schedule_or_boundary",
+          "left": 4,
+          "left_present": true,
+          "path": "$.stream_engine.stream3.buf_spatial_stride[4]",
+          "right": 8,
+          "right_present": true
+        },
+        {
+          "class": "schedule_or_boundary",
+          "left": 5,
+          "left_present": true,
+          "path": "$.stream_engine.stream3.buf_spatial_stride[5]",
+          "right": 9,
+          "right_present": true
+        },
+        {
+          "class": "schedule_or_boundary",
+          "left": 6,
+          "left_present": true,
+          "path": "$.stream_engine.stream3.buf_spatial_stride[6]",
+          "right": 12,
+          "right_present": true
+        },
+        {
+          "class": "schedule_or_boundary",
+          "left": 7,
+          "left_present": true,
+          "path": "$.stream_engine.stream3.buf_spatial_stride[7]",
+          "right": 13,
+          "right_present": true
+        },
+        {
+          "class": "schedule_or_boundary",
+          "left": 8,
+          "left_present": true,
+          "path": "$.stream_engine.stream3.buf_spatial_stride[8]",
+          "right": 16,
+          "right_present": true
+        },
+        {
+          "class": "schedule_or_boundary",
+          "left": 9,
+          "left_present": true,
+          "path": "$.stream_engine.stream3.buf_spatial_stride[9]",
+          "right": 17,
+          "right_present": true
+        }
+      ],
+      "left": {
+        "path": "ndp-sim/jsons/prefill_gemm_ring_4slice.json",
+        "sha256": "6a2ca9f2edd2e9c7b8ebbb558a84dd23c8e583781f8a8ac01c213b78c6737e91"
+      },
+      "parameters": {
+        "operator_id": "op0",
+        "package_graph": "jsons/gemm_ring_Vgen/gemm_ring_Vgen_withbaseaddr.json",
+        "template_id": "prefill_gemm_ring_4slice"
+      },
+      "relation": "source_template_to_server_package_instance",
+      "relocation_only": false,
+      "right": {
+        "path": "jsons/gemm_ring_Vgen/jsons/op0_prefill_gemm_ring_4slice.json",
+        "sha256": "34a864425d1d1f7c375fd3eb780c8895d6b35ea20087dc2b65ebf7cb52efd465"
+      },
+      "topology_changes": true
+    },
+    {
+      "change_class_counts": {
+        "address_relocation": 3,
+        "schedule_or_boundary": 5
+      },
+      "difference_count": 8,
+      "differences": [
+        {
+          "class": "schedule_or_boundary",
+          "left": 16,
+          "left_present": true,
+          "path": "$.dram_loop_configs.LC1.end",
+          "right": 32,
+          "right_present": true
+        },
+        {
+          "class": "schedule_or_boundary",
+          "left": 16,
+          "left_present": true,
+          "path": "$.dram_loop_configs.LC2.end",
+          "right": 32,
+          "right_present": true
+        },
+        {
+          "class": "schedule_or_boundary",
+          "left": 16,
+          "left_present": true,
+          "path": "$.dram_loop_configs.LC3.end",
+          "right": 32,
+          "right_present": true
+        },
+        {
+          "class": "address_relocation",
+          "left": "0b00000_00_0000000000000_000000_0000",
+          "left_present": true,
+          "path": "$.stream_engine.stream0.base_addr",
+          "right": "0x0",
+          "right_present": true
+        },
+        {
+          "class": "schedule_or_boundary",
+          "left": 512,
+          "left_present": true,
+          "path": "$.stream_engine.stream0.dim_stride[1]",
+          "right": 1024,
+          "right_present": true
+        },
+        {
+          "class": "address_relocation",
+          "left": "0b00000_11_0000000000000_000000_0000",
+          "left_present": true,
+          "path": "$.stream_engine.stream2.base_addr",
+          "right": "0x2000",
+          "right_present": true
+        },
+        {
+          "class": "schedule_or_boundary",
+          "left": 512,
+          "left_present": true,
+          "path": "$.stream_engine.stream2.dim_stride[1]",
+          "right": 1024,
+          "right_present": true
+        },
+        {
+          "class": "address_relocation",
+          "left": "0b00000_01_0000000000000_000000_0000",
+          "left_present": true,
+          "path": "$.stream_engine.stream3.base_addr",
+          "right": "0x1000",
+          "right_present": true
+        }
+      ],
+      "left": {
+        "path": "ndp-sim/jsons/prefill_mac_fp32MN_fp32MN_fp32MN.json",
+        "sha256": "32521b8ed33e020019258911542929e1220c3326510fb6f7ce4867b6d09536a9"
+      },
+      "parameters": {
+        "operator_id": "op0",
+        "package_graph": "jsons/softmax/softmax_withbaseaddr.json",
+        "template_id": "prefill_mac_fp32MN_fp32MN_fp32MN"
+      },
+      "relation": "source_template_to_server_package_instance",
+      "relocation_only": false,
+      "right": {
+        "path": "jsons/softmax/jsons/op0_prefill_mac_fp32MN_fp32MN_fp32MN.json",
+        "sha256": "ea2fa397be267883897362b998d7a61153307f4c3e7ec159c46dc8f64f8ffd6a"
+      },
+      "topology_changes": false
+    },
+    {
+      "change_class_counts": {
+        "address_relocation": 2
+      },
+      "difference_count": 2,
+      "differences": [
+        {
+          "class": "address_relocation",
+          "left": "0b00000_00_0000000000000_000000_0000",
+          "left_present": true,
+          "path": "$.stream_engine.stream0.base_addr",
+          "right": "0x2000",
+          "right_present": true
+        },
+        {
+          "class": "address_relocation",
+          "left": "0b00000_11_0000000000000_000000_0000",
+          "left_present": true,
+          "path": "$.stream_engine.stream1.base_addr",
+          "right": "0x3000",
+          "right_present": true
+        }
+      ],
+      "left": {
+        "path": "ndp-sim/jsons/prefill_max_fp32MN_fp32MN.json",
+        "sha256": "2d20d87f5bbd14546c346bb54e1200ffd07299c193aded766dbeb59ea704921b"
+      },
+      "parameters": {
+        "operator_id": "op1",
+        "package_graph": "jsons/softmax/softmax_withbaseaddr.json",
+        "template_id": "prefill_max_fp32MN_fp32MN"
+      },
+      "relation": "source_template_to_server_package_instance",
+      "relocation_only": true,
+      "right": {
+        "path": "jsons/softmax/jsons/op1_prefill_max_fp32MN_fp32MN.json",
+        "sha256": "9d20befea381f073c13952d1a50387174598b294f22f9755c915c9d06ba64466"
+      },
+      "topology_changes": false
+    },
+    {
+      "change_class_counts": {
+        "address_relocation": 3,
+        "schedule_or_boundary": 5
+      },
+      "difference_count": 8,
+      "differences": [
+        {
+          "class": "schedule_or_boundary",
+          "left": 8,
+          "left_present": true,
+          "path": "$.dram_loop_configs.LC0.end",
+          "right": 4,
+          "right_present": true
+        },
+        {
+          "class": "schedule_or_boundary",
+          "left": 128,
+          "left_present": true,
+          "path": "$.dram_loop_configs.LC1.end",
+          "right": 32,
+          "right_present": true
+        },
+        {
+          "class": "schedule_or_boundary",
+          "left": 64,
+          "left_present": true,
+          "path": "$.dram_loop_configs.LC2.end",
+          "right": 16,
+          "right_present": true
+        },
+        {
+          "class": "address_relocation",
+          "left": "0b00000_00_0000000000000_000000_0000",
+          "left_present": true,
+          "path": "$.stream_engine.stream0.base_addr",
+          "right": "0x3080",
+          "right_present": true
+        },
+        {
+          "class": "schedule_or_boundary",
+          "left": 4096,
+          "left_present": true,
+          "path": "$.stream_engine.stream0.dim_stride[1]",
+          "right": 1024,
+          "right_present": true
+        },
+        {
+          "class": "address_relocation",
+          "left": "0b00000_01_0000000000000_000000_0000",
+          "left_present": true,
+          "path": "$.stream_engine.stream1.base_addr",
+          "right": "0x4080",
+          "right_present": true
+        },
+        {
+          "class": "address_relocation",
+          "left": "0b00000_11_0000000000000_000000_0000",
+          "left_present": true,
+          "path": "$.stream_engine.stream2.base_addr",
+          "right": "0x4100",
+          "right_present": true
+        },
+        {
+          "class": "schedule_or_boundary",
+          "left": 2048,
+          "left_present": true,
+          "path": "$.stream_engine.stream2.dim_stride[1]",
+          "right": 512,
+          "right_present": true
+        }
+      ],
+      "left": {
+        "path": "ndp-sim/jsons/prefill_mul_fp32MN_fp32M_fp16MN.json",
+        "sha256": "31d4369b393a39435349adb687a1a0dab63835f3a5f246f02e40a2af5f8923de"
+      },
+      "parameters": {
+        "operator_id": "op4",
+        "package_graph": "jsons/softmax/softmax_withbaseaddr.json",
+        "template_id": "prefill_mul_fp32MN_fp32M_fp16MN"
+      },
+      "relation": "source_template_to_server_package_instance",
+      "relocation_only": false,
+      "right": {
+        "path": "jsons/softmax/jsons/op4_prefill_mul_fp32MN_fp32M_fp16MN.json",
+        "sha256": "f80d1f41a6930564b910c5d0241a69c639e3662a955e3fb886fa1f6002927561"
+      },
+      "topology_changes": false
+    },
+    {
+      "change_class_counts": {
+        "address_relocation": 3,
+        "schedule_or_boundary": 6
+      },
+      "difference_count": 9,
+      "differences": [
+        {
+          "class": "schedule_or_boundary",
+          "left": 16,
+          "left_present": true,
+          "path": "$.dram_loop_configs.LC1.end",
+          "right": 32,
+          "right_present": true
+        },
+        {
+          "class": "schedule_or_boundary",
+          "left": 16,
+          "left_present": true,
+          "path": "$.dram_loop_configs.LC2.end",
+          "right": 32,
+          "right_present": true
+        },
+        {
+          "class": "schedule_or_boundary",
+          "left": 16,
+          "left_present": true,
+          "path": "$.dram_loop_configs.LC3.end",
+          "right": 32,
+          "right_present": true
+        },
+        {
+          "class": "address_relocation",
+          "left": "0b00000_00_0000000000000_000000_0000",
+          "left_present": true,
+          "path": "$.stream_engine.stream0.base_addr",
+          "right": "0x0",
+          "right_present": true
+        },
+        {
+          "class": "schedule_or_boundary",
+          "left": 512,
+          "left_present": true,
+          "path": "$.stream_engine.stream0.dim_stride[1]",
+          "right": 1024,
+          "right_present": true
+        },
+        {
+          "class": "address_relocation",
+          "left": "0b00000_01_0000000000000_000000_0000",
+          "left_present": true,
+          "path": "$.stream_engine.stream1.base_addr",
+          "right": "0x1000",
+          "right_present": true
+        },
+        {
+          "class": "schedule_or_boundary",
+          "left": 512,
+          "left_present": true,
+          "path": "$.stream_engine.stream1.dim_stride[1]",
+          "right": 1024,
+          "right_present": true
+        },
+        {
+          "class": "address_relocation",
+          "left": "0b00000_11_0000000000000_000000_0000",
+          "left_present": true,
+          "path": "$.stream_engine.stream2.base_addr",
+          "right": "0x2000",
+          "right_present": true
+        },
+        {
+          "class": "schedule_or_boundary",
+          "left": 512,
+          "left_present": true,
+          "path": "$.stream_engine.stream2.dim_stride[1]",
+          "right": 1024,
+          "right_present": true
+        }
+      ],
+      "left": {
+        "path": "ndp-sim/jsons/prefill_mul_fp32MN_fp32MN_fp32MN.json",
+        "sha256": "b3eaafdd63d40c7506341c1c72abf120ca3d2feea93092fcd6933efa1274ed7e"
+      },
+      "parameters": {
+        "operator_id": "op0",
+        "package_graph": "jsons/rope/rope_withbaseaddr.json",
+        "template_id": "prefill_mul_fp32MN_fp32MN_fp32MN"
+      },
+      "relation": "source_template_to_server_package_instance",
+      "relocation_only": false,
+      "right": {
+        "path": "jsons/rope/jsons/op0_prefill_mul_fp32MN_fp32MN_fp32MN.json",
+        "sha256": "e152618c6cc54996b64c246211029331617b244e7739c225f73749eb92cce1c8"
+      },
+      "topology_changes": false
+    },
+    {
+      "change_class_counts": {
+        "address_relocation": 3,
+        "schedule_or_boundary": 6
+      },
+      "difference_count": 9,
+      "differences": [
+        {
+          "class": "schedule_or_boundary",
+          "left": 16,
+          "left_present": true,
+          "path": "$.dram_loop_configs.LC1.end",
+          "right": 32,
+          "right_present": true
+        },
+        {
+          "class": "schedule_or_boundary",
+          "left": 16,
+          "left_present": true,
+          "path": "$.dram_loop_configs.LC2.end",
+          "right": 32,
+          "right_present": true
+        },
+        {
+          "class": "schedule_or_boundary",
+          "left": 16,
+          "left_present": true,
+          "path": "$.dram_loop_configs.LC3.end",
+          "right": 32,
+          "right_present": true
+        },
+        {
+          "class": "address_relocation",
+          "left": "0b00000_00_0000000000000_000000_0000",
+          "left_present": true,
+          "path": "$.stream_engine.stream0.base_addr",
+          "right": "0x3000",
+          "right_present": true
+        },
+        {
+          "class": "schedule_or_boundary",
+          "left": 512,
+          "left_present": true,
+          "path": "$.stream_engine.stream0.dim_stride[1]",
+          "right": 1024,
+          "right_present": true
+        },
+        {
+          "class": "address_relocation",
+          "left": "0b00000_01_0000000000000_000000_0000",
+          "left_present": true,
+          "path": "$.stream_engine.stream1.base_addr",
+          "right": "0x4000",
+          "right_present": true
+        },
+        {
+          "class": "schedule_or_boundary",
+          "left": 512,
+          "left_present": true,
+          "path": "$.stream_engine.stream1.dim_stride[1]",
+          "right": 1024,
+          "right_present": true
+        },
+        {
+          "class": "address_relocation",
+          "left": "0b00000_11_0000000000000_000000_0000",
+          "left_present": true,
+          "path": "$.stream_engine.stream2.base_addr",
+          "right": "0x5000",
+          "right_present": true
+        },
+        {
+          "class": "schedule_or_boundary",
+          "left": 512,
+          "left_present": true,
+          "path": "$.stream_engine.stream2.dim_stride[1]",
+          "right": 1024,
+          "right_present": true
+        }
+      ],
+      "left": {
+        "path": "ndp-sim/jsons/prefill_mul_fp32MN_fp32MN_fp32MN.json",
+        "sha256": "b3eaafdd63d40c7506341c1c72abf120ca3d2feea93092fcd6933efa1274ed7e"
+      },
+      "parameters": {
+        "operator_id": "op1",
+        "package_graph": "jsons/rope/rope_withbaseaddr.json",
+        "template_id": "prefill_mul_fp32MN_fp32MN_fp32MN"
+      },
+      "relation": "source_template_to_server_package_instance",
+      "relocation_only": false,
+      "right": {
+        "path": "jsons/rope/jsons/op1_prefill_mul_fp32MN_fp32MN_fp32MN.json",
+        "sha256": "71dc9c358748c52dabe1a09b56a4940780eaf556c4c4e21ff820133b00424bf2"
+      },
+      "topology_changes": false
+    },
+    {
+      "change_class_counts": {
+        "address_relocation": 2,
+        "schedule_or_boundary": 4
+      },
+      "difference_count": 6,
+      "differences": [
+        {
+          "class": "schedule_or_boundary",
+          "left": 4,
+          "left_present": true,
+          "path": "$.dram_loop_configs.LC1.end",
+          "right": 32,
+          "right_present": true
+        },
+        {
+          "class": "schedule_or_boundary",
+          "left": 8,
+          "left_present": true,
+          "path": "$.dram_loop_configs.LC2.end",
+          "right": 64,
+          "right_present": true
+        },
+        {
+          "class": "address_relocation",
+          "left": "0b00000_00_0000000000000_000000_0000",
+          "left_present": true,
+          "path": "$.stream_engine.stream0.base_addr",
+          "right": "0x0",
+          "right_present": true
+        },
+        {
+          "class": "schedule_or_boundary",
+          "left": 128,
+          "left_present": true,
+          "path": "$.stream_engine.stream0.dim_stride[1]",
+          "right": 1024,
+          "right_present": true
+        },
+        {
+          "class": "address_relocation",
+          "left": "0b00000_11_0000000000000_000000_0000",
+          "left_present": true,
+          "path": "$.stream_engine.stream2.base_addr",
+          "right": "0x1000",
+          "right_present": true
+        },
+        {
+          "class": "schedule_or_boundary",
+          "left": 256,
+          "left_present": true,
+          "path": "$.stream_engine.stream2.dim_stride[1]",
+          "right": 2048,
+          "right_present": true
+        }
+      ],
+      "left": {
+        "path": "ndp-sim/jsons/prefill_silu_fp16MN_fp32MN.json",
+        "sha256": "08101bdc82d615741d6262db57098b3ba3acd04cc427c1d0c1297cc68da5cdbd"
+      },
+      "parameters": {
+        "operator_id": "op0",
+        "package_graph": "jsons/silu/silu_withbaseaddr.json",
+        "template_id": "prefill_silu_fp16MN_fp32MN"
+      },
+      "relation": "source_template_to_server_package_instance",
+      "relocation_only": false,
+      "right": {
+        "path": "jsons/silu/jsons/op0_prefill_silu_fp16MN_fp32MN.json",
+        "sha256": "8f2b399c7a42f68c33ffa6fdbf6ae8e62bd3d46db793d4d13616c1e4c479c9a5"
+      },
+      "topology_changes": false
+    },
+    {
+      "change_class_counts": {
+        "address_relocation": 3,
+        "schedule_or_boundary": 13
+      },
+      "difference_count": 16,
+      "differences": [
+        {
+          "class": "schedule_or_boundary",
+          "left": 8,
+          "left_present": true,
+          "path": "$.dram_loop_configs.LC0.end",
+          "right": 4,
+          "right_present": true
+        },
+        {
+          "class": "address_relocation",
+          "left": "0b00000_00_0000000000000_000000_0000",
+          "left_present": true,
+          "path": "$.stream_engine.stream0.base_addr",
+          "right": "0x2000",
+          "right_present": true
+        },
+        {
+          "class": "schedule_or_boundary",
+          "left": 10,
+          "left_present": true,
+          "path": "$.stream_engine.stream0.buf_spatial_stride[10]",
+          "right": 12,
+          "right_present": true
+        },
+        {
+          "class": "schedule_or_boundary",
+          "left": 11,
+          "left_present": true,
+          "path": "$.stream_engine.stream0.buf_spatial_stride[11]",
+          "right": 13,
+          "right_present": true
+        },
+        {
+          "class": "schedule_or_boundary",
+          "left": 12,
+          "left_present": true,
+          "path": "$.stream_engine.stream0.buf_spatial_stride[12]",
+          "right": 6,
+          "right_present": true
+        },
+        {
+          "class": "schedule_or_boundary",
+          "left": 13,
+          "left_present": true,
+          "path": "$.stream_engine.stream0.buf_spatial_stride[13]",
+          "right": 7,
+          "right_present": true
+        },
+        {
+          "class": "schedule_or_boundary",
+          "left": 2,
+          "left_present": true,
+          "path": "$.stream_engine.stream0.buf_spatial_stride[2]",
+          "right": 8,
+          "right_present": true
+        },
+        {
+          "class": "schedule_or_boundary",
+          "left": 3,
+          "left_present": true,
+          "path": "$.stream_engine.stream0.buf_spatial_stride[3]",
+          "right": 9,
+          "right_present": true
+        },
+        {
+          "class": "schedule_or_boundary",
+          "left": 4,
+          "left_present": true,
+          "path": "$.stream_engine.stream0.buf_spatial_stride[4]",
+          "right": 2,
+          "right_present": true
+        },
+        {
+          "class": "schedule_or_boundary",
+          "left": 5,
+          "left_present": true,
+          "path": "$.stream_engine.stream0.buf_spatial_stride[5]",
+          "right": 3,
+          "right_present": true
+        },
+        {
+          "class": "schedule_or_boundary",
+          "left": 6,
+          "left_present": true,
+          "path": "$.stream_engine.stream0.buf_spatial_stride[6]",
+          "right": 10,
+          "right_present": true
+        },
+        {
+          "class": "schedule_or_boundary",
+          "left": 7,
+          "left_present": true,
+          "path": "$.stream_engine.stream0.buf_spatial_stride[7]",
+          "right": 11,
+          "right_present": true
+        },
+        {
+          "class": "schedule_or_boundary",
+          "left": 8,
+          "left_present": true,
+          "path": "$.stream_engine.stream0.buf_spatial_stride[8]",
+          "right": 4,
+          "right_present": true
+        },
+        {
+          "class": "schedule_or_boundary",
+          "left": 9,
+          "left_present": true,
+          "path": "$.stream_engine.stream0.buf_spatial_stride[9]",
+          "right": 5,
+          "right_present": true
+        },
+        {
+          "class": "address_relocation",
+          "left": "0b00000_01_0000000000000_000000_0000",
+          "left_present": true,
+          "path": "$.stream_engine.stream1.base_addr",
+          "right": "0x3000",
+          "right_present": true
+        },
+        {
+          "class": "address_relocation",
+          "left": "0b00000_11_0000000000000_000000_0000",
+          "left_present": true,
+          "path": "$.stream_engine.stream2.base_addr",
+          "right": "0x3080",
+          "right_present": true
+        }
+      ],
+      "left": {
+        "path": "ndp-sim/jsons/prefill_sub_SFU_fp32MN_fp32M_fp32MN.json",
+        "sha256": "a745ce74782b2f3598e246b5646102e835299196a626e6b8d219e0d0b48e4fc9"
+      },
+      "parameters": {
+        "operator_id": "op2",
+        "package_graph": "jsons/softmax/softmax_withbaseaddr.json",
+        "template_id": "prefill_sub_SFU_fp32MN_fp32M_fp32MN"
+      },
+      "relation": "source_template_to_server_package_instance",
+      "relocation_only": false,
+      "right": {
+        "path": "jsons/softmax/jsons/op2_prefill_sub_SFU_fp32MN_fp32M_fp32MN.json",
+        "sha256": "3169f69fd05b8f0f31362c4c0d7029cb9721ad8da5a6e1349566116ea207a357"
+      },
+      "topology_changes": false
+    },
+    {
+      "change_class_counts": {
+        "address_relocation": 2
+      },
+      "difference_count": 2,
+      "differences": [
+        {
+          "class": "address_relocation",
+          "left": "0b00000_00_0000000000000_000000_0000",
+          "left_present": true,
+          "path": "$.stream_engine.stream0.base_addr",
+          "right": "0x3080",
+          "right_present": true
+        },
+        {
+          "class": "address_relocation",
+          "left": "0b00000_11_0000000000000_000000_0000",
+          "left_present": true,
+          "path": "$.stream_engine.stream1.base_addr",
+          "right": "0x4080",
+          "right_present": true
+        }
+      ],
+      "left": {
+        "path": "ndp-sim/jsons/prefill_sum_rec_fp32MN_fp32MN.json",
+        "sha256": "33f1332d15a659d3be5244b293edd341bd12a22c4427b2d16b1efcddd57c6522"
+      },
+      "parameters": {
+        "operator_id": "op3",
+        "package_graph": "jsons/softmax/softmax_withbaseaddr.json",
+        "template_id": "prefill_sum_rec_fp32MN_fp32MN"
+      },
+      "relation": "source_template_to_server_package_instance",
+      "relocation_only": true,
+      "right": {
+        "path": "jsons/softmax/jsons/op3_prefill_sum_rec_fp32MN_fp32MN.json",
+        "sha256": "bddceb63bd5e7e67740feed025f8fe661e5abb8c9bc1c01f2b281ab248af1104"
+      },
+      "topology_changes": false
+    }
+  ],
+  "schema": "ndpsim-operator-config-rule-evidence-v1",
+  "source_corpus_sha256": "35ae23af57d2f7485a6e57512bac6f59f4fc43b174ab7f48bce2e8d2274efb0d",
+  "summary": {
+    "change_class_counts": {
+      "address_relocation": 30,
+      "numeric_semantics": 2,
+      "other": 114,
+      "schedule_or_boundary": 105,
+      "topology": 2
+    },
+    "maxpool_shape_difference_count": 18,
+    "pair_count": 11,
+    "relocation_only_pair_count": 3,
+    "topology_changing_pair_count": 2
+  }
+}

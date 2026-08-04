@@ -1,0 +1,488 @@
+{
+  "algorithm": {
+    "exact_pairs": [
+      {
+        "counterexample_id": "NEG5_PLUS5",
+        "dot4": 5,
+        "psum_in": -5
+      },
+      {
+        "counterexample_id": "INT32_MIN_PLUS0",
+        "dot4": 0,
+        "psum_in": -2147483648
+      }
+    ],
+    "initial_psum": "s32(bias - x_zero_point * sum(logical signed weights))",
+    "output_value_budget": 4000000,
+    "packing": "OIHW-flatten K grouped in original consecutive groups of four; tail activation=x_zp and tail weight=0",
+    "position_chunk": 256,
+    "recurrence": "psum_next=s32(psum_in+dot4)",
+    "stop_on_first_hit": true,
+    "torch_thread_count": 16
+  },
+  "blocker_delta": {
+    "close": [],
+    "keep": [
+      "B_CONV_NATIVE_FOUR_LANE_RTL_IDENTITY_AND_E2_PENDING"
+    ],
+    "open": [
+      "B_CONV_SA_INT32_NEGATIVE_PSUM_BOUNDARY_REACHABLE"
+    ]
+  },
+  "candidate_release": false,
+  "claim_boundary": "Exact frozen W3 reachability of the two named SA_PE_Float_CSA counterexamples only.  A hit blocks the native four-lane package without authorizing RTL edits.  A no-hit result is model/instance-limited and does not establish full INT32-domain RTL correctness.",
+  "package_release": "NONE",
+  "records": [
+    {
+      "absolute_partial_sum_bound": {
+        "formula": "abs(corrected_bias[oc]) + sum_k(abs(weight[oc,k]) * 255)",
+        "int32_min_reachable_under_bound": false,
+        "maximum": 2025309,
+        "per_channel_sha256": "41d7ead31e4445410893eb05624dcce5d19275c64a57ff01b9105727c34f1a9a"
+      },
+      "counterexample_reachable": false,
+      "exact_occurrence_scan": {
+        "chunk_count": 196,
+        "chunk_receipts_sha256": "99ebc8a6e09513067a853ceec12a2c09998a8b883bcb6fc2dfbca22288ecd9c3",
+        "complete_enumeration": true,
+        "counterexample_hit_counts": {
+          "INT32_MIN_PLUS0": 0,
+          "NEG5_PLUS5": 0
+        },
+        "dot4_group_count_per_output": 16,
+        "dot4_observed_range": [
+          -25736,
+          20597
+        ],
+        "enumerated_occurrence_count": 51380224,
+        "first_hits": {
+          "INT32_MIN_PLUS0": null,
+          "NEG5_PLUS5": null
+        },
+        "logical_k": 64,
+        "packed_k": 64,
+        "planned_occurrence_count": 51380224,
+        "stop_on_first_hit": true
+      },
+      "geometry": {
+        "attributes": {
+          "auto_pad": "NOTSET",
+          "dilations": [
+            1,
+            1
+          ],
+          "group": 1,
+          "kernel_shape": [
+            1,
+            1
+          ],
+          "pads": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "strides": [
+            1,
+            1
+          ]
+        },
+        "input_shape": [
+          16,
+          64,
+          56,
+          56
+        ],
+        "logical_k": 64,
+        "output_shape": [
+          16,
+          64,
+          56,
+          56
+        ],
+        "weight_shape": [
+          64,
+          64,
+          1,
+          1
+        ],
+        "x_zero_point": 0
+      },
+      "identity": {
+        "hw_op_id": "hwop-0004-00",
+        "hw_op_type": "ConvInt32Accumulate",
+        "node_id": "node-0004",
+        "onnx_name": "fused resnetv17_stage1_conv0_fwd_quant",
+        "onnx_op_type": "QLinearConv",
+        "request_id": "r5:hwop-0004-00",
+        "request_sha256": "e27e10169168f3889df4c03bf15cb21de074abf3f3767dc4bee288425165874b",
+        "stage": "accumulate"
+      },
+      "scan_ordinal": 1,
+      "source_ownership": {
+        "activation": {
+          "identity_sha256": "e4039c779c0083ff3cbe76845b4ba313e9b2e095e4faa72d329cbfa04f6cae1b",
+          "identity_source": "artifacts/w3/golden_batch16/manifest.json",
+          "onnx_name": "resnetv17_pool0_fwd_quantized",
+          "tensor_id": "tensor-8d2f28c80ac24676"
+        },
+        "bias": {
+          "identity_sha256": "40bc2a3acbd553ffc067ea1c7b1c31cb59f18fca30451f55809ff76d2594bc0b",
+          "identity_source": "artifacts/w3/golden_batch16/manifest.json",
+          "onnx_name": "ConvBnFusion_BN_B_resnetv17_stage1_batchnorm0_beta_quantized",
+          "tensor_id": "tensor-d72c70cfb6839a45"
+        },
+        "weight": {
+          "identity_sha256": "ff6ee89cbc889e0708d483f22b2a8f0e09f2cde13f65dcac061eb30551f68b48",
+          "identity_source": "artifacts/w3/golden_batch16/manifest.json",
+          "onnx_name": "ConvBnFusion_W_resnetv17_stage1_conv0_weight_quantized",
+          "tensor_id": "tensor-56b60866ff5ecb4a"
+        },
+        "weight_zero_point": {
+          "identity_sha256": "f5a5fd42d16a20302798ef6ed309979b43003d2320d9f0e8ea9831a92759fb4b",
+          "identity_source": "artifacts/w3/golden_batch16/manifest.json",
+          "onnx_name": "ConvBnFusion_W_resnetv17_stage1_conv0_weight_zero_point",
+          "tensor_id": "tensor-705bc355ebf7bbd5"
+        }
+      }
+    },
+    {
+      "absolute_partial_sum_bound": {
+        "formula": "abs(corrected_bias[oc]) + sum_k(abs(weight[oc,k]) * 255)",
+        "int32_min_reachable_under_bound": false,
+        "maximum": 16886860,
+        "per_channel_sha256": "6b6088344a146d39d06dcd714a3aab4b7c92eaaa83ba7e346a9d39e6c93baf61"
+      },
+      "counterexample_reachable": false,
+      "exact_occurrence_scan": {
+        "chunk_count": 784,
+        "chunk_receipts_sha256": "9b5811acdab63c79f9f87fe119bc52fb9d62ed62db2255c8b15e71792bf778ac",
+        "complete_enumeration": true,
+        "counterexample_hit_counts": {
+          "INT32_MIN_PLUS0": 0,
+          "NEG5_PLUS5": 0
+        },
+        "dot4_group_count_per_output": 37,
+        "dot4_observed_range": [
+          -101231,
+          95485
+        ],
+        "enumerated_occurrence_count": 475267072,
+        "first_hits": {
+          "INT32_MIN_PLUS0": null,
+          "NEG5_PLUS5": null
+        },
+        "logical_k": 147,
+        "packed_k": 148,
+        "planned_occurrence_count": 475267072,
+        "stop_on_first_hit": true
+      },
+      "geometry": {
+        "attributes": {
+          "auto_pad": "NOTSET",
+          "dilations": [
+            1,
+            1
+          ],
+          "group": 1,
+          "kernel_shape": [
+            7,
+            7
+          ],
+          "pads": [
+            3,
+            3,
+            3,
+            3
+          ],
+          "strides": [
+            2,
+            2
+          ]
+        },
+        "input_shape": [
+          16,
+          3,
+          224,
+          224
+        ],
+        "logical_k": 147,
+        "output_shape": [
+          16,
+          64,
+          112,
+          112
+        ],
+        "weight_shape": [
+          64,
+          3,
+          7,
+          7
+        ],
+        "x_zero_point": 114
+      },
+      "identity": {
+        "hw_op_id": "hwop-0001-00",
+        "hw_op_type": "ConvInt32Accumulate",
+        "node_id": "node-0001",
+        "onnx_name": "fused resnetv17_conv0_fwd_quant",
+        "onnx_op_type": "QLinearConv",
+        "request_id": "r5:hwop-0001-00",
+        "request_sha256": "36b50b93353c995ea4392dc5bd535fcecfa70f4a032b860ec4cf81128e6824d6",
+        "stage": "accumulate"
+      },
+      "scan_ordinal": 2,
+      "source_ownership": {
+        "activation": {
+          "identity_sha256": "963f2c0edbcd5a2ef946a8a4757773b37cfbc8a50b0f35727b0a22eaf20f470a",
+          "identity_source": "artifacts/w3/golden_batch16/manifest.json",
+          "onnx_name": "data_quantized",
+          "tensor_id": "tensor-a60f1132af1aa3d0"
+        },
+        "bias": {
+          "identity_sha256": "33709f9d70d44902a7c2c90b768d8b6480936387a3040a547903060cb34032d2",
+          "identity_source": "artifacts/w3/golden_batch16/manifest.json",
+          "onnx_name": "ConvBnFusion_BN_B_resnetv17_batchnorm0_beta_quantized",
+          "tensor_id": "tensor-de84039d7825997b"
+        },
+        "weight": {
+          "identity_sha256": "9fa7dbdfbc2db700a773672ea82d509c87d55982a97b9b6fa90d59d23e07262c",
+          "identity_source": "artifacts/w3/golden_batch16/manifest.json",
+          "onnx_name": "ConvBnFusion_W_resnetv17_conv0_weight_quantized",
+          "tensor_id": "tensor-583ab37c0ae58e5d"
+        },
+        "weight_zero_point": {
+          "identity_sha256": "f5a5fd42d16a20302798ef6ed309979b43003d2320d9f0e8ea9831a92759fb4b",
+          "identity_source": "artifacts/w3/golden_batch16/manifest.json",
+          "onnx_name": "ConvBnFusion_W_resnetv17_conv0_weight_zero_point",
+          "tensor_id": "tensor-3a42964541a66d45"
+        }
+      }
+    },
+    {
+      "absolute_partial_sum_bound": {
+        "formula": "abs(corrected_bias[oc]) + sum_k(abs(weight[oc,k]) * 255)",
+        "int32_min_reachable_under_bound": false,
+        "maximum": 3076189,
+        "per_channel_sha256": "41ed4d2e37b7909e2ce887d11718e0d7ece13cc4bcd0965465c630c162a87758"
+      },
+      "counterexample_reachable": true,
+      "exact_occurrence_scan": {
+        "chunk_count": 6,
+        "chunk_receipts_sha256": "384b19a5e508802324da39bb987a412acd169d480a99e6c79218d9f7b9f8948b",
+        "complete_enumeration": false,
+        "counterexample_hit_counts": {
+          "INT32_MIN_PLUS0": 0,
+          "NEG5_PLUS5": 1
+        },
+        "dot4_group_count_per_output": 16,
+        "dot4_observed_range": [
+          -31509,
+          27629
+        ],
+        "enumerated_occurrence_count": 6291456,
+        "first_hits": {
+          "INT32_MIN_PLUS0": null,
+          "NEG5_PLUS5": {
+            "activation_u8_lanes": [
+              21,
+              24,
+              24,
+              26
+            ],
+            "dot4": 5,
+            "flat_nhw": 1328,
+            "k_group": 14,
+            "lane_products": [
+              -21,
+              0,
+              0,
+              26
+            ],
+            "logical_k": 64,
+            "output_channel": 33,
+            "output_h": 23,
+            "output_w": 40,
+            "psum_in": -5,
+            "result_s32": 0,
+            "sample": 0,
+            "weight_s8_lanes": [
+              -1,
+              0,
+              0,
+              1
+            ]
+          }
+        },
+        "logical_k": 64,
+        "packed_k": 64,
+        "planned_occurrence_count": 205520896,
+        "stop_on_first_hit": true
+      },
+      "geometry": {
+        "attributes": {
+          "auto_pad": "NOTSET",
+          "dilations": [
+            1,
+            1
+          ],
+          "group": 1,
+          "kernel_shape": [
+            1,
+            1
+          ],
+          "pads": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "strides": [
+            1,
+            1
+          ]
+        },
+        "input_shape": [
+          16,
+          64,
+          56,
+          56
+        ],
+        "logical_k": 64,
+        "output_shape": [
+          16,
+          256,
+          56,
+          56
+        ],
+        "weight_shape": [
+          256,
+          64,
+          1,
+          1
+        ],
+        "x_zero_point": 0
+      },
+      "identity": {
+        "hw_op_id": "hwop-0003-00",
+        "hw_op_type": "ConvInt32Accumulate",
+        "node_id": "node-0003",
+        "onnx_name": "resnetv17_stage1_conv3_fwd_quant",
+        "onnx_op_type": "QLinearConv",
+        "request_id": "r5:hwop-0003-00",
+        "request_sha256": "258de9630b244851cecd8b9bcb0c19686f4909d82d16cb124d46d42815a34fbd",
+        "stage": "accumulate"
+      },
+      "scan_ordinal": 3,
+      "source_ownership": {
+        "activation": {
+          "identity_sha256": "e4039c779c0083ff3cbe76845b4ba313e9b2e095e4faa72d329cbfa04f6cae1b",
+          "identity_source": "artifacts/w3/golden_batch16/manifest.json",
+          "onnx_name": "resnetv17_pool0_fwd_quantized",
+          "tensor_id": "tensor-8d2f28c80ac24676"
+        },
+        "bias": {
+          "identity_sha256": "82f0094f044e869a180de66bcf86961f43468cbe9d44bbc3aa07c9b647c3a84f",
+          "identity_source": "artifacts/w3/golden_batch16/manifest.json",
+          "onnx_name": "ConvBnFusion_BN_B_resnetv17_stage1_batchnorm3_beta_quantized",
+          "tensor_id": "tensor-692dfb16247de6bb"
+        },
+        "weight": {
+          "identity_sha256": "1e151c63b51447135cb5e0efdc122aa8837516119730768bab845d11846179e2",
+          "identity_source": "artifacts/w3/golden_batch16/manifest.json",
+          "onnx_name": "ConvBnFusion_W_resnetv17_stage1_conv3_weight_quantized",
+          "tensor_id": "tensor-5d2a52d71f3d65b5"
+        },
+        "weight_zero_point": {
+          "identity_sha256": "5341e6b2646979a70e57653007a1f310169421ec9bdd9f1a5648f75ade005af1",
+          "identity_source": "artifacts/w3/golden_batch16/manifest.json",
+          "onnx_name": "ConvBnFusion_W_resnetv17_stage1_conv3_weight_zero_point",
+          "tensor_id": "tensor-4c116098ff5e3245"
+        }
+      }
+    }
+  ],
+  "result": {
+    "any_counterexample_reachable": true,
+    "enumerated_occurrence_count": 532938752,
+    "first_global_hit": {
+      "first_hits": {
+        "INT32_MIN_PLUS0": null,
+        "NEG5_PLUS5": {
+          "activation_u8_lanes": [
+            21,
+            24,
+            24,
+            26
+          ],
+          "dot4": 5,
+          "flat_nhw": 1328,
+          "k_group": 14,
+          "lane_products": [
+            -21,
+            0,
+            0,
+            26
+          ],
+          "logical_k": 64,
+          "output_channel": 33,
+          "output_h": 23,
+          "output_w": 40,
+          "psum_in": -5,
+          "result_s32": 0,
+          "sample": 0,
+          "weight_s8_lanes": [
+            -1,
+            0,
+            0,
+            1
+          ]
+        }
+      },
+      "hw_op_id": "hwop-0003-00",
+      "node_id": "node-0003",
+      "request_id": "r5:hwop-0003-00"
+    },
+    "planned_occurrence_count_scanned_records": 732168192
+  },
+  "rtl_counterexamples": [
+    {
+      "counterexample_id": "NEG5_PLUS5",
+      "dot4": 5,
+      "psum_in": -5
+    },
+    {
+      "counterexample_id": "INT32_MIN_PLUS0",
+      "dot4": 0,
+      "psum_in": -2147483648
+    }
+  ],
+  "schema": "resnet50-conv-native-four-lane-negative-psum-reachability-v1",
+  "scope": {
+    "all_selected_scanned": false,
+    "node0004_scanned_first": true,
+    "scanned_count": 3,
+    "selected_count": 53,
+    "selected_hw_op_ids": "ALL_53",
+    "typed_conv_count": 53
+  },
+  "source_receipts": {
+    ".agents/rules/INT8_SA点积专项规则.md": "54a1e12541aaeb6f62dadb19c47a6154eb0462b758a35a9a5bc4a0043cb37dce",
+    ".agents/rules/NDP硬件字段语义.md": "603d57805bc5a5bdfca7406c402bc94db60c06ea6682493d672abb91671b1055",
+    ".agents/rules/服务器测试包生成规则.md": "5761987d07f425a316bd845e390405c0c64d78c9a371b9cce22cc491c8f25f48",
+    ".agents/rules/生成前必读索引.md": "db339fb8f47105b76deef85cdd43cfc85af6358a0c8155571fde54c2006f26c5",
+    ".agents/rules/算子配置规则.md": "cbaffcc5fb3bea7da9f0c199bb2e7f06445a676ab456bdfd505b90dd89825171",
+    ".agents/rules/精确UINT8量化尾专项规则.md": "1685bd6527111bf014a738dbef4ee85b5b8d3e54c0565cb63eda9417d5c9425e",
+    ".agents/task_records/20260727_int8_sa_dot_product_common_cause_adjudication.md": "d844505b0dd098888d05e52f7872e1affb1cde92b9bfe7c885665b4fa81516d8",
+    ".agents/task_records/20260727_int8_sa_rtl_repair_acceptance.md": "45d9c1f9c7e209e7b949db59de3fd00a5a71c951325971955f5c42d87b7a5e7b",
+    ".agents/task_records/20260729_trassic2_github_master_sync_and_interface_adjudication.md": "15d5cb4aecb35bf46bab2d913c8d6cda630534f79bd6cf48c6c72493af9f21a7",
+    ".agents/task_records/20260803_conv_node0004_v26_return_v28_dwrite_path_successor.md": "3fce2611614b7566dab59c088d10fc80e8be011f5492f5144e7c2ca161c0d622",
+    "artifacts/reference_model/resnet50-v1-12-int8.onnx": "c234f30975989788b4405f25253275aae247ab6dbdd34aaa69ab0a59ff76f6d0",
+    "artifacts/w3/golden_batch16/manifest.json": "f7e90cf1f087acf255e93d98d1788e0fb0b4c77bbe935ea9addb17feea583180",
+    "contracts/operator_config/conv_sa_remaining52_expansion_v1.json": "31065f28bc5c9ec46d150c74a1c3370a6166a3f4bff3fa54c711f3d7b5ef7063",
+    "contracts/resnet50_r5_lowering_bundle.json": "bf661e4eda2011025d9922708ab46a64f8d1b3c279527b88aa7d630bb3545432",
+    "outputs/conv_sa_rtl_compile_audit_b7acbe5/report.json": "d9bcdc5d02866cd0510128e89b80ad15b03c52299722bb0e3995502fb24bc6af"
+  },
+  "status": "HARDWARE_CAPABILITY_BLOCKED",
+  "test_id": "r5_conv_native_four_lane_negative_psum_reachability_v1"
+}

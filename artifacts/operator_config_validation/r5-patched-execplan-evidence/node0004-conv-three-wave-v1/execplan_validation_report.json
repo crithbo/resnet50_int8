@@ -1,0 +1,128 @@
+{
+  "schema": "operator-config-execplan-validation-report-v1",
+  "graph_root": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\node0004-conv-three-wave-v1\\pipeline_output",
+  "valid": true,
+  "first_error": null,
+  "issues": [],
+  "facts": {
+    "target_profile": {
+      "slices": 28,
+      "banks_per_slice": 4,
+      "ddr_rows": 6144,
+      "ddr_columns": 64,
+      "subwords_per_column": 16,
+      "read_streams": 4,
+      "write_streams": 1,
+      "buffers": 6
+    },
+    "graph": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\node0004-conv-three-wave-v1\\pipeline_output\\graph_withbaseaddr.json",
+    "graph_sha256": "e2db77bbe17a07398e5092dea2a0714a75322d3bb2b1baf6730b250ea7e8500e",
+    "execplan": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\node0004-conv-three-wave-v1\\pipeline_output\\install\\execplan.txt",
+    "execplan_sha256": "e89da926d71d9c155e508235fdfda246dc8c12ea943cf49c0028c9bf22d02526",
+    "instruction_count_64bit": 251,
+    "execplan_lines_128bit": 126,
+    "operator_count": 3,
+    "load_config_count": 3,
+    "sfu_load_config_count": 0,
+    "start_comp_count": 3,
+    "stages": [
+      {
+        "stage_index": 0,
+        "op_id": "op_w0",
+        "op_type": "resnet50_conv_node0004_wave0",
+        "load_instruction_index": 1,
+        "start_instruction_index": 110,
+        "slice_mask": "0xFFFFFFF",
+        "source_config": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\node0004-conv-three-wave-v1\\mapping_evidence\\op_w0\\source_config.json",
+        "source_config_sha256": "42aa4f09c3d992095f01721900272d58eaedca07d89916cf94886ad90cee7965",
+        "artifact_dir": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\node0004-conv-three-wave-v1\\mapping_evidence\\op_w0",
+        "artifact_valid": true,
+        "next_config_state": {
+          "IGA": "7d35e19982e4bc027b9921ec9f2d318dd521b07f9504312463a5a85e038f5a47",
+          "LSU": "ff363c2d1cbe718412597acc32c708e7331d5c8dc0ecd6c7c2da60e2c9f4a881",
+          "SA": "cf63eb05a7c2bad2a040bddd3566d08724cda1814bf1df9bed0b0bd5256b0c22",
+          "GA": null
+        },
+        "pipeline_json": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\node0004-conv-three-wave-v1\\pipeline_output\\jsons\\op_w0_resnet50_conv_node0004_wave0.json",
+        "pipeline_json_sha256": "9cc39711b58e5aa01ab017053435dda46e3e642ec85137c7facd82355d8dc1d4",
+        "pipeline_artifact_sha256": {
+          "mapping_review.json": "622f5fe2a187eb6dd1b09b8c290fbac4ff841f30c3e8faf24d4e5225a7a11258",
+          "parsed_bitstream.txt": "528eca6cfcc495e90a28a99507fa5b13e7df899226bde716aa8e639dc51fa5b0",
+          "modules_dump_64b.bin": "4c722ababbe797a4d9adba9f68f95ff610a910591dbc36ed9cf66d67c222b091",
+          "modules_dump_128b.bin": "c185043c0239aa38a6a1a4459158ea95cc8376a8dd4dfe26ce4968296bc8dc37"
+        },
+        "config_base_addr": "0x00127000",
+        "config_length_64bit_words": 60,
+        "config_path": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\node0004-conv-three-wave-v1\\pipeline_output\\install\\cfg_pkg\\op_w0_resnet50_conv_node0004_wave0_bitstream_128b.bin",
+        "config_sha256": "c185043c0239aa38a6a1a4459158ea95cc8376a8dd4dfe26ce4968296bc8dc37"
+      },
+      {
+        "stage_index": 1,
+        "op_id": "op_w1",
+        "op_type": "resnet50_conv_node0004_wave1",
+        "load_instruction_index": 111,
+        "start_instruction_index": 220,
+        "slice_mask": "0xFFFFFFF",
+        "source_config": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\node0004-conv-three-wave-v1\\mapping_evidence\\op_w1\\source_config.json",
+        "source_config_sha256": "2e9530d3b2d929dbde18fd72ce29e3b82f49827c85632b91e8d77d24653b1b74",
+        "artifact_dir": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\node0004-conv-three-wave-v1\\mapping_evidence\\op_w1",
+        "artifact_valid": true,
+        "next_config_state": {
+          "IGA": "7d35e19982e4bc027b9921ec9f2d318dd521b07f9504312463a5a85e038f5a47",
+          "LSU": "a0214f9ea527d14579822ccfe6ed59aae9159f5116fd2a339090769f91ab74d6",
+          "SA": "cf63eb05a7c2bad2a040bddd3566d08724cda1814bf1df9bed0b0bd5256b0c22",
+          "GA": null
+        },
+        "pipeline_json": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\node0004-conv-three-wave-v1\\pipeline_output\\jsons\\op_w1_resnet50_conv_node0004_wave1.json",
+        "pipeline_json_sha256": "26ec4cac7e0e5abec23a674b5bb93d4cfe360499846830c46c0a04fd388f9ddf",
+        "pipeline_artifact_sha256": {
+          "mapping_review.json": "622f5fe2a187eb6dd1b09b8c290fbac4ff841f30c3e8faf24d4e5225a7a11258",
+          "parsed_bitstream.txt": "4d1f127957cd69b324f693632a9af95f314dd29fbcff5e87c25f0d59521cd14b",
+          "modules_dump_64b.bin": "e3ef0a1994ae4a774f2bfbc7faca185b7b6df148cb8075612b4241429eac00e8",
+          "modules_dump_128b.bin": "f3461cbeacdbdab61e09947c094e389939364bc75425ef144c91802f14d5569a"
+        },
+        "config_base_addr": "0x00127400",
+        "config_length_64bit_words": 60,
+        "config_path": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\node0004-conv-three-wave-v1\\pipeline_output\\install\\cfg_pkg\\op_w1_resnet50_conv_node0004_wave1_bitstream_128b.bin",
+        "config_sha256": "f3461cbeacdbdab61e09947c094e389939364bc75425ef144c91802f14d5569a"
+      },
+      {
+        "stage_index": 2,
+        "op_id": "op_w2",
+        "op_type": "resnet50_conv_node0004_wave2",
+        "load_instruction_index": 221,
+        "start_instruction_index": 250,
+        "slice_mask": "0x00000FF",
+        "source_config": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\node0004-conv-three-wave-v1\\mapping_evidence\\op_w2\\source_config.json",
+        "source_config_sha256": "6a164759aeeabedacd97db022384ab9cf9a77191f4b44b7f05e664649222d4be",
+        "artifact_dir": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\node0004-conv-three-wave-v1\\mapping_evidence\\op_w2",
+        "artifact_valid": true,
+        "next_config_state": {
+          "IGA": "7d35e19982e4bc027b9921ec9f2d318dd521b07f9504312463a5a85e038f5a47",
+          "LSU": "96db4aca7306a2c29811663c49773808c414566b10507753ec57e58190cb7236",
+          "SA": "cf63eb05a7c2bad2a040bddd3566d08724cda1814bf1df9bed0b0bd5256b0c22",
+          "GA": null
+        },
+        "pipeline_json": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\node0004-conv-three-wave-v1\\pipeline_output\\jsons\\op_w2_resnet50_conv_node0004_wave2.json",
+        "pipeline_json_sha256": "360a8e35e77ffac94397a20ecce228fe31da2c6f6954f5a009becfd04928180b",
+        "pipeline_artifact_sha256": {
+          "mapping_review.json": "622f5fe2a187eb6dd1b09b8c290fbac4ff841f30c3e8faf24d4e5225a7a11258",
+          "parsed_bitstream.txt": "642d84e0b5e0b144ef74460ded22124987592d31d55bb46238d9436a4d5e5682",
+          "modules_dump_64b.bin": "5de00bbe70896d4cf8e90c9a10a4678fd43f754ec029e9956c9c0a12ac16ab42",
+          "modules_dump_128b.bin": "2b83c43e48c3cec335eb379aaf26c635db648c8d02631179e055464b6695b3c6"
+        },
+        "config_base_addr": "0x00127800",
+        "config_length_64bit_words": 60,
+        "config_path": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\node0004-conv-three-wave-v1\\pipeline_output\\install\\cfg_pkg\\op_w2_resnet50_conv_node0004_wave2_bitstream_128b.bin",
+        "config_sha256": "2b83c43e48c3cec335eb379aaf26c635db648c8d02631179e055464b6695b3c6"
+      }
+    ],
+    "final_config_state": {
+      "IGA": "7d35e19982e4bc027b9921ec9f2d318dd521b07f9504312463a5a85e038f5a47",
+      "LSU": "96db4aca7306a2c29811663c49773808c414566b10507753ec57e58190cb7236",
+      "SA": "cf63eb05a7c2bad2a040bddd3566d08724cda1814bf1df9bed0b0bd5256b0c22",
+      "GA": null
+    },
+    "issue_count": 0
+  }
+}

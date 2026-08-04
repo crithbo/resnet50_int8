@@ -1,0 +1,83 @@
+{
+  "schema": "resnet50-conv-node0004-v23-return-v24-successor-contract-v1",
+  "test_id": "r5-node0004-v23-return-v24-final-release-diagnostic-compilefix",
+  "provenance": {
+    "owner": "019fa2c1-17df-7122-bcbd-a727aaf173f5",
+    "return_target": "019fbec2-fe93-7e03-9314-cff6f222f33d"
+  },
+  "return": {
+    "path": "C:/Users/15383/xwechat_files/wxid_vwpfpfs4fgyk22_29b7/msg/file/2026-08/r5_n4_hw_v23_final_release_diag_return.zip",
+    "bytes": 29867,
+    "sha256": "e8efef64b095f5d6cc2b5e4d734b6d1a94a14741d3b608dfc008ef6894905842",
+    "external_sidecar_present": false,
+    "external_transport_attested": true
+  },
+  "return_adjudication": {
+    "status": "PACKAGE_LOCAL_OBSERVER_COMPILE_FAILURE",
+    "compile_exit": 2,
+    "run_exit": 125,
+    "simulation_started": false,
+    "natural_terminal": false,
+    "formal_d_present": 0,
+    "formal_d_missing": 320,
+    "last_proven_good_this_return": "PACKAGE_INSTALL_AND_OBSERVER_STATIC_PREFLIGHT_PASS",
+    "first_divergence_this_return": "VCS_PARSE_PACKAGE_LOCAL_OBSERVER_UNDECLARED_IDENTIFIER",
+    "hang_root_cause": "NOT_A_RUNTIME_HANG_SIMULATION_NOT_STARTED",
+    "package_root_cause": {
+      "file": "tb_probe/native_return_observer.svh",
+      "line": 3926,
+      "leaf_sha256": "3ecc3f0e0f276a5d4cfa9ca8267cedcad2a0b1198929217f99046595524e8723",
+      "token": "return_obs_buf45_wr_edge_count",
+      "mechanism": "one use, zero declarations or updates"
+    },
+    "conv_dataflow_advanced": false,
+    "frozen_conv_last_proven_good": "SA_ALU_RESULT_ACCEPT_AND_OUTBUFFER_WRITE",
+    "frozen_conv_first_divergence": "SA_ALU_RESULT_WRITE_TO_FINAL_RESULT_RELEASE_AND_PE_OUTPUT_VALID",
+    "E3": false,
+    "E4": false,
+    "E5": false
+  },
+  "receipt_gap": {
+    "v23_return_allowlist_exact_set_valid": true,
+    "v23_return_per_file_hashes_valid": true,
+    "v23_RETURN_MANIFEST_present": false,
+    "v23_returned_package_manifest_present": false,
+    "fixed_in_v24": true
+  },
+  "audit_escape": {
+    "root_cause": "VALIDATOR_NONCOMPLIANCE_WITH_STRICT_LOCAL_AUDIT_INTENT",
+    "rules_read_before_and_after_generation": true,
+    "not_a_rule_read_omission": true,
+    "safe_compile_stub_scope": "runner reachability and finalizer only",
+    "safe_compile_stub_is_hdl_evidence": false,
+    "v23_release_claim": "QUARANTINED_PACKAGE_LOCAL_OBSERVER_COMPILE_FAILURE",
+    "rule_delta_proposal": "CDA-SERVER-PACKAGE-LOCAL-OBSERVER-HDL-SYNTAX-SCOPE-POSITIVE-001"
+  },
+  "v24_fix": {
+    "classification": "DIAGNOSTIC_ONLY_NOT_FUNCTIONAL_FIX",
+    "observer": "declare/reset/update a qualified Buffer5 write rising-edge counter and bind the existing final-release boundary record to it",
+    "return_contract": "add RETURN_MANIFEST.json and returned package manifest identity with exact-set validation",
+    "numeric_or_workload_change": false,
+    "configuration_change": false,
+    "functional_rtl_change": false
+  },
+  "v24_release": {
+    "install_name": "r5_n4_hw_v24_final_release_diag_compilefix",
+    "zip_bytes": 5828936,
+    "zip_sha256": "3701226c52de41a6982dd0ac9a111ade26c26ed088eee53d62fcc038cd5980fc",
+    "sidecar_bytes": 113,
+    "sidecar_sha256": "9c670a475772307d5cd13d595a14dd6d17e7e7e6c33ccaeb3181a8491561207a",
+    "status": "PACKAGE_READY_NOT_RUN",
+    "command": "bash r5_n4_hw_v24_final_release_diag_compilefix/PREPARE_AND_RUN.sh /absolute/path/to/NDP_copy",
+    "expected_return": "r5_n4_hw_v24_final_release_diag_compilefix_return.zip"
+  },
+  "scope": {
+    "numeric_analysis_repeated": false,
+    "node0004_workload_rebuilt": false,
+    "configuration_rebuilt": false,
+    "functional_rtl_modified": false,
+    "public_rules_modified": false,
+    "plan_modified": false,
+    "server_action": false
+  }
+}

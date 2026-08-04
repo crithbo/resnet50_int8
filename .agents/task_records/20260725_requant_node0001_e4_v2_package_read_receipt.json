@@ -1,0 +1,136 @@
+{
+  "schema": "requant-node0001-e4-package-generation-read-receipt-v2",
+  "recorded_at": "2026-07-25T13:40:06+08:00",
+  "target": "r5:hwop-0001-01 RequantizeUint8 stock-RTL E4 compile-integration repair",
+  "read_receipt": [
+    {
+      "path": ".agents/agent.md",
+      "sha256": "367f4f4260246d40531d83cc6d24fe94946cb05bce6fbef18c428f05b634c083",
+      "size_bytes": 3439,
+      "reason": "project boundary and authority"
+    },
+    {
+      "path": ".agents/rules/生成前必读索引.md",
+      "sha256": "539e8dfbe52ad9fc8bd9fdef8c69d448fb5fd713e938e3adc5f663f82fd806d7",
+      "size_bytes": 5650,
+      "reason": "generation routing and stop gates"
+    },
+    {
+      "path": ".agents/rules/服务器测试包生成规则.md",
+      "sha256": "4707fc8ca6c3d358f61d32b109175ec319e39ffa1d1f56c791796c6718406688",
+      "size_bytes": 10581,
+      "reason": "package, identity, observer, return and E4 gates"
+    },
+    {
+      "path": ".agents/rules/RequantizeUint8算子配置规则.md",
+      "sha256": "bb428f79966d197e1df8b63b0ed3072fbc40edd74a25a434d707e9eb0b5de4f6",
+      "size_bytes": 11066,
+      "reason": "two-stage semantics and alias-aware transient guard E4 gate"
+    },
+    {
+      "path": ".agents/plan.md",
+      "sha256": "185958e976ca7574fb444a88a11b29df48138b0098ad3ad766ecae7f22bd4281",
+      "size_bytes": 11496,
+      "reason": "current Requant first-dynamic failure and blocker state"
+    },
+    {
+      "path": ".agents/task_records/20260725_requant_node0001_two_stage_local_e2.md",
+      "sha256": "4d21bf19545c35bff57ba3d7a64e7967ace7828dc9606232f2b1c2598dff529f",
+      "size_bytes": 6777,
+      "reason": "frozen local E2 source and exact workload facts"
+    },
+    {
+      "path": "contracts/operator_config/requant_node0001_two_stage_contract_v1.json",
+      "sha256": "a1e6c12d745e8cb8efa0758ca0a237d8ee9ee102b096b00fcd0a7ea3f66f27d9",
+      "size_bytes": 1093,
+      "reason": "machine-readable source boundary and blocker"
+    },
+    {
+      "path": "contracts/native_ndp_server_return_acceptance.md",
+      "sha256": "f67e84abe4519f2e501d5c8390c01cff81fb3df063a7b844a4e06f0ae2cc78b4",
+      "size_bytes": 6148,
+      "reason": "formal server-return acceptance boundary"
+    },
+    {
+      "path": "NDP_copy01/README_HARDWARE_SIM_ENTRY.md",
+      "sha256": "4318f3a28de399fb522740315f11bdddf346e71969cf1e45686899a568b042d7",
+      "size_bytes": 5461,
+      "reason": "active hardware-simulation entry"
+    },
+    {
+      "path": "NDP_copy01/Makefile.tb_NDP_Top_new_phy",
+      "sha256": "528d93f3c7f458d256bdbaf1d9ec39edfbfe5bd8a924e2bf0786914a634f4aba",
+      "size_bytes": 17683,
+      "reason": "VCS consumer changes directory to RUN_DIR and accepts VCS_EXTRA_OPTS"
+    },
+    {
+      "path": "NDP_copy01/rtl/filelists/NDP_Top_phy_filelist.f",
+      "sha256": "b6720607b2757d50d13de6efc109e240aa32e56b51c7dd7e30ec0150a34e4b6a",
+      "size_bytes": 357,
+      "reason": "active RTL filelist consumer"
+    },
+    {
+      "path": "NDP_copy01/tb_NDP_Top_new_phy.sv",
+      "sha256": "e068f7500f0c71c2ba2c756f74a4519c33d13d4afe0fa4cc9f6c9e79b1e3f994",
+      "size_bytes": 342445,
+      "reason": "direct native_return_observer.svh include consumer"
+    },
+    {
+      "path": "NDP_copy01/native_return_observer.svh",
+      "sha256": "47f0d66728f47c92f9f93f8cf87b47a0ff8567d587c3a099e2d03f610af09f49",
+      "size_bytes": 111824,
+      "reason": "declared read-only observer preimage"
+    },
+    {
+      "path": "server_returns/requant_node0001_stockrtl_e4_return_analysis_20260725.json",
+      "sha256": "b23f62f5b2101d1849d98ef3f909791f0b46149ac7ee2b89f89fbf605c349369",
+      "size_bytes": 4389,
+      "reason": "formal analysis of the v1 compile failure"
+    }
+  ],
+  "returned_failure_identity": {
+    "zip_name": "requant_node0001_two_stage_stockrtl_e4_onecmd_v1_return.zip",
+    "zip_size_bytes": 38960,
+    "zip_sha256": "de580c4c86cc33965991bd3f9489f24950ca71e2bee127eb5fd1192d975f2c00",
+    "classification": "FIRST_DYNAMIC_FAILURE",
+    "dynamic_baseline": "NO_DYNAMIC_BASELINE",
+    "compile_exit_status": 2,
+    "simulation_started": false,
+    "earliest_failure": "VCS SFCOR at tb_NDP_Top_new_phy.sv:5854: native_return_observer.svh unresolved",
+    "root_cause": "Requant v1 omitted the explicit NDP-root +incdir passed by the known compiling Dequant server entry while VCS compiled from isolated RUN_DIR"
+  },
+  "repair_scope": {
+    "new_identity": "requant_node0001_two_stage_stockrtl_e4_onecmd_v2",
+    "explicit_vcs_include_directory": true,
+    "precompile_observer_byte_identity_gate": true,
+    "separate_compile_driver_log": true,
+    "workload_semantics_changed": false,
+    "configuration_changed": false,
+    "functional_rtl_modified": false,
+    "rtl_directory_write_allowed": false,
+    "candidate_release": false,
+    "dynamic_baseline": "NO_DYNAMIC_BASELINE",
+    "e4_only": true
+  },
+  "rule_ids": [
+    "CDA-SERVER-WORKLOAD-PROVENANCE-001",
+    "CDA-SERVER-ONE-COMMAND-001",
+    "CDA-SCA-D-TB-READBACK-LENGTH-001",
+    "CDA-SERVER-SIGNAL-SAFE-PARTIAL-COLLECTION-001",
+    "CDA-SERVER-NO-DYNAMIC-BASELINE-001",
+    "CDA-SERVER-RETURN-RECEIPT-001",
+    "CDA-REQUANT-QPARAM-001",
+    "CDA-REQUANT-INT32-GUARD-001",
+    "CDA-REQUANT-SFU-LUT-001",
+    "CDA-REQUANT-TWO-STAGE-001",
+    "CDA-REQUANT-ROUND-MAGIC-001",
+    "CDA-REQUANT-LAYOUT-HWC8-001",
+    "CDA-REQUANT-MATERIALIZED-ROUNDTRIP-001",
+    "CDA-REQUANT-E4-E5-001",
+    "CDA-REQUANT-TRANSIENT-GUARD-E4-001"
+  ],
+  "open_dynamic_gates": [
+    "B_REQUANT_SERVER_E4_E5"
+  ],
+  "generation_allowed": true
+}

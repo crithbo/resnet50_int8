@@ -7,7 +7,7 @@
     "seed": 42
   },
   "encoder_repository": {
-    "commit": "056b1c3c08b24e098636615d9001e8a974beb09f",
+    "commit": "d4ffc32c9b29a858d83e13706cd837c5549521a4",
     "name": "ndp-sim-ref"
   },
   "hw_op_id": "hwop-0004-01",
@@ -18,11 +18,11 @@
       "binding_id": "hwop-0004-01.shard-00",
       "config": {
         "path": "conv_1x1_requant_real/shard-00.json",
-        "sha256": "a86426df7b70206d67a66a5a5d313676f85ea000777f37a292cee0ff7dea6054",
-        "size_bytes": 16521
+        "sha256": "07c8f1485ccf019a57a13f30b4388a390e40db92f5005247ec0dcb1c39b8bc6f",
+        "size_bytes": 16522
       },
-      "encode_a_root": "artifacts/w5/conv_1x1_requant_real/v14/encode-a/shard-00",
-      "encode_b_root": "artifacts/w5/conv_1x1_requant_real/v14/encode-b/shard-00",
+      "encode_a_root": "artifacts/w5/conv_1x1_requant_real/v20/encode-a/shard-00",
+      "encode_b_root": "artifacts/w5/conv_1x1_requant_real/v20/encode-b/shard-00",
       "official_encoder": {
         "mapping_review.semantic.json": {
           "sha256": "f1b33af7b42a700cd900d7e6a6c51af62dbe7fbe81a1123c0887eb1c45b1731d",
@@ -31,17 +31,17 @@
         "modules_dump_128b.bin": {
           "line_count": 34,
           "line_width_bits": 128,
-          "logical_sha256": "1f4549a7e9afa0a19790c1f95441fbf9991fb7d749fba1517e0f811103bbf5db",
+          "logical_sha256": "2e8a09745aca8bbd7ebe8c0326e30d80104092e28dbfa0c22de7c42c6051498b",
           "logical_size_bytes": 4386,
-          "raw_sha256": "fb9677350fb4d6d5119e2a835ab35acfeafdad01afee47240980e1c20db067b2",
+          "raw_sha256": "e5d460d2ef6703745547e550f3bea229bbb8770518cc803f96a02b1d60522d19",
           "raw_size_bytes": 4420
         },
         "modules_dump_64b.bin": {
-          "sha256": "34a44cc27f1084d9119d8f4511fcdffc7bd55da85dc2084d5d085f7da8161717",
+          "sha256": "0962d74c98f1a8b763ee428bf3659c9e1869545786bc54077957c62864fd1c99",
           "size_bytes": 4488
         },
         "parsed_bitstream.txt": {
-          "sha256": "7bda4ce636adc6919b58570fa5ff8232a7f45a96744abb6e7b6791aecdf0cf1c",
+          "sha256": "b14980651845554fa5183ebf2c37eef2ebb9a008ad41f03baa37ca43f3c075ec",
           "size_bytes": 4916
         }
       },
@@ -52,11 +52,11 @@
       "binding_id": "hwop-0004-01.shard-01",
       "config": {
         "path": "conv_1x1_requant_real/shard-01.json",
-        "sha256": "b42294eb8bc99d706e58589d07dd930ab15d4c0af99d2ec5fafd3dd43c39ccc1",
-        "size_bytes": 16517
+        "sha256": "707f7f2efc49842022baedf182eba004de23619506ff6a7c99d2781ef818bc12",
+        "size_bytes": 16518
       },
-      "encode_a_root": "artifacts/w5/conv_1x1_requant_real/v14/encode-a/shard-01",
-      "encode_b_root": "artifacts/w5/conv_1x1_requant_real/v14/encode-b/shard-01",
+      "encode_a_root": "artifacts/w5/conv_1x1_requant_real/v20/encode-a/shard-01",
+      "encode_b_root": "artifacts/w5/conv_1x1_requant_real/v20/encode-b/shard-01",
       "official_encoder": {
         "mapping_review.semantic.json": {
           "sha256": "f1b33af7b42a700cd900d7e6a6c51af62dbe7fbe81a1123c0887eb1c45b1731d",
@@ -65,17 +65,17 @@
         "modules_dump_128b.bin": {
           "line_count": 34,
           "line_width_bits": 128,
-          "logical_sha256": "e3b9b6e1a5855c857cc5a34b5a9ea1d46355cf7f1b4fc2938d95e8e973127a35",
+          "logical_sha256": "d6333bcab699666dfa5fe1b8c5a5c2be2390eb551316cc965b286250725316de",
           "logical_size_bytes": 4386,
-          "raw_sha256": "d2c535cf06c0eed37e46262287b8b023cc00ce2fbc4feaa3ab09c74542aeff3a",
+          "raw_sha256": "38592b92e846243c4a2847b161e55b5f2153a71f5c56fb8fe72b009de9f75e01",
           "raw_size_bytes": 4420
         },
         "modules_dump_64b.bin": {
-          "sha256": "85742d75b6b994161257b730ca4ef12c15fdb11dcce127276ffdcfed8b5a4146",
+          "sha256": "17385f746570699fbca3d1f92feeb25c0b8785d40ecd1d5cb14d49ab3dce9a4b",
           "size_bytes": 4488
         },
         "parsed_bitstream.txt": {
-          "sha256": "cc6a49a88ae2a48ca67d13814ea47c2847f36677b7db5cf26bb93a4cf7555453",
+          "sha256": "bee80c96164bb09eda75f084a44a7a2045274573312edf86e14b27468dd423c8",
           "size_bytes": 4916
         }
       },
@@ -86,11 +86,11 @@
       "binding_id": "hwop-0004-01.shard-02",
       "config": {
         "path": "conv_1x1_requant_real/shard-02.json",
-        "sha256": "78f22343f9d260b207bd110c6dd1ae8df959e570aa8b4d3143a0ac255dbf0832",
-        "size_bytes": 16519
+        "sha256": "0e426380c491987ac0b0654018f31047c2333598884a7461ec19e7790b220457",
+        "size_bytes": 16520
       },
-      "encode_a_root": "artifacts/w5/conv_1x1_requant_real/v14/encode-a/shard-02",
-      "encode_b_root": "artifacts/w5/conv_1x1_requant_real/v14/encode-b/shard-02",
+      "encode_a_root": "artifacts/w5/conv_1x1_requant_real/v20/encode-a/shard-02",
+      "encode_b_root": "artifacts/w5/conv_1x1_requant_real/v20/encode-b/shard-02",
       "official_encoder": {
         "mapping_review.semantic.json": {
           "sha256": "f1b33af7b42a700cd900d7e6a6c51af62dbe7fbe81a1123c0887eb1c45b1731d",
@@ -99,17 +99,17 @@
         "modules_dump_128b.bin": {
           "line_count": 34,
           "line_width_bits": 128,
-          "logical_sha256": "c46a61e25202cd1d2089f40151f9862260395b3aa6361a81a4580985dab8ce18",
+          "logical_sha256": "1a66f7883227b1bbb9df15f9a9080ab68ce650d267397fe22db44d6627eee999",
           "logical_size_bytes": 4386,
-          "raw_sha256": "3c4d58ae4d76d25acdcd2b8ff23221106495eb1e0e95ac83aceefee325914d4e",
+          "raw_sha256": "ee89d9a0807190c2d7296559e941b2056813b6bf801d4c21a9ad953a0250e9e1",
           "raw_size_bytes": 4420
         },
         "modules_dump_64b.bin": {
-          "sha256": "756b9f726c554ec0d3d7512e656a97e84caab51bf97d8e0e0b22850f4c3f77ad",
+          "sha256": "a70635615e22cea3eda7d3cb55fc7b076f17d460ee873a7c12c36f3d01033040",
           "size_bytes": 4488
         },
         "parsed_bitstream.txt": {
-          "sha256": "fd7b56fd9ec1b5e2cea80955ffc2176828c516285b85f0cbe4f5b1f3971859b3",
+          "sha256": "cc0508e3cc878eaf4d09f82f25caf318f431322e0991cae415e672e99c7f3215",
           "size_bytes": 4916
         }
       },
@@ -120,11 +120,11 @@
       "binding_id": "hwop-0004-01.shard-03",
       "config": {
         "path": "conv_1x1_requant_real/shard-03.json",
-        "sha256": "6d58275a0443b816062113d4df611c9b8c562ee0a7fc84f7c0ac57120818eb4b",
-        "size_bytes": 16515
+        "sha256": "82699f4fc959fe2e6cebcc9875d290ca83e672786de58489100956d8d60da5dc",
+        "size_bytes": 16516
       },
-      "encode_a_root": "artifacts/w5/conv_1x1_requant_real/v14/encode-a/shard-03",
-      "encode_b_root": "artifacts/w5/conv_1x1_requant_real/v14/encode-b/shard-03",
+      "encode_a_root": "artifacts/w5/conv_1x1_requant_real/v20/encode-a/shard-03",
+      "encode_b_root": "artifacts/w5/conv_1x1_requant_real/v20/encode-b/shard-03",
       "official_encoder": {
         "mapping_review.semantic.json": {
           "sha256": "f1b33af7b42a700cd900d7e6a6c51af62dbe7fbe81a1123c0887eb1c45b1731d",
@@ -133,17 +133,17 @@
         "modules_dump_128b.bin": {
           "line_count": 34,
           "line_width_bits": 128,
-          "logical_sha256": "48dcb71c4e7e30cd1e2b79a98986be0bc06110a95308e41d25e208b8eeff07aa",
+          "logical_sha256": "7ad249a33839ae5f289a1317c9c9f1ae24889219a8e18d7e06e15371847ecf9d",
           "logical_size_bytes": 4386,
-          "raw_sha256": "e09f9a44c9a5c742bb619b3c554f482fd238b00b7a2cef91e473a940a77c525e",
+          "raw_sha256": "5d9be6b5d19f24d2ed091eafe3d8b2f25f758b191710b64b59c3076241f151c9",
           "raw_size_bytes": 4420
         },
         "modules_dump_64b.bin": {
-          "sha256": "aa87b46d3ff2765f8d9ecaebd96de6188342cde4e291a611dd5b7f1b71b22821",
+          "sha256": "24143455d2be3fd8862fc999ecb983991beb738bc8107e0d1dd8570f7527bf2b",
           "size_bytes": 4488
         },
         "parsed_bitstream.txt": {
-          "sha256": "f09ad51508aa5d2a71500d31de5aa6319956497c0401315de93962feca13351e",
+          "sha256": "ea864d41d69939fb251336ad0a1026aad3526652df7e2d9d86c6741a537d3838",
           "size_bytes": 4916
         }
       },
@@ -154,11 +154,11 @@
       "binding_id": "hwop-0004-01.shard-04",
       "config": {
         "path": "conv_1x1_requant_real/shard-04.json",
-        "sha256": "ed30555f27d5b75fdcf691d5d4dd4b5a6c9abb3c94ecb3ef03895092b178a13a",
-        "size_bytes": 16518
+        "sha256": "5166359b580b90ec786a74f0da52b7851f151eedf29b8266ffb404cebdf6050c",
+        "size_bytes": 16519
       },
-      "encode_a_root": "artifacts/w5/conv_1x1_requant_real/v14/encode-a/shard-04",
-      "encode_b_root": "artifacts/w5/conv_1x1_requant_real/v14/encode-b/shard-04",
+      "encode_a_root": "artifacts/w5/conv_1x1_requant_real/v20/encode-a/shard-04",
+      "encode_b_root": "artifacts/w5/conv_1x1_requant_real/v20/encode-b/shard-04",
       "official_encoder": {
         "mapping_review.semantic.json": {
           "sha256": "f1b33af7b42a700cd900d7e6a6c51af62dbe7fbe81a1123c0887eb1c45b1731d",
@@ -167,17 +167,17 @@
         "modules_dump_128b.bin": {
           "line_count": 34,
           "line_width_bits": 128,
-          "logical_sha256": "33d1614180fe83cc62776780cc9179934ea0fcd7c8a3c2ac52dd27e14dbd73ed",
+          "logical_sha256": "980dd835c18b1bc971b75335028165aa7ea826e6ed2ffa14e2c7eb1d709122db",
           "logical_size_bytes": 4386,
-          "raw_sha256": "e8d37b779b038dea305c3445924fce87e93ace3687033c5b4e9076a5791c1e58",
+          "raw_sha256": "d6657be215c105c4c78053ba0dc9e1861cf3dd6728c6c4a15e7906220ded2166",
           "raw_size_bytes": 4420
         },
         "modules_dump_64b.bin": {
-          "sha256": "b9cd9797d058c38e4a2831184a5f786582e0b83142afaaf9f11503380f6f2d12",
+          "sha256": "8f09a2cfd47ae6c14ec4a6aa2f565d0f6a7fb3c91d9de4fed6a3d219838e3935",
           "size_bytes": 4488
         },
         "parsed_bitstream.txt": {
-          "sha256": "a1fdc9d32cd6cacffcc1ebd281c8c0cea599814da649def3704dec987281542c",
+          "sha256": "f1aeae0d3c5ce5057b5763cb5ebb4e465a50da5838a6f01380b799fcf0b73e8b",
           "size_bytes": 4916
         }
       },
@@ -188,11 +188,11 @@
       "binding_id": "hwop-0004-01.shard-05",
       "config": {
         "path": "conv_1x1_requant_real/shard-05.json",
-        "sha256": "c8e4cf8f62557faf48a9ab4c37b33961ec119164a575c335594bf080c6fae349",
-        "size_bytes": 16520
+        "sha256": "e687002c092d26031deaf1ae3b166874d0c0fde73d206cf224bb41e4e5be48f1",
+        "size_bytes": 16521
       },
-      "encode_a_root": "artifacts/w5/conv_1x1_requant_real/v14/encode-a/shard-05",
-      "encode_b_root": "artifacts/w5/conv_1x1_requant_real/v14/encode-b/shard-05",
+      "encode_a_root": "artifacts/w5/conv_1x1_requant_real/v20/encode-a/shard-05",
+      "encode_b_root": "artifacts/w5/conv_1x1_requant_real/v20/encode-b/shard-05",
       "official_encoder": {
         "mapping_review.semantic.json": {
           "sha256": "f1b33af7b42a700cd900d7e6a6c51af62dbe7fbe81a1123c0887eb1c45b1731d",
@@ -201,17 +201,17 @@
         "modules_dump_128b.bin": {
           "line_count": 34,
           "line_width_bits": 128,
-          "logical_sha256": "e0ba147c29862e2e3a4a9b0f26726049a6f51dd877958a80ffa50a5c7e3cbb9b",
+          "logical_sha256": "42629a9be62810854bc11bba211f7babc474e16ff17de0ff658d690fde2a0e1d",
           "logical_size_bytes": 4386,
-          "raw_sha256": "840ce8f6673234c899ee662784e17b39985efe005dc1e0c26de4687e71e83c8e",
+          "raw_sha256": "44e31cd9646253804d4d705a1e2e7ab5abc9b24fdd8bd1e1890c15c167c57d0c",
           "raw_size_bytes": 4420
         },
         "modules_dump_64b.bin": {
-          "sha256": "52f350174edf492965b87c44065f554626300a69a19d55a880c616ee108f323e",
+          "sha256": "b558b4fa06068a5337fc56d8ecfad99e7482e17be5355879f6fe9938d599f8ff",
           "size_bytes": 4488
         },
         "parsed_bitstream.txt": {
-          "sha256": "b74352b42c905d3646f4883d73f9d98ea92fabca5e3289afbf9fb0e888b19fbb",
+          "sha256": "8f7306399beae6a46fb2216973e99ef80c2440d81ecf0beafed8679c7d8286c1",
           "size_bytes": 4916
         }
       },
@@ -222,11 +222,11 @@
       "binding_id": "hwop-0004-01.shard-06",
       "config": {
         "path": "conv_1x1_requant_real/shard-06.json",
-        "sha256": "447e29b749e3bbb714abfa422dab11db10de780821d9fdd896f5babba1ea6a2b",
-        "size_bytes": 16517
+        "sha256": "3a7d1a2757da6b547b41e950a85ff5c69212e349e61869de1e93ebd79bb7e7b0",
+        "size_bytes": 16518
       },
-      "encode_a_root": "artifacts/w5/conv_1x1_requant_real/v14/encode-a/shard-06",
-      "encode_b_root": "artifacts/w5/conv_1x1_requant_real/v14/encode-b/shard-06",
+      "encode_a_root": "artifacts/w5/conv_1x1_requant_real/v20/encode-a/shard-06",
+      "encode_b_root": "artifacts/w5/conv_1x1_requant_real/v20/encode-b/shard-06",
       "official_encoder": {
         "mapping_review.semantic.json": {
           "sha256": "f1b33af7b42a700cd900d7e6a6c51af62dbe7fbe81a1123c0887eb1c45b1731d",
@@ -235,17 +235,17 @@
         "modules_dump_128b.bin": {
           "line_count": 34,
           "line_width_bits": 128,
-          "logical_sha256": "63bf70d1aff84187bda412c17e833b4d4260632534f0dba2e8868b4bf1c74eb1",
+          "logical_sha256": "480c91ba8cc1b76b9002e9a054dabbe856770c9801dbc684b83a002925fb1014",
           "logical_size_bytes": 4386,
-          "raw_sha256": "dbe58f2c3c1386d490163bd3ac7a87dfcdae371f2dba1bfdb3d09e0dce96dcc7",
+          "raw_sha256": "8d3c5d68b53a3409045cf199e3852bc9bc765aef9223057fc29a6553a1381811",
           "raw_size_bytes": 4420
         },
         "modules_dump_64b.bin": {
-          "sha256": "a6124ad475f4c32a5c0fad17158cf3a712b50167eeb220c64aea505dfa511ee9",
+          "sha256": "9b07602f901dc9e909a447b342208992d5ddf3b84e7bb6010dcfc0edb86bc040",
           "size_bytes": 4488
         },
         "parsed_bitstream.txt": {
-          "sha256": "5fb4aa18c94ddf509c0b51492ddd9b300873488df64e0ace706e8709d336bf10",
+          "sha256": "c9693af45088ca90cc6824f3c1a1cac9b13462e21befd0a29c8e871b337386ad",
           "size_bytes": 4916
         }
       },
@@ -256,11 +256,11 @@
       "binding_id": "hwop-0004-01.shard-07",
       "config": {
         "path": "conv_1x1_requant_real/shard-07.json",
-        "sha256": "ae1a330877bdceca6071d0dbd65d3cd845ebccc0f630b5de7f3d4d13a64ce89a",
-        "size_bytes": 16519
+        "sha256": "a75fb0e9128dc4ffb3934a9bea45f507565a2b6998a606ea5d4e649c47abeb57",
+        "size_bytes": 16520
       },
-      "encode_a_root": "artifacts/w5/conv_1x1_requant_real/v14/encode-a/shard-07",
-      "encode_b_root": "artifacts/w5/conv_1x1_requant_real/v14/encode-b/shard-07",
+      "encode_a_root": "artifacts/w5/conv_1x1_requant_real/v20/encode-a/shard-07",
+      "encode_b_root": "artifacts/w5/conv_1x1_requant_real/v20/encode-b/shard-07",
       "official_encoder": {
         "mapping_review.semantic.json": {
           "sha256": "f1b33af7b42a700cd900d7e6a6c51af62dbe7fbe81a1123c0887eb1c45b1731d",
@@ -269,17 +269,17 @@
         "modules_dump_128b.bin": {
           "line_count": 34,
           "line_width_bits": 128,
-          "logical_sha256": "f6342adc5b8439d3ef92bd8a73011a95eee3fd09df6b7cc91154c99126366a32",
+          "logical_sha256": "c4c8a861a6dc5c250f8fc0ff8cf4524669d17c1688ac1069ca07c44a14f8b86a",
           "logical_size_bytes": 4386,
-          "raw_sha256": "0822bdfe0e7fca206ed6ea6d83ce68fdc6bb5f435f22aa064b4866188b9dddef",
+          "raw_sha256": "612fe08046262518f7381aa244a5c0aa5c541725687715c4e5bb690febc3ee3f",
           "raw_size_bytes": 4420
         },
         "modules_dump_64b.bin": {
-          "sha256": "a3d091e7498def254a265288a5b1b4c9462951970e6acc3105f784fc49755620",
+          "sha256": "59d8928184816c8f989e00760cb922576a36863d14cdd1e472171f2925f4796b",
           "size_bytes": 4488
         },
         "parsed_bitstream.txt": {
-          "sha256": "13c34d14064d231d84fac65641823e46d791973d0c57ff81ca62a4075733df2e",
+          "sha256": "caa81170ed7f88a86155b06bbaf80bcfe1959bff777b148814b281a5212db228",
           "size_bytes": 4916
         }
       },

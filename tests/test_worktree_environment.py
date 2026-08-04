@@ -123,7 +123,7 @@ class CodexWorktreeEnvironmentTests(unittest.TestCase):
         self.assertEqual(report["repository_verify"], "not_run")
         self.assertEqual(
             [item["name"] for item in report["shared_paths"]],
-            [".venv", "CGRA_SIM", "ndp-sim-ref", "NDPFuncModel"],
+            [".venv", "CGRA_SIM", "ndp-sim-ref", "NDPFuncModel", "ndp-sim"],
         )
         self.assertEqual(report["mode"], "local")
         self.assertTrue(

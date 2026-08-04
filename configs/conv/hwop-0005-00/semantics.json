@@ -1,0 +1,304 @@
+{
+  "schema_version": "resnet50-conv-3x3-semantics-0.1",
+  "status": "official_encoder_double_run_bound_candidate",
+  "transport_abi": "conv_sa_q8k8_v2",
+  "instance": {
+    "node_id": "node-0005",
+    "hw_op_ids": [
+      "hwop-0005-00",
+      "hwop-0005-01"
+    ],
+    "activation_shape": [
+      16,
+      64,
+      56,
+      56
+    ],
+    "weight_shape": [
+      64,
+      64,
+      3,
+      3
+    ],
+    "output_shape": [
+      16,
+      64,
+      56,
+      56
+    ],
+    "strides": [
+      1,
+      1
+    ],
+    "pads": [
+      1,
+      1,
+      1,
+      1
+    ],
+    "dilations": [
+      1,
+      1
+    ],
+    "group": 1,
+    "static_json_scope": "one-storage-sample 3x3 accumulation microprogram; batch16 uses three typed waves over seven HIGH-4 groups",
+    "runtime_batch_schedule": {
+      "storage_sample_count": 3,
+      "logical_sample_counts_by_group": [
+        3,
+        3,
+        2,
+        2,
+        2,
+        2,
+        2
+      ],
+      "accumulate_wave_count": 3,
+      "logical_samples_by_wave": [
+        [
+          0,
+          3,
+          6,
+          8,
+          10,
+          12,
+          14
+        ],
+        [
+          1,
+          4,
+          7,
+          9,
+          11,
+          13,
+          15
+        ],
+        [
+          2,
+          5
+        ]
+      ]
+    }
+  },
+  "port_semantics": {
+    "A": {
+      "logical_role": "activation_uint8",
+      "physical_role": "explicit_pad1_halo_q8c4",
+      "dtype": "uint8",
+      "padding_value": "x_zero_point"
+    },
+    "B": {
+      "logical_role": "weight_int8",
+      "physical_role": "RS_PREVring_Cquartet_Kblock_K8_C4",
+      "dtype": "int8"
+    },
+    "C": {
+      "logical_role": "bias_int32",
+      "physical_role": "Kblock_K8",
+      "dtype": "int32"
+    },
+    "D": {
+      "logical_role": "accumulator_P",
+      "physical_role": "NH_Qblock_Q8_Kblock_K8",
+      "dtype": "int32"
+    }
+  },
+  "activation_halo": {
+    "status": "explicitly_staged_before_accumulate",
+    "logical_shape": [
+      3,
+      56,
+      56,
+      16
+    ],
+    "physical_shape": [
+      3,
+      58,
+      4,
+      64,
+      4
+    ],
+    "axis_order": "N-HaloH-Cquartet-HaloW-C4",
+    "halo_extent": [
+      58,
+      58
+    ],
+    "padded_extent": [
+      58,
+      64
+    ],
+    "fill": "x_zero_point",
+    "dynamic_stream_padding": false,
+    "reason": "kernel-s shifted Q8 windows remain contiguous complete 32-byte transactions without partial four-byte lane masking"
+  },
+  "loop_semantics": {
+    "LC0": "k_block",
+    "LC1": "output_h",
+    "LC2": "output_q_block",
+    "LC4": "kernel_r",
+    "LC5": "kernel_s",
+    "LC3": "local_activation_c_quartet",
+    "LC6": "HIGH_PREV_ring_step",
+    "LC7": "local_weight_c_quartet",
+    "LC13_LC14_LC15_LC9": "value-identical_P_write_branch",
+    "LC10_LC11_LC12": "per-output-tile_bias_branch",
+    "LC8": "unused"
+  },
+  "lc_pe_semantics": {
+    "PE0": "LC2*8+LC5",
+    "PE1": "LC1+LC4",
+    "PE2": "LC6*4+LC7",
+    "PE3": "LC4*3+LC5",
+    "PE4": "LC15*8+LC9"
+  },
+  "stream_semantics": {
+    "stream0": {
+      "target": "A",
+      "mode": "read",
+      "idx": [
+        "DRAM_LC.LC3",
+        "LC_PE.PE0",
+        "LC_PE.PE1"
+      ],
+      "idx_size_minus_one": [
+        31,
+        0,
+        0
+      ],
+      "byte_stride": [
+        256,
+        4,
+        1024
+      ],
+      "transaction_bytes": 32,
+      "dynamic_padding": false
+    },
+    "stream1": {
+      "target": "B",
+      "mode": "read",
+      "idx": [
+        "LC_PE.PE2",
+        "LC_PE.PE3",
+        "DRAM_LC.LC0"
+      ],
+      "idx_size_minus_one": [
+        31,
+        0,
+        0
+      ],
+      "byte_stride": [
+        64,
+        1024,
+        32
+      ],
+      "transaction_bytes": 32,
+      "dynamic_padding": false
+    },
+    "stream2": {
+      "target": "D",
+      "mode": "write",
+      "idx": [
+        "DRAM_LC.LC13",
+        "LC_PE.PE4",
+        "DRAM_LC.LC14"
+      ],
+      "idx_size_minus_one": [
+        31,
+        0,
+        0
+      ],
+      "byte_stride": [
+        32,
+        64,
+        3584
+      ],
+      "transaction_bytes": 32,
+      "dynamic_padding": false
+    },
+    "stream3": {
+      "target": "C",
+      "mode": "read",
+      "idx": [
+        "DRAM_LC.LC10",
+        "DRAM_LC.LC11",
+        "DRAM_LC.LC12"
+      ],
+      "idx_size_minus_one": [
+        31,
+        0,
+        0
+      ],
+      "byte_stride": [
+        32,
+        0,
+        0
+      ],
+      "transaction_bytes": 32,
+      "dynamic_padding": false
+    }
+  },
+  "ring_semantics": {
+    "domain": "HIGH-4",
+    "neighbor_stream": 0,
+    "mem_loop": 4,
+    "src_slice_sel": 1,
+    "dst_slice_sel": 1,
+    "activation_order": "destination-relative PREV traversal",
+    "weight_order": "prepacked in the same destination-relative PREV order"
+  },
+  "bias_runtime_contract": {
+    "schedule": "one_32B_K8_row_per_Kblock_H_Qblock_tile",
+    "transaction_count": 784,
+    "unique_address_count": 2,
+    "sa_handshakes_per_tile": 4
+  },
+  "config": {
+    "path": "configs/conv/hwop-0005-00/accumulate.json",
+    "sha256": "c87f0bf2d827044560fcc8ee82d3c6da105dd3f294089d6d93adfa4a90ec8dbd",
+    "generator": "tools/generate_conv_instance.py",
+    "source": "conv_full.json"
+  },
+  "official_encoder": {
+    "repository_commit": "e299b2804448242d1589b3e58ed7c5a9a5eca09f",
+    "mapping_cache_key": "4c06373a23642656",
+    "connection_count": 42,
+    "constraint_cost": 0,
+    "repeat_count": 2,
+    "repeat_outputs_identical": true,
+    "outputs": {
+      "mapping_review.json": {
+        "size_bytes": 8954,
+        "sha256": "9c56bfb4988476868f96b03a3027f38e8a94fb61bff45f165bf46e3b0f92586a"
+      },
+      "parsed_bitstream.txt": {
+        "size_bytes": 4520,
+        "sha256": "3fe382a6215352f28be81e867a58f262db28e511f852c3a864ee38f7b834583e"
+      },
+      "modules_dump_64b.bin": {
+        "size_bytes": 4290,
+        "sha256": "4ca42755c2f467cbbe174434bee4d23d2dfd664259c2984d8b301112e304a6cb"
+      },
+      "modules_dump_128b.bin": {
+        "size_bytes": 4290,
+        "sha256": "bb302f830255344ce5a236db4e885e931c877a0a83887b8a82c5724d87be43c4"
+      },
+      "detailed_dump.txt": {
+        "size_bytes": 39035,
+        "sha256": "6fc0041af024b04bbcf2908a59dab4f6548cb1531b448971f6f6e3a5293a47ee"
+      }
+    }
+  },
+  "evidence_boundaries": {
+    "proven": [
+      "typed node-0005 geometry and parameter identity",
+      "32-byte A/B/C/D stream transactions",
+      "explicit halo physical packing and reversible logical inverse",
+      "HIGH-4 selector and buffer ownership"
+    ],
+    "not_proven": [
+      "cycle-accurate target execution",
+      "server RTL P/D equality until returned dump is audited",
+      "G6/G8 hardware approval"
+    ]
+  }
+}

@@ -1,0 +1,74 @@
+{
+  "schema": "operator-config-mapping-evidence-v2",
+  "mapping_mode": "heuristic",
+  "penalty": 0.0,
+  "penalty_source": {
+    "artifact": "native_mapping_state.json",
+    "json_path": "$.last_mapping_cost",
+    "sha256": "a8bd0c00a219d08e4eea24eda161c49db69f4a7392740a768e5045a8f9915d2b"
+  },
+  "fallback_used": false,
+  "mapping_review_sha256": "627e20efca2c16a79211609533ef094c2ccae4e9c1996c686b7815048076da12",
+  "encoder": {
+    "repository": "ndp-sim",
+    "commit": "ec12424516ae0304228dd2321d4e604fe225e04e",
+    "bitstream_tree_sha256": "fb3d5ccfaa4fe632b5326a0316948b58462751e9f57efc813e00d83668fbebad",
+    "source_manifest": "encoder_source_manifest.json",
+    "source_manifest_sha256": "89f2f11f8429d917f9bc7e15cc6a74365ed14f075cd8428bfb78f2e971d4dac1",
+    "patchset": {
+      "manifest": "patchset_manifest.json",
+      "manifest_sha256": "54bea2dee6dbf85a5d8dd52c638cd575e519fd6f93e51d49cb53d3d6cda99feb",
+      "patchset_id": "resnet50-ndp-toolchain-6144-gap-v1",
+      "patchset_sha256": "2f3b9f856a77e6ed0306f7a763e897729fc7985c23a44d3f25b4044b48f90145"
+    }
+  },
+  "source_config": {
+    "artifact": "source_config.json",
+    "sha256": "5cbf02721fd01619b7cd2e5f99de13f5d697e7ebdbf783ff91ace24cf772a7ad",
+    "original_path": "config.json"
+  },
+  "cache": {
+    "policy": "same-run-generated-not-loaded",
+    "initial_file_count": 0,
+    "final_file_count": 1,
+    "loaded": false,
+    "loaded_origin": "none",
+    "portable": true,
+    "bundled": true,
+    "sha256": "525689427e2f02d65b86720ad75283ccf41057a90536d70d6b52fff55839e921",
+    "seed": null
+  },
+  "run": {
+    "returncode": 0,
+    "seed": 42,
+    "heuristic_iterations": 10000,
+    "heuristic_restarts": 10,
+    "python_version": "3.12.13",
+    "pythonhashseed": 0,
+    "command": [
+      "<python>",
+      "-c",
+      "<operator-config-evidence-native-wrapper-v1>",
+      "<source-config>",
+      "<temporary-output>",
+      "42",
+      "10000",
+      "10"
+    ],
+    "stdout": {
+      "artifact": "native_stdout.log",
+      "sha256": "15ac57ed10f71c77736c422bdd47ee54c92fc5e232046d458238a52ac2b5178b"
+    },
+    "stderr": {
+      "artifact": "native_stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "native_wrapper_missing_return_observed": false
+  },
+  "artifacts": {
+    "mapping_review.json": "627e20efca2c16a79211609533ef094c2ccae4e9c1996c686b7815048076da12",
+    "parsed_bitstream.txt": "75f84d35968d9f65b074154253c0dbb7cea950e8314d31d66eac66985d2077d8",
+    "modules_dump_64b.bin": "b643bdc9356e944cb8a952d0b5518be50d8293d4e696afa061d77d3f3076f555",
+    "modules_dump_128b.bin": "8ab9cef57ed267d80596ec49a96068822b86ebf4cfba04e11e35d777c201c2c6"
+  }
+}

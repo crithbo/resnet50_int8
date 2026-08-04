@@ -1,0 +1,36 @@
+{
+  "schema": "dequant-node0077-full-v6-e5-independent-read-receipt-v1",
+  "status": "complete",
+  "read_session_date": "2026-07-27",
+  "package_identity": "dequant_node0077_stockrtl_e5_onecmd_v1",
+  "packaged_full_receipt": {
+    "path": "artifacts/operator_config_validation/r5-server-test-packages/dequant_node0077_stockrtl_e5_onecmd_v1/validation/GENERATION_READ_RECEIPT.json",
+    "sha256": "088d53b08842aae462aa9679d83759eb630f83ac5c95e6dd3bbe3928651d2dec"
+  },
+  "fail_closed_authority_identities": {
+    ".agents/rules/生成前必读索引.md": "539e8dfbe52ad9fc8bd9fdef8c69d448fb5fd713e938e3adc5f663f82fd806d7",
+    ".agents/rules/服务器测试包生成规则.md": "b4019910c7ef65f334676a1b3a5679e63b8ac41dcde88b567ada4f096e50fe05",
+    ".agents/rules/DequantizeLinear算子配置规则.md": "2374975170515252b1ea2d1c1ffc806af5b757c286322ba91b194c0bac0419d7",
+    "NDP_copy01/README_HARDWARE_SIM_ENTRY.md": "4318f3a28de399fb522740315f11bdddf346e71969cf1e45686899a568b042d7",
+    ".agents/plan.md": "1eaf9491aa345c4559915b937161f293d4aaa1bc4f135024632645b7453a7d95",
+    "server_returns/dequant_node0077_stockrtl_e4_onecmd_v2_return_analysis_20260727.json": "c7d1380f6dd365b6349e050390a5e112125906eb04a73fcd54a3dec412bfe35f",
+    ".agents/task_records/20260727_dequant_node0077_full_v6_e4_pass.md": "e7fe4ceaf9a9581b68b5ddf16d57f7bc19a9f5ee6a34aa4b4b9235f16c81cc28"
+  },
+  "actual_generator_identities": {
+    "tools/build_dequant_node0077_e5_onecmd_server_test.py": "f0e599202b8dc115ceb97528fb09300a7238216582acbe6822f41899802f8e1d",
+    "tools/dequant_node0077_server_runtime.py": "b57f47b2a29a300f7da14540e68666c57c2e72deb7394ac4ff82c43eb488831e",
+    "tests/test_build_dequant_node0077_e5_onecmd_server_test.py": "b9f1075190f11ad2c358a6cf260dc8a38c39a99447b46ba51065d125f9a5538e"
+  },
+  "consumer_scope": "The packaged full receipt records the complete Makefile, TB, filelist, observer, planner, encoder, mapper, builder and runtime consumer identities.",
+  "rule_ids": [
+    "CDA-SERVER-WORKLOAD-PROVENANCE-001",
+    "CDA-SERVER-ONE-COMMAND-001",
+    "CDA-SERVER-RETURN-RECEIPT-001",
+    "CDA-SERVER-PACKAGE-BOOTSTRAP-IMMUTABILITY-001",
+    "CDA-SERVER-OBSERVER-XMR-ELABORATION-CONSTANT-001",
+    "CDA-SERVER-OBSERVER-DECOUPLED-HANDSHAKE-001",
+    "CDA-SCA-D-TB-READBACK-LENGTH-001",
+    "CDA-DEQUANT-NODE0077-E4-V6-DYNAMIC-PASS-001",
+    "CDA-DEQUANT-E4-E5-001"
+  ]
+}

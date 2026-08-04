@@ -1,0 +1,117 @@
+{
+  "schema": "dequant-node0077-e4-package-read-receipt-v1",
+  "recorded_date": "2026-07-25",
+  "scope": "stock-RTL DequantizeLinear node0077 E4 one-command package",
+  "mandatory_files_read_completely": [
+    {
+      "path": ".agents/rules/生成前必读索引.md",
+      "size_bytes": 5650,
+      "sha256": "539e8dfbe52ad9fc8bd9fdef8c69d448fb5fd713e938e3adc5f663f82fd806d7"
+    },
+    {
+      "path": ".agents/rules/服务器测试包生成规则.md",
+      "size_bytes": 10581,
+      "sha256": "4707fc8ca6c3d358f61d32b109175ec319e39ffa1d1f56c791796c6718406688"
+    },
+    {
+      "path": "NDP_copy01/README_HARDWARE_SIM_ENTRY.md",
+      "size_bytes": 5461,
+      "sha256": "4318f3a28de399fb522740315f11bdddf346e71969cf1e45686899a568b042d7"
+    },
+    {
+      "path": ".agents/rules/DequantizeLinear算子配置规则.md",
+      "size_bytes": 6572,
+      "sha256": "ba75b679199aa140a9765b8f44ae335b492f667509f50a0c01f9dfc6cdd3f8e2"
+    },
+    {
+      "path": ".agents/rules/算子配置规则.md",
+      "size_bytes": 12168,
+      "sha256": "a5fbe2f0fa2e26d8cd4ebfe8772d5a3c69516d6918cfaa5087198706a352427b"
+    },
+    {
+      "path": ".agents/rules/NDP硬件字段语义.md",
+      "size_bytes": 12602,
+      "sha256": "7f446adb1719658ce75c2614c6d619fc2c7cdcabf5e4fd34945482645539158f"
+    },
+    {
+      "path": ".agents/plan.md",
+      "size_bytes_at_read": 7290,
+      "sha256_at_read": "ff4fec97358eddce1bbd4f8574104e96d8c31d957fb9a13d3f9d6ec5c63c9a30"
+    },
+    {
+      "path": "ndp-sim/model_execplan/README.md",
+      "size_bytes": 40935,
+      "sha256": "992360e8cfc1a15d03abbbb70047de86548e07518e329248d17c61c130b9b11f"
+    },
+    {
+      "path": "ndp-sim/model_execplan/README_op_json.md",
+      "size_bytes": 6663,
+      "sha256": "261cd35b989dc44f9d783eaddef00744a9b0d2d7a3112f683ea3ed2502854107"
+    }
+  ],
+  "actual_packaging_consumers": [
+    {
+      "path": "tools/build_dequant_node0077_onecmd_server_test.py",
+      "role": "frozen-v5 identity validator, LF transport bridge, SCA/SCA_D materializer, deterministic ZIP writer",
+      "sha256": "229a3f81b48bd3a1e508001a5b519af85641889722560ad4efcc46289686259b"
+    },
+    {
+      "path": "tools/dequant_node0077_server_runtime.py",
+      "role": "server package/install/result validator, four-phase identity, E4 numeric/lifecycle gate, allowlist return collector",
+      "sha256": "d44b13246e2a1985c8b22f768e9ea7990a231a1a65f1e1f3a926898feb03b3c4"
+    },
+    {
+      "path": "NDP_copy01/tb_NDP_Top_new_phy.sv",
+      "role": "active SCA/SCA_D loader, Repeat_Num consumer, per-slice lifecycle logger, formal readback writer",
+      "sha256": "e068f7500f0c71c2ba2c756f74a4519c33d13d4afe0fa4cc9f6c9e79b1e3f994"
+    },
+    {
+      "path": "NDP_copy01/Makefile.tb_NDP_Top_new_phy",
+      "role": "active stock-RTL compile entry",
+      "sha256": "528d93f3c7f458d256bdbaf1d9ec39edfbfe5bd8a924e2bf0786914a634f4aba"
+    },
+    {
+      "path": "NDP_copy01/rtl/filelists/NDP_Top_phy_filelist.f",
+      "role": "active functional RTL filelist",
+      "sha256": "b6720607b2757d50d13de6efc109e240aa32e56b51c7dd7e30ec0150a34e4b6a"
+    },
+    {
+      "path": "NDP_copy01/native_return_observer.svh",
+      "role": "existing TB include identity only; no observer plusarg enabled and no packaged replacement",
+      "sha256": "47f0d66728f47c92f9f93f8cf87b47a0ff8567d587c3a099e2d03f610af09f49"
+    }
+  ],
+  "frozen_generation_chain_policy": {
+    "planner_mapper_encoder_execplan_rerun_in_this_turn": false,
+    "reason": "configuration semantics are unchanged; the server package consumes the frozen v5 bitstream and execplan only",
+    "original_full_rebuild_receipt": {
+      "path": "contracts/operator_config/node0077_dequant_generation_receipt_v5.json",
+      "sha256": "392194adf3bcd9d585745a0d9a0dfa18e7c3dac6b85ab81fea1bcc0198c879f7"
+    },
+    "original_consumers_and_hashes_are_bound_by_receipt": true,
+    "source_execplan_sha256": "5caf5840264c8b93a28fb72f8fb3666a936b5df54b509928e919484ba608ddcd",
+    "source_bitstream_sha256": "8918be634ce76c574a406060d570e0d0555b2a59e8e05182f00ffb6d1bdc89bd",
+    "only_packaging_bridge": "line-preserving CRLF-to-LF canonicalization required by the 128-bit server text ABI",
+    "packaged_execplan_lf_sha256": "af79d9a1ed7acc1ede0bf0fe6223e7826cc714489235dcca40b1846d7cff7910",
+    "packaged_bitstream_lf_sha256": "28b30b65e6e82de974fabe0f153d547bfd4e1bad03472b1f0e0b64457412c0cc",
+    "source_and_package_128bit_word_sequences_identical": true
+  },
+  "rule_ids_applied": [
+    "CDA-SERVER-WORKLOAD-PROVENANCE-001",
+    "CDA-SERVER-ONE-COMMAND-001",
+    "CDA-SCA-D-TB-READBACK-LENGTH-001",
+    "CDA-SERVER-SIGNAL-SAFE-PARTIAL-COLLECTION-001",
+    "CDA-SERVER-NO-DYNAMIC-BASELINE-001",
+    "CDA-SERVER-RETURN-RECEIPT-001",
+    "CDA-DEQUANT-ONNX-ORDER-001",
+    "CDA-DEQUANT-NO-AFFINE-MAC-001",
+    "CDA-DEQUANT-TWO-STAGE-GA-001",
+    "CDA-DEQUANT-NORMAL-OUTBUFFER-001",
+    "CDA-DEQUANT-LAYOUT-HIGH4-001",
+    "CDA-DEQUANT-STREAM-LIFECYCLE-001",
+    "CDA-DEQUANT-TYPED-CONSTANT-001",
+    "CDA-DEQUANT-MAPPING-BINDING-001",
+    "CDA-DEQUANT-E2-001",
+    "CDA-DEQUANT-E4-E5-001"
+  ]
+}

@@ -1,0 +1,116 @@
+{
+  "config": {
+    "path": "configs/stage_codegen/hwop-0071-00-d-index-v1/config.json",
+    "sha256": "c5c159e0c3a6873979ce6899afebacd674967db179c8b392c94be7e60028b3cb",
+    "size_bytes": 12076
+  },
+  "d_index_coverage": {
+    "classification": "RTL_PROVEN",
+    "derived_distinct_transaction_bases": 256,
+    "dimensions": [
+      {
+        "dimension": 0,
+        "domain": {
+          "carrier": {
+            "end": 256,
+            "kind": "local_lc_counter_domain",
+            "source": "DRAM_LC.LC2",
+            "src_id_role": "trigger_tag_dependency_only",
+            "start": 0,
+            "stride": 1,
+            "value_count": 256
+          },
+          "constant_operands": [
+            1
+          ],
+          "kind": "lc_pe_identity_mul_domain",
+          "opcode": "mul",
+          "source": "LC_PE.PE1",
+          "value_count": 256
+        },
+        "source": "LC_PE.PE1",
+        "stride_bytes": 32
+      }
+    ],
+    "first_derived_biases_bytes": [
+      0,
+      32,
+      64,
+      96,
+      128,
+      160,
+      192,
+      224,
+      256,
+      288,
+      320,
+      352,
+      384,
+      416,
+      448,
+      480
+    ],
+    "necessary_condition_passed": true,
+    "output_bytes_per_sample": 8192,
+    "output_dtype": "int32",
+    "output_shape": [
+      16,
+      2048,
+      1,
+      1
+    ],
+    "request_id": "r5:hwop-0071-00",
+    "required_distinct_transaction_bases": 256,
+    "scope": "necessary D-address coverage only; passing does not prove ordering, tag/completion, payload, mapping, E4 or E5",
+    "transaction_bytes": 32,
+    "unresolved_dimensions": [],
+    "write_stream": "stream1"
+  },
+  "formal_target_config": false,
+  "manifest_sha256": "af5eadee38096a16f5b05a480d4dfa4929cbf3174d0525699ce1874c8b2795be",
+  "remaining_blockers": [
+    "B_GAP_GA_ACCUM_STATE",
+    "B_ADDRESS_MAPPING_EXECPLAN_SCA",
+    "B_SERVER_E4_E5"
+  ],
+  "request_id": "r5:hwop-0071-00",
+  "request_sha256": "9df690a675c74d2d9e43a78b516ce4045f1d978014bca4ad2abcaaab9dc295f4",
+  "schema": "resnet50-gap-d-index-schedule-v1",
+  "semantic_patches": [
+    {
+      "after": 256,
+      "before": 1,
+      "json_path": "$.dram_loop_configs.LC2.end",
+      "reason": "leaf_value_changed"
+    },
+    {
+      "after": 0,
+      "before": 1,
+      "json_path": "$.dram_loop_configs.LC2.last_index",
+      "reason": "leaf_value_changed"
+    },
+    {
+      "after": 1,
+      "before": 0,
+      "json_path": "$.dram_loop_configs.LC2.outmost_loop",
+      "reason": "leaf_value_changed"
+    },
+    {
+      "after": null,
+      "before": "DRAM_LC.LC0",
+      "json_path": "$.dram_loop_configs.LC2.src_id",
+      "reason": "leaf_value_changed"
+    }
+  ],
+  "server_candidate": false,
+  "source": {
+    "path": "configs/native_ndp_sim/avgpool_config_2048_7_7_strict_v1/config.json",
+    "sha256": "bc1c593106c0dd25251af67c5500983218051dc21d19d33f8c91942c9e412e76",
+    "size_bytes": 12083
+  },
+  "status": "diagnostic_address_unbound_config_not_server_candidate",
+  "strict_validation": {
+    "issue_count": 0,
+    "valid": true
+  }
+}

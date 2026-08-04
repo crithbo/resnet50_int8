@@ -1,0 +1,1127 @@
+{
+  "accepted_lifetimes_and_barriers": [
+    "A_SCALED: stage0 accepted write through stage3 last accepted read",
+    "B_SCALED: stage1 accepted write through stage3 last accepted read",
+    "RELOCATION_PAD: stage2 only; hardware output is not consumed",
+    "SUM_F32: stage3 accepted write through stage4 last accepted read",
+    "TAIL_F32: stage4 accepted write through stage5 last accepted read",
+    "Y_UINT8: fresh stage5 terminal output",
+    "native sequential execplan completion is the inter-stage barrier"
+  ],
+  "blocker_delta": {
+    "closed": [
+      "B_QADD_NODE0007_DRAM_LC_SIGNED_FEEDBACK_WRAP"
+    ],
+    "open": []
+  },
+  "bypass_annotation": {
+    "bypass_reason": "native add_dequant terminates at FP32 and the prior flat positive-stride LC domains wrap signed feedback",
+    "claim_boundary": "CONFIG_ONLY_CORRECTNESS_BASELINE; candidate_release=false; E2 local only",
+    "contradicted_or_missing_native_path": "native fused QLinearAdd with exact UINT8 tail is absent; flat dequant/add DRAM LC end 37632 is dynamically contradicted",
+    "exact_equivalence_scope": "node0007 frozen six-qparam W3 order, all 28 slices, complete UINT8 Y and zero padding",
+    "materialized_configuration_mechanism": "six native stages; dequant 4x9408 and add 8x18816 nested DRAM loops with explicit FP32 scratch and exact UINT8 tail",
+    "performance_and_resource_cost": "six serialized stages, two full FP32 activation scratches, one FP32 relocation spacer and completion barriers",
+    "unresolved_production_blocker": "no performance qualification and no bound final server RTL identity or dynamic E4/E5 result"
+  },
+  "candidate_release": false,
+  "claim": "CONFIG_ONLY_CORRECTNESS_BASELINE",
+  "config_bound_simulator": {
+    "active_slices": 28,
+    "configuration_sha256": {
+      "op_a_dequant": "7235d68fc4375a891fa9b04539e5e50f2a37f02d8fbab50fcf1ecd24b6b17f00",
+      "op_b_dequant": "c51118bc9fa4a2670f4b9cb5583c94dd8bdc1425ff25be4350ae557a2701e0cc",
+      "op_fp32_add": "3403551eb4a1b49b774443ee4d4bb6df68b09f77fc2be07d3884bffabed60139",
+      "op_relocation_pad": "eb3eee7e58f76f82312a35611035e15498a491f0f86e043b9572db840181f048",
+      "op_tail_mul": "ebf34599fc10ee211c510da9691c1c047ed576f1c6c8612e626686b21aa14fef",
+      "op_tail_round": "f08b5528a49d3c29cbcc51139b60cc5092e8f58f70b19b806b20bb9c4a07d3a3"
+    },
+    "frozen_numeric_verification_replayed": true,
+    "golden_logical_sha256": "61dd40220d8439a030c6e586c102d035dd2ea981a681124477afa92c82c134f3",
+    "host_precomputed_internal_tensor": false,
+    "logical_elements": 12845056,
+    "logical_mismatch_count": 0,
+    "nested_lc_ordered_equivalence": {
+      "arithmetic_semantics_changed": false,
+      "numeric_analysis_repeated": false,
+      "qparams_changed": false,
+      "records": {
+        "dequant_read": {
+          "element_stride_bytes": 16,
+          "first_offset": 0,
+          "inner_domain": 9408,
+          "last_offset": 602096,
+          "logical_occurrence_count": 37632,
+          "new_equation": "(outer_index * 9408 + inner_index) * 16",
+          "old_equation": "flat_index * 16",
+          "ordered_equal": true,
+          "ordered_new_sha256": "19c8a6e89e7e98ed8156443c14e686c5a88197b49b174ce0bd4dfe0c50bce6f5",
+          "ordered_old_sha256": "19c8a6e89e7e98ed8156443c14e686c5a88197b49b174ce0bd4dfe0c50bce6f5",
+          "outer_domain": 4
+        },
+        "dequant_write": {
+          "element_stride_bytes": 64,
+          "first_offset": 0,
+          "inner_domain": 9408,
+          "last_offset": 2408384,
+          "logical_occurrence_count": 37632,
+          "new_equation": "(outer_index * 9408 + inner_index) * 64",
+          "old_equation": "flat_index * 64",
+          "ordered_equal": true,
+          "ordered_new_sha256": "1a78345751fc789f64b2542f717bb239bd764f5df27a052063300ec7bf444371",
+          "ordered_old_sha256": "1a78345751fc789f64b2542f717bb239bd764f5df27a052063300ec7bf444371",
+          "outer_domain": 4
+        },
+        "fp32_add_read_write": {
+          "element_stride_bytes": 16,
+          "first_offset": 0,
+          "inner_domain": 18816,
+          "last_offset": 2408432,
+          "logical_occurrence_count": 150528,
+          "new_equation": "(outer_index * 18816 + inner_index) * 16",
+          "old_equation": "flat_index * 16",
+          "ordered_equal": true,
+          "ordered_new_sha256": "56c63353fc1079be5c6e8cf0307029b0bd54be327987d4f57c4f798ea6dcefd1",
+          "ordered_old_sha256": "56c63353fc1079be5c6e8cf0307029b0bd54be327987d4f57c4f798ea6dcefd1",
+          "outer_domain": 8
+        }
+      },
+      "schema": "qlinearadd-node0007-nested-lc-equivalence-v1",
+      "tail_semantics_changed": false,
+      "valid": true
+    },
+    "numeric_analysis_repeated": false,
+    "output_sha256": "5f82d13c57e39982d89b68b2c9ad767ad748fa81882d236f9d8652f4fa9c5146",
+    "padding_mismatch_count": 0,
+    "per_slice_physical_elements": 602112,
+    "physical_mismatch_count": 0,
+    "physical_output_bytes": 16859136,
+    "preloaded_tensors": [
+      "A",
+      "B",
+      "FROZEN_ZERO_RELOCATION_PAD"
+    ],
+    "relocation_pad": {
+      "hardware_operation": "FP32 multiply by 1.0",
+      "hardware_output_bytes_per_slice": 135168,
+      "input_bytes_per_slice": 135168,
+      "input_kind": "frozen FP32 zero constant",
+      "output_consumed_by_qlinearadd": false,
+      "qlinearadd_internal_tensor": false
+    },
+    "signed_feedback_bounds": {
+      "maximum_positive_stride_end": 18816,
+      "records": [
+        {
+          "end": 4,
+          "loop": "LC0",
+          "operator_id": "op_a_dequant",
+          "positive_stride": true,
+          "signed_feedback_end_legal": true,
+          "start": 0,
+          "stride": 1
+        },
+        {
+          "end": 9408,
+          "loop": "LC1",
+          "operator_id": "op_a_dequant",
+          "positive_stride": true,
+          "signed_feedback_end_legal": true,
+          "start": 0,
+          "stride": 1
+        },
+        {
+          "end": 1,
+          "loop": "LC2",
+          "operator_id": "op_a_dequant",
+          "positive_stride": true,
+          "signed_feedback_end_legal": true,
+          "start": 0,
+          "stride": 1
+        },
+        {
+          "end": 9408,
+          "loop": "LC3",
+          "operator_id": "op_a_dequant",
+          "positive_stride": true,
+          "signed_feedback_end_legal": true,
+          "start": 0,
+          "stride": 1
+        },
+        {
+          "end": 1,
+          "loop": "LC4",
+          "operator_id": "op_a_dequant",
+          "positive_stride": true,
+          "signed_feedback_end_legal": true,
+          "start": 0,
+          "stride": 1
+        },
+        {
+          "end": 4,
+          "loop": "LC0",
+          "operator_id": "op_b_dequant",
+          "positive_stride": true,
+          "signed_feedback_end_legal": true,
+          "start": 0,
+          "stride": 1
+        },
+        {
+          "end": 9408,
+          "loop": "LC1",
+          "operator_id": "op_b_dequant",
+          "positive_stride": true,
+          "signed_feedback_end_legal": true,
+          "start": 0,
+          "stride": 1
+        },
+        {
+          "end": 1,
+          "loop": "LC2",
+          "operator_id": "op_b_dequant",
+          "positive_stride": true,
+          "signed_feedback_end_legal": true,
+          "start": 0,
+          "stride": 1
+        },
+        {
+          "end": 9408,
+          "loop": "LC3",
+          "operator_id": "op_b_dequant",
+          "positive_stride": true,
+          "signed_feedback_end_legal": true,
+          "start": 0,
+          "stride": 1
+        },
+        {
+          "end": 1,
+          "loop": "LC4",
+          "operator_id": "op_b_dequant",
+          "positive_stride": true,
+          "signed_feedback_end_legal": true,
+          "start": 0,
+          "stride": 1
+        },
+        {
+          "end": 1,
+          "loop": "LC0",
+          "operator_id": "op_relocation_pad",
+          "positive_stride": true,
+          "signed_feedback_end_legal": true,
+          "start": 0,
+          "stride": 1
+        },
+        {
+          "end": 4224,
+          "loop": "LC1",
+          "operator_id": "op_relocation_pad",
+          "positive_stride": true,
+          "signed_feedback_end_legal": true,
+          "start": 0,
+          "stride": 1
+        },
+        {
+          "end": 4224,
+          "loop": "LC2",
+          "operator_id": "op_relocation_pad",
+          "positive_stride": true,
+          "signed_feedback_end_legal": true,
+          "start": 0,
+          "stride": 1
+        },
+        {
+          "end": 8,
+          "loop": "LC0",
+          "operator_id": "op_fp32_add",
+          "positive_stride": true,
+          "signed_feedback_end_legal": true,
+          "start": 0,
+          "stride": 1
+        },
+        {
+          "end": 18816,
+          "loop": "LC1",
+          "operator_id": "op_fp32_add",
+          "positive_stride": true,
+          "signed_feedback_end_legal": true,
+          "start": 0,
+          "stride": 1
+        },
+        {
+          "end": 18816,
+          "loop": "LC2",
+          "operator_id": "op_fp32_add",
+          "positive_stride": true,
+          "signed_feedback_end_legal": true,
+          "start": 0,
+          "stride": 1
+        },
+        {
+          "end": 18816,
+          "loop": "LC3",
+          "operator_id": "op_fp32_add",
+          "positive_stride": true,
+          "signed_feedback_end_legal": true,
+          "start": 0,
+          "stride": 1
+        },
+        {
+          "end": 4,
+          "loop": "LC0",
+          "operator_id": "op_tail_mul",
+          "positive_stride": true,
+          "signed_feedback_end_legal": true,
+          "start": 0,
+          "stride": 1
+        },
+        {
+          "end": 18816,
+          "loop": "LC1",
+          "operator_id": "op_tail_mul",
+          "positive_stride": true,
+          "signed_feedback_end_legal": true,
+          "start": 0,
+          "stride": 1
+        },
+        {
+          "end": 18816,
+          "loop": "LC2",
+          "operator_id": "op_tail_mul",
+          "positive_stride": true,
+          "signed_feedback_end_legal": true,
+          "start": 0,
+          "stride": 1
+        },
+        {
+          "end": 4,
+          "loop": "LC0",
+          "operator_id": "op_tail_round",
+          "positive_stride": true,
+          "signed_feedback_end_legal": true,
+          "start": 0,
+          "stride": 1
+        },
+        {
+          "end": 18816,
+          "loop": "LC1",
+          "operator_id": "op_tail_round",
+          "positive_stride": true,
+          "signed_feedback_end_legal": true,
+          "start": 0,
+          "stride": 1
+        },
+        {
+          "end": 4704,
+          "loop": "LC2",
+          "operator_id": "op_tail_round",
+          "positive_stride": true,
+          "signed_feedback_end_legal": true,
+          "start": 0,
+          "stride": 1
+        }
+      ],
+      "rule_id": "CDA-IGA-LC-SIGNED-FEEDBACK-END-BOUND-001",
+      "valid": true
+    },
+    "simulator": "nested-LC final-config geometry binding plus frozen five-stage W3 config-bound comparison"
+  },
+  "consumed_reuse_assets": true,
+  "contract_path": "contracts/operator_config/qlinearadd_node0007_nested_lc_full_e2_v4.json",
+  "errors": [],
+  "final_request_facts": {
+    "issue_count": 0,
+    "operator_count": 6,
+    "request_count_with_multiplicity": 37352448,
+    "unique_request_address_count": 20493312,
+    "unique_request_addresses_sha256": "e933bb1cd4f9f163174c8375fcbed841b7258f11dae542bb9beb97b6c7830034"
+  },
+  "final_signed_feedback_bounds": [
+    {
+      "end": 4,
+      "loop": "LC0",
+      "operator_id": "op_a_dequant",
+      "start": 0,
+      "stride": 1,
+      "valid": true
+    },
+    {
+      "end": 9408,
+      "loop": "LC1",
+      "operator_id": "op_a_dequant",
+      "start": 0,
+      "stride": 1,
+      "valid": true
+    },
+    {
+      "end": 1,
+      "loop": "LC2",
+      "operator_id": "op_a_dequant",
+      "start": 0,
+      "stride": 1,
+      "valid": true
+    },
+    {
+      "end": 9408,
+      "loop": "LC3",
+      "operator_id": "op_a_dequant",
+      "start": 0,
+      "stride": 1,
+      "valid": true
+    },
+    {
+      "end": 1,
+      "loop": "LC4",
+      "operator_id": "op_a_dequant",
+      "start": 0,
+      "stride": 1,
+      "valid": true
+    },
+    {
+      "end": 4,
+      "loop": "LC0",
+      "operator_id": "op_b_dequant",
+      "start": 0,
+      "stride": 1,
+      "valid": true
+    },
+    {
+      "end": 9408,
+      "loop": "LC1",
+      "operator_id": "op_b_dequant",
+      "start": 0,
+      "stride": 1,
+      "valid": true
+    },
+    {
+      "end": 1,
+      "loop": "LC2",
+      "operator_id": "op_b_dequant",
+      "start": 0,
+      "stride": 1,
+      "valid": true
+    },
+    {
+      "end": 9408,
+      "loop": "LC3",
+      "operator_id": "op_b_dequant",
+      "start": 0,
+      "stride": 1,
+      "valid": true
+    },
+    {
+      "end": 1,
+      "loop": "LC4",
+      "operator_id": "op_b_dequant",
+      "start": 0,
+      "stride": 1,
+      "valid": true
+    },
+    {
+      "end": 1,
+      "loop": "LC0",
+      "operator_id": "op_relocation_pad",
+      "start": 0,
+      "stride": 1,
+      "valid": true
+    },
+    {
+      "end": 4224,
+      "loop": "LC1",
+      "operator_id": "op_relocation_pad",
+      "start": 0,
+      "stride": 1,
+      "valid": true
+    },
+    {
+      "end": 4224,
+      "loop": "LC2",
+      "operator_id": "op_relocation_pad",
+      "start": 0,
+      "stride": 1,
+      "valid": true
+    },
+    {
+      "end": 8,
+      "loop": "LC0",
+      "operator_id": "op_fp32_add",
+      "start": 0,
+      "stride": 1,
+      "valid": true
+    },
+    {
+      "end": 18816,
+      "loop": "LC1",
+      "operator_id": "op_fp32_add",
+      "start": 0,
+      "stride": 1,
+      "valid": true
+    },
+    {
+      "end": 18816,
+      "loop": "LC2",
+      "operator_id": "op_fp32_add",
+      "start": 0,
+      "stride": 1,
+      "valid": true
+    },
+    {
+      "end": 18816,
+      "loop": "LC3",
+      "operator_id": "op_fp32_add",
+      "start": 0,
+      "stride": 1,
+      "valid": true
+    },
+    {
+      "end": 4,
+      "loop": "LC0",
+      "operator_id": "op_tail_mul",
+      "start": 0,
+      "stride": 1,
+      "valid": true
+    },
+    {
+      "end": 18816,
+      "loop": "LC1",
+      "operator_id": "op_tail_mul",
+      "start": 0,
+      "stride": 1,
+      "valid": true
+    },
+    {
+      "end": 18816,
+      "loop": "LC2",
+      "operator_id": "op_tail_mul",
+      "start": 0,
+      "stride": 1,
+      "valid": true
+    },
+    {
+      "end": 4,
+      "loop": "LC0",
+      "operator_id": "op_tail_round",
+      "start": 0,
+      "stride": 1,
+      "valid": true
+    },
+    {
+      "end": 18816,
+      "loop": "LC1",
+      "operator_id": "op_tail_round",
+      "start": 0,
+      "stride": 1,
+      "valid": true
+    },
+    {
+      "end": 4704,
+      "loop": "LC2",
+      "operator_id": "op_tail_round",
+      "start": 0,
+      "stride": 1,
+      "valid": true
+    }
+  ],
+  "first_error": null,
+  "hw_op_id": "hwop-0007-00",
+  "mapping_from_empty_state": {
+    "op_a_dequant": {
+      "bit_range_count": 529,
+      "cache_loaded_origin": "none",
+      "cache_policy": "same-run-generated-not-loaded",
+      "fallback_used": false,
+      "native_wrapper_missing_return_observed": false,
+      "penalty": 0.0,
+      "unpadded_bits": 3272,
+      "valid": true
+    },
+    "op_b_dequant": {
+      "bit_range_count": 529,
+      "cache_loaded_origin": "none",
+      "cache_policy": "same-run-generated-not-loaded",
+      "fallback_used": false,
+      "native_wrapper_missing_return_observed": false,
+      "penalty": 0.0,
+      "unpadded_bits": 3272,
+      "valid": true
+    },
+    "op_fp32_add": {
+      "bit_range_count": 506,
+      "cache_loaded_origin": "none",
+      "cache_policy": "same-run-generated-not-loaded",
+      "fallback_used": false,
+      "native_wrapper_missing_return_observed": false,
+      "penalty": 0.0,
+      "unpadded_bits": 3279,
+      "valid": true
+    },
+    "op_relocation_pad": {
+      "bit_range_count": 517,
+      "cache_loaded_origin": "none",
+      "cache_policy": "same-run-generated-not-loaded",
+      "fallback_used": false,
+      "native_wrapper_missing_return_observed": false,
+      "penalty": 0.0,
+      "unpadded_bits": 3152,
+      "valid": true
+    },
+    "op_tail_mul": {
+      "bit_range_count": 517,
+      "cache_loaded_origin": "none",
+      "cache_policy": "same-run-generated-not-loaded",
+      "fallback_used": false,
+      "native_wrapper_missing_return_observed": false,
+      "penalty": 0.0,
+      "unpadded_bits": 3152,
+      "valid": true
+    },
+    "op_tail_round": {
+      "bit_range_count": 653,
+      "cache_loaded_origin": "none",
+      "cache_policy": "same-run-generated-not-loaded",
+      "fallback_used": false,
+      "native_wrapper_missing_return_observed": false,
+      "penalty": 0.0,
+      "unpadded_bits": 4304,
+      "valid": true
+    }
+  },
+  "nested_lc_ordered_equivalence": {
+    "arithmetic_semantics_changed": false,
+    "numeric_analysis_repeated": false,
+    "qparams_changed": false,
+    "records": {
+      "dequant_read": {
+        "element_stride_bytes": 16,
+        "first_offset": 0,
+        "inner_domain": 9408,
+        "last_offset": 602096,
+        "logical_occurrence_count": 37632,
+        "new_equation": "(outer_index * 9408 + inner_index) * 16",
+        "old_equation": "flat_index * 16",
+        "ordered_equal": true,
+        "ordered_new_sha256": "19c8a6e89e7e98ed8156443c14e686c5a88197b49b174ce0bd4dfe0c50bce6f5",
+        "ordered_old_sha256": "19c8a6e89e7e98ed8156443c14e686c5a88197b49b174ce0bd4dfe0c50bce6f5",
+        "outer_domain": 4
+      },
+      "dequant_write": {
+        "element_stride_bytes": 64,
+        "first_offset": 0,
+        "inner_domain": 9408,
+        "last_offset": 2408384,
+        "logical_occurrence_count": 37632,
+        "new_equation": "(outer_index * 9408 + inner_index) * 64",
+        "old_equation": "flat_index * 64",
+        "ordered_equal": true,
+        "ordered_new_sha256": "1a78345751fc789f64b2542f717bb239bd764f5df27a052063300ec7bf444371",
+        "ordered_old_sha256": "1a78345751fc789f64b2542f717bb239bd764f5df27a052063300ec7bf444371",
+        "outer_domain": 4
+      },
+      "fp32_add_read_write": {
+        "element_stride_bytes": 16,
+        "first_offset": 0,
+        "inner_domain": 18816,
+        "last_offset": 2408432,
+        "logical_occurrence_count": 150528,
+        "new_equation": "(outer_index * 18816 + inner_index) * 16",
+        "old_equation": "flat_index * 16",
+        "ordered_equal": true,
+        "ordered_new_sha256": "56c63353fc1079be5c6e8cf0307029b0bd54be327987d4f57c4f798ea6dcefd1",
+        "ordered_old_sha256": "56c63353fc1079be5c6e8cf0307029b0bd54be327987d4f57c4f798ea6dcefd1",
+        "outer_domain": 8
+      }
+    },
+    "schema": "qlinearadd-node0007-nested-lc-equivalence-v1",
+    "tail_semantics_changed": false,
+    "valid": true
+  },
+  "node_id": "node-0007",
+  "numeric_analysis_repeated": false,
+  "package_release": {
+    "candidate_release": false,
+    "evidence_level": "E2_LOCAL_ONLY",
+    "sidecar": "artifacts/operator_config_validation/r5-server-test-packages/r5_qadd_n7_nested_lc_v4.zip.sha256",
+    "status": "PACKAGE_READY_NOT_RUN",
+    "zip": "artifacts/operator_config_validation/r5-server-test-packages/r5_qadd_n7_nested_lc_v4.zip",
+    "zip_sha256": "dfe6ab0e11482d9af7954ba3e87911b770f8d80efa4148352b63d27bf7df2361"
+  },
+  "per_slice_nonalias_ranges": [
+    {
+      "end": "0x00093000",
+      "start": "0x00000000",
+      "tensor": "A"
+    },
+    {
+      "end": "0x002df000",
+      "start": "0x00093000",
+      "tensor": "A_SCALED"
+    },
+    {
+      "end": "0x00372000",
+      "start": "0x002df000",
+      "tensor": "B"
+    },
+    {
+      "end": "0x005be000",
+      "start": "0x00372000",
+      "tensor": "B_SCALED"
+    },
+    {
+      "end": "0x005df000",
+      "start": "0x005be000",
+      "tensor": "RELOCATION_PAD_INPUT"
+    },
+    {
+      "end": "0x00600000",
+      "start": "0x005df000",
+      "tensor": "RELOCATION_PAD_OUTPUT"
+    },
+    {
+      "end": "0x00a4c000",
+      "start": "0x00800000",
+      "tensor": "SUM_F32"
+    },
+    {
+      "end": "0x00c98000",
+      "start": "0x00a4c000",
+      "tensor": "TAIL_F32"
+    },
+    {
+      "end": "0x00d2b000",
+      "start": "0x00c98000",
+      "tensor": "Y_UINT8"
+    }
+  ],
+  "per_slice_stream_signatures_match_frozen_logical_domain": true,
+  "provenance": {
+    "execplan_bundle_manifest": {
+      "path": "artifacts/operator_config_validation/r5-qlinearadd-node0007-nested-lc-full-e2-v4/execplan/bundle_manifest.json",
+      "sha256": "1025d284423192d28c82a2f809b74561847be5b054878be4b3c53dffa81a889d"
+    },
+    "hardware_rule": {
+      "path": ".agents/rules/NDP硬件字段语义.md",
+      "sha256": "4db23b6019a43a7cc7b30488c549fb9426fe374349e8224ad989cf107c9bd7a1"
+    },
+    "qlinearadd_rule": {
+      "path": ".agents/rules/QLinearAdd算子配置规则.md",
+      "sha256": "dd4a8122d771ed5f4dbb9995fd6463ba14b179a72a515d2af5e91d30f2c71269"
+    },
+    "schema": "qlinearadd-node0007-nested-lc-full-local-e2-v4"
+  },
+  "schema": "qlinearadd-node0007-nested-lc-full-e2-contract-v4",
+  "six_qparams": {
+    "a_scale": 0.017621304839849472,
+    "a_zero_point": 84,
+    "b_scale": 0.03495480865240097,
+    "b_zero_point": 150,
+    "y_scale": 0.01425931230187416,
+    "y_zero_point": 0
+  },
+  "static_signed_feedback_bounds": {
+    "maximum_positive_stride_end": 18816,
+    "records": [
+      {
+        "end": 4,
+        "loop": "LC0",
+        "operator_id": "op_a_dequant",
+        "positive_stride": true,
+        "signed_feedback_end_legal": true,
+        "start": 0,
+        "stride": 1
+      },
+      {
+        "end": 9408,
+        "loop": "LC1",
+        "operator_id": "op_a_dequant",
+        "positive_stride": true,
+        "signed_feedback_end_legal": true,
+        "start": 0,
+        "stride": 1
+      },
+      {
+        "end": 1,
+        "loop": "LC2",
+        "operator_id": "op_a_dequant",
+        "positive_stride": true,
+        "signed_feedback_end_legal": true,
+        "start": 0,
+        "stride": 1
+      },
+      {
+        "end": 9408,
+        "loop": "LC3",
+        "operator_id": "op_a_dequant",
+        "positive_stride": true,
+        "signed_feedback_end_legal": true,
+        "start": 0,
+        "stride": 1
+      },
+      {
+        "end": 1,
+        "loop": "LC4",
+        "operator_id": "op_a_dequant",
+        "positive_stride": true,
+        "signed_feedback_end_legal": true,
+        "start": 0,
+        "stride": 1
+      },
+      {
+        "end": 4,
+        "loop": "LC0",
+        "operator_id": "op_b_dequant",
+        "positive_stride": true,
+        "signed_feedback_end_legal": true,
+        "start": 0,
+        "stride": 1
+      },
+      {
+        "end": 9408,
+        "loop": "LC1",
+        "operator_id": "op_b_dequant",
+        "positive_stride": true,
+        "signed_feedback_end_legal": true,
+        "start": 0,
+        "stride": 1
+      },
+      {
+        "end": 1,
+        "loop": "LC2",
+        "operator_id": "op_b_dequant",
+        "positive_stride": true,
+        "signed_feedback_end_legal": true,
+        "start": 0,
+        "stride": 1
+      },
+      {
+        "end": 9408,
+        "loop": "LC3",
+        "operator_id": "op_b_dequant",
+        "positive_stride": true,
+        "signed_feedback_end_legal": true,
+        "start": 0,
+        "stride": 1
+      },
+      {
+        "end": 1,
+        "loop": "LC4",
+        "operator_id": "op_b_dequant",
+        "positive_stride": true,
+        "signed_feedback_end_legal": true,
+        "start": 0,
+        "stride": 1
+      },
+      {
+        "end": 1,
+        "loop": "LC0",
+        "operator_id": "op_relocation_pad",
+        "positive_stride": true,
+        "signed_feedback_end_legal": true,
+        "start": 0,
+        "stride": 1
+      },
+      {
+        "end": 4224,
+        "loop": "LC1",
+        "operator_id": "op_relocation_pad",
+        "positive_stride": true,
+        "signed_feedback_end_legal": true,
+        "start": 0,
+        "stride": 1
+      },
+      {
+        "end": 4224,
+        "loop": "LC2",
+        "operator_id": "op_relocation_pad",
+        "positive_stride": true,
+        "signed_feedback_end_legal": true,
+        "start": 0,
+        "stride": 1
+      },
+      {
+        "end": 8,
+        "loop": "LC0",
+        "operator_id": "op_fp32_add",
+        "positive_stride": true,
+        "signed_feedback_end_legal": true,
+        "start": 0,
+        "stride": 1
+      },
+      {
+        "end": 18816,
+        "loop": "LC1",
+        "operator_id": "op_fp32_add",
+        "positive_stride": true,
+        "signed_feedback_end_legal": true,
+        "start": 0,
+        "stride": 1
+      },
+      {
+        "end": 18816,
+        "loop": "LC2",
+        "operator_id": "op_fp32_add",
+        "positive_stride": true,
+        "signed_feedback_end_legal": true,
+        "start": 0,
+        "stride": 1
+      },
+      {
+        "end": 18816,
+        "loop": "LC3",
+        "operator_id": "op_fp32_add",
+        "positive_stride": true,
+        "signed_feedback_end_legal": true,
+        "start": 0,
+        "stride": 1
+      },
+      {
+        "end": 4,
+        "loop": "LC0",
+        "operator_id": "op_tail_mul",
+        "positive_stride": true,
+        "signed_feedback_end_legal": true,
+        "start": 0,
+        "stride": 1
+      },
+      {
+        "end": 18816,
+        "loop": "LC1",
+        "operator_id": "op_tail_mul",
+        "positive_stride": true,
+        "signed_feedback_end_legal": true,
+        "start": 0,
+        "stride": 1
+      },
+      {
+        "end": 18816,
+        "loop": "LC2",
+        "operator_id": "op_tail_mul",
+        "positive_stride": true,
+        "signed_feedback_end_legal": true,
+        "start": 0,
+        "stride": 1
+      },
+      {
+        "end": 4,
+        "loop": "LC0",
+        "operator_id": "op_tail_round",
+        "positive_stride": true,
+        "signed_feedback_end_legal": true,
+        "start": 0,
+        "stride": 1
+      },
+      {
+        "end": 18816,
+        "loop": "LC1",
+        "operator_id": "op_tail_round",
+        "positive_stride": true,
+        "signed_feedback_end_legal": true,
+        "start": 0,
+        "stride": 1
+      },
+      {
+        "end": 4704,
+        "loop": "LC2",
+        "operator_id": "op_tail_round",
+        "positive_stride": true,
+        "signed_feedback_end_legal": true,
+        "start": 0,
+        "stride": 1
+      }
+    ],
+    "rule_id": "CDA-IGA-LC-SIGNED-FEEDBACK-END-BOUND-001",
+    "valid": true
+  },
+  "static_to_final_leaf_diff": {
+    "authorization": "base_addr-only materialization",
+    "base_only_count": 13,
+    "non_base_count": 0,
+    "owner": "native execplan base-address allocator",
+    "records": [
+      {
+        "final": "0x0",
+        "operator_id": "op_a_dequant",
+        "path": "stream_engine.stream0.base_addr",
+        "static": "0x00000000"
+      },
+      {
+        "final": "0x93000",
+        "operator_id": "op_a_dequant",
+        "path": "stream_engine.stream2.base_addr",
+        "static": "0x00093000"
+      },
+      {
+        "final": "0x2df000",
+        "operator_id": "op_b_dequant",
+        "path": "stream_engine.stream0.base_addr",
+        "static": "0x002df000"
+      },
+      {
+        "final": "0x372000",
+        "operator_id": "op_b_dequant",
+        "path": "stream_engine.stream2.base_addr",
+        "static": "0x00372000"
+      },
+      {
+        "final": "0x5be000",
+        "operator_id": "op_relocation_pad",
+        "path": "stream_engine.stream0.base_addr",
+        "static": "0x005be000"
+      },
+      {
+        "final": "0x5df000",
+        "operator_id": "op_relocation_pad",
+        "path": "stream_engine.stream2.base_addr",
+        "static": "0x005df000"
+      },
+      {
+        "final": "0x93000",
+        "operator_id": "op_fp32_add",
+        "path": "stream_engine.stream0.base_addr",
+        "static": "0x00093000"
+      },
+      {
+        "final": "0x372000",
+        "operator_id": "op_fp32_add",
+        "path": "stream_engine.stream1.base_addr",
+        "static": "0x00372000"
+      },
+      {
+        "final": "0x800000",
+        "operator_id": "op_fp32_add",
+        "path": "stream_engine.stream2.base_addr",
+        "static": "0x00800000"
+      },
+      {
+        "final": "0x800000",
+        "operator_id": "op_tail_mul",
+        "path": "stream_engine.stream0.base_addr",
+        "static": "0x00800000"
+      },
+      {
+        "final": "0xa4c000",
+        "operator_id": "op_tail_mul",
+        "path": "stream_engine.stream2.base_addr",
+        "static": "0x00a4c000"
+      },
+      {
+        "final": "0xa4c000",
+        "operator_id": "op_tail_round",
+        "path": "stream_engine.stream0.base_addr",
+        "static": "0x00a4c000"
+      },
+      {
+        "final": "0xc98000",
+        "operator_id": "op_tail_round",
+        "path": "stream_engine.stream2.base_addr",
+        "static": "0x00c98000"
+      }
+    ],
+    "total_count": 13
+  },
+  "status": "E2_LOCAL_COMPLETE",
+  "stream_address_coverage": {
+    "op_a_dequant:READ_STREAM0": {
+      "logical_payload_bytes": 16859136,
+      "max_row": 587,
+      "min_row": 0,
+      "padding_masked_bytes": 0,
+      "request_count": 1053696,
+      "valid_bytes": 16859136
+    },
+    "op_a_dequant:WRITE_STREAM0": {
+      "logical_payload_bytes": 67436544,
+      "max_row": 2939,
+      "min_row": 588,
+      "padding_masked_bytes": 0,
+      "request_count": 4214784,
+      "valid_bytes": 67436544
+    },
+    "op_b_dequant:READ_STREAM0": {
+      "logical_payload_bytes": 16859136,
+      "max_row": 3527,
+      "min_row": 2940,
+      "padding_masked_bytes": 0,
+      "request_count": 1053696,
+      "valid_bytes": 16859136
+    },
+    "op_b_dequant:WRITE_STREAM0": {
+      "logical_payload_bytes": 67436544,
+      "max_row": 5879,
+      "min_row": 3528,
+      "padding_masked_bytes": 0,
+      "request_count": 4214784,
+      "valid_bytes": 67436544
+    },
+    "op_fp32_add:READ_STREAM0": {
+      "logical_payload_bytes": 67436544,
+      "max_row": 2939,
+      "min_row": 588,
+      "padding_masked_bytes": 0,
+      "request_count": 4214784,
+      "valid_bytes": 67436544
+    },
+    "op_fp32_add:READ_STREAM1": {
+      "logical_payload_bytes": 67436544,
+      "max_row": 5879,
+      "min_row": 3528,
+      "padding_masked_bytes": 0,
+      "request_count": 4214784,
+      "valid_bytes": 67436544
+    },
+    "op_fp32_add:WRITE_STREAM0": {
+      "logical_payload_bytes": 67436544,
+      "max_row": 2351,
+      "min_row": 0,
+      "padding_masked_bytes": 0,
+      "request_count": 4214784,
+      "valid_bytes": 67436544
+    },
+    "op_relocation_pad:READ_STREAM0": {
+      "logical_payload_bytes": 3784704,
+      "max_row": 6011,
+      "min_row": 5880,
+      "padding_masked_bytes": 0,
+      "request_count": 236544,
+      "valid_bytes": 3784704
+    },
+    "op_relocation_pad:WRITE_STREAM0": {
+      "logical_payload_bytes": 3784704,
+      "max_row": 6143,
+      "min_row": 6012,
+      "padding_masked_bytes": 0,
+      "request_count": 236544,
+      "valid_bytes": 3784704
+    },
+    "op_tail_mul:READ_STREAM0": {
+      "logical_payload_bytes": 67436544,
+      "max_row": 2351,
+      "min_row": 0,
+      "padding_masked_bytes": 0,
+      "request_count": 4214784,
+      "valid_bytes": 67436544
+    },
+    "op_tail_mul:WRITE_STREAM0": {
+      "logical_payload_bytes": 67436544,
+      "max_row": 4703,
+      "min_row": 2352,
+      "padding_masked_bytes": 0,
+      "request_count": 4214784,
+      "valid_bytes": 67436544
+    },
+    "op_tail_round:READ_STREAM0": {
+      "logical_payload_bytes": 67436544,
+      "max_row": 4703,
+      "min_row": 2352,
+      "padding_masked_bytes": 0,
+      "request_count": 4214784,
+      "valid_bytes": 67436544
+    },
+    "op_tail_round:WRITE_STREAM0": {
+      "logical_payload_bytes": 16859136,
+      "max_row": 5291,
+      "min_row": 4704,
+      "padding_masked_bytes": 0,
+      "request_count": 1053696,
+      "valid_bytes": 16859136
+    }
+  },
+  "valid": true
+}

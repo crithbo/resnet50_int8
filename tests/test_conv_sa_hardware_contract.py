@@ -13,9 +13,10 @@ from resnet50_pipeline.conv_sa_contract import (
     WEIGHT_TRANSACTION_BYTES,
     stream_total_bytes,
     validate_first_conv_sa_contract,
+    validate_first_conv_signed_a_local_contract,
 )
 from resnet50_pipeline.conv28_layout import (
-    CONV28_HARDWARE_LAYOUT_ABI,
+    CONV28_SIGNED_A_LOCAL_LAYOUT_ABI,
     QLinearConvPhysicalLayout,
 )
 from tools.generate_conv_1x1_real import build_real_1x1
@@ -34,7 +35,7 @@ class ConvSaHardwareContractTests(unittest.TestCase):
         cls.spec = load_conv_instance_spec(ROOT, "node-0004")
         cls.config = build_real_1x1(_json(ROOT / "conv_full.json"), cls.spec)
         cls.plan = QLinearConvPhysicalLayout(
-            layout_abi=CONV28_HARDWARE_LAYOUT_ABI
+            layout_abi=CONV28_SIGNED_A_LOCAL_LAYOUT_ABI
         ).plan(
             activation_shape=cls.spec.activation_shape,
             weight_shape=cls.spec.weight_shape,
@@ -45,26 +46,49 @@ class ConvSaHardwareContractTests(unittest.TestCase):
         )
 
     def test_byte_routes_terminal_tags_and_bias_extent_close(self) -> None:
-        report = validate_first_conv_sa_contract(self.config)
+        report = validate_first_conv_signed_a_local_contract(self.config)
         self.assertEqual(
             report["stream_transaction_bytes"],
             {
-                "stream0": INPUT_TRANSACTION_BYTES,
-                "stream1": WEIGHT_TRANSACTION_BYTES,
-                "stream2": OUTPUT_TRANSACTION_BYTES,
+                "stream0": WEIGHT_TRANSACTION_BYTES,
+                "stream1": INPUT_TRANSACTION_BYTES,
+                "stream2": INPUT_TRANSACTION_BYTES,
                 "stream3": BIAS_TRANSACTION_BYTES,
+                "stream4": OUTPUT_TRANSACTION_BYTES,
             },
         )
         self.assertEqual(report["buffer_loop_bytes"]["GROUP0"], 128)
         self.assertEqual(report["buffer_loop_bytes"]["GROUP1"], 128)
-        self.assertEqual(report["buffer_loop_bytes"]["GROUP2"], 32)
-        self.assertEqual(set(self.config["n2n"]), {"neighbor_stream0"})
-        self.assertEqual(report["bias_extent_bytes"], 64)
-        self.assertEqual(report["bias_transaction_count"], 2 * 56 * 7)
-        self.assertEqual(report["bias_unique_address_count"], 2)
+        self.assertEqual(report["buffer_loop_bytes"]["GROUP2"], 128)
+        self.assertEqual(report["buffer_loop_bytes"]["GROUP3"], 32)
+        self.assertEqual(self.config["n2n"], {})
+        self.assertEqual(report["neighbor_stream_count"], 0)
+        self.assertEqual(report["sa_data_a_role"], "signed_int8_weight")
+        self.assertEqual(report["sa_data_b_role"], "unsigned_uint8_activation")
         self.assertEqual(
-            report["bias_handshakes_per_tile"], SA_BIAS_HANDSHAKES_PER_TILE
+            report["a_pingpong_binding"],
+            {
+                "mse_stream": 0,
+                "physical_buffers": [0, 1],
+                "sa_inport": 0,
+                "enabled": True,
+                "terminal_tag": 4,
+            },
         )
+        self.assertEqual(
+            [
+                self.config["buffer_config"][f"buffer{index}"]["mode"]
+                for index in range(4)
+            ],
+            [1, 1, 1, 1],
+        )
+        for index in range(5):
+            stream = self.config["stream_engine"][f"stream{index}"]
+            group = self.config["buffer_loop_configs"][f"GROUP{index}"]
+            self.assertEqual(
+                stream["buf_idx_keep_last_index"][0],
+                group["COL_LC"]["last_index"],
+            )
 
     def test_physical_input_and_p_write_ranges_are_exact_partitions(self) -> None:
         streams = self.config["stream_engine"]
@@ -73,11 +97,12 @@ class ConvSaHardwareContractTests(unittest.TestCase):
         k_blocks = self.plan.k_tile_padded // 8
 
         a_offsets = {
-            c * streams["stream0"]["dim_stride"][0]
-            + q * streams["stream0"]["dim_stride"][1]
-            + p * streams["stream0"]["dim_stride"][2]
+            (ring * c_quartets + c) * streams["stream1"]["dim_stride"][0]
+            + q * streams["stream1"]["dim_stride"][1]
+            + p * streams["stream1"]["dim_stride"][2]
             for p in range(self.spec.output_height)
             for q in range(q_blocks)
+            for ring in range(4)
             for c in range(c_quartets)
         }
         self.assertEqual(len(a_offsets), self.plan.port("A").payload_bytes // 3 // 32)
@@ -85,9 +110,9 @@ class ConvSaHardwareContractTests(unittest.TestCase):
         self.assertEqual(max(a_offsets) + 32, self.plan.port("A").payload_bytes // 3)
 
         p_offsets = {
-            k * streams["stream2"]["dim_stride"][0]
-            + (q * 8 + lane) * streams["stream2"]["dim_stride"][1]
-            + p * streams["stream2"]["dim_stride"][2]
+            k * streams["stream4"]["dim_stride"][0]
+            + (q * 8 + lane) * streams["stream4"]["dim_stride"][1]
+            + p * streams["stream4"]["dim_stride"][2]
             for p in range(self.spec.output_height)
             for q in range(q_blocks)
             for lane in range(8)
@@ -98,8 +123,8 @@ class ConvSaHardwareContractTests(unittest.TestCase):
         self.assertEqual(max(p_offsets) + 32, self.plan.port("P").payload_bytes // 3)
 
         weight_offsets = {
-            (ring * c_quartets + c) * streams["stream1"]["dim_stride"][0]
-            + k * streams["stream1"]["dim_stride"][1]
+            (ring * c_quartets + c) * streams["stream0"]["dim_stride"][0]
+            + k * streams["stream0"]["dim_stride"][1]
             for ring in range(4)
             for c in range(c_quartets)
             for k in range(k_blocks)
@@ -127,37 +152,54 @@ class ConvSaHardwareContractTests(unittest.TestCase):
         bad = json.loads(json.dumps(self.config))
         bad["stream_engine"]["stream1"]["idx_size"] = [3, 0, 0]
         with self.assertRaisesRegex(ValueError, "stream1 transaction is 4B"):
-            validate_first_conv_sa_contract(bad)
+            validate_first_conv_signed_a_local_contract(bad)
 
         bad = json.loads(json.dumps(self.config))
-        bad["buffer_loop_configs"]["GROUP2"]["ROW_LC"]["end"] = 4
-        with self.assertRaisesRegex(ValueError, "K8 int32 bias row"):
-            validate_first_conv_sa_contract(bad)
+        bad["buffer_loop_configs"]["GROUP3"]["ROW_LC"]["end"] = 4
+        with self.assertRaisesRegex(ValueError, "GROUP3 must cover"):
+            validate_first_conv_signed_a_local_contract(bad)
 
         bad = json.loads(json.dumps(self.config))
-        bad["n2n"] = {"neighbor_stream1": bad["n2n"].pop("neighbor_stream0")}
-        with self.assertRaisesRegex(ValueError, "neighbor_stream0"):
-            validate_first_conv_sa_contract(bad)
+        bad["n2n"] = {"neighbor_stream0": {"mem_loop": 4}}
+        with self.assertRaisesRegex(ValueError, "must not depend"):
+            validate_first_conv_signed_a_local_contract(bad)
 
         bad = json.loads(json.dumps(self.config))
         bad["buffer_config"]["buffer4"]["buffer_life_time"] = 1
         with self.assertRaisesRegex(ValueError, "four bias handshakes"):
-            validate_first_conv_sa_contract(bad)
+            validate_first_conv_signed_a_local_contract(bad)
 
         bad = json.loads(json.dumps(self.config))
         bad["stream_engine"]["stream3"]["idx"] = ["DRAM_LC.LC13", None, None]
         with self.assertRaisesRegex(ValueError, "Kblock/H/Qblock bias tile branch"):
-            validate_first_conv_sa_contract(bad)
+            validate_first_conv_signed_a_local_contract(bad)
 
         bad = json.loads(json.dumps(self.config))
         bad["stream_engine"]["stream3"]["dim_stride"][2] = 32
         with self.assertRaisesRegex(ValueError, "change only by 32B per Kblock"):
-            validate_first_conv_sa_contract(bad)
+            validate_first_conv_signed_a_local_contract(bad)
 
         bad = json.loads(json.dumps(self.config))
-        bad["buffer_loop_configs"]["GROUP2"]["ROW_LC"]["src_id"] = "DRAM_LC.LC13"
-        with self.assertRaisesRegex(ValueError, "Qblock bias tile event"):
-            validate_first_conv_sa_contract(bad)
+        bad["stream_engine"]["stream2"]["dim_stride"][1] += 32
+        with self.assertRaisesRegex(ValueError, "B/B' activation producers"):
+            validate_first_conv_signed_a_local_contract(bad)
+
+        bad = json.loads(json.dumps(self.config))
+        bad["stream_engine"]["stream0"]["buf_idx_keep_last_index"][0] -= 1
+        with self.assertRaisesRegex(
+            ValueError, "ROW keep threshold must equal GROUP0.COL_LC.last_index"
+        ):
+            validate_first_conv_signed_a_local_contract(bad)
+
+        bad = json.loads(json.dumps(self.config))
+        bad["stream_engine"]["stream0"]["ping_pong"] = 0
+        with self.assertRaisesRegex(ValueError, "ping-pong enables must match"):
+            validate_first_conv_signed_a_local_contract(bad)
+
+        bad = json.loads(json.dumps(self.config))
+        bad["stream_engine"]["stream0"]["pingpong_last_index"] = 3
+        with self.assertRaisesRegex(ValueError, "terminal tags must match"):
+            validate_first_conv_signed_a_local_contract(bad)
 
 
 if __name__ == "__main__":

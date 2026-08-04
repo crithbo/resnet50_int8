@@ -1,0 +1,780 @@
+{
+  "operators": [
+    {
+      "id": "op_w0_s00",
+      "inputs": {
+        "A": {
+          "bank_interleave": 1,
+          "dtype": "int32",
+          "remapping": null,
+          "shape": [
+            1,
+            3136,
+            8
+          ],
+          "source": {
+            "type": "external"
+          },
+          "base_addr": "0x00000000"
+        }
+      },
+      "output": {
+        "bank_interleave": 1,
+        "dtype": "uint8",
+        "remapping": null,
+        "shape": [
+          1,
+          3136,
+          8
+        ],
+        "base_addr": "0x00018800"
+      },
+      "type": "resnet50_requant_node0004_w0_s00",
+      "used_slices": "0b0001000100010001000100010001"
+    },
+    {
+      "id": "op_w0_s01",
+      "inputs": {
+        "A": {
+          "bank_interleave": 1,
+          "dtype": "int32",
+          "remapping": null,
+          "shape": [
+            1,
+            3136,
+            8
+          ],
+          "source": {
+            "type": "external"
+          },
+          "base_addr": "0x0001EA00"
+        }
+      },
+      "output": {
+        "bank_interleave": 1,
+        "dtype": "uint8",
+        "remapping": null,
+        "shape": [
+          1,
+          3136,
+          8
+        ],
+        "base_addr": "0x00037200"
+      },
+      "type": "resnet50_requant_node0004_w0_s01",
+      "used_slices": "0b0001000100010001000100010001"
+    },
+    {
+      "id": "op_w0_s02",
+      "inputs": {
+        "A": {
+          "bank_interleave": 1,
+          "dtype": "int32",
+          "remapping": null,
+          "shape": [
+            1,
+            3136,
+            8
+          ],
+          "source": {
+            "type": "external"
+          },
+          "base_addr": "0x0003D400"
+        }
+      },
+      "output": {
+        "bank_interleave": 1,
+        "dtype": "uint8",
+        "remapping": null,
+        "shape": [
+          1,
+          3136,
+          8
+        ],
+        "base_addr": "0x00055C00"
+      },
+      "type": "resnet50_requant_node0004_w0_s02",
+      "used_slices": "0b0100010001000100010001000100"
+    },
+    {
+      "id": "op_w0_s03",
+      "inputs": {
+        "A": {
+          "bank_interleave": 1,
+          "dtype": "int32",
+          "remapping": null,
+          "shape": [
+            1,
+            3136,
+            8
+          ],
+          "source": {
+            "type": "external"
+          },
+          "base_addr": "0x0005BE00"
+        }
+      },
+      "output": {
+        "bank_interleave": 1,
+        "dtype": "uint8",
+        "remapping": null,
+        "shape": [
+          1,
+          3136,
+          8
+        ],
+        "base_addr": "0x00074600"
+      },
+      "type": "resnet50_requant_node0004_w0_s03",
+      "used_slices": "0b0100010001000100010001000100"
+    },
+    {
+      "id": "op_w0_s04",
+      "inputs": {
+        "A": {
+          "bank_interleave": 1,
+          "dtype": "int32",
+          "remapping": null,
+          "shape": [
+            1,
+            3136,
+            8
+          ],
+          "source": {
+            "type": "external"
+          },
+          "base_addr": "0x0007A800"
+        }
+      },
+      "output": {
+        "bank_interleave": 1,
+        "dtype": "uint8",
+        "remapping": null,
+        "shape": [
+          1,
+          3136,
+          8
+        ],
+        "base_addr": "0x00093000"
+      },
+      "type": "resnet50_requant_node0004_w0_s04",
+      "used_slices": "0b1000100010001000100010001000"
+    },
+    {
+      "id": "op_w0_s05",
+      "inputs": {
+        "A": {
+          "bank_interleave": 1,
+          "dtype": "int32",
+          "remapping": null,
+          "shape": [
+            1,
+            3136,
+            8
+          ],
+          "source": {
+            "type": "external"
+          },
+          "base_addr": "0x00099200"
+        }
+      },
+      "output": {
+        "bank_interleave": 1,
+        "dtype": "uint8",
+        "remapping": null,
+        "shape": [
+          1,
+          3136,
+          8
+        ],
+        "base_addr": "0x000B1A00"
+      },
+      "type": "resnet50_requant_node0004_w0_s05",
+      "used_slices": "0b1000100010001000100010001000"
+    },
+    {
+      "id": "op_w0_s06",
+      "inputs": {
+        "A": {
+          "bank_interleave": 1,
+          "dtype": "int32",
+          "remapping": null,
+          "shape": [
+            1,
+            3136,
+            8
+          ],
+          "source": {
+            "type": "external"
+          },
+          "base_addr": "0x000B7C00"
+        }
+      },
+      "output": {
+        "bank_interleave": 1,
+        "dtype": "uint8",
+        "remapping": null,
+        "shape": [
+          1,
+          3136,
+          8
+        ],
+        "base_addr": "0x000D0400"
+      },
+      "type": "resnet50_requant_node0004_w0_s06",
+      "used_slices": "0b0010001000100010001000100010"
+    },
+    {
+      "id": "op_w0_s07",
+      "inputs": {
+        "A": {
+          "bank_interleave": 1,
+          "dtype": "int32",
+          "remapping": null,
+          "shape": [
+            1,
+            3136,
+            8
+          ],
+          "source": {
+            "type": "external"
+          },
+          "base_addr": "0x000D6600"
+        }
+      },
+      "output": {
+        "bank_interleave": 1,
+        "dtype": "uint8",
+        "remapping": null,
+        "shape": [
+          1,
+          3136,
+          8
+        ],
+        "base_addr": "0x000EEE00"
+      },
+      "type": "resnet50_requant_node0004_w0_s07",
+      "used_slices": "0b0010001000100010001000100010"
+    },
+    {
+      "id": "op_w1_s00",
+      "inputs": {
+        "A": {
+          "bank_interleave": 1,
+          "dtype": "int32",
+          "remapping": null,
+          "shape": [
+            1,
+            3136,
+            8
+          ],
+          "source": {
+            "type": "external"
+          },
+          "base_addr": "0x000F5000"
+        }
+      },
+      "output": {
+        "bank_interleave": 1,
+        "dtype": "uint8",
+        "remapping": null,
+        "shape": [
+          1,
+          3136,
+          8
+        ],
+        "base_addr": "0x0010D800"
+      },
+      "type": "resnet50_requant_node0004_w1_s00",
+      "used_slices": "0b0001000100010001000100010001"
+    },
+    {
+      "id": "op_w1_s01",
+      "inputs": {
+        "A": {
+          "bank_interleave": 1,
+          "dtype": "int32",
+          "remapping": null,
+          "shape": [
+            1,
+            3136,
+            8
+          ],
+          "source": {
+            "type": "external"
+          },
+          "base_addr": "0x00113A00"
+        }
+      },
+      "output": {
+        "bank_interleave": 1,
+        "dtype": "uint8",
+        "remapping": null,
+        "shape": [
+          1,
+          3136,
+          8
+        ],
+        "base_addr": "0x0012C200"
+      },
+      "type": "resnet50_requant_node0004_w1_s01",
+      "used_slices": "0b0001000100010001000100010001"
+    },
+    {
+      "id": "op_w1_s02",
+      "inputs": {
+        "A": {
+          "bank_interleave": 1,
+          "dtype": "int32",
+          "remapping": null,
+          "shape": [
+            1,
+            3136,
+            8
+          ],
+          "source": {
+            "type": "external"
+          },
+          "base_addr": "0x00132400"
+        }
+      },
+      "output": {
+        "bank_interleave": 1,
+        "dtype": "uint8",
+        "remapping": null,
+        "shape": [
+          1,
+          3136,
+          8
+        ],
+        "base_addr": "0x0014AC00"
+      },
+      "type": "resnet50_requant_node0004_w1_s02",
+      "used_slices": "0b0100010001000100010001000100"
+    },
+    {
+      "id": "op_w1_s03",
+      "inputs": {
+        "A": {
+          "bank_interleave": 1,
+          "dtype": "int32",
+          "remapping": null,
+          "shape": [
+            1,
+            3136,
+            8
+          ],
+          "source": {
+            "type": "external"
+          },
+          "base_addr": "0x00150E00"
+        }
+      },
+      "output": {
+        "bank_interleave": 1,
+        "dtype": "uint8",
+        "remapping": null,
+        "shape": [
+          1,
+          3136,
+          8
+        ],
+        "base_addr": "0x00169600"
+      },
+      "type": "resnet50_requant_node0004_w1_s03",
+      "used_slices": "0b0100010001000100010001000100"
+    },
+    {
+      "id": "op_w1_s04",
+      "inputs": {
+        "A": {
+          "bank_interleave": 1,
+          "dtype": "int32",
+          "remapping": null,
+          "shape": [
+            1,
+            3136,
+            8
+          ],
+          "source": {
+            "type": "external"
+          },
+          "base_addr": "0x0016F800"
+        }
+      },
+      "output": {
+        "bank_interleave": 1,
+        "dtype": "uint8",
+        "remapping": null,
+        "shape": [
+          1,
+          3136,
+          8
+        ],
+        "base_addr": "0x00188000"
+      },
+      "type": "resnet50_requant_node0004_w1_s04",
+      "used_slices": "0b1000100010001000100010001000"
+    },
+    {
+      "id": "op_w1_s05",
+      "inputs": {
+        "A": {
+          "bank_interleave": 1,
+          "dtype": "int32",
+          "remapping": null,
+          "shape": [
+            1,
+            3136,
+            8
+          ],
+          "source": {
+            "type": "external"
+          },
+          "base_addr": "0x0018E200"
+        }
+      },
+      "output": {
+        "bank_interleave": 1,
+        "dtype": "uint8",
+        "remapping": null,
+        "shape": [
+          1,
+          3136,
+          8
+        ],
+        "base_addr": "0x001A6A00"
+      },
+      "type": "resnet50_requant_node0004_w1_s05",
+      "used_slices": "0b1000100010001000100010001000"
+    },
+    {
+      "id": "op_w1_s06",
+      "inputs": {
+        "A": {
+          "bank_interleave": 1,
+          "dtype": "int32",
+          "remapping": null,
+          "shape": [
+            1,
+            3136,
+            8
+          ],
+          "source": {
+            "type": "external"
+          },
+          "base_addr": "0x001ACC00"
+        }
+      },
+      "output": {
+        "bank_interleave": 1,
+        "dtype": "uint8",
+        "remapping": null,
+        "shape": [
+          1,
+          3136,
+          8
+        ],
+        "base_addr": "0x001C5400"
+      },
+      "type": "resnet50_requant_node0004_w1_s06",
+      "used_slices": "0b0010001000100010001000100010"
+    },
+    {
+      "id": "op_w1_s07",
+      "inputs": {
+        "A": {
+          "bank_interleave": 1,
+          "dtype": "int32",
+          "remapping": null,
+          "shape": [
+            1,
+            3136,
+            8
+          ],
+          "source": {
+            "type": "external"
+          },
+          "base_addr": "0x001CB600"
+        }
+      },
+      "output": {
+        "bank_interleave": 1,
+        "dtype": "uint8",
+        "remapping": null,
+        "shape": [
+          1,
+          3136,
+          8
+        ],
+        "base_addr": "0x001E3E00"
+      },
+      "type": "resnet50_requant_node0004_w1_s07",
+      "used_slices": "0b0010001000100010001000100010"
+    },
+    {
+      "id": "op_w2_s00",
+      "inputs": {
+        "A": {
+          "bank_interleave": 1,
+          "dtype": "int32",
+          "remapping": null,
+          "shape": [
+            1,
+            3136,
+            8
+          ],
+          "source": {
+            "type": "external"
+          },
+          "base_addr": "0x001EA000"
+        }
+      },
+      "output": {
+        "bank_interleave": 1,
+        "dtype": "uint8",
+        "remapping": null,
+        "shape": [
+          1,
+          3136,
+          8
+        ],
+        "base_addr": "0x00202800"
+      },
+      "type": "resnet50_requant_node0004_w2_s00",
+      "used_slices": "0b0000000000000000000000010001"
+    },
+    {
+      "id": "op_w2_s01",
+      "inputs": {
+        "A": {
+          "bank_interleave": 1,
+          "dtype": "int32",
+          "remapping": null,
+          "shape": [
+            1,
+            3136,
+            8
+          ],
+          "source": {
+            "type": "external"
+          },
+          "base_addr": "0x00208A00"
+        }
+      },
+      "output": {
+        "bank_interleave": 1,
+        "dtype": "uint8",
+        "remapping": null,
+        "shape": [
+          1,
+          3136,
+          8
+        ],
+        "base_addr": "0x00221200"
+      },
+      "type": "resnet50_requant_node0004_w2_s01",
+      "used_slices": "0b0000000000000000000000010001"
+    },
+    {
+      "id": "op_w2_s02",
+      "inputs": {
+        "A": {
+          "bank_interleave": 1,
+          "dtype": "int32",
+          "remapping": null,
+          "shape": [
+            1,
+            3136,
+            8
+          ],
+          "source": {
+            "type": "external"
+          },
+          "base_addr": "0x00227400"
+        }
+      },
+      "output": {
+        "bank_interleave": 1,
+        "dtype": "uint8",
+        "remapping": null,
+        "shape": [
+          1,
+          3136,
+          8
+        ],
+        "base_addr": "0x0023FC00"
+      },
+      "type": "resnet50_requant_node0004_w2_s02",
+      "used_slices": "0b0000000000000000000001000100"
+    },
+    {
+      "id": "op_w2_s03",
+      "inputs": {
+        "A": {
+          "bank_interleave": 1,
+          "dtype": "int32",
+          "remapping": null,
+          "shape": [
+            1,
+            3136,
+            8
+          ],
+          "source": {
+            "type": "external"
+          },
+          "base_addr": "0x00245E00"
+        }
+      },
+      "output": {
+        "bank_interleave": 1,
+        "dtype": "uint8",
+        "remapping": null,
+        "shape": [
+          1,
+          3136,
+          8
+        ],
+        "base_addr": "0x0025E600"
+      },
+      "type": "resnet50_requant_node0004_w2_s03",
+      "used_slices": "0b0000000000000000000001000100"
+    },
+    {
+      "id": "op_w2_s04",
+      "inputs": {
+        "A": {
+          "bank_interleave": 1,
+          "dtype": "int32",
+          "remapping": null,
+          "shape": [
+            1,
+            3136,
+            8
+          ],
+          "source": {
+            "type": "external"
+          },
+          "base_addr": "0x00264800"
+        }
+      },
+      "output": {
+        "bank_interleave": 1,
+        "dtype": "uint8",
+        "remapping": null,
+        "shape": [
+          1,
+          3136,
+          8
+        ],
+        "base_addr": "0x0027D000"
+      },
+      "type": "resnet50_requant_node0004_w2_s04",
+      "used_slices": "0b0000000000000000000010001000"
+    },
+    {
+      "id": "op_w2_s05",
+      "inputs": {
+        "A": {
+          "bank_interleave": 1,
+          "dtype": "int32",
+          "remapping": null,
+          "shape": [
+            1,
+            3136,
+            8
+          ],
+          "source": {
+            "type": "external"
+          },
+          "base_addr": "0x00283200"
+        }
+      },
+      "output": {
+        "bank_interleave": 1,
+        "dtype": "uint8",
+        "remapping": null,
+        "shape": [
+          1,
+          3136,
+          8
+        ],
+        "base_addr": "0x0029BA00"
+      },
+      "type": "resnet50_requant_node0004_w2_s05",
+      "used_slices": "0b0000000000000000000010001000"
+    },
+    {
+      "id": "op_w2_s06",
+      "inputs": {
+        "A": {
+          "bank_interleave": 1,
+          "dtype": "int32",
+          "remapping": null,
+          "shape": [
+            1,
+            3136,
+            8
+          ],
+          "source": {
+            "type": "external"
+          },
+          "base_addr": "0x002A1C00"
+        }
+      },
+      "output": {
+        "bank_interleave": 1,
+        "dtype": "uint8",
+        "remapping": null,
+        "shape": [
+          1,
+          3136,
+          8
+        ],
+        "base_addr": "0x002BA400"
+      },
+      "type": "resnet50_requant_node0004_w2_s06",
+      "used_slices": "0b0000000000000000000000100010"
+    },
+    {
+      "id": "op_w2_s07",
+      "inputs": {
+        "A": {
+          "bank_interleave": 1,
+          "dtype": "int32",
+          "remapping": null,
+          "shape": [
+            1,
+            3136,
+            8
+          ],
+          "source": {
+            "type": "external"
+          },
+          "base_addr": "0x002C0600"
+        }
+      },
+      "output": {
+        "bank_interleave": 1,
+        "dtype": "uint8",
+        "remapping": null,
+        "shape": [
+          1,
+          3136,
+          8
+        ],
+        "base_addr": "0x002D8E00"
+      },
+      "type": "resnet50_requant_node0004_w2_s07",
+      "used_slices": "0b0000000000000000000000100010"
+    }
+  ],
+  "params": {
+    "hw_op_id": "hwop-0004-01",
+    "node_id": "node-0004",
+    "shard_count_per_wave": 8,
+    "source": "independent W3 INT32 accumulator and UINT8 golden",
+    "wave_count": 3
+  },
+  "used_slices": "0b1111111111111111111111111111"
+}

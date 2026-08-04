@@ -9,21 +9,23 @@ from pathlib import Path
 from typing import Any
 
 from resnet50_pipeline.conv_instance import (
+    CONV_GEMM_TRANSPOSED_OUTPORT_JSON_MODE,
+    CONV_TRANSPORT_ABI_SIGNED_A_LOCAL,
     FIRST_REAL_CONV_NODE_ID,
     SA_ONLY_CONFIG_MASK,
     ConvInstanceSpec,
     load_conv_instance_spec,
     validate_conv_accumulate_config_mask,
-    validate_conv_accumulate_neighbor_ring,
     validate_conv_accumulate_output_route,
 )
 from resnet50_pipeline.conv_sa_contract import (
     HIGH_RING_STEPS,
+    SA_BIAS_HANDSHAKES_PER_TILE,
     SA_CHANNEL_LANES,
     SA_OUTPUT_LANES,
     SA_SPATIAL_LANES,
     ceil_div,
-    validate_first_conv_sa_contract,
+    validate_first_conv_signed_a_local_contract,
 )
 
 
@@ -61,9 +63,10 @@ def build_real_1x1(
     # accumulation.  Keeping the broader SA+GA mask would leave the parser to
     # silently discard absent GA fields and makes transport audits ambiguous.
     config["CONFIG"] = SA_ONLY_CONFIG_MASK
-    # One standard 8x8 GEMM orientation is used everywhere: activation rows on
-    # group0, weight columns on group1, and K bias on the RTL column-broadcast
-    # group2.  This is the orientation used by the passing HIGH-ring example.
+    # RTL inport0/DataA is signed and inport1/DataB is unsigned.  The v3 ABI
+    # therefore puts K8xC4 int8 weights on target A and replicated Q8xC4 uint8
+    # activations on targets B/B'.  Both operands are local and follow the same
+    # destination-relative PREV C order; no runtime neighbor transfer remains.
     loops = config["dram_loop_configs"]
     if set(loops) != {f"LC{index}" for index in range(16)}:
         raise ValueError("Conv source loop inventory differs from the reviewed skeleton")
@@ -77,13 +80,14 @@ def build_real_1x1(
             last_index=0,
         )
     loop_contract = {
-        # One compute matrix is K8 x Q8.  LC3 fills a 128B activation
-        # buffer; LC6/LC7 fill four matching 128B weight buffers in the exact
-        # HIGH-ring arrival order; LC9 emits eight contiguous K8 P rows.
+        # One compute matrix is K8 x Q8.  LC4/LC5 and LC6/LC7 traverse the
+        # identical destination-relative PREV C order for activation/weight.
+        # LC9 emits eight contiguous K8 P rows after the SA outport transpose.
         "LC0": (None, 1, k_blocks, 0),
         "LC1": ("DRAM_LC.LC0", 0, spec.output_height, 1),
         "LC2": ("DRAM_LC.LC1", 0, q_blocks, 2),
-        "LC3": ("DRAM_LC.LC2", 0, c_quartets, 3),
+        "LC4": ("DRAM_LC.LC2", 0, HIGH_RING_STEPS, 3),
+        "LC5": ("DRAM_LC.LC4", 0, c_quartets, 4),
         "LC6": ("DRAM_LC.LC2", 0, HIGH_RING_STEPS, 3),
         "LC7": ("DRAM_LC.LC6", 0, c_quartets, 4),
         # The WRITE_STREAM0 and READ_STREAM3 endpoints sit on the opposite
@@ -128,8 +132,29 @@ def build_real_1x1(
         "inport1": {"src_id": None, "mode": "constant", "keep_last_index": None, "constant": SA_SPATIAL_LANES},
         "inport0": {"src_id": "DRAM_LC.LC15", "mode": "keep", "keep_last_index": 2, "constant": 0},
     }
+    # PE2 = ring_step*c_quartets + local_c_quartet for the replicated
+    # activation.  It intentionally mirrors PE0's weight traversal.
+    pe["PE2"] = {
+        "alu_opcode": "mac",
+        "inport2": {"src_id": "DRAM_LC.LC5", "mode": "buffer", "keep_last_index": None, "constant": 0},
+        "inport1": {"src_id": None, "mode": "constant", "keep_last_index": None, "constant": c_quartets},
+        "inport0": {"src_id": "DRAM_LC.LC4", "mode": "keep", "keep_last_index": 3, "constant": 0},
+    }
 
-    streams = config["stream_engine"]
+    stream_templates = config["stream_engine"]
+    for required in ("stream0", "stream1", "stream2", "stream3"):
+        if required not in stream_templates:
+            raise ValueError(f"Conv source is missing {required} stream template")
+    # Match the model_execplan/native register order exactly.  This is not
+    # cosmetic: address patching resolves rd_stream2 to JSON stream2.
+    streams = {
+        "stream0": deepcopy(stream_templates["stream0"]),  # A / READ0
+        "stream1": deepcopy(stream_templates["stream1"]),  # B / READ1
+        "stream2": deepcopy(stream_templates["stream1"]),  # B' / READ2
+        "stream3": deepcopy(stream_templates["stream3"]),  # C / READ3
+        "stream4": deepcopy(stream_templates["stream2"]),  # D / WRITE0
+    }
+    config["stream_engine"] = streams
     def reset_stream(name: str, *, target: str, mode: str) -> dict[str, Any]:
         stream = streams[name]
         stream.update(target=target, mode=mode)
@@ -149,24 +174,7 @@ def build_real_1x1(
         stream["pingpong_last_index"] = None
         return stream
 
-    activation = reset_stream("stream0", target="A", mode="read")
-    activation.update(
-        idx=["DRAM_LC.LC3", "DRAM_LC.LC2", "DRAM_LC.LC1"],
-        idx_size=[31, 0, 0],
-        dim_stride=[
-            SA_SPATIAL_LANES * SA_CHANNEL_LANES,
-            c_quartets * SA_SPATIAL_LANES * SA_CHANNEL_LANES,
-            q_blocks * c_quartets * SA_SPATIAL_LANES * SA_CHANNEL_LANES,
-        ],
-        mem_idx_mode=["buffer", "keep", "keep"],
-        mem_idx_keep_last_index=[3, 2, 1],
-        buf_idx_mode=["keep", "buffer"],
-        buf_idx_keep_last_index=[3, 4],
-        buf_spatial_stride=list(range(16)),
-        buf_full_last_index=3,
-    )
-
-    weight = reset_stream("stream1", target="B", mode="read")
+    weight = reset_stream("stream0", target="A", mode="read")
     weight.update(
         idx=["LC_PE.PE0", "DRAM_LC.LC0", None],
         idx_size=[31, 0, 0],
@@ -178,12 +186,43 @@ def build_real_1x1(
         mem_idx_mode=["buffer", "keep", None],
         mem_idx_keep_last_index=[4, 0, None],
         buf_idx_mode=["keep", "buffer"],
-        buf_idx_keep_last_index=[4, 5],
+        # JSON Buffer-AG order is [row, col].  ROW is a keep input and may
+        # only be released when the buffered COL terminal (index 5) arrives.
+        buf_idx_keep_last_index=[5, 5],
+        buf_spatial_stride=list(range(16)),
+        buf_full_last_index=4,
+        # RTL WR_Buffer_AG uses this selector to alternate READ0 between
+        # physical buffers 0/1.  SA inport0 independently alternates between
+        # those same buffers at terminal tag 4, so the producer and consumer
+        # selectors must have the same enable and boundary.
+        ping_pong=1,
+        pingpong_last_index=4,
+    )
+
+    activation = reset_stream("stream1", target="B", mode="read")
+    activation.update(
+        idx=["LC_PE.PE2", "DRAM_LC.LC2", "DRAM_LC.LC1"],
+        idx_size=[31, 0, 0],
+        dim_stride=[
+            SA_SPATIAL_LANES * SA_CHANNEL_LANES,
+            HIGH_RING_STEPS * c_quartets * SA_SPATIAL_LANES * SA_CHANNEL_LANES,
+            q_blocks * HIGH_RING_STEPS * c_quartets * SA_SPATIAL_LANES * SA_CHANNEL_LANES,
+        ],
+        mem_idx_mode=["buffer", "keep", "keep"],
+        mem_idx_keep_last_index=[4, 2, 1],
+        buf_idx_mode=["keep", "buffer"],
+        buf_idx_keep_last_index=[5, 5],
         buf_spatial_stride=list(range(16)),
         buf_full_last_index=4,
     )
 
-    output = reset_stream("stream2", target="D", mode="write")
+    activation_prime = reset_stream("stream2", target="B'", mode="read")
+    activation_prime.update(
+        {key: deepcopy(value) for key, value in activation.items() if key != "target"}
+    )
+    activation_prime["target"] = "B'"
+
+    output = reset_stream("stream4", target="D", mode="write")
     output.update(
         idx=["DRAM_LC.LC13", "LC_PE.PE1", "DRAM_LC.LC14"],
         idx_size=[31, 0, 0],
@@ -195,7 +234,7 @@ def build_real_1x1(
         mem_idx_mode=["keep", "buffer", "keep"],
         mem_idx_keep_last_index=[0, 3, 1],
         buf_idx_mode=["keep", "buffer"],
-        buf_idx_keep_last_index=[4, 5],
+        buf_idx_keep_last_index=[5, 5],
         buf_spatial_stride=[0, 4, 8, 12, 1, 5, 9, 13, 2, 6, 10, 14, 3, 7, 11, 15],
     )
 
@@ -207,32 +246,26 @@ def build_real_1x1(
         mem_idx_mode=["keep", "keep", "buffer"],
         mem_idx_keep_last_index=[0, 1, 2],
         buf_idx_mode=["keep", "buffer"],
-        buf_idx_keep_last_index=[3, 4],
+        buf_idx_keep_last_index=[4, 4],
         buf_spatial_stride=list(range(16)),
         buf_full_last_index=2,
     )
 
-    config["n2n"] = {
-        "neighbor_stream0": {
-            "mem_loop": spec.n2n_mem_loop,
-            "src_slice_sel": spec.n2n_src_slice_sel,
-            "dst_slice_sel": spec.n2n_dst_slice_sel,
-            "ping_pong": spec.n2n_ping_pong,
-        }
-    }
-    neighbor = config["n2n"]["neighbor_stream0"]
-    neighbor.update(
-        mem_loop=spec.n2n_mem_loop,
-        src_slice_sel=spec.n2n_src_slice_sel,
-        dst_slice_sel=spec.n2n_dst_slice_sel,
-        ping_pong=spec.n2n_ping_pong,
-    )
+    config["n2n"] = {}
 
     group_contract = {
-        "GROUP0": ("A", "DRAM_LC.LC2", 4, 3, 4),
-        "GROUP1": ("B", "DRAM_LC.LC6", 4, 4, 5),
-        "GROUP2": ("C", "DRAM_LC.LC12", 1, 3, 4),
-        "GROUP3": ("D", "DRAM_LC.LC9", 4, 4, 5),
+        "GROUP0": ("A", "DRAM_LC.LC6", 4, 4, 5),
+        "GROUP1": ("B", "DRAM_LC.LC4", 4, 4, 5),
+        "GROUP2": ("B'", "DRAM_LC.LC4", 4, 4, 5),
+        "GROUP3": ("C", "DRAM_LC.LC12", 1, 3, 4),
+        "GROUP4": ("D", "DRAM_LC.LC9", 4, 4, 5),
+    }
+    group_templates = list(config["buffer_loop_configs"].values())
+    if not group_templates:
+        raise ValueError("Conv source has no buffer-loop template")
+    config["buffer_loop_configs"] = {
+        name: deepcopy(group_templates[min(index, len(group_templates) - 1)])
+        for index, name in enumerate(group_contract)
     }
     for name, (target, source_id, row_end, row_last, col_last) in group_contract.items():
         group = config["buffer_loop_configs"][name]
@@ -245,8 +278,11 @@ def build_real_1x1(
         )
 
     buffer_contract = {
-        0: (1, 3, 4, 0, 3),
-        1: (1, 3, 4, 0, 3),
+        # Buffer0/1 carry signed weight rows.  Array_Request_Manager mode=1
+        # makes the four-use lifetime the inner counter, so each row remains
+        # selected for all four SA handshakes before the row address advances.
+        0: (0, 4, 4, 1, 3),
+        1: (0, 4, 4, 1, 3),
         2: (0, 4, 4, 1, 3),
         3: (0, 4, 4, 1, 3),
         # JSON lifetime is encoded as N-1. Four reads initialize all four SA
@@ -259,7 +295,7 @@ def build_real_1x1(
             dst_port=0,
             nbr_enable=nbr,
             buf_full_last_index=full_last,
-            buffer_nbr_cnt=spec.n2n_mem_loop - 1,
+            buffer_nbr_cnt=0,
             buffer_life_time=lifetime,
             mode=mode,
             mask=[1] * 8,
@@ -274,8 +310,8 @@ def build_real_1x1(
         "inport0": {
             "enable": 1,
             "pingpong_en": 1,
-            "pingpong_last_index": 3,
-            "nbr_enable": 1,
+            "pingpong_last_index": 4,
+            "nbr_enable": 0,
         },
         "inport1": {
             "enable": 1,
@@ -290,19 +326,19 @@ def build_real_1x1(
             "nbr_enable": 0,
         },
         "outport": {
-            # Official encoder label "col" is numeric RTL row-major (0).
-            "mode": "col",
+            # Weight rows x activation columns are transposed back to the
+            # existing Q8xK8 accumulator layout by RTL major=1.
+            "mode": CONV_GEMM_TRANSPOSED_OUTPORT_JSON_MODE,
             "fp32tofp16": "false",
             "fp32tobf16": "false",
         },
     }
-    validate_conv_accumulate_output_route(config)
-    validate_conv_accumulate_config_mask(config)
-    validate_conv_accumulate_neighbor_ring(
+    validate_conv_accumulate_output_route(
         config,
-        expected_group_size=spec.n2n_mem_loop,
+        expected_json_mode=CONV_GEMM_TRANSPOSED_OUTPORT_JSON_MODE,
     )
-    validate_first_conv_sa_contract(config)
+    validate_conv_accumulate_config_mask(config)
+    validate_first_conv_signed_a_local_contract(config)
     return config
 
 
@@ -311,20 +347,25 @@ def _refresh_contract_semantics(
 ) -> None:
     """Bind the human/machine semantic record to the generated graph."""
 
-    static_report = validate_first_conv_sa_contract(config)
-    contract["transport_abi"] = "conv_sa_q8k8_v2"
+    static_report = validate_first_conv_signed_a_local_contract(config)
+    contract["transport_abi"] = CONV_TRANSPORT_ABI_SIGNED_A_LOCAL
 
     contract["port_semantics"].update(
         {
             "target_A": {
-                "logical_role": "activation_q8c4",
+                "logical_role": "weight_k8c4_in_destination_prev_order",
+                "project_port": "B",
+                "dtype": "int8",
+            },
+            "target_B": {
+                "logical_role": "destination_local_activation_q8c4",
                 "project_port": "A",
                 "dtype": "uint8",
             },
-            "target_B": {
-                "logical_role": "weight_k8c4_in_high_ring_prev_order",
-                "project_port": "B",
-                "dtype": "int8",
+            "target_B_prime": {
+                "logical_role": "destination_local_activation_q8c4_pingpong_replica",
+                "project_port": "A",
+                "dtype": "uint8",
             },
         }
     )
@@ -332,7 +373,8 @@ def _refresh_contract_semantics(
         "LC0": "k_block_compute",
         "LC1": "p_compute",
         "LC2": "q_block_compute",
-        "LC3": "local_c_quartet_activation",
+        "LC4": "destination_prev_step_activation",
+        "LC5": "local_c_quartet_activation",
         "LC6": "high_ring_step",
         "LC7": "local_c_quartet_weight",
         "LC9": "q_lane_write",
@@ -374,13 +416,20 @@ def _refresh_contract_semantics(
                 "formula": "LC15*8+LC9",
                 "sources": ["LC15", "constant:8", "LC9"],
             },
+            {
+                "pe": "PE2",
+                "result": "activation_prev_step_c_quartet",
+                "formula": "LC4*c_quartets+LC5",
+                "sources": ["LC4", "constant:c_quartets", "LC5"],
+            },
         ],
     }
     roles = {
-        "stream0": "activation_q8c4_read",
-        "stream1": "weight_k8c4_read",
-        "stream2": "int32_p_k8_write",
+        "stream0": "signed_weight_k8c4_read",
+        "stream1": "unsigned_activation_q8c4_read_buffer2",
+        "stream2": "unsigned_activation_q8c4_read_buffer3",
         "stream3": "int32_bias_k8_read",
+        "stream4": "int32_p_k8_write",
     }
     contract["stream_semantics"] = [
         {
@@ -395,27 +444,28 @@ def _refresh_contract_semantics(
         }
         for name, stream in sorted(config["stream_engine"].items())
     ]
-    contract["ring_semantics"]["neighbor_stream"] = 0
-    contract["ring_semantics"]["payload_role"] = "activation_q8c4"
+    contract["ring_semantics"]["neighbor_stream"] = None
+    contract["ring_semantics"]["payload_role"] = "no_runtime_neighbor_payload"
     contract["ring_semantics"]["weight_order"] = (
         "destination-relative PREV traversal: destination, prev1, prev2, prev3"
+    )
+    contract["ring_semantics"]["activation_order"] = (
+        "same destination-relative PREV traversal, replicated locally per destination"
     )
     contract["bias_runtime_contract"] = {
         "schedule": "one_32B_K8_row_per_Kblock_H_Qblock_tile",
         "loop_branch": ["DRAM_LC.LC10", "DRAM_LC.LC11", "DRAM_LC.LC12"],
         "memory_byte_stride": [SA_OUTPUT_LANES * 4, 0, 0],
         "transaction_bytes": static_report["stream_transaction_bytes"]["stream3"],
-        "transaction_count": static_report["bias_transaction_count"],
-        "unique_address_count": static_report["bias_unique_address_count"],
-        "physical_extent_bytes": static_report["bias_extent_bytes"],
-        "sa_handshakes_per_tile": static_report["bias_handshakes_per_tile"],
+        "sa_handshakes_per_tile": SA_BIAS_HANDSHAKES_PER_TILE,
         "buffer4_json_lifetime": config["buffer_config"]["buffer4"]["buffer_life_time"],
         "buffer4_encoded_lifetime": config["buffer_config"]["buffer4"]["buffer_life_time"] - 1,
         "terminal_last_index": config["stream_engine"]["stream3"]["buf_full_last_index"],
     }
     contract["resolved_pseudocode_conflicts"] = [
-        "RTL group2 broadcasts by SA column, so activation is group0 and weight is group1",
-        "physical A/B/P ranges are transaction packed; encoder-valid v8 NHWC/NHWK strides are rejected",
+        "RTL DataA is signed and DataB is unsigned, so weight is target A/inport0 and activation is target B/B-prime/inport1",
+        "both activation ping-pong buffers have explicit local READ producers; runtime N2N is removed",
+        "RTL outport major=1 transposes K-row/Q-column compute order into the existing Q8xK8 P layout",
         "WRITE_STREAM0 uses a value-identical LC13-LC15 placement branch required by physical IGA connectivity",
         "READ_STREAM3 uses an independent LC10-LC12 Kblock/H/Qblock branch so every output tile receives four bias handshakes",
     ]

@@ -1,0 +1,571 @@
+{
+  "contract_sha256": "f5e3fb74da660f39da57d28afc40ac34946d12240cf3c51222a4ec5e2adc0c8b",
+  "emission_gate": {
+    "additional_backend_blockers": [
+      "B_CONV_FULL_3WAVE_SCHEDULE",
+      "B_CONV_DERIVED_WAVES_VALIDATION"
+    ],
+    "authority_resolves_reference_template_semantics": [],
+    "candidate_config_emission_allowed": false,
+    "claim_boundary": "This node0004 config was added after the pinned upstream commit and is not covered by the upstream-tested authority. Its static 28-of-64 schedule and layout facts are useful diagnostic evidence, but its correctness and the remaining waves both require validation.",
+    "effective_unresolved_blockers": [
+      "B_CONV_BIAS_PSUM",
+      "B_CONV_INT8_SA"
+    ],
+    "hardware_attempt_status": "server_attempt_invalid_missing_preload_files_and_bitstream",
+    "lowering_overlay_update_pending": false,
+    "numeric_hardware_test_proven": false,
+    "positive_hardware_test_proven": false,
+    "reference_configuration_evidence_class": "project_added_candidate_requires_independent_validation",
+    "reference_wave0_config_accepted_correct": false
+  },
+  "evidence": {
+    "execplan_bundle": {
+      "path": "artifacts/operator_config_validation/r5-patched-execplan-evidence/node0004-nopp-r1-v2/bundle_manifest.json",
+      "sha256": "f2287642dde7544923a850132caca8a203515e99fd222279d108142b0846cb73",
+      "size_bytes": 9671
+    },
+    "hardware_evidence_audit": {
+      "path": "contracts/operator_config/ndpsim_json_hardware_evidence_v1.json",
+      "sha256": "c68e03aa0cc3febd40364ab403764e3b97e94b7934f509e03ec6a0a42860fbd1",
+      "size_bytes": 108095
+    },
+    "lowering_bundle": {
+      "path": "contracts/resnet50_r5_lowering_bundle.json",
+      "sha256": "5f4be507028aeb836c7f0586f11725c03c29c176d415f9c04405e96b41e98cea",
+      "size_bytes": 1914959
+    },
+    "mapping_bundle": {
+      "path": "artifacts/operator_config_validation/r5-patched-mapping-evidence/node0004-accumulate-wave0-nopp-r1-strict-address-bound-seed42-v1/bundle_manifest.json",
+      "sha256": "680e15564bfbc8a8f152f0d7fd730c59f2b7ef6b9816092f4fc20d3c07424843",
+      "size_bytes": 2812
+    },
+    "request_address_report": {
+      "path": "artifacts/operator_config_validation/r5-patched-execplan-evidence/node0004-nopp-r1-v2/request_address_validation_report.json",
+      "sha256": "21cba4bbbb3934fa3124a1472623a4ffa813eb7f995e60cf9ad22edaee3344f2",
+      "size_bytes": 297975
+    },
+    "semantic_contract": {
+      "path": "contracts/node0004_accumulate_wave0_nopp_r1_semantic_contract.json",
+      "sha256": "f13fda7c709973c68d54ba51b1a2ad10449edca82593b1a7be1ee46934db8fda",
+      "size_bytes": 4436
+    },
+    "strict_config": {
+      "path": "configs/native_ndp_sim/node0004_accumulate_wave0_nopp_r1_strict_v1/config.json",
+      "sha256": "2fe3fc865a6bfb8f37d0c34afe2adb730de35568d02892d9705895b0261b9ae8",
+      "size_bytes": 14618
+    },
+    "wave0_input_manifest": {
+      "path": "artifacts/operator_config_validation/r5-server-candidates/node0004-nopp-r1-v2/node0004_accumulate_wave0_nopp_r1_input_manifest.json",
+      "sha256": "fe253ebb2c6141e2a438c94cb30046224381053764f7634a171dc339ad10c274",
+      "size_bytes": 142613
+    }
+  },
+  "logical_schedule": {
+    "batch_count": 16,
+    "evidenced_logical_samples": [
+      0,
+      3,
+      6,
+      8,
+      10,
+      12,
+      14
+    ],
+    "evidenced_tile_count": 28,
+    "evidenced_wave_index": 0,
+    "full_logical_tile_count": 64,
+    "full_three_wave_schedule_proven": false,
+    "input_channels": 64,
+    "kernel": [
+      1,
+      1
+    ],
+    "output_channel_tile": 16,
+    "output_channel_tile_count": 4,
+    "output_channels": 64,
+    "output_spatial": [
+      56,
+      56
+    ],
+    "unevidenced_tile_count": 36
+  },
+  "physical_contract": {
+    "layout": {
+      "A": "signed int8 weights; K16 x C64; K-major/C-minor",
+      "B": "unsigned uint8 activation; one logical sample; HWC C64",
+      "C": "int32 bias; local K16",
+      "D": "int32 partial sum; one logical sample; HWK-local K16"
+    },
+    "mapping": {
+      "fallback_used": false,
+      "penalty": 0.0,
+      "unpadded_bits": 3839,
+      "valid": true
+    },
+    "request_address_facts": {
+      "enabled_slice_count": 28,
+      "per_target": {
+        "A": {
+          "logical_payload_bytes_per_slice_with_multiplicity": 1024,
+          "mode": "read",
+          "padding_masked_bytes_per_slice_with_multiplicity": 0,
+          "request_count_per_slice_with_multiplicity": 64,
+          "resource": "READ_STREAM0",
+          "slice_record_count": 28,
+          "unique_request_counts": [
+            64
+          ]
+        },
+        "B": {
+          "logical_payload_bytes_per_slice_with_multiplicity": 200704,
+          "mode": "read",
+          "padding_masked_bytes_per_slice_with_multiplicity": 0,
+          "request_count_per_slice_with_multiplicity": 12544,
+          "resource": "READ_STREAM1",
+          "slice_record_count": 28,
+          "unique_request_counts": [
+            12544
+          ]
+        },
+        "C": {
+          "logical_payload_bytes_per_slice_with_multiplicity": 25088,
+          "mode": "read",
+          "padding_masked_bytes_per_slice_with_multiplicity": 0,
+          "request_count_per_slice_with_multiplicity": 1568,
+          "resource": "READ_STREAM3",
+          "slice_record_count": 28,
+          "unique_request_counts": [
+            4
+          ]
+        },
+        "D": {
+          "logical_payload_bytes_per_slice_with_multiplicity": 200704,
+          "mode": "write",
+          "padding_masked_bytes_per_slice_with_multiplicity": 0,
+          "request_count_per_slice_with_multiplicity": 12544,
+          "resource": "WRITE_STREAM0",
+          "slice_record_count": 28,
+          "unique_request_counts": [
+            12544
+          ]
+        }
+      },
+      "request_count_with_multiplicity": 748160,
+      "unique_request_address_count": 704368
+    },
+    "special_array": {
+      "bias_enable": 1,
+      "data_type": "int8",
+      "inports": {
+        "inport0": {
+          "enable": 1,
+          "nbr_enable": 0,
+          "pingpong_en": 0,
+          "pingpong_last_index": null
+        },
+        "inport1": {
+          "enable": 1,
+          "nbr_enable": 0,
+          "pingpong_en": 0,
+          "pingpong_last_index": null
+        },
+        "inport2": {
+          "enable": 1,
+          "nbr_enable": 0,
+          "pingpong_en": 0,
+          "pingpong_last_index": null
+        }
+      },
+      "mode": "gemm",
+      "outport_mode_json_label": "col"
+    },
+    "streams": {
+      "A": {
+        "buffer_index_mode": [
+          "keep",
+          "buffer"
+        ],
+        "buffer_spatial_size": 16,
+        "dim_stride_bytes": [
+          64,
+          32,
+          null
+        ],
+        "idx": [
+          "LC_PE.PE0",
+          "DRAM_LC.LC0",
+          null
+        ],
+        "idx_size_encoded": [
+          31,
+          0,
+          0
+        ],
+        "logical_tensor_bytes_per_tile": 1024,
+        "mode": "read",
+        "ping_pong": 0,
+        "relative_base_addr": 0,
+        "stream": "stream0"
+      },
+      "B": {
+        "buffer_index_mode": [
+          "keep",
+          "buffer"
+        ],
+        "buffer_spatial_size": 16,
+        "dim_stride_bytes": [
+          32,
+          512,
+          3584
+        ],
+        "idx": [
+          "LC_PE.PE2",
+          "DRAM_LC.LC2",
+          "DRAM_LC.LC1"
+        ],
+        "idx_size_encoded": [
+          31,
+          0,
+          0
+        ],
+        "logical_tensor_bytes_per_tile": 200704,
+        "mode": "read",
+        "ping_pong": 0,
+        "relative_base_addr": 8192,
+        "stream": "stream1"
+      },
+      "C": {
+        "buffer_index_mode": [
+          "keep",
+          "buffer"
+        ],
+        "buffer_spatial_size": 16,
+        "dim_stride_bytes": [
+          32,
+          0,
+          0
+        ],
+        "idx": [
+          "DRAM_LC.LC10",
+          "DRAM_LC.LC11",
+          "DRAM_LC.LC12"
+        ],
+        "idx_size_encoded": [
+          31,
+          0,
+          0
+        ],
+        "logical_tensor_bytes_per_tile": 64,
+        "mode": "read",
+        "ping_pong": 0,
+        "relative_base_addr": 8320,
+        "stream": "stream3"
+      },
+      "D": {
+        "buffer_index_mode": [
+          "keep",
+          "buffer"
+        ],
+        "buffer_spatial_size": 16,
+        "dim_stride_bytes": [
+          32,
+          64,
+          3584
+        ],
+        "idx": [
+          "DRAM_LC.LC13",
+          "LC_PE.PE1",
+          "DRAM_LC.LC14"
+        ],
+        "idx_size_encoded": [
+          31,
+          0,
+          0
+        ],
+        "logical_tensor_bytes_per_tile": 200704,
+        "mode": "write",
+        "ping_pong": 0,
+        "relative_base_addr": 16384,
+        "stream": "stream4"
+      }
+    }
+  },
+  "request": {
+    "identity": {
+      "hw_op_id": "hwop-0004-00",
+      "hw_op_type": "ConvInt32Accumulate",
+      "node_id": "node-0004",
+      "onnx_name": "fused resnetv17_stage1_conv0_fwd_quant",
+      "onnx_op_type": "QLinearConv",
+      "stage": "accumulate"
+    },
+    "logical_geometry": {
+      "attributes": {
+        "auto_pad": "NOTSET",
+        "dilations": [
+          1,
+          1
+        ],
+        "group": 1,
+        "kernel_shape": [
+          1,
+          1
+        ],
+        "pads": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "strides": [
+          1,
+          1
+        ]
+      },
+      "input_dtypes": [
+        "uint8",
+        "uint8",
+        "int8",
+        "int8",
+        "int32"
+      ],
+      "input_shapes": [
+        [
+          16,
+          64,
+          56,
+          56
+        ],
+        [
+          1
+        ],
+        [
+          64,
+          64,
+          1,
+          1
+        ],
+        [
+          64
+        ],
+        [
+          64
+        ]
+      ],
+      "output_dtypes": [
+        "int32"
+      ],
+      "output_shapes": [
+        [
+          16,
+          64,
+          56,
+          56
+        ]
+      ]
+    },
+    "request_id": "r5:hwop-0004-00",
+    "request_sha256": "e27e10169168f3889df4c03bf15cb21de074abf3f3767dc4bee288425165874b"
+  },
+  "schema": "resnet50-conv-stage-schedule-evidence-v1",
+  "status": "project_added_wave0_static_evidence_full_conv_schedule_blocked",
+  "wave0_slice_assignments": [
+    {
+      "group_id": 0,
+      "local_sample_slot": 0,
+      "logical_sample": 0,
+      "owner_step": 0,
+      "slice_id": 0
+    },
+    {
+      "group_id": 0,
+      "local_sample_slot": 0,
+      "logical_sample": 0,
+      "owner_step": 3,
+      "slice_id": 1
+    },
+    {
+      "group_id": 0,
+      "local_sample_slot": 0,
+      "logical_sample": 0,
+      "owner_step": 1,
+      "slice_id": 2
+    },
+    {
+      "group_id": 0,
+      "local_sample_slot": 0,
+      "logical_sample": 0,
+      "owner_step": 2,
+      "slice_id": 3
+    },
+    {
+      "group_id": 1,
+      "local_sample_slot": 0,
+      "logical_sample": 3,
+      "owner_step": 0,
+      "slice_id": 4
+    },
+    {
+      "group_id": 1,
+      "local_sample_slot": 0,
+      "logical_sample": 3,
+      "owner_step": 3,
+      "slice_id": 5
+    },
+    {
+      "group_id": 1,
+      "local_sample_slot": 0,
+      "logical_sample": 3,
+      "owner_step": 1,
+      "slice_id": 6
+    },
+    {
+      "group_id": 1,
+      "local_sample_slot": 0,
+      "logical_sample": 3,
+      "owner_step": 2,
+      "slice_id": 7
+    },
+    {
+      "group_id": 2,
+      "local_sample_slot": 0,
+      "logical_sample": 6,
+      "owner_step": 0,
+      "slice_id": 8
+    },
+    {
+      "group_id": 2,
+      "local_sample_slot": 0,
+      "logical_sample": 6,
+      "owner_step": 3,
+      "slice_id": 9
+    },
+    {
+      "group_id": 2,
+      "local_sample_slot": 0,
+      "logical_sample": 6,
+      "owner_step": 1,
+      "slice_id": 10
+    },
+    {
+      "group_id": 2,
+      "local_sample_slot": 0,
+      "logical_sample": 6,
+      "owner_step": 2,
+      "slice_id": 11
+    },
+    {
+      "group_id": 3,
+      "local_sample_slot": 0,
+      "logical_sample": 8,
+      "owner_step": 0,
+      "slice_id": 12
+    },
+    {
+      "group_id": 3,
+      "local_sample_slot": 0,
+      "logical_sample": 8,
+      "owner_step": 1,
+      "slice_id": 13
+    },
+    {
+      "group_id": 3,
+      "local_sample_slot": 0,
+      "logical_sample": 8,
+      "owner_step": 3,
+      "slice_id": 14
+    },
+    {
+      "group_id": 3,
+      "local_sample_slot": 0,
+      "logical_sample": 8,
+      "owner_step": 2,
+      "slice_id": 15
+    },
+    {
+      "group_id": 4,
+      "local_sample_slot": 0,
+      "logical_sample": 10,
+      "owner_step": 0,
+      "slice_id": 16
+    },
+    {
+      "group_id": 4,
+      "local_sample_slot": 0,
+      "logical_sample": 10,
+      "owner_step": 1,
+      "slice_id": 17
+    },
+    {
+      "group_id": 4,
+      "local_sample_slot": 0,
+      "logical_sample": 10,
+      "owner_step": 3,
+      "slice_id": 18
+    },
+    {
+      "group_id": 4,
+      "local_sample_slot": 0,
+      "logical_sample": 10,
+      "owner_step": 2,
+      "slice_id": 19
+    },
+    {
+      "group_id": 5,
+      "local_sample_slot": 0,
+      "logical_sample": 12,
+      "owner_step": 0,
+      "slice_id": 20
+    },
+    {
+      "group_id": 5,
+      "local_sample_slot": 0,
+      "logical_sample": 12,
+      "owner_step": 1,
+      "slice_id": 21
+    },
+    {
+      "group_id": 5,
+      "local_sample_slot": 0,
+      "logical_sample": 12,
+      "owner_step": 3,
+      "slice_id": 22
+    },
+    {
+      "group_id": 5,
+      "local_sample_slot": 0,
+      "logical_sample": 12,
+      "owner_step": 2,
+      "slice_id": 23
+    },
+    {
+      "group_id": 6,
+      "local_sample_slot": 0,
+      "logical_sample": 14,
+      "owner_step": 0,
+      "slice_id": 24
+    },
+    {
+      "group_id": 6,
+      "local_sample_slot": 0,
+      "logical_sample": 14,
+      "owner_step": 1,
+      "slice_id": 25
+    },
+    {
+      "group_id": 6,
+      "local_sample_slot": 0,
+      "logical_sample": 14,
+      "owner_step": 3,
+      "slice_id": 26
+    },
+    {
+      "group_id": 6,
+      "local_sample_slot": 0,
+      "logical_sample": 14,
+      "owner_step": 2,
+      "slice_id": 27
+    }
+  ]
+}

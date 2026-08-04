@@ -1,0 +1,78 @@
+{
+  "params": {
+    "hidden_size": 896,
+    "intermediate_size": 1792,
+    "num_attention_heads": 7,
+    "num_key_value_heads": 1,
+    "head_dim": 128,
+    "num_hidden_layers": 1,
+    "sequence_length": 32,
+    "slice_per_head": 4,
+    "used_slices": 2,
+    "target_op": "all",
+    "target_op_decode": "all",
+    "random_seed": 0
+  },
+  "used_slices": 2,
+  "operators": [
+    {
+      "id": "op0",
+      "type": "decode_silu_fp16N_fp32N",
+      "used_slices": "0b0000000000000000000000000011",
+      "inputs": {
+        "A": {
+          "bank_interleave": 1,
+          "shape": [
+            1,
+            1,
+            32
+          ],
+          "remapping": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25
+          ],
+          "source": {
+            "type": "external"
+          },
+          "dtype": "fp16",
+          "base_addr": "0x00000000"
+        }
+      },
+      "output": {
+        "shape": [
+          1,
+          1,
+          32
+        ],
+        "dtype": "fp32",
+        "remapping": null,
+        "base_addr": "0x00000040"
+      },
+      "config_sfu": "SiLU"
+    }
+  ]
+}

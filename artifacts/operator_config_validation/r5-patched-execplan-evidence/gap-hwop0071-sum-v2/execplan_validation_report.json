@@ -1,0 +1,68 @@
+{
+  "schema": "operator-config-execplan-validation-report-v1",
+  "graph_root": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\gap-hwop0071-sum-v2\\pipeline_output",
+  "valid": true,
+  "first_error": null,
+  "issues": [],
+  "facts": {
+    "target_profile": {
+      "slices": 28,
+      "banks_per_slice": 4,
+      "ddr_rows": 6144,
+      "ddr_columns": 64,
+      "subwords_per_column": 16,
+      "read_streams": 4,
+      "write_streams": 1,
+      "buffers": 6
+    },
+    "graph": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\gap-hwop0071-sum-v2\\pipeline_output\\graph_address_seed_withbaseaddr.json",
+    "graph_sha256": "66928400ee70b761c776f1b42638f613bb4651579e6eda6bb315541894ca816f",
+    "execplan": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\gap-hwop0071-sum-v2\\pipeline_output\\install\\execplan.txt",
+    "execplan_sha256": "7b221b48a43ddd630f90c2f653f675b5f72d01bd3eb4a984c8cef27b14fc7ba5",
+    "instruction_count_64bit": 33,
+    "execplan_lines_128bit": 17,
+    "operator_count": 1,
+    "load_config_count": 1,
+    "sfu_load_config_count": 0,
+    "start_comp_count": 1,
+    "stages": [
+      {
+        "stage_index": 0,
+        "op_id": "op0",
+        "op_type": "resnet50_gap_sum_uint8_int32",
+        "load_instruction_index": 1,
+        "start_instruction_index": 32,
+        "slice_mask": "0x000FFFF",
+        "source_config": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\gap-hwop0071-sum-v2\\mapping_evidence\\op0\\source_config.json",
+        "source_config_sha256": "5cbf02721fd01619b7cd2e5f99de13f5d697e7ebdbf783ff91ace24cf772a7ad",
+        "artifact_dir": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\gap-hwop0071-sum-v2\\mapping_evidence\\op0",
+        "artifact_valid": true,
+        "next_config_state": {
+          "IGA": "7c52c4a423bdeeb3838cedae28c3f364bfc279493c9d210bee23e8ad76e1b4ee",
+          "LSU": "1aea46c1d506d1c34675fe7a1d9c0f3e9b42a1245982989d713ae6df8621f983",
+          "SA": null,
+          "GA": "2c6d8fb12d2c3e394eeae7881ddcf59546e49c02451661e1f4c4478c486c8a9a"
+        },
+        "pipeline_json": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\gap-hwop0071-sum-v2\\pipeline_output\\jsons\\op0_resnet50_gap_sum_uint8_int32.json",
+        "pipeline_json_sha256": "5cbf02721fd01619b7cd2e5f99de13f5d697e7ebdbf783ff91ace24cf772a7ad",
+        "pipeline_artifact_sha256": {
+          "mapping_review.json": "627e20efca2c16a79211609533ef094c2ccae4e9c1996c686b7815048076da12",
+          "parsed_bitstream.txt": "75f84d35968d9f65b074154253c0dbb7cea950e8314d31d66eac66985d2077d8",
+          "modules_dump_64b.bin": "b643bdc9356e944cb8a952d0b5518be50d8293d4e696afa061d77d3f3076f555",
+          "modules_dump_128b.bin": "8ab9cef57ed267d80596ec49a96068822b86ebf4cfba04e11e35d777c201c2c6"
+        },
+        "config_base_addr": "0x0001AC00",
+        "config_length_64bit_words": 48,
+        "config_path": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\gap-hwop0071-sum-v2\\pipeline_output\\install\\cfg_pkg\\op0_resnet50_gap_sum_uint8_int32_bitstream_128b.bin",
+        "config_sha256": "8ab9cef57ed267d80596ec49a96068822b86ebf4cfba04e11e35d777c201c2c6"
+      }
+    ],
+    "final_config_state": {
+      "IGA": "7c52c4a423bdeeb3838cedae28c3f364bfc279493c9d210bee23e8ad76e1b4ee",
+      "LSU": "1aea46c1d506d1c34675fe7a1d9c0f3e9b42a1245982989d713ae6df8621f983",
+      "SA": null,
+      "GA": "2c6d8fb12d2c3e394eeae7881ddcf59546e49c02451661e1f4c4478c486c8a9a"
+    },
+    "issue_count": 0
+  }
+}

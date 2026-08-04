@@ -214,7 +214,8 @@ def audit(args: argparse.Namespace) -> dict[str, Any]:
         ):
             raise AuditError("server README does not require two preserved formal runs")
         ndp_root = extracted / "NDP_copy01"
-        package_root = ndp_root / "install" / "cfg_pkg" / f"hwop-0004-00-{revision}"
+        install_name = args.install_name or f"hwop-0004-00-{revision}"
+        package_root = ndp_root / "install" / "cfg_pkg" / install_name
         if not package_root.is_dir():
             raise AuditError("revisioned install package is missing")
         package_manifest_path = package_root / "metadata" / "manifest.json"
@@ -476,13 +477,56 @@ def audit(args: argparse.Namespace) -> dict[str, Any]:
             raise AuditError("readback contract differs from serialized SCA_D")
 
         bindings = package_manifest.get("bitstream_bindings")
-        if not isinstance(bindings, Mapping) or bindings.get("status") != "json_official_encoder_freeze_install_bound":
+        allowed_binding_statuses = {
+            "json_official_encoder_freeze_install_bound",
+            "hardware_trace_json_official_encoder_freeze_install_bound",
+            "fresh_upstream_json_run_all_slices_ab_freeze_install_bound",
+        }
+        if (
+            not isinstance(bindings, Mapping)
+            or bindings.get("status") not in allowed_binding_statuses
+        ):
             raise AuditError("JSON/official-encoder/install bitstream binding status differs")
         binding_records = bindings.get("records")
-        if not isinstance(binding_records, list) or len(binding_records) != 9:
+        if (
+            not isinstance(binding_records, list)
+            or len(binding_records) != args.expected_bitstreams
+        ):
             raise AuditError("bitstream binding record count differs")
+        ring4_binding = (
+            bindings.get("status")
+            == "fresh_upstream_json_run_all_slices_ab_freeze_install_bound"
+        )
+        ring4_slices: set[int] = set()
+        ring4_masks: set[str] = set()
+        ring4_logical_hashes: set[str] = set()
         for record in binding_records:
-            if not isinstance(record, Mapping) or not SHA256_RE.fullmatch(str(record.get("config_sha256", ""))):
+            if not isinstance(record, Mapping):
+                raise AuditError("bitstream binding record is malformed")
+            if ring4_binding:
+                generated_config = record.get("generated_config")
+                official_encoder = record.get("official_encoder")
+                if (
+                    record.get("base_config_sha256")
+                    != package_manifest.get("source_config_sha256")
+                    or not isinstance(generated_config, Mapping)
+                    or not SHA256_RE.fullmatch(str(generated_config.get("sha256", "")))
+                    or not isinstance(official_encoder, Mapping)
+                ):
+                    raise AuditError("Ring4 binding lacks its upstream JSON/encoder identity")
+                safe_relative(
+                    str(generated_config.get("path", "")),
+                    label="Ring4 generated config evidence",
+                )
+                slice_id = record.get("slice_id")
+                if isinstance(slice_id, bool) or not isinstance(slice_id, int):
+                    raise AuditError("Ring4 binding has an invalid slice ID")
+                expected_mask = f"0x{1 << slice_id:07X}"
+                if record.get("load_slice_mask") != expected_mask:
+                    raise AuditError("Ring4 binding load mask differs from its slice ID")
+                ring4_slices.add(slice_id)
+                ring4_masks.add(expected_mask)
+            elif not SHA256_RE.fullmatch(str(record.get("config_sha256", ""))):
                 raise AuditError("bitstream binding has an invalid JSON config identity")
             install = record.get("install")
             if not isinstance(install, Mapping):
@@ -497,6 +541,29 @@ def audit(args: argparse.Namespace) -> dict[str, Any]:
                 or line_count != install.get("line_count")
             ):
                 raise AuditError("final install bitstream differs from its binding record")
+            if ring4_binding:
+                official_encoder = record["official_encoder"]
+                for field in (
+                    "raw_size_bytes",
+                    "raw_sha256",
+                    "logical_size_bytes",
+                    "logical_sha256",
+                    "line_count",
+                    "line_width_bits",
+                ):
+                    if official_encoder.get(field) != install.get(field):
+                        raise AuditError(
+                            "Ring4 official encoder/install identity differs"
+                        )
+                if install.get("line_width_bits") != 128:
+                    raise AuditError("Ring4 installed bitstream width differs")
+                ring4_logical_hashes.add(str(install.get("logical_sha256")))
+        if ring4_binding and (
+            ring4_slices != {0, 1, 2, 3}
+            or ring4_masks != {"0x0000001", "0x0000002", "0x0000004", "0x0000008"}
+            or len(ring4_logical_hashes) != 4
+        ):
+            raise AuditError("Ring4 binding does not contain four distinct slice configs")
 
         execplan_path = package_root / "install" / "execplan.txt"
         if count_128bit_lines(execplan_path) != args.expected_exec_lines:
@@ -546,12 +613,14 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--sidecar", type=Path)
     parser.add_argument("--report", type=Path)
     parser.add_argument("--revision", required=True)
+    parser.add_argument("--install-name")
     parser.add_argument("--expected-banks", type=int, default=28)
     parser.add_argument("--expected-exec-lines", type=int, default=314)
     parser.add_argument("--expected-stages", type=int, default=12)
     parser.add_argument("--expected-repeat", type=int, default=5)
     parser.add_argument("--expected-preloads", type=int, default=434)
     parser.add_argument("--expected-readbacks", type=int, default=168)
+    parser.add_argument("--expected-bitstreams", type=int, default=9)
     return parser.parse_args()
 
 

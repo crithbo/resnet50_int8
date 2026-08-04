@@ -1,0 +1,114 @@
+{
+  "schema": "operator-config-semantic-contract-v1",
+  "graph_sha256": "bf7309a6dd5ce222f85efd65b39491e073473dfef97cc0544d67805e3e8a4f0d",
+  "target_profile": {
+    "slices": 28,
+    "banks_per_slice": 4,
+    "ddr_rows": 6144,
+    "ddr_columns": 64,
+    "subwords_per_column": 16,
+    "read_streams": 4,
+    "write_streams": 1,
+    "buffers": 6
+  },
+  "candidate_scope": {
+    "node_id": "node-0004",
+    "revision": "nopp_r1",
+    "formal_target_config": false,
+    "server_execution_claim": false,
+    "purpose": "single-stage zero-ping-pong accumulate smoke"
+  },
+  "source_identities": {
+    "typed_lowering_bundle_sha256": "b7208d37209377c7e92a50925b9f834a640379b2495d750642e01a0dff1dc32e",
+    "typed_lowering_request_set_sha256": "9da4423bb293a047c9a2dac945270d56eab9fe114146a2f6638e43c655fa341b",
+    "accumulate_request_sha256": "e27e10169168f3889df4c03bf15cb21de074abf3f3767dc4bee288425165874b",
+    "requant_request_sha256": "ed833d0512b0256756f3d7e39cfd79aac04a901d0095f11f103e7216e6dccb5b",
+    "strict_config_materialization_sha256": "2601bf91333559d8799a7aa9a7cb1be31a8054187a14aa5c2ad97ba9804e5c2b",
+    "address_bound_materialization_sha256": "370dffb145f5435f0342bba157081b94efa8e8e809f008fb8d1ac1670184f3ea",
+    "mapping_bundle_manifest_sha256": "680e15564bfbc8a8f152f0d7fd730c59f2b7ef6b9816092f4fc20d3c07424843"
+  },
+  "operators": {
+    "op0": {
+      "op_type": "node0004_accumulate_wave0_nopp_r1",
+      "layouts": {
+        "A": "signed-A Conv28 weight tile; local K16 x global C64; int8 K-major/C-minor",
+        "B": "unsigned-B Conv28 activation tile; one logical sample; HWC with C64",
+        "C": "INT32 bias vector; local K16",
+        "D": "INT32 partial-sum tile; one logical sample; HWK-local K16"
+      },
+      "qparams": {
+        "policy": "explicit",
+        "bindings": {
+          "A": {
+            "scale": {
+              "axis": 0,
+              "dtype": "float32",
+              "element_count": 64,
+              "maximum": 0.006007642950862646,
+              "minimum": 9.22749610055007e-09,
+              "shape": [
+                64
+              ],
+              "value_kind": "per_channel",
+              "value_sha256": "3abf120f4bc983427b0f9699d55fcfbc648a8884501832dbe874b3828968e9b9"
+            },
+            "zero_point": {
+              "axis": 0,
+              "dtype": "int8",
+              "element_count": 64,
+              "maximum": 0,
+              "minimum": 0,
+              "shape": [
+                64
+              ],
+              "value_kind": "per_channel",
+              "value_sha256": "f5a5fd42d16a20302798ef6ed309979b43003d2320d9f0e8ea9831a92759fb4b"
+            },
+            "source": "resnet50-r5-typed-lowering-bundle-v1:r5:hwop-0004-00@e27e10169168f3889df4c03bf15cb21de074abf3f3767dc4bee288425165874b+r5:hwop-0004-01@ed833d0512b0256756f3d7e39cfd79aac04a901d0095f11f103e7216e6dccb5b"
+          },
+          "B": {
+            "scale": 0.021563487127423286,
+            "zero_point": 0,
+            "source": "resnet50-r5-typed-lowering-bundle-v1:r5:hwop-0004-00@e27e10169168f3889df4c03bf15cb21de074abf3f3767dc4bee288425165874b+r5:hwop-0004-01@ed833d0512b0256756f3d7e39cfd79aac04a901d0095f11f103e7216e6dccb5b"
+          }
+        }
+      },
+      "stage": {
+        "role": "QLinearConv INT32 accumulate wave 0; candidate-only",
+        "dependencies": []
+      },
+      "tail": {
+        "policy": "explicit",
+        "bindings": {
+          "A": {
+            "block_elements": 16,
+            "valid_last": 16
+          },
+          "B": {
+            "block_elements": 16,
+            "valid_last": 16
+          },
+          "C": {
+            "block_elements": 4,
+            "valid_last": 4
+          },
+          "D": {
+            "block_elements": 4,
+            "valid_last": 4
+          }
+        }
+      },
+      "provenance": {
+        "source_config": {
+          "artifact": "mapping_evidence/op0/source_config.json",
+          "sha256": "12daf4c1a81d1634439374ea79dbb7972a28bd415da74e999ee9cfa87e7905ae"
+        },
+        "mapping_evidence": {
+          "artifact": "mapping_evidence/op0/mapping_evidence.json",
+          "sha256": "e0b0e2aef31acefc074b34279fabd50dc4f089fb35f2cb9d813907b93c6a32ef"
+        }
+      }
+    }
+  },
+  "contract_sha256": "c69a295edd8e56463c34e81eed270754e16f8de25a8991ac713af79885edbf50"
+}

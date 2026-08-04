@@ -1,0 +1,282 @@
+{
+  "decisions": {
+    "formal_release": false,
+    "ga_topology": "four ADD PEs followed by four MUL PEs",
+    "hardware_shape_cwh": [
+      16,
+      47,
+      1
+    ],
+    "layout": "HIGH4 prefix 750 plus two neutral tail elements per slice",
+    "numeric_order": "(float32(uint8(x))-60.0f)*float32(scale)",
+    "single_affine_mac_rejected": true,
+    "typed_constant_count": 2
+  },
+  "known_counterexamples": [
+    {
+      "element_count": 16000,
+      "fact": "x*scale+(-60*scale) differs from (float32(x)-60.0f)*scale",
+      "id": "DEQUANT_AFFINE_ROUNDING_COUNTEREXAMPLE",
+      "w3_mismatch_count": 12976
+    },
+    {
+      "fact": "dense linear IDs 0,2,8,10/4,6,12,14 are reinterpreted by the native sparse-key writer and misroute constants",
+      "id": "DEQUANT_SPARSE_PE_BINDING_COUNTEREXAMPLE",
+      "resolution": "coordinate-coded exact keys 0,2,20,22/10,12,30,32 plus encoded physical-slot audit"
+    }
+  ],
+  "omitted_files": [
+    {
+      "path": ".agents/rules/服务器测试包生成规则.md",
+      "reason": "no server package is generated in this local E2 task"
+    },
+    {
+      "path": "NDP_copy01/README_HARDWARE_SIM_ENTRY.md",
+      "reason": "no hardware-simulator package or server command is generated"
+    },
+    {
+      "path": "NDP hardware SA/N2N chapters",
+      "reason": "this exact schedule triggers LC, MSE, Buffer, and GA only"
+    }
+  ],
+  "open_dynamic_gates": [
+    {
+      "blocker_id": "B_DEQUANT_SERVER_E4_E5",
+      "classification": "NO_DYNAMIC_BASELINE",
+      "rule_id": "CDA-DEQUANT-E4-E5-001"
+    }
+  ],
+  "read_receipt": [
+    {
+      "path": ".agents/agent.md",
+      "read_at": "2026-07-24T13:15:27+00:00",
+      "reason": "workspace policy router",
+      "sha256": "27f2e3a567d39e01abe176289bcffb3bc28fd6a4c39ffb0dd17c79784154b966"
+    },
+    {
+      "path": ".agents/rules/生成前必读索引.md",
+      "read_at": "2026-07-24T13:15:27+00:00",
+      "reason": "operator JSON generation routing and stop gates",
+      "sha256": "539e8dfbe52ad9fc8bd9fdef8c69d448fb5fd713e938e3adc5f663f82fd806d7"
+    },
+    {
+      "path": ".agents/rules/算子配置规则.md",
+      "read_at": "2026-07-24T13:15:27+00:00",
+      "reason": "common materialization, provenance, mapping, and E2 gates",
+      "sha256": "a5fbe2f0fa2e26d8cd4ebfe8772d5a3c69516d6918cfaa5087198706a352427b"
+    },
+    {
+      "path": ".agents/rules/NDP硬件字段语义.md",
+      "read_at": "2026-07-24T13:15:27+00:00",
+      "reason": "triggered LC, MSE, Buffer, and GA field semantics",
+      "sha256": "7f446adb1719658ce75c2614c6d619fc2c7cdcabf5e4fd34945482645539158f"
+    },
+    {
+      "path": ".agents/rules/DequantizeLinear算子配置规则.md",
+      "read_at": "2026-07-24T13:15:27+00:00",
+      "reason": "operator-specific numeric, layout, topology, and release gates",
+      "sha256": "ba75b679199aa140a9765b8f44ae335b492f667509f50a0c01f9dfc6cdd3f8e2"
+    },
+    {
+      "path": "ndp-sim/generate_python_golden/README.md",
+      "read_at": "2026-07-24T13:15:27+00:00",
+      "reason": "native tensor/golden flow",
+      "sha256": "4d6cc73fa99b283d557e5fe11cba40d1044e09ade3740e73efaad1ddef1f2d60"
+    },
+    {
+      "path": "ndp-sim/generate_python_golden/README_gen_data.md",
+      "read_at": "2026-07-24T13:15:27+00:00",
+      "reason": "native data layout and serialization flow",
+      "sha256": "bb367700dc0869511f104baba72a15532f354bbb540b24d778684ff8577f11c9"
+    },
+    {
+      "path": "ndp-sim/model_execplan/README.md",
+      "read_at": "2026-07-24T13:15:27+00:00",
+      "reason": "native graph-to-execplan lifecycle",
+      "sha256": "992360e8cfc1a15d03abbbb70047de86548e07518e329248d17c61c130b9b11f"
+    },
+    {
+      "path": "ndp-sim/model_execplan/README_op_json.md",
+      "read_at": "2026-07-24T13:15:27+00:00",
+      "reason": "native typed operator request schema",
+      "sha256": "261cd35b989dc44f9d783eaddef00744a9b0d2d7a3112f683ea3ed2502854107"
+    },
+    {
+      "path": "ndp-sim-ref/model_execplan/src/execution_plan_generator/json_loader.py",
+      "read_at": "2026-07-24T13:15:27+00:00",
+      "reason": "actual typed request parser",
+      "sha256": "a3ac009d0f452c610bfb97f2562eaaf60cb0c4981ace7f337372ce5178b92dee"
+    },
+    {
+      "path": "ndp-sim-ref/model_execplan/src/execution_plan_generator/control_registers.py",
+      "read_at": "2026-07-24T13:15:27+00:00",
+      "reason": "actual typed binding and control-register consumer",
+      "sha256": "5fe1c5f363a0ff57c1db26281d75a0cc365a260395f2130155fb6ccdc4fcb8dd"
+    },
+    {
+      "path": "ndp-sim-ref/model_execplan/src/execution_plan_generator/output_writer.py",
+      "read_at": "2026-07-24T13:15:27+00:00",
+      "reason": "actual typed JSON materializer and explanation writer",
+      "sha256": "383f39f2e61900d1e4dddcffa90faff80bc315266f77350c597b8eecc60a23aa"
+    },
+    {
+      "path": "ndp-sim-ref/model_execplan/src/execution_plan_generator/pipeline.py",
+      "read_at": "2026-07-24T13:15:27+00:00",
+      "reason": "actual address binder and bitstream lifecycle consumer",
+      "sha256": "a4905e18eb3e843b58d4049096971288087bfedf2c2cc58f038bb14e2a9b28b5"
+    },
+    {
+      "path": "ndp-sim-ref/model_execplan/src/execution_plan_generator/instruction_generator.py",
+      "read_at": "2026-07-24T13:15:27+00:00",
+      "reason": "actual command ordering and Write_Reg consumer",
+      "sha256": "cdc7d4dcdf41ec79571d53a909a2b2d8f1ab7897a404969b5cf49d416fc85315"
+    },
+    {
+      "path": "ndp-sim-ref/bitstream/main.py",
+      "read_at": "2026-07-24T13:15:27+00:00",
+      "reason": "actual native encoder entrypoint",
+      "sha256": "32f3452fae24b933576e93b9607651bfbfcb4705e6781fe3f14ecbe675d4e63c"
+    },
+    {
+      "path": "ndp-sim-ref/bitstream/parse.py",
+      "read_at": "2026-07-24T13:15:27+00:00",
+      "reason": "actual module ordering and 64/128-bit dump writer",
+      "sha256": "a6bd0f9dc288b518389a677570cf34a08ebec72a430e9a85c085570d3be869f0"
+    },
+    {
+      "path": "ndp-sim-ref/bitstream/config/mapper.py",
+      "read_at": "2026-07-24T13:15:27+00:00",
+      "reason": "actual placement, cache, and exact-penalty consumer",
+      "sha256": "8e2504d3262bd47ce13b9d75c8bebe58a6900bdf9af03360bf563d653dd88641"
+    },
+    {
+      "path": "ndp-sim-ref/bitstream/config/general.py",
+      "read_at": "2026-07-24T13:15:27+00:00",
+      "reason": "actual GA PE opcode and fp32 constant bit encoder",
+      "sha256": "eb9d5ee9ef273182e05b718aca378f87d0a1ccb5366ae463d8482c8c94c3482f"
+    },
+    {
+      "path": "contracts/resnet50_r5_lowering_bundle.json",
+      "read_at": "2026-07-24T13:15:27+00:00",
+      "reason": "typed node-0077 request identity",
+      "sha256": "c0182041fd11556aa34a1f0ab8344b20695dfc13c6a80ad4324aae79bcfa2820"
+    },
+    {
+      "path": "ndp-sim-ref/jsons/add_dequant_uint8CWH_uint8CWH_fp32CWH.json",
+      "read_at": "2026-07-24T13:15:27+00:00",
+      "reason": "authorized embedded Dequant branch topology baseline",
+      "sha256": "15f5321ab57cb73ca2f650693859657759f834389677451a9a89e66217e9e6da"
+    }
+  ],
+  "receipt_sha256": "7bae04372e044129ddc8301dde82ebaba9113228371821032155f57a6262583c",
+  "request_id": "r5:hwop-0077-00",
+  "rule_ids": [
+    "CDA-DEQUANT-ONNX-ORDER-001",
+    "CDA-DEQUANT-NO-AFFINE-MAC-001",
+    "CDA-DEQUANT-TWO-STAGE-GA-001",
+    "CDA-DEQUANT-NORMAL-OUTBUFFER-001",
+    "CDA-DEQUANT-LAYOUT-HIGH4-001",
+    "CDA-DEQUANT-STREAM-LIFECYCLE-001",
+    "CDA-DEQUANT-TYPED-CONSTANT-001",
+    "CDA-DEQUANT-MAPPING-BINDING-001",
+    "CDA-DEQUANT-E2-001",
+    "CDA-DEQUANT-E4-E5-001"
+  ],
+  "schema": "dequantize-linear-generation-receipt-v1",
+  "sources": {
+    "agent_policy": {
+      "path": ".agents/agent.md",
+      "sha256": "27f2e3a567d39e01abe176289bcffb3bc28fd6a4c39ffb0dd17c79784154b966"
+    },
+    "bitstream_ga_encoder": {
+      "path": "ndp-sim-ref/bitstream/config/general.py",
+      "sha256": "eb9d5ee9ef273182e05b718aca378f87d0a1ccb5366ae463d8482c8c94c3482f"
+    },
+    "bitstream_main": {
+      "path": "ndp-sim-ref/bitstream/main.py",
+      "sha256": "32f3452fae24b933576e93b9607651bfbfcb4705e6781fe3f14ecbe675d4e63c"
+    },
+    "bitstream_mapper": {
+      "path": "ndp-sim-ref/bitstream/config/mapper.py",
+      "sha256": "8e2504d3262bd47ce13b9d75c8bebe58a6900bdf9af03360bf563d653dd88641"
+    },
+    "bitstream_parser": {
+      "path": "ndp-sim-ref/bitstream/parse.py",
+      "sha256": "a6bd0f9dc288b518389a677570cf34a08ebec72a430e9a85c085570d3be869f0"
+    },
+    "data_readme": {
+      "path": "ndp-sim/generate_python_golden/README_gen_data.md",
+      "sha256": "bb367700dc0869511f104baba72a15532f354bbb540b24d778684ff8577f11c9"
+    },
+    "dequant_rules": {
+      "path": ".agents/rules/DequantizeLinear算子配置规则.md",
+      "sha256": "ba75b679199aa140a9765b8f44ae335b492f667509f50a0c01f9dfc6cdd3f8e2"
+    },
+    "execplan_readme": {
+      "path": "ndp-sim/model_execplan/README.md",
+      "sha256": "992360e8cfc1a15d03abbbb70047de86548e07518e329248d17c61c130b9b11f"
+    },
+    "generation_read_index": {
+      "path": ".agents/rules/生成前必读索引.md",
+      "sha256": "539e8dfbe52ad9fc8bd9fdef8c69d448fb5fd713e938e3adc5f663f82fd806d7"
+    },
+    "golden_readme": {
+      "path": "ndp-sim/generate_python_golden/README.md",
+      "sha256": "4d6cc73fa99b283d557e5fe11cba40d1044e09ade3740e73efaad1ddef1f2d60"
+    },
+    "hardware_field_semantics": {
+      "path": ".agents/rules/NDP硬件字段语义.md",
+      "sha256": "7f446adb1719658ce75c2614c6d619fc2c7cdcabf5e4fd34945482645539158f"
+    },
+    "input_npy": {
+      "path": "artifacts/w3/golden_batch16/tensors/tensor-02aeb7457d1ccf49.npy",
+      "sha256": "10d974cdab69904bfd3ed7749059e26e16388ba784872f0d432cd2ba14bcbdc8"
+    },
+    "lowering_bundle": {
+      "path": "contracts/resnet50_r5_lowering_bundle.json",
+      "sha256": "c0182041fd11556aa34a1f0ab8344b20695dfc13c6a80ad4324aae79bcfa2820"
+    },
+    "op_json_readme": {
+      "path": "ndp-sim/model_execplan/README_op_json.md",
+      "sha256": "261cd35b989dc44f9d783eaddef00744a9b0d2d7a3112f683ea3ed2502854107"
+    },
+    "operator_rules": {
+      "path": ".agents/rules/算子配置规则.md",
+      "sha256": "a5fbe2f0fa2e26d8cd4ebfe8772d5a3c69516d6918cfaa5087198706a352427b"
+    },
+    "output_npy": {
+      "path": "artifacts/w3/golden_batch16/tensors/tensor-bff07c95eb9f8609.npy",
+      "sha256": "2c6c5fabc1d41fceee35f06221efb4c64b94fabfe7a0b4680d2acf2186ca0894"
+    },
+    "reference_config": {
+      "path": "ndp-sim-ref/jsons/add_dequant_uint8CWH_uint8CWH_fp32CWH.json",
+      "sha256": "15f5321ab57cb73ca2f650693859657759f834389677451a9a89e66217e9e6da"
+    },
+    "typed_control_registers": {
+      "path": "ndp-sim-ref/model_execplan/src/execution_plan_generator/control_registers.py",
+      "sha256": "5fe1c5f363a0ff57c1db26281d75a0cc365a260395f2130155fb6ccdc4fcb8dd"
+    },
+    "typed_instruction_generator": {
+      "path": "ndp-sim-ref/model_execplan/src/execution_plan_generator/instruction_generator.py",
+      "sha256": "cdc7d4dcdf41ec79571d53a909a2b2d8f1ab7897a404969b5cf49d416fc85315"
+    },
+    "typed_json_loader": {
+      "path": "ndp-sim-ref/model_execplan/src/execution_plan_generator/json_loader.py",
+      "sha256": "a3ac009d0f452c610bfb97f2562eaaf60cb0c4981ace7f337372ce5178b92dee"
+    },
+    "typed_output_writer": {
+      "path": "ndp-sim-ref/model_execplan/src/execution_plan_generator/output_writer.py",
+      "sha256": "383f39f2e61900d1e4dddcffa90faff80bc315266f77350c597b8eecc60a23aa"
+    },
+    "typed_pipeline": {
+      "path": "ndp-sim-ref/model_execplan/src/execution_plan_generator/pipeline.py",
+      "sha256": "a4905e18eb3e843b58d4049096971288087bfedf2c2cc58f038bb14e2a9b28b5"
+    }
+  },
+  "status": "generation_gate_satisfied_before_json_materialization",
+  "upstream_identity": {
+    "active_source_policy": "read_only",
+    "commit": "d4ffc32c9b29a858d83e13706cd837c5549521a4",
+    "repository": "ndp-sim-ref"
+  }
+}

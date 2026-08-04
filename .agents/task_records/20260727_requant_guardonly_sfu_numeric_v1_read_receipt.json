@@ -1,0 +1,174 @@
+{
+  "schema": "mandatory-server-package-read-receipt-v1",
+  "created_local_date": "2026-07-27",
+  "task": "Requant node0001 frozen guard-only capture-edge-safe SFU numeric path diagnostic",
+  "status": "complete_before_generation",
+  "semantic_workload_policy": "freeze rq_node0001_guardonly_sfu_ready_stock_v1 JSON, mapping, bitstream, execplan, inputs, RequantGuard, golden, formal D and expected writes byte-exact",
+  "read_files": [
+    {
+      "path": ".agents/agent.md",
+      "size_bytes": 3439,
+      "sha256": "367f4f4260246d40531d83cc6d24fe94946cb05bce6fbef18c428f05b634c083",
+      "coverage": "complete"
+    },
+    {
+      "path": ".agents/plan.md",
+      "size_bytes": 13195,
+      "sha256": "a9f0c3397dad32473f542c82852bef9d244535ca40abdb688623aa3c47f14354",
+      "coverage": "complete active plan and exact Requant next action"
+    },
+    {
+      "path": ".agents/rules/生成前必读索引.md",
+      "size_bytes": 5650,
+      "sha256": "539e8dfbe52ad9fc8bd9fdef8c69d448fb5fd713e938e3adc5f663f82fd806d7",
+      "coverage": "complete"
+    },
+    {
+      "path": ".agents/rules/服务器测试包生成规则.md",
+      "size_bytes": 15938,
+      "sha256": "0fec7a4f72246c9e802fb2e91e972c2f636e2721aaeef1194c2d4d3fba103fbc",
+      "coverage": "complete"
+    },
+    {
+      "path": ".agents/rules/RequantizeUint8算子配置规则.md",
+      "size_bytes": 25630,
+      "sha256": "5f7bc1fc7087d3aafce0b74982588df9c68abeea583a7ea501c87031c3ef9e52",
+      "coverage": "complete"
+    },
+    {
+      "path": "NDP_copy01/README_HARDWARE_SIM_ENTRY.md",
+      "size_bytes": 5461,
+      "sha256": "4318f3a28de399fb522740315f11bdddf346e71969cf1e45686899a568b042d7",
+      "coverage": "complete"
+    },
+    {
+      "path": "server_returns/rq_node0001_guardonly_sfu_ready_stock_v1_return_analysis_20260727.json",
+      "size_bytes": 5009,
+      "sha256": "47f91b2cb25b2e81e1385b35fe0cc6739709717c69a22f3b383bfbbf81be584a",
+      "coverage": "complete authoritative predecessor adjudication"
+    },
+    {
+      "path": ".agents/task_records/20260727_requant_guardonly_sfu_ready_v1_return_analysis.md",
+      "size_bytes": 3030,
+      "sha256": "543164638bda1d7d3b233b568daea6c3bad50002f8b0e0e401572e8d0cd16f43",
+      "coverage": "complete human-readable predecessor adjudication"
+    }
+  ],
+  "actual_consumers_reviewed": [
+    {
+      "path": "tools/build_requant_guard_only_onecmd_server_test.py",
+      "size_bytes": 139777,
+      "sha256": "8f24eee1bd73dc5c0de505f87d34d3a1ae9b8a500bf6339e28cd490b24a9a3c0",
+      "coverage": "frozen semantic copy, capture-edge observer, manifest, deterministic ZIP and fresh-extract validation"
+    },
+    {
+      "path": "tools/requant_atomic_server_runtime.py",
+      "size_bytes": 67158,
+      "sha256": "f7954105d325f98243d1e3adfcb1dd85f6410d53f7ca8a02cbcba715a600d05e",
+      "coverage": "package preflight, capture-edge checkpoint parser, first-divergence routing, formal readback and return allowlist"
+    },
+    {
+      "path": "tools/requant_node0001_server_runtime.py",
+      "size_bytes": 66753,
+      "sha256": "35434ce4406deb31eed26e07416246ddad1ae7c1902fc3a282f7ab6bc71ec542",
+      "coverage": "XMR gate, transactional observer install, focused identity and restore"
+    },
+    {
+      "path": "NDP_copy01/Makefile.tb_NDP_Top_new_phy",
+      "size_bytes": 17683,
+      "sha256": "528d93f3c7f458d256bdbaf1d9ec39edfbfe5bd8a924e2bf0786914a634f4aba",
+      "coverage": "complete compile/run consumer"
+    },
+    {
+      "path": "NDP_copy01/tb_NDP_Top_new_phy.sv",
+      "size_bytes": 342445,
+      "sha256": "e068f7500f0c71c2ba2c756f74a4519c33d13d4afe0fa4cc9f6c9e79b1e3f994",
+      "coverage": "SCA/SCA_D, lifecycle and observer include consumer"
+    },
+    {
+      "path": "NDP_copy01/native_return_observer.svh",
+      "size_bytes": 111824,
+      "sha256": "47f0d66728f47c92f9f93f8cf87b47a0ff8567d587c3a099e2d03f610af09f49",
+      "coverage": "tail marker, lifecycle and raw MSE4 monitor exports"
+    },
+    {
+      "path": "NDP_copy01/rtl/filelists/NDP_Top_phy_filelist.f",
+      "size_bytes": 357,
+      "sha256": "b6720607b2757d50d13de6efc109e240aa32e56b51c7dd7e30ec0150a34e4b6a",
+      "coverage": "complete active compile filelist"
+    }
+  ],
+  "read_only_rtl_signal_sources": [
+    {
+      "path": "NDP_copy01/rtl/Slice/General_Array/GA_PE_Group/GA_PE_Inbuffer.sv",
+      "sha256": "25fa4dd2c6fe8301bc3651d660df72059ea2787c0c26a2841a1d4e439586b518"
+    },
+    {
+      "path": "NDP_copy01/rtl/Slice/General_Array/GA_PE_Group/GA_PE_Outbuffer.sv",
+      "sha256": "0e4c024c159cb02c2ec6425490fa09abf151a2cf99034b03c36d80dbc9a72de8"
+    },
+    {
+      "path": "NDP_copy01/rtl/Slice/General_Array/GA_PE_Group/GA_SFU_PE/GA_SFU_PE.sv",
+      "sha256": "fe09e7d44651cbc86dead5ee8bd406c90b8ffd4ad74b68acc3f46ea21781ffca"
+    },
+    {
+      "path": "NDP_copy01/rtl/Slice/General_Array/GA_PE_Group/GA_SFU_PE/GA_SFU_PE_Preprocess.sv",
+      "sha256": "79a285e4988e36b5fbb0ef4646131fd3ca559d7bc7ea0d4ee2751b544e2eb548"
+    },
+    {
+      "path": "NDP_copy01/rtl/Slice/General_Array/GA_PE_Group/GA_SFU_PE/GA_SFU_PE_Postprocess.sv",
+      "sha256": "074564e6b2a26dfbefd710082fedaf0f8c6e758f2bca3681b1f6404579c5ac06"
+    },
+    {
+      "path": "NDP_copy01/rtl/Slice/General_Array/GA_PE_Group/GA_SFU_PE/Binary_Search_Tree.sv",
+      "sha256": "34bb0cf77c5283c67267d4bc5054071a0715d181e53757abbb056ae0031d0553"
+    },
+    {
+      "path": "NDP_copy01/rtl/Slice/General_Array/GA_PE_Group/GA_SFU_PE/Comparator.sv",
+      "sha256": "c2191b32fd91a1d6d51b04fb273cab942da983b5bea4d62086168aa6a1cfef4b"
+    },
+    {
+      "path": "NDP_copy01/rtl/Slice/General_Array/GA_Outport/GA_Outport.sv",
+      "sha256": "8b1a3f12f44a2dbbe65ff41853397c06f7f591c1472b93ab8dd1698587b328db"
+    }
+  ],
+  "rule_ids": [
+    "CDA-SERVER-WORKLOAD-PROVENANCE-001",
+    "CDA-SERVER-PACKAGE-BOOTSTRAP-IMMUTABILITY-001",
+    "CDA-SERVER-ONE-COMMAND-001",
+    "CDA-SERVER-RETURN-RECEIPT-001",
+    "CDA-SERVER-OBSERVER-XMR-ELABORATION-CONSTANT-001",
+    "CDA-SERVER-OBSERVER-DECOUPLED-HANDSHAKE-001",
+    "CDA-SERVER-OBSERVER-EVIDENCE-DOMINANCE-001",
+    "CDA-SERVER-OBSERVER-CAPTURE-EDGE-WITNESS-001",
+    "CDA-REQUANT-GUARD-DIAGNOSTIC-EVIDENCE-BOUNDARY-001",
+    "CDA-REQUANT-GUARD-CHECKPOINT-ROUTING-001",
+    "CDA-REQUANT-SFU-READY-V1-DYNAMIC-EVIDENCE-001"
+  ],
+  "known_counterexamples": [
+    "SFU readiness v1 proves registered preprocess0 valid 64 times while all 16 MSE4 write-data and both formal D payloads remain zero",
+    "posedge change-only zero records cannot override downstream registered capture-edge witnesses",
+    "packed opcode/valid/enable status summaries are not numeric payload evidence"
+  ],
+  "open_dynamic_gates": [
+    "B_REQUANT_GUARD_DYNAMIC_DATA_PATH",
+    "B_REQUANT_SERVER_E4_E5"
+  ],
+  "omitted_files": [
+    {
+      "path": ".agents/rules/算子配置规则.md and .agents/rules/NDP硬件字段语义.md",
+      "reason": "the semantic/address-bound workload is byte-frozen; no JSON, mapping, address or encoding field is changed"
+    },
+    {
+      "path": "round-only, alias-lifetime and full-E4 assets",
+      "reason": "explicitly disabled by the authoritative current first-divergence route"
+    }
+  ],
+  "prohibitions": {
+    "modify_tb_or_rtl": false,
+    "force_or_deposit": false,
+    "enable_round_or_alias_or_full_e4": false,
+    "candidate_release": false,
+    "upload_or_run": false
+  }
+}

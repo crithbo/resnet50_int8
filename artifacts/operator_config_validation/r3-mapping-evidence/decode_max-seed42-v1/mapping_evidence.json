@@ -1,0 +1,67 @@
+{
+  "schema": "operator-config-mapping-evidence-v2",
+  "mapping_mode": "heuristic",
+  "penalty": 0.0,
+  "penalty_source": {
+    "artifact": "native_mapping_state.json",
+    "json_path": "$.last_mapping_cost",
+    "sha256": "f1bdfff01b0114cc69dabda29e8611fa1b7937592b25f835990fbb9c7d6808a8"
+  },
+  "fallback_used": false,
+  "mapping_review_sha256": "cac0dc0959e6789b0eae608d0a74338b4fc8629f083b28539752e1882ea8eba5",
+  "encoder": {
+    "repository": "ndp-sim",
+    "commit": "ec12424516ae0304228dd2321d4e604fe225e04e",
+    "bitstream_tree_sha256": "27c0601a4f8745b47d044a41ec98e612bacc9f18dd5b5547267e99d0440defa5",
+    "source_manifest": "encoder_source_manifest.json",
+    "source_manifest_sha256": "a69af964b84d317c431c9a2ce6f3c59e57babdff911e090ac9e9ab21f29d5ba6"
+  },
+  "source_config": {
+    "artifact": "source_config.json",
+    "sha256": "f673ec5d618791bb6b4925634dc85b75d0f4d3116f295d1ec8b6859c4ee2033c",
+    "original_path": "ndp-sim/model_execplan/output/decode_max_fp32N_fp32N_graph/jsons/op10_decode_max_fp32N_fp32N.json"
+  },
+  "cache": {
+    "policy": "same-run-generated-loaded",
+    "initial_file_count": 0,
+    "final_file_count": 1,
+    "loaded": true,
+    "loaded_origin": "same-run-generated",
+    "portable": true,
+    "bundled": true,
+    "sha256": "88f07d85a4b846ecf8ad91210c1c33311783a2e246bee2be2db94cc03a7cb753"
+  },
+  "run": {
+    "returncode": 0,
+    "seed": 42,
+    "heuristic_iterations": 10000,
+    "heuristic_restarts": 10,
+    "python_version": "3.12.13",
+    "pythonhashseed": 0,
+    "command": [
+      "<python>",
+      "-c",
+      "<operator-config-evidence-native-wrapper-v1>",
+      "<source-config>",
+      "<temporary-output>",
+      "42",
+      "10000",
+      "10"
+    ],
+    "stdout": {
+      "artifact": "native_stdout.log",
+      "sha256": "e53bd19177b6f33511be10380e46ccef1ce60d2bc45ed41a430b37b9cccc1249"
+    },
+    "stderr": {
+      "artifact": "native_stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "native_wrapper_missing_return_observed": true
+  },
+  "artifacts": {
+    "mapping_review.json": "cac0dc0959e6789b0eae608d0a74338b4fc8629f083b28539752e1882ea8eba5",
+    "parsed_bitstream.txt": "ae135780eb595e74252a0fe7e8c39d14d8c7849da63e8b18ac92d622b443ea24",
+    "modules_dump_64b.bin": "4de764865951b492821ef0e8088c43e0cddaab70cea5d99b1abc23c2f3e90efa",
+    "modules_dump_128b.bin": "12e8b4c161dad2900f6e67bd31714a77d8b8b0ff0d7fb414eefdbfe6f14b3def"
+  }
+}

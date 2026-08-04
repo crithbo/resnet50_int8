@@ -1,0 +1,77 @@
+{
+  "params": {
+    "node_id": "node-0071",
+    "hw_op_id": "hwop-0071-00",
+    "active_slice_count": 16,
+    "source": "W3 golden_batch16/subop_batch16",
+    "transport_storage": "C8HW8"
+  },
+  "used_slices": "0b0000000000001111111111111111",
+  "operators": [
+    {
+      "id": "op0",
+      "type": "resnet50_gap_sum_uint8_int32",
+      "used_slices": "0b0000000000001111111111111111",
+      "inputs": {
+        "A": {
+          "shape": [
+            1,
+            1,
+            100416
+          ],
+          "dtype": "uint8",
+          "bank_interleave": 1,
+          "remapping": null,
+          "source": {
+            "type": "external"
+          },
+          "logical_storage": {
+            "schema": "resnet50-gap-c8hw8-input-v1",
+            "logical_shape_nchw": [
+              2048,
+              7,
+              7
+            ],
+            "physical_shape": [
+              256,
+              7,
+              7,
+              8
+            ],
+            "layout": "C8HW8",
+            "payload_bytes": 100352,
+            "allocation_bytes": 100416,
+            "prefix_guard_bytes": 0,
+            "suffix_guard_bytes": 64
+          },
+          "base_addr": "0x00000000"
+        }
+      },
+      "output": {
+        "shape": [
+          2048,
+          1,
+          1
+        ],
+        "dtype": "int32",
+        "bank_interleave": 1,
+        "remapping": null,
+        "logical_storage": {
+          "schema": "resnet50-gap-c8-output-v1",
+          "logical_shape_nchw": [
+            2048,
+            1,
+            1
+          ],
+          "physical_shape": [
+            256,
+            8
+          ],
+          "layout": "C8",
+          "payload_bytes": 8192
+        },
+        "base_addr": "0x00018840"
+      }
+    }
+  ]
+}

@@ -1,12 +1,31 @@
 .venv/
 # Generated artifacts stay out of Git except the two small, frozen W3 graph
-# metadata files needed by layout queries in a fresh clone. Tensor payloads,
-# manifests, models, encoder output, hardware freezes, logs, and caches remain ignored.
+# metadata files needed by layout queries in a fresh clone and the small,
+# hash-closed R3/R5 evidence bundles. Other tensor payloads, manifests,
+# models, encoder output, hardware freezes, logs, and caches remain ignored.
 /artifacts/*
 !/artifacts/w3/
 /artifacts/w3/*
 !/artifacts/w3/model_graph.json
 !/artifacts/w3/legacy77_mapping.json
+!/artifacts/operator_config_validation/
+/artifacts/operator_config_validation/*
+!/artifacts/operator_config_validation/r3-mapping-evidence/
+!/artifacts/operator_config_validation/r3-mapping-evidence/**
+!/artifacts/operator_config_validation/r5-patched-mapping-evidence/
+!/artifacts/operator_config_validation/r5-patched-mapping-evidence/**
+!/artifacts/operator_config_validation/r5-patched-execplan-evidence/
+!/artifacts/operator_config_validation/r5-patched-execplan-evidence/**
+
+# Interrupted/failed local MaxPool execplan attempts have no bundle manifest
+# and are never evidence inputs.  Keep only the manifest-complete v3/v5 chain.
+/artifacts/operator_config_validation/r5-patched-execplan-evidence/maxpool-node0002-guarded-wave0-v2/
+/artifacts/operator_config_validation/r5-patched-execplan-evidence/maxpool-node0002-guarded-wave0-v4/
+/artifacts/operator_config_validation/r5-patched-execplan-evidence/maxpool-node0002-wave0-strict-v1/
+
+# Local exploratory report accidentally emitted into an immutable v1 bundle;
+# the current closure uses node0004-nopp-r1-v2 and never consumes this file.
+/artifacts/operator_config_validation/r5-patched-execplan-evidence/node0004-nopp-r1-v1/active_matrix_complete_package_validation_report.json
 __pycache__/
 *.py[cod]
 *.egg-info/
@@ -19,12 +38,23 @@ htmlcov/
 /CGRA_SIM/
 /ndp-sim-ref/
 /NDPFuncModel/
+/ndp-sim/
+
+# Large local/reference trees are restored or adjudicated independently.
+# Keep them out of the root source checkpoint; current identities and receipts
+# remain in repos.lock.json, contracts, .agents task records, and machine
+# evidence selected below.
+/Trassic2.0_RTL/
+/jsons/
+/outputs/
+/server_returns/
 
 # Local server RTL/VCS mirror and immutable returned result archives are
 # evidence inputs, not source-controlled project payloads. Keep only the
 # hand-maintained entry documentation from the mirror in the root repository.
 /NDP_copy01/*
 !/NDP_copy01/README_HARDWARE_SIM_ENTRY.md
+!/NDP_copy01/native_return_observer.svh
 /sim_result*.zip
 
 # Operator pseudocode originals supplied for comparison remain local and must

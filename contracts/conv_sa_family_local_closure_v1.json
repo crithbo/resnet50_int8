@@ -1,0 +1,259 @@
+{
+  "schema": "conv-sa-family-local-closure-v1",
+  "status": "BLOCKED_RTL_ARITHMETIC_AND_SIMULATOR_SEMANTICS_DIVERGE",
+  "candidate_release": false,
+  "formal_target_instance_allowed": false,
+  "evidence_level": "E1_STATIC_SOURCE_BOUNDARY",
+  "stage_census": {
+    "typed_stage_count": 133,
+    "conv_stage_count": 53,
+    "matmul_stage_count": 1
+  },
+  "representative": {
+    "request_id": "r5:hwop-0004-00",
+    "hw_op_id": "hwop-0004-00",
+    "node_id": "node-0004",
+    "onnx_name": "fused resnetv17_stage1_conv0_fwd_quant",
+    "input_shapes": [
+      [
+        16,
+        64,
+        56,
+        56
+      ],
+      [
+        1
+      ],
+      [
+        64,
+        64,
+        1,
+        1
+      ],
+      [
+        64
+      ],
+      [
+        64
+      ]
+    ],
+    "output_shapes": [
+      [
+        16,
+        64,
+        56,
+        56
+      ]
+    ],
+    "attributes": {
+      "auto_pad": "NOTSET",
+      "dilations": [
+        1,
+        1
+      ],
+      "group": 1,
+      "kernel_shape": [
+        1,
+        1
+      ],
+      "pads": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "strides": [
+        1,
+        1
+      ]
+    },
+    "x_zero_point": {
+      "dtype": "uint8",
+      "element_count": 1,
+      "scalar": 0,
+      "shape": [
+        1
+      ],
+      "value_kind": "scalar",
+      "value_sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d"
+    },
+    "w_zero_point": {
+      "axis": 0,
+      "dtype": "int8",
+      "element_count": 64,
+      "maximum": 0,
+      "minimum": 0,
+      "shape": [
+        64
+      ],
+      "value_kind": "per_channel",
+      "value_sha256": "f5a5fd42d16a20302798ef6ed309979b43003d2320d9f0e8ea9831a92759fb4b"
+    },
+    "bias": {
+      "axis": 0,
+      "dtype": "int32",
+      "element_count": 64,
+      "maximum": 27356,
+      "minimum": -1166214,
+      "shape": [
+        64
+      ],
+      "value_kind": "per_channel",
+      "value_sha256": "40bc2a3acbd553ffc067ea1c7b1c31cb59f18fca30451f55809ff76d2594bc0b"
+    },
+    "request_sha256": "e27e10169168f3889df4c03bf15cb21de074abf3f3767dc4bee288425165874b"
+  },
+  "arithmetic_boundary": {
+    "onnx_and_ndpfuncmodel": "psum32 + sum_i(s8(weight_i) * u8(activation_i))",
+    "stock_rtl_after_first_int8_csa": "psum32 + signext32(sum17) + (signext32(carry17) << 1)",
+    "counterexample": {
+      "signed_weight_lanes": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "unsigned_activation_lanes": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "psum32": 0,
+      "first_csa_sum17": 2,
+      "first_csa_carry17": 2,
+      "onnx_and_ndpfuncmodel": 4,
+      "stock_rtl": 6
+    },
+    "issue_id": "CDA-SA-INT8-CSA-001",
+    "adjudication": "CONTRADICTED"
+  },
+  "closure_matrix": {
+    "input_weight_tiling": "STRUCTURALLY_MODELED_NOT_NUMERICALLY_RELEASABLE",
+    "bias_initialization": "STRUCTURALLY_MODELED_NOT_NUMERICALLY_RELEASABLE",
+    "psum_accumulation": "BLOCKED_BY_CDA-SA-INT8-CSA-001",
+    "tail_and_padding": "NOT_REACHED_AFTER_ARITHMETIC_STOP_GATE",
+    "sa_to_requant_handoff": "NOT_REACHED_AND_OUTSIDE_THIS_FAMILY_RELEASE",
+    "buffer_address_lifetime": "NOT_REACHED_AFTER_ARITHMETIC_STOP_GATE",
+    "mse_occurrence": "NOT_REACHED_AFTER_ARITHMETIC_STOP_GATE",
+    "mapping_bitstream_execplan_sca": "MUST_NOT_BE_MATERIALIZED_AS_RELEASE_CANDIDATE",
+    "config_bound_simulator": "INCOMPATIBLE_CONVENTIONAL_DOT_MODEL"
+  },
+  "blocker_delta": {
+    "keep": [
+      "B_CONV_INT8_SA",
+      "B_CONV_BIAS_PSUM",
+      "B_EXECPLAN_TYPED_TRANSPORT",
+      "B_LAYOUT_APPROVAL"
+    ],
+    "add": [
+      "B_CONV_CONFIG_BOUND_SIMULATOR_RTL_CSA_MISMATCH",
+      "B_CONV_STOCK_RTL_INT8_DOT_CAPABILITY"
+    ],
+    "close": []
+  },
+  "minimum_next_action": {
+    "acceptable_path_a": "new stock RTL identity whose INT8 SA implements the conventional signed-weight/unsigned-activation dot, followed by fresh E2/E4/E5",
+    "acceptable_path_b": "an explicitly authorized hardware topology that computes the exact ONNX dot without the contradicted INT8 SA path, plus a config-bound simulator for it",
+    "not_sufficient": [
+      "retiling",
+      "bias correction",
+      "tail masking",
+      "mapping success",
+      "encoder success",
+      "natural server completion"
+    ]
+  },
+  "rule_delta_proposal": {
+    "proposal_only": true,
+    "text": "Any Conv/MatMul config-bound simulator using NDPFuncModel SpecialPEA ordinary INT8 dot semantics must be rejected for stock-RTL release while CDA-SA-INT8-CSA-001 remains CONTRADICTED."
+  },
+  "read_receipt": [
+    {
+      "path": ".agents/agent.md",
+      "sha256": "5a4660df1e771b75045c45f75e08b7eba771542750b91ab18af6ab0434043de0",
+      "reason": "required rule, typed source, mapper/execplan, simulator, or RTL consumer"
+    },
+    {
+      "path": ".agents/plan.md",
+      "sha256": "caf0a8ce965b0b16737bade63cfc8f8ddcd707a91dd5adf99987c6b2b4488efc",
+      "reason": "required rule, typed source, mapper/execplan, simulator, or RTL consumer"
+    },
+    {
+      "path": ".agents/rules/生成前必读索引.md",
+      "sha256": "539e8dfbe52ad9fc8bd9fdef8c69d448fb5fd713e938e3adc5f663f82fd806d7",
+      "reason": "required rule, typed source, mapper/execplan, simulator, or RTL consumer"
+    },
+    {
+      "path": ".agents/rules/算子配置规则.md",
+      "sha256": "f7e3f80e7fb4edd2b42d7ff41a70bba55abfde6797013648dfedccdc6385e023",
+      "reason": "required rule, typed source, mapper/execplan, simulator, or RTL consumer"
+    },
+    {
+      "path": ".agents/rules/NDP硬件字段语义.md",
+      "sha256": "a955834fc059f08bada8131adc94db5c05112eb1e6acc0a0976eee7e6ae17c59",
+      "reason": "required rule, typed source, mapper/execplan, simulator, or RTL consumer"
+    },
+    {
+      "path": ".agents/rules/服务器测试包生成规则.md",
+      "sha256": "72f22cc21e328eb06a841418a39640a924de0c533e6d0ac6d8822dfd0771d524",
+      "reason": "required rule, typed source, mapper/execplan, simulator, or RTL consumer"
+    },
+    {
+      "path": "NDP_copy01/README_HARDWARE_SIM_ENTRY.md",
+      "sha256": "4318f3a28de399fb522740315f11bdddf346e71969cf1e45686899a568b042d7",
+      "reason": "required rule, typed source, mapper/execplan, simulator, or RTL consumer"
+    },
+    {
+      "path": "contracts/resnet50_r5_lowering_bundle.json",
+      "sha256": "bf661e4eda2011025d9922708ab46a64f8d1b3c279527b88aa7d630bb3545432",
+      "reason": "required rule, typed source, mapper/execplan, simulator, or RTL consumer"
+    },
+    {
+      "path": "ndp-sim/bitstream/config/special.py",
+      "sha256": "0c989cf657eaa429f9b2b37848105abe3448b3926e22e09ae98c42ddd4f8447a",
+      "reason": "required rule, typed source, mapper/execplan, simulator, or RTL consumer"
+    },
+    {
+      "path": "ndp-sim/bitstream/config/mapper.py",
+      "sha256": "c7685cc297e4e11ccafa23758a46d20986e5db931fcb3c4e21f5f4a0a2534226",
+      "reason": "required rule, typed source, mapper/execplan, simulator, or RTL consumer"
+    },
+    {
+      "path": "ndp-sim/model_execplan/src/execution_plan_generator/pipeline.py",
+      "sha256": "1e59210c4401dbe6c694ffdb34939531238c0e3c949ff965a3f74667eb46cfae",
+      "reason": "required rule, typed source, mapper/execplan, simulator, or RTL consumer"
+    },
+    {
+      "path": "NDP_copy01/rtl/Slice/Specialized_Array/Specialized_Array_Config.sv",
+      "sha256": "e0eb610d4332ea8817d4667cee58b6d804edd4c43093ee41b4dc1ef51893bce2",
+      "reason": "required rule, typed source, mapper/execplan, simulator, or RTL consumer"
+    },
+    {
+      "path": "NDP_copy01/rtl/Slice/Specialized_Array/SA_PE/SA_PE_Control_Block.sv",
+      "sha256": "e254af41c5354d93d31cd9196d79a0a365ea880b86286ea0c15e3a4f41122ca6",
+      "reason": "required rule, typed source, mapper/execplan, simulator, or RTL consumer"
+    },
+    {
+      "path": "NDP_copy01/rtl/Slice/Specialized_Array/SA_PE/SA_PE_Outbuffer.sv",
+      "sha256": "be66a8c68e8c31398ccf7784eff73fd733831498bf5580c22f457d445cd229be",
+      "reason": "required rule, typed source, mapper/execplan, simulator, or RTL consumer"
+    },
+    {
+      "path": "NDP_copy01/rtl/Slice/Specialized_Array/SA_PE/SA_PE_ALU/SA_PE_Mul_Array.v",
+      "sha256": "89ea1999ffc4a8a8b1459ba86525664ce78baa19a04179b1154e3635e8d2ff35",
+      "reason": "required rule, typed source, mapper/execplan, simulator, or RTL consumer"
+    },
+    {
+      "path": "NDPFuncModel/component/SpecialPEA.py",
+      "sha256": "1382f0375077e19f783214de9426dca6a4e685256e5888d14ce7a17f00eadbb1",
+      "reason": "required rule, typed source, mapper/execplan, simulator, or RTL consumer"
+    }
+  ],
+  "omitted_files": [
+    {
+      "path": "server package assets",
+      "reason": "generation stopped before E2; no package is authorized"
+    }
+  ]
+}

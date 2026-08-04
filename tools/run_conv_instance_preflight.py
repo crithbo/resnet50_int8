@@ -15,10 +15,17 @@ def main() -> int:
     parser = argparse.ArgumentParser(description="Run one typed Conv candidate preflight")
     parser.add_argument("--node-id", required=True)
     parser.add_argument("--output", type=Path)
+    parser.add_argument(
+        "--encoder-candidate",
+        type=Path,
+        help="Native server-profile candidate directory (or candidate_manifest.json).",
+    )
     args = parser.parse_args()
     request = make_conv_target_request(ROOT, args.node_id)
     output = args.output or request.preflight_path
-    report = build_conv_instance_preflight(ROOT, args.node_id)
+    report = build_conv_instance_preflight(
+        ROOT, args.node_id, encoder_candidate_path=args.encoder_candidate
+    )
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(
         json.dumps(report, ensure_ascii=False, indent=2, sort_keys=True) + "\n",

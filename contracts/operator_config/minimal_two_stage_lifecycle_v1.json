@@ -1,0 +1,41 @@
+{
+  "artifact": {
+    "manifest_sha256": "e6466bcfc6e88ef9f6085f756493b38a0389b6a6dc8750e4d34b78b33a61de04",
+    "path": "artifacts/operator_config_validation/r5-minimal-two-stage-lifecycle-e2-v1",
+    "report_sha256": "d95522d5e3767eeefc1ce1681789384c92930c58dd34451081aa6633c3f1c378"
+  },
+  "candidate_release": false,
+  "closed_local_semantics": [
+    "producer D and consumer A exact physical address alias",
+    "producer-backed input excluded from runtime preload",
+    "independent main config load/address/payload per stage",
+    "same-mask immediate barrier after each Start_Comp",
+    "Repeat_Num/start/barrier/completion count equals two",
+    "stage0 and stage1 bit-exact independent golden"
+  ],
+  "contract_sha256": "9d09aa0b397bdaecc022eb2ddd1d2d65aca7efe6d58001a39f95fc1ea4fc7bff",
+  "formal_target_config": false,
+  "probe": {
+    "dtype": "fp32",
+    "shape": [
+      1,
+      8,
+      32
+    ],
+    "slice_mask": "0b0000000000000000000000000001",
+    "stage0": "prefill_mul_fp32MN_fp32M_fp32MN",
+    "stage1": "prefill_add_fp32MN_fp32MN_fp32MN"
+  },
+  "remaining_scope": "full-network 133-stage physical allocation/lifetime remains open; hardware E4/E5 is not claimed",
+  "rule_ids": [
+    "CDA-TWO-STAGE-MATERIALIZED-ROUNDTRIP-001",
+    "CDA-TWO-STAGE-DATA-ALIAS-001",
+    "CDA-TWO-STAGE-CONFIG-RELOAD-001",
+    "CDA-TWO-STAGE-BARRIER-ORDER-001",
+    "CDA-TWO-STAGE-TERMINATION-001",
+    "CDA-TWO-STAGE-DUAL-GOLDEN-001"
+  ],
+  "schema": "minimal-two-stage-lifecycle-contract-v1",
+  "server_package": false,
+  "status": "local_e2_complete_dynamic_hardware_pending"
+}

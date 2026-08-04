@@ -1,0 +1,118 @@
+{
+  "schema": "operator-config-semantic-contract-v1",
+  "graph_sha256": "871c665990e918a2d1280be5c11c45225d624353520aceb667bec039b59d63eb",
+  "target_profile": {
+    "slices": 28,
+    "banks_per_slice": 4,
+    "ddr_rows": 6144,
+    "ddr_columns": 64,
+    "subwords_per_column": 16,
+    "read_streams": 4,
+    "write_streams": 1,
+    "buffers": 6
+  },
+  "candidate_scope": {
+    "node_id": "node-0002",
+    "wave_index": 0,
+    "slice_count": 28,
+    "remaining_tiles": 36,
+    "formal_target_config": false,
+    "server_execution_claim": false,
+    "current_semantics_compatible": false,
+    "current_semantic_blockers": [
+      "B_GA_INT8_MAX_FLOW",
+      "B_GA_INT8_MAX_NUMERIC"
+    ],
+    "purpose": "hash-bound guarded C4HWC4 MaxPool historical package; current RTL semantic release is blocked"
+  },
+  "source_identities": {
+    "typed_lowering_bundle_sha256": "318cac3df84cf12577bb6e975b7639ab766bb41063a45c8b1b65fdbe99501aeb",
+    "typed_lowering_request_set_sha256": "9da4423bb293a047c9a2dac945270d56eab9fe114146a2f6638e43c655fa341b",
+    "producer_request_sha256": "d1521e88ac08c4768c3d4bcd8c66820bc59b0d49b31d4a1c7481c089050fbe9e",
+    "maxpool_request_sha256": "6126a69fcd131b9fe3e12450acb2d54c5b6f93e91779a44150bf302ece018578",
+    "resolution_overlay_sha256": "b8f48de525a6c109a9a00bc3689d24378e4805b7c868b94d6b0425ef0d1afc93",
+    "guarded_transport_manifest_sha256": "91a1fdf61dedece2a3a6af47042376be19a9f3972e9093edc6899815ceeaa878",
+    "request_address_proof_sha256": "c00ce2648b6ae5295126d2e0715190ac25c029689c92e6d2fbc8b889794fa7ff",
+    "mapping_bundle_manifest_sha256": "7867a16a9e32eb01bbaee17b6417436a31bbcd4f0abc0cd6fc8efe76f1342ed6"
+  },
+  "operators": {
+    "op0": {
+      "op_type": "maxpool_config_16_112_112_stride2_padding1",
+      "layouts": {
+        "A": "UINT8 guarded C4HWC4; coordinate origin (1,1); 452-byte prefix, 200704-byte payload, 12-byte suffix",
+        "D": "UINT8 C4HWC4 [C/4,H,W,4]; 56x56x16; 50176 bytes"
+      },
+      "qparams": {
+        "policy": "explicit",
+        "bindings": {
+          "A": {
+            "scale": {
+              "dtype": "float32",
+              "element_count": 1,
+              "float32_bits": "0x3cb0a5e9",
+              "scalar": 0.021563487127423286,
+              "shape": [
+                1
+              ],
+              "value_kind": "scalar",
+              "value_sha256": "a1aac7487d3e8f919770415333ea8456ee152f1a343819888671a4395e2e7d02"
+            },
+            "zero_point": {
+              "dtype": "uint8",
+              "element_count": 1,
+              "scalar": 0,
+              "shape": [
+                1
+              ],
+              "value_kind": "scalar",
+              "value_sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d"
+            },
+            "source": "resnet50-r5-typed-lowering-bundle-v1:r5:hwop-0001-01@d1521e88ac08c4768c3d4bcd8c66820bc59b0d49b31d4a1c7481c089050fbe9e->r5:hwop-0002-00@6126a69fcd131b9fe3e12450acb2d54c5b6f93e91779a44150bf302ece018578"
+          },
+          "D": {
+            "scale": {
+              "dtype": "float32",
+              "element_count": 1,
+              "float32_bits": "0x3cb0a5e9",
+              "scalar": 0.021563487127423286,
+              "shape": [
+                1
+              ],
+              "value_kind": "scalar",
+              "value_sha256": "a1aac7487d3e8f919770415333ea8456ee152f1a343819888671a4395e2e7d02"
+            },
+            "zero_point": {
+              "dtype": "uint8",
+              "element_count": 1,
+              "scalar": 0,
+              "shape": [
+                1
+              ],
+              "value_kind": "scalar",
+              "value_sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d"
+            },
+            "source": "resnet50-r5-typed-lowering-bundle-v1:r5:hwop-0001-01@d1521e88ac08c4768c3d4bcd8c66820bc59b0d49b31d4a1c7481c089050fbe9e->r5:hwop-0002-00@6126a69fcd131b9fe3e12450acb2d54c5b6f93e91779a44150bf302ece018578"
+          }
+        }
+      },
+      "stage": {
+        "role": "node-0002 UINT8 3x3 stride-2 MaxPool wave 0 candidate",
+        "dependencies": []
+      },
+      "tail": {
+        "policy": "exact"
+      },
+      "provenance": {
+        "source_config": {
+          "artifact": "mapping_evidence/op0/source_config.json",
+          "sha256": "f5ae3d62eba31d734561050365e39745fd5929759710d24f998fd7ff5c7d1e7b"
+        },
+        "mapping_evidence": {
+          "artifact": "mapping_evidence/op0/mapping_evidence.json",
+          "sha256": "c67f11b65efd4d03c9ec340a78ce11dd7992986d44227cc7b767176c77ffb4d8"
+        }
+      }
+    }
+  },
+  "contract_sha256": "25d33b6e333c2ae8316657280447ab54848cae24a83174821ea33e9980c02a90"
+}

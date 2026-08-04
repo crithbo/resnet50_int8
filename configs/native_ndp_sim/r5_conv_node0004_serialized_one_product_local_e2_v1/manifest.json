@@ -1,0 +1,71 @@
+{
+  "field_ownership": {
+    "active_sa_arithmetic": ".agents/rules/INT8_SA点积专项规则.md",
+    "derived_fields": [
+      "LC4.end=16",
+      "LC6.end=16",
+      "B.dim_stride=[32,2048,14336]",
+      "A/B/C/D relative bases from serialized physical sizes"
+    ],
+    "topology_seed_structure_only": "configs/native_ndp_sim/node0004_accumulate_wave0_nopp_r1_strict_v1/config.json",
+    "typed_geometry_qparams": "contracts/resnet50_r5_lowering_bundle.json"
+  },
+  "operator_allocation_bytes": 1007680,
+  "records": [
+    {
+      "active_slice_count": 28,
+      "canonical_sha256": "e8c0f962f713a89d781cff71f0c0e9d13961ca7c5507fb27a45429f44837831e",
+      "op_id": "serialized_w0",
+      "operator_type": "resnet50_conv_node0004_serialized_wave0",
+      "path": "configs/native_ndp_sim/r5_conv_node0004_serialized_one_product_local_e2_v1/wave-0.json",
+      "samples": [
+        0,
+        3,
+        6,
+        8,
+        10,
+        12,
+        14
+      ],
+      "sha256": "559878e720ebec974a54dda4903d8ab0fd208e4fbb7fe973410ab81a8ebcd4c5",
+      "wave": 0
+    },
+    {
+      "active_slice_count": 28,
+      "canonical_sha256": "1635b66a10bb56855b1efe2f05ec5594e5e26c150f0f5ea258017fe06d0b338a",
+      "op_id": "serialized_w1",
+      "operator_type": "resnet50_conv_node0004_serialized_wave1",
+      "path": "configs/native_ndp_sim/r5_conv_node0004_serialized_one_product_local_e2_v1/wave-1.json",
+      "samples": [
+        1,
+        4,
+        7,
+        9,
+        11,
+        13,
+        15
+      ],
+      "sha256": "44ebf50af3d2ad167cf1f65a466c24a3111bddeb381fccc45342a422aa0bfa10",
+      "wave": 1
+    },
+    {
+      "active_slice_count": 8,
+      "canonical_sha256": "f8e115274aea58cb07d7383b9a833c0c23f6e220bae6b4378b6429d140d157ca",
+      "op_id": "serialized_w2",
+      "operator_type": "resnet50_conv_node0004_serialized_wave2",
+      "path": "configs/native_ndp_sim/r5_conv_node0004_serialized_one_product_local_e2_v1/wave-2.json",
+      "samples": [
+        2,
+        5
+      ],
+      "sha256": "2f59b4984cc1551ddad904b85560f18dc6dce393d3c7f941170bc6875b57908d",
+      "wave": 2
+    }
+  ],
+  "schema": "resnet50-node0004-serialized-config-set-v1",
+  "source_receipts": {
+    "structural_seed_sha256": "2fe3fc865a6bfb8f37d0c34afe2adb730de35568d02892d9705895b0261b9ae8",
+    "typed_lowering_sha256": "bf661e4eda2011025d9922708ab46a64f8d1b3c279527b88aa7d630bb3545432"
+  },
+  "test_id": "r5_conv_node0004_serialized_one_product_local_e2_v1"
+}

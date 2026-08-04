@@ -26,6 +26,8 @@ class NdpPhysicalProbeResult:
     target_config_binding: dict[str, Any] | None = None
     requant_config_binding: dict[str, Any] | None = None
     int8_conv_1x1_jobs: tuple[dict[str, Any], ...] = ()
+    maxpool_config_binding: dict[str, Any] | None = None
+    uint8_maxpool_jobs: tuple[dict[str, Any], ...] = ()
 
 
 @dataclass(frozen=True)
@@ -56,11 +58,15 @@ class NdpFunctionalAdapter:
         *,
         python_executable: Path | None = None,
         timeout_seconds: int = 30,
+        bridge_module: str = "tools.physical_image_probe",
     ):
         self.repository = repository.resolve()
         self.python_executable = Path(python_executable or sys.executable).resolve()
         self.timeout_seconds = timeout_seconds
-        bridge = self.repository / "tools" / "physical_image_probe.py"
+        if not bridge_module.startswith("tools.") or not bridge_module.replace(".", "_").isidentifier():
+            raise ValueError("bridge_module must name a tools module")
+        self.bridge_module = bridge_module
+        bridge = self.repository.joinpath(*bridge_module.split(".")).with_suffix(".py")
         if not bridge.is_file():
             raise PipelineError(f"NDP physical-image bridge is missing: {bridge}")
         if timeout_seconds <= 0:
@@ -74,6 +80,8 @@ class NdpFunctionalAdapter:
         target_config_binding: dict[str, Any] | None = None,
         requant_config_binding: dict[str, Any] | None = None,
         int8_conv_1x1_jobs: tuple[dict[str, Any], ...] = (),
+        maxpool_config_binding: dict[str, Any] | None = None,
+        uint8_maxpool_jobs: tuple[dict[str, Any], ...] = (),
     ) -> NdpPhysicalProbeResult:
         geometry = bundle.geometry
         if int8_conv_1x1_jobs and target_config_binding is None:
@@ -82,8 +90,21 @@ class NdpFunctionalAdapter:
             target_config_binding is None or not int8_conv_1x1_jobs
         ):
             raise ValueError("requant config binding requires accumulate binding and bulk jobs")
+        if uint8_maxpool_jobs and maxpool_config_binding is None:
+            raise ValueError("UINT8 MaxPool jobs require a MaxPool config binding")
+        if maxpool_config_binding is not None and len(uint8_maxpool_jobs) != 1:
+            raise ValueError("MaxPool config binding requires exactly one UINT8 MaxPool job")
+        if maxpool_config_binding is not None and (
+            target_config_binding is not None
+            or requant_config_binding is not None
+            or int8_conv_1x1_jobs
+            or int8_dot_probes
+        ):
+            raise ValueError("MaxPool and Conv probe modes cannot be combined")
         schema_version = (
-            "0.3"
+            "0.4"
+            if maxpool_config_binding is not None
+            else "0.3"
             if requant_config_binding is not None
             else "0.2"
             if target_config_binding is not None
@@ -106,6 +127,9 @@ class NdpFunctionalAdapter:
             request["int8_conv_1x1_jobs"] = list(int8_conv_1x1_jobs)
         if requant_config_binding is not None:
             request["requant_config_binding"] = requant_config_binding
+        if maxpool_config_binding is not None:
+            request["maxpool_config_binding"] = maxpool_config_binding
+            request["uint8_maxpool_jobs"] = list(uint8_maxpool_jobs)
         expected: dict[tuple[str, int], str] = {}
         for region in bundle.regions:
             payload = bundle.image.read(region.base_address, region.size_bytes)
@@ -221,7 +245,7 @@ class NdpFunctionalAdapter:
                     [
                         str(self.python_executable),
                         "-m",
-                        "tools.physical_image_probe",
+                        self.bridge_module,
                         str(request_path),
                     ],
                     cwd=self.repository,
@@ -333,6 +357,11 @@ class NdpFunctionalAdapter:
             if returned_binding is not None or returned_requant_binding is not None or bulk_response:
                 raise PipelineError("NDP probe returned an unexpected target config result")
         else:
+            local_signed_a = (
+                target_config_binding.get("transport_abi")
+                == "conv_sa_s8a_u8b_local_v3"
+            )
+            expected_n2n = (0, 0, 0) if local_signed_a else (4, 1, 1)
             if (
                 not isinstance(returned_binding, dict)
                 or returned_binding.get("status") != "validated"
@@ -342,9 +371,9 @@ class NdpFunctionalAdapter:
                 != target_config_binding.get("semantic_contract_sha256")
                 or returned_binding.get("transport_abi")
                 != target_config_binding.get("transport_abi")
-                or returned_binding.get("n2n_mem_loop") != 4
-                or returned_binding.get("n2n_src_slice_sel") != 1
-                or returned_binding.get("n2n_dst_slice_sel") != 1
+                or returned_binding.get("n2n_mem_loop") != expected_n2n[0]
+                or returned_binding.get("n2n_src_slice_sel") != expected_n2n[1]
+                or returned_binding.get("n2n_dst_slice_sel") != expected_n2n[2]
             ):
                 raise PipelineError("NDP target config binding validation differs")
             requested_names = [item.get("name") for item in int8_conv_1x1_jobs]
@@ -402,6 +431,57 @@ class NdpFunctionalAdapter:
                     != expected_staged_offsets
                 ):
                     raise PipelineError("NDP requant config binding validation differs")
+        returned_maxpool_binding = response.get("maxpool_config_binding")
+        maxpool_response = response.get("uint8_maxpool_jobs", [])
+        if maxpool_config_binding is None:
+            if returned_maxpool_binding is not None or maxpool_response:
+                raise PipelineError("NDP probe returned an unexpected MaxPool result")
+        else:
+            if (
+                not isinstance(returned_maxpool_binding, dict)
+                or returned_maxpool_binding.get("status") != "validated"
+                or returned_maxpool_binding.get("template_name")
+                != maxpool_config_binding.get("template_name")
+                or returned_maxpool_binding.get("template_sha256")
+                != maxpool_config_binding.get("template_sha256")
+                or returned_maxpool_binding.get("unsigned_uint8_semantics") is not True
+            ):
+                raise PipelineError("NDP MaxPool config binding validation differs")
+            requested_names = [item.get("name") for item in uint8_maxpool_jobs]
+            returned_names = [item.get("name") for item in maxpool_response]
+            if returned_names != requested_names:
+                raise PipelineError("NDP MaxPool job order differs")
+            expected_slice_ids = {
+                int(item["slice_id"])
+                for item in uint8_maxpool_jobs[0].get("slices", [])
+            }
+            for job in maxpool_response:
+                if (
+                    job.get("status") != "passed"
+                    or int(job.get("physical_mismatch_count", -1)) != 0
+                    or job.get("execution_path")
+                    != [
+                        "region_backed_physical_image",
+                        "GeneralPEA",
+                        "region_backed_physical_image",
+                    ]
+                ):
+                    raise PipelineError(f"NDP MaxPool mismatch: {job.get('name')}")
+                returned_slice_ids: set[int] = set()
+                for output in job.get("outputs", []):
+                    slice_id = int(output["slice_id"])
+                    payload = bytes.fromhex(output["data_hex"])
+                    if (
+                        slice_id in returned_slice_ids
+                        or hashlib.sha256(payload).hexdigest() != output.get("sha256")
+                        or int(output.get("mismatch_count", -1)) != 0
+                    ):
+                        raise PipelineError(
+                            f"NDP MaxPool physical output differs on slice {slice_id}"
+                        )
+                    returned_slice_ids.add(slice_id)
+                if returned_slice_ids != expected_slice_ids:
+                    raise PipelineError("NDP MaxPool output slice coverage differs")
         return NdpPhysicalProbeResult(
             per_slice=int(response["per_slice"]),
             total_bytes=int(response["total_bytes"]),
@@ -410,6 +490,8 @@ class NdpFunctionalAdapter:
             target_config_binding=returned_binding,
             requant_config_binding=returned_requant_binding,
             int8_conv_1x1_jobs=tuple(bulk_response),
+            maxpool_config_binding=returned_maxpool_binding,
+            uint8_maxpool_jobs=tuple(maxpool_response),
         )
 
     @staticmethod

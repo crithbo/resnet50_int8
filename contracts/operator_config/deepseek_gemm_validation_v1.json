@@ -1,0 +1,747 @@
+{
+  "blockers": [],
+  "candidate_release": false,
+  "closed_blockers": [
+    "B_DS_GEMM_LAYOUT_HINT_STAGE_GAP",
+    "B_DS_GEMM_NUMERIC_PAYLOAD_EVIDENCE"
+  ],
+  "contract_sha256": "a0af3a78b341ed5ffda97fd7efa33edb0b2fb3d0fd1ffeb070a39d4b51165a8e",
+  "formal_target_config": false,
+  "identity_boundary": {
+    "crop_contract_required": true,
+    "direct_onnx_shape_equals_stage": false,
+    "onnx_repository_classification": "SEMANTIC_MODEL_MATCH",
+    "original_source_identity": false
+  },
+  "inputs": {
+    "active_prefill_stage": {
+      "path": "artifacts/operator_config_validation/r5-deepseek-onnx-stage-json-e2-v1/layer0_prefill.rule_normalized.json",
+      "sha256": "2f1fc4def9d9332d4d3abb19fc711a4488d659ceac3b67a3e85b951ce43a423b",
+      "size_bytes": 34628
+    },
+    "active_stage_producer_contract": {
+      "path": "contracts/operator_config/deepseek_prefill_rule_normalized_stage_v1.json",
+      "sha256": "b59312280d0e11cdae398b4ab7c3cd467061e2b8db48bfb7c37d0373c0a334c1",
+      "size_bytes": 5517
+    },
+    "crop_contract": {
+      "path": "contracts/operator_config/deepseek_ndpsim_crop_contract_v1.json",
+      "sha256": "4ad206b550757f6649feb39b6df6e46e1b8bc99062502b441dbc5e4ba5c1e392",
+      "size_bytes": 7384
+    },
+    "isolated_graph": {
+      "path": "artifacts/operator_config_validation/ds_gemm_ffn_gate_v1/ds_gemm_ffn_gate_v1.json",
+      "sha256": "9a37e9326ff35744d1622446ee1a4e67b8948a43fef56aa35ecb6cdea6a57b4b",
+      "size_bytes": 1597
+    },
+    "native_fragment": {
+      "path": "ndp-sim/model_execplan/op_json/gemm_ring_ffn_gate.json",
+      "sha256": "f65fb9094ece53eec92610761a23e152e4438f0f993355f56363f59e457c1016",
+      "size_bytes": 1081
+    },
+    "onnx_inventory": {
+      "path": "artifacts/operator_config_validation/r5-deepseek-onnx-stage-json-e2-v1/onnx_graph_inventory.json",
+      "sha256": "ae2f5ab015d1fd6be7961e3d3bcc32d41119a2a02e810bb6027f4b8e63136c14",
+      "size_bytes": 458979
+    },
+    "raw_prefill_graph": {
+      "path": "artifacts/operator_config_validation/r5-deepseek-onnx-stage-json-e2-v1/layer0_prefill.generated.json",
+      "sha256": "089d4a2edcbe8b8af049ad8d1dfb5c474cc251e76a3fa2a64880e8a344e70dea",
+      "size_bytes": 34462
+    },
+    "read_receipt": {
+      "path": "contracts/operator_config/deepseek_gemm_read_receipt_v1.json",
+      "sha256": "88c812049d0ee1f99de9fea135541795dc13b1d115ad87fcf334938c3aee6bd8",
+      "size_bytes": 7052
+    },
+    "relayout_consumer": {
+      "path": "ndp-sim/generate_python_golden/single_op_data/relayout_gemm_ring.py",
+      "sha256": "26f368f09dc92b3a1dc2fb1f2b9ab39f8c3a4a3dfd9877a8ac7cfd3352660f28",
+      "size_bytes": 30355
+    },
+    "synthetic_numeric_contract": {
+      "path": "contracts/operator_config/deepseek_gemm_numeric_v1.json",
+      "sha256": "b0063a6ad58d02382266a7ee6fc9cb7034c70043ed10832555c504bd40fdb8f3",
+      "size_bytes": 2809
+    },
+    "trusted_native_template": {
+      "path": "ndp-sim/jsons/prefill_gemm_ring_4slice.json",
+      "sha256": "6a2ca9f2edd2e9c7b8ebbb558a84dd23c8e583781f8a8ac01c213b78c6737e91",
+      "size_bytes": 20430
+    },
+    "trusted_package_graph": {
+      "path": "jsons/gemm_ring_fnn/gemm_ring_fnn_withbaseaddr.json",
+      "sha256": "e1c11f2d60bda6cfbb2a5e166269af24d40f5c48cdf7989a0f144f6d713e0227",
+      "size_bytes": 1747
+    }
+  },
+  "layout_and_occurrence_contract": {
+    "B_and_B_prime_share_logical_allocation": true,
+    "per_slice": {
+      "A_bytes": 2048,
+      "A_shape": [
+        32,
+        32,
+        1
+      ],
+      "B_bytes": 114688,
+      "B_shape": [
+        896,
+        1,
+        64
+      ],
+      "D_bytes": 4096,
+      "D_shape": [
+        1,
+        32,
+        64
+      ]
+    },
+    "relayout": {
+      "A_input": "L8,K2,L4",
+      "B_weight": "N8,K2,N4",
+      "D_output": "L8,N8,L4,N4"
+    },
+    "required_write_reg_hints": {
+      "A": "reorder(m8,n2)->(n2,m8)",
+      "B": "reorder(n8,m2)->(m2,n8)"
+    },
+    "ring": {
+      "dst_slice_sel": 0,
+      "n2n_mem_loop": 28,
+      "participating_slice_count": 28,
+      "src_slice_sel": 0
+    },
+    "sca_d": {
+      "bytes_per_slice": 4096,
+      "lines_128b_per_slice": 256,
+      "slice_count": 28,
+      "total_valid_bytes": 114688
+    }
+  },
+  "onnx_to_stage": {
+    "active_stage_graph": {
+      "operators": [
+        {
+          "id": "op0",
+          "inputs": {
+            "A": {
+              "dtype": "fp16",
+              "remapping": null,
+              "shape": [
+                32,
+                32,
+                1
+              ],
+              "source": {
+                "operator_id": null,
+                "type": "external"
+              },
+              "type": null,
+              "write_reg_hint": "reorder(m8,n2)->(n2,m8)"
+            },
+            "B": {
+              "dtype": "fp16",
+              "remapping": null,
+              "shape": [
+                896,
+                1,
+                64
+              ],
+              "source": {
+                "operator_id": null,
+                "type": "external"
+              },
+              "type": null,
+              "write_reg_hint": "reorder(n8,m2)->(m2,n8)"
+            },
+            "B'": {
+              "dtype": "fp32",
+              "remapping": null,
+              "shape": [
+                896,
+                1,
+                64
+              ],
+              "source": {
+                "operator_id": null,
+                "type": "external"
+              },
+              "type": null,
+              "write_reg_hint": null
+            }
+          },
+          "output": {
+            "dtype": "fp16",
+            "remapping": null,
+            "shape": [
+              1,
+              32,
+              64
+            ],
+            "type": null,
+            "write_reg_hint": null
+          },
+          "type": "prefill_gemm_ring_4slice",
+          "used_slices": "0b1111111111111111111111111111"
+        }
+      ],
+      "used_slices": "0b0000000000000000000000011100"
+    },
+    "active_stage_matches_trusted_graph": true,
+    "anchor": {
+      "node": {
+        "attributes": [],
+        "domain": "",
+        "index": 15,
+        "inputs": [
+          "/model/layers.0/post_attention_layernorm/output_0",
+          "model.layers.0.mlp.gate_proj.MatMul.weight"
+        ],
+        "name": "/model/layers.0/mlp/gate_proj/MatMul",
+        "op_type": "MatMul",
+        "outputs": [
+          "/model/layers.0/mlp/gate_proj/MatMul/output_0"
+        ]
+      },
+      "weight_initializer": {
+        "data_location": "EXTERNAL",
+        "data_type": 10,
+        "data_type_name": "FLOAT16",
+        "dims": [
+          1536,
+          8960
+        ],
+        "double_data_count": 0,
+        "external_data": {
+          "length": "27525120",
+          "location": "model_fp16.onnx_data",
+          "offset": "511311872"
+        },
+        "float_data_count": 0,
+        "int32_data_count": 0,
+        "int64_data_count": 0,
+        "name": "model.layers.0.mlp.gate_proj.MatMul.weight",
+        "raw_data_bytes": 0,
+        "uint64_data_count": 0
+      }
+    },
+    "crop_formula": "[1,32,896] @ [896,1792] -> [1,32,1792]",
+    "hardware_slice_formula": "28 slices; A[32,32,1], B[896,1,64], D[1,32,64] per slice",
+    "raw_stage_graph": {
+      "operators": [
+        {
+          "id": "op0",
+          "inputs": {
+            "A": {
+              "dtype": "fp16",
+              "remapping": null,
+              "shape": [
+                "hidden_size//used_slices",
+                "sequence_length",
+                1
+              ],
+              "source": "external",
+              "write_reg_hint": null
+            },
+            "B": {
+              "dtype": "fp16",
+              "remapping": null,
+              "shape": [
+                "hidden_size",
+                1,
+                "intermediate_size//used_slices"
+              ],
+              "source": {
+                "type": "external"
+              },
+              "write_reg_hint": null
+            },
+            "B'": {
+              "remapping": null,
+              "shape": [
+                "hidden_size",
+                1,
+                "intermediate_size//used_slices"
+              ],
+              "source": {
+                "dtype": "fp16",
+                "type": "external"
+              }
+            }
+          },
+          "output": {
+            "dtype": "fp16",
+            "remapping": null,
+            "shape": [
+              1,
+              "sequence_length",
+              "intermediate_size//used_slices"
+            ]
+          },
+          "type": "prefill_gemm_ring_4slice",
+          "used_slices": "0b1111111111111111111111111111"
+        }
+      ],
+      "params": {
+        "head_dim": 128,
+        "hidden_size": 896,
+        "intermediate_size": 1792,
+        "num_attention_heads": 7,
+        "num_hidden_layers": 1,
+        "num_key_value_heads": 1,
+        "sequence_length": 32,
+        "target_op": "all",
+        "used_slices": 28
+      },
+      "used_slices": 28
+    },
+    "raw_stage_matches_trusted_graph": false,
+    "raw_stage_missing_layout_hints": {
+      "A": null,
+      "B": null
+    },
+    "source_formula": "[batch, sequence, 1536] @ [1536, 8960] -> [batch, sequence, 8960]"
+  },
+  "policy_result": {
+    "active_stage_is_sufficient_for_automatic_generation": true,
+    "advance_to_server_test": false,
+    "load_config_length_matches_trusted_oracle": true,
+    "local_e2_reference_conformant": true,
+    "local_json_bitstream_rebuild_complete": true,
+    "local_numeric_closure_complete": true,
+    "upstream_raw_stage_is_active_stage": false
+  },
+  "schema": "deepseek-gemm-ffn-gate-validation-v1",
+  "server_package_generated": false,
+  "stage_json_bitstream_lifecycle": {
+    "address_bound_graph_diff": [],
+    "bitstream_byte_equal": false,
+    "config_length_comparison": {
+      "generated_128bit_packing_matches_64bit_source": true,
+      "generated_counts_padded_storage_slots": false,
+      "generated_load_config_length_64bit_words": 59,
+      "last_row_high_half_is_transport_padding": true,
+      "padding_classification": "ODD_ONE_TRANSPORT_PADDING_HALF",
+      "physical_128bit_rows": 30,
+      "physical_64bit_transport_slots": 60,
+      "rtl_boundary": "global_config_manager stores gconfig_len_sent=gexec2gconfig_len-1 and suppresses the final high half when the length is odd; bitstream/parse.py 64-bit output owns the meaningful source-word count",
+      "source_64bit_word_count": 59,
+      "trusted_load_config_length_64bit_words": 59,
+      "trusted_matches_64bit_source_word_count": true
+    },
+    "config_semantics_accepted": true,
+    "generated_bitstream": {
+      "path": "artifacts/operator_config_validation/ds_gemm_ffn_gate_v1/a/t/model_execplan/output/ds_gemm_ffn_gate_v1/install/cfg_pkg/op0_prefill_gemm_ring_4slice_bitstream_128b.bin",
+      "sha256": "186c85691f6f56da045a073bec44b8e4d51a185720f45e14ae4b14b87f4d6d81",
+      "size_bytes": 3900
+    },
+    "generated_json": {
+      "path": "artifacts/operator_config_validation/ds_gemm_ffn_gate_v1/a/t/model_execplan/output/ds_gemm_ffn_gate_v1/jsons/op0_prefill_gemm_ring_4slice.json",
+      "sha256": "475c3739d1aa3224e3caf6022ab6c6ae890433dabefdce51c2afe843d69cbf5f",
+      "size_bytes": 14995
+    },
+    "generated_lifecycle": {
+      "clock_enable_count": 1,
+      "command_count": 111,
+      "event_order": [
+        "Load_Config",
+        "Start_Comp"
+      ],
+      "load_config_count": 1,
+      "start_comp_count": 1,
+      "write_reg_count": 108
+    },
+    "instruction_comparison": {
+      "all_commands_equal": true,
+      "all_write_reg_and_start_comp_commands_equal": true,
+      "command_count": 111,
+      "difference_count": 0,
+      "differences": []
+    },
+    "mapping_exact_penalty": 0.0,
+    "mapping_review": {
+      "path": "artifacts/operator_config_validation/ds_gemm_ffn_gate_v1/a/t/model_execplan/output/ds_gemm_ffn_gate_v1/config/op0/mapping_review.json",
+      "sha256": "b58e9e3685df7b352665bb0f4cefcd6be8803eae15bab096055a14ad94d2f436",
+      "size_bytes": 7174
+    },
+    "native_double_run": {
+      "deterministic_file_count": 15,
+      "deterministic_outputs_byte_identical": true,
+      "empty_cache_at_start": true,
+      "excluded_visualization_count": 1,
+      "native_source_modified": false,
+      "output_file_count_per_run": 16,
+      "python_hash_seed": 0,
+      "random_seed": 19,
+      "runs": {
+        "a": {
+          "binding": {
+            "path": "artifacts/operator_config_validation/ds_gemm_ffn_gate_v1/a/native_run_receipt.json",
+            "sha256": "e262694b8f1ab015d6da901ff119e4fc3f57741afb2869d70de532d7b7e0f554",
+            "size_bytes": 4414
+          },
+          "mapping_exact_penalties": {
+            "op0": 0.0
+          },
+          "receipt_sha256": "05dfaf6dbb57e2491a97d7fa29cd0d72a595534d409ec8f6dedf0787b0794e45"
+        },
+        "b": {
+          "binding": {
+            "path": "artifacts/operator_config_validation/ds_gemm_ffn_gate_v1/b/native_run_receipt.json",
+            "sha256": "792a1679329b802387090415b4f9c418fcb4165be7cce066c7300aa2519e66d1",
+            "size_bytes": 4414
+          },
+          "mapping_exact_penalties": {
+            "op0": 0.0
+          },
+          "receipt_sha256": "5f9c042f8aca62cd3d50aecbd0c478c8a089e4911e459df0b75f063ef817d671"
+        }
+      }
+    },
+    "structurally_complete": true,
+    "trusted_bitstream": {
+      "path": "jsons/gemm_ring_fnn/install/cfg_pkg/prefill_gemm_ring_4slice_bitstream_128b.bin",
+      "sha256": "12f55f4c923ab1825707faf9419e7f27ee34cbd3be057ab8de8a46a49b24441a",
+      "size_bytes": 3900
+    },
+    "trusted_lifecycle": {
+      "clock_enable_count": 1,
+      "command_count": 111,
+      "event_order": [
+        "Load_Config",
+        "Start_Comp"
+      ],
+      "load_config_count": 1,
+      "start_comp_count": 1,
+      "write_reg_count": 108
+    },
+    "trusted_template_diff": [
+      {
+        "generated": 27,
+        "path": "buffer_config.buffer0.buffer_nbr_cnt",
+        "trusted": "<missing>"
+      },
+      {
+        "generated": 27,
+        "path": "buffer_config.buffer1.buffer_nbr_cnt",
+        "trusted": "<missing>"
+      },
+      {
+        "generated": 27,
+        "path": "buffer_config.buffer2.buffer_nbr_cnt",
+        "trusted": "<missing>"
+      },
+      {
+        "generated": 27,
+        "path": "buffer_config.buffer3.buffer_nbr_cnt",
+        "trusted": "<missing>"
+      },
+      {
+        "generated": 27,
+        "path": "buffer_config.buffer4.buffer_nbr_cnt",
+        "trusted": "<missing>"
+      },
+      {
+        "generated": 27,
+        "path": "buffer_config.buffer5.buffer_nbr_cnt",
+        "trusted": "<missing>"
+      },
+      {
+        "generated": 4,
+        "path": "buffer_loop_configs.GROUP0.COL_LC.end",
+        "trusted": 32
+      },
+      {
+        "generated": 2,
+        "path": "buffer_loop_configs.GROUP0.COL_LC.stride",
+        "trusted": 16
+      },
+      {
+        "generated": 4,
+        "path": "buffer_loop_configs.GROUP1.COL_LC.end",
+        "trusted": 32
+      },
+      {
+        "generated": 2,
+        "path": "buffer_loop_configs.GROUP1.COL_LC.stride",
+        "trusted": 16
+      },
+      {
+        "generated": 4,
+        "path": "buffer_loop_configs.GROUP3.COL_LC.end",
+        "trusted": 32
+      },
+      {
+        "generated": 2,
+        "path": "buffer_loop_configs.GROUP3.COL_LC.stride",
+        "trusted": 16
+      },
+      {
+        "generated": 1,
+        "path": "dram_loop_configs.LC0.end",
+        "trusted": 2
+      },
+      {
+        "generated": 2,
+        "path": "dram_loop_configs.LC1.end",
+        "trusted": 1
+      },
+      {
+        "generated": 16,
+        "path": "dram_loop_configs.LC2.end",
+        "trusted": 2
+      },
+      {
+        "generated": 224,
+        "path": "dram_loop_configs.LC4.end",
+        "trusted": 4
+      },
+      {
+        "generated": 64,
+        "path": "lc_pe_configs.PE0.inport1.constant",
+        "trusted": 8
+      },
+      {
+        "generated": 1792,
+        "path": "lc_pe_configs.PE1.inport1.constant",
+        "trusted": 32
+      },
+      {
+        "generated": 32,
+        "path": "lc_pe_configs.PE3.inport1.constant",
+        "trusted": 16
+      },
+      {
+        "generated": 0,
+        "path": "n2n.neighbor_stream0.dst_slice_sel",
+        "trusted": 1
+      },
+      {
+        "generated": 28,
+        "path": "n2n.neighbor_stream0.mem_loop",
+        "trusted": 4
+      },
+      {
+        "generated": 0,
+        "path": "n2n.neighbor_stream0.src_slice_sel",
+        "trusted": 1
+      },
+      {
+        "generated": "0x0",
+        "path": "stream_engine.stream0.base_addr",
+        "trusted": "0b00011_00_0000000000000_000000_0000"
+      },
+      {
+        "generated": [
+          0,
+          1,
+          4,
+          5,
+          8,
+          9,
+          12,
+          13,
+          16,
+          17,
+          20,
+          21,
+          24,
+          25,
+          28,
+          29
+        ],
+        "path": "stream_engine.stream0.buf_spatial_stride",
+        "trusted": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15
+        ]
+      },
+      {
+        "generated": "0x800",
+        "path": "stream_engine.stream1.base_addr",
+        "trusted": "0b00000_00_0000000001000_000000_0000"
+      },
+      {
+        "generated": [
+          0,
+          1,
+          4,
+          5,
+          8,
+          9,
+          12,
+          13,
+          16,
+          17,
+          20,
+          21,
+          24,
+          25,
+          28,
+          29
+        ],
+        "path": "stream_engine.stream1.buf_spatial_stride",
+        "trusted": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15
+        ]
+      },
+      {
+        "generated": "0x1c800",
+        "path": "stream_engine.stream2.base_addr",
+        "trusted": "0b00000_00_0000000010000_000000_0000"
+      },
+      {
+        "generated": "0x880",
+        "path": "stream_engine.stream3.base_addr",
+        "trusted": "0b00011_00_0000000001000_001000_0000"
+      },
+      {
+        "generated": [
+          0,
+          1,
+          4,
+          5,
+          8,
+          9,
+          12,
+          13,
+          16,
+          17,
+          20,
+          21,
+          24,
+          25,
+          28,
+          29
+        ],
+        "path": "stream_engine.stream3.buf_spatial_stride",
+        "trusted": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15
+        ]
+      }
+    ]
+  },
+  "status": "LOCAL_E2_REFERENCE_CONFORMANT",
+  "synthetic_numeric_e2": {
+    "candidate_release": false,
+    "contract_sha256": "3dac8cb9c3fa765017dbdfaf39ef6da1460054382d3e71440299c7e5b31cb9d3",
+    "coverage": {
+      "K_chunk_count_per_output_slice": 28,
+      "logical_file_count": 4,
+      "nonempty_file_count": 88,
+      "per_slice_bytes": {
+        "A": 2048,
+        "B": 114688,
+        "D": 4096
+      },
+      "physical_file_count": 84,
+      "physical_mapping_is_permutation": true,
+      "ring_order_is_permutation": true,
+      "slice_count": 28
+    },
+    "formal_target_config": false,
+    "identity_boundary": {
+      "hardware_readback": false,
+      "onnx_original_weight_payload": false,
+      "payload_kind": "DETERMINISTIC_SYNTHETIC"
+    },
+    "inputs": {
+      "active_stage_producer_contract": {
+        "path": "contracts/operator_config/deepseek_prefill_rule_normalized_stage_v1.json",
+        "sha256": "b59312280d0e11cdae398b4ab7c3cd467061e2b8db48bfb7c37d0373c0a334c1",
+        "size_bytes": 5517
+      },
+      "gemm_rule": {
+        "path": ".agents/rules/DeepSeek_GEMM增量规则.md",
+        "sha256": "9745e0517efa26315fc9682cbceb4abd579bac6d9b40a52ab627feef8ee49b97",
+        "size_bytes": 1356
+      },
+      "manifest": {
+        "path": "artifacts/operator_config_validation/ds_gemm_numeric_v1/manifest.json",
+        "sha256": "ef5e42ab466114d0fd6e87aa20edf836266433b5bd729023afb39064d096ebb5",
+        "size_bytes": 34856
+      },
+      "materialized_json": {
+        "path": "artifacts/operator_config_validation/ds_gemm_ffn_gate_v1/a/t/model_execplan/output/ds_gemm_ffn_gate_v1/jsons/op0_prefill_gemm_ring_4slice.json",
+        "sha256": "475c3739d1aa3224e3caf6022ab6c6ae890433dabefdce51c2afe843d69cbf5f",
+        "size_bytes": 14995
+      },
+      "native_formula_consumer": {
+        "path": "ndp-sim/generate_python_golden/deepseek1.5b_3_time_golden_smallsize.py",
+        "sha256": "4dde1877861b9feec6c4650a662d1c9b633cfe5be9abcabfa1839bde6e776053",
+        "size_bytes": 53478
+      },
+      "native_relayout_consumer": {
+        "path": "ndp-sim/generate_python_golden/single_op_data/relayout_gemm_ring.py",
+        "sha256": "26f368f09dc92b3a1dc2fb1f2b9ab39f8c3a4a3dfd9877a8ac7cfd3352660f28",
+        "size_bytes": 30355
+      }
+    },
+    "numeric_result": {
+      "all_28_K_chunks_covered_per_output_slice": true,
+      "logical_formula": "D_NM=transpose(fp16(fp32(A_KM.T @ B_KN)))",
+      "max_ring_partial_error": 0.0,
+      "physical_payload_matches_native_relayout": true,
+      "stored_fp16_output_exact": true,
+      "stored_fp32_accumulator_exact": true
+    },
+    "rule_ids": [
+      "CDA-DEEPSEEK-GEMM-NUMERIC-PAYLOAD-001",
+      "CDA-DEEPSEEK-GEMM-RING-PARTIAL-COVERAGE-001",
+      "CDA-DEEPSEEK-LAYOUT-HINT-OWNER-001"
+    ],
+    "schema": "deepseek-gemm-ffn-gate-synthetic-numeric-e2-v1",
+    "server_package_generated": false,
+    "status": "LOCAL_NUMERIC_E2_COMPLETE"
+  },
+  "trusted_numeric_payload_boundary": {
+    "numerical_golden_available": false,
+    "onnx_external_weight_payload_downloaded": false,
+    "trusted_package_tensor_payload_available": false
+  }
+}

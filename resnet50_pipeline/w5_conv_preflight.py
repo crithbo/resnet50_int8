@@ -16,6 +16,8 @@ from onnx import numpy_helper
 
 from .adapters.ndp_rtl28_functional import NdpRtl28FunctionalAdapter
 from .conv_instance import (
+    CONV_TRANSPORT_ABI_Q8K8,
+    CONV_TRANSPORT_ABI_SIGNED_A_LOCAL,
     FIRST_REAL_CONV_NODE_ID,
     ConvInstanceSpec,
     ConvTargetRequest,
@@ -29,6 +31,7 @@ from .conv_execplan_transport import (
 )
 from .conv28_layout import (
     CONV28_HARDWARE_LAYOUT_ABI,
+    CONV28_SIGNED_A_LOCAL_LAYOUT_ABI,
     QLinearConvPhysicalLayout,
 )
 from .golden.qlinear_conv import requantize_uint8
@@ -102,6 +105,7 @@ def _bind_native_encoder_candidate(
     *,
     expected_node_id: str,
     expected_typed_request_sha256: str,
+    expected_artifact_ids: set[str] | None = None,
 ) -> dict[str, Any]:
     """Independently validate and bind a native server-profile candidate."""
 
@@ -147,16 +151,17 @@ def _bind_native_encoder_candidate(
             "native encoder candidate is not bound to this typed execplan request"
         )
     records = manifest.get("records", [])
-    expected_artifacts = {"hwop-0004-00.config"} | {
-        f"hwop-0004-01.shard-{index:02d}" for index in range(8)
-    }
+    expected_artifacts = expected_artifact_ids or (
+        {"hwop-0004-00.config"}
+        | {f"hwop-0004-01.shard-{index:02d}" for index in range(8)}
+    )
     actual_artifacts = {
         record.get("artifact_id") for record in records if isinstance(record, dict)
     }
     if (
         manifest.get("node_id") != expected_node_id
-        or manifest.get("record_count") != 9
-        or len(records) != 9
+        or manifest.get("record_count") != len(expected_artifacts)
+        or len(records) != len(expected_artifacts)
         or actual_artifacts != expected_artifacts
         or any(record.get("repeat_outputs_identical") is not True for record in records)
     ):
@@ -445,8 +450,13 @@ def _simulator_entry_probe(
     }
 
 
-def _n2n_selector_crosscheck(project_root: Path, source_root: Path) -> dict[str, Any]:
-    """Compare the candidate selector tuple with executable DeepSeek references."""
+def _n2n_selector_crosscheck(
+    project_root: Path,
+    source_root: Path,
+    *,
+    transport_abi: str,
+) -> dict[str, Any]:
+    """Validate the candidate communication domain against its transport ABI."""
 
     candidate_path = project_root / "conv_1x1_real.json"
     high4_path = source_root / "jsons" / "prefill_gemm_ring_4slice.json"
@@ -471,19 +481,12 @@ def _n2n_selector_crosscheck(project_root: Path, source_root: Path) -> dict[str,
             for key in ("mem_loop", "src_slice_sel", "dst_slice_sel", "ping_pong")
         }
 
-    candidate = one_stream(candidate_path)
     high4 = one_stream(high4_path)
     low28 = one_stream(low28_path)
     register_text = register_path.read_text(encoding="utf-8")
     controls_text = controls_path.read_text(encoding="utf-8")
     if (
-        candidate != {
-            "mem_loop": 4,
-            "src_slice_sel": 1,
-            "dst_slice_sel": 1,
-            "ping_pong": 0,
-        }
-        or high4["mem_loop"] != 4
+        high4["mem_loop"] != 4
         or high4["src_slice_sel"] != 1
         or high4["dst_slice_sel"] != 1
         or low28["mem_loop"] != 28
@@ -494,13 +497,46 @@ def _n2n_selector_crosscheck(project_root: Path, source_root: Path) -> dict[str,
         or "(b_k // a_k) != 28" not in controls_text
     ):
         raise W5ConvPreflightError("DeepSeek N2N selector crosscheck differs")
-    return {
-        "status": "candidate_matches_executable_high4_reference",
-        "candidate": {
+    candidate_n2n = _load_json(candidate_path).get("n2n", {})
+    if transport_abi == CONV_TRANSPORT_ABI_SIGNED_A_LOCAL:
+        if candidate_n2n != {}:
+            raise W5ConvPreflightError(
+                "signed-A local transport must not contain an N2N stream"
+            )
+        candidate_record: dict[str, Any] = {
+            "path": "conv_1x1_real.json",
+            "sha256": sha256_file(candidate_path),
+            "stream_count": 0,
+            "local_activation_replication": True,
+        }
+        status = "candidate_uses_destination_local_activation_without_n2n"
+        resolution = (
+            "the signed-A/unsigned-B transport stores a complete activation "
+            "replica in each destination slice; N2N selectors are intentionally unused"
+        )
+    else:
+        candidate = one_stream(candidate_path)
+        if candidate != {
+            "mem_loop": 4,
+            "src_slice_sel": 1,
+            "dst_slice_sel": 1,
+            "ping_pong": 0,
+        }:
+            raise W5ConvPreflightError("DeepSeek N2N selector crosscheck differs")
+        candidate_record = {
             "path": "conv_1x1_real.json",
             "sha256": sha256_file(candidate_path),
             **candidate,
-        },
+        }
+        status = "candidate_matches_executable_high4_reference"
+        resolution = (
+            "candidate src/dst selectors match the executable HIGH-4 value 1; "
+            "ping_pong remains a separate dataflow choice"
+        )
+    return {
+        "status": status,
+        "transport_abi": transport_abi,
+        "candidate": candidate_record,
         "executable_high4_reference": {
             "path": "ndp-sim-ref/jsons/prefill_gemm_ring_4slice.json",
             "sha256": sha256_file(high4_path),
@@ -522,7 +558,7 @@ def _n2n_selector_crosscheck(project_root: Path, source_root: Path) -> dict[str,
             "sha256": sha256_file(controls_path),
             "rule": "selector=1 when the slice ratio is not 28; otherwise selector=0",
         },
-        "resolution": "candidate src/dst selectors now match the executable HIGH-4 value 1; ping_pong remains a separate dataflow choice",
+        "resolution": resolution,
     }
 
 
@@ -711,9 +747,19 @@ def _compare_tile(
     ).copy()
     lifecycle: list[dict[str, Any]] = []
     for index, source_slice in enumerate(traversal):
-        region = bundle.region("A", source_slice)
-        start = region.logical_start
-        count = region.logical_count
+        if layout.signed_a_local_replication:
+            region = bundle.region("A", destination)
+            start = ring.owners.index(source_slice) * bundle.plan.c_tile
+            count = max(
+                0,
+                min(bundle.plan.c_tile, bundle.plan.activation_shape[1] - start),
+            )
+            owner_step = index
+        else:
+            region = bundle.region("A", source_slice)
+            start = region.logical_start
+            count = region.logical_count
+            owner_step = region.owner_step
         a = activation[:, start : start + count, :, :] - x_zero_point
         b = weight[:, start : start + count] - w_zero_point.reshape(-1, 1)
         partial = np.einsum("nchw,kc->nkhw", a, b, dtype=np.int64, optimize=True)
@@ -724,7 +770,7 @@ def _compare_tile(
             {
                 "phase": phase,
                 "source_slice": source_slice,
-                "owner_step": region.owner_step,
+                "owner_step": owner_step,
                 "channel_start": start,
                 "channel_count": count,
                 "int8_pair_count_per_output": count // 2,
@@ -1072,7 +1118,11 @@ def load_conv_instance_execution(
         raise W5ConvPreflightError("typed per-channel requant multiplier differs")
     layout = QLinearConvPhysicalLayout(
         profile_id=GROUP4X7_BATCH_CHANNEL28_PROFILE,
-        layout_abi=CONV28_HARDWARE_LAYOUT_ABI,
+        layout_abi=(
+            CONV28_SIGNED_A_LOCAL_LAYOUT_ABI
+            if spec.node_id == FIRST_REAL_CONV_NODE_ID
+            else CONV28_HARDWARE_LAYOUT_ABI
+        ),
     )
     bundle = layout.forward(
         activation=values["A"],
@@ -1233,7 +1283,11 @@ def build_w5_first_conv_preflight(
     tensor_ids = {name: descriptors[name]["tensor_id"] for name in descriptors}
     layout = QLinearConvPhysicalLayout(
         profile_id=GROUP4X7_BATCH_CHANNEL28_PROFILE,
-        layout_abi=CONV28_HARDWARE_LAYOUT_ABI,
+        layout_abi=(
+            CONV28_SIGNED_A_LOCAL_LAYOUT_ABI
+            if spec.node_id == FIRST_REAL_CONV_NODE_ID
+            else CONV28_HARDWARE_LAYOUT_ABI
+        ),
     )
     bundle = layout.forward(
         activation=values["A"],
@@ -1287,7 +1341,11 @@ def build_w5_first_conv_preflight(
     authority = _load_json(authority_path)
     backend = _load_json(backend_path)
     simulator_probe = _simulator_entry_probe(root, source, authority, backend)
-    n2n_selector_crosscheck = _n2n_selector_crosscheck(root, source)
+    n2n_selector_crosscheck = _n2n_selector_crosscheck(
+        root,
+        source,
+        transport_abi=target_request.transport_abi,
+    )
     legacy_generator_probe = _legacy_conv_generator_probe(source)
     operator_candidate = _operator_conv_candidate_probe(root)
     tile = _compare_tile(values, layout, bundle, spec)
@@ -1402,9 +1460,24 @@ def build_w5_first_conv_preflight(
                 },
                 {
                     "former_blocker": "B_N2N_TARGET_SELECTOR",
-                    "status": "official_high4_selector_resolved",
-                    "scope": "the real Conv candidate uses mem_loop=4 with src/dst selector 1",
-                    "boundary": "ping_pong remains a separate Conv buffer-lifecycle decision",
+                    "status": (
+                        "destination_local_replication_resolved"
+                        if target_request.transport_abi
+                        == CONV_TRANSPORT_ABI_SIGNED_A_LOCAL
+                        else "official_high4_selector_resolved"
+                    ),
+                    "scope": (
+                        "the real Conv candidate stores activation locally in every destination slice and uses no N2N stream"
+                        if target_request.transport_abi
+                        == CONV_TRANSPORT_ABI_SIGNED_A_LOCAL
+                        else "the real Conv candidate uses mem_loop=4 with src/dst selector 1"
+                    ),
+                    "boundary": (
+                        "local replication is validated by physical inverse and config-bound P/D comparison"
+                        if target_request.transport_abi
+                        == CONV_TRANSPORT_ABI_SIGNED_A_LOCAL
+                        else "ping_pong remains a separate Conv buffer-lifecycle decision"
+                    ),
                 },
                 {
                     "former_blocker": "B_REQUANT_TARGET_NUMERICS",
@@ -1497,6 +1570,22 @@ def validate_w5_first_conv_preflight(value: dict[str, Any]) -> None:
         for item in target.get("resolved_target_capabilities", [])
     }
     n2n = target.get("n2n_selector_crosscheck", {})
+    historical_n2n = (
+        n2n.get("status") == "candidate_matches_executable_high4_reference"
+        and resolved.get("B_N2N_TARGET_SELECTOR", {}).get("status")
+        == "official_high4_selector_resolved"
+        and n2n.get("candidate", {}).get("mem_loop") == 4
+        and n2n.get("candidate", {}).get("src_slice_sel") == 1
+    )
+    signed_a_local = (
+        n2n.get("status")
+        == "candidate_uses_destination_local_activation_without_n2n"
+        and n2n.get("transport_abi") == CONV_TRANSPORT_ABI_SIGNED_A_LOCAL
+        and resolved.get("B_N2N_TARGET_SELECTOR", {}).get("status")
+        == "destination_local_replication_resolved"
+        and n2n.get("candidate", {}).get("stream_count") == 0
+        and n2n.get("candidate", {}).get("local_activation_replication") is True
+    )
     if (
         set(resolved)
         != {
@@ -1507,16 +1596,11 @@ def validate_w5_first_conv_preflight(value: dict[str, Any]) -> None:
         }
         or resolved["B_CONV_TARGET_EXECUTION_SEMANTICS"].get("status")
         != "operator_confirmed_platform_capability"
-        or resolved["B_N2N_TARGET_SELECTOR"].get("status")
-        != "official_high4_selector_resolved"
         or resolved["B_REQUANT_TARGET_NUMERICS"].get("status")
         != "real_64_channel_requant_config_bound"
         or resolved["B_EXECPLAN_TYPED_TRANSPORT"].get("status")
         != "official_typed_transport_and_conv_request_validated"
-        or n2n.get("status")
-        != "candidate_matches_executable_high4_reference"
-        or n2n.get("candidate", {}).get("mem_loop") != 4
-        or n2n.get("candidate", {}).get("src_slice_sel") != 1
+        or not (historical_n2n or signed_a_local)
         or n2n.get("executable_high4_reference", {}).get("src_slice_sel") != 1
         or n2n.get("executable_low28_reference", {}).get("mem_loop") != 28
     ):
@@ -1620,7 +1704,10 @@ def validate_w5_first_conv_preflight(value: dict[str, Any]) -> None:
         or closure.get("request_schema") != "0.3"
         or closure.get("target_config_binding", {}).get("status") != "validated"
         or closure.get("target_config_binding", {}).get("transport_abi")
-        != "conv_sa_q8k8_v2"
+        not in {
+            CONV_TRANSPORT_ABI_Q8K8,
+            CONV_TRANSPORT_ABI_SIGNED_A_LOCAL,
+        }
         or closure.get("requant_config_binding", {}).get("status") != "validated"
         or closure.get("requant_config_binding", {}).get("channel_count") != 64
         or closure.get("requant_config_binding", {}).get("shard_count") != 8

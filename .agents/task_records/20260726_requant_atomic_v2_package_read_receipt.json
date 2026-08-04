@@ -1,0 +1,119 @@
+{
+  "schema": "requant-atomic-v2-server-package-read-receipt-v1",
+  "recorded_on": "2026-07-26",
+  "scope": "node0001 RequantizeUint8 single-occurrence two-stage v2 stock-RTL FIRST_DYNAMIC diagnostic package",
+  "files": [
+    {
+      "path": ".agents/rules/生成前必读索引.md",
+      "size_bytes": 5650,
+      "sha256": "539e8dfbe52ad9fc8bd9fdef8c69d448fb5fd713e938e3adc5f663f82fd806d7",
+      "read": "complete"
+    },
+    {
+      "path": ".agents/rules/服务器测试包生成规则.md",
+      "size_bytes": 10787,
+      "sha256": "cb101e1aedf8f1d7516bb7f120badb120d2efbf8316223d39990c383c10e95ea",
+      "read": "complete"
+    },
+    {
+      "path": ".agents/rules/RequantizeUint8算子配置规则.md",
+      "size_bytes": 14910,
+      "sha256": "f0315f627a492a660c91a95aa12d46339518863b79358280e498dc2125799cf3",
+      "read": "complete"
+    },
+    {
+      "path": "NDP_copy01/README_HARDWARE_SIM_ENTRY.md",
+      "size_bytes": 5461,
+      "sha256": "4318f3a28de399fb522740315f11bdddf346e71969cf1e45686899a568b042d7",
+      "read": "complete"
+    },
+    {
+      "path": "NDP_copy01/Makefile.tb_NDP_Top_new_phy",
+      "size_bytes": 17683,
+      "sha256": "528d93f3c7f458d256bdbaf1d9ec39edfbfe5bd8a924e2bf0786914a634f4aba",
+      "read": "complete"
+    },
+    {
+      "path": "NDP_copy01/tb_NDP_Top_new_phy.sv",
+      "size_bytes": 342445,
+      "sha256": "e068f7500f0c71c2ba2c756f74a4519c33d13d4afe0fa4cc9f6c9e79b1e3f994",
+      "read": "completion loop, SCA/SCA_D and observer-consumer paths"
+    },
+    {
+      "path": "NDP_copy01/native_return_observer.svh",
+      "size_bytes": 111824,
+      "sha256": "47f0d66728f47c92f9f93f8cf87b47a0ff8567d587c3a099e2d03f610af09f49",
+      "read": "observer exports and accepted MSE4 handshake paths"
+    },
+    {
+      "path": "ndp-sim/model_execplan/main.py",
+      "size_bytes": 7346,
+      "sha256": "661623ebf37f0c2fe31a530fc53c756e58408000a371d7cc528301314a4dac7e",
+      "read": "complete"
+    },
+    {
+      "path": "ndp-sim/model_execplan/src/execution_plan_generator/pipeline.py",
+      "size_bytes": 11797,
+      "sha256": "1e59210c4401dbe6c694ffdb34939531238c0e3c949ff965a3f74667eb46cfae",
+      "read": "complete"
+    },
+    {
+      "path": "ndp-sim/model_execplan/src/execution_plan_generator/address_planner.py",
+      "size_bytes": 30150,
+      "sha256": "2208ffa925c509d2479e2763f323551a36e1b6c1680a112e7519f6356a312ea0",
+      "read": "consumer-relevant planning and address allocation"
+    },
+    {
+      "path": "ndp-sim/model_execplan/src/execution_plan_generator/output_writer.py",
+      "size_bytes": 48029,
+      "sha256": "434dde3c5a34ab8f3992095771876e7fad56e443eec08eb469c093b30f87beae",
+      "read": "execplan, SCA and SCA_D output paths"
+    },
+    {
+      "path": "ndp-sim/bitstream/main.py",
+      "size_bytes": 13598,
+      "sha256": "067723b4ef118932b3a69623fa8bb4f2ed70d06eda3a5a24886c9562611ff415",
+      "read": "complete"
+    },
+    {
+      "path": "resnet50_pipeline/requantize_uint8_vertical.py",
+      "size_bytes": 75801,
+      "sha256": "d14d19fbabb6f67cc700c9cb138a10c647bb2b557d535f41922471d4eef4f746",
+      "read": "isolated planner/mapper/encoder build and provenance consumers"
+    },
+    {
+      "path": "configs/native_ndp_sim/node0001_requant_single_occurrence_two_stage_v2/manifest.json",
+      "size_bytes": 5370,
+      "sha256": "c6e50200d01209147851d990e824b3eead748ecfec9fb64aaaf6cd0cd97d4097",
+      "read": "complete"
+    },
+    {
+      "path": "configs/native_ndp_sim/node0001_requant_single_occurrence_two_stage_v2/generation_receipt.json",
+      "size_bytes": 6242,
+      "sha256": "0046cc4ad1e19e905b24b3b78524a5c80b991c5c4699bcd329c6d9c8063f7f25",
+      "read": "complete"
+    },
+    {
+      "path": "contracts/operator_config/requant_node0001_single_occurrence_two_stage_dynamic_v2.json",
+      "size_bytes": 1880,
+      "sha256": "efba2a4f00764d7f9cecef8c91888255ea5f0a1d409b94df4d277d41766cbd9b",
+      "read": "complete"
+    },
+    {
+      "path": "artifacts/operator_config_validation/r5-requant-node0001-single-occurrence-two-stage-v2/local_contract_report.json",
+      "size_bytes": 1839,
+      "sha256": "aa1acd52995cfa22dc6cbb9f8c2682fd50782dfdc80d893673237130dddeaeb3",
+      "read": "complete"
+    }
+  ],
+  "constraints_acknowledged": {
+    "v1_frozen_not_consumed": true,
+    "functional_rtl_or_tb_modification_allowed": false,
+    "force_deposit_or_driving_observer_allowed": false,
+    "internal_tb_timeout_shortening_allowed": false,
+    "candidate_release": false,
+    "counts_as_e4_or_e5": false,
+    "server_user_command_count": 1,
+    "return_policy": "allowlist-only fail-closed"
+  }
+}

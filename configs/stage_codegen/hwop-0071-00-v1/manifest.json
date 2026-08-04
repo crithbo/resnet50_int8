@@ -1,0 +1,30 @@
+{
+  "claims": {
+    "formal_target_config": false,
+    "hardware_execution": false,
+    "hardware_numeric_match": false,
+    "server_e4_e5_required": true
+  },
+  "lowering_bundle": {
+    "path": "contracts/resnet50_r5_lowering_bundle.json",
+    "request_set_sha256": "9da4423bb293a047c9a2dac945270d56eab9fe114146a2f6638e43c655fa341b",
+    "sha256": "5f4be507028aeb836c7f0586f11725c03c29c176d415f9c04405e96b41e98cea"
+  },
+  "manifest_sha256": "c3439096c82780aa15a26c251485a2a44e7e5185d3b6ff29afa5d256984f7098",
+  "operator_config": {
+    "path": "config.json",
+    "semantic_identity": true,
+    "sha256": "bc1c593106c0dd25251af67c5500983218051dc21d19d33f8c91942c9e412e76",
+    "source_path": "configs/native_ndp_sim/avgpool_config_2048_7_7_strict_v1/config.json",
+    "source_sha256": "bc1c593106c0dd25251af67c5500983218051dc21d19d33f8c91942c9e412e76",
+    "strict_validation": "passed"
+  },
+  "request_id": "r5:hwop-0071-00",
+  "schedule_ir": {
+    "path": "schedule_ir.json",
+    "semantic_sha256": "92ab290bde66202003cef2217fc552f50c0ad21f2a59472e8e158590da431514",
+    "sha256": "074c283b8d752062ae0b3e03394d60e6f94f2f2e3bc75a42387eeb5da0708d3b"
+  },
+  "schema": "resnet50-stage-config-candidate-manifest-v1",
+  "status": "candidate_address_unbound_not_formal"
+}

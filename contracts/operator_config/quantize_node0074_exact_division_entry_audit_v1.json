@@ -1,0 +1,278 @@
+{
+  "schema": "resnet50-quantize-node0074-exact-division-entry-audit-v1",
+  "status": "FAIL_CLOSED_NO_EXACT_BINARY32_DIVISION_ENTRY",
+  "test_id": "r5-quantize-node0074-exact-division-entry-audit-v1",
+  "claim_boundary": "CAPABILITY_AUDIT_ONLY_NOT_TARGET_NOT_E2_NOT_E4_NOT_E5",
+  "node": {
+    "request_id": "r5:hwop-0074-00",
+    "node_id": "node-0074",
+    "hw_op_id": "hwop-0074-00",
+    "onnx_name": "flatten_473_QuantizeLinear",
+    "op_type": "QuantizeLinear",
+    "input": {
+      "tensor_id": "tensor-9b1363d3baf474c8",
+      "dtype": "float32",
+      "shape": [16, 2048],
+      "strides_bytes": [8192, 4],
+      "element_count": 32768,
+      "logical_bytes": 131072,
+      "sha256": "3c59f1721a8a18c862764229f5f002ad3f976147add4a582ff26b853d3eeaa52"
+    },
+    "qparams": {
+      "scale_dtype": "float32",
+      "scale_bits": "0x3cbf57ec",
+      "scale": 0.02335735410451889,
+      "zero_point_dtype": "uint8",
+      "zero_point": 0
+    },
+    "output": {
+      "tensor_id": "tensor-6fbd5707d5f08110",
+      "dtype": "uint8",
+      "shape": [16, 2048],
+      "element_count": 32768,
+      "logical_bytes": 32768,
+      "sha256": "c2d08ebd45a564d63e499b333a9576bbdafc71448ee693c8a199a7cf65193f12"
+    },
+    "downstream": {
+      "node_id": "node-0075",
+      "op_type": "QLinearMatMul"
+    }
+  },
+  "required_semantics": {
+    "equation": "saturate_uint8(round_to_nearest_even(binary32_divide(x, scale)) + zero_point)",
+    "division_rounding_point": "one binary32 result rounding at x / scale",
+    "rounding": "nearest_even",
+    "saturation": [0, 255],
+    "finite_signed_input_domain": true,
+    "host_precompute_scaled_rounded_saturated_or_final_tensor": false
+  },
+  "reused_evidence": [
+    {
+      "path": "contracts/operator_config/node0072_dequant_config_only_correctness_baseline_v1.json",
+      "sha256": "cf5172db59a0a7c294e49445f63cd7c61919c3aa4640af180799d2dcef42c60f",
+      "class": "APPROVED_EQUIVALENT",
+      "consumed_for": "node0072 producer D tensor geometry and 28-slice physical-write evidence",
+      "retested": false
+    },
+    {
+      "path": "contracts/operator_config/flatten_node0073_physical_view_v1.json",
+      "sha256": "067351563c40fb1b95e63f3b327e9758f19c49c72d3c48b348d223426ada9851",
+      "class": "APPROVED_EQUIVALENT",
+      "consumed_for": "node0073 metadata-only zero-copy alias semantics",
+      "retested": false
+    },
+    {
+      "path": "contracts/operator_config/exact_uint8_quant_tail_capability_v1.json",
+      "sha256": "dedd0e467a31ecb42cd3e76faddb55901286b97fb2311fc4052d0a157dbd8c6e",
+      "class": "APPROVED_EQUIVALENT",
+      "consumed_for": "shared exact-tail capability taxonomy and frozen fused-path counterexample",
+      "retested": false
+    },
+    {
+      "path": "contracts/operator_config/exact_uint8_quant_tail_rounding_discriminator_v1.json",
+      "sha256": "82ab3276a8ae9ee35aeda366756dd4525dfac77c6e3ed40cf395d7a011f8a477",
+      "class": "APPROVED_EQUIVALENT",
+      "consumed_for": "accepted 26-vs-25 discriminator and existing exact-division gate",
+      "retested": false
+    }
+  ],
+  "native_entry_matrix": [
+    {
+      "entry": "direct_binary32_division",
+      "configuration": null,
+      "opcode": null,
+      "typed_handler": null,
+      "mapper": null,
+      "verdict": "ABSENT"
+    },
+    {
+      "entry": "prefill_sum_rec_fp32MN_fp32MN",
+      "configuration": "ndp-sim/jsons/prefill_sum_rec_fp32MN_fp32MN.json",
+      "opcode": "REC_after_SUM",
+      "verdict": "STRUCTURE_OR_PRIMITIVE_ONLY",
+      "reason": "fixed reduction then SFU reciprocal; wrong elementwise computation boundary and output shape"
+    },
+    {
+      "entry": "decode_sum_rec_fp32N_fp32N",
+      "configuration": "ndp-sim/jsons/decode_sum_rec_fp32N_fp32N.json",
+      "opcode": "REC_after_SUM",
+      "verdict": "STRUCTURE_OR_PRIMITIVE_ONLY",
+      "reason": "fixed reduction then SFU reciprocal; wrong elementwise computation boundary and output shape"
+    },
+    {
+      "entry": "REC_then_MUL",
+      "configuration": "sum_rec plus prefill_mul composition",
+      "opcode": "piecewise_REC_then_binary32_MUL",
+      "verdict": "CONTRADICTED",
+      "reason": "rounded reciprocal followed by rounded multiplication is not binary32 division and has a same-scale uint8-visible counterexample"
+    },
+    {
+      "entry": "quant_from_buffer_int32MN_uint8MN",
+      "configuration": "ndp-sim/jsons/quant_from_buffer_int32MN_uint8MN.json",
+      "opcode": "INT32_TO_FP32_quant_tail",
+      "verdict": "STRUCTURE_OR_PRIMITIVE_ONLY",
+      "reason": "wrong INT32 ingress and no exact binary32 division or node0074 typed transport"
+    }
+  ],
+  "same_scale_sequential_reciprocal_counterexample": {
+    "x_bits": "0x406cefe0",
+    "x": 3.7021408081054688,
+    "scale_bits": "0x3cbf57ec",
+    "reciprocal_bits": "0x422b4095",
+    "binary32_divide_bits": "0x431e8001",
+    "binary32_divide_value": 158.50001525878906,
+    "divide_then_rne_uint8": 159,
+    "binary32_reciprocal_mul_bits": "0x431e8000",
+    "binary32_reciprocal_mul_value": 158.5,
+    "reciprocal_mul_then_rne_uint8": 158,
+    "input_domain": "finite positive binary32; valid node0074 input domain"
+  },
+  "frozen_w3_route_observation": {
+    "input_elements": 32768,
+    "exact_division_matches_formal_output": true,
+    "exact_division_vs_sequential_reciprocal_mul_scaled_bit_mismatches": 720,
+    "exact_division_vs_sequential_reciprocal_mul_final_uint8_mismatches": 0,
+    "interpretation": "frozen W3 output coincidence is not full-domain equivalence and cannot authorize a target"
+  },
+  "endpoint_binding": {
+    "chain": "node0072-D -> node0073 alias -> node0074-A",
+    "producer_tensor_id": "tensor-50c285690f899b1b",
+    "consumer_tensor_id": "tensor-9b1363d3baf474c8",
+    "producer_shape": [16, 2048, 1, 1],
+    "producer_strides_bytes": [8192, 4, 4, 4],
+    "consumer_shape": [16, 2048],
+    "consumer_strides_bytes": [8192, 4],
+    "required_read_elements": 32768,
+    "required_read_bytes": 131072,
+    "view_computation": false,
+    "view_allocation": false,
+    "view_copy": false,
+    "blocked_by": "B_QUANT_NODE0074_EXACT_DIVISION",
+    "node0074_owned_fields": {
+      "final_storage_identity": null,
+      "final_producer_base": null,
+      "final_view_offset": null,
+      "final_consumer_base": null,
+      "final_read_coverage": null,
+      "final_accepted_lifetime": null
+    },
+    "provisional_address_allowed": false,
+    "target_endpoint_claimed": false
+  },
+  "blockers": {
+    "shared": {
+      "id": "B_QUANT_TAIL_EXACT_FP32_DIVISION",
+      "status": "OPEN"
+    },
+    "instance": {
+      "id": "B_QUANT_NODE0074_EXACT_DIVISION",
+      "status": "OPEN_NO_DIRECT_OR_EQUIVALENT_ENTRY",
+      "first_unavoidable_break": "exact_binary32_division_opcode_and_config_entry"
+    },
+    "downstream_deferred": [
+      "B_QUANT_NODE0074_FP32_INGRESS",
+      "B_QUANT_NODE0074_SIGNED_FINITE_DOMAIN",
+      "B_QUANT_NODE0074_TYPED_HANDLER",
+      "B_QUANT_NODE0074_MAPPER",
+      "B_QUANT_NODE0074_TERMINAL_READBACK"
+    ]
+  },
+  "outputs": {
+    "target_json": false,
+    "mapping": false,
+    "bitstream": false,
+    "execplan": false,
+    "sca": false,
+    "server_package": false,
+    "candidate_release": false
+  },
+  "analysis_accounting": {
+    "accepted_numeric_analysis_repeated": false,
+    "node0004_analysis_repeated": false,
+    "accepted_primitive_retested": false,
+    "new_path_specific_analysis": "one same-scale reciprocal/MUL counterexample plus one frozen-W3 route comparison",
+    "reuse_assets_consumed": true
+  },
+  "semantic_source_identities": [
+    {
+      "path": ".agents/rules/算子配置规则.md",
+      "sha256": "cbaffcc5fb3bea7da9f0c199bb2e7f06445a676ab456bdfd505b90dd89825171"
+    },
+    {
+      "path": ".agents/rules/NDP硬件字段语义.md",
+      "sha256": "18d71520dd4ededc5edd9bb316acd0cc0421a9a261cf14b28ea6997ddd0e844a"
+    },
+    {
+      "path": ".agents/rules/精确UINT8量化尾专项规则.md",
+      "sha256": "1685bd6527111bf014a738dbef4ee85b5b8d3e54c0565cb63eda9417d5c9425e"
+    },
+    {
+      "path": ".agents/rules/Flatten_View算子配置规则.md",
+      "sha256": "28ba3a92fecbb83149d494867429c34aa3124040a5c59fe99c4b9481feb3b7ee"
+    },
+    {
+      "path": "contracts/resnet50_r5_lowering_bundle.json",
+      "sha256": "bf661e4eda2011025d9922708ab46a64f8d1b3c279527b88aa7d630bb3545432"
+    },
+    {
+      "path": "artifacts/w3/model_graph.json",
+      "sha256": "f030c5d4e43f63fbbcce771e4c4ea9e88b042be0a2c988e7f51de2c0e17ac410"
+    },
+    {
+      "path": "artifacts/w3/golden_batch16/tensors/tensor-9b1363d3baf474c8.npy",
+      "sha256": "3c59f1721a8a18c862764229f5f002ad3f976147add4a582ff26b853d3eeaa52"
+    },
+    {
+      "path": "artifacts/w3/golden_batch16/tensors/tensor-6fbd5707d5f08110.npy",
+      "sha256": "c2d08ebd45a564d63e499b333a9576bbdafc71448ee693c8a199a7cf65193f12"
+    },
+    {
+      "path": "ndp-sim/model_execplan/config/operator_base_info.json",
+      "sha256": "e408606006e5778997b015f6cf90608dad93ef45efe60d73c5a0b675eab096e0"
+    },
+    {
+      "path": "ndp-sim/model_execplan/src/execution_plan_generator/control_registers.py",
+      "sha256": "cd12ee5f31231e856f9f63f61746a8e43435228d0268813c3eb8c4630e09a941"
+    },
+    {
+      "path": "ndp-sim/bitstream/config/general.py",
+      "sha256": "eb9d5ee9ef273182e05b718aca378f87d0a1ccb5366ae463d8482c8c94c3482f"
+    },
+    {
+      "path": "ndp-sim/model_execplan/config/SFU_Coeff/REC.txt",
+      "sha256": "25cb4bb1782d26a402de49cf1dacfa5d972b8712809a1c7f1bb638125dd826b8"
+    }
+  ],
+  "native_config_identities": [
+    {
+      "path": "ndp-sim/jsons/prefill_sum_rec_fp32MN_fp32MN.json",
+      "sha256": "33f1332d15a659d3be5244b293edd341bd12a22c4427b2d16b1efcddd57c6522"
+    },
+    {
+      "path": "ndp-sim/jsons/decode_sum_rec_fp32N_fp32N.json",
+      "sha256": "310befa14072caf43d233ab7d3e892e187de94b64de8e77bef26696cec13ab30"
+    },
+    {
+      "path": "ndp-sim/jsons/prefill_mul_fp32MN_fp32M_fp32MN.json",
+      "sha256": "db66d5e8da6146eb743fe1006a6248daf040ba937d713a99f961c591325a272f"
+    },
+    {
+      "path": "ndp-sim/jsons/quant_from_buffer_int32MN_uint8MN.json",
+      "sha256": "db638f0640e74217e80e61350a2fe400f7b495e2201f17c39915328cdd455ba2"
+    }
+  ],
+  "mutable_read_receipt": [
+    {
+      "path": ".agents/plan.md",
+      "sha256": "f9a3ce73baa73346c144f14bf005262f0b0caaf66d981da157a5a11c0a703183",
+      "gate": "historical_provenance_only"
+    },
+    {
+      "path": ".agents/rules/生成前必读索引.md",
+      "sha256": "12583308ec9a16dbb8ea15571a5280291fed7e152167d2e4e8e00509a9a6370f",
+      "gate": "historical_provenance_only"
+    }
+  ],
+  "rule_delta_proposal": null,
+  "package_release": "NONE"
+}

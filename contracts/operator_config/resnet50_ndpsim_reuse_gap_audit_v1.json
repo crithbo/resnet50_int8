@@ -1,0 +1,337 @@
+{
+  "schema": "resnet50-ndpsim-reuse-gap-audit-v1",
+  "status": "READ_ONLY_AUDIT_COMPLETE_REPLAN_FROZEN",
+  "date": "2026-07-27",
+  "scope": {
+    "workspace": "resnet50_int8",
+    "server_files_inspected": false,
+    "server_package_generated": false,
+    "server_lease_granted": false,
+    "functional_rtl_modified": false,
+    "public_rules_modified": false,
+    "purpose": "Separate reusable ndp-sim primitives from exact ResNet50 backend gaps and replan work without weakening generation gates."
+  },
+  "source_identities": {
+    "typed_config_parameter_contract": {
+      "path": "contracts/typed_config_parameter_contract.json",
+      "sha256": "abbc87b0b13c92611a90fe1767b32b15fe9c49f23bee616ca2bb51219dd181bd"
+    },
+    "lowering_bundle": {
+      "path": "contracts/resnet50_r5_lowering_bundle.json",
+      "sha256": "bf661e4eda2011025d9922708ab46a64f8d1b3c279527b88aa7d630bb3545432"
+    },
+    "ndpsim_json_corpus": {
+      "path": "contracts/operator_config/ndpsim_json_corpus_v1.json",
+      "sha256": "bd2527db3470521e309acd43224dc15a694b210b293011e944f964e9b76270e3"
+    },
+    "quant_template": {
+      "path": "ndp-sim/jsons/quant_from_buffer_int32MN_uint8MN.json",
+      "sha256": "db638f0640e74217e80e61350a2fe400f7b495e2201f17c39915328cdd455ba2"
+    },
+    "add_dequant_template": {
+      "path": "ndp-sim/jsons/add_dequant_uint8CWH_uint8CWH_fp32CWH.json",
+      "sha256": "15f5321ab57cb73ca2f650693859657759f834389677451a9a89e66217e9e6da"
+    },
+    "avgpool_template": {
+      "path": "ndp-sim/jsons/avgpool_config_2048_7_7.json",
+      "sha256": "a3d19c7b1759eb40b66a6b786234865b61917e9cf74822a62dd469729c2497c5"
+    },
+    "maxpool_target_template": {
+      "path": "ndp-sim/jsons/maxpool_config_16_112_112_stride2_padding1.json",
+      "sha256": "a0091f3fae223abd5225c54b833cf3bb578b3fea6b202883c5cbf4be50d60cb1"
+    },
+    "fp16_gemm_template": {
+      "path": "ndp-sim/jsons/prefill_gemm_local.json",
+      "sha256": "9d0f72bc1a32f5b3fb2fff44c7fe4585adfb00d393ccf38bffb9f2e239f2761e"
+    },
+    "project_int8_sa_candidate": {
+      "path": "ndp-sim/jsons/node0004_accumulate_wave0_nopp_r1.json",
+      "sha256": "0706ad05233d03f43b800797b1be40390c718f58d34c13df89a0208d75bba45e",
+      "authority": "project_added_candidate_not_authorized_as_tested_reference"
+    },
+    "control_register_handlers": {
+      "path": "ndp-sim/model_execplan/src/execution_plan_generator/control_registers.py",
+      "sha256": "cd12ee5f31231e856f9f63f61746a8e43435228d0268813c3eb8c4630e09a941"
+    },
+    "address_remapping_registry_test": {
+      "path": "ndp-sim/address_remapping/tests/test_solver.py",
+      "sha256": "1336c1d5557802dd48acaee4ab23d059570364fdcb4474920bd28ab2d1a8c180"
+    }
+  },
+  "model_inventory": {
+    "onnx_node_count": 78,
+    "onnx_operator_counts": {
+      "QLinearConv": 53,
+      "QLinearAdd": 17,
+      "QuantizeLinear": 2,
+      "DequantizeLinear": 2,
+      "MaxPool": 1,
+      "QLinearGlobalAveragePool": 1,
+      "Flatten": 1,
+      "QLinearMatMul": 1
+    },
+    "hardware_stage_count": 133,
+    "hardware_stage_counts": {
+      "ConvInt32Accumulate": 53,
+      "RequantizeUint8": 54,
+      "QLinearAddUint8": 17,
+      "QuantizeLinear": 2,
+      "DequantizeLinear": 2,
+      "MaxPoolUint8": 1,
+      "GlobalAverageSumInt32": 1,
+      "AverageRequantizeUint8": 1,
+      "View": 1,
+      "MatMulInt32Accumulate": 1
+    }
+  },
+  "ndpsim_inventory_boundary": {
+    "template_count": 55,
+    "user_authorized_reference_count": 53,
+    "project_added_or_modified_candidate_count": 2,
+    "interpretation": "Upstream-tested or user-authorized templates are reusable field and topology evidence, but do not prove exact ResNet target materialization, mapper registration, config-bound simulation, or E4/E5."
+  },
+  "operator_assessment": [
+    {
+      "onnx_op_type": "QLinearConv",
+      "node_count": 53,
+      "classification": "CORE_PRIMITIVE_MISSING_OR_CONTRADICTED",
+      "reusable_basis": [
+        "project INT8 special-array candidates",
+        "FP16 GEMM transport structure"
+      ],
+      "remaining_exact_gap": "Stock-RTL INT8 special-array CSA arithmetic is contradicted by ordinary dot-product semantics; bias, psum, tiling, and tail work remain downstream.",
+      "planning_root_gap": "R5_GAP_INT8_SA_DOT_PRODUCT"
+    },
+    {
+      "onnx_op_type": "QLinearMatMul",
+      "node_count": 1,
+      "classification": "SHARES_CORE_PRIMITIVE_GAP_WITH_CONV",
+      "reusable_basis": [
+        "FP16 GEMM/GEMV scheduling and transport",
+        "project INT8 special-array candidate structure"
+      ],
+      "remaining_exact_gap": "Target uint8 x int8 to int32 accumulate has no exact trusted native template; its output requant has nonzero y_zero_point=60.",
+      "planning_root_gaps": [
+        "R5_GAP_INT8_SA_DOT_PRODUCT",
+        "R5_GAP_EXACT_UINT8_QUANT_TAIL"
+      ]
+    },
+    {
+      "onnx_op_type": "QuantizeLinear",
+      "node_count": 2,
+      "classification": "EXACT_VARIANT_MISSING_REUSABLE_GA_PRIMITIVES_EXIST",
+      "reusable_basis": [
+        "quant_from_buffer INT32 to UINT8 rounding and saturation field oracle",
+        "native FP32 GA ingress examples"
+      ],
+      "remaining_exact_gap": "No config-bound FP32 to UINT8 recipe with target scale, arbitrary zero-point, nearest-even rounding, saturation, typed transport, and registered mapper.",
+      "planning_root_gap": "R5_GAP_EXACT_UINT8_QUANT_TAIL"
+    },
+    {
+      "onnx_op_type": "QLinearAdd",
+      "node_count": 17,
+      "classification": "COMPOSITE_BACKEND_MISSING_PRIMITIVES_REUSABLE",
+      "reusable_basis": [
+        "add_dequant UINT8 plus UINT8 to FP32",
+        "native FP32 add variants",
+        "quant/requant field oracle"
+      ],
+      "instance_classes": {
+        "same_shape_residual_add": 16,
+        "broadcast_bias_add": 1
+      },
+      "remaining_exact_gap": "No complete six-qparam add plus output requant DAG, mapper/handler transport, or bound allocation and lifetime.",
+      "planning_root_gaps": [
+        "R5_GAP_EXACT_UINT8_QUANT_TAIL",
+        "R5_GAP_COMPOSITE_BACKEND_INTEGRATION"
+      ]
+    },
+    {
+      "onnx_op_type": "QLinearGlobalAveragePool",
+      "node_count": 1,
+      "classification": "PRIMITIVES_AVAILABLE_CONTROL_AND_DYNAMIC_CLOSURE_MISSING",
+      "reusable_basis": [
+        "avgpool UINT8 to INT32 sum template",
+        "INT32 to UINT8 requant template"
+      ],
+      "target_specialization": "x_zero_point=0, y_zero_point=0, spatial_element_count=49",
+      "remaining_exact_gap": "Materialized two-stage control, mapper, accumulator state, address/lifetime, and dynamic flow closure.",
+      "planning_root_gap": "R5_GAP_COMPOSITE_BACKEND_INTEGRATION"
+    },
+    {
+      "onnx_op_type": "MaxPool",
+      "node_count": 1,
+      "classification": "EXACT_TEMPLATE_AVAILABLE_FLOW_AND_DYNAMIC_CLOSURE_MISSING",
+      "reusable_basis": [
+        "target-shape native MaxPool JSON",
+        "static proof that the int8-labelled datapath performs unsigned byte max"
+      ],
+      "remaining_exact_gap": "Mapper integration, complete flow compatibility, and authoritative target hardware pass record.",
+      "planning_root_gap": "R5_GAP_COMPOSITE_BACKEND_INTEGRATION"
+    },
+    {
+      "onnx_op_type": "DequantizeLinear",
+      "node_count": 2,
+      "classification": "REUSABLE_IMPLEMENTATION_AVAILABLE",
+      "reusable_basis": [
+        "add_dequant GA field semantics",
+        "project two-stage affine implementation"
+      ],
+      "formal_closed_instance": "node0077",
+      "remaining_exact_gap": "node0072 instance adaptation and physical closure only; no new arithmetic primitive is required."
+    },
+    {
+      "onnx_op_type": "Flatten",
+      "node_count": 1,
+      "classification": "ZERO_COPY_NO_COMPUTE_OPERATOR_REQUIRED",
+      "reusable_basis": [
+        "logical bytewise view"
+      ],
+      "remaining_exact_gap": "Final producer/consumer physical alias, offset, allocation, and lifetime proof."
+    }
+  ],
+  "requant_stage_boundary": {
+    "stage_count": 54,
+    "standard_w3_golden_exact_count": 54,
+    "zero_point_zero_numeric_compatible_count": 33,
+    "nonzero_zero_point_current_guard_contradicted_count": 21,
+    "physical_e2_materialized_count": 1,
+    "formal_dynamic_pass_count": 0,
+    "interpretation": "RequantizeUint8 is not an absent operator, but its general nonzero-zero-point exact quantization tail and physical generalization are not complete."
+  },
+  "independent_root_gaps": [
+    {
+      "planning_gap_id": "R5_GAP_EXACT_UINT8_QUANT_TAIL",
+      "priority": "P0",
+      "kind": "validated_numeric_recipe_and_transport",
+      "scope": "FP32 or INT32 input to UINT8 output with float32 scale handling, arbitrary zero-point, nearest-even rounding, saturation, target shape/layout, and typed mapper/execplan transport",
+      "consumers": [
+        "QuantizeLinear",
+        "QLinearAdd",
+        "RequantizeUint8",
+        "AverageRequantizeUint8",
+        "QLinearMatMul output requant"
+      ]
+    },
+    {
+      "planning_gap_id": "R5_GAP_INT8_SA_DOT_PRODUCT",
+      "priority": "P0",
+      "kind": "hardware_arithmetic_compatibility",
+      "scope": "Reliable uint8 x int8 to int32 special-array dot product with zero-point, bias, psum, tiling, and tail semantics",
+      "consumers": [
+        "QLinearConv",
+        "QLinearMatMul"
+      ]
+    },
+    {
+      "planning_gap_id": "R5_GAP_COMPOSITE_BACKEND_INTEGRATION",
+      "priority": "P1",
+      "kind": "compiler_materialization",
+      "scope": "Compose reusable primitives into exact stage DAGs and bind handler, mapper, address, allocation, lifetime, bitstream, execplan, SCA, and config-bound simulator",
+      "consumers": [
+        "QLinearAdd",
+        "QLinearGlobalAveragePool",
+        "MaxPool",
+        "Flatten physical view"
+      ],
+      "dependencies": [
+        "R5_GAP_EXACT_UINT8_QUANT_TAIL where output quantization is required"
+      ]
+    }
+  ],
+  "replanned_work": [
+    {
+      "priority": "P0",
+      "track": "exact_uint8_quant_tail",
+      "owner_family": "QuantizeLinear with RequantizeUint8 evidence input",
+      "allowed_now": [
+        "read-only capability matrix",
+        "exact numeric DAG proposal",
+        "counterexample suite",
+        "RULE_DELTA_PROPOSAL"
+      ],
+      "forbidden_now": [
+        "target JSON generation",
+        "server package generation",
+        "server execution",
+        "public rule modification by family tasks"
+      ],
+      "exit_condition": "Mainline approves an exact shared numeric and transport contract without weakening existing evidence gates."
+    },
+    {
+      "priority": "P0",
+      "track": "int8_sa_dot_product",
+      "owner_family": "Conv/SA jointly covering QLinearMatMul accumulate semantics",
+      "allowed_now": [
+        "compatibility boundary analysis",
+        "minimal counterexample preservation",
+        "compatible implementation or RTL identity options"
+      ],
+      "forbidden_now": [
+        "bias/psum/tail package generation before arithmetic compatibility",
+        "functional RTL modification without new user authorization",
+        "server package generation"
+      ],
+      "exit_condition": "A compatible implementation or authorized RTL identity satisfies ordinary dot-product semantics."
+    },
+    {
+      "priority": "P1",
+      "track": "qlinearadd_composition",
+      "owner_family": "QLinearAdd",
+      "dependencies": [
+        "exact_uint8_quant_tail"
+      ],
+      "allowed_now": [
+        "same-shape and broadcast DAG design",
+        "six-qparam typed transport design",
+        "address and lifetime contract proposal"
+      ],
+      "forbidden_now": [
+        "target materialization before specialty-rule and shared-tail approval",
+        "server package generation"
+      ]
+    },
+    {
+      "priority": "P1",
+      "track": "requant_generalization",
+      "owner_family": "RequantizeUint8",
+      "dependencies": [
+        "exact_uint8_quant_tail"
+      ],
+      "allowed_now": [
+        "preserve 33/21 numeric classification",
+        "shape and lifetime local planning",
+        "nonzero-zero-point counterexample input to shared-tail design"
+      ],
+      "forbidden_now": [
+        "event-edge server execution as a prerequisite for semantic replanning",
+        "claiming regression or dynamic closure"
+      ]
+    },
+    {
+      "priority": "P2",
+      "track": "direct_reuse_materialization",
+      "owner_family": "separate future family tasks",
+      "scope": [
+        "DequantizeLinear node0072",
+        "MaxPool target integration",
+        "QLinearGlobalAveragePool two-stage composition",
+        "Flatten physical view"
+      ],
+      "entry_condition": "P0 contracts are stable where consumed and mainline explicitly dispatches the relevant family task.",
+      "forbidden_now": [
+        "cross-family task reuse without handoff",
+        "server package generation"
+      ]
+    }
+  ],
+  "control_plane_decisions": {
+    "do_not_treat_template_presence_as_formal_support": true,
+    "do_not_repeat_native_template_testing_without_an_exact_resnet_blocker": true,
+    "do_not_generate_server_packages_during_replanning": true,
+    "do_not_inspect_server_files_or_server_root_identity": true,
+    "retain_generation_fail_closed": true,
+    "retain_functional_rtl_freeze": true,
+    "formal_three_party_node_count": "1/78"
+  }
+}

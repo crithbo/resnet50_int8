@@ -1,0 +1,116 @@
+{
+  "candidate_release": false,
+  "claim_boundary": "This asset is a minimal diagnostic dynamic contract.  It is not a bitstream, server package, stock-RTL result, or formal E4/E5.",
+  "counts": {
+    "element": 32,
+    "final_bytes": 32,
+    "guard_bytes": 128,
+    "guard_mse4_accepted_write_beats": 8,
+    "occurrence": 1,
+    "round_mse4_accepted_write_beats": 2,
+    "stage": 2
+  },
+  "diagnostic_only": true,
+  "dynamic_baseline": "NO_DYNAMIC_BASELINE",
+  "dynamic_release_ready": false,
+  "evidence_level": "E2_LOCAL_CONTRACT_ONLY",
+  "files": {
+    "RequantGuard.txt": {
+      "sha256": "19bfa9a258d3199d5280f3829e3a54dd7d06c4d95294f5b419246e5eb8eebf57",
+      "size_bytes": 6450
+    },
+    "coverage_contract.json": {
+      "sha256": "07c692660f26d98fd64d41611f2065756a2a72e0adadc24f0fcc3487bd4204cc",
+      "size_bytes": 809
+    },
+    "derivation_provenance.json": {
+      "sha256": "ac3a78591e32248c70bafa96f6a724084e2d1f756e09558d25267ed98adf766d",
+      "size_bytes": 2197
+    },
+    "expected_mse4_writes.json": {
+      "sha256": "24bc8785566b0d0d49da7565653ae48e64330d09d3d71b0c72d3fd2e03aed314",
+      "size_bytes": 4232
+    },
+    "final_golden_128b.txt": {
+      "sha256": "b104cc8479775383479b7610d395fda948f1a71664dcc83e4ccff342e3dd16df",
+      "size_bytes": 258
+    },
+    "final_golden_uint8_hwc8.npy": {
+      "sha256": "89e8d21d6639ee936eec75d3260da61d630739dc8146b4471b7279ded58736a5",
+      "size_bytes": 160
+    },
+    "first_divergence_routing.json": {
+      "sha256": "4e33cd9c116f3093e683a782f7b649e3ab8c0f0d42909b926ee7872504e6039e",
+      "size_bytes": 867
+    },
+    "generation_receipt.json": {
+      "sha256": "067f29870156e9707185b296d42f9d6373918e146693e4a5577058eb52861671",
+      "size_bytes": 4959
+    },
+    "guard.json": {
+      "sha256": "defeca56b0c248eb1f4915b0338227580687d4e8c92cedf548ad727f6457d5d2",
+      "size_bytes": 11912
+    },
+    "guard_golden_128b.txt": {
+      "sha256": "e9bd06473f6a24efb409725ef938f32c432f39f7db9235c7a080bb561567b85a",
+      "size_bytes": 1032
+    },
+    "guard_golden_fp32_hwc8.npy": {
+      "sha256": "541a9db8779f323c80d852c3dc7b3865dccfb1b22ffea51d8b6a2f48d72871a1",
+      "size_bytes": 256
+    },
+    "input_int32_128b.txt": {
+      "sha256": "35f9442ac0cc2a4bfcaaa70e60c83a64845093f98c9c5794abf83fbdaa70bf77",
+      "size_bytes": 1032
+    },
+    "input_int32_hwc8.npy": {
+      "sha256": "b659f7d879ec64277faea87b0256958e2c3efb2246a8e231f7fba41e855b4c93",
+      "size_bytes": 256
+    },
+    "lifecycle_contract.json": {
+      "sha256": "1e09f6ea363f1e6d3b1a4a67d691a7923a6a392fb88687412cef3558ddc3e34d",
+      "size_bytes": 1804
+    },
+    "round_saturate.json": {
+      "sha256": "e8e3d0f2ed67f77f8228aeb142e64b038f1f0ac4cdbc2e79f297ca4ee4be08b0",
+      "size_bytes": 16530
+    },
+    "typed_graph.json": {
+      "sha256": "e4f42026eb420d2575a1c6e9bd6617520ffcdd20a1965f4c35538b32558cf03c",
+      "size_bytes": 1677
+    }
+  },
+  "formal_target_instance_allowed": false,
+  "generation_receipt_sha256": "8b78d1945992ffd6695a9b7c4a61b0a194c34ae9775046b04939ed0c325f8a24",
+  "guard_sfu": {
+    "breakpoint_words": 65,
+    "execplan_length_64b": 100,
+    "intercept_words": 66,
+    "line_count_128b": 50,
+    "meaningful_word_count_32b": 197,
+    "padding_word_count_32b": 3,
+    "payload_sha256": "19bfa9a258d3199d5280f3829e3a54dd7d06c4d95294f5b419246e5eb8eebf57",
+    "slope65_bits": "0x3f800000",
+    "slope_words": 66,
+    "word_count_32b": 200
+  },
+  "manifest_sha256": "55f876129ae11f6d6ad28fac7cc32f77ed4ee81da72950f9cd9997370302209e",
+  "remaining_blockers": [
+    "B_REQUANT_SERVER_E4_E5"
+  ],
+  "request_id": "r5:hwop-0001-01",
+  "rule_ids": [
+    "CDA-CONFIG-SEMANTIC-OWNERSHIP-001",
+    "CDA-CONFIG-MATERIALIZED-ROUNDTRIP-001",
+    "CDA-REQUANT-QPARAM-001",
+    "CDA-REQUANT-INT32-GUARD-001",
+    "CDA-REQUANT-SFU-LUT-001",
+    "CDA-REQUANT-TWO-STAGE-001",
+    "CDA-REQUANT-ROUND-MAGIC-001",
+    "CDA-REQUANT-ATOMIC-SINGLE-OCCURRENCE-001"
+  ],
+  "schema": "requant-node0001-single-occurrence-two-stage-dynamic-contract-v1",
+  "scope": "single slice, one HWC8 occurrence, guard then round_saturate",
+  "server_package": false,
+  "status": "LOCAL_DYNAMIC_CONTRACT_MATERIALIZED_NOT_RUN"
+}

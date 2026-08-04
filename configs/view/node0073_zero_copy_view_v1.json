@@ -1,0 +1,490 @@
+{
+  "accepted_handshake_lifetime": {
+    "conservative_fallback": "if final-input-data acceptance is not observable, retain through node0074.completion_accepted; this changes lifetime only, not data",
+    "consumer_acquire_point": "node0074.first_input_data_accepted",
+    "event_order": [
+      "allocation.bind_accepted",
+      "node0073.view_alias_bind_accepted",
+      "node0072.final_output_write_accepted",
+      "node0072.completion_accepted",
+      "node0074.first_input_data_accepted",
+      "node0074.final_input_data_accepted",
+      "allocation.release_accepted"
+    ],
+    "release_point": "allocation.release_accepted",
+    "release_precondition": "node0074.final_input_data_accepted and no pending/replayed node0074 input transactions",
+    "visibility_point": "node0072.completion_accepted"
+  },
+  "address_mapping_proof": {
+    "all_addresses_equal": true,
+    "enumerated_element_count": 32768,
+    "first": {
+      "address": 0,
+      "byte_offset": 0,
+      "input_index": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "output_index": [
+        0,
+        0
+      ]
+    },
+    "formula": "addr_in(n,c,0,0)=allocation_base+byte_offset+4*(n*2048+c)=addr_out(n,c)",
+    "last": {
+      "address": 131068,
+      "byte_offset": 131068,
+      "input_index": [
+        15,
+        2047,
+        0,
+        0
+      ],
+      "output_index": [
+        15,
+        2047
+      ]
+    },
+    "ordered_mapping_sha256": "158a3974b49e05ed010ba27915065dbf700586e08b780bd3d4d1ecb8333e06d6"
+  },
+  "allocation_ownership": {
+    "alias_may_allocate": false,
+    "alias_may_release": false,
+    "node0074_access": "read-only borrower",
+    "owner": "activation_allocator_for_node0072_D",
+    "view_owns_allocation": false
+  },
+  "binding_certificate_interface": {
+    "required_fields": [
+      "storage_id",
+      "allocation_owner_request_id",
+      "allocation_base",
+      "producer_byte_offset",
+      "consumer_byte_offset",
+      "byte_span",
+      "producer_byte_strides",
+      "consumer_byte_strides",
+      "event_sequence",
+      "no_pending_or_replayed_consumer_reads_at_release",
+      "producer_final_output_coverage",
+      "consumer_final_input_coverage"
+    ],
+    "required_source_bindings": [
+      "producer_addressed_execplan",
+      "producer_layout_contract",
+      "consumer_addressed_execplan",
+      "consumer_layout_contract",
+      "allocator_plan"
+    ],
+    "schema": "resnet50-flatten-physical-view-binding-v1"
+  },
+  "bypass_annotation": {
+    "bypass_reason": "Flatten is an ONNX physical view; emitting a computational operator would add non-semantic work and functional RTL changes are frozen.",
+    "claim_boundary": "eligible only for CONFIG_ONLY_CORRECTNESS_BASELINE after a validated endpoint binding certificate; no production/performance/E4/E5 claim",
+    "contradicted_or_missing_native_path": "the legacy execplan intentionally excludes Flatten and the native operator JSON/mapper path has no View computation to encode",
+    "exact_equivalence_scope": "frozen node0073 axis=1 float32 C-contiguous [16,2048,1,1] to [16,2048] instance",
+    "materialized_configuration_mechanism": "planner/execplan metadata alias with one storage identity, identical base+offset, zero View instruction and zero View memory request",
+    "performance_and_resource_cost": "zero copy traffic and zero View compute; producer allocation remains live through node0074 final accepted input data, increasing live-range pressure and potentially constraining scheduling",
+    "unresolved_production_blocker": "node0072 D and node0074 A final addressed layout/execplan plus accepted-handshake lifetime certificate are not yet materialized"
+  },
+  "dependencies": {
+    "node0072": {
+      "must_supply": [
+        "storage_id/allocation owner",
+        "addressed allocation_base+byte_offset",
+        "C-order physical byte strides [8192,4,4,4]",
+        "131072-byte visible span",
+        "final output write accepted and completion accepted events",
+        "final occurrence/address unique written-byte coverage",
+        "addressed execplan and layout contract hashes"
+      ],
+      "port": "D",
+      "request_id": "r5:hwop-0072-00"
+    },
+    "node0074": {
+      "must_supply": [
+        "same storage_id/allocation_base+byte_offset",
+        "C-order physical byte strides [8192,4]",
+        "131072-byte read span",
+        "first/final input data accepted and no-replay release proof",
+        "final occurrence/address unique read-byte coverage",
+        "addressed execplan and layout contract hashes"
+      ],
+      "port": "A",
+      "request_id": "r5:hwop-0074-00"
+    }
+  },
+  "formal_output_byte_coverage": {
+    "consumer_materialized_read_coverage_proven": false,
+    "coverage_kind": "inherited_node0072_D_written_byte_set",
+    "producer_materialized_occurrence_coverage_proven": false,
+    "reason": "View emits no write; target coverage must be recalculated from node0072 final write and node0074 final read occurrence/address equations in the endpoint binding certificate",
+    "required_relative_byte_set": {
+      "equation": "required_byte_set={allocation_base+byte_offset+i | 0<=i<131072}",
+      "first_address": 0,
+      "last_address": 131071,
+      "ordered_byte_set_sha256": "37346dd57482669517de980f7a75c951f3349b5367a27754a36024b6c66fa775",
+      "unique_byte_count": 131072
+    },
+    "required_unique_output_bytes": 131072,
+    "view_owned_write_byte_count": 0
+  },
+  "golden_proof": {
+    "byte_count": 131072,
+    "bytes_sha256": "9430e90815858319eb2e08f610a54779bb12a78b7313ece27a92c5042d08018e",
+    "exact_bytes_equal": true,
+    "input_path": "artifacts/w3/golden_batch16/tensors/tensor-50c285690f899b1b.npy",
+    "output_path": "artifacts/w3/golden_batch16/tensors/tensor-9b1363d3baf474c8.npy",
+    "reshape_elementwise_equal": true
+  },
+  "identity": {
+    "axis": 1,
+    "hw_op_type": "View",
+    "node_id": "node-0073",
+    "onnx_name": "flatten_473",
+    "onnx_op_type": "Flatten",
+    "request_id": "r5:hwop-0073-00",
+    "request_sha256": "6ad8751fdab5f31fac84c8092964a60b6eab284e408aa458955cbddd0dab91e0"
+  },
+  "input_replay_policy": {
+    "allowed_data_source": "only the final node0072 D producer output through physical alias",
+    "calculation_owner_unchanged": true,
+    "copy_enabled": false,
+    "forbidden_boundary_crossing": "host may not calculate any node0072, node0073 or node0074 internal/scaled/rounded/saturated/final tensor",
+    "host_precomputed_final_tensor_enabled": false,
+    "host_precomputed_internal_tensor_enabled": false,
+    "host_precomputed_rounded_tensor_enabled": false,
+    "host_precomputed_saturated_tensor_enabled": false,
+    "host_precomputed_scaled_tensor_enabled": false,
+    "input_or_constant_replay_enabled": false,
+    "rule_id": "CDA-CONFIG-ONLY-INPUT-REPLAY-NONCOMPUTATIONAL-001"
+  },
+  "logical_tensors": {
+    "byte_count": 131072,
+    "element_count": 32768,
+    "input": {
+      "byte_strides": [
+        8192,
+        4,
+        4,
+        4
+      ],
+      "dtype": "float32",
+      "identity_sha256": "8d334045de23456fdcfda347c6667c353663d2c1f3bca24c348017794263bf8a",
+      "order": "C",
+      "producer_request_id": "r5:hwop-0072-00",
+      "shape": [
+        16,
+        2048,
+        1,
+        1
+      ],
+      "tensor_id": "tensor-50c285690f899b1b"
+    },
+    "logical_tensor_ids_distinct": true,
+    "output": {
+      "byte_strides": [
+        8192,
+        4
+      ],
+      "consumer_request_id": "r5:hwop-0074-00",
+      "dtype": "float32",
+      "identity_sha256": "3c59f1721a8a18c862764229f5f002ad3f976147add4a582ff26b853d3eeaa52",
+      "order": "C",
+      "shape": [
+        16,
+        2048
+      ],
+      "tensor_id": "tensor-9b1363d3baf474c8"
+    },
+    "physical_storage_identity_required": true
+  },
+  "materialization": {
+    "emit_arithmetic_json": false,
+    "emit_mapping_or_bitstream": false,
+    "execplan_directive": {
+      "allocation_owner_request_id": "r5:hwop-0072-00",
+      "base_selector": "node0072.D.allocation_base",
+      "consumer_base_selector": "node0074.A.allocation_base",
+      "consumer_byte_offset_selector": "node0074.A.byte_offset",
+      "input_byte_offset_selector": "node0072.D.byte_offset",
+      "input_tensor_id": "tensor-50c285690f899b1b",
+      "kind": "BindTensorViewAlias",
+      "output_byte_offset_expression": "node0072.D.byte_offset",
+      "output_tensor_id": "tensor-9b1363d3baf474c8"
+    },
+    "hardware_config_count": 0,
+    "hardware_instruction_count": 0,
+    "hardware_memory_request_count": 0,
+    "kind": "execplan_metadata_zero_copy_alias",
+    "required_equalities": [
+      "node0072.D.storage_id == node0073.input.storage_id",
+      "node0073.input.storage_id == node0073.output.storage_id",
+      "node0073.output.storage_id == node0074.A.storage_id",
+      "node0072.D.allocation_base == node0074.A.allocation_base",
+      "node0072.D.byte_offset == node0074.A.byte_offset",
+      "node0072.D.byte_span == node0074.A.byte_span == 131072"
+    ]
+  },
+  "materialized_nonbase_field_ownership": {
+    "changed_leaf_count": 5,
+    "endpoint_address_resolution_pending": true,
+    "final_materialized_projection": {
+      "allocation_base": "node0072.D.allocation_base",
+      "allocation_owner_request_id": "r5:hwop-0072-00",
+      "axis": 1,
+      "byte_span": 131072,
+      "consumer_byte_offset": "node0074.A.byte_offset",
+      "dtype": "float32",
+      "hardware_instruction_count": 0,
+      "hardware_memory_request_count": 0,
+      "input_byte_strides": [
+        8192,
+        4,
+        4,
+        4
+      ],
+      "input_shape": [
+        16,
+        2048,
+        1,
+        1
+      ],
+      "input_tensor_id": "tensor-50c285690f899b1b",
+      "op_kind": "View",
+      "output_byte_strides": [
+        8192,
+        4
+      ],
+      "output_shape": [
+        16,
+        2048
+      ],
+      "output_tensor_id": "tensor-9b1363d3baf474c8",
+      "producer_byte_offset": "node0072.D.byte_offset",
+      "storage_id": "node0072.D.storage_id"
+    },
+    "final_materialized_projection_sha256": "cd82823fce894447d00d41da8269c9aa6e94c3ba9fb3a56efab58f17e603a96b",
+    "leaf_diff": [
+      {
+        "authorization": "typed View zero-copy storage identity",
+        "expected_new_value": "node0072.D.storage_id",
+        "field_class": "non_base",
+        "formula": "node0073.input.storage_id=node0073.output.storage_id=node0072.D.storage_id=node0074.A.storage_id",
+        "input_source": "node0072 D addressed allocation",
+        "old_value": null,
+        "owner": "activation_allocator",
+        "path": "$.storage_id"
+      },
+      {
+        "authorization": "View borrows and never reallocates or releases storage",
+        "expected_new_value": "r5:hwop-0072-00",
+        "field_class": "non_base",
+        "formula": "owner=request_id(node0072 D producer)",
+        "input_source": "typed producer request identity",
+        "old_value": null,
+        "owner": "activation_allocator",
+        "path": "$.allocation_owner_request_id"
+      },
+      {
+        "authorization": "planner-owned physical base binding",
+        "expected_new_value": "node0072.D.allocation_base",
+        "field_class": "base",
+        "formula": "view_base=node0072.D.allocation_base=node0074.A.allocation_base",
+        "input_source": "node0072 D addressed execplan",
+        "old_value": null,
+        "owner": "planner_address_binder",
+        "path": "$.allocation_base"
+      },
+      {
+        "authorization": "planner-owned producer offset binding",
+        "expected_new_value": "node0072.D.byte_offset",
+        "field_class": "base_offset",
+        "formula": "view_input_offset=node0072.D.byte_offset",
+        "input_source": "node0072 D addressed execplan",
+        "old_value": null,
+        "owner": "planner_address_binder",
+        "path": "$.producer_byte_offset"
+      },
+      {
+        "authorization": "planner-owned consumer offset binding",
+        "expected_new_value": "node0074.A.byte_offset",
+        "field_class": "base_offset",
+        "formula": "view_output_offset=node0074.A.byte_offset=node0072.D.byte_offset",
+        "input_source": "node0074 A addressed execplan",
+        "old_value": null,
+        "owner": "planner_address_binder",
+        "path": "$.consumer_byte_offset"
+      }
+    ],
+    "logical_projection": {
+      "allocation_base": null,
+      "allocation_owner_request_id": null,
+      "axis": 1,
+      "byte_span": 131072,
+      "consumer_byte_offset": null,
+      "dtype": "float32",
+      "hardware_instruction_count": 0,
+      "hardware_memory_request_count": 0,
+      "input_byte_strides": [
+        8192,
+        4,
+        4,
+        4
+      ],
+      "input_shape": [
+        16,
+        2048,
+        1,
+        1
+      ],
+      "input_tensor_id": "tensor-50c285690f899b1b",
+      "op_kind": "View",
+      "output_byte_strides": [
+        8192,
+        4
+      ],
+      "output_shape": [
+        16,
+        2048
+      ],
+      "output_tensor_id": "tensor-9b1363d3baf474c8",
+      "producer_byte_offset": null,
+      "storage_id": null
+    },
+    "logical_projection_sha256": "c7cd4e861f384d6b498636403a23b72d9ac6bd5976ab5082049a0cb58d3157cb",
+    "nonbase_changed_leaf_count": 2,
+    "nonbase_fields_not_listed_are_immutable": true,
+    "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+    "undeclared_changed_leaf_count": 0
+  },
+  "metadata_sha256": "5888feec4434e77e0fc78a20ffde8230ddeef3b6273aee0a7fbac41d238c5e4d",
+  "omitted_files": [
+    {
+      "path": ".agents/rules/NDP硬件字段语义.md",
+      "reason": "View emits no LC/MSE/Buffer/SA/GA/N2N field and no hardware configuration"
+    },
+    {
+      "path": ".agents/rules/服务器测试包生成规则.md",
+      "reason": "no server package is generated or authorized"
+    }
+  ],
+  "read_receipt": [
+    {
+      "accepted_lineage_append": false,
+      "mutable_provenance": false,
+      "path": ".agents/agent.md",
+      "semantic_gate": false,
+      "sha256": "5a4660df1e771b75045c45f75e08b7eba771542750b91ab18af6ab0434043de0"
+    },
+    {
+      "accepted_lineage_append": false,
+      "mutable_provenance": true,
+      "path": ".agents/plan.md",
+      "semantic_gate": false,
+      "sha256": "a1e19c6e84360641205836f6fa0b172fc0405472b8b2dfdc4c580cc2e0875516"
+    },
+    {
+      "accepted_lineage_append": false,
+      "mutable_provenance": false,
+      "path": ".agents/rules/生成前必读索引.md",
+      "semantic_gate": true,
+      "sha256": "3940dc4d6f6d0b5d52347acd6fe5655281562dc09d4082c298cf70c7dbfb4f19"
+    },
+    {
+      "accepted_lineage_append": false,
+      "mutable_provenance": false,
+      "path": ".agents/rules/算子配置规则.md",
+      "semantic_gate": true,
+      "sha256": "407fc0320d0587c362730c74e9b1d87cbd8e2ab686051173ceacadb6ac31c2cc"
+    },
+    {
+      "accepted_lineage_append": false,
+      "mutable_provenance": false,
+      "path": ".agents/rules/Flatten_View算子配置规则.md",
+      "semantic_gate": true,
+      "sha256": "28ba3a92fecbb83149d494867429c34aa3124040a5c59fe99c4b9481feb3b7ee"
+    },
+    {
+      "accepted_lineage_append": true,
+      "mutable_provenance": false,
+      "path": ".agents/task_records/20260727_config_only_correctness_first_parallel_mainline_policy.md",
+      "semantic_gate": false,
+      "sha256": "b7ec52e4f57dad22b1dbbe8a556f15d3aa8ea49a7a559c3968622e23d03b7b54"
+    },
+    {
+      "accepted_lineage_append": false,
+      "mutable_provenance": false,
+      "path": "contracts/resnet50_r5_lowering_bundle.json",
+      "semantic_gate": false,
+      "sha256": "bf661e4eda2011025d9922708ab46a64f8d1b3c279527b88aa7d630bb3545432"
+    },
+    {
+      "accepted_lineage_append": false,
+      "mutable_provenance": false,
+      "path": "contracts/operator_config/stage_state_lifetime_contract_v1.json",
+      "semantic_gate": false,
+      "sha256": "67f8e7758128a0dfea4b3faf2eab700b01b602ca052c3301fec967d6d2604744"
+    },
+    {
+      "accepted_lineage_append": false,
+      "mutable_provenance": false,
+      "path": "artifacts/w3/golden_batch16/manifest.json",
+      "semantic_gate": false,
+      "sha256": "f7e90cf1f087acf255e93d98d1788e0fb0b4c77bbe935ea9addb17feea583180"
+    },
+    {
+      "accepted_lineage_append": false,
+      "mutable_provenance": false,
+      "path": "resnet50_pipeline/lowering/registry.py",
+      "semantic_gate": false,
+      "sha256": "922198210d1ffb56edd0b6987393940b83506af29a283ab95c1bba2d43092d5c"
+    },
+    {
+      "accepted_lineage_append": false,
+      "mutable_provenance": false,
+      "path": "resnet50_pipeline/lowering/legacy_plan.py",
+      "semantic_gate": false,
+      "sha256": "a54bdd7cd9dc25278944cbab25dac2f2eda6e28f1354570799310d66f96d699b"
+    },
+    {
+      "accepted_lineage_append": false,
+      "mutable_provenance": false,
+      "path": "resnet50_pipeline/stage_state_lifetime_contract.py",
+      "semantic_gate": false,
+      "sha256": "27fe4d1a3aae92924302e6542374337697d687c4051950a203b91ce72be7ad56"
+    }
+  ],
+  "release": {
+    "claim_enabled": false,
+    "claim_label": null,
+    "eligible_claim_label_after_binding": "CONFIG_ONLY_CORRECTNESS_BASELINE",
+    "formal_target_instance_allowed": false,
+    "independent_target_local_e2": false,
+    "open_blockers": [
+      "B_VIEW_PRODUCER_ALLOCATION",
+      "B_VIEW_CONSUMER_ALLOCATION",
+      "B_VIEW_BYTE_OFFSET_IDENTITY",
+      "B_VIEW_BUFFER_LIFETIME"
+    ],
+    "rtl_modified": false,
+    "server_package": false,
+    "status": "ENDPOINT_BINDING_PENDING"
+  },
+  "rule_ids": [
+    "CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+    "CDA-CONFIG-ONLY-INPUT-REPLAY-NONCOMPUTATIONAL-001",
+    "CDA-CONFIG-SEMANTIC-OWNERSHIP-001",
+    "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+    "CDA-CONFIG-MATERIALIZED-ROUNDTRIP-001",
+    "CDA-VIEW-METADATA-ONLY-001",
+    "CDA-VIEW-PHYSICAL-IDENTITY-001",
+    "CDA-VIEW-ENDPOINT-COVERAGE-001",
+    "CDA-VIEW-ACCEPTED-LIFETIME-001",
+    "CDA-VIEW-INTEGRATED-CLAIM-BOUNDARY-001"
+  ],
+  "schema": "resnet50-flatten-physical-view-v1",
+  "test_id": "r5-flatten-node0073-zero-copy-view-v1"
+}

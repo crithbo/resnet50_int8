@@ -1,0 +1,215 @@
+{
+  "config_set": {
+    "file_count": 10,
+    "files": [
+      {
+        "path": "RequantGuard.txt",
+        "sha256": "19bfa9a258d3199d5280f3829e3a54dd7d06c4d95294f5b419246e5eb8eebf57",
+        "size_bytes": 6450
+      },
+      {
+        "path": "resnet50_requant_guard_node0001.json",
+        "sha256": "1ab2edaca84a06aa369312145693eec1379aa16119f5187dda7564b5d085714e",
+        "size_bytes": 11987
+      },
+      {
+        "path": "resnet50_requant_round_node0001_s00.json",
+        "sha256": "bf9d814224236661ebdf355dea2ac48f4c2a32f77b234a1bef913fa246634710",
+        "size_bytes": 16599
+      },
+      {
+        "path": "resnet50_requant_round_node0001_s01.json",
+        "sha256": "1757400926ca8c967928b2c37f84a2d4ecfc397e99aef334353b9f1e5397b18e",
+        "size_bytes": 16596
+      },
+      {
+        "path": "resnet50_requant_round_node0001_s02.json",
+        "sha256": "e84b3430e2317bf3a581f7608031a617e3e58590f11cdf3be7d170fddcd56de8",
+        "size_bytes": 16596
+      },
+      {
+        "path": "resnet50_requant_round_node0001_s03.json",
+        "sha256": "022b02dccabb8412de7328a4c2befdd80bd4891a7797a0d07cfc0332a61f87dc",
+        "size_bytes": 16596
+      },
+      {
+        "path": "resnet50_requant_round_node0001_s04.json",
+        "sha256": "fad93c60c71a96d37706dbc448140e7bca34dd1470fa3402cc84cefb40e8bb55",
+        "size_bytes": 16597
+      },
+      {
+        "path": "resnet50_requant_round_node0001_s05.json",
+        "sha256": "f982137fcc4aa4acb21a389502fa07a3124ba38c59d69b003e4f541619bf0e6d",
+        "size_bytes": 16597
+      },
+      {
+        "path": "resnet50_requant_round_node0001_s06.json",
+        "sha256": "fa4389e08391562e6ba67fa2682b5a01d1824081e93595d8a59556af75ae8cc7",
+        "size_bytes": 16595
+      },
+      {
+        "path": "resnet50_requant_round_node0001_s07.json",
+        "sha256": "236cf4e187713cb32f63d37c8a8bda3a8270f807ce5608bb3ede8da738c9db7c",
+        "size_bytes": 16599
+      }
+    ],
+    "manifest": {
+      "path": "configs/native_ndp_sim/node0001_requant_two_stage_v1/manifest.json",
+      "sha256": "5a51a63464936240ed48bc23b1182e4be754adefbdac505c0f6e255917e6aad3"
+    },
+    "source_root": "configs/native_ndp_sim/node0001_requant_two_stage_v1"
+  },
+  "dataflow": {
+    "consumer_intermediate_sca_preload_count": 0,
+    "guard": {
+      "active_pe_count": 8,
+      "inport_conversion": "int32tofp32",
+      "input_dtype": "int32",
+      "opcode": "sfu_activation",
+      "outbuffer": "normal_non_transout",
+      "output_dtype": "fp32"
+    },
+    "producer_consumer_same_slice_same_address": true,
+    "round_saturate": {
+      "active_int32_sub_count": 8,
+      "active_mac_count": 8,
+      "inport_conversion": "all_disabled",
+      "input_dtype": "fp32",
+      "outbuffer": "normal_non_transout",
+      "outport_conversion": "int32touint8",
+      "output_dtype": "uint8"
+    }
+  },
+  "emission": {
+    "candidate_release": false,
+    "formal_target_config": false,
+    "kind": "address_unbound_multi_config_candidate",
+    "remaining_blockers": [
+      "B_REQUANT_SERVER_E4_E5"
+    ],
+    "server_package": false
+  },
+  "hw_op_type": "RequantizeUint8",
+  "local_e2": {
+    "decoded_bitstream_stage_count": 48,
+    "path": "artifacts/operator_config_validation/r5-requant-node0001-two-stage-e2-v1/local_e2_report.json",
+    "semantic_contract": {
+      "path": "contracts/operator_config/requant_node0001_two_stage_contract_v1.json",
+      "sha256": "a1e6c12d745e8cb8efa0758ca0a237d8ee9ee102b096b00fcd0a7ea3f66f27d9"
+    },
+    "sha256": "29b24ba2c0ca48348adb7e2c2b7a05508324474f506f0cabcadc1ded4f121990",
+    "two_isolated_toolchains": true
+  },
+  "logical_geometry": {
+    "attributes": {
+      "auto_pad": "NOTSET",
+      "dilations": [
+        1,
+        1
+      ],
+      "group": 1,
+      "kernel_shape": [
+        7,
+        7
+      ],
+      "pads": [
+        3,
+        3,
+        3,
+        3
+      ],
+      "strides": [
+        2,
+        2
+      ]
+    },
+    "input_dtypes": [
+      "int32",
+      "float32",
+      "float32",
+      "float32",
+      "uint8"
+    ],
+    "input_shapes": [
+      [
+        16,
+        64,
+        112,
+        112
+      ],
+      [
+        1
+      ],
+      [
+        64
+      ],
+      [
+        1
+      ],
+      [
+        1
+      ]
+    ],
+    "output_dtypes": [
+      "uint8"
+    ],
+    "output_shapes": [
+      [
+        16,
+        64,
+        112,
+        112
+      ]
+    ]
+  },
+  "numeric_order": {
+    "direct_negative_int32_to_requant_mac_allowed": false,
+    "formula": "guard=max(fp32_convert(acc),+0); scaled=fp32(guard*multiplier[c]); q=saturate_uint8(round_to_nearest_even(scaled))",
+    "guard_sfu_breakpoints": "65x+0.0",
+    "guard_sfu_slope0_bits": "0x00000000",
+    "guard_sfu_slope65_bits": "0x3f800000",
+    "round_magic_bits": "0x4b400000",
+    "w3_bit_exact_element_count": 12845056,
+    "w3_minus_one_element_count": 80,
+    "w3_negative_element_count": 3246544
+  },
+  "physical_schedule": {
+    "address_binding": "hash-bound W4 per-slice lifetime allocator in isolated E2",
+    "channel_shard_count": 8,
+    "guard_intermediate_slot_count": 1,
+    "layout_profile": "w4_28slice_hwc8_node0001_v1",
+    "logical_shape": [
+      16,
+      64,
+      112,
+      112
+    ],
+    "occurrence_count": 24,
+    "occurrence_shape": [
+      1,
+      12544,
+      8
+    ],
+    "per_slice_persistent_slot_count": 6,
+    "physical_stage_count": 48,
+    "target_rows_per_bank": 6144,
+    "wave_count": 3
+  },
+  "request_id": "r5:hwop-0001-01",
+  "request_sha256": "d1521e88ac08c4768c3d4bcd8c66820bc59b0d49b31d4a1c7481c089050fbe9e",
+  "schedule_sha256": "e444ffa444d254a444f82a7aae1584bef0d0a1eda282e84b2f8108fd23e44a97",
+  "schema": "resnet50-ndp-schedule-ir-v1",
+  "stage_role": "requantize",
+  "typed_parameter_consumption": {
+    "requant_multiplier": {
+      "parameter_id": "hwop-0001-01.derived.requant_multiplier",
+      "physical_binding": "eight round_saturate MAC lanes in each of eight channel-shard configs",
+      "value_sha256": "7ed3f7e123f3f68c86a141ea0fa562a694ed8bfd4a5014907f8e551ff76e9790"
+    },
+    "y_zero_point": {
+      "parameter_id": "hwop-0001-01.initializer.y_zero_point",
+      "scalar": 0,
+      "specialization_required": true
+    }
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "DRAM_LC.LC3": "LC16",
+  "DRAM_LC.LC2": "LC14",
+  "DRAM_LC.LC0": "LC2",
+  "DRAM_LC.LC1": "LC0",
+  "LC_PE.PE0": "PE4",
+  "LC_PE.PE1": "PE6",
+  "STREAM.stream1": "WRITE_STREAM0",
+  "GROUP0.COL_LC": "COL_LC0",
+  "STREAM.stream0": "READ_STREAM0",
+  "GROUP0.ROW_LC": "ROW_LC0",
+  "GROUP1.COL_LC": "COL_LC4",
+  "GROUP1.ROW_LC": "ROW_LC4"
+}

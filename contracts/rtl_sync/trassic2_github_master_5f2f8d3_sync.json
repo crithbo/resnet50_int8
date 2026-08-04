@@ -1,0 +1,62 @@
+{
+  "schema": "trassic2-github-master-sync-v1",
+  "recorded_at": "2026-07-29",
+  "repository": "https://github.com/xlsjdjdk/Trassic2.0_RTL",
+  "branch": "master",
+  "head_commit": "5f2f8d3a2358c090143caa35957c07ff3650ff4c",
+  "head_subject": "修改代码冲突",
+  "download": {
+    "method": "authenticated_github_master_archive",
+    "archive_name": "Trassic2.0_RTL-master.zip",
+    "archive_sha256": "bdf0ce9f83ba8e0b3e1354bd559f61a4eb3e2a4c6187934c78c880d28e7c3faa",
+    "local_root": "Trassic2.0_RTL",
+    "git_metadata_present": false,
+    "source_files_extracted": 2008,
+    "duplicate_archive_path_groups": 14,
+    "duplicate_scope": "AXI_IF/run_axi_write64_merge_bridge_tb/csrc/*.DB only",
+    "rtl_source_duplicate_paths": 0
+  },
+  "comparison": {
+    "historical_local_root": "NDP_copy01/rtl",
+    "historical_source_files": 2010,
+    "github_source_files": 2008,
+    "different_source_files": 13,
+    "changed_in_both": 11,
+    "historical_local_only": 2,
+    "github_only": 0,
+    "historical_local_only_paths": [
+      "clk_freq_new.sv",
+      "NDP_Top_phy_with_fifo.sv"
+    ],
+    "changed_paths": [
+      "Global/global_config_manager.sv",
+      "NDP_Top.sv",
+      "NDP_Top_phy.sv",
+      "Slice/General_Array/GA_Inport/GA_Inport.sv",
+      "Slice/General_Array/GA_PE_Group/GA_PE/GA_PE.sv",
+      "Slice/General_Array/GA_PE_Group/GA_PE_Outbuffer.sv",
+      "Slice/General_Array/GA_PE_Group/GA_SFU_PE/GA_SFU_PE.sv",
+      "Slice/General_Array/GA_PE_Group/GA_SFU_PE/GA_SFU_PE_Postprocess.sv",
+      "Slice/Slice_Execution_Manager.sv",
+      "Slice/Specialized_Array/SA_PE/SA_PE_ALU/SA_PE_Float_Control.v",
+      "Slice/Specialized_Array/SA_PE/SA_PE_ALU/SA_PE_Mul_Array.v"
+    ]
+  },
+  "critical_interface_adjudication": {
+    "github_sa_alu_sha256": "42142fb407df4eeb9855b9ed730a1c08eb16d3ab30392ecc3d1e3f9d2abb7f2e",
+    "github_sa_alu_instantiation": "SA_PE_Mul_Array u_SA_PE_Mul_Array connects .slice_rst(slice_rst)",
+    "github_sa_pe_mul_array_sha256": "081eafbbe625104866ec711bec1683b8eb0a28f9a4f8992514429a0c787d27ee",
+    "github_sa_pe_mul_array_slice_rst_port_present": false,
+    "historical_local_sa_pe_mul_array_sha256": "89ea1999ffc4a8a8b1459ba86525664ce78baa19a04179b1154e3635e8d2ff35",
+    "historical_local_sa_pe_mul_array_slice_rst_port_present": true,
+    "github_master_interface_consistent": false,
+    "server_return_matches_github_master_interface_failure": true,
+    "compile_release_allowed": false
+  },
+  "sync_policy": {
+    "historical_ndp_copy01_overwritten": false,
+    "github_snapshot_is_new_read_only_reference": true,
+    "reason_not_installed_over_historical_root": "GitHub master contains a proven caller/callee slice_rst compile-interface mismatch and must not replace the internally consistent historical snapshot before hardware-owner repair.",
+    "required_next_action": "Hardware owner restores a consistent slice_rst interface in SA_ALU and SA_PE_Mul_Array, publishes a new commit, then this local GitHub snapshot is refreshed and rechecked before server rerun."
+  }
+}

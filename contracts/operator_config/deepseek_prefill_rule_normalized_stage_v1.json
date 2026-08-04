@@ -1,0 +1,158 @@
+{
+  "candidate_release": false,
+  "closed_blockers": [
+    "B_DS_RMSNORM_STAGE_TOPOLOGY_GAP",
+    "B_DS_SOFTMAX_STAGE_LAYOUT_HINT_GAP",
+    "B_DS_GEMM_LAYOUT_HINT_STAGE_GAP"
+  ],
+  "contract_sha256": "aeb3fe3ec7dcefb63b837fd3a92ba907ba09856f32f2128add9878142b62d5cd",
+  "formal_target_config": false,
+  "identity_boundary": {
+    "crop_contract_required": true,
+    "onnx_repository_classification": "SEMANTIC_MODEL_MATCH",
+    "original_source_identity": false
+  },
+  "inputs": {
+    "crop_contract": {
+      "path": "contracts/operator_config/deepseek_ndpsim_crop_contract_v1.json",
+      "sha256": "4ad206b550757f6649feb39b6df6e46e1b8bc99062502b441dbc5e4ba5c1e392",
+      "size_bytes": 7384
+    },
+    "lifecycle_rule": {
+      "path": ".agents/rules/DeepSeek_\u7801\u6d41\u751f\u547d\u5468\u671f\u589e\u91cf\u89c4\u5219.md",
+      "sha256": "247f4469572359055af077b631d59f4193cb1735c8932c857f5de94e1a83518a",
+      "size_bytes": 5516
+    },
+    "operator_listing": {
+      "path": "artifacts/operator_config_validation/r5-deepseek-onnx-stage-json-e2-v1/layer0_prefill.generated_op_listing.json",
+      "sha256": "03afe7e7ae1e1d2231e33f4980f7f1e95be26f04ad40531bcfb6241e4b798956",
+      "size_bytes": 1390
+    },
+    "raw_prefill_graph": {
+      "path": "artifacts/operator_config_validation/r5-deepseek-onnx-stage-json-e2-v1/layer0_prefill.generated.json",
+      "sha256": "089d4a2edcbe8b8af049ad8d1dfb5c474cc251e76a3fa2a64880e8a344e70dea",
+      "size_bytes": 34462
+    },
+    "rmsnorm_rule": {
+      "path": ".agents/rules/DeepSeek_RMSNorm\u589e\u91cf\u89c4\u5219.md",
+      "sha256": "c40b5ecb09290946490881473b5f23bcc483238153bdfb7151743b25ad9a0a2c",
+      "size_bytes": 2358
+    },
+    "softmax_rule": {
+      "path": ".agents/rules/DeepSeek_Softmax\u589e\u91cf\u89c4\u5219.md",
+      "sha256": "2bb2dfb0f37db68848f7a8ff1c018169d3d4a2ee13359c672c502f1031f00cc8",
+      "size_bytes": 2465
+    }
+  },
+  "normalization_change_count": 12,
+  "normalization_changes": [
+    {
+      "after": "0b1111111111111111111111111111",
+      "before": "0b1000000000000000000000000000",
+      "path": "operators.op1.used_slices",
+      "rule_id": "CDA-DEEPSEEK-RMSNORM-STAGE-TOPOLOGY-OWNER-001"
+    },
+    {
+      "after": [
+        1,
+        "slice_per_head",
+        "sequence_length"
+      ],
+      "before": [
+        1,
+        "used_slices",
+        "sequence_length"
+      ],
+      "path": "operators.op1.inputs.A.shape",
+      "rule_id": "CDA-DEEPSEEK-RMSNORM-STAGE-TOPOLOGY-OWNER-001"
+    },
+    {
+      "after": "slice0",
+      "before": "<missing>",
+      "path": "operators.op1.inputs.A.type",
+      "rule_id": "CDA-DEEPSEEK-RMSNORM-STAGE-TOPOLOGY-OWNER-001"
+    },
+    {
+      "after": "<missing>",
+      "before": "slice0",
+      "path": "operators.op2.inputs.A.type",
+      "rule_id": "CDA-DEEPSEEK-RMSNORM-STAGE-TOPOLOGY-OWNER-001"
+    },
+    {
+      "after": "0b1111111111111111111111111111",
+      "before": "0b1000000000000000000000000000",
+      "path": "operators.op33.used_slices",
+      "rule_id": "CDA-DEEPSEEK-RMSNORM-STAGE-TOPOLOGY-OWNER-001"
+    },
+    {
+      "after": [
+        1,
+        "slice_per_head",
+        "sequence_length"
+      ],
+      "before": [
+        1,
+        "used_slices",
+        "sequence_length"
+      ],
+      "path": "operators.op33.inputs.A.shape",
+      "rule_id": "CDA-DEEPSEEK-RMSNORM-STAGE-TOPOLOGY-OWNER-001"
+    },
+    {
+      "after": "slice0",
+      "before": "<missing>",
+      "path": "operators.op33.inputs.A.type",
+      "rule_id": "CDA-DEEPSEEK-RMSNORM-STAGE-TOPOLOGY-OWNER-001"
+    },
+    {
+      "after": "<missing>",
+      "before": "slice0",
+      "path": "operators.op34.inputs.A.type",
+      "rule_id": "CDA-DEEPSEEK-RMSNORM-STAGE-TOPOLOGY-OWNER-001"
+    },
+    {
+      "after": "softmax_mask_reuse_rows",
+      "before": "<missing>",
+      "path": "operators.op24.inputs.C.write_reg_hint",
+      "rule_id": "CDA-DEEPSEEK-SOFTMAX-MASK-STRIDE-OWNER-001"
+    },
+    {
+      "after": "softmax_exp_m8_n_interleave",
+      "before": "<missing>",
+      "path": "operators.op26.inputs.A.write_reg_hint",
+      "rule_id": "CDA-DEEPSEEK-SOFTMAX-EXP-BUFFER-LAYOUT-001"
+    },
+    {
+      "after": "reorder(m8,n2)->(n2,m8)",
+      "before": null,
+      "path": "operators.op37.inputs.A.write_reg_hint",
+      "rule_id": "CDA-DEEPSEEK-LAYOUT-HINT-OWNER-001"
+    },
+    {
+      "after": "reorder(n8,m2)->(m2,n8)",
+      "before": null,
+      "path": "operators.op37.inputs.B.write_reg_hint",
+      "rule_id": "CDA-DEEPSEEK-LAYOUT-HINT-OWNER-001"
+    }
+  ],
+  "output": {
+    "path": "artifacts/operator_config_validation/r5-deepseek-onnx-stage-json-e2-v1/layer0_prefill.rule_normalized.json",
+    "sha256": "2f1fc4def9d9332d4d3abb19fc711a4488d659ceac3b67a3e85b951ce43a423b",
+    "size_bytes": 34628
+  },
+  "rule_ids": [
+    "CDA-DEEPSEEK-LAYOUT-HINT-OWNER-001",
+    "CDA-DEEPSEEK-RMSNORM-STAGE-TOPOLOGY-OWNER-001",
+    "CDA-DEEPSEEK-SOFTMAX-EXP-BUFFER-LAYOUT-001",
+    "CDA-DEEPSEEK-SOFTMAX-MASK-STRIDE-OWNER-001"
+  ],
+  "schema": "deepseek-prefill-rule-normalized-stage-producer-v1",
+  "server_package_generated": false,
+  "status": "LOCAL_E2_ACTIVE_STAGE_PRODUCER_READY",
+  "upstream_boundary": {
+    "raw_upstream_graph_is_active_stage_output": false,
+    "raw_upstream_graph_modified": false,
+    "rule_normalized_output_is_active_stage_output": true,
+    "unlisted_leaf_changes_allowed": false
+  }
+}

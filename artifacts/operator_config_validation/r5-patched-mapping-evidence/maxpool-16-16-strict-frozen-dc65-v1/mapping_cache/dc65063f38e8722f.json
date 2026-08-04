@@ -1,0 +1,22 @@
+{
+  "DRAM_LC.LC4": "LC12",
+  "DRAM_LC.LC5": "LC10",
+  "DRAM_LC.LC1": "LC3",
+  "DRAM_LC.LC2": "LC1",
+  "DRAM_LC.LC0": "LC4",
+  "DRAM_LC.LC3": "LC13",
+  "DRAM_LC.LC6": "LC6",
+  "DRAM_LC.LC7": "LC16",
+  "LC_PE.PE3": "PE3",
+  "LC_PE.PE0": "PE2",
+  "LC_PE.PE1": "PE1",
+  "LC_PE.PE5": "PE6",
+  "LC_PE.PE2": "PE0",
+  "LC_PE.PE4": "PE5",
+  "STREAM.stream0": "READ_STREAM0",
+  "GROUP0.ROW_LC": "ROW_LC0",
+  "GROUP1.COL_LC": "COL_LC4",
+  "GROUP0.COL_LC": "COL_LC0",
+  "GROUP1.ROW_LC": "ROW_LC4",
+  "STREAM.stream1": "WRITE_STREAM0"
+}

@@ -1,0 +1,110 @@
+{
+  "schema": "resnet50-gap-d-index-address-bound-config-v2",
+  "status": "address_bound_d_index_config_ready_for_mapping",
+  "request_id": "r5:hwop-0071-00",
+  "request_sha256": "9df690a675c74d2d9e43a78b516ce4045f1d978014bca4ad2abcaaab9dc295f4",
+  "source": {
+    "path": "artifacts/operator_config_validation/r5-server-workloads/gap_hwop0071_sum_graph/jsons/op0_resnet50_gap_sum_uint8_int32.json",
+    "sha256": "5cbf02721fd01619b7cd2e5f99de13f5d697e7ebdbf783ff91ace24cf772a7ad"
+  },
+  "config": {
+    "path": "configs/stage_codegen/hwop-0071-00-d-index-address-bound-v2/config.json",
+    "sha256": "34cbeab0ccee74ff735a1fb8b9632b5aa43f0cdbd49b383069f5e6edd860ddf4",
+    "canonical_sha256": "3d2c5f61a80edff7df7e2103c5657a37b6182d8247cb4da7acf3295ad4d124df"
+  },
+  "semantic_patches": [
+    {
+      "json_path": "$.dram_loop_configs.LC2.end",
+      "before": 1,
+      "after": 256
+    },
+    {
+      "json_path": "$.dram_loop_configs.LC2.last_index",
+      "before": 1,
+      "after": 0
+    },
+    {
+      "json_path": "$.dram_loop_configs.LC2.outmost_loop",
+      "before": 0,
+      "after": 1
+    },
+    {
+      "json_path": "$.dram_loop_configs.LC2.src_id",
+      "before": "DRAM_LC.LC0",
+      "after": null
+    }
+  ],
+  "d_index_coverage": {
+    "request_id": "r5:hwop-0071-00",
+    "write_stream": "stream1",
+    "output_shape": [
+      16,
+      2048,
+      1,
+      1
+    ],
+    "output_dtype": "int32",
+    "output_bytes_per_sample": 8192,
+    "transaction_bytes": 32,
+    "required_distinct_transaction_bases": 256,
+    "derived_distinct_transaction_bases": 256,
+    "first_derived_biases_bytes": [
+      0,
+      32,
+      64,
+      96,
+      128,
+      160,
+      192,
+      224,
+      256,
+      288,
+      320,
+      352,
+      384,
+      416,
+      448,
+      480
+    ],
+    "dimensions": [
+      {
+        "dimension": 0,
+        "source": "LC_PE.PE1",
+        "stride_bytes": 32,
+        "domain": {
+          "source": "LC_PE.PE1",
+          "kind": "lc_pe_identity_mul_domain",
+          "opcode": "mul",
+          "constant_operands": [
+            1
+          ],
+          "carrier": {
+            "source": "DRAM_LC.LC2",
+            "kind": "local_lc_counter_domain",
+            "src_id_role": "trigger_tag_dependency_only",
+            "start": 0,
+            "end": 256,
+            "stride": 1,
+            "value_count": 256
+          },
+          "value_count": 256
+        }
+      }
+    ],
+    "unresolved_dimensions": [],
+    "classification": "RTL_PROVEN",
+    "necessary_condition_passed": true,
+    "scope": "necessary D-address coverage only; passing does not prove ordering, tag/completion, payload, mapping, E4 or E5"
+  },
+  "strict_validation": {
+    "valid": true,
+    "issue_count": 0,
+    "development_mode": true
+  },
+  "preserved_address_binding": {
+    "stream0": "0x0",
+    "stream1": "0x18840"
+  },
+  "source_reference_modified": false,
+  "manifest_sha256": "61c629cb4c7deede229299e870c1904765c2c8e729dc7254fdee19eea31d34e6"
+}

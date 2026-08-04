@@ -1,0 +1,21 @@
+{
+  "above_zero_point_count": 18,
+  "active_slices": [
+    0,
+    1
+  ],
+  "below_zero_point_count": 12,
+  "contains_59_60_61_per_slice": [
+    true,
+    true
+  ],
+  "element_count_per_slice": 16,
+  "element_count_total": 32,
+  "equal_zero_point_count": 2,
+  "max_uint8_count": 2,
+  "numeric_order": "(float32(uint8(x))-60.0f)*float32(scale)",
+  "scale_bits": "0x3e01622d",
+  "slice1_is_slice0_rotation": true,
+  "zero_count": 2,
+  "zero_point": 60
+}

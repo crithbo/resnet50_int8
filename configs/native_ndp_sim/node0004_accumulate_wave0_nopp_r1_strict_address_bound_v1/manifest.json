@@ -1,0 +1,51 @@
+{
+  "schema": "operator-config-address-bound-materialization-v1",
+  "status": "strict_config_bound_to_planner_addresses",
+  "source": {
+    "artifact": "configs/native_ndp_sim/node0004_accumulate_wave0_nopp_r1_strict_v1/config.json",
+    "sha256": "2fe3fc865a6bfb8f37d0c34afe2adb730de35568d02892d9705895b0261b9ae8",
+    "materialization_manifest_sha256": "2601bf91333559d8799a7aa9a7cb1be31a8054187a14aa5c2ad97ba9804e5c2b",
+    "strict_normalization_decision": "approved-remove-native-ignored-write-fields"
+  },
+  "graph_withbaseaddr": {
+    "artifact": "ndp-sim/model_execplan/output/node0004_accumulate_wave0_nopp_r1_graph/node0004_accumulate_wave0_nopp_r1_graph_withbaseaddr.json",
+    "sha256": "bf7309a6dd5ce222f85efd65b39491e073473dfef97cc0544d67805e3e8a4f0d"
+  },
+  "bound_config": {
+    "artifact": "config.json",
+    "sha256": "12daf4c1a81d1634439374ea79dbb7972a28bd415da74e999ee9cfa87e7905ae",
+    "canonical_sha256": "4224686aafe7889937439d98d7ac4d50a87ba92a76875cbddb328f25f7955fdd"
+  },
+  "changes": [
+    {
+      "path": "$.stream_engine.stream0.base_addr",
+      "target": "A",
+      "before": 0,
+      "after": "0x0"
+    },
+    {
+      "path": "$.stream_engine.stream1.base_addr",
+      "target": "B",
+      "before": 8192,
+      "after": "0x400"
+    },
+    {
+      "path": "$.stream_engine.stream3.base_addr",
+      "target": "C",
+      "before": 8320,
+      "after": "0x31400"
+    },
+    {
+      "path": "$.stream_engine.stream4.base_addr",
+      "target": "D",
+      "before": 16384,
+      "after": "0x31440"
+    }
+  ],
+  "change_set_sha256": "d2a8198e8ec8c28a8fd73b2f890edadc78870bc756d48167e098b74af9b01626",
+  "strict_validation": {
+    "valid": true,
+    "issue_count": 0
+  },
+  "source_rewrite_performed": false
+}

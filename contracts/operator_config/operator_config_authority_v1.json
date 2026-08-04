@@ -1,0 +1,1537 @@
+{
+  "authority": {
+    "decision": {
+      "path": ".agents/decisions/ADR-021-scope-config-authority-by-upstream-provenance.md",
+      "sha256": "0caee81d27e3006f244d7aa8d7d62362e2b04153aae5271ba17465f4a7702c0f",
+      "size_bytes": 2171
+    },
+    "later_project_additions_are_not_implicitly_authorized": true,
+    "per_file_raw_receipt_required_for_rule_extraction": false,
+    "reference_configuration_correctness_accepted": true,
+    "statement_scope": [
+      "jsons operator configurations",
+      "ndp-sim/jsons configurations present unchanged in the pinned upstream commit"
+    ]
+  },
+  "authority_sha256": "431fda2a1b3e0fe66d4c248418458ff07213b139115de717ad22524ba02eddc0",
+  "pinned_ndpsim_upstream": {
+    "commit": "ec12424516ae0304228dd2321d4e604fe225e04e",
+    "contract": {
+      "path": "contracts/ndp_patch_toolchain_v1.json",
+      "sha256": "4f5061a200270155ce9f9f9c1edbdbb942474a01d410bf61f8ed5db569dd145b"
+    },
+    "exact_operator_config_count": 53,
+    "modified_operator_config_count": 0,
+    "repository": "https://github.com/uSFrances/ndp-sim.git"
+  },
+  "policy": {
+    "derived_shape_address_constant_or_topology_is_not_preapproved": true,
+    "formal_resnet50_release_still_requires_e4_e5": true,
+    "project_package_execution_is_separate_evidence": true,
+    "reference_config_may_seed_derived_candidates": true,
+    "reference_config_may_seed_semantic_rules": true
+  },
+  "records": [
+    {
+      "allowed_uses": [
+        "configuration_semantics",
+        "rule_extraction",
+        "exact_reference_reproduction",
+        "derived_candidate_seed"
+      ],
+      "configuration_correctness": "user_authorized_correct_reference",
+      "derived_candidate_requires_validation": true,
+      "evidence_class": "high_strength_upstream_hardware_tested_baseline",
+      "path": "ndp-sim/jsons/add_dequant_uint8CWH_uint8CWH_fp32CWH.json",
+      "provenance": {
+        "git_worktree_matches_pinned_blob": true,
+        "kind": "pinned_upstream_exact_blob",
+        "pinned_commit": "ec12424516ae0304228dd2321d4e604fe225e04e",
+        "pinned_git_blob_oid": "41c502ce87ac7712c42dcc6214ecb76f3bc4c06b",
+        "repository_path": "jsons/add_dequant_uint8CWH_uint8CWH_fp32CWH.json",
+        "working_tree_content_sha256": "15f5321ab57cb73ca2f650693859657759f834389677451a9a89e66217e9e6da"
+      },
+      "sha256": "15f5321ab57cb73ca2f650693859657759f834389677451a9a89e66217e9e6da",
+      "size_bytes": 19573,
+      "source_root": "ndp-sim/jsons"
+    },
+    {
+      "allowed_uses": [
+        "configuration_semantics",
+        "rule_extraction",
+        "exact_reference_reproduction",
+        "derived_candidate_seed"
+      ],
+      "configuration_correctness": "user_authorized_correct_reference",
+      "derived_candidate_requires_validation": true,
+      "evidence_class": "high_strength_upstream_hardware_tested_baseline",
+      "path": "ndp-sim/jsons/avgpool_config_2048_7_7.json",
+      "provenance": {
+        "git_worktree_matches_pinned_blob": true,
+        "kind": "pinned_upstream_exact_blob",
+        "pinned_commit": "ec12424516ae0304228dd2321d4e604fe225e04e",
+        "pinned_git_blob_oid": "44604a8de4cc4aa4a45de9a83cd4b20d4a1fc005",
+        "repository_path": "jsons/avgpool_config_2048_7_7.json",
+        "working_tree_content_sha256": "a3d19c7b1759eb40b66a6b786234865b61917e9cf74822a62dd469729c2497c5"
+      },
+      "sha256": "a3d19c7b1759eb40b66a6b786234865b61917e9cf74822a62dd469729c2497c5",
+      "size_bytes": 13417,
+      "source_root": "ndp-sim/jsons"
+    },
+    {
+      "allowed_uses": [
+        "configuration_semantics",
+        "rule_extraction",
+        "exact_reference_reproduction",
+        "derived_candidate_seed"
+      ],
+      "configuration_correctness": "user_authorized_correct_reference",
+      "derived_candidate_requires_validation": true,
+      "evidence_class": "high_strength_upstream_hardware_tested_baseline",
+      "path": "ndp-sim/jsons/decode_add_fp16N_fp32N_fp16N.json",
+      "provenance": {
+        "git_worktree_matches_pinned_blob": true,
+        "kind": "pinned_upstream_exact_blob",
+        "pinned_commit": "ec12424516ae0304228dd2321d4e604fe225e04e",
+        "pinned_git_blob_oid": "8e2d9950e1e26a0c1a8724e70d79c93bfe3b0990",
+        "repository_path": "jsons/decode_add_fp16N_fp32N_fp16N.json",
+        "working_tree_content_sha256": "cdec73316426b4abd16b764f94f1b573f38921a129def208e495877bed3a1e45"
+      },
+      "sha256": "cdec73316426b4abd16b764f94f1b573f38921a129def208e495877bed3a1e45",
+      "size_bytes": 20996,
+      "source_root": "ndp-sim/jsons"
+    },
+    {
+      "allowed_uses": [
+        "configuration_semantics",
+        "rule_extraction",
+        "exact_reference_reproduction",
+        "derived_candidate_seed"
+      ],
+      "configuration_correctness": "user_authorized_correct_reference",
+      "derived_candidate_requires_validation": true,
+      "evidence_class": "high_strength_upstream_hardware_tested_baseline",
+      "path": "ndp-sim/jsons/decode_add_fp16N_fp32N_fp32N.json",
+      "provenance": {
+        "git_worktree_matches_pinned_blob": true,
+        "kind": "pinned_upstream_exact_blob",
+        "pinned_commit": "ec12424516ae0304228dd2321d4e604fe225e04e",
+        "pinned_git_blob_oid": "3ada8aa0ee476e2cdb4ff2842f86f6f6334eb849",
+        "repository_path": "jsons/decode_add_fp16N_fp32N_fp32N.json",
+        "working_tree_content_sha256": "64b366c2783371c0d88e82a7afe88b1c830708468272e24fe74e0ea304db5322"
+      },
+      "sha256": "64b366c2783371c0d88e82a7afe88b1c830708468272e24fe74e0ea304db5322",
+      "size_bytes": 19451,
+      "source_root": "ndp-sim/jsons"
+    },
+    {
+      "allowed_uses": [
+        "configuration_semantics",
+        "rule_extraction",
+        "exact_reference_reproduction",
+        "derived_candidate_seed"
+      ],
+      "configuration_correctness": "user_authorized_correct_reference",
+      "derived_candidate_requires_validation": true,
+      "evidence_class": "high_strength_upstream_hardware_tested_baseline",
+      "path": "ndp-sim/jsons/decode_add_fp32N_fp16N_fp32N.json",
+      "provenance": {
+        "git_worktree_matches_pinned_blob": true,
+        "kind": "pinned_upstream_exact_blob",
+        "pinned_commit": "ec12424516ae0304228dd2321d4e604fe225e04e",
+        "pinned_git_blob_oid": "c455d0835d67ec329ccfff1e932171d5e13f021a",
+        "repository_path": "jsons/decode_add_fp32N_fp16N_fp32N.json",
+        "working_tree_content_sha256": "7d3ba9b76557dc5ea44f6998fb15bd51d2ff9a89fb6da6e3edcc83bcbb1e3126"
+      },
+      "sha256": "7d3ba9b76557dc5ea44f6998fb15bd51d2ff9a89fb6da6e3edcc83bcbb1e3126",
+      "size_bytes": 16449,
+      "source_root": "ndp-sim/jsons"
+    },
+    {
+      "allowed_uses": [
+        "configuration_semantics",
+        "rule_extraction",
+        "exact_reference_reproduction",
+        "derived_candidate_seed"
+      ],
+      "configuration_correctness": "user_authorized_correct_reference",
+      "derived_candidate_requires_validation": true,
+      "evidence_class": "high_strength_upstream_hardware_tested_baseline",
+      "path": "ndp-sim/jsons/decode_add_fp32N_fp32N_fp16N.json",
+      "provenance": {
+        "git_worktree_matches_pinned_blob": true,
+        "kind": "pinned_upstream_exact_blob",
+        "pinned_commit": "ec12424516ae0304228dd2321d4e604fe225e04e",
+        "pinned_git_blob_oid": "9dfec10f09d3975a20476b44f6574c8ab2a46995",
+        "repository_path": "jsons/decode_add_fp32N_fp32N_fp16N.json",
+        "working_tree_content_sha256": "0db96a50346caa5fa8b13a26d16ff3441821d5c56ee58715ea8a4ad1fe1960dc"
+      },
+      "sha256": "0db96a50346caa5fa8b13a26d16ff3441821d5c56ee58715ea8a4ad1fe1960dc",
+      "size_bytes": 16449,
+      "source_root": "ndp-sim/jsons"
+    },
+    {
+      "allowed_uses": [
+        "configuration_semantics",
+        "rule_extraction",
+        "exact_reference_reproduction",
+        "derived_candidate_seed"
+      ],
+      "configuration_correctness": "user_authorized_correct_reference",
+      "derived_candidate_requires_validation": true,
+      "evidence_class": "high_strength_upstream_hardware_tested_baseline",
+      "path": "ndp-sim/jsons/decode_add_fp32N_fp32N_fp32N.json",
+      "provenance": {
+        "git_worktree_matches_pinned_blob": true,
+        "kind": "pinned_upstream_exact_blob",
+        "pinned_commit": "ec12424516ae0304228dd2321d4e604fe225e04e",
+        "pinned_git_blob_oid": "fa0c87fc9080137732036ce5f23ffb600f522510",
+        "repository_path": "jsons/decode_add_fp32N_fp32N_fp32N.json",
+        "working_tree_content_sha256": "c3142754fec2f77b12165fd0166805227c96564a833fc40dda6f3e964b6d6b9a"
+      },
+      "sha256": "c3142754fec2f77b12165fd0166805227c96564a833fc40dda6f3e964b6d6b9a",
+      "size_bytes": 16246,
+      "source_root": "ndp-sim/jsons"
+    },
+    {
+      "allowed_uses": [
+        "configuration_semantics",
+        "rule_extraction",
+        "exact_reference_reproduction",
+        "derived_candidate_seed"
+      ],
+      "configuration_correctness": "user_authorized_correct_reference",
+      "derived_candidate_requires_validation": true,
+      "evidence_class": "high_strength_upstream_hardware_tested_baseline",
+      "path": "ndp-sim/jsons/decode_gemv_local.json",
+      "provenance": {
+        "git_worktree_matches_pinned_blob": true,
+        "kind": "pinned_upstream_exact_blob",
+        "pinned_commit": "ec12424516ae0304228dd2321d4e604fe225e04e",
+        "pinned_git_blob_oid": "41ab06bf105fc5ccf37ad33e673daf0e63b526d2",
+        "repository_path": "jsons/decode_gemv_local.json",
+        "working_tree_content_sha256": "87fc60851d463ca555b796adb8d49fd445a43a0a8cb4d302fd6cb5b414cd808e"
+      },
+      "sha256": "87fc60851d463ca555b796adb8d49fd445a43a0a8cb4d302fd6cb5b414cd808e",
+      "size_bytes": 25784,
+      "source_root": "ndp-sim/jsons"
+    },
+    {
+      "allowed_uses": [
+        "configuration_semantics",
+        "rule_extraction",
+        "exact_reference_reproduction",
+        "derived_candidate_seed"
+      ],
+      "configuration_correctness": "user_authorized_correct_reference",
+      "derived_candidate_requires_validation": true,
+      "evidence_class": "high_strength_upstream_hardware_tested_baseline",
+      "path": "ndp-sim/jsons/decode_gemv_ring.json",
+      "provenance": {
+        "git_worktree_matches_pinned_blob": true,
+        "kind": "pinned_upstream_exact_blob",
+        "pinned_commit": "ec12424516ae0304228dd2321d4e604fe225e04e",
+        "pinned_git_blob_oid": "17d98d706f9df5559f936078075c41cfa76022e0",
+        "repository_path": "jsons/decode_gemv_ring.json",
+        "working_tree_content_sha256": "1c5e2909dc486f1e4c712c0577bdeb69bee65f3269111bdd64f4a071cc574c1f"
+      },
+      "sha256": "1c5e2909dc486f1e4c712c0577bdeb69bee65f3269111bdd64f4a071cc574c1f",
+      "size_bytes": 26173,
+      "source_root": "ndp-sim/jsons"
+    },
+    {
+      "allowed_uses": [
+        "configuration_semantics",
+        "rule_extraction",
+        "exact_reference_reproduction",
+        "derived_candidate_seed"
+      ],
+      "configuration_correctness": "user_authorized_correct_reference",
+      "derived_candidate_requires_validation": true,
+      "evidence_class": "high_strength_upstream_hardware_tested_baseline",
+      "path": "ndp-sim/jsons/decode_mac_fp32N_fp32N_fp32N.json",
+      "provenance": {
+        "git_worktree_matches_pinned_blob": true,
+        "kind": "pinned_upstream_exact_blob",
+        "pinned_commit": "ec12424516ae0304228dd2321d4e604fe225e04e",
+        "pinned_git_blob_oid": "a3021c898506ed0ea5b7954124acf0a67f0673cb",
+        "repository_path": "jsons/decode_mac_fp32N_fp32N_fp32N.json",
+        "working_tree_content_sha256": "db4677ba13faacaf3a452170ed7d15ff1d0ea4fab4eb35e9982b963992c5f773"
+      },
+      "sha256": "db4677ba13faacaf3a452170ed7d15ff1d0ea4fab4eb35e9982b963992c5f773",
+      "size_bytes": 16358,
+      "source_root": "ndp-sim/jsons"
+    },
+    {
+      "allowed_uses": [
+        "configuration_semantics",
+        "rule_extraction",
+        "exact_reference_reproduction",
+        "derived_candidate_seed"
+      ],
+      "configuration_correctness": "user_authorized_correct_reference",
+      "derived_candidate_requires_validation": true,
+      "evidence_class": "high_strength_upstream_hardware_tested_baseline",
+      "path": "ndp-sim/jsons/decode_mac_SFU_fp32N_fp32N.json",
+      "provenance": {
+        "git_worktree_matches_pinned_blob": true,
+        "kind": "pinned_upstream_exact_blob",
+        "pinned_commit": "ec12424516ae0304228dd2321d4e604fe225e04e",
+        "pinned_git_blob_oid": "73a0b508b69217c936359703b9cb56d09123f44f",
+        "repository_path": "jsons/decode_mac_SFU_fp32N_fp32N.json",
+        "working_tree_content_sha256": "11dd50c1e9f428b97ad27f8bfdbe8f4773bf0b121eea6a06aa2a368ca5eb031f"
+      },
+      "sha256": "11dd50c1e9f428b97ad27f8bfdbe8f4773bf0b121eea6a06aa2a368ca5eb031f",
+      "size_bytes": 8821,
+      "source_root": "ndp-sim/jsons"
+    },
+    {
+      "allowed_uses": [
+        "configuration_semantics",
+        "rule_extraction",
+        "exact_reference_reproduction",
+        "derived_candidate_seed"
+      ],
+      "configuration_correctness": "user_authorized_correct_reference",
+      "derived_candidate_requires_validation": true,
+      "evidence_class": "high_strength_upstream_hardware_tested_baseline",
+      "path": "ndp-sim/jsons/decode_max_fp32N_fp32N.json",
+      "provenance": {
+        "git_worktree_matches_pinned_blob": true,
+        "kind": "pinned_upstream_exact_blob",
+        "pinned_commit": "ec12424516ae0304228dd2321d4e604fe225e04e",
+        "pinned_git_blob_oid": "4cd761a7b8a68f6de47987f3076f05aa944951f3",
+        "repository_path": "jsons/decode_max_fp32N_fp32N.json",
+        "working_tree_content_sha256": "ab73710698892ed8e1062e4b5ac66fe310f99609dac89ea96ce8fa6e4bd3a1c2"
+      },
+      "sha256": "ab73710698892ed8e1062e4b5ac66fe310f99609dac89ea96ce8fa6e4bd3a1c2",
+      "size_bytes": 8337,
+      "source_root": "ndp-sim/jsons"
+    },
+    {
+      "allowed_uses": [
+        "configuration_semantics",
+        "rule_extraction",
+        "exact_reference_reproduction",
+        "derived_candidate_seed"
+      ],
+      "configuration_correctness": "user_authorized_correct_reference",
+      "derived_candidate_requires_validation": true,
+      "evidence_class": "high_strength_upstream_hardware_tested_baseline",
+      "path": "ndp-sim/jsons/decode_mul_fp32N_fp16N_fp16N.json",
+      "provenance": {
+        "git_worktree_matches_pinned_blob": true,
+        "kind": "pinned_upstream_exact_blob",
+        "pinned_commit": "ec12424516ae0304228dd2321d4e604fe225e04e",
+        "pinned_git_blob_oid": "a47921d4cd57f28a3ba208c3ef1fcc744388fa10",
+        "repository_path": "jsons/decode_mul_fp32N_fp16N_fp16N.json",
+        "working_tree_content_sha256": "9a9734098a53cc723bd48776a357ee229e29a2e301e5bf50f7baf081f5781eb5"
+      },
+      "sha256": "9a9734098a53cc723bd48776a357ee229e29a2e301e5bf50f7baf081f5781eb5",
+      "size_bytes": 16454,
+      "source_root": "ndp-sim/jsons"
+    },
+    {
+      "allowed_uses": [
+        "configuration_semantics",
+        "rule_extraction",
+        "exact_reference_reproduction",
+        "derived_candidate_seed"
+      ],
+      "configuration_correctness": "user_authorized_correct_reference",
+      "derived_candidate_requires_validation": true,
+      "evidence_class": "high_strength_upstream_hardware_tested_baseline",
+      "path": "ndp-sim/jsons/decode_mul_fp32N_fp32_fp16N.json",
+      "provenance": {
+        "git_worktree_matches_pinned_blob": true,
+        "kind": "pinned_upstream_exact_blob",
+        "pinned_commit": "ec12424516ae0304228dd2321d4e604fe225e04e",
+        "pinned_git_blob_oid": "120cd96ee0e0c56032af3a6d29b5f94f12069cf5",
+        "repository_path": "jsons/decode_mul_fp32N_fp32_fp16N.json",
+        "working_tree_content_sha256": "50dd43514e0ca309f118b88b1c60191e8cbb3b0058ee47e86e465ddc6fde10fb"
+      },
+      "sha256": "50dd43514e0ca309f118b88b1c60191e8cbb3b0058ee47e86e465ddc6fde10fb",
+      "size_bytes": 16202,
+      "source_root": "ndp-sim/jsons"
+    },
+    {
+      "allowed_uses": [
+        "configuration_semantics",
+        "rule_extraction",
+        "exact_reference_reproduction",
+        "derived_candidate_seed"
+      ],
+      "configuration_correctness": "user_authorized_correct_reference",
+      "derived_candidate_requires_validation": true,
+      "evidence_class": "high_strength_upstream_hardware_tested_baseline",
+      "path": "ndp-sim/jsons/decode_mul_fp32N_fp32_fp32N.json",
+      "provenance": {
+        "git_worktree_matches_pinned_blob": true,
+        "kind": "pinned_upstream_exact_blob",
+        "pinned_commit": "ec12424516ae0304228dd2321d4e604fe225e04e",
+        "pinned_git_blob_oid": "135863f431cce4162a11a7477f7f941713be1811",
+        "repository_path": "jsons/decode_mul_fp32N_fp32_fp32N.json",
+        "working_tree_content_sha256": "34d0d083a57b1c57a08c581e50643db75b2361a134befa8187921c39cf211f2b"
+      },
+      "sha256": "34d0d083a57b1c57a08c581e50643db75b2361a134befa8187921c39cf211f2b",
+      "size_bytes": 16202,
+      "source_root": "ndp-sim/jsons"
+    },
+    {
+      "allowed_uses": [
+        "configuration_semantics",
+        "rule_extraction",
+        "exact_reference_reproduction",
+        "derived_candidate_seed"
+      ],
+      "configuration_correctness": "user_authorized_correct_reference",
+      "derived_candidate_requires_validation": true,
+      "evidence_class": "high_strength_upstream_hardware_tested_baseline",
+      "path": "ndp-sim/jsons/decode_mul_fp32N_fp32N_fp16N.json",
+      "provenance": {
+        "git_worktree_matches_pinned_blob": true,
+        "kind": "pinned_upstream_exact_blob",
+        "pinned_commit": "ec12424516ae0304228dd2321d4e604fe225e04e",
+        "pinned_git_blob_oid": "c7e150b08c4d35146ef775d674d66ab6cfb9132b",
+        "repository_path": "jsons/decode_mul_fp32N_fp32N_fp16N.json",
+        "working_tree_content_sha256": "c9e5cfd375cecb50d39e1b4d66f89998ac57a6394bfb65bf132bce133254b017"
+      },
+      "sha256": "c9e5cfd375cecb50d39e1b4d66f89998ac57a6394bfb65bf132bce133254b017",
+      "size_bytes": 16449,
+      "source_root": "ndp-sim/jsons"
+    },
+    {
+      "allowed_uses": [
+        "configuration_semantics",
+        "rule_extraction",
+        "exact_reference_reproduction",
+        "derived_candidate_seed"
+      ],
+      "configuration_correctness": "user_authorized_correct_reference",
+      "derived_candidate_requires_validation": true,
+      "evidence_class": "high_strength_upstream_hardware_tested_baseline",
+      "path": "ndp-sim/jsons/decode_mul_fp32N_fp32N_fp32N.json",
+      "provenance": {
+        "git_worktree_matches_pinned_blob": true,
+        "kind": "pinned_upstream_exact_blob",
+        "pinned_commit": "ec12424516ae0304228dd2321d4e604fe225e04e",
+        "pinned_git_blob_oid": "41a161c621ca4b046c6bc14dccf36c556e2ab7c9",
+        "repository_path": "jsons/decode_mul_fp32N_fp32N_fp32N.json",
+        "working_tree_content_sha256": "67c2824bc796609cc9831dd549c5c36aa8f748a8dbf32859f37e5b6dc6f556eb"
+      },
+      "sha256": "67c2824bc796609cc9831dd549c5c36aa8f748a8dbf32859f37e5b6dc6f556eb",
+      "size_bytes": 16246,
+      "source_root": "ndp-sim/jsons"
+    },
+    {
+      "allowed_uses": [
+        "configuration_semantics",
+        "rule_extraction",
+        "exact_reference_reproduction",
+        "derived_candidate_seed"
+      ],
+      "configuration_correctness": "user_authorized_correct_reference",
+      "derived_candidate_requires_validation": true,
+      "evidence_class": "high_strength_upstream_hardware_tested_baseline",
+      "path": "ndp-sim/jsons/decode_remote_sum_fp32N_fp32N.json",
+      "provenance": {
+        "git_worktree_matches_pinned_blob": true,
+        "kind": "pinned_upstream_exact_blob",
+        "pinned_commit": "ec12424516ae0304228dd2321d4e604fe225e04e",
+        "pinned_git_blob_oid": "d727bd21a91df2bdbf48c0f78259fc0de16e2ae1",
+        "repository_path": "jsons/decode_remote_sum_fp32N_fp32N.json",
+        "working_tree_content_sha256": "5886828fe28930d72b6bcbef17c4da4c88a0c9da5301dfc15e16f5437747edc1"
+      },
+      "sha256": "5886828fe28930d72b6bcbef17c4da4c88a0c9da5301dfc15e16f5437747edc1",
+      "size_bytes": 8426,
+      "source_root": "ndp-sim/jsons"
+    },
+    {
+      "allowed_uses": [
+        "configuration_semantics",
+        "rule_extraction",
+        "exact_reference_reproduction",
+        "derived_candidate_seed"
+      ],
+      "configuration_correctness": "user_authorized_correct_reference",
+      "derived_candidate_requires_validation": true,
+      "evidence_class": "high_strength_upstream_hardware_tested_baseline",
+      "path": "ndp-sim/jsons/decode_silu_fp16N_fp32N.json",
+      "provenance": {
+        "git_worktree_matches_pinned_blob": true,
+        "kind": "pinned_upstream_exact_blob",
+        "pinned_commit": "ec12424516ae0304228dd2321d4e604fe225e04e",
+        "pinned_git_blob_oid": "92b6cde482e081f1ac773d0dbd4812e835517ada",
+        "repository_path": "jsons/decode_silu_fp16N_fp32N.json",
+        "working_tree_content_sha256": "eafb7ec7cd47006dda15c1fc60d00601563a7a9f7e8ae12da3ce45e57baec6be"
+      },
+      "sha256": "eafb7ec7cd47006dda15c1fc60d00601563a7a9f7e8ae12da3ce45e57baec6be",
+      "size_bytes": 14311,
+      "source_root": "ndp-sim/jsons"
+    },
+    {
+      "allowed_uses": [
+        "configuration_semantics",
+        "rule_extraction",
+        "exact_reference_reproduction",
+        "derived_candidate_seed"
+      ],
+      "configuration_correctness": "user_authorized_correct_reference",
+      "derived_candidate_requires_validation": true,
+      "evidence_class": "high_strength_upstream_hardware_tested_baseline",
+      "path": "ndp-sim/jsons/decode_sub_SFU_fp32N_fp32_fp32N.json",
+      "provenance": {
+        "git_worktree_matches_pinned_blob": true,
+        "kind": "pinned_upstream_exact_blob",
+        "pinned_commit": "ec12424516ae0304228dd2321d4e604fe225e04e",
+        "pinned_git_blob_oid": "251fb4938f91e15739fc17b98b76bb1343c15482",
+        "repository_path": "jsons/decode_sub_SFU_fp32N_fp32_fp32N.json",
+        "working_tree_content_sha256": "6d697363b4125a1781745e122a3ff6013f7d22d2b534d8a1d091ac07bd06025c"
+      },
+      "sha256": "6d697363b4125a1781745e122a3ff6013f7d22d2b534d8a1d091ac07bd06025c",
+      "size_bytes": 22902,
+      "source_root": "ndp-sim/jsons"
+    },
+    {
+      "allowed_uses": [
+        "configuration_semantics",
+        "rule_extraction",
+        "exact_reference_reproduction",
+        "derived_candidate_seed"
+      ],
+      "configuration_correctness": "user_authorized_correct_reference",
+      "derived_candidate_requires_validation": true,
+      "evidence_class": "high_strength_upstream_hardware_tested_baseline",
+      "path": "ndp-sim/jsons/decode_sum_rec_fp32N_fp32N.json",
+      "provenance": {
+        "git_worktree_matches_pinned_blob": true,
+        "kind": "pinned_upstream_exact_blob",
+        "pinned_commit": "ec12424516ae0304228dd2321d4e604fe225e04e",
+        "pinned_git_blob_oid": "806890b5ca6f52a8a782a10024a330a097bab162",
+        "repository_path": "jsons/decode_sum_rec_fp32N_fp32N.json",
+        "working_tree_content_sha256": "310befa14072caf43d233ab7d3e892e187de94b64de8e77bef26696cec13ab30"
+      },
+      "sha256": "310befa14072caf43d233ab7d3e892e187de94b64de8e77bef26696cec13ab30",
+      "size_bytes": 9009,
+      "source_root": "ndp-sim/jsons"
+    },
+    {
+      "allowed_uses": [
+        "configuration_semantics",
+        "rule_extraction",
+        "exact_reference_reproduction",
+        "derived_candidate_seed"
+      ],
+      "configuration_correctness": "user_authorized_correct_reference",
+      "derived_candidate_requires_validation": true,
+      "evidence_class": "high_strength_upstream_hardware_tested_baseline",
+      "path": "ndp-sim/jsons/decode_summac_fp16N_fp32N.json",
+      "provenance": {
+        "git_worktree_matches_pinned_blob": true,
+        "kind": "pinned_upstream_exact_blob",
+        "pinned_commit": "ec12424516ae0304228dd2321d4e604fe225e04e",
+        "pinned_git_blob_oid": "271428e95b153c349b57c1b216516631f7db1f08",
+        "repository_path": "jsons/decode_summac_fp16N_fp32N.json",
+        "working_tree_content_sha256": "c2aafcb6fb3ca9a49ddea6114b93aef63b589cb851b9c557af5844c086218121"
+      },
+      "sha256": "c2aafcb6fb3ca9a49ddea6114b93aef63b589cb851b9c557af5844c086218121",
+      "size_bytes": 9981,
+      "source_root": "ndp-sim/jsons"
+    },
+    {
+      "allowed_uses": [
+        "configuration_semantics",
+        "rule_extraction",
+        "exact_reference_reproduction",
+        "derived_candidate_seed"
+      ],
+      "configuration_correctness": "user_authorized_correct_reference",
+      "derived_candidate_requires_validation": true,
+      "evidence_class": "high_strength_upstream_hardware_tested_baseline",
+      "path": "ndp-sim/jsons/decode_summac_fp32N_fp32N.json",
+      "provenance": {
+        "git_worktree_matches_pinned_blob": true,
+        "kind": "pinned_upstream_exact_blob",
+        "pinned_commit": "ec12424516ae0304228dd2321d4e604fe225e04e",
+        "pinned_git_blob_oid": "bdde44c10a794011bebecb5276efd5c349fea904",
+        "repository_path": "jsons/decode_summac_fp32N_fp32N.json",
+        "working_tree_content_sha256": "7f7387dd21bb422a906a2cd71c332ff0e57ce8e42ed148a50d1713f37f95f8f3"
+      },
+      "sha256": "7f7387dd21bb422a906a2cd71c332ff0e57ce8e42ed148a50d1713f37f95f8f3",
+      "size_bytes": 9103,
+      "source_root": "ndp-sim/jsons"
+    },
+    {
+      "allowed_uses": [
+        "configuration_semantics",
+        "rule_extraction",
+        "exact_reference_reproduction",
+        "derived_candidate_seed"
+      ],
+      "configuration_correctness": "user_authorized_correct_reference",
+      "derived_candidate_requires_validation": true,
+      "evidence_class": "high_strength_upstream_hardware_tested_baseline",
+      "path": "ndp-sim/jsons/gemv_config_local_M1N128K32.json",
+      "provenance": {
+        "git_worktree_matches_pinned_blob": true,
+        "kind": "pinned_upstream_exact_blob",
+        "pinned_commit": "ec12424516ae0304228dd2321d4e604fe225e04e",
+        "pinned_git_blob_oid": "d0094d4348e83793f1582e1f01e1a46aac46d475",
+        "repository_path": "jsons/gemv_config_local_M1N128K32.json",
+        "working_tree_content_sha256": "f5dc25654b28dbabff87df6b2efad3793b869c807bf75b30f5442614f8084ee3"
+      },
+      "sha256": "f5dc25654b28dbabff87df6b2efad3793b869c807bf75b30f5442614f8084ee3",
+      "size_bytes": 16967,
+      "source_root": "ndp-sim/jsons"
+    },
+    {
+      "allowed_uses": [
+        "configuration_semantics",
+        "rule_extraction",
+        "exact_reference_reproduction",
+        "derived_candidate_seed"
+      ],
+      "configuration_correctness": "user_authorized_correct_reference",
+      "derived_candidate_requires_validation": true,
+      "evidence_class": "high_strength_upstream_hardware_tested_baseline",
+      "path": "ndp-sim/jsons/maxpool_config_16_112_112_stride2_padding1.json",
+      "provenance": {
+        "git_worktree_matches_pinned_blob": true,
+        "kind": "pinned_upstream_exact_blob",
+        "pinned_commit": "ec12424516ae0304228dd2321d4e604fe225e04e",
+        "pinned_git_blob_oid": "4e8f7bb8906ab58f54f4c6507d2b94822f71bf04",
+        "repository_path": "jsons/maxpool_config_16_112_112_stride2_padding1.json",
+        "working_tree_content_sha256": "a0091f3fae223abd5225c54b833cf3bb578b3fea6b202883c5cbf4be50d60cb1"
+      },
+      "sha256": "a0091f3fae223abd5225c54b833cf3bb578b3fea6b202883c5cbf4be50d60cb1",
+      "size_bytes": 19762,
+      "source_root": "ndp-sim/jsons"
+    },
+    {
+      "allowed_uses": [
+        "configuration_semantics",
+        "rule_extraction",
+        "exact_reference_reproduction",
+        "derived_candidate_seed"
+      ],
+      "configuration_correctness": "user_authorized_correct_reference",
+      "derived_candidate_requires_validation": true,
+      "evidence_class": "high_strength_upstream_hardware_tested_baseline",
+      "path": "ndp-sim/jsons/maxpool_config_16_16_16_stride2_padding1.json",
+      "provenance": {
+        "git_worktree_matches_pinned_blob": true,
+        "kind": "pinned_upstream_exact_blob",
+        "pinned_commit": "ec12424516ae0304228dd2321d4e604fe225e04e",
+        "pinned_git_blob_oid": "5281f4f49dfd8290ae339a68c6df111286040698",
+        "repository_path": "jsons/maxpool_config_16_16_16_stride2_padding1.json",
+        "working_tree_content_sha256": "624d675ddde6f386474289d473d1c69559691794f3c1ea775dfc99325cc8f072"
+      },
+      "sha256": "624d675ddde6f386474289d473d1c69559691794f3c1ea775dfc99325cc8f072",
+      "size_bytes": 19819,
+      "source_root": "ndp-sim/jsons"
+    },
+    {
+      "allowed_uses": [
+        "identity_audit",
+        "failure_analysis",
+        "static_hypothesis_only"
+      ],
+      "configuration_correctness": "not_authorized_as_tested_reference",
+      "derived_candidate_requires_validation": true,
+      "evidence_class": "project_added_candidate_requires_independent_validation",
+      "path": "ndp-sim/jsons/node0004_accumulate_wave0.json",
+      "provenance": {
+        "kind": "project_added_after_pinned_upstream"
+      },
+      "sha256": "df73611d0b3141b50a029c002c7ab0e61e8fa5a47bc0a74dcb3446be69e79c16",
+      "size_bytes": 16013,
+      "source_root": "ndp-sim/jsons"
+    },
+    {
+      "allowed_uses": [
+        "identity_audit",
+        "failure_analysis",
+        "static_hypothesis_only"
+      ],
+      "configuration_correctness": "not_authorized_as_tested_reference",
+      "derived_candidate_requires_validation": true,
+      "evidence_class": "project_added_candidate_requires_independent_validation",
+      "path": "ndp-sim/jsons/node0004_accumulate_wave0_nopp_r1.json",
+      "provenance": {
+        "kind": "project_added_after_pinned_upstream"
+      },
+      "sha256": "0706ad05233d03f43b800797b1be40390c718f58d34c13df89a0208d75bba45e",
+      "size_bytes": 14082,
+      "source_root": "ndp-sim/jsons"
+    },
+    {
+      "allowed_uses": [
+        "configuration_semantics",
+        "rule_extraction",
+        "exact_reference_reproduction",
+        "derived_candidate_seed"
+      ],
+      "configuration_correctness": "user_authorized_correct_reference",
+      "derived_candidate_requires_validation": true,
+      "evidence_class": "high_strength_upstream_hardware_tested_baseline",
+      "path": "ndp-sim/jsons/prefill_add_fp16MN_fp32N_fp32MN.json",
+      "provenance": {
+        "git_worktree_matches_pinned_blob": true,
+        "kind": "pinned_upstream_exact_blob",
+        "pinned_commit": "ec12424516ae0304228dd2321d4e604fe225e04e",
+        "pinned_git_blob_oid": "1776294712b48e92bac329a770bba792fb3168e1",
+        "repository_path": "jsons/prefill_add_fp16MN_fp32N_fp32MN.json",
+        "working_tree_content_sha256": "6db696fa77e5878c8702319796830abeb64d2d17f2ed0224afa6998f35162373"
+      },
+      "sha256": "6db696fa77e5878c8702319796830abeb64d2d17f2ed0224afa6998f35162373",
+      "size_bytes": 16452,
+      "source_root": "ndp-sim/jsons"
+    },
+    {
+      "allowed_uses": [
+        "configuration_semantics",
+        "rule_extraction",
+        "exact_reference_reproduction",
+        "derived_candidate_seed"
+      ],
+      "configuration_correctness": "user_authorized_correct_reference",
+      "derived_candidate_requires_validation": true,
+      "evidence_class": "high_strength_upstream_hardware_tested_baseline",
+      "path": "ndp-sim/jsons/prefill_add_fp32MN_fp16MN_fp32MN.json",
+      "provenance": {
+        "git_worktree_matches_pinned_blob": true,
+        "kind": "pinned_upstream_exact_blob",
+        "pinned_commit": "ec12424516ae0304228dd2321d4e604fe225e04e",
+        "pinned_git_blob_oid": "17893fd34cc3d605e6254adb95184f3fc5c44bd4",
+        "repository_path": "jsons/prefill_add_fp32MN_fp16MN_fp32MN.json",
+        "working_tree_content_sha256": "b0de8e8d36f4db22ebad825a4c3d220d9c21a3ed47d75773902d8a302365d602"
+      },
+      "sha256": "b0de8e8d36f4db22ebad825a4c3d220d9c21a3ed47d75773902d8a302365d602",
+      "size_bytes": 16251,
+      "source_root": "ndp-sim/jsons"
+    },
+    {
+      "allowed_uses": [
+        "configuration_semantics",
+        "rule_extraction",
+        "exact_reference_reproduction",
+        "derived_candidate_seed"
+      ],
+      "configuration_correctness": "user_authorized_correct_reference",
+      "derived_candidate_requires_validation": true,
+      "evidence_class": "high_strength_upstream_hardware_tested_baseline",
+      "path": "ndp-sim/jsons/prefill_add_fp32MN_fp32MN_fp16MN.json",
+      "provenance": {
+        "git_worktree_matches_pinned_blob": true,
+        "kind": "pinned_upstream_exact_blob",
+        "pinned_commit": "ec12424516ae0304228dd2321d4e604fe225e04e",
+        "pinned_git_blob_oid": "0c4c8b51643e975e67b81909338ffb82d6e1bbab",
+        "repository_path": "jsons/prefill_add_fp32MN_fp32MN_fp16MN.json",
+        "working_tree_content_sha256": "14c6394c39ced9ad465902ed7f747c729c61e64174dee1c5a7a5a3953f78cb5e"
+      },
+      "sha256": "14c6394c39ced9ad465902ed7f747c729c61e64174dee1c5a7a5a3953f78cb5e",
+      "size_bytes": 16251,
+      "source_root": "ndp-sim/jsons"
+    },
+    {
+      "allowed_uses": [
+        "configuration_semantics",
+        "rule_extraction",
+        "exact_reference_reproduction",
+        "derived_candidate_seed"
+      ],
+      "configuration_correctness": "user_authorized_correct_reference",
+      "derived_candidate_requires_validation": true,
+      "evidence_class": "high_strength_upstream_hardware_tested_baseline",
+      "path": "ndp-sim/jsons/prefill_add_fp32MN_fp32MN_fp32MN.json",
+      "provenance": {
+        "git_worktree_matches_pinned_blob": true,
+        "kind": "pinned_upstream_exact_blob",
+        "pinned_commit": "ec12424516ae0304228dd2321d4e604fe225e04e",
+        "pinned_git_blob_oid": "e9c454f006d654aec850d2148f37253cab251bfb",
+        "repository_path": "jsons/prefill_add_fp32MN_fp32MN_fp32MN.json",
+        "working_tree_content_sha256": "d78e184c92f3f88875f8ef6caea13d88e8e35f514226e893bb6078ed2f4e4a85"
+      },
+      "sha256": "d78e184c92f3f88875f8ef6caea13d88e8e35f514226e893bb6078ed2f4e4a85",
+      "size_bytes": 16255,
+      "source_root": "ndp-sim/jsons"
+    },
+    {
+      "allowed_uses": [
+        "configuration_semantics",
+        "rule_extraction",
+        "exact_reference_reproduction",
+        "derived_candidate_seed"
+      ],
+      "configuration_correctness": "user_authorized_correct_reference",
+      "derived_candidate_requires_validation": true,
+      "evidence_class": "high_strength_upstream_hardware_tested_baseline",
+      "path": "ndp-sim/jsons/prefill_add_V_fp16MN_fp32N_fp16MN.json",
+      "provenance": {
+        "git_worktree_matches_pinned_blob": true,
+        "kind": "pinned_upstream_exact_blob",
+        "pinned_commit": "ec12424516ae0304228dd2321d4e604fe225e04e",
+        "pinned_git_blob_oid": "94f4c9f3802d1631fea28256144c024886bb28a0",
+        "repository_path": "jsons/prefill_add_V_fp16MN_fp32N_fp16MN.json",
+        "working_tree_content_sha256": "6b30203fc2302de480da5c12e520bd134d35c76cde63a4fa3c02deb7e3b9bf4f"
+      },
+      "sha256": "6b30203fc2302de480da5c12e520bd134d35c76cde63a4fa3c02deb7e3b9bf4f",
+      "size_bytes": 21142,
+      "source_root": "ndp-sim/jsons"
+    },
+    {
+      "allowed_uses": [
+        "configuration_semantics",
+        "rule_extraction",
+        "exact_reference_reproduction",
+        "derived_candidate_seed"
+      ],
+      "configuration_correctness": "user_authorized_correct_reference",
+      "derived_candidate_requires_validation": true,
+      "evidence_class": "high_strength_upstream_hardware_tested_baseline",
+      "path": "ndp-sim/jsons/prefill_gemm_local.json",
+      "provenance": {
+        "git_worktree_matches_pinned_blob": true,
+        "kind": "pinned_upstream_exact_blob",
+        "pinned_commit": "ec12424516ae0304228dd2321d4e604fe225e04e",
+        "pinned_git_blob_oid": "1f340e0562c321488ea7c454025506a4af64552c",
+        "repository_path": "jsons/prefill_gemm_local.json",
+        "working_tree_content_sha256": "9d0f72bc1a32f5b3fb2fff44c7fe4585adfb00d393ccf38bffb9f2e239f2761e"
+      },
+      "sha256": "9d0f72bc1a32f5b3fb2fff44c7fe4585adfb00d393ccf38bffb9f2e239f2761e",
+      "size_bytes": 20243,
+      "source_root": "ndp-sim/jsons"
+    },
+    {
+      "allowed_uses": [
+        "configuration_semantics",
+        "rule_extraction",
+        "exact_reference_reproduction",
+        "derived_candidate_seed"
+      ],
+      "configuration_correctness": "user_authorized_correct_reference",
+      "derived_candidate_requires_validation": true,
+      "evidence_class": "high_strength_upstream_hardware_tested_baseline",
+      "path": "ndp-sim/jsons/prefill_gemm_local_qkt.json",
+      "provenance": {
+        "git_worktree_matches_pinned_blob": true,
+        "kind": "pinned_upstream_exact_blob",
+        "pinned_commit": "ec12424516ae0304228dd2321d4e604fe225e04e",
+        "pinned_git_blob_oid": "509b157ca1d14f9731a736b1078d74f9fd465898",
+        "repository_path": "jsons/prefill_gemm_local_qkt.json",
+        "working_tree_content_sha256": "e2b4f2e8e119fa29b3a4202b4476f838fd071e106322809745169ee70cef4de6"
+      },
+      "sha256": "e2b4f2e8e119fa29b3a4202b4476f838fd071e106322809745169ee70cef4de6",
+      "size_bytes": 20242,
+      "source_root": "ndp-sim/jsons"
+    },
+    {
+      "allowed_uses": [
+        "configuration_semantics",
+        "rule_extraction",
+        "exact_reference_reproduction",
+        "derived_candidate_seed"
+      ],
+      "configuration_correctness": "user_authorized_correct_reference",
+      "derived_candidate_requires_validation": true,
+      "evidence_class": "high_strength_upstream_hardware_tested_baseline",
+      "path": "ndp-sim/jsons/prefill_gemm_ring_4slice.json",
+      "provenance": {
+        "git_worktree_matches_pinned_blob": true,
+        "kind": "pinned_upstream_exact_blob",
+        "pinned_commit": "ec12424516ae0304228dd2321d4e604fe225e04e",
+        "pinned_git_blob_oid": "a5d9445c06e15e96e820acc908a5c5c751b7c374",
+        "repository_path": "jsons/prefill_gemm_ring_4slice.json",
+        "working_tree_content_sha256": "6a2ca9f2edd2e9c7b8ebbb558a84dd23c8e583781f8a8ac01c213b78c6737e91"
+      },
+      "sha256": "6a2ca9f2edd2e9c7b8ebbb558a84dd23c8e583781f8a8ac01c213b78c6737e91",
+      "size_bytes": 20430,
+      "source_root": "ndp-sim/jsons"
+    },
+    {
+      "allowed_uses": [
+        "configuration_semantics",
+        "rule_extraction",
+        "exact_reference_reproduction",
+        "derived_candidate_seed"
+      ],
+      "configuration_correctness": "user_authorized_correct_reference",
+      "derived_candidate_requires_validation": true,
+      "evidence_class": "high_strength_upstream_hardware_tested_baseline",
+      "path": "ndp-sim/jsons/prefill_mac_fp32MN_fp32MN_fp32MN.json",
+      "provenance": {
+        "git_worktree_matches_pinned_blob": true,
+        "kind": "pinned_upstream_exact_blob",
+        "pinned_commit": "ec12424516ae0304228dd2321d4e604fe225e04e",
+        "pinned_git_blob_oid": "2112b4106902e97e69b59b847abd0c8eadbadce7",
+        "repository_path": "jsons/prefill_mac_fp32MN_fp32MN_fp32MN.json",
+        "working_tree_content_sha256": "32521b8ed33e020019258911542929e1220c3326510fb6f7ce4867b6d09536a9"
+      },
+      "sha256": "32521b8ed33e020019258911542929e1220c3326510fb6f7ce4867b6d09536a9",
+      "size_bytes": 16364,
+      "source_root": "ndp-sim/jsons"
+    },
+    {
+      "allowed_uses": [
+        "configuration_semantics",
+        "rule_extraction",
+        "exact_reference_reproduction",
+        "derived_candidate_seed"
+      ],
+      "configuration_correctness": "user_authorized_correct_reference",
+      "derived_candidate_requires_validation": true,
+      "evidence_class": "high_strength_upstream_hardware_tested_baseline",
+      "path": "ndp-sim/jsons/prefill_mac_SFU_fp32MN_fp32MN.json",
+      "provenance": {
+        "git_worktree_matches_pinned_blob": true,
+        "kind": "pinned_upstream_exact_blob",
+        "pinned_commit": "ec12424516ae0304228dd2321d4e604fe225e04e",
+        "pinned_git_blob_oid": "83855a4c85c66da582f7c046bac43115a383a357",
+        "repository_path": "jsons/prefill_mac_SFU_fp32MN_fp32MN.json",
+        "working_tree_content_sha256": "f6fa1fccd55df2728ec855a0097918dca35a89002e32ac93c4b3e60a9058696d"
+      },
+      "sha256": "f6fa1fccd55df2728ec855a0097918dca35a89002e32ac93c4b3e60a9058696d",
+      "size_bytes": 19424,
+      "source_root": "ndp-sim/jsons"
+    },
+    {
+      "allowed_uses": [
+        "configuration_semantics",
+        "rule_extraction",
+        "exact_reference_reproduction",
+        "derived_candidate_seed"
+      ],
+      "configuration_correctness": "user_authorized_correct_reference",
+      "derived_candidate_requires_validation": true,
+      "evidence_class": "high_strength_upstream_hardware_tested_baseline",
+      "path": "ndp-sim/jsons/prefill_max_fp32MN_fp32MN.json",
+      "provenance": {
+        "git_worktree_matches_pinned_blob": true,
+        "kind": "pinned_upstream_exact_blob",
+        "pinned_commit": "ec12424516ae0304228dd2321d4e604fe225e04e",
+        "pinned_git_blob_oid": "66eb314fad8dd169f7af99cfd511cca91c4b6dcb",
+        "repository_path": "jsons/prefill_max_fp32MN_fp32MN.json",
+        "working_tree_content_sha256": "2d20d87f5bbd14546c346bb54e1200ffd07299c193aded766dbeb59ea704921b"
+      },
+      "sha256": "2d20d87f5bbd14546c346bb54e1200ffd07299c193aded766dbeb59ea704921b",
+      "size_bytes": 13577,
+      "source_root": "ndp-sim/jsons"
+    },
+    {
+      "allowed_uses": [
+        "configuration_semantics",
+        "rule_extraction",
+        "exact_reference_reproduction",
+        "derived_candidate_seed"
+      ],
+      "configuration_correctness": "user_authorized_correct_reference",
+      "derived_candidate_requires_validation": true,
+      "evidence_class": "high_strength_upstream_hardware_tested_baseline",
+      "path": "ndp-sim/jsons/prefill_mul_fp32MN_fp16MN_fp16MN.json",
+      "provenance": {
+        "git_worktree_matches_pinned_blob": true,
+        "kind": "pinned_upstream_exact_blob",
+        "pinned_commit": "ec12424516ae0304228dd2321d4e604fe225e04e",
+        "pinned_git_blob_oid": "33c0b47bea2a9574345a40b7e54f64cb5fcf8fb3",
+        "repository_path": "jsons/prefill_mul_fp32MN_fp16MN_fp16MN.json",
+        "working_tree_content_sha256": "c089a9bad3cce8d5f1a2a62b48ea57e557a32a1834b3ba34019ddefdadeca217"
+      },
+      "sha256": "c089a9bad3cce8d5f1a2a62b48ea57e557a32a1834b3ba34019ddefdadeca217",
+      "size_bytes": 16250,
+      "source_root": "ndp-sim/jsons"
+    },
+    {
+      "allowed_uses": [
+        "configuration_semantics",
+        "rule_extraction",
+        "exact_reference_reproduction",
+        "derived_candidate_seed"
+      ],
+      "configuration_correctness": "user_authorized_correct_reference",
+      "derived_candidate_requires_validation": true,
+      "evidence_class": "high_strength_upstream_hardware_tested_baseline",
+      "path": "ndp-sim/jsons/prefill_mul_fp32MN_fp32M_fp16MN.json",
+      "provenance": {
+        "git_worktree_matches_pinned_blob": true,
+        "kind": "pinned_upstream_exact_blob",
+        "pinned_commit": "ec12424516ae0304228dd2321d4e604fe225e04e",
+        "pinned_git_blob_oid": "ffc973d9f6cfa46bd132b8a39ffffa57088cacd4",
+        "repository_path": "jsons/prefill_mul_fp32MN_fp32M_fp16MN.json",
+        "working_tree_content_sha256": "31d4369b393a39435349adb687a1a0dab63835f3a5f246f02e40a2af5f8923de"
+      },
+      "sha256": "31d4369b393a39435349adb687a1a0dab63835f3a5f246f02e40a2af5f8923de",
+      "size_bytes": 16004,
+      "source_root": "ndp-sim/jsons"
+    },
+    {
+      "allowed_uses": [
+        "configuration_semantics",
+        "rule_extraction",
+        "exact_reference_reproduction",
+        "derived_candidate_seed"
+      ],
+      "configuration_correctness": "user_authorized_correct_reference",
+      "derived_candidate_requires_validation": true,
+      "evidence_class": "high_strength_upstream_hardware_tested_baseline",
+      "path": "ndp-sim/jsons/prefill_mul_fp32MN_fp32M_fp32MN.json",
+      "provenance": {
+        "git_worktree_matches_pinned_blob": true,
+        "kind": "pinned_upstream_exact_blob",
+        "pinned_commit": "ec12424516ae0304228dd2321d4e604fe225e04e",
+        "pinned_git_blob_oid": "9916da4c6d051c702d9ada15aeb604eedb367c18",
+        "repository_path": "jsons/prefill_mul_fp32MN_fp32M_fp32MN.json",
+        "working_tree_content_sha256": "db66d5e8da6146eb743fe1006a6248daf040ba937d713a99f961c591325a272f"
+      },
+      "sha256": "db66d5e8da6146eb743fe1006a6248daf040ba937d713a99f961c591325a272f",
+      "size_bytes": 14789,
+      "source_root": "ndp-sim/jsons"
+    },
+    {
+      "allowed_uses": [
+        "configuration_semantics",
+        "rule_extraction",
+        "exact_reference_reproduction",
+        "derived_candidate_seed"
+      ],
+      "configuration_correctness": "user_authorized_correct_reference",
+      "derived_candidate_requires_validation": true,
+      "evidence_class": "high_strength_upstream_hardware_tested_baseline",
+      "path": "ndp-sim/jsons/prefill_mul_fp32MN_fp32MN_fp32MN.json",
+      "provenance": {
+        "git_worktree_matches_pinned_blob": true,
+        "kind": "pinned_upstream_exact_blob",
+        "pinned_commit": "ec12424516ae0304228dd2321d4e604fe225e04e",
+        "pinned_git_blob_oid": "51a51472d84423bdc478b4be64fbe57390cd6494",
+        "repository_path": "jsons/prefill_mul_fp32MN_fp32MN_fp32MN.json",
+        "working_tree_content_sha256": "b3eaafdd63d40c7506341c1c72abf120ca3d2feea93092fcd6933efa1274ed7e"
+      },
+      "sha256": "b3eaafdd63d40c7506341c1c72abf120ca3d2feea93092fcd6933efa1274ed7e",
+      "size_bytes": 16252,
+      "source_root": "ndp-sim/jsons"
+    },
+    {
+      "allowed_uses": [
+        "configuration_semantics",
+        "rule_extraction",
+        "exact_reference_reproduction",
+        "derived_candidate_seed"
+      ],
+      "configuration_correctness": "user_authorized_correct_reference",
+      "derived_candidate_requires_validation": true,
+      "evidence_class": "high_strength_upstream_hardware_tested_baseline",
+      "path": "ndp-sim/jsons/prefill_mul_fp32MN_fp32N_fp16MN.json",
+      "provenance": {
+        "git_worktree_matches_pinned_blob": true,
+        "kind": "pinned_upstream_exact_blob",
+        "pinned_commit": "ec12424516ae0304228dd2321d4e604fe225e04e",
+        "pinned_git_blob_oid": "ac1aa649af3a516a1b06cade576d1bd3f82e74ec",
+        "repository_path": "jsons/prefill_mul_fp32MN_fp32N_fp16MN.json",
+        "working_tree_content_sha256": "4c82b7820830b041931769a3bc48e6612ae4bb47bc36a148c80aebd7d73b4cd7"
+      },
+      "sha256": "4c82b7820830b041931769a3bc48e6612ae4bb47bc36a148c80aebd7d73b4cd7",
+      "size_bytes": 16452,
+      "source_root": "ndp-sim/jsons"
+    },
+    {
+      "allowed_uses": [
+        "configuration_semantics",
+        "rule_extraction",
+        "exact_reference_reproduction",
+        "derived_candidate_seed"
+      ],
+      "configuration_correctness": "user_authorized_correct_reference",
+      "derived_candidate_requires_validation": true,
+      "evidence_class": "high_strength_upstream_hardware_tested_baseline",
+      "path": "ndp-sim/jsons/prefill_remote_max_fp32MN_fp32MN.json",
+      "provenance": {
+        "git_worktree_matches_pinned_blob": true,
+        "kind": "pinned_upstream_exact_blob",
+        "pinned_commit": "ec12424516ae0304228dd2321d4e604fe225e04e",
+        "pinned_git_blob_oid": "2cda34065900c1b7962f34cf16952c99150a5959",
+        "repository_path": "jsons/prefill_remote_max_fp32MN_fp32MN.json",
+        "working_tree_content_sha256": "c18b4aac7970f4b061afac85fbf588a136187861e614efdf3c9de4bea18850b8"
+      },
+      "sha256": "c18b4aac7970f4b061afac85fbf588a136187861e614efdf3c9de4bea18850b8",
+      "size_bytes": 13667,
+      "source_root": "ndp-sim/jsons"
+    },
+    {
+      "allowed_uses": [
+        "configuration_semantics",
+        "rule_extraction",
+        "exact_reference_reproduction",
+        "derived_candidate_seed"
+      ],
+      "configuration_correctness": "user_authorized_correct_reference",
+      "derived_candidate_requires_validation": true,
+      "evidence_class": "high_strength_upstream_hardware_tested_baseline",
+      "path": "ndp-sim/jsons/prefill_remote_sum_4slice_fp16MN_fp32MN.json",
+      "provenance": {
+        "git_worktree_matches_pinned_blob": true,
+        "kind": "pinned_upstream_exact_blob",
+        "pinned_commit": "ec12424516ae0304228dd2321d4e604fe225e04e",
+        "pinned_git_blob_oid": "8032189edbcb3f930d81e5bf0e57a5e9455c6f5b",
+        "repository_path": "jsons/prefill_remote_sum_4slice_fp16MN_fp32MN.json",
+        "working_tree_content_sha256": "9ebaec3af598ebf8a25ef9664e5517a6c107ce48416fc0ac76e05b9b6578c37c"
+      },
+      "sha256": "9ebaec3af598ebf8a25ef9664e5517a6c107ce48416fc0ac76e05b9b6578c37c",
+      "size_bytes": 20674,
+      "source_root": "ndp-sim/jsons"
+    },
+    {
+      "allowed_uses": [
+        "configuration_semantics",
+        "rule_extraction",
+        "exact_reference_reproduction",
+        "derived_candidate_seed"
+      ],
+      "configuration_correctness": "user_authorized_correct_reference",
+      "derived_candidate_requires_validation": true,
+      "evidence_class": "high_strength_upstream_hardware_tested_baseline",
+      "path": "ndp-sim/jsons/prefill_remote_sum_4slice_fp32MN_fp32MN.json",
+      "provenance": {
+        "git_worktree_matches_pinned_blob": true,
+        "kind": "pinned_upstream_exact_blob",
+        "pinned_commit": "ec12424516ae0304228dd2321d4e604fe225e04e",
+        "pinned_git_blob_oid": "7d83f88fc0f4529a1c28d5400c7e74155507fe32",
+        "repository_path": "jsons/prefill_remote_sum_4slice_fp32MN_fp32MN.json",
+        "working_tree_content_sha256": "86930ae15d348b433eef49aef78878874ca809b39fe0bad09a1072f04e07afda"
+      },
+      "sha256": "86930ae15d348b433eef49aef78878874ca809b39fe0bad09a1072f04e07afda",
+      "size_bytes": 13666,
+      "source_root": "ndp-sim/jsons"
+    },
+    {
+      "allowed_uses": [
+        "configuration_semantics",
+        "rule_extraction",
+        "exact_reference_reproduction",
+        "derived_candidate_seed"
+      ],
+      "configuration_correctness": "user_authorized_correct_reference",
+      "derived_candidate_requires_validation": true,
+      "evidence_class": "high_strength_upstream_hardware_tested_baseline",
+      "path": "ndp-sim/jsons/prefill_remote_sum_fp32MN_fp32MN.json",
+      "provenance": {
+        "git_worktree_matches_pinned_blob": true,
+        "kind": "pinned_upstream_exact_blob",
+        "pinned_commit": "ec12424516ae0304228dd2321d4e604fe225e04e",
+        "pinned_git_blob_oid": "6100ba1e85f1db76f00c89585941c2bced3e0b8f",
+        "repository_path": "jsons/prefill_remote_sum_fp32MN_fp32MN.json",
+        "working_tree_content_sha256": "44382b0405fc3192172f3ab6e4fb81dbd29701a7c8e16715d2a186743ef60708"
+      },
+      "sha256": "44382b0405fc3192172f3ab6e4fb81dbd29701a7c8e16715d2a186743ef60708",
+      "size_bytes": 13667,
+      "source_root": "ndp-sim/jsons"
+    },
+    {
+      "allowed_uses": [
+        "configuration_semantics",
+        "rule_extraction",
+        "exact_reference_reproduction",
+        "derived_candidate_seed"
+      ],
+      "configuration_correctness": "user_authorized_correct_reference",
+      "derived_candidate_requires_validation": true,
+      "evidence_class": "high_strength_upstream_hardware_tested_baseline",
+      "path": "ndp-sim/jsons/prefill_silu_fp16MN_fp32MN.json",
+      "provenance": {
+        "git_worktree_matches_pinned_blob": true,
+        "kind": "pinned_upstream_exact_blob",
+        "pinned_commit": "ec12424516ae0304228dd2321d4e604fe225e04e",
+        "pinned_git_blob_oid": "987f402cd8f57adbabb33112e190d4e54cd893a9",
+        "repository_path": "jsons/prefill_silu_fp16MN_fp32MN.json",
+        "working_tree_content_sha256": "08101bdc82d615741d6262db57098b3ba3acd04cc427c1d0c1297cc68da5cdbd"
+      },
+      "sha256": "08101bdc82d615741d6262db57098b3ba3acd04cc427c1d0c1297cc68da5cdbd",
+      "size_bytes": 14107,
+      "source_root": "ndp-sim/jsons"
+    },
+    {
+      "allowed_uses": [
+        "configuration_semantics",
+        "rule_extraction",
+        "exact_reference_reproduction",
+        "derived_candidate_seed"
+      ],
+      "configuration_correctness": "user_authorized_correct_reference",
+      "derived_candidate_requires_validation": true,
+      "evidence_class": "high_strength_upstream_hardware_tested_baseline",
+      "path": "ndp-sim/jsons/prefill_sub_SFU_fp32MN_fp32M_fp32MN.json",
+      "provenance": {
+        "git_worktree_matches_pinned_blob": true,
+        "kind": "pinned_upstream_exact_blob",
+        "pinned_commit": "ec12424516ae0304228dd2321d4e604fe225e04e",
+        "pinned_git_blob_oid": "2507692a2af694f6f66a46cd2dfdaa5f76f32ec6",
+        "repository_path": "jsons/prefill_sub_SFU_fp32MN_fp32M_fp32MN.json",
+        "working_tree_content_sha256": "a745ce74782b2f3598e246b5646102e835299196a626e6b8d219e0d0b48e4fc9"
+      },
+      "sha256": "a745ce74782b2f3598e246b5646102e835299196a626e6b8d219e0d0b48e4fc9",
+      "size_bytes": 22689,
+      "source_root": "ndp-sim/jsons"
+    },
+    {
+      "allowed_uses": [
+        "configuration_semantics",
+        "rule_extraction",
+        "exact_reference_reproduction",
+        "derived_candidate_seed"
+      ],
+      "configuration_correctness": "user_authorized_correct_reference",
+      "derived_candidate_requires_validation": true,
+      "evidence_class": "high_strength_upstream_hardware_tested_baseline",
+      "path": "ndp-sim/jsons/prefill_sum_rec_fp32MN_fp32MN.json",
+      "provenance": {
+        "git_worktree_matches_pinned_blob": true,
+        "kind": "pinned_upstream_exact_blob",
+        "pinned_commit": "ec12424516ae0304228dd2321d4e604fe225e04e",
+        "pinned_git_blob_oid": "58c21f1b1942a5288328bb39eb8f9c32150950e0",
+        "repository_path": "jsons/prefill_sum_rec_fp32MN_fp32MN.json",
+        "working_tree_content_sha256": "33f1332d15a659d3be5244b293edd341bd12a22c4427b2d16b1efcddd57c6522"
+      },
+      "sha256": "33f1332d15a659d3be5244b293edd341bd12a22c4427b2d16b1efcddd57c6522",
+      "size_bytes": 19521,
+      "source_root": "ndp-sim/jsons"
+    },
+    {
+      "allowed_uses": [
+        "configuration_semantics",
+        "rule_extraction",
+        "exact_reference_reproduction",
+        "derived_candidate_seed"
+      ],
+      "configuration_correctness": "user_authorized_correct_reference",
+      "derived_candidate_requires_validation": true,
+      "evidence_class": "high_strength_upstream_hardware_tested_baseline",
+      "path": "ndp-sim/jsons/prefill_summac_fp16MN_fp32MN.json",
+      "provenance": {
+        "git_worktree_matches_pinned_blob": true,
+        "kind": "pinned_upstream_exact_blob",
+        "pinned_commit": "ec12424516ae0304228dd2321d4e604fe225e04e",
+        "pinned_git_blob_oid": "e166fcf6021a76be174990897c30a165733e1e94",
+        "repository_path": "jsons/prefill_summac_fp16MN_fp32MN.json",
+        "working_tree_content_sha256": "da91862f510562dbc30af72f4722f4645ae4b2c6086fe9689db730a5973984f7"
+      },
+      "sha256": "da91862f510562dbc30af72f4722f4645ae4b2c6086fe9689db730a5973984f7",
+      "size_bytes": 20611,
+      "source_root": "ndp-sim/jsons"
+    },
+    {
+      "allowed_uses": [
+        "configuration_semantics",
+        "rule_extraction",
+        "exact_reference_reproduction",
+        "derived_candidate_seed"
+      ],
+      "configuration_correctness": "user_authorized_correct_reference",
+      "derived_candidate_requires_validation": true,
+      "evidence_class": "high_strength_upstream_hardware_tested_baseline",
+      "path": "ndp-sim/jsons/prefill_summac_fp32MN_fp32MN.json",
+      "provenance": {
+        "git_worktree_matches_pinned_blob": true,
+        "kind": "pinned_upstream_exact_blob",
+        "pinned_commit": "ec12424516ae0304228dd2321d4e604fe225e04e",
+        "pinned_git_blob_oid": "ed61de72b4771cb46db51e0a046156e9f9737c72",
+        "repository_path": "jsons/prefill_summac_fp32MN_fp32MN.json",
+        "working_tree_content_sha256": "bcbf94fc07e9610d98ebfcd11c0264a8f935b2020d06eda7e3131f271d2075ae"
+      },
+      "sha256": "bcbf94fc07e9610d98ebfcd11c0264a8f935b2020d06eda7e3131f271d2075ae",
+      "size_bytes": 19729,
+      "source_root": "ndp-sim/jsons"
+    },
+    {
+      "allowed_uses": [
+        "configuration_semantics",
+        "rule_extraction",
+        "exact_reference_reproduction",
+        "derived_candidate_seed"
+      ],
+      "configuration_correctness": "user_authorized_correct_reference",
+      "derived_candidate_requires_validation": true,
+      "evidence_class": "high_strength_upstream_hardware_tested_baseline",
+      "path": "ndp-sim/jsons/quant_from_buffer_int32MN_uint8MN.json",
+      "provenance": {
+        "git_worktree_matches_pinned_blob": true,
+        "kind": "pinned_upstream_exact_blob",
+        "pinned_commit": "ec12424516ae0304228dd2321d4e604fe225e04e",
+        "pinned_git_blob_oid": "959e759e81eea358f52680c091f2dfa1535f564d",
+        "repository_path": "jsons/quant_from_buffer_int32MN_uint8MN.json",
+        "working_tree_content_sha256": "db638f0640e74217e80e61350a2fe400f7b495e2201f17c39915328cdd455ba2"
+      },
+      "sha256": "db638f0640e74217e80e61350a2fe400f7b495e2201f17c39915328cdd455ba2",
+      "size_bytes": 20366,
+      "source_root": "ndp-sim/jsons"
+    },
+    {
+      "allowed_uses": [
+        "configuration_semantics",
+        "rule_extraction",
+        "exact_reference_reproduction",
+        "derived_candidate_seed"
+      ],
+      "configuration_correctness": "user_authorized_correct_reference",
+      "derived_candidate_requires_validation": true,
+      "evidence_class": "high_strength_upstream_hardware_tested_baseline",
+      "path": "ndp-sim/jsons/sum_config_32_32.json",
+      "provenance": {
+        "git_worktree_matches_pinned_blob": true,
+        "kind": "pinned_upstream_exact_blob",
+        "pinned_commit": "ec12424516ae0304228dd2321d4e604fe225e04e",
+        "pinned_git_blob_oid": "f25c4ba9983ca9015a1e6d44da0a1a73841a91eb",
+        "repository_path": "jsons/sum_config_32_32.json",
+        "working_tree_content_sha256": "dbcf087129e5746ed5ebd2b847d224bec83c034c8d652fd1b88cead6fefe5a6d"
+      },
+      "sha256": "dbcf087129e5746ed5ebd2b847d224bec83c034c8d652fd1b88cead6fefe5a6d",
+      "size_bytes": 12902,
+      "source_root": "ndp-sim/jsons"
+    },
+    {
+      "allowed_uses": [
+        "configuration_semantics",
+        "rule_extraction",
+        "exact_reference_reproduction",
+        "derived_candidate_seed"
+      ],
+      "configuration_correctness": "user_authorized_correct_reference",
+      "derived_candidate_requires_validation": true,
+      "evidence_class": "high_strength_hardware_validated_baseline",
+      "path": "jsons/gemm_ring_Vgen/jsons/op0_prefill_gemm_ring_4slice.json",
+      "provenance": {
+        "kind": "user_supplied_root_reference",
+        "user_authorized_as_correct": true
+      },
+      "sha256": "34a864425d1d1f7c375fd3eb780c8895d6b35ea20087dc2b65ebf7cb52efd465",
+      "size_bytes": 15404,
+      "source_root": "jsons"
+    },
+    {
+      "allowed_uses": [
+        "configuration_semantics",
+        "rule_extraction",
+        "exact_reference_reproduction",
+        "derived_candidate_seed"
+      ],
+      "configuration_correctness": "user_authorized_correct_reference",
+      "derived_candidate_requires_validation": true,
+      "evidence_class": "high_strength_hardware_validated_baseline",
+      "path": "jsons/gemv_local/jsons/op0_prefill_gemv_local.json",
+      "provenance": {
+        "kind": "user_supplied_root_reference",
+        "user_authorized_as_correct": true
+      },
+      "sha256": "81609288330104fdd4892c4e7d15c5263a6bc9b827d14d1ec05963c323a50fb2",
+      "size_bytes": 20538,
+      "source_root": "jsons"
+    },
+    {
+      "allowed_uses": [
+        "configuration_semantics",
+        "rule_extraction",
+        "exact_reference_reproduction",
+        "derived_candidate_seed"
+      ],
+      "configuration_correctness": "user_authorized_correct_reference",
+      "derived_candidate_requires_validation": true,
+      "evidence_class": "high_strength_hardware_validated_baseline",
+      "path": "jsons/rmt_sum/remote_sum_decode_config_1_32.json",
+      "provenance": {
+        "kind": "user_supplied_root_reference",
+        "user_authorized_as_correct": true
+      },
+      "sha256": "e8665777a58dd8c5ed1e37d17589296ffd209e5a5e124fc5f622f310a08309a2",
+      "size_bytes": 7752,
+      "source_root": "jsons"
+    },
+    {
+      "allowed_uses": [
+        "configuration_semantics",
+        "rule_extraction",
+        "exact_reference_reproduction",
+        "derived_candidate_seed"
+      ],
+      "configuration_correctness": "user_authorized_correct_reference",
+      "derived_candidate_requires_validation": true,
+      "evidence_class": "high_strength_hardware_validated_baseline",
+      "path": "jsons/rope/jsons/op0_prefill_mul_fp32MN_fp32MN_fp32MN.json",
+      "provenance": {
+        "kind": "user_supplied_root_reference",
+        "user_authorized_as_correct": true
+      },
+      "sha256": "e152618c6cc54996b64c246211029331617b244e7739c225f73749eb92cce1c8",
+      "size_bytes": 14235,
+      "source_root": "jsons"
+    },
+    {
+      "allowed_uses": [
+        "configuration_semantics",
+        "rule_extraction",
+        "exact_reference_reproduction",
+        "derived_candidate_seed"
+      ],
+      "configuration_correctness": "user_authorized_correct_reference",
+      "derived_candidate_requires_validation": true,
+      "evidence_class": "high_strength_hardware_validated_baseline",
+      "path": "jsons/rope/jsons/op1_prefill_mul_fp32MN_fp32MN_fp32MN.json",
+      "provenance": {
+        "kind": "user_supplied_root_reference",
+        "user_authorized_as_correct": true
+      },
+      "sha256": "71dc9c358748c52dabe1a09b56a4940780eaf556c4c4e21ff820133b00424bf2",
+      "size_bytes": 14238,
+      "source_root": "jsons"
+    },
+    {
+      "allowed_uses": [
+        "configuration_semantics",
+        "rule_extraction",
+        "exact_reference_reproduction",
+        "derived_candidate_seed"
+      ],
+      "configuration_correctness": "user_authorized_correct_reference",
+      "derived_candidate_requires_validation": true,
+      "evidence_class": "high_strength_hardware_validated_baseline",
+      "path": "jsons/rope/jsons/op2_prefill_add_fp32MN_fp32MN_fp32MN.json",
+      "provenance": {
+        "kind": "user_supplied_root_reference",
+        "user_authorized_as_correct": true
+      },
+      "sha256": "119fa688f7f0ef2986aa88f53cf8efd9c435ae6685910426434d94139d888e59",
+      "size_bytes": 14238,
+      "source_root": "jsons"
+    },
+    {
+      "allowed_uses": [
+        "configuration_semantics",
+        "rule_extraction",
+        "exact_reference_reproduction",
+        "derived_candidate_seed"
+      ],
+      "configuration_correctness": "user_authorized_correct_reference",
+      "derived_candidate_requires_validation": true,
+      "evidence_class": "high_strength_hardware_validated_baseline",
+      "path": "jsons/silu/jsons/op0_prefill_silu_fp16MN_fp32MN.json",
+      "provenance": {
+        "kind": "user_supplied_root_reference",
+        "user_authorized_as_correct": true
+      },
+      "sha256": "8f2b399c7a42f68c33ffa6fdbf6ae8e62bd3d46db793d4d13616c1e4c479c9a5",
+      "size_bytes": 11915,
+      "source_root": "jsons"
+    },
+    {
+      "allowed_uses": [
+        "configuration_semantics",
+        "rule_extraction",
+        "exact_reference_reproduction",
+        "derived_candidate_seed"
+      ],
+      "configuration_correctness": "user_authorized_correct_reference",
+      "derived_candidate_requires_validation": true,
+      "evidence_class": "high_strength_hardware_validated_baseline",
+      "path": "jsons/softmax/jsons/op0_prefill_mac_fp32MN_fp32MN_fp32MN.json",
+      "provenance": {
+        "kind": "user_supplied_root_reference",
+        "user_authorized_as_correct": true
+      },
+      "sha256": "ea2fa397be267883897362b998d7a61153307f4c3e7ec159c46dc8f64f8ffd6a",
+      "size_bytes": 14346,
+      "source_root": "jsons"
+    },
+    {
+      "allowed_uses": [
+        "configuration_semantics",
+        "rule_extraction",
+        "exact_reference_reproduction",
+        "derived_candidate_seed"
+      ],
+      "configuration_correctness": "user_authorized_correct_reference",
+      "derived_candidate_requires_validation": true,
+      "evidence_class": "high_strength_hardware_validated_baseline",
+      "path": "jsons/softmax/jsons/op1_prefill_max_fp32MN_fp32MN.json",
+      "provenance": {
+        "kind": "user_supplied_root_reference",
+        "user_authorized_as_correct": true
+      },
+      "sha256": "9d20befea381f073c13952d1a50387174598b294f22f9755c915c9d06ba64466",
+      "size_bytes": 11539,
+      "source_root": "jsons"
+    },
+    {
+      "allowed_uses": [
+        "configuration_semantics",
+        "rule_extraction",
+        "exact_reference_reproduction",
+        "derived_candidate_seed"
+      ],
+      "configuration_correctness": "user_authorized_correct_reference",
+      "derived_candidate_requires_validation": true,
+      "evidence_class": "high_strength_hardware_validated_baseline",
+      "path": "jsons/softmax/jsons/op2_prefill_sub_SFU_fp32MN_fp32M_fp32MN.json",
+      "provenance": {
+        "kind": "user_supplied_root_reference",
+        "user_authorized_as_correct": true
+      },
+      "sha256": "3169f69fd05b8f0f31362c4c0d7029cb9721ad8da5a6e1349566116ea207a357",
+      "size_bytes": 18763,
+      "source_root": "jsons"
+    },
+    {
+      "allowed_uses": [
+        "configuration_semantics",
+        "rule_extraction",
+        "exact_reference_reproduction",
+        "derived_candidate_seed"
+      ],
+      "configuration_correctness": "user_authorized_correct_reference",
+      "derived_candidate_requires_validation": true,
+      "evidence_class": "high_strength_hardware_validated_baseline",
+      "path": "jsons/softmax/jsons/op3_prefill_sum_rec_fp32MN_fp32MN.json",
+      "provenance": {
+        "kind": "user_supplied_root_reference",
+        "user_authorized_as_correct": true
+      },
+      "sha256": "bddceb63bd5e7e67740feed025f8fe661e5abb8c9bc1c01f2b281ab248af1104",
+      "size_bytes": 15739,
+      "source_root": "jsons"
+    },
+    {
+      "allowed_uses": [
+        "configuration_semantics",
+        "rule_extraction",
+        "exact_reference_reproduction",
+        "derived_candidate_seed"
+      ],
+      "configuration_correctness": "user_authorized_correct_reference",
+      "derived_candidate_requires_validation": true,
+      "evidence_class": "high_strength_hardware_validated_baseline",
+      "path": "jsons/softmax/jsons/op4_prefill_mul_fp32MN_fp32M_fp16MN.json",
+      "provenance": {
+        "kind": "user_supplied_root_reference",
+        "user_authorized_as_correct": true
+      },
+      "sha256": "f80d1f41a6930564b910c5d0241a69c639e3662a955e3fb886fa1f6002927561",
+      "size_bytes": 14038,
+      "source_root": "jsons"
+    }
+  ],
+  "schema": "operator-config-user-authority-v1",
+  "status": "provenance_scoped_reference_configuration_authority",
+  "summary": {
+    "all_inventory_records_authorized_correct": false,
+    "authorized_operator_config_count": 65,
+    "excluded_paths": [
+      "ndp-sim/jsons/node0004_accumulate_wave0.json",
+      "ndp-sim/jsons/node0004_accumulate_wave0_nopp_r1.json"
+    ],
+    "inventory_operator_config_count": 67,
+    "not_authorized_as_tested_reference_count": 2,
+    "source_root_authorized_counts": {
+      "jsons": 12,
+      "ndp-sim/jsons": 53
+    },
+    "source_root_inventory_counts": {
+      "jsons": 12,
+      "ndp-sim/jsons": 55
+    }
+  }
+}

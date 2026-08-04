@@ -1,0 +1,91 @@
+{
+  "claims": {
+    "formal_target_config": false,
+    "hardware_execution": false,
+    "hardware_numeric_match": false,
+    "server_e4_e5_required": true
+  },
+  "lowering_bundle": {
+    "path": "contracts/resnet50_r5_lowering_bundle.json",
+    "request_set_sha256": "9da4423bb293a047c9a2dac945270d56eab9fe114146a2f6638e43c655fa341b",
+    "sha256": "836c743f8e14b4709489afb2109eda2d1db2f9d9f3fb0dbe48b2b2cf668543fb"
+  },
+  "manifest_sha256": "3b114c438aee958c8814e20b36a57c51d7049eea9166e761c1f340bd340550fc",
+  "operator_config": null,
+  "operator_config_set": {
+    "file_count": 10,
+    "files": [
+      {
+        "path": "config_set/RequantGuard.txt",
+        "sha256": "19bfa9a258d3199d5280f3829e3a54dd7d06c4d95294f5b419246e5eb8eebf57",
+        "size_bytes": 6450,
+        "source_path": "configs/native_ndp_sim/node0001_requant_two_stage_v1/RequantGuard.txt"
+      },
+      {
+        "path": "config_set/resnet50_requant_guard_node0001.json",
+        "sha256": "1ab2edaca84a06aa369312145693eec1379aa16119f5187dda7564b5d085714e",
+        "size_bytes": 11987,
+        "source_path": "configs/native_ndp_sim/node0001_requant_two_stage_v1/resnet50_requant_guard_node0001.json"
+      },
+      {
+        "path": "config_set/resnet50_requant_round_node0001_s00.json",
+        "sha256": "bf9d814224236661ebdf355dea2ac48f4c2a32f77b234a1bef913fa246634710",
+        "size_bytes": 16599,
+        "source_path": "configs/native_ndp_sim/node0001_requant_two_stage_v1/resnet50_requant_round_node0001_s00.json"
+      },
+      {
+        "path": "config_set/resnet50_requant_round_node0001_s01.json",
+        "sha256": "1757400926ca8c967928b2c37f84a2d4ecfc397e99aef334353b9f1e5397b18e",
+        "size_bytes": 16596,
+        "source_path": "configs/native_ndp_sim/node0001_requant_two_stage_v1/resnet50_requant_round_node0001_s01.json"
+      },
+      {
+        "path": "config_set/resnet50_requant_round_node0001_s02.json",
+        "sha256": "e84b3430e2317bf3a581f7608031a617e3e58590f11cdf3be7d170fddcd56de8",
+        "size_bytes": 16596,
+        "source_path": "configs/native_ndp_sim/node0001_requant_two_stage_v1/resnet50_requant_round_node0001_s02.json"
+      },
+      {
+        "path": "config_set/resnet50_requant_round_node0001_s03.json",
+        "sha256": "022b02dccabb8412de7328a4c2befdd80bd4891a7797a0d07cfc0332a61f87dc",
+        "size_bytes": 16596,
+        "source_path": "configs/native_ndp_sim/node0001_requant_two_stage_v1/resnet50_requant_round_node0001_s03.json"
+      },
+      {
+        "path": "config_set/resnet50_requant_round_node0001_s04.json",
+        "sha256": "fad93c60c71a96d37706dbc448140e7bca34dd1470fa3402cc84cefb40e8bb55",
+        "size_bytes": 16597,
+        "source_path": "configs/native_ndp_sim/node0001_requant_two_stage_v1/resnet50_requant_round_node0001_s04.json"
+      },
+      {
+        "path": "config_set/resnet50_requant_round_node0001_s05.json",
+        "sha256": "f982137fcc4aa4acb21a389502fa07a3124ba38c59d69b003e4f541619bf0e6d",
+        "size_bytes": 16597,
+        "source_path": "configs/native_ndp_sim/node0001_requant_two_stage_v1/resnet50_requant_round_node0001_s05.json"
+      },
+      {
+        "path": "config_set/resnet50_requant_round_node0001_s06.json",
+        "sha256": "fa4389e08391562e6ba67fa2682b5a01d1824081e93595d8a59556af75ae8cc7",
+        "size_bytes": 16595,
+        "source_path": "configs/native_ndp_sim/node0001_requant_two_stage_v1/resnet50_requant_round_node0001_s06.json"
+      },
+      {
+        "path": "config_set/resnet50_requant_round_node0001_s07.json",
+        "sha256": "236cf4e187713cb32f63d37c8a8bda3a8270f807ce5608bb3ede8da738c9db7c",
+        "size_bytes": 16599,
+        "source_path": "configs/native_ndp_sim/node0001_requant_two_stage_v1/resnet50_requant_round_node0001_s07.json"
+      }
+    ],
+    "semantic_identity": true,
+    "source_root": "configs/native_ndp_sim/node0001_requant_two_stage_v1",
+    "strict_json_validation": "passed"
+  },
+  "request_id": "r5:hwop-0001-01",
+  "schedule_ir": {
+    "path": "schedule_ir.json",
+    "semantic_sha256": "e444ffa444d254a444f82a7aae1584bef0d0a1eda282e84b2f8108fd23e44a97",
+    "sha256": "3e44d98eb68c87ff7b2bfc9caddc28c92d4813fe61457c37c4e3868c2fe2c656"
+  },
+  "schema": "resnet50-stage-config-candidate-manifest-v1",
+  "status": "candidate_address_unbound_not_formal"
+}

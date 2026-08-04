@@ -1,0 +1,1721 @@
+{
+  "all_changed_leaves_owned": true,
+  "changed_leaf_count": 171,
+  "changed_leaves": [
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": 1,
+      "field_class": "non_base_semantic",
+      "input_source": "typed shape [1,256,8] and element byte width",
+      "old_value": 4,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.dram_loop_configs.LC0.end",
+      "transform_formula": "derive LC cardinality, 32-byte transaction stride and FP32 coverage"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": 256,
+      "field_class": "non_base_semantic",
+      "input_source": "typed shape [1,256,8] and element byte width",
+      "old_value": 32,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.dram_loop_configs.LC1.end",
+      "transform_formula": "derive LC cardinality, 32-byte transaction stride and FP32 coverage"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": 256,
+      "field_class": "non_base_semantic",
+      "input_source": "typed shape [1,256,8] and element byte width",
+      "old_value": 8,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.dram_loop_configs.LC2.end",
+      "transform_formula": "derive LC cardinality, 32-byte transaction stride and FP32 coverage"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": 1,
+      "field_class": "non_base_semantic",
+      "input_source": "typed shape [1,256,8] and element byte width",
+      "old_value": 2,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.dram_loop_configs.LC2.last_index",
+      "transform_formula": "derive LC cardinality, 32-byte transaction stride and FP32 coverage"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": "mul",
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": "mac",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE00.alu_opcode",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": 0.0661861002445221,
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": 0.06375,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE00.inport1.constant",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": 0,
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": 12582975.75,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE00.inport2.constant",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": null,
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": "constant",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE00.inport2.mode",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": "<absent>",
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": "int32_sub",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE01.alu_opcode",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": "<absent>",
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": 0,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE01.inport0.constant",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": "<absent>",
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": null,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE01.inport0.keep_last_index",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": "<absent>",
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": "buffer",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE01.inport0.mode",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": "<absent>",
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": "GA_PE.PE00",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE01.inport0.src_id",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": "<absent>",
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": 1262485504,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE01.inport1.constant",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": "<absent>",
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": null,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE01.inport1.keep_last_index",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": "<absent>",
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": "constant",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE01.inport1.mode",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": "<absent>",
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": null,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE01.inport1.src_id",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": "<absent>",
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": 0,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE01.inport2.constant",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": "<absent>",
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": null,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE01.inport2.keep_last_index",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": "<absent>",
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": null,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE01.inport2.mode",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": "<absent>",
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": null,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE01.inport2.src_id",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": "<absent>",
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": null,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE01.transout_last_index",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": "mul",
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": "mac",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE02.alu_opcode",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": 0.0661861002445221,
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": 0.06375,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE02.inport1.constant",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": 0,
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": 12582975.75,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE02.inport2.constant",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": null,
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": "constant",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE02.inport2.mode",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": "<absent>",
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": "int32_sub",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE03.alu_opcode",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": "<absent>",
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": 0,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE03.inport0.constant",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": "<absent>",
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": null,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE03.inport0.keep_last_index",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": "<absent>",
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": "buffer",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE03.inport0.mode",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": "<absent>",
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": "GA_PE.PE02",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE03.inport0.src_id",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": "<absent>",
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": 1262485504,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE03.inport1.constant",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": "<absent>",
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": null,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE03.inport1.keep_last_index",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": "<absent>",
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": "constant",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE03.inport1.mode",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": "<absent>",
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": null,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE03.inport1.src_id",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": "<absent>",
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": 0,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE03.inport2.constant",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": "<absent>",
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": null,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE03.inport2.keep_last_index",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": "<absent>",
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": null,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE03.inport2.mode",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": "<absent>",
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": null,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE03.inport2.src_id",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": "<absent>",
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": null,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE03.transout_last_index",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": "mul",
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": "mac",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE10.alu_opcode",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": 0.0661861002445221,
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": 0.06375,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE10.inport1.constant",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": 0,
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": 12582975.75,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE10.inport2.constant",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": null,
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": "constant",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE10.inport2.mode",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": "<absent>",
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": "int32_sub",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE11.alu_opcode",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": "<absent>",
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": 0,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE11.inport0.constant",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": "<absent>",
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": null,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE11.inport0.keep_last_index",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": "<absent>",
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": "buffer",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE11.inport0.mode",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": "<absent>",
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": "GA_PE.PE10",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE11.inport0.src_id",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": "<absent>",
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": 1262485504,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE11.inport1.constant",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": "<absent>",
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": null,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE11.inport1.keep_last_index",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": "<absent>",
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": "constant",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE11.inport1.mode",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": "<absent>",
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": null,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE11.inport1.src_id",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": "<absent>",
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": 0,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE11.inport2.constant",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": "<absent>",
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": null,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE11.inport2.keep_last_index",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": "<absent>",
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": null,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE11.inport2.mode",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": "<absent>",
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": null,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE11.inport2.src_id",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": "<absent>",
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": null,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE11.transout_last_index",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": "mul",
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": "mac",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE12.alu_opcode",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": 0.0661861002445221,
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": 0.06375,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE12.inport1.constant",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": 0,
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": 12582975.75,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE12.inport2.constant",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": null,
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": "constant",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE12.inport2.mode",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": "<absent>",
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": "int32_sub",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE13.alu_opcode",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": "<absent>",
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": 0,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE13.inport0.constant",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": "<absent>",
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": null,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE13.inport0.keep_last_index",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": "<absent>",
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": "buffer",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE13.inport0.mode",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": "<absent>",
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": "GA_PE.PE12",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE13.inport0.src_id",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": "<absent>",
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": 1262485504,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE13.inport1.constant",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": "<absent>",
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": null,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE13.inport1.keep_last_index",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": "<absent>",
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": "constant",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE13.inport1.mode",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": "<absent>",
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": null,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE13.inport1.src_id",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": "<absent>",
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": 0,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE13.inport2.constant",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": "<absent>",
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": null,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE13.inport2.keep_last_index",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": "<absent>",
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": null,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE13.inport2.mode",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": "<absent>",
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": null,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE13.inport2.src_id",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": "<absent>",
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": null,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE13.transout_last_index",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": "mul",
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": "mac",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE20.alu_opcode",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": 0.0661861002445221,
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": 0.06375,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE20.inport1.constant",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": 0,
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": 12582975.75,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE20.inport2.constant",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": null,
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": "constant",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE20.inport2.mode",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": "<absent>",
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": "int32_sub",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE21.alu_opcode",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": "<absent>",
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": 0,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE21.inport0.constant",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": "<absent>",
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": null,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE21.inport0.keep_last_index",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": "<absent>",
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": "buffer",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE21.inport0.mode",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": "<absent>",
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": "GA_PE.PE20",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE21.inport0.src_id",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": "<absent>",
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": 1262485504,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE21.inport1.constant",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": "<absent>",
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": null,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE21.inport1.keep_last_index",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": "<absent>",
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": "constant",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE21.inport1.mode",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": "<absent>",
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": null,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE21.inport1.src_id",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": "<absent>",
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": 0,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE21.inport2.constant",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": "<absent>",
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": null,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE21.inport2.keep_last_index",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": "<absent>",
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": null,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE21.inport2.mode",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": "<absent>",
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": null,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE21.inport2.src_id",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": "<absent>",
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": null,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE21.transout_last_index",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": "mul",
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": "mac",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE22.alu_opcode",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": 0.0661861002445221,
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": 0.06375,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE22.inport1.constant",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": 0,
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": 12582975.75,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE22.inport2.constant",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": null,
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": "constant",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE22.inport2.mode",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": "<absent>",
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": "int32_sub",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE23.alu_opcode",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": "<absent>",
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": 0,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE23.inport0.constant",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": "<absent>",
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": null,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE23.inport0.keep_last_index",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": "<absent>",
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": "buffer",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE23.inport0.mode",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": "<absent>",
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": "GA_PE.PE22",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE23.inport0.src_id",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": "<absent>",
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": 1262485504,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE23.inport1.constant",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": "<absent>",
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": null,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE23.inport1.keep_last_index",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": "<absent>",
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": "constant",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE23.inport1.mode",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": "<absent>",
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": null,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE23.inport1.src_id",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": "<absent>",
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": 0,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE23.inport2.constant",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": "<absent>",
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": null,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE23.inport2.keep_last_index",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": "<absent>",
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": null,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE23.inport2.mode",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": "<absent>",
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": null,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE23.inport2.src_id",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": "<absent>",
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": null,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE23.transout_last_index",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": "mul",
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": "mac",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE30.alu_opcode",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": 0.0661861002445221,
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": 0.06375,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE30.inport1.constant",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": 0,
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": 12582975.75,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE30.inport2.constant",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": null,
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": "constant",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE30.inport2.mode",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": "<absent>",
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": "int32_sub",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE31.alu_opcode",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": "<absent>",
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": 0,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE31.inport0.constant",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": "<absent>",
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": null,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE31.inport0.keep_last_index",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": "<absent>",
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": "buffer",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE31.inport0.mode",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": "<absent>",
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": "GA_PE.PE30",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE31.inport0.src_id",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": "<absent>",
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": 1262485504,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE31.inport1.constant",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": "<absent>",
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": null,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE31.inport1.keep_last_index",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": "<absent>",
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": "constant",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE31.inport1.mode",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": "<absent>",
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": null,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE31.inport1.src_id",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": "<absent>",
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": 0,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE31.inport2.constant",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": "<absent>",
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": null,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE31.inport2.keep_last_index",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": "<absent>",
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": null,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE31.inport2.mode",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": "<absent>",
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": null,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE31.inport2.src_id",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": "<absent>",
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": null,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE31.transout_last_index",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": "mul",
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": "mac",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE32.alu_opcode",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": 0.0661861002445221,
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": 0.06375,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE32.inport1.constant",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": 0,
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": 12582975.75,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE32.inport2.constant",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": null,
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": "constant",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE32.inport2.mode",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": "<absent>",
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": "int32_sub",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE33.alu_opcode",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": "<absent>",
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": 0,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE33.inport0.constant",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": "<absent>",
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": null,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE33.inport0.keep_last_index",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": "<absent>",
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": "buffer",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE33.inport0.mode",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": "<absent>",
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": "GA_PE.PE32",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE33.inport0.src_id",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": "<absent>",
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": 1262485504,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE33.inport1.constant",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": "<absent>",
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": null,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE33.inport1.keep_last_index",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": "<absent>",
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": "constant",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE33.inport1.mode",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": "<absent>",
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": null,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE33.inport1.src_id",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": "<absent>",
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": 0,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE33.inport2.constant",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": "<absent>",
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": null,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE33.inport2.keep_last_index",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": "<absent>",
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": null,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE33.inport2.mode",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": "<absent>",
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": null,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE33.inport2.src_id",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": "<absent>",
+      "field_class": "non_base_semantic",
+      "input_source": "typed node0071 multiplier bits 0x3d878c94",
+      "old_value": null,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.PE_array.PE33.transout_last_index",
+      "transform_formula": "eight even PEs perform FP32 MUL"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": "false",
+      "field_class": "non_base_semantic",
+      "input_source": "INT32-to-FP32 MUL stage ABI",
+      "old_value": "true",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.outport.int32touint8",
+      "transform_formula": "derive conversion/outport semantics from typed stage boundary"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": 0,
+      "field_class": "non_base_semantic",
+      "input_source": "INT32-to-FP32 MUL stage ABI",
+      "old_value": 1,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.general_array.outport.src_id",
+      "transform_formula": "derive conversion/outport semantics from typed stage boundary"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": "0x0",
+      "field_class": "logical_relative_base",
+      "input_source": "logical relative-address policy",
+      "old_value": "0b00000_00_0000000000000_000000_0000",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream0.base_addr",
+      "transform_formula": "logical_base = 0; physical allocation is deferred to binder"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": 8192,
+      "field_class": "non_base_semantic",
+      "input_source": "typed shape [1,256,8] and element byte width",
+      "old_value": 1024,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream0.dim_stride[1]",
+      "transform_formula": "derive LC cardinality, 32-byte transaction stride and FP32 coverage"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": "0x0",
+      "field_class": "logical_relative_base",
+      "input_source": "logical relative-address policy",
+      "old_value": "0b00000_11_0000000000000_000000_0000",
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream2.base_addr",
+      "transform_formula": "logical_base = 0; physical allocation is deferred to binder"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": 10,
+      "field_class": "non_base_semantic",
+      "input_source": "typed shape [1,256,8] and element byte width",
+      "old_value": 9,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream2.buf_spatial_stride[10]",
+      "transform_formula": "derive LC cardinality, 32-byte transaction stride and FP32 coverage"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": 11,
+      "field_class": "non_base_semantic",
+      "input_source": "typed shape [1,256,8] and element byte width",
+      "old_value": 13,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream2.buf_spatial_stride[11]",
+      "transform_formula": "derive LC cardinality, 32-byte transaction stride and FP32 coverage"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": 12,
+      "field_class": "non_base_semantic",
+      "input_source": "typed shape [1,256,8] and element byte width",
+      "old_value": 17,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream2.buf_spatial_stride[12]",
+      "transform_formula": "derive LC cardinality, 32-byte transaction stride and FP32 coverage"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": 13,
+      "field_class": "non_base_semantic",
+      "input_source": "typed shape [1,256,8] and element byte width",
+      "old_value": 21,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream2.buf_spatial_stride[13]",
+      "transform_formula": "derive LC cardinality, 32-byte transaction stride and FP32 coverage"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": 14,
+      "field_class": "non_base_semantic",
+      "input_source": "typed shape [1,256,8] and element byte width",
+      "old_value": 25,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream2.buf_spatial_stride[14]",
+      "transform_formula": "derive LC cardinality, 32-byte transaction stride and FP32 coverage"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": 15,
+      "field_class": "non_base_semantic",
+      "input_source": "typed shape [1,256,8] and element byte width",
+      "old_value": 29,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream2.buf_spatial_stride[15]",
+      "transform_formula": "derive LC cardinality, 32-byte transaction stride and FP32 coverage"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": 1,
+      "field_class": "non_base_semantic",
+      "input_source": "typed shape [1,256,8] and element byte width",
+      "old_value": 4,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream2.buf_spatial_stride[1]",
+      "transform_formula": "derive LC cardinality, 32-byte transaction stride and FP32 coverage"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": 2,
+      "field_class": "non_base_semantic",
+      "input_source": "typed shape [1,256,8] and element byte width",
+      "old_value": 8,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream2.buf_spatial_stride[2]",
+      "transform_formula": "derive LC cardinality, 32-byte transaction stride and FP32 coverage"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": 3,
+      "field_class": "non_base_semantic",
+      "input_source": "typed shape [1,256,8] and element byte width",
+      "old_value": 12,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream2.buf_spatial_stride[3]",
+      "transform_formula": "derive LC cardinality, 32-byte transaction stride and FP32 coverage"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": 4,
+      "field_class": "non_base_semantic",
+      "input_source": "typed shape [1,256,8] and element byte width",
+      "old_value": 16,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream2.buf_spatial_stride[4]",
+      "transform_formula": "derive LC cardinality, 32-byte transaction stride and FP32 coverage"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": 5,
+      "field_class": "non_base_semantic",
+      "input_source": "typed shape [1,256,8] and element byte width",
+      "old_value": 20,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream2.buf_spatial_stride[5]",
+      "transform_formula": "derive LC cardinality, 32-byte transaction stride and FP32 coverage"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": 6,
+      "field_class": "non_base_semantic",
+      "input_source": "typed shape [1,256,8] and element byte width",
+      "old_value": 24,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream2.buf_spatial_stride[6]",
+      "transform_formula": "derive LC cardinality, 32-byte transaction stride and FP32 coverage"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": 7,
+      "field_class": "non_base_semantic",
+      "input_source": "typed shape [1,256,8] and element byte width",
+      "old_value": 28,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream2.buf_spatial_stride[7]",
+      "transform_formula": "derive LC cardinality, 32-byte transaction stride and FP32 coverage"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": 8,
+      "field_class": "non_base_semantic",
+      "input_source": "typed shape [1,256,8] and element byte width",
+      "old_value": 1,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream2.buf_spatial_stride[8]",
+      "transform_formula": "derive LC cardinality, 32-byte transaction stride and FP32 coverage"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": 9,
+      "field_class": "non_base_semantic",
+      "input_source": "typed shape [1,256,8] and element byte width",
+      "old_value": 5,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream2.buf_spatial_stride[9]",
+      "transform_formula": "derive LC cardinality, 32-byte transaction stride and FP32 coverage"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": 8192,
+      "field_class": "non_base_semantic",
+      "input_source": "typed shape [1,256,8] and element byte width",
+      "old_value": 256,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream2.dim_stride[1]",
+      "transform_formula": "derive LC cardinality, 32-byte transaction stride and FP32 coverage"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": 0,
+      "field_class": "non_base_semantic",
+      "input_source": "typed shape [1,256,8] and element byte width",
+      "old_value": 3,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream2.idx_size[0]",
+      "transform_formula": "derive LC cardinality, 32-byte transaction stride and FP32 coverage"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+      "expected_new_value": 31,
+      "field_class": "non_base_semantic",
+      "input_source": "typed shape [1,256,8] and element byte width",
+      "old_value": 7,
+      "owner": "gap-node0071-tail/logical_config_generator",
+      "path": "$.stream_engine.stream2.idx_size[1]",
+      "transform_formula": "derive LC cardinality, 32-byte transaction stride and FP32 coverage"
+    }
+  ],
+  "logical_leaf_count": 404,
+  "non_base_changed_leaf_count": 169,
+  "schema": "gap-node0071-tail-template-to-logical-leaf-diff-v1",
+  "stage": "mul",
+  "template_leaf_count": 516
+}

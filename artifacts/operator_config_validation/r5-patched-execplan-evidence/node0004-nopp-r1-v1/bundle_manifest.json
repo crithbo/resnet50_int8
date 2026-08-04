@@ -1,0 +1,238 @@
+{
+  "schema": "operator-config-execplan-evidence-bundle-v1",
+  "created_utc": "2026-07-22T21:40:38.419209+00:00",
+  "read_only_native_source": true,
+  "native_repository": {
+    "name": "ndp-sim",
+    "commit": "ec12424516ae0304228dd2321d4e604fe225e04e",
+    "dirty_status_at_run": [
+      "M .gitignore",
+      "?? README_SERVER_PACKAGE_LOCAL.md",
+      "?? jsons/node0004_accumulate_wave0.json",
+      "?? jsons/node0004_accumulate_wave0_nopp_r1.json"
+    ],
+    "source_manifest": "native_source_manifest.json",
+    "source_manifest_sha256": "ce85c9238afb1a5e55975542aa070e29785678e11c0c5c4e5618bea181fb0a3d",
+    "patchset": {
+      "artifact": "patchset_manifest.json",
+      "sha256": "421141410bf1c4fab0beeb65291da5e402ca99797b1bbac92de0e3b0e437431e",
+      "patchset_id": "resnet50-ndp-toolchain-6144-v1",
+      "patchset_sha256": "eea36da87fefaa3758bf4cbd7018c8a8346d31d47bae3a09abfb47eafd93389c"
+    }
+  },
+  "graph_input": {
+    "artifact": "graph_input.json",
+    "sha256": "e7adf870cc809647013399eebe7c720667f70e51a0c218495a0851e1aa48952b"
+  },
+  "mapping_cache_policy": "portable-zero-penalty-bundle-input",
+  "planner_config_policy": "validated mapping source_config installed by operator type in each disposable tool copy; active ndp-sim remains read-only",
+  "operator_mapping_bundles": {
+    "op0": {
+      "path": "mapping_evidence/op0",
+      "source_config_sha256": "12daf4c1a81d1634439374ea79dbb7972a28bd415da74e999ee9cfa87e7905ae",
+      "mapping_evidence_sha256": "e0b0e2aef31acefc074b34279fabd50dc4f089fb35f2cb9d813907b93c6a32ef"
+    }
+  },
+  "native_command": [
+    "<python>",
+    "<isolated-native-model-execplan-main>",
+    "<graph-input>"
+  ],
+  "double_run": {
+    "equal": true,
+    "comparison": "double_run_comparison.json",
+    "deterministic_file_count": 15
+  },
+  "execplan": {
+    "artifact": "pipeline_output/install/execplan.txt",
+    "sha256": "a5d9edf2fbd51f2107b9fe7845f4716786a61797be7c9e38aca3ede9009a0711"
+  },
+  "validation_report": {
+    "artifact": "execplan_validation_report.json",
+    "sha256": "7853e6b7931307228cde10e83e9b134a5df74960a497196556c7463ab31795b6",
+    "valid": true
+  },
+  "package_validation_report": {
+    "artifact": "package_validation_report.json",
+    "sha256": "e67f849bf413d933789af1a962ccadf267d9426678dc1e2cbe73b266a3344f7b",
+    "valid": true,
+    "matrix_files_required": false
+  },
+  "request_address_validation_report": {
+    "artifact": "request_address_validation_report.json",
+    "sha256": "67aebb045df0ca79318b640f70ea2ea22471ee1a222cce7832042468e04d502f",
+    "valid": true,
+    "request_count_with_multiplicity": 748160,
+    "unique_request_address_count": 704368
+  },
+  "files": {
+    "double_run_comparison.json": {
+      "size": 1879,
+      "sha256": "20db9a430f22e9387c2a8acfdc64fa2fd817d35d4fc1348435e4d921bcc6cf8b"
+    },
+    "execplan_validation_report.json": {
+      "size": 4101,
+      "sha256": "7853e6b7931307228cde10e83e9b134a5df74960a497196556c7463ab31795b6"
+    },
+    "graph_input.json": {
+      "size": 1527,
+      "sha256": "e7adf870cc809647013399eebe7c720667f70e51a0c218495a0851e1aa48952b"
+    },
+    "mapping_evidence/op0/artifact_validation_report.json": {
+      "size": 99933,
+      "sha256": "fa5c8ededa7ad7979227895e204d01a3ffd848ca6ce01fe81d3accbf8eb3d3e1"
+    },
+    "mapping_evidence/op0/detailed_dump.txt": {
+      "size": 35154,
+      "sha256": "68e6bf93c8bcdaad78d59ec214b8ae2e370bebb342f63c0a56f06e5fb70f38ea"
+    },
+    "mapping_evidence/op0/encoder_source_manifest.json": {
+      "size": 2481,
+      "sha256": "89f2f11f8429d917f9bc7e15cc6a74365ed14f075cd8428bfb78f2e971d4dac1"
+    },
+    "mapping_evidence/op0/mapping_cache/df2e5c93d0c7120d.json": {
+      "size": 833,
+      "sha256": "dd2c350369ca74c086aed0cc21041107843982fc52325ab64af402fb99115116"
+    },
+    "mapping_evidence/op0/mapping_evidence.json": {
+      "size": 2753,
+      "sha256": "e0b0e2aef31acefc074b34279fabd50dc4f089fb35f2cb9d813907b93c6a32ef"
+    },
+    "mapping_evidence/op0/mapping_review.json": {
+      "size": 7900,
+      "sha256": "622f5fe2a187eb6dd1b09b8c290fbac4ff841f30c3e8faf24d4e5225a7a11258"
+    },
+    "mapping_evidence/op0/modules_dump_128b.bin": {
+      "size": 3900,
+      "sha256": "c185043c0239aa38a6a1a4459158ea95cc8376a8dd4dfe26ce4968296bc8dc37"
+    },
+    "mapping_evidence/op0/modules_dump_64b.bin": {
+      "size": 3960,
+      "sha256": "4c722ababbe797a4d9adba9f68f95ff610a910591dbc36ed9cf66d67c222b091"
+    },
+    "mapping_evidence/op0/native_mapping_state.json": {
+      "size": 892,
+      "sha256": "e0837646ee80d5cb13c06fb0f81da77531726286d86136b5d216cb5508db2093"
+    },
+    "mapping_evidence/op0/native_stderr.log": {
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "mapping_evidence/op0/native_stdout.log": {
+      "size": 42245,
+      "sha256": "24920dec436ebc2a22df79b723cf9b237b21180221039737050d950002d80cab"
+    },
+    "mapping_evidence/op0/parsed_bitstream.txt": {
+      "size": 4254,
+      "sha256": "528eca6cfcc495e90a28a99507fa5b13e7df899226bde716aa8e639dc51fa5b0"
+    },
+    "mapping_evidence/op0/patchset_manifest.json": {
+      "size": 1448,
+      "sha256": "421141410bf1c4fab0beeb65291da5e402ca99797b1bbac92de0e3b0e437431e"
+    },
+    "mapping_evidence/op0/source_config.json": {
+      "size": 14634,
+      "sha256": "12daf4c1a81d1634439374ea79dbb7972a28bd415da74e999ee9cfa87e7905ae"
+    },
+    "native_run1_stderr.log": {
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "native_run1_stdout.log": {
+      "size": 2405,
+      "sha256": "9161ad96d0a4499be33f8d17cb311c528ebd4a01452c14995877c236458da5e4"
+    },
+    "native_run2_stderr.log": {
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "native_run2_stdout.log": {
+      "size": 2405,
+      "sha256": "6b9f1abf8340d49019f03511ddbdcaf57462008b6d8329a5feb66afb29713dae"
+    },
+    "native_source_manifest.json": {
+      "size": 17625,
+      "sha256": "ce85c9238afb1a5e55975542aa070e29785678e11c0c5c4e5618bea181fb0a3d"
+    },
+    "package_validation_report.json": {
+      "size": 39827,
+      "sha256": "e67f849bf413d933789af1a962ccadf267d9426678dc1e2cbe73b266a3344f7b"
+    },
+    "patchset_manifest.json": {
+      "size": 1448,
+      "sha256": "421141410bf1c4fab0beeb65291da5e402ca99797b1bbac92de0e3b0e437431e"
+    },
+    "pipeline_output/config/op0/detailed_dump.txt": {
+      "size": 35154,
+      "sha256": "68e6bf93c8bcdaad78d59ec214b8ae2e370bebb342f63c0a56f06e5fb70f38ea"
+    },
+    "pipeline_output/config/op0/mapping_review.json": {
+      "size": 7900,
+      "sha256": "622f5fe2a187eb6dd1b09b8c290fbac4ff841f30c3e8faf24d4e5225a7a11258"
+    },
+    "pipeline_output/config/op0/modules_dump_128b.bin": {
+      "size": 3900,
+      "sha256": "c185043c0239aa38a6a1a4459158ea95cc8376a8dd4dfe26ce4968296bc8dc37"
+    },
+    "pipeline_output/config/op0/modules_dump_64b.bin": {
+      "size": 3960,
+      "sha256": "4c722ababbe797a4d9adba9f68f95ff610a910591dbc36ed9cf66d67c222b091"
+    },
+    "pipeline_output/config/op0/op0_node0004_accumulate_wave0_nopp_r1_bitstream_128b.bin": {
+      "size": 3900,
+      "sha256": "c185043c0239aa38a6a1a4459158ea95cc8376a8dd4dfe26ce4968296bc8dc37"
+    },
+    "pipeline_output/config/op0/op0_node0004_accumulate_wave0_nopp_r1_bitstream_64b.bin": {
+      "size": 3960,
+      "sha256": "4c722ababbe797a4d9adba9f68f95ff610a910591dbc36ed9cf66d67c222b091"
+    },
+    "pipeline_output/config/op0/parsed_bitstream.txt": {
+      "size": 4254,
+      "sha256": "528eca6cfcc495e90a28a99507fa5b13e7df899226bde716aa8e639dc51fa5b0"
+    },
+    "pipeline_output/config/op0/placement.png": {
+      "size": 340314,
+      "sha256": "7c2e6a0c3009c4c83482e2933e95feec315b7e2bd371038590ab0fa8997a11d7"
+    },
+    "pipeline_output/install/cfg_pkg/op0_node0004_accumulate_wave0_nopp_r1_bitstream_128b.bin": {
+      "size": 3900,
+      "sha256": "c185043c0239aa38a6a1a4459158ea95cc8376a8dd4dfe26ce4968296bc8dc37"
+    },
+    "pipeline_output/install/execplan.txt": {
+      "size": 7280,
+      "sha256": "a5d9edf2fbd51f2107b9fe7845f4716786a61797be7c9e38aca3ede9009a0711"
+    },
+    "pipeline_output/install/execplan_op0.txt": {
+      "size": 7280,
+      "sha256": "a5d9edf2fbd51f2107b9fe7845f4716786a61797be7c9e38aca3ede9009a0711"
+    },
+    "pipeline_output/instructions_explained.txt": {
+      "size": 63837,
+      "sha256": "e2471651e807d30136d9d85b991348b3e1d688239e95ea3ee3cfee691b4a99f0"
+    },
+    "pipeline_output/jsons/op0_node0004_accumulate_wave0_nopp_r1.json": {
+      "size": 14634,
+      "sha256": "12daf4c1a81d1634439374ea79dbb7972a28bd415da74e999ee9cfa87e7905ae"
+    },
+    "pipeline_output/node0004_accumulate_wave0_nopp_r1_graph_withbaseaddr.json": {
+      "size": 1755,
+      "sha256": "bf7309a6dd5ce222f85efd65b39491e073473dfef97cc0544d67805e3e8a4f0d"
+    },
+    "pipeline_output/sca_cfg.json": {
+      "size": 11377,
+      "sha256": "9380afb63a65ee07ccfb00b55da65e48b384579a2a71bdf7f15320b469841ffa"
+    },
+    "pipeline_output/sca_cfg_D.json": {
+      "size": 4307,
+      "sha256": "c7004766236195004737a30573576297605e487ea28d4b7b4efb03039b2ea185"
+    },
+    "request_address_validation_report.json": {
+      "size": 229259,
+      "sha256": "67aebb045df0ca79318b640f70ea2ea22471ee1a222cce7832042468e04d502f"
+    },
+    "semantic_contract.json": {
+      "size": 4436,
+      "sha256": "ea92499421bad44ebe7664f2af7fd94d35fdace41bec0e59e6b76ba8aa06b15b"
+    }
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "base_commit": "ec12424516ae0304228dd2321d4e604fe225e04e",
+  "base_repository": "https://github.com/uSFrances/ndp-sim.git",
+  "files": [
+    {
+      "base_sha256_lf": "0c122a03b2c1b4b75ca2d04006c41d11d081dbf3b1977e90809a728e6fea7f59",
+      "patched_sha256_lf": "52095a34e6fecf20813cf5a2a2492ca1681ca0b6386808df6b7b456ee741be69",
+      "path": "model_execplan/src/execution_plan_generator/address_planner.py",
+      "replacement_ids": [
+        "target-profile-row-count-6144"
+      ]
+    },
+    {
+      "base_sha256_lf": "9889c1433849ac1a536d9fe4aa85b46b808da472f58bc5f1137cdc3fe00a0a39",
+      "patched_sha256_lf": "aed98569f784cecde99bae7b937e9eb9e0e90cbfe00d9032a1cdbe637da5ece1",
+      "path": "bitstream/config/mapper.py",
+      "replacement_ids": [
+        "direct-dram-lc-unmatched-name",
+        "zero-penalty-search-return",
+        "preserve-explicit-nonconnected-bindings"
+      ]
+    },
+    {
+      "base_sha256_lf": "c7844a510bb72c16417c79da002b85c0a421f08dd2c88ef6eaa1a86d5f2b6e1c",
+      "patched_sha256_lf": "10ec8e131ac911b885d67951b234fcff8a8fcd74254f6ae4246411e60feb4d1c",
+      "path": "model_execplan/src/execution_plan_generator/control_registers.py",
+      "replacement_ids": [
+        "register-exact-resnet50-node0004-serialized-conv-handlers"
+      ]
+    }
+  ],
+  "patchset_id": "resnet50-ndp-toolchain-6144-conv-serialized-one-product-v1",
+  "patchset_sha256": "701f83266ad9c97cf28074a8c031917c7d6a5c857e4490d24cb3f621eac12875",
+  "policy": {
+    "active_source_read_only": true,
+    "direct_mapping_is_not_evidence": true,
+    "fail_closed_mapping": true,
+    "zero_penalty_required": true
+  },
+  "schema": "resnet50-ndp-patchset-v1",
+  "target_profile": {
+    "banks_per_slice": 4,
+    "bytes_per_column": 16,
+    "columns_per_row": 64,
+    "rows_per_bank": 6144,
+    "slices": 28
+  }
+}

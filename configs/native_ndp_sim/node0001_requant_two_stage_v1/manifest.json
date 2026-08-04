@@ -1,0 +1,109 @@
+{
+  "candidate_release": false,
+  "files": {
+    "RequantGuard.txt": {
+      "sha256": "19bfa9a258d3199d5280f3829e3a54dd7d06c4d95294f5b419246e5eb8eebf57",
+      "size_bytes": 6450
+    },
+    "resnet50_requant_guard_node0001.json": {
+      "sha256": "1ab2edaca84a06aa369312145693eec1379aa16119f5187dda7564b5d085714e",
+      "size_bytes": 11987
+    },
+    "resnet50_requant_round_node0001_s00.json": {
+      "sha256": "bf9d814224236661ebdf355dea2ac48f4c2a32f77b234a1bef913fa246634710",
+      "size_bytes": 16599
+    },
+    "resnet50_requant_round_node0001_s01.json": {
+      "sha256": "1757400926ca8c967928b2c37f84a2d4ecfc397e99aef334353b9f1e5397b18e",
+      "size_bytes": 16596
+    },
+    "resnet50_requant_round_node0001_s02.json": {
+      "sha256": "e84b3430e2317bf3a581f7608031a617e3e58590f11cdf3be7d170fddcd56de8",
+      "size_bytes": 16596
+    },
+    "resnet50_requant_round_node0001_s03.json": {
+      "sha256": "022b02dccabb8412de7328a4c2befdd80bd4891a7797a0d07cfc0332a61f87dc",
+      "size_bytes": 16596
+    },
+    "resnet50_requant_round_node0001_s04.json": {
+      "sha256": "fad93c60c71a96d37706dbc448140e7bca34dd1470fa3402cc84cefb40e8bb55",
+      "size_bytes": 16597
+    },
+    "resnet50_requant_round_node0001_s05.json": {
+      "sha256": "f982137fcc4aa4acb21a389502fa07a3124ba38c59d69b003e4f541619bf0e6d",
+      "size_bytes": 16597
+    },
+    "resnet50_requant_round_node0001_s06.json": {
+      "sha256": "fa4389e08391562e6ba67fa2682b5a01d1824081e93595d8a59556af75ae8cc7",
+      "size_bytes": 16595
+    },
+    "resnet50_requant_round_node0001_s07.json": {
+      "sha256": "236cf4e187713cb32f63d37c8a8bda3a8270f807ce5608bb3ede8da738c9db7c",
+      "size_bytes": 16599
+    }
+  },
+  "formal_target_config": false,
+  "generation_receipt_sha256": "cb30c0f6be787f1237a8e9a8069c42c9c573988147b5520af01351c1159d2824",
+  "guard_sfu": {
+    "breakpoint_words": 65,
+    "execplan_length_64b": 100,
+    "intercept_words": 66,
+    "line_count_128b": 50,
+    "meaningful_word_count_32b": 197,
+    "padding_word_count_32b": 3,
+    "payload_sha256": "19bfa9a258d3199d5280f3829e3a54dd7d06c4d95294f5b419246e5eb8eebf57",
+    "slope65_bits": "0x3f800000",
+    "slope_words": 66,
+    "word_count_32b": 200
+  },
+  "manifest_sha256": "2459d9d2f028e18b6440bfc3d9c31d735815d26c05ce38c51d34f3beed00417d",
+  "operator_types": {
+    "resnet50_requant_guard_node0001": {
+      "canonical_json_sha256": "ad639684ac72751021c95778e2422d8e8eb983436f50b31ae7bdb6f271b57bed",
+      "role": "guard"
+    },
+    "resnet50_requant_round_node0001_s00": {
+      "canonical_json_sha256": "ee4f55f40d1a847501e4897436a13e7a3079f857580fc68c062ef4a54d7f3b7a",
+      "role": "round_saturate"
+    },
+    "resnet50_requant_round_node0001_s01": {
+      "canonical_json_sha256": "58325e691e7c9ba7a72fc64fd75dd4371a6183e6deb0b2063b04242e5d0297af",
+      "role": "round_saturate"
+    },
+    "resnet50_requant_round_node0001_s02": {
+      "canonical_json_sha256": "b75096f17d4ab47398ec9d62f53c9e00d9a6a72e93a03b6ab2c348d2d057255f",
+      "role": "round_saturate"
+    },
+    "resnet50_requant_round_node0001_s03": {
+      "canonical_json_sha256": "44c4278193ebb12a744ffb1c426a327b6429584677780431d3c17d11cdabe439",
+      "role": "round_saturate"
+    },
+    "resnet50_requant_round_node0001_s04": {
+      "canonical_json_sha256": "1653d0e493c43e1f51957c9641ed985216e8203d2587c1a72138d3783b8cb016",
+      "role": "round_saturate"
+    },
+    "resnet50_requant_round_node0001_s05": {
+      "canonical_json_sha256": "e955938df9582b3b1c649edc0127a704547031394982830cfb3284b7332dd0cf",
+      "role": "round_saturate"
+    },
+    "resnet50_requant_round_node0001_s06": {
+      "canonical_json_sha256": "c098f89ed9384a263b64d67c2ff2d2fd638def989514c7c073d626cf071c64d8",
+      "role": "round_saturate"
+    },
+    "resnet50_requant_round_node0001_s07": {
+      "canonical_json_sha256": "309f7d56b09e06c3fb15de38b16d31263e6d6ef88b3ab377897e5e69211589d4",
+      "role": "round_saturate"
+    }
+  },
+  "qparams": {
+    "all_multiplier_finite_positive": true,
+    "multiplier_maximum": 0.001863094512373209,
+    "multiplier_minimum": 3.840008033773046e-10,
+    "multiplier_sha256": "7ed3f7e123f3f68c86a141ea0fa562a694ed8bfd4a5014907f8e551ff76e9790",
+    "x_scale_bits": "0x3c98d99a",
+    "y_scale_bits": "0x3cb0a5e9",
+    "y_zero_point": 0
+  },
+  "request_id": "r5:hwop-0001-01",
+  "schema": "node0001-requant-two-stage-static-config-set-v1"
+}

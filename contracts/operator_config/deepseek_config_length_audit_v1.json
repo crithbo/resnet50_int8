@@ -1,0 +1,573 @@
+{
+  "blockers": [],
+  "candidate_release": false,
+  "consumer_equations": {
+    "acceptance": "programmed length == 64-bit source line count and exact 64b-to-128b reordered repacking",
+    "execplan": "Load_Config.config_length is measured in 64-bit words",
+    "generator": "bitstream/parse.py writes the continuous bit string independently as 64-bit words and reordered 128-bit rows",
+    "rtl": "global_config_manager suppresses the final high half only when the programmed 64-bit length is odd"
+  },
+  "contract_sha256": "c32b77ef50c5c8539c7027db8b9752e73549fd0903c43d1aaf630f0dfc490ede",
+  "families": {
+    "gemm": {
+      "instructions_explained": {
+        "path": "artifacts/operator_config_validation/ds_gemm_ffn_gate_v1/a/t/model_execplan/output/ds_gemm_ffn_gate_v1/instructions_explained.txt",
+        "sha256": "1edb92fbebd2b9559640170ec96fe64f302837d719eae35217a43d63151ca40d",
+        "size_bytes": 63846
+      },
+      "open_operator_ids": [],
+      "operator_count": 1,
+      "operators": {
+        "op0": {
+          "analysis": {
+            "last_row_high_half_is_transport_padding": true,
+            "matches_rtl_padding_contract": true,
+            "packing_matches_64bit_source": true,
+            "padding_classification": "ODD_ONE_TRANSPORT_PADDING_HALF",
+            "physical_128bit_rows": 30,
+            "physical_64bit_transport_slots": 60,
+            "programmed_load_config_length_64bit_words": 59,
+            "rtl_boundary": "global_config_manager sets gconfig_len_sent=len-1, uses ARLEN=(len-1)>>1, and for odd len suppresses the final 128-bit beat high half; the 64-bit generator output owns the meaningful word count",
+            "rtl_meaningful_64bit_word_count": 59,
+            "source_64bit_word_count": 59
+          },
+          "installed_128b_matches_transport": true,
+          "installed_128b_present": true,
+          "programmed_minus_source_words": 0,
+          "source_64b": {
+            "path": "artifacts/operator_config_validation/ds_gemm_ffn_gate_v1/a/t/model_execplan/output/ds_gemm_ffn_gate_v1/config/op0/op0_prefill_gemm_ring_4slice_bitstream_64b.bin",
+            "sha256": "11a969d40dfc138e5db7c549aa4df5ddcb8ea1ded1abf6990ae7ab6f1af29781",
+            "size_bytes": 3894
+          },
+          "status": "CLOSED",
+          "transport_128b": {
+            "path": "artifacts/operator_config_validation/ds_gemm_ffn_gate_v1/a/t/model_execplan/output/ds_gemm_ffn_gate_v1/config/op0/op0_prefill_gemm_ring_4slice_bitstream_128b.bin",
+            "sha256": "186c85691f6f56da045a073bec44b8e4d51a185720f45e14ae4b14b87f4d6d81",
+            "size_bytes": 3900
+          }
+        }
+      },
+      "output_root": "artifacts/operator_config_validation/ds_gemm_ffn_gate_v1/a/t/model_execplan/output/ds_gemm_ffn_gate_v1",
+      "status": "CLOSED"
+    },
+    "gemv": {
+      "instructions_explained": {
+        "path": "artifacts/operator_config_validation/ds_gemv_ffn_gate_v1/a/t/model_execplan/output/ds_gemv_ffn_gate_v1/instructions_explained.txt",
+        "sha256": "9205466ac7de84870fd5b0e119d6419011afea5c88ce5aad3c4d20c8cb761f8d",
+        "size_bytes": 63830
+      },
+      "open_operator_ids": [],
+      "operator_count": 1,
+      "operators": {
+        "op0": {
+          "analysis": {
+            "last_row_high_half_is_transport_padding": false,
+            "matches_rtl_padding_contract": true,
+            "packing_matches_64bit_source": true,
+            "padding_classification": "EVEN_NO_TRANSPORT_PADDING_HALF",
+            "physical_128bit_rows": 39,
+            "physical_64bit_transport_slots": 78,
+            "programmed_load_config_length_64bit_words": 78,
+            "rtl_boundary": "global_config_manager sets gconfig_len_sent=len-1, uses ARLEN=(len-1)>>1, and for odd len suppresses the final 128-bit beat high half; the 64-bit generator output owns the meaningful word count",
+            "rtl_meaningful_64bit_word_count": 78,
+            "source_64bit_word_count": 78
+          },
+          "installed_128b_matches_transport": true,
+          "installed_128b_present": true,
+          "programmed_minus_source_words": 0,
+          "source_64b": {
+            "path": "artifacts/operator_config_validation/ds_gemv_ffn_gate_v1/a/t/model_execplan/output/ds_gemv_ffn_gate_v1/config/op0/op0_decode_gemv_ring_bitstream_64b.bin",
+            "sha256": "c8c9bbf8cb5c8481eec0757978a6357290a834f95474d1a8ec15474189548967",
+            "size_bytes": 5148
+          },
+          "status": "CLOSED",
+          "transport_128b": {
+            "path": "artifacts/operator_config_validation/ds_gemv_ffn_gate_v1/a/t/model_execplan/output/ds_gemv_ffn_gate_v1/config/op0/op0_decode_gemv_ring_bitstream_128b.bin",
+            "sha256": "86e80abc5c5214c8250c9c00c656222c2240416b8eba31636043af44bae3c78d",
+            "size_bytes": 5070
+          }
+        }
+      },
+      "output_root": "artifacts/operator_config_validation/ds_gemv_ffn_gate_v1/a/t/model_execplan/output/ds_gemv_ffn_gate_v1",
+      "status": "CLOSED"
+    },
+    "rmsnorm": {
+      "instructions_explained": {
+        "path": "artifacts/operator_config_validation/ds_rms_v1/a/t/model_execplan/output/ds_rms_v1/instructions_explained.txt",
+        "sha256": "d0c919ba5d5ca8d808ae7863734926557e37ab97af3f6dd09398eb740883add4",
+        "size_bytes": 210830
+      },
+      "open_operator_ids": [],
+      "operator_count": 5,
+      "operators": {
+        "op0": {
+          "analysis": {
+            "last_row_high_half_is_transport_padding": true,
+            "matches_rtl_padding_contract": true,
+            "packing_matches_64bit_source": true,
+            "padding_classification": "ODD_ONE_TRANSPORT_PADDING_HALF",
+            "physical_128bit_rows": 34,
+            "physical_64bit_transport_slots": 68,
+            "programmed_load_config_length_64bit_words": 67,
+            "rtl_boundary": "global_config_manager sets gconfig_len_sent=len-1, uses ARLEN=(len-1)>>1, and for odd len suppresses the final 128-bit beat high half; the 64-bit generator output owns the meaningful word count",
+            "rtl_meaningful_64bit_word_count": 67,
+            "source_64bit_word_count": 67
+          },
+          "installed_128b_matches_transport": true,
+          "installed_128b_present": true,
+          "programmed_minus_source_words": 0,
+          "source_64b": {
+            "path": "artifacts/operator_config_validation/ds_rms_v1/a/t/model_execplan/output/ds_rms_v1/config/op0/op0_prefill_summac_fp32MN_fp32MN_bitstream_64b.bin",
+            "sha256": "f3a9523e5e4ddf7dd7c77c3e26c057c38f3b5044fc277a3d4078c49834ee5b0b",
+            "size_bytes": 4422
+          },
+          "status": "CLOSED",
+          "transport_128b": {
+            "path": "artifacts/operator_config_validation/ds_rms_v1/a/t/model_execplan/output/ds_rms_v1/config/op0/op0_prefill_summac_fp32MN_fp32MN_bitstream_128b.bin",
+            "sha256": "642569a14f3e866b2d85ea33603e7a66b0115f0d6c1ab17897b478b059a39f16",
+            "size_bytes": 4420
+          }
+        },
+        "op1": {
+          "analysis": {
+            "last_row_high_half_is_transport_padding": true,
+            "matches_rtl_padding_contract": true,
+            "packing_matches_64bit_source": true,
+            "padding_classification": "ODD_ONE_TRANSPORT_PADDING_HALF",
+            "physical_128bit_rows": 25,
+            "physical_64bit_transport_slots": 50,
+            "programmed_load_config_length_64bit_words": 49,
+            "rtl_boundary": "global_config_manager sets gconfig_len_sent=len-1, uses ARLEN=(len-1)>>1, and for odd len suppresses the final 128-bit beat high half; the 64-bit generator output owns the meaningful word count",
+            "rtl_meaningful_64bit_word_count": 49,
+            "source_64bit_word_count": 49
+          },
+          "installed_128b_matches_transport": true,
+          "installed_128b_present": true,
+          "programmed_minus_source_words": 0,
+          "source_64b": {
+            "path": "artifacts/operator_config_validation/ds_rms_v1/a/t/model_execplan/output/ds_rms_v1/config/op1/op1_prefill_remote_sum_fp32MN_fp32MN_bitstream_64b.bin",
+            "sha256": "7f36c5346f9dd8a2f2109b5739ffea0947219605002556f1f56d968b42e2bcfd",
+            "size_bytes": 3234
+          },
+          "status": "CLOSED",
+          "transport_128b": {
+            "path": "artifacts/operator_config_validation/ds_rms_v1/a/t/model_execplan/output/ds_rms_v1/config/op1/op1_prefill_remote_sum_fp32MN_fp32MN_bitstream_128b.bin",
+            "sha256": "6837a42c1e2d5667ba82bb06a3057bc986360b44e30d89ecaabb6d9310bf2dca",
+            "size_bytes": 3250
+          }
+        },
+        "op2": {
+          "analysis": {
+            "last_row_high_half_is_transport_padding": false,
+            "matches_rtl_padding_contract": true,
+            "packing_matches_64bit_source": true,
+            "padding_classification": "EVEN_NO_TRANSPORT_PADDING_HALF",
+            "physical_128bit_rows": 33,
+            "physical_64bit_transport_slots": 66,
+            "programmed_load_config_length_64bit_words": 66,
+            "rtl_boundary": "global_config_manager sets gconfig_len_sent=len-1, uses ARLEN=(len-1)>>1, and for odd len suppresses the final 128-bit beat high half; the 64-bit generator output owns the meaningful word count",
+            "rtl_meaningful_64bit_word_count": 66,
+            "source_64bit_word_count": 66
+          },
+          "installed_128b_matches_transport": true,
+          "installed_128b_present": true,
+          "programmed_minus_source_words": 0,
+          "source_64b": {
+            "path": "artifacts/operator_config_validation/ds_rms_v1/a/t/model_execplan/output/ds_rms_v1/config/op2/op2_prefill_mac_SFU_fp32MN_fp32MN_bitstream_64b.bin",
+            "sha256": "6eea2808bfceff1d0eecf8eddd85a5d859070d75b7d6406850e7eccd42198737",
+            "size_bytes": 4356
+          },
+          "status": "CLOSED",
+          "transport_128b": {
+            "path": "artifacts/operator_config_validation/ds_rms_v1/a/t/model_execplan/output/ds_rms_v1/config/op2/op2_prefill_mac_SFU_fp32MN_fp32MN_bitstream_128b.bin",
+            "sha256": "8c6cdba6de336c568f5c976c5c3a3c999d76de1635da8e10d00452fbf4f89064",
+            "size_bytes": 4290
+          }
+        },
+        "op3": {
+          "analysis": {
+            "last_row_high_half_is_transport_padding": false,
+            "matches_rtl_padding_contract": true,
+            "packing_matches_64bit_source": true,
+            "padding_classification": "EVEN_NO_TRANSPORT_PADDING_HALF",
+            "physical_128bit_rows": 30,
+            "physical_64bit_transport_slots": 60,
+            "programmed_load_config_length_64bit_words": 60,
+            "rtl_boundary": "global_config_manager sets gconfig_len_sent=len-1, uses ARLEN=(len-1)>>1, and for odd len suppresses the final 128-bit beat high half; the 64-bit generator output owns the meaningful word count",
+            "rtl_meaningful_64bit_word_count": 60,
+            "source_64bit_word_count": 60
+          },
+          "installed_128b_matches_transport": true,
+          "installed_128b_present": true,
+          "programmed_minus_source_words": 0,
+          "source_64b": {
+            "path": "artifacts/operator_config_validation/ds_rms_v1/a/t/model_execplan/output/ds_rms_v1/config/op3/op3_prefill_mul_fp32MN_fp32M_fp32MN_bitstream_64b.bin",
+            "sha256": "b63a01f66201fe415db3f21de51f380c7379e98ae50e6fa525c365898c873f05",
+            "size_bytes": 3960
+          },
+          "status": "CLOSED",
+          "transport_128b": {
+            "path": "artifacts/operator_config_validation/ds_rms_v1/a/t/model_execplan/output/ds_rms_v1/config/op3/op3_prefill_mul_fp32MN_fp32M_fp32MN_bitstream_128b.bin",
+            "sha256": "38fa2f2d270fd957a94ee89edac8afbf57ccad5949c7c7d90c1624dabc49c59a",
+            "size_bytes": 3900
+          }
+        },
+        "op4": {
+          "analysis": {
+            "last_row_high_half_is_transport_padding": false,
+            "matches_rtl_padding_contract": true,
+            "packing_matches_64bit_source": true,
+            "padding_classification": "EVEN_NO_TRANSPORT_PADDING_HALF",
+            "physical_128bit_rows": 25,
+            "physical_64bit_transport_slots": 50,
+            "programmed_load_config_length_64bit_words": 50,
+            "rtl_boundary": "global_config_manager sets gconfig_len_sent=len-1, uses ARLEN=(len-1)>>1, and for odd len suppresses the final 128-bit beat high half; the 64-bit generator output owns the meaningful word count",
+            "rtl_meaningful_64bit_word_count": 50,
+            "source_64bit_word_count": 50
+          },
+          "installed_128b_matches_transport": true,
+          "installed_128b_present": true,
+          "programmed_minus_source_words": 0,
+          "source_64b": {
+            "path": "artifacts/operator_config_validation/ds_rms_v1/a/t/model_execplan/output/ds_rms_v1/config/op4/op4_prefill_mul_fp32MN_fp32N_fp16MN_bitstream_64b.bin",
+            "sha256": "dbe8c1b8f1be3e9417334b7f027d2001cb156ace4c96e8a5eef063d1fb1b8101",
+            "size_bytes": 3300
+          },
+          "status": "CLOSED",
+          "transport_128b": {
+            "path": "artifacts/operator_config_validation/ds_rms_v1/a/t/model_execplan/output/ds_rms_v1/config/op4/op4_prefill_mul_fp32MN_fp32N_fp16MN_bitstream_128b.bin",
+            "sha256": "97efb73eac61ad8aceff0c97a636f32c3351a34e426e72476bc2e65deaa3d5f9",
+            "size_bytes": 3250
+          }
+        }
+      },
+      "output_root": "artifacts/operator_config_validation/ds_rms_v1/a/t/model_execplan/output/ds_rms_v1",
+      "status": "CLOSED"
+    },
+    "rope": {
+      "instructions_explained": {
+        "path": "artifacts/operator_config_validation/ds_rope_v1/a/t/model_execplan/output/ds_rope_v1/instructions_explained.txt",
+        "sha256": "3490ea9f95805b554b55173c740f343934544ac9d5247d6d80c4473dda75b450",
+        "size_bytes": 144406
+      },
+      "open_operator_ids": [],
+      "operator_count": 3,
+      "operators": {
+        "op0": {
+          "analysis": {
+            "last_row_high_half_is_transport_padding": true,
+            "matches_rtl_padding_contract": true,
+            "packing_matches_64bit_source": true,
+            "padding_classification": "ODD_ONE_TRANSPORT_PADDING_HALF",
+            "physical_128bit_rows": 31,
+            "physical_64bit_transport_slots": 62,
+            "programmed_load_config_length_64bit_words": 61,
+            "rtl_boundary": "global_config_manager sets gconfig_len_sent=len-1, uses ARLEN=(len-1)>>1, and for odd len suppresses the final 128-bit beat high half; the 64-bit generator output owns the meaningful word count",
+            "rtl_meaningful_64bit_word_count": 61,
+            "source_64bit_word_count": 61
+          },
+          "installed_128b_matches_transport": true,
+          "installed_128b_present": true,
+          "programmed_minus_source_words": 0,
+          "source_64b": {
+            "path": "artifacts/operator_config_validation/ds_rope_v1/a/t/model_execplan/output/ds_rope_v1/config/op0/op0_prefill_mul_fp32MN_fp32MN_fp32MN_bitstream_64b.bin",
+            "sha256": "3759f7624cef1d914ecfdba56cd16a0160e242ac124f2dfdd481560cd02a3a88",
+            "size_bytes": 4026
+          },
+          "status": "CLOSED",
+          "transport_128b": {
+            "path": "artifacts/operator_config_validation/ds_rope_v1/a/t/model_execplan/output/ds_rope_v1/config/op0/op0_prefill_mul_fp32MN_fp32MN_fp32MN_bitstream_128b.bin",
+            "sha256": "0502b7a8d9c8d35374ed240dc1fdf802981e9c0ef2e49926ea26e7a7fa8568c5",
+            "size_bytes": 4030
+          }
+        },
+        "op1": {
+          "analysis": {
+            "last_row_high_half_is_transport_padding": true,
+            "matches_rtl_padding_contract": true,
+            "packing_matches_64bit_source": true,
+            "padding_classification": "ODD_ONE_TRANSPORT_PADDING_HALF",
+            "physical_128bit_rows": 31,
+            "physical_64bit_transport_slots": 62,
+            "programmed_load_config_length_64bit_words": 61,
+            "rtl_boundary": "global_config_manager sets gconfig_len_sent=len-1, uses ARLEN=(len-1)>>1, and for odd len suppresses the final 128-bit beat high half; the 64-bit generator output owns the meaningful word count",
+            "rtl_meaningful_64bit_word_count": 61,
+            "source_64bit_word_count": 61
+          },
+          "installed_128b_matches_transport": true,
+          "installed_128b_present": true,
+          "programmed_minus_source_words": 0,
+          "source_64b": {
+            "path": "artifacts/operator_config_validation/ds_rope_v1/a/t/model_execplan/output/ds_rope_v1/config/op1/op1_prefill_mul_fp32MN_fp32MN_fp32MN_bitstream_64b.bin",
+            "sha256": "b5c63c21e753d7b0cecbba32130a0fcc99a6c5048402444826f41fe32fcc3571",
+            "size_bytes": 4026
+          },
+          "status": "CLOSED",
+          "transport_128b": {
+            "path": "artifacts/operator_config_validation/ds_rope_v1/a/t/model_execplan/output/ds_rope_v1/config/op1/op1_prefill_mul_fp32MN_fp32MN_fp32MN_bitstream_128b.bin",
+            "sha256": "1890825e6a0d999765ad3c50563dbd7e15b46cacba389be3502429fb68081d90",
+            "size_bytes": 4030
+          }
+        },
+        "op2": {
+          "analysis": {
+            "last_row_high_half_is_transport_padding": true,
+            "matches_rtl_padding_contract": true,
+            "packing_matches_64bit_source": true,
+            "padding_classification": "ODD_ONE_TRANSPORT_PADDING_HALF",
+            "physical_128bit_rows": 31,
+            "physical_64bit_transport_slots": 62,
+            "programmed_load_config_length_64bit_words": 61,
+            "rtl_boundary": "global_config_manager sets gconfig_len_sent=len-1, uses ARLEN=(len-1)>>1, and for odd len suppresses the final 128-bit beat high half; the 64-bit generator output owns the meaningful word count",
+            "rtl_meaningful_64bit_word_count": 61,
+            "source_64bit_word_count": 61
+          },
+          "installed_128b_matches_transport": true,
+          "installed_128b_present": true,
+          "programmed_minus_source_words": 0,
+          "source_64b": {
+            "path": "artifacts/operator_config_validation/ds_rope_v1/a/t/model_execplan/output/ds_rope_v1/config/op2/op2_prefill_add_fp32MN_fp32MN_fp16MN_bitstream_64b.bin",
+            "sha256": "1e9499a107be3a3d4c9fe593723ddac8904a751edc2ae5bd54b9fb92e48dc542",
+            "size_bytes": 4026
+          },
+          "status": "CLOSED",
+          "transport_128b": {
+            "path": "artifacts/operator_config_validation/ds_rope_v1/a/t/model_execplan/output/ds_rope_v1/config/op2/op2_prefill_add_fp32MN_fp32MN_fp16MN_bitstream_128b.bin",
+            "sha256": "f448361e2dcff4cfef3ce7c640aa6c30c32655a38b91039bdc871c301612df50",
+            "size_bytes": 4030
+          }
+        }
+      },
+      "output_root": "artifacts/operator_config_validation/ds_rope_v1/a/t/model_execplan/output/ds_rope_v1",
+      "status": "CLOSED"
+    },
+    "silu": {
+      "instructions_explained": {
+        "path": "artifacts/operator_config_validation/ds_silu_v6/a/t/model_execplan/output/ds_silu_v6/instructions_explained.txt",
+        "sha256": "4e196d8afa743ea208f3fca2801289233c0d28aff3ff59c11b6d7fd3d14d9ee3",
+        "size_bytes": 32954
+      },
+      "open_operator_ids": [],
+      "operator_count": 1,
+      "operators": {
+        "op0": {
+          "analysis": {
+            "last_row_high_half_is_transport_padding": false,
+            "matches_rtl_padding_contract": true,
+            "packing_matches_64bit_source": true,
+            "padding_classification": "EVEN_NO_TRANSPORT_PADDING_HALF",
+            "physical_128bit_rows": 25,
+            "physical_64bit_transport_slots": 50,
+            "programmed_load_config_length_64bit_words": 50,
+            "rtl_boundary": "global_config_manager sets gconfig_len_sent=len-1, uses ARLEN=(len-1)>>1, and for odd len suppresses the final 128-bit beat high half; the 64-bit generator output owns the meaningful word count",
+            "rtl_meaningful_64bit_word_count": 50,
+            "source_64bit_word_count": 50
+          },
+          "installed_128b_matches_transport": true,
+          "installed_128b_present": true,
+          "programmed_minus_source_words": 0,
+          "source_64b": {
+            "path": "artifacts/operator_config_validation/ds_silu_v6/a/t/model_execplan/output/ds_silu_v6/config/op0/op0_prefill_silu_fp16MN_fp32MN_bitstream_64b.bin",
+            "sha256": "98e112a4920463005c7c458cf55045c3d98087adb2ba8c8a53cb8b66610fc95b",
+            "size_bytes": 3300
+          },
+          "status": "CLOSED",
+          "transport_128b": {
+            "path": "artifacts/operator_config_validation/ds_silu_v6/a/t/model_execplan/output/ds_silu_v6/config/op0/op0_prefill_silu_fp16MN_fp32MN_bitstream_128b.bin",
+            "sha256": "07fa511ede6f962e0d00a67adacd71a2b1c0da0a8e4db4c870813a889db58392",
+            "size_bytes": 3250
+          }
+        }
+      },
+      "output_root": "artifacts/operator_config_validation/ds_silu_v6/a/t/model_execplan/output/ds_silu_v6",
+      "status": "CLOSED"
+    },
+    "softmax": {
+      "instructions_explained": {
+        "path": "artifacts/operator_config_validation/ds_softmax_v1/a/t/model_execplan/output/ds_softmax_v1/instructions_explained.txt",
+        "sha256": "05398d8959989b5016b01bd1f1905120269c6b7dc4428fb4255c1a4fed245a5b",
+        "size_bytes": 209969
+      },
+      "open_operator_ids": [],
+      "operator_count": 5,
+      "operators": {
+        "op0": {
+          "analysis": {
+            "last_row_high_half_is_transport_padding": true,
+            "matches_rtl_padding_contract": true,
+            "packing_matches_64bit_source": true,
+            "padding_classification": "ODD_ONE_TRANSPORT_PADDING_HALF",
+            "physical_128bit_rows": 31,
+            "physical_64bit_transport_slots": 62,
+            "programmed_load_config_length_64bit_words": 61,
+            "rtl_boundary": "global_config_manager sets gconfig_len_sent=len-1, uses ARLEN=(len-1)>>1, and for odd len suppresses the final 128-bit beat high half; the 64-bit generator output owns the meaningful word count",
+            "rtl_meaningful_64bit_word_count": 61,
+            "source_64bit_word_count": 61
+          },
+          "installed_128b_matches_transport": true,
+          "installed_128b_present": true,
+          "programmed_minus_source_words": 0,
+          "source_64b": {
+            "path": "artifacts/operator_config_validation/ds_softmax_v1/a/t/model_execplan/output/ds_softmax_v1/config/op0/op0_prefill_mac_fp32MN_fp32MN_fp32MN_bitstream_64b.bin",
+            "sha256": "9e826443e81122c615719cb66fb8ba6730407bea80e834ea27308176e63552d3",
+            "size_bytes": 4026
+          },
+          "status": "CLOSED",
+          "transport_128b": {
+            "path": "artifacts/operator_config_validation/ds_softmax_v1/a/t/model_execplan/output/ds_softmax_v1/config/op0/op0_prefill_mac_fp32MN_fp32MN_fp32MN_bitstream_128b.bin",
+            "sha256": "db74f44aba9bcea80534b80d4cc2003dffdaf5ce353f138e991f45ded2ab60eb",
+            "size_bytes": 4030
+          }
+        },
+        "op1": {
+          "analysis": {
+            "last_row_high_half_is_transport_padding": true,
+            "matches_rtl_padding_contract": true,
+            "packing_matches_64bit_source": true,
+            "padding_classification": "ODD_ONE_TRANSPORT_PADDING_HALF",
+            "physical_128bit_rows": 25,
+            "physical_64bit_transport_slots": 50,
+            "programmed_load_config_length_64bit_words": 49,
+            "rtl_boundary": "global_config_manager sets gconfig_len_sent=len-1, uses ARLEN=(len-1)>>1, and for odd len suppresses the final 128-bit beat high half; the 64-bit generator output owns the meaningful word count",
+            "rtl_meaningful_64bit_word_count": 49,
+            "source_64bit_word_count": 49
+          },
+          "installed_128b_matches_transport": true,
+          "installed_128b_present": true,
+          "programmed_minus_source_words": 0,
+          "source_64b": {
+            "path": "artifacts/operator_config_validation/ds_softmax_v1/a/t/model_execplan/output/ds_softmax_v1/config/op1/op1_prefill_max_fp32MN_fp32MN_bitstream_64b.bin",
+            "sha256": "57816f17d6413edf6dbed32a8e3250e90d8b8b6cdd64ebc729344a84f36d1cd6",
+            "size_bytes": 3234
+          },
+          "status": "CLOSED",
+          "transport_128b": {
+            "path": "artifacts/operator_config_validation/ds_softmax_v1/a/t/model_execplan/output/ds_softmax_v1/config/op1/op1_prefill_max_fp32MN_fp32MN_bitstream_128b.bin",
+            "sha256": "436b5376cc389398d7de134afa4c4a61cac9db106b867270a32b9aa51b1e3eaf",
+            "size_bytes": 3250
+          }
+        },
+        "op2": {
+          "analysis": {
+            "last_row_high_half_is_transport_padding": true,
+            "matches_rtl_padding_contract": true,
+            "packing_matches_64bit_source": true,
+            "padding_classification": "ODD_ONE_TRANSPORT_PADDING_HALF",
+            "physical_128bit_rows": 40,
+            "physical_64bit_transport_slots": 80,
+            "programmed_load_config_length_64bit_words": 79,
+            "rtl_boundary": "global_config_manager sets gconfig_len_sent=len-1, uses ARLEN=(len-1)>>1, and for odd len suppresses the final 128-bit beat high half; the 64-bit generator output owns the meaningful word count",
+            "rtl_meaningful_64bit_word_count": 79,
+            "source_64bit_word_count": 79
+          },
+          "installed_128b_matches_transport": true,
+          "installed_128b_present": true,
+          "programmed_minus_source_words": 0,
+          "source_64b": {
+            "path": "artifacts/operator_config_validation/ds_softmax_v1/a/t/model_execplan/output/ds_softmax_v1/config/op2/op2_prefill_sub_SFU_fp32MN_fp32M_fp32MN_bitstream_64b.bin",
+            "sha256": "78a38d4455dec02a38e1098ad67b8fe078c8cb2fc9aaf61d6d8bc7cac69710e7",
+            "size_bytes": 5214
+          },
+          "status": "CLOSED",
+          "transport_128b": {
+            "path": "artifacts/operator_config_validation/ds_softmax_v1/a/t/model_execplan/output/ds_softmax_v1/config/op2/op2_prefill_sub_SFU_fp32MN_fp32M_fp32MN_bitstream_128b.bin",
+            "sha256": "5b2d8f5b32a3fb12e711a436da843e5feb1bee6ee846112716b00711ef92d85b",
+            "size_bytes": 5200
+          }
+        },
+        "op3": {
+          "analysis": {
+            "last_row_high_half_is_transport_padding": true,
+            "matches_rtl_padding_contract": true,
+            "packing_matches_64bit_source": true,
+            "padding_classification": "ODD_ONE_TRANSPORT_PADDING_HALF",
+            "physical_128bit_rows": 34,
+            "physical_64bit_transport_slots": 68,
+            "programmed_load_config_length_64bit_words": 67,
+            "rtl_boundary": "global_config_manager sets gconfig_len_sent=len-1, uses ARLEN=(len-1)>>1, and for odd len suppresses the final 128-bit beat high half; the 64-bit generator output owns the meaningful word count",
+            "rtl_meaningful_64bit_word_count": 67,
+            "source_64bit_word_count": 67
+          },
+          "installed_128b_matches_transport": true,
+          "installed_128b_present": true,
+          "programmed_minus_source_words": 0,
+          "source_64b": {
+            "path": "artifacts/operator_config_validation/ds_softmax_v1/a/t/model_execplan/output/ds_softmax_v1/config/op3/op3_prefill_sum_rec_fp32MN_fp32MN_bitstream_64b.bin",
+            "sha256": "093a6343ab2a26fc32e50cc100859b755efbf641557d38d1941694743b6e6dcc",
+            "size_bytes": 4422
+          },
+          "status": "CLOSED",
+          "transport_128b": {
+            "path": "artifacts/operator_config_validation/ds_softmax_v1/a/t/model_execplan/output/ds_softmax_v1/config/op3/op3_prefill_sum_rec_fp32MN_fp32MN_bitstream_128b.bin",
+            "sha256": "ce8d5bd2ead9c1a6bf1198b3df3c7a792755b7d97e40ed6b3fb15312803bf7b2",
+            "size_bytes": 4420
+          }
+        },
+        "op4": {
+          "analysis": {
+            "last_row_high_half_is_transport_padding": false,
+            "matches_rtl_padding_contract": true,
+            "packing_matches_64bit_source": true,
+            "padding_classification": "EVEN_NO_TRANSPORT_PADDING_HALF",
+            "physical_128bit_rows": 30,
+            "physical_64bit_transport_slots": 60,
+            "programmed_load_config_length_64bit_words": 60,
+            "rtl_boundary": "global_config_manager sets gconfig_len_sent=len-1, uses ARLEN=(len-1)>>1, and for odd len suppresses the final 128-bit beat high half; the 64-bit generator output owns the meaningful word count",
+            "rtl_meaningful_64bit_word_count": 60,
+            "source_64bit_word_count": 60
+          },
+          "installed_128b_matches_transport": true,
+          "installed_128b_present": true,
+          "programmed_minus_source_words": 0,
+          "source_64b": {
+            "path": "artifacts/operator_config_validation/ds_softmax_v1/a/t/model_execplan/output/ds_softmax_v1/config/op4/op4_prefill_mul_fp32MN_fp32M_fp16MN_bitstream_64b.bin",
+            "sha256": "bc809c4ae6bec9d7b00e7be0aaba1075277f751e11404cbc5083f362b0ac907c",
+            "size_bytes": 3960
+          },
+          "status": "CLOSED",
+          "transport_128b": {
+            "path": "artifacts/operator_config_validation/ds_softmax_v1/a/t/model_execplan/output/ds_softmax_v1/config/op4/op4_prefill_mul_fp32MN_fp32M_fp16MN_bitstream_128b.bin",
+            "sha256": "800dbb8d94f8e0e4cd48f36502b0462e7855da8f8ad5d7100b90c7191f8b5444",
+            "size_bytes": 3900
+          }
+        }
+      },
+      "output_root": "artifacts/operator_config_validation/ds_softmax_v1/a/t/model_execplan/output/ds_softmax_v1",
+      "status": "CLOSED"
+    }
+  },
+  "formal_target_config": false,
+  "identity_boundary": {
+    "crop_contract_required": true,
+    "direct_onnx_shape_equals_stage": false,
+    "onnx_repository_classification": "SEMANTIC_MODEL_MATCH",
+    "original_source_identity": false
+  },
+  "rule": {
+    "path": ".agents/rules/DeepSeek_码流生命周期增量规则.md",
+    "sha256": "247f4469572359055af077b631d59f4193cb1735c8932c857f5de94e1a83518a",
+    "size_bytes": 5516
+  },
+  "rule_ids": [
+    "CDA-DEEPSEEK-CONFIG-LENGTH-PADDING-001",
+    "CDA-CONFIG-MATERIALIZED-ROUNDTRIP-001"
+  ],
+  "schema": "deepseek-config-length-audit-v1",
+  "server_package_generated": false,
+  "status": "LOCAL_E2_CONFIG_LENGTH_CLOSED",
+  "summary": {
+    "closed_families": [
+      "gemm",
+      "gemv",
+      "rmsnorm",
+      "rope",
+      "silu",
+      "softmax"
+    ],
+    "closed_operator_count": 16,
+    "family_count": 6,
+    "open_families": [],
+    "open_operator_count": 0,
+    "operator_count": 16
+  }
+}

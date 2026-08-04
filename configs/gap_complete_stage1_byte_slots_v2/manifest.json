@@ -1,0 +1,52 @@
+{
+  "bypass_annotation": {
+    "bypass_reason": "The real node-0071 QLinearGlobalAveragePool must be numerically runnable while every functional RTL repair route remains frozen.",
+    "claim_boundary": "CONFIG_ONLY_CORRECTNESS_BASELINE for this exact node-0071 instance at local E2 only; not production, not a performance release, and not E3/E4/E5.",
+    "contradicted_or_missing_native_path": "The historical int32_sum/transout path is contradicted by occupancy, stale-C and D-coverage evidence. repair_v9, RTL_CONTROL and CONFIG_SEMANTICS repairs remain frozen. The generic one-stage multiply-plus-magic topology violates the required ordered FP32 materialization boundary.",
+    "exact_equivalence_scope": "Only r5 node-0071 with uint8[16,2048,7,7], x_zp=0, spatial_count=49, INT32 sums in [0,2477], FP32 multiplier bits 0x3d878c94, y_zp=0 and uint8 output[16,2048,1,1]. It does not establish an unconditional AverageRequant or QuantizeLinear capability.",
+    "materialized_configuration_mechanism": "Reuse the hash-bound six-stage non-transout int32_mac sum tree, then serialize INT32-to-FP32 MUL into explicit scratch at 0xa0000 and a separate magic-bias RNE/int32-sub/saturating uint8 stage at 0xa2000. All eight stages reload configuration and end in a same-mask barrier.",
+    "performance_and_resource_cost": "Adds two Start_Comp operations, two barriers, 8192 bytes of FP32 scratch per active slice and one extra full INT32/FP32 read-write pass; total serialized stage count is eight. No throughput claim.",
+    "unresolved_production_blocker": "No final Trassic2.0_RTL commit is bound; dynamic dual-stream, barrier/readback and native server integration are not executed here. E4/E5 and production timing/resource closure remain open."
+  },
+  "claim": "CONFIG_ONLY_CORRECTNESS_BASELINE",
+  "records": [
+    {
+      "logical_config": "configs/gap_complete_stage1_byte_slots_v2/mul/logical_config.json",
+      "logical_config_sha256": "d93b9a62dd5aeed16c2fbc65da9eaec162434d51dc5970356e5b1216253c8ed9",
+      "materialization_ownership": "configs/gap_complete_stage1_byte_slots_v2/mul/materialization_ownership.json",
+      "materialization_ownership_sha256": "25f9428f5d2d3609a9235193a85d9d8e2f0b12adedbe85281c624b11e57b3aad",
+      "materialized_non_base_diff_count": 0,
+      "path": "configs/gap_complete_stage1_byte_slots_v2/mul/config.json",
+      "semantic_derivation": "configs/gap_complete_stage1_byte_slots_v2/mul/semantic_derivation.json",
+      "semantic_derivation_sha256": "2b65e83ae8cfbe2ed35df96d83844b180050ac513cc668c628927462d072a032",
+      "sha256": "b3bea50e017a4da6ea5a89b3563240c69bccb16ea9d28ff7a76d25c2b69d4609",
+      "stage": "mul"
+    },
+    {
+      "logical_config": "configs/gap_complete_stage1_byte_slots_v2/round/logical_config.json",
+      "logical_config_sha256": "d3b76d0460c7e9b00f543c58af5a2cf241e90c352df5e11654f30fa0d6986c02",
+      "materialization_ownership": "configs/gap_complete_stage1_byte_slots_v2/round/materialization_ownership.json",
+      "materialization_ownership_sha256": "9ded865159b01f8942434b95fa66b477d82e1c790e511b935922e319be9d2672",
+      "materialized_non_base_diff_count": 0,
+      "path": "configs/gap_complete_stage1_byte_slots_v2/round/config.json",
+      "semantic_derivation": "configs/gap_complete_stage1_byte_slots_v2/round/semantic_derivation.json",
+      "semantic_derivation_sha256": "c3209a04bf7daf7096f0c9f85a15a392269872541e0fb8d1c2db141a70cf4edf",
+      "sha256": "b2969efd8c32ddd616b25676748594b1d7c811f1d8c0bb05927dd663b38881a0",
+      "stage": "round"
+    }
+  ],
+  "schema": "gap-node0071-exact-uint8-tail-config-set-v1",
+  "template": {
+    "path": "ndp-sim/jsons/quant_from_buffer_int32MN_uint8MN.json",
+    "reuse_scope": "STRUCTURE_OR_PRIMITIVE_ONLY",
+    "sha256": "db638f0640e74217e80e61350a2fe400f7b495e2201f17c39915328cdd455ba2"
+  },
+  "typed_parameters": {
+    "multiplier_bits": "0x3d878c94",
+    "multiplier_formula": "float32(x_scale / (y_scale * 49))",
+    "output_zero_point": 0,
+    "spatial_count": 49,
+    "x_scale_bits": "0x3d9b232c",
+    "y_scale_bits": "0x3cbf57ec"
+  }
+}

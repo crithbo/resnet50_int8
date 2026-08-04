@@ -1,0 +1,154 @@
+{
+  "schema": "deepseek-rmsnorm-generation-read-receipt-v1",
+  "created_at": "2026-07-25",
+  "task": "DeepSeek crop-derived RMSNorm five-stage local E2 validation",
+  "scope": {
+    "mode": "local_rule_validation",
+    "json_generation_allowed_after_receipt": true,
+    "server_package_generation_allowed": false,
+    "rtl_tree_mutation_allowed": false,
+    "maximum_evidence_level": "E2"
+  },
+  "source_identity_boundary": {
+    "onnx_repository_classification": "SEMANTIC_MODEL_MATCH",
+    "original_source_identity_claim_allowed": false,
+    "crop_required_for_ndpsim_shape": true,
+    "direct_onnx_shape_equals_hardware_stage_claim_allowed": false
+  },
+  "base_read_receipt": {
+    "path": "contracts/operator_config/deepseek_onnx_stage_validation_read_receipt_v1.json",
+    "sha256": "bab13378476bd715f416d7cdb9b9d9b753a5729132590322d44954f5ce8c1ce4",
+    "scope": "common rules, DeepSeek-specific rules, LC/MSE/Buffer/GA field semantics and shared native consumers"
+  },
+  "supplemental_rules_read": [
+    {
+      "path": ".agents/rules/DeepSeek_码流生命周期增量规则.md",
+      "sha256": "247f4469572359055af077b631d59f4193cb1735c8932c857f5de94e1a83518a",
+      "size_bytes": 5516,
+      "reason": "64b-owned Load_Config length and exact 64b-to-128b packing"
+    },
+    {
+      "path": ".agents/rules/DeepSeek_RMSNorm增量规则.md",
+      "sha256": "c40b5ecb09290946490881473b5f23bcc483238153bdfb7151743b25ad9a0a2c",
+      "size_bytes": 2358,
+      "reason": "7x4-slice grouped remote-sum topology and raw Stage ownership"
+    }
+  ],
+  "active_stage_producer": {
+    "graph": {
+      "path": "artifacts/operator_config_validation/r5-deepseek-onnx-stage-json-e2-v1/layer0_prefill.rule_normalized.json",
+      "sha256": "2f1fc4def9d9332d4d3abb19fc711a4488d659ceac3b67a3e85b951ce43a423b",
+      "size_bytes": 34628
+    },
+    "contract": {
+      "path": "contracts/operator_config/deepseek_prefill_rule_normalized_stage_v1.json",
+      "sha256": "b59312280d0e11cdae398b4ab7c3cd467061e2b8db48bfb7c37d0373c0a334c1",
+      "size_bytes": 5517
+    }
+  },
+  "trusted_materialized_package_oracle": {
+    "graph": {
+      "path": "jsons/rmsnorm/rmsnorm_withbaseaddr.json",
+      "sha256": "1e433f028cde7c67121e2290bbb3572bd81dc6536a79bebefa4858cf8d4264a8",
+      "size_bytes": 2329
+    },
+    "instructions_explained": {
+      "path": "jsons/rmsnorm/instructions_explained.txt",
+      "sha256": "ee843a82e12e34c2d228423c5f45b82a4bc672dbc8f13ebe6ad3913888d5aa2d",
+      "size_bytes": 230587
+    },
+    "sca": {
+      "path": "jsons/rmsnorm/sca_cfg.json",
+      "sha256": "41d7a1cac39c07ad73963735dbe51315914e02aa0ae8c9d3af23ccac0d4cb42f",
+      "size_bytes": 34646
+    }
+  },
+  "additional_native_sources_read": [
+    {
+      "path": "ndp-sim/model_execplan/op_json/rmsnorm.json",
+      "sha256": "ad046825c4b4d3265a33b8614fcb0a179157d78321f79cb96a95541c7bcb4097",
+      "size_bytes": 2006,
+      "reason": "native four-stage RMS core DAG"
+    },
+    {
+      "path": "ndp-sim/model_execplan/op_json/prefill_mul_fp32MN_fp32N_fp16MN.json",
+      "sha256": "f6a49417fb41916bb245f50b952fe4c7cb3c7aa0876406d2ccbcec8a5d781d33",
+      "size_bytes": 710,
+      "reason": "native gamma multiply stage following the RMS core"
+    },
+    {
+      "path": "ndp-sim/model_execplan/src/execution_plan_generator/control_registers.py",
+      "sha256": "cd12ee5f31231e856f9f63f61746a8e43435228d0268813c3eb8c4630e09a941",
+      "size_bytes": 85852,
+      "read_scope": "prefill summac, remote-sum, mac-SFU, fp32MN×fp32M and fp32MN×fp32N handlers plus registry",
+      "reason": "actual Stage-shape to materialized-register derivation"
+    },
+    {
+      "path": "ndp-sim/generate_python_golden/deepseek1.5b_3_time_golden_smallsize_0527.py",
+      "sha256": "4dc42e91a5869bb523fb86ba8caf92280df18de5487c1ce33b706361fa799540",
+      "size_bytes": 49401,
+      "read_scope": "rms_norm and separate attn_norm/ffn_norm gamma multiply consumers",
+      "reason": "numeric decomposition and operator-boundary evidence"
+    },
+    {
+      "path": "ndp-sim/jsons/prefill_summac_fp32MN_fp32MN.json",
+      "sha256": "bcbf94fc07e9610d98ebfcd11c0264a8f935b2020d06eda7e3131f271d2075ae",
+      "size_bytes": 19729,
+      "reason": "trusted local square-and-sum JSON oracle"
+    },
+    {
+      "path": "ndp-sim/jsons/prefill_remote_sum_fp32MN_fp32MN.json",
+      "sha256": "44382b0405fc3192172f3ab6e4fb81dbd29701a7c8e16715d2a186743ef60708",
+      "size_bytes": 13667,
+      "reason": "trusted cross-slice sum JSON oracle"
+    },
+    {
+      "path": "ndp-sim/jsons/prefill_mac_SFU_fp32MN_fp32MN.json",
+      "sha256": "f6fa1fccd55df2728ec855a0097918dca35a89002e32ac93c4b3e60a9058696d",
+      "size_bytes": 19424,
+      "reason": "trusted divide, epsilon and reciprocal-square-root JSON oracle"
+    },
+    {
+      "path": "ndp-sim/jsons/prefill_mul_fp32MN_fp32M_fp32MN.json",
+      "sha256": "db66d5e8da6146eb743fe1006a6248daf040ba937d713a99f961c591325a272f",
+      "size_bytes": 14789,
+      "reason": "trusted normalization-factor broadcast multiply JSON oracle"
+    },
+    {
+      "path": "ndp-sim/jsons/prefill_mul_fp32MN_fp32N_fp16MN.json",
+      "sha256": "4c82b7820830b041931769a3bc48e6612ae4bb47bc36a148c80aebd7d73b4cd7",
+      "size_bytes": 16452,
+      "reason": "trusted gamma multiply and fp32-to-fp16 JSON oracle"
+    },
+    {
+      "path": "resnet50_pipeline/deepseek_reduction_rules.py",
+      "sha256": "8aef07e5975c73d2be7959ec163982ea66fc01c493ab6905c4d7304411366213",
+      "size_bytes": 15336,
+      "reason": "existing local/remote reduction rule extraction and terminal checks"
+    }
+  ],
+  "onnx_anchor": {
+    "node_index": 9,
+    "name": "/model/layers.0/input_layernorm/LayerNorm",
+    "op_type": "SimplifiedLayerNormalization",
+    "axis": -1,
+    "epsilon": 9.999999974752427e-07,
+    "gamma_initializer": "model.layers.0.input_layernorm.weight"
+  },
+  "known_counterexamples": [
+    "The ONNX fused node includes gamma; the native four-stage rmsnorm.json only computes the unweighted normalized tensor and requires a fifth gamma-multiply stage.",
+    "A correct remote-sum JSON does not prove that the address planner gathers 28 producer slices into the leader slice.",
+    "Per-slice producer allocation plus a leader-only consumer must prove source-slice routing and byte extent before full RMSNorm acceptance."
+  ],
+  "rule_ids": [
+    "CDA-CONFIG-SEMANTIC-OWNERSHIP-001",
+    "CDA-CONFIG-MATERIALIZED-ROUNDTRIP-001",
+    "CDA-CONFIG-FULL-REBUILD-PROVENANCE-001",
+    "CDA-DEEPSEEK-MODEL-IDENTITY-001",
+    "CDA-DEEPSEEK-CROP-EXPLICIT-001",
+    "CDA-DEEPSEEK-ONNX-STAGE-DAG-001",
+    "CDA-DEEPSEEK-STAGE-JSON-ORACLE-001",
+    "CDA-DEEPSEEK-CROSS-SLICE-ROUTE-001"
+  ],
+  "receipt_status": "RMSNORM_FIVE_STAGE_MATERIALIZATION_READY"
+}

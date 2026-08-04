@@ -1,0 +1,147 @@
+{
+  "known_counterexamples": [
+    "DEQUANT_AFFINE_ROUNDING_COUNTEREXAMPLE",
+    "full E4: 28 starts, zero finishes, no formal D"
+  ],
+  "omitted_files": [
+    {
+      "path": ".agents/rules/服务器测试包生成规则.md",
+      "reason": "the testing task owns package generation"
+    },
+    {
+      "path": "NDP_copy01/rtl/**",
+      "reason": "no RTL is modified; stable field rules are consumed"
+    }
+  ],
+  "open_dynamic_gates": [
+    "B_DEQUANT_SERVER_E4_E5"
+  ],
+  "read_at": "2026-07-26",
+  "read_receipt": [
+    {
+      "label": "agent_policy",
+      "path": ".agents/agent.md",
+      "reason": "rule routing and triggered field semantics",
+      "sha256": "367f4f4260246d40531d83cc6d24fe94946cb05bce6fbef18c428f05b634c083",
+      "size_bytes": 3439
+    },
+    {
+      "label": "generation_read_index",
+      "path": ".agents/rules/生成前必读索引.md",
+      "reason": "rule routing and triggered field semantics",
+      "sha256": "539e8dfbe52ad9fc8bd9fdef8c69d448fb5fd713e938e3adc5f663f82fd806d7",
+      "size_bytes": 5650
+    },
+    {
+      "label": "operator_rules",
+      "path": ".agents/rules/算子配置规则.md",
+      "reason": "rule routing and triggered field semantics",
+      "sha256": "a5fbe2f0fa2e26d8cd4ebfe8772d5a3c69516d6918cfaa5087198706a352427b",
+      "size_bytes": 12168
+    },
+    {
+      "label": "hardware_field_semantics",
+      "path": ".agents/rules/NDP硬件字段语义.md",
+      "reason": "rule routing and triggered field semantics",
+      "sha256": "7f446adb1719658ce75c2614c6d619fc2c7cdcabf5e4fd34945482645539158f",
+      "size_bytes": 12602
+    },
+    {
+      "label": "dequant_rules",
+      "path": ".agents/rules/DequantizeLinear算子配置规则.md",
+      "reason": "rule routing and triggered field semantics",
+      "sha256": "ba75b679199aa140a9765b8f44ae335b492f667509f50a0c01f9dfc6cdd3f8e2",
+      "size_bytes": 6572
+    },
+    {
+      "label": "atomic_rules",
+      "path": ".agents/rules/DequantizeLinear原子动态合同规则.md",
+      "reason": "rule routing and triggered field semantics",
+      "sha256": "c2873ebf86181262ae1f6235f19162e44ab31523e5031cc329b89150a61b7e53",
+      "size_bytes": 2835
+    },
+    {
+      "label": "dequant_materializer",
+      "path": "resnet50_pipeline/dequantize_linear_vertical.py",
+      "reason": "closed source topology or actual direct consumer",
+      "sha256": "1372706d6faad420100e6d8d9610f05004522f7696384021ad565861ac74e072",
+      "size_bytes": 85929
+    },
+    {
+      "label": "source_config",
+      "path": "configs/native_ndp_sim/resnet50_dequant_node0077_uint8_fp32_strict_v5/config.json",
+      "reason": "closed source topology or actual direct consumer",
+      "sha256": "812c6d861bf41ce89233e16b2bdd1d9d8328aed9e07941070872d6409668bba1",
+      "size_bytes": 12374
+    },
+    {
+      "label": "source_graph",
+      "path": "artifacts/operator_config_validation/r5-dequant-node0077-e2-v5/execplan_request.json",
+      "reason": "closed source topology or actual direct consumer",
+      "sha256": "ca5247687f70eb51002f7ae7c9dd55849d791d073abaae09a23d8e2c1daa16c0",
+      "size_bytes": 20971
+    },
+    {
+      "label": "loop_encoder",
+      "path": "ndp-sim-ref/bitstream/config/loop.py",
+      "reason": "closed source topology or actual direct consumer",
+      "sha256": "7a25a5e6e29e35ce07c437a6e44ac654cda0dcc110fda1ba82cdeacb0b12aa35",
+      "size_bytes": 13871
+    },
+    {
+      "label": "stream_encoder",
+      "path": "ndp-sim-ref/bitstream/config/stream.py",
+      "reason": "closed source topology or actual direct consumer",
+      "sha256": "00e0610719670f24e22139ee0a3a453ae6e90f90e5d572f578c5f489f5a813d1",
+      "size_bytes": 14083
+    },
+    {
+      "label": "buffer_encoder",
+      "path": "ndp-sim-ref/bitstream/config/buffer.py",
+      "reason": "closed source topology or actual direct consumer",
+      "sha256": "39b6c32786ca83a1ffd247a99dafea2f966aa1c490ef587fa1594759456355a4",
+      "size_bytes": 1847
+    },
+    {
+      "label": "ga_encoder",
+      "path": "ndp-sim-ref/bitstream/config/general.py",
+      "reason": "closed source topology or actual direct consumer",
+      "sha256": "eb9d5ee9ef273182e05b718aca378f87d0a1ccb5366ae463d8482c8c94c3482f",
+      "size_bytes": 11738
+    },
+    {
+      "label": "stock_tb_entry_contract",
+      "path": "NDP_copy01/README_HARDWARE_SIM_ENTRY.md",
+      "reason": "closed source topology or actual direct consumer",
+      "sha256": "4318f3a28de399fb522740315f11bdddf346e71969cf1e45686899a568b042d7",
+      "size_bytes": 5461
+    },
+    {
+      "label": "stock_tb_completion_consumer",
+      "path": "NDP_copy01/tb_NDP_Top_new_phy.sv",
+      "reason": "closed source topology or actual direct consumer",
+      "sha256": "e068f7500f0c71c2ba2c756f74a4519c33d13d4afe0fa4cc9f6c9e79b1e3f994",
+      "size_bytes": 342445
+    },
+    {
+      "label": "full_e4_return_analysis",
+      "path": "server_returns/dequant_node0077_stockrtl_e4_return_analysis_20260725.json",
+      "reason": "closed source topology or actual direct consumer",
+      "sha256": "f861a8cec186f14ddc05dca1844d832e65ada5aee90e89f807223a4268fcdf23",
+      "size_bytes": 3871
+    }
+  ],
+  "receipt_sha256": "651678ee0aeaf6b3cb937d130886d00892fed2af047779e5f1783327dca7c057",
+  "rule_ids": [
+    "CDA-CONFIG-SEMANTIC-OWNERSHIP-001",
+    "CDA-CONFIG-MATERIALIZED-ROUNDTRIP-001",
+    "CDA-DEQUANT-ONNX-ORDER-001",
+    "CDA-DEQUANT-NO-AFFINE-MAC-001",
+    "CDA-DEQUANT-TWO-STAGE-GA-001",
+    "CDA-DEQUANT-NORMAL-OUTBUFFER-001",
+    "CDA-DEQUANT-STREAM-LIFECYCLE-001",
+    "CDA-DEQUANT-ATOMIC-STOCK-TB-001"
+  ],
+  "schema": "dequant-atomic-generation-read-receipt-v1",
+  "scope": "derive atomic JSON/golden/lifecycle only; no server package"
+}

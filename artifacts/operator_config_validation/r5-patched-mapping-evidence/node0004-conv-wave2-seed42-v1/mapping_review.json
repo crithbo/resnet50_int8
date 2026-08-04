@@ -1,0 +1,359 @@
+{
+  "summary": {
+    "total_nodes": 29,
+    "mapped_nodes": 33,
+    "connections": 36
+  },
+  "node_to_resource": [
+    {
+      "node": "GROUP0.COL_LC",
+      "resource": "COL_LC0"
+    },
+    {
+      "node": "GROUP1.COL_LC",
+      "resource": "COL_LC1"
+    },
+    {
+      "node": "GROUP3.COL_LC",
+      "resource": "COL_LC3"
+    },
+    {
+      "node": "GROUP4.COL_LC",
+      "resource": "COL_LC4"
+    },
+    {
+      "node": "GROUP0",
+      "resource": "GROUP0"
+    },
+    {
+      "node": "GROUP1",
+      "resource": "GROUP1"
+    },
+    {
+      "node": "GROUP3",
+      "resource": "GROUP3"
+    },
+    {
+      "node": "GROUP4",
+      "resource": "GROUP4"
+    },
+    {
+      "node": "DRAM_LC.LC1",
+      "resource": "LC0"
+    },
+    {
+      "node": "DRAM_LC.LC2",
+      "resource": "LC1"
+    },
+    {
+      "node": "DRAM_LC.LC0",
+      "resource": "LC2"
+    },
+    {
+      "node": "DRAM_LC.LC4",
+      "resource": "LC3"
+    },
+    {
+      "node": "DRAM_LC.LC5",
+      "resource": "LC4"
+    },
+    {
+      "node": "DRAM_LC.LC10",
+      "resource": "LC5"
+    },
+    {
+      "node": "DRAM_LC.LC11",
+      "resource": "LC6"
+    },
+    {
+      "node": "DRAM_LC.LC12",
+      "resource": "LC7"
+    },
+    {
+      "node": "DRAM_LC.LC7",
+      "resource": "LC12"
+    },
+    {
+      "node": "DRAM_LC.LC6",
+      "resource": "LC13"
+    },
+    {
+      "node": "DRAM_LC.LC15",
+      "resource": "LC15"
+    },
+    {
+      "node": "DRAM_LC.LC9",
+      "resource": "LC16"
+    },
+    {
+      "node": "DRAM_LC.LC14",
+      "resource": "LC17"
+    },
+    {
+      "node": "DRAM_LC.LC13",
+      "resource": "LC18"
+    },
+    {
+      "node": "LC_PE.PE0",
+      "resource": "PE2"
+    },
+    {
+      "node": "LC_PE.PE2",
+      "resource": "PE4"
+    },
+    {
+      "node": "LC_PE.PE1",
+      "resource": "PE6"
+    },
+    {
+      "node": "GROUP0.ROW_LC",
+      "resource": "ROW_LC0"
+    },
+    {
+      "node": "GROUP1.ROW_LC",
+      "resource": "ROW_LC1"
+    },
+    {
+      "node": "GROUP3.ROW_LC",
+      "resource": "ROW_LC3"
+    },
+    {
+      "node": "GROUP4.ROW_LC",
+      "resource": "ROW_LC4"
+    },
+    {
+      "node": "STREAM.stream0",
+      "resource": "READ_STREAM0"
+    },
+    {
+      "node": "STREAM.stream1",
+      "resource": "READ_STREAM1"
+    },
+    {
+      "node": "STREAM.stream3",
+      "resource": "READ_STREAM3"
+    },
+    {
+      "node": "STREAM.stream4",
+      "resource": "WRITE_STREAM0"
+    }
+  ],
+  "connection_mapping": [
+    {
+      "src_node": "DRAM_LC.LC0",
+      "src_resource": "LC2",
+      "dst_node": "DRAM_LC.LC1",
+      "dst_resource": "LC0"
+    },
+    {
+      "src_node": "DRAM_LC.LC10",
+      "src_resource": "LC5",
+      "dst_node": "DRAM_LC.LC11",
+      "dst_resource": "LC6"
+    },
+    {
+      "src_node": "DRAM_LC.LC11",
+      "src_resource": "LC6",
+      "dst_node": "DRAM_LC.LC12",
+      "dst_resource": "LC7"
+    },
+    {
+      "src_node": "DRAM_LC.LC13",
+      "src_resource": "LC18",
+      "dst_node": "DRAM_LC.LC14",
+      "dst_resource": "LC17"
+    },
+    {
+      "src_node": "DRAM_LC.LC14",
+      "src_resource": "LC17",
+      "dst_node": "DRAM_LC.LC15",
+      "dst_resource": "LC15"
+    },
+    {
+      "src_node": "DRAM_LC.LC1",
+      "src_resource": "LC0",
+      "dst_node": "DRAM_LC.LC2",
+      "dst_resource": "LC1"
+    },
+    {
+      "src_node": "DRAM_LC.LC2",
+      "src_resource": "LC1",
+      "dst_node": "DRAM_LC.LC4",
+      "dst_resource": "LC3"
+    },
+    {
+      "src_node": "DRAM_LC.LC4",
+      "src_resource": "LC3",
+      "dst_node": "DRAM_LC.LC5",
+      "dst_resource": "LC4"
+    },
+    {
+      "src_node": "DRAM_LC.LC2",
+      "src_resource": "LC1",
+      "dst_node": "DRAM_LC.LC6",
+      "dst_resource": "LC13"
+    },
+    {
+      "src_node": "DRAM_LC.LC6",
+      "src_resource": "LC13",
+      "dst_node": "DRAM_LC.LC7",
+      "dst_resource": "LC12"
+    },
+    {
+      "src_node": "DRAM_LC.LC15",
+      "src_resource": "LC15",
+      "dst_node": "DRAM_LC.LC9",
+      "dst_resource": "LC16"
+    },
+    {
+      "src_node": "DRAM_LC.LC6",
+      "src_resource": "LC13",
+      "dst_node": "GROUP0.ROW_LC",
+      "dst_resource": "ROW_LC0"
+    },
+    {
+      "src_node": "GROUP0.ROW_LC",
+      "src_resource": "ROW_LC0",
+      "dst_node": "GROUP0.COL_LC",
+      "dst_resource": "COL_LC0"
+    },
+    {
+      "src_node": "DRAM_LC.LC4",
+      "src_resource": "LC3",
+      "dst_node": "GROUP1.ROW_LC",
+      "dst_resource": "ROW_LC1"
+    },
+    {
+      "src_node": "GROUP1.ROW_LC",
+      "src_resource": "ROW_LC1",
+      "dst_node": "GROUP1.COL_LC",
+      "dst_resource": "COL_LC1"
+    },
+    {
+      "src_node": "DRAM_LC.LC12",
+      "src_resource": "LC7",
+      "dst_node": "GROUP3.ROW_LC",
+      "dst_resource": "ROW_LC3"
+    },
+    {
+      "src_node": "GROUP3.ROW_LC",
+      "src_resource": "ROW_LC3",
+      "dst_node": "GROUP3.COL_LC",
+      "dst_resource": "COL_LC3"
+    },
+    {
+      "src_node": "DRAM_LC.LC9",
+      "src_resource": "LC16",
+      "dst_node": "GROUP4.ROW_LC",
+      "dst_resource": "ROW_LC4"
+    },
+    {
+      "src_node": "GROUP4.ROW_LC",
+      "src_resource": "ROW_LC4",
+      "dst_node": "GROUP4.COL_LC",
+      "dst_resource": "COL_LC4"
+    },
+    {
+      "src_node": "DRAM_LC.LC6",
+      "src_resource": "LC13",
+      "dst_node": "LC_PE.PE0",
+      "dst_resource": "PE2"
+    },
+    {
+      "src_node": "DRAM_LC.LC7",
+      "src_resource": "LC12",
+      "dst_node": "LC_PE.PE0",
+      "dst_resource": "PE2"
+    },
+    {
+      "src_node": "DRAM_LC.LC15",
+      "src_resource": "LC15",
+      "dst_node": "LC_PE.PE1",
+      "dst_resource": "PE6"
+    },
+    {
+      "src_node": "DRAM_LC.LC9",
+      "src_resource": "LC16",
+      "dst_node": "LC_PE.PE1",
+      "dst_resource": "PE6"
+    },
+    {
+      "src_node": "DRAM_LC.LC4",
+      "src_resource": "LC3",
+      "dst_node": "LC_PE.PE2",
+      "dst_resource": "PE4"
+    },
+    {
+      "src_node": "DRAM_LC.LC5",
+      "src_resource": "LC4",
+      "dst_node": "LC_PE.PE2",
+      "dst_resource": "PE4"
+    },
+    {
+      "src_node": "LC_PE.PE0",
+      "src_resource": "PE2",
+      "dst_node": "STREAM.stream0",
+      "dst_resource": "READ_STREAM0"
+    },
+    {
+      "src_node": "DRAM_LC.LC0",
+      "src_resource": "LC2",
+      "dst_node": "STREAM.stream0",
+      "dst_resource": "READ_STREAM0"
+    },
+    {
+      "src_node": "LC_PE.PE2",
+      "src_resource": "PE4",
+      "dst_node": "STREAM.stream1",
+      "dst_resource": "READ_STREAM1"
+    },
+    {
+      "src_node": "DRAM_LC.LC2",
+      "src_resource": "LC1",
+      "dst_node": "STREAM.stream1",
+      "dst_resource": "READ_STREAM1"
+    },
+    {
+      "src_node": "DRAM_LC.LC1",
+      "src_resource": "LC0",
+      "dst_node": "STREAM.stream1",
+      "dst_resource": "READ_STREAM1"
+    },
+    {
+      "src_node": "DRAM_LC.LC10",
+      "src_resource": "LC5",
+      "dst_node": "STREAM.stream3",
+      "dst_resource": "READ_STREAM3"
+    },
+    {
+      "src_node": "DRAM_LC.LC11",
+      "src_resource": "LC6",
+      "dst_node": "STREAM.stream3",
+      "dst_resource": "READ_STREAM3"
+    },
+    {
+      "src_node": "DRAM_LC.LC12",
+      "src_resource": "LC7",
+      "dst_node": "STREAM.stream3",
+      "dst_resource": "READ_STREAM3"
+    },
+    {
+      "src_node": "DRAM_LC.LC13",
+      "src_resource": "LC18",
+      "dst_node": "STREAM.stream4",
+      "dst_resource": "WRITE_STREAM0"
+    },
+    {
+      "src_node": "LC_PE.PE1",
+      "src_resource": "PE6",
+      "dst_node": "STREAM.stream4",
+      "dst_resource": "WRITE_STREAM0"
+    },
+    {
+      "src_node": "DRAM_LC.LC14",
+      "src_resource": "LC17",
+      "dst_node": "STREAM.stream4",
+      "dst_resource": "WRITE_STREAM0"
+    }
+  ]
+}

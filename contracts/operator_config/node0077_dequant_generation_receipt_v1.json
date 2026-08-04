@@ -1,0 +1,104 @@
+{
+  "decisions": {
+    "formal_release": false,
+    "ga_topology": "four ADD PEs followed by four MUL PEs",
+    "hardware_shape_cwh": [
+      16,
+      47,
+      1
+    ],
+    "layout": "HIGH4 prefix 750 plus two neutral tail elements per slice",
+    "numeric_order": "(float32(uint8(x))-60.0f)*float32(scale)",
+    "single_affine_mac_rejected": true,
+    "typed_constant_count": 2
+  },
+  "known_dynamic_gap": "CDA-DEQUANT-E4-E5-001",
+  "read_completely": [
+    ".agents/agent.md",
+    ".agents/rules/算子配置规则.md",
+    ".agents/rules/DequantizeLinear算子配置规则.md",
+    "ndp-sim/generate_python_golden/README.md",
+    "ndp-sim/generate_python_golden/README_gen_data.md",
+    "ndp-sim/model_execplan/README.md",
+    "ndp-sim/model_execplan/README_op_json.md"
+  ],
+  "receipt_sha256": "1413ee103b27c0f87f3c539a73334083677e4a1b6bfeb89dd1fd9ee40e05defd",
+  "request_id": "r5:hwop-0077-00",
+  "rule_ids": [
+    "CDA-DEQUANT-ONNX-ORDER-001",
+    "CDA-DEQUANT-NO-AFFINE-MAC-001",
+    "CDA-DEQUANT-TWO-STAGE-GA-001",
+    "CDA-DEQUANT-NORMAL-OUTBUFFER-001",
+    "CDA-DEQUANT-LAYOUT-HIGH4-001",
+    "CDA-DEQUANT-STREAM-LIFECYCLE-001",
+    "CDA-DEQUANT-TYPED-CONSTANT-001",
+    "CDA-DEQUANT-MAPPING-BINDING-001",
+    "CDA-DEQUANT-E2-001",
+    "CDA-DEQUANT-E4-E5-001"
+  ],
+  "schema": "dequantize-linear-generation-receipt-v1",
+  "sources": {
+    "agent_policy": {
+      "path": ".agents/agent.md",
+      "sha256": "7b6a9ed73a25797d9c95fd9ed7016cb3593d10e700b3b634f31a2fc15f12cdb6"
+    },
+    "data_readme": {
+      "path": "ndp-sim/generate_python_golden/README_gen_data.md",
+      "sha256": "bb367700dc0869511f104baba72a15532f354bbb540b24d778684ff8577f11c9"
+    },
+    "dequant_rules": {
+      "path": ".agents/rules/DequantizeLinear算子配置规则.md",
+      "sha256": "1256d04d0f3bc85d0cf97b1b0da52d7da28531d2dd53a8de0014b4de0af9a4b2"
+    },
+    "execplan_readme": {
+      "path": "ndp-sim/model_execplan/README.md",
+      "sha256": "992360e8cfc1a15d03abbbb70047de86548e07518e329248d17c61c130b9b11f"
+    },
+    "golden_readme": {
+      "path": "ndp-sim/generate_python_golden/README.md",
+      "sha256": "4d6cc73fa99b283d557e5fe11cba40d1044e09ade3740e73efaad1ddef1f2d60"
+    },
+    "input_npy": {
+      "path": "artifacts/w3/golden_batch16/tensors/tensor-02aeb7457d1ccf49.npy",
+      "sha256": "10d974cdab69904bfd3ed7749059e26e16388ba784872f0d432cd2ba14bcbdc8"
+    },
+    "lowering_bundle": {
+      "path": "contracts/resnet50_r5_lowering_bundle.json",
+      "sha256": "c0182041fd11556aa34a1f0ab8344b20695dfc13c6a80ad4324aae79bcfa2820"
+    },
+    "op_json_readme": {
+      "path": "ndp-sim/model_execplan/README_op_json.md",
+      "sha256": "261cd35b989dc44f9d783eaddef00744a9b0d2d7a3112f683ea3ed2502854107"
+    },
+    "operator_rules": {
+      "path": ".agents/rules/算子配置规则.md",
+      "sha256": "9dbdc45cc7d16c36fce762d2277469b79391465e9a8641fbfac3987f51f8d239"
+    },
+    "output_npy": {
+      "path": "artifacts/w3/golden_batch16/tensors/tensor-bff07c95eb9f8609.npy",
+      "sha256": "2c6c5fabc1d41fceee35f06221efb4c64b94fabfe7a0b4680d2acf2186ca0894"
+    },
+    "reference_config": {
+      "path": "ndp-sim-ref/jsons/add_dequant_uint8CWH_uint8CWH_fp32CWH.json",
+      "sha256": "15f5321ab57cb73ca2f650693859657759f834389677451a9a89e66217e9e6da"
+    },
+    "typed_control_registers": {
+      "path": "ndp-sim-ref/model_execplan/src/execution_plan_generator/control_registers.py",
+      "sha256": "5fe1c5f363a0ff57c1db26281d75a0cc365a260395f2130155fb6ccdc4fcb8dd"
+    },
+    "typed_json_loader": {
+      "path": "ndp-sim-ref/model_execplan/src/execution_plan_generator/json_loader.py",
+      "sha256": "a3ac009d0f452c610bfb97f2562eaaf60cb0c4981ace7f337372ce5178b92dee"
+    },
+    "typed_output_writer": {
+      "path": "ndp-sim-ref/model_execplan/src/execution_plan_generator/output_writer.py",
+      "sha256": "383f39f2e61900d1e4dddcffa90faff80bc315266f77350c597b8eecc60a23aa"
+    }
+  },
+  "status": "generation_gate_satisfied_before_json_materialization",
+  "upstream_identity": {
+    "active_source_policy": "read_only",
+    "commit": "d4ffc32c9b29a858d83e13706cd837c5549521a4",
+    "repository": "ndp-sim-ref"
+  }
+}

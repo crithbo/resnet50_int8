@@ -1,0 +1,557 @@
+{
+  "candidate_release": false,
+  "contract_sha256": "ff496088cb34772df9cc5442c0d66a97a59658ce25ec7556708f81a338ccc9e6",
+  "formal_target_config": false,
+  "full_layer_blockers_not_bypassed": [
+    "B_DS_PREFILL_EXTERNAL_ALIAS_MANIFEST",
+    "B_DS_PREFILL_LEADER_SLICE_ROUTING",
+    "B_DS_PREFILL_REMOTE_REDUCTION_BYTE_EXTENT",
+    "B_DS_PREFILL_TOP_LEVEL_SLICE_MASK_ENCODING"
+  ],
+  "identity_boundary": {
+    "crop_contract_required": true,
+    "crop_contract_status": "explicit_crop_contract_locally_closed",
+    "direct_onnx_shape_equals_stage": false,
+    "onnx_repository_classification": "SEMANTIC_MODEL_MATCH",
+    "original_source_identity": false
+  },
+  "independent_numeric_golden": {
+    "formula": "y = fp32(fp16(x)) * sigmoid(fp32(fp16(x)))",
+    "hardware_numeric_accuracy_claimed": false,
+    "input_dtype": "fp16",
+    "onnx_nodes": [
+      "/model/layers.0/mlp/act_fn/Sigmoid",
+      "/model/layers.0/mlp/act_fn/Mul"
+    ],
+    "output_dtype": "fp32",
+    "samples": [
+      {
+        "expected_fp32_bits": "0xbb2fd1ef",
+        "expected_value": -0.00268280110321939,
+        "input_fp16_bits": "0xc800",
+        "input_value": -8.0
+      },
+      {
+        "expected_fp32_bits": "0xbd9357d1",
+        "expected_value": -0.07194484025239944,
+        "input_fp16_bits": "0xc400",
+        "input_value": -4.0
+      },
+      {
+        "expected_fp32_bits": "0xbe89b2b0",
+        "expected_value": -0.26894140243530273,
+        "input_fp16_bits": "0xbc00",
+        "input_value": -1.0
+      },
+      {
+        "expected_fp32_bits": "0xbe414d03",
+        "expected_value": -0.1887703388929367,
+        "input_fp16_bits": "0xb800",
+        "input_value": -0.5
+      },
+      {
+        "expected_fp32_bits": "0x00000000",
+        "expected_value": 0.0,
+        "input_fp16_bits": "0x0000",
+        "input_value": 0.0
+      },
+      {
+        "expected_fp32_bits": "0x3e9f597f",
+        "expected_value": 0.3112296760082245,
+        "input_fp16_bits": "0x3800",
+        "input_value": 0.5
+      },
+      {
+        "expected_fp32_bits": "0x3f3b26a8",
+        "expected_value": 0.7310585975646973,
+        "input_fp16_bits": "0x3c00",
+        "input_value": 1.0
+      },
+      {
+        "expected_fp32_bits": "0x407b6541",
+        "expected_value": 3.9280550479888916,
+        "input_fp16_bits": "0x4400",
+        "input_value": 4.0
+      },
+      {
+        "expected_fp32_bits": "0x40ffea06",
+        "expected_value": 7.997317314147949,
+        "input_fp16_bits": "0x4800",
+        "input_value": 8.0
+      }
+    ],
+    "scope": "independent ONNX semantic golden only; stock-RTL SFU approximation accuracy remains outside local E2"
+  },
+  "inputs": {
+    "crop_contract": {
+      "path": "contracts/operator_config/deepseek_ndpsim_crop_contract_v1.json",
+      "sha256": "4ad206b550757f6649feb39b6df6e46e1b8bc99062502b441dbc5e4ba5c1e392",
+      "size_bytes": 7384
+    },
+    "isolated_graph": {
+      "path": "artifacts/operator_config_validation/ds_silu_v6/ds_silu_v6.json",
+      "sha256": "11d2c09190318125767909829098743e5dcf66e03132b15f2007a64a73c57c26",
+      "size_bytes": 941
+    },
+    "onnx_inventory": {
+      "path": "artifacts/operator_config_validation/r5-deepseek-onnx-stage-json-e2-v1/onnx_graph_inventory.json",
+      "sha256": "ae2f5ab015d1fd6be7961e3d3bcc32d41119a2a02e810bb6027f4b8e63136c14",
+      "size_bytes": 458979
+    },
+    "prefill_audit": {
+      "path": "contracts/operator_config/deepseek_onnx_prefill_stage_audit_v1.json",
+      "sha256": "84a62ed3d95f5c1f784df9a25771eef2263d44b258d34c07dd3d7cf360831935",
+      "size_bytes": 10042
+    },
+    "prefill_graph": {
+      "path": "artifacts/operator_config_validation/r5-deepseek-onnx-stage-json-e2-v1/layer0_prefill.generated.json",
+      "sha256": "089d4a2edcbe8b8af049ad8d1dfb5c474cc251e76a3fa2a64880e8a344e70dea",
+      "size_bytes": 34462
+    },
+    "read_receipt": {
+      "path": "contracts/operator_config/deepseek_onnx_stage_validation_read_receipt_v1.json",
+      "sha256": "bab13378476bd715f416d7cdb9b9d9b753a5729132590322d44954f5ce8c1ce4",
+      "size_bytes": 25969
+    },
+    "silu_op_fragment": {
+      "path": "ndp-sim/model_execplan/op_json/prefill_silu_fp16MN_fp32MN.json",
+      "sha256": "fbab4a91df27071404b45aedcd6a68dbb2847fe9494f75a8b3f7c4ea5bc251dd",
+      "size_bytes": 831
+    },
+    "trusted_static_json": {
+      "path": "ndp-sim/jsons/prefill_silu_fp16MN_fp32MN.json",
+      "sha256": "08101bdc82d615741d6262db57098b3ba3acd04cc427c1d0c1297cc68da5cdbd",
+      "size_bytes": 14107
+    }
+  },
+  "isolated_rebuilds": {
+    "comparison": {
+      "deterministic_file_count": 16,
+      "deterministic_files_byte_identical": true,
+      "registered_visualization_exclusions": [
+        "config/op0/placement.png"
+      ],
+      "relative_file_count": 17,
+      "same_relative_file_set": true,
+      "visualization_hashes": {
+        "config/op0/placement.png": {
+          "run_a": {
+            "sha256": "ddc9280063bd7154cf7286c375825df5374e1795babe9ba7d2ae3d416ec20079",
+            "size_bytes": 209209
+          },
+          "run_b": {
+            "sha256": "ddc9280063bd7154cf7286c375825df5374e1795babe9ba7d2ae3d416ec20079",
+            "size_bytes": 209209
+          }
+        }
+      }
+    },
+    "mapping_seed": 42,
+    "mapping_seed_scope": "harness-only; native source files remain byte-identical",
+    "python_hash_seed": 0,
+    "run_a": {
+      "run_receipt": {
+        "path": "native_run_receipt.json",
+        "sha256": "a8e7a4184c3c30791878c473ebfc53ceaf639c8d0083759f2fc533f2bd243614",
+        "size_bytes": 4530
+      },
+      "tool_source_manifest": {
+        "path": "tool_source_manifest.json",
+        "sha256": "380d12253f86fdbfa7b717719b3331caa133c0d49c23b0131a7ba862d28af7dc",
+        "size_bytes": 8294
+      }
+    },
+    "run_b": {
+      "run_receipt": {
+        "path": "native_run_receipt.json",
+        "sha256": "9f47ca52f74cee41de31efb5ecd5b5115eb66552a5e44fc72ded6edf965f16ef",
+        "size_bytes": 4530
+      },
+      "tool_source_manifest": {
+        "path": "tool_source_manifest.json",
+        "sha256": "380d12253f86fdbfa7b717719b3331caa133c0d49c23b0131a7ba862d28af7dc",
+        "size_bytes": 8294
+      }
+    }
+  },
+  "json_to_bitstream_roundtrip": {
+    "decoded_selected_fields": {
+      "DRAM_LC.LC0.end": 4,
+      "DRAM_LC.LC1.end": 32,
+      "DRAM_LC.LC2.end": 64,
+      "read.base_addr": 0,
+      "read.dim_stride": 35185445830656,
+      "write.base_addr": 4096,
+      "write.dim_stride": 35186519572480
+    },
+    "lifecycle": {
+      "clock_enable_count": 1,
+      "command_count": 58,
+      "load_config_count": 1,
+      "load_sfu_config_count": 1,
+      "ordered_command_classes": [
+        "Clock_Enable",
+        "Load_Config",
+        "Load_Config_SFU",
+        "Write_Reg",
+        "Write_Reg",
+        "Write_Reg",
+        "Write_Reg",
+        "Write_Reg",
+        "Write_Reg",
+        "Write_Reg",
+        "Write_Reg",
+        "Write_Reg",
+        "Write_Reg",
+        "Write_Reg",
+        "Write_Reg",
+        "Write_Reg",
+        "Write_Reg",
+        "Write_Reg",
+        "Write_Reg",
+        "Write_Reg",
+        "Write_Reg",
+        "Write_Reg",
+        "Write_Reg",
+        "Write_Reg",
+        "Write_Reg",
+        "Write_Reg",
+        "Write_Reg",
+        "Write_Reg",
+        "Write_Reg",
+        "Write_Reg",
+        "Write_Reg",
+        "Write_Reg",
+        "Write_Reg",
+        "Write_Reg",
+        "Write_Reg",
+        "Write_Reg",
+        "Write_Reg",
+        "Write_Reg",
+        "Write_Reg",
+        "Write_Reg",
+        "Write_Reg",
+        "Write_Reg",
+        "Write_Reg",
+        "Write_Reg",
+        "Write_Reg",
+        "Write_Reg",
+        "Write_Reg",
+        "Write_Reg",
+        "Write_Reg",
+        "Write_Reg",
+        "Write_Reg",
+        "Write_Reg",
+        "Write_Reg",
+        "Write_Reg",
+        "Write_Reg",
+        "Write_Reg",
+        "Write_Reg",
+        "Start_Comp"
+      ],
+      "slice_mask": "0b1111111111111111111111111111",
+      "start_comp_count": 1,
+      "write_reg_count": 54
+    },
+    "required_output_paths": [
+      "config/op0/detailed_dump.txt",
+      "config/op0/mapping_review.json",
+      "config/op0/modules_dump_128b.bin",
+      "config/op0/modules_dump_64b.bin",
+      "config/op0/op0_prefill_silu_fp16MN_fp32MN_bitstream_128b.bin",
+      "config/op0/op0_prefill_silu_fp16MN_fp32MN_bitstream_64b.bin",
+      "config/op0/parsed_bitstream.txt",
+      "config/op0/placement.png",
+      "ds_silu_v6_withbaseaddr.json",
+      "install/cfg_pkg/SiLU.txt",
+      "install/cfg_pkg/op0_prefill_silu_fp16MN_fp32MN_bitstream_128b.bin",
+      "install/execplan.txt",
+      "install/execplan_op0.txt",
+      "instructions_explained.txt",
+      "jsons/op0_prefill_silu_fp16MN_fp32MN.json",
+      "sca_cfg.json",
+      "sca_cfg_D.json"
+    ],
+    "sca": {
+      "input_a_slice_entries": 28,
+      "main_config_present": true,
+      "output_d_128bit_lines_per_slice": 512,
+      "output_d_slice_entries": 28,
+      "regenerated_config_length_64bit_words": 50,
+      "sfu_config_length_64bit_words": 100,
+      "sfu_config_present": true
+    }
+  },
+  "native_normalized_graph": {
+    "operators": [
+      {
+        "id": "op0",
+        "inputs": {
+          "A": {
+            "dtype": "fp16",
+            "remapping": null,
+            "shape": [
+              1,
+              32,
+              64
+            ],
+            "source": {
+              "operator_id": null,
+              "type": "external"
+            },
+            "type": null,
+            "write_reg_hint": null
+          }
+        },
+        "output": {
+          "dtype": "fp32",
+          "remapping": null,
+          "shape": [
+            1,
+            32,
+            64
+          ],
+          "type": null,
+          "write_reg_hint": null
+        },
+        "type": "prefill_silu_fp16MN_fp32MN",
+        "used_slices": "0b1111111111111111111111111111"
+      }
+    ],
+    "used_slices": "0b1111111111111111111111111111"
+  },
+  "onnx_to_stage": {
+    "crop_derived_shape": [
+      1,
+      32,
+      64
+    ],
+    "fused_semantic_operator": "SiLU(x)=x*Sigmoid(x)",
+    "input_dtype": "fp16",
+    "input_source": "isolated external stand-in for full-graph op37",
+    "isolated_occurrence": "op0",
+    "n2n": "disabled",
+    "native_prefill_occurrence": "op39",
+    "onnx_nodes": [
+      {
+        "index": 17,
+        "inputs": [
+          "/model/layers.0/mlp/gate_proj/MatMul/output_0"
+        ],
+        "name": "/model/layers.0/mlp/act_fn/Sigmoid",
+        "op_type": "Sigmoid",
+        "outputs": [
+          "/model/layers.0/mlp/act_fn/Sigmoid/output_0"
+        ]
+      },
+      {
+        "index": 18,
+        "inputs": [
+          "/model/layers.0/mlp/gate_proj/MatMul/output_0",
+          "/model/layers.0/mlp/act_fn/Sigmoid/output_0"
+        ],
+        "name": "/model/layers.0/mlp/act_fn/Mul",
+        "op_type": "Mul",
+        "outputs": [
+          "/model/layers.0/mlp/act_fn/Mul/output_0"
+        ]
+      }
+    ],
+    "output_dtype": "fp32",
+    "padding": "disabled",
+    "qparam": "not-applicable",
+    "shape_derivation": "1792 intermediate elements / 28 slices = 64",
+    "source_shape": [
+      1,
+      32,
+      8
+    ],
+    "tailing": "disabled",
+    "used_slices_mask": "0b1111111111111111111111111111"
+  },
+  "release_boundary": {
+    "E4": false,
+    "E5": false,
+    "hardware_dynamic_closed": false,
+    "maximum_evidence_level": "E2",
+    "scope": "one isolated crop-derived SiLU holdout only; not the full DeepSeek layer and not a formal target config"
+  },
+  "rule_ids": [
+    "CDA-CONFIG-SEMANTIC-OWNERSHIP-001",
+    "CDA-CONFIG-MATERIALIZED-ROUNDTRIP-001",
+    "CDA-CONFIG-FULL-REBUILD-PROVENANCE-001",
+    "CDA-DEEPSEEK-MODEL-IDENTITY-001",
+    "CDA-DEEPSEEK-CROP-EXPLICIT-001",
+    "CDA-DEEPSEEK-ONNX-STAGE-DAG-001",
+    "CDA-DEEPSEEK-STAGE-JSON-ORACLE-001",
+    "CDA-DEEPSEEK-HOLDOUT-ROUNDTRIP-001"
+  ],
+  "schema": "deepseek-silu-holdout-roundtrip-v1",
+  "server_package_generated": false,
+  "stage_to_json": {
+    "classification": "DERIVED_INSTANCE_VALIDATED",
+    "materialized_audit": {
+      "authorized_diff": [
+        {
+          "after": 32,
+          "before": 4,
+          "path": "dram_loop_configs.LC1.end"
+        },
+        {
+          "after": 64,
+          "before": 8,
+          "path": "dram_loop_configs.LC2.end"
+        },
+        {
+          "after": "0x0",
+          "before": "0b00000_00_0000000000000_000000_0000",
+          "path": "stream_engine.stream0.base_addr"
+        },
+        {
+          "after": 1024,
+          "before": 128,
+          "path": "stream_engine.stream0.dim_stride[1]"
+        },
+        {
+          "after": "0x1000",
+          "before": "0b00000_11_0000000000000_000000_0000",
+          "path": "stream_engine.stream2.base_addr"
+        },
+        {
+          "after": 2048,
+          "before": 256,
+          "path": "stream_engine.stream2.dim_stride[1]"
+        }
+      ],
+      "ga_active_pe_count": 8,
+      "ga_output_path": "normal_outbuffer_non_transout",
+      "input_base_addr_slice0": 0,
+      "output_base_addr_slice0": 4096,
+      "read_buffer_bank_byte_pairs": [
+        {
+          "bank": 0,
+          "byte": 0
+        },
+        {
+          "bank": 0,
+          "byte": 1
+        },
+        {
+          "bank": 1,
+          "byte": 0
+        },
+        {
+          "bank": 1,
+          "byte": 1
+        },
+        {
+          "bank": 2,
+          "byte": 0
+        },
+        {
+          "bank": 2,
+          "byte": 1
+        },
+        {
+          "bank": 3,
+          "byte": 0
+        },
+        {
+          "bank": 3,
+          "byte": 1
+        },
+        {
+          "bank": 4,
+          "byte": 0
+        },
+        {
+          "bank": 4,
+          "byte": 1
+        },
+        {
+          "bank": 5,
+          "byte": 0
+        },
+        {
+          "bank": 5,
+          "byte": 1
+        },
+        {
+          "bank": 6,
+          "byte": 0
+        },
+        {
+          "bank": 6,
+          "byte": 1
+        },
+        {
+          "bank": 7,
+          "byte": 0
+        },
+        {
+          "bank": 7,
+          "byte": 1
+        }
+      ],
+      "read_occurrences_per_slice": 128,
+      "read_supply_bytes_per_slice": 4096,
+      "read_transaction_bytes": 32,
+      "write_coverage_bytes_per_slice": 8192,
+      "write_occurrences_per_slice": 256,
+      "write_spatial_stride": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15
+      ],
+      "write_transaction_bytes": 32
+    },
+    "materialized_json": {
+      "path": "jsons/op0_prefill_silu_fp16MN_fp32MN.json",
+      "sha256": "8ea6153e9ca9f42da6b9b3f7a10c1046756bd49c8dd29bd4e00a924442ce00cc",
+      "size_bytes": 12531
+    },
+    "planner_owned_updates": [
+      "stream_engine.stream0.base_addr",
+      "stream_engine.stream2.base_addr"
+    ],
+    "shape_owned_updates": {
+      "LC0.end": 4,
+      "LC1.end": 32,
+      "LC2.end": 64,
+      "read_dim_stride": [
+        32,
+        1024,
+        null
+      ],
+      "write_dim_stride": [
+        32,
+        2048,
+        null
+      ]
+    },
+    "target_shape": [
+      1,
+      32,
+      64
+    ],
+    "trusted_initial_shape": [
+      1,
+      32,
+      8
+    ]
+  },
+  "status": "LOCAL_E2_REFERENCE_CONFORMANT"
+}

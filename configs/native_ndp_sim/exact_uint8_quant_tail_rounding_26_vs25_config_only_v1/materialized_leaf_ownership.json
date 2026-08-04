@@ -1,0 +1,2908 @@
+{
+  "declaration_count": 222,
+  "declarations": [
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001 plus transaction_contract",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": 32,
+      "formula": "one 32-element occurrence; FP32 stage emits four 32-byte transactions, UINT8 stage emits one packed 32-byte transaction",
+      "input_source": "transaction_contract logical_element_count=32, ga_lane_count=8, issue_cycles=4 and pack_factor=4",
+      "old_value": 4,
+      "owner": "logical ScheduleIR",
+      "path": "/buffer_loop_configs/GROUP2/COL_LC/end",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001 plus transaction_contract",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": 16,
+      "formula": "one 32-element occurrence; FP32 stage emits four 32-byte transactions, UINT8 stage emits one packed 32-byte transaction",
+      "input_source": "transaction_contract logical_element_count=32, ga_lane_count=8, issue_cycles=4 and pack_factor=4",
+      "old_value": 2,
+      "owner": "logical ScheduleIR",
+      "path": "/buffer_loop_configs/GROUP2/COL_LC/stride",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001 plus transaction_contract",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": 1,
+      "formula": "one 32-element occurrence; FP32 stage emits four 32-byte transactions, UINT8 stage emits one packed 32-byte transaction",
+      "input_source": "transaction_contract logical_element_count=32, ga_lane_count=8, issue_cycles=4 and pack_factor=4",
+      "old_value": 4,
+      "owner": "logical ScheduleIR",
+      "path": "/dram_loop_configs/LC0/end",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001 plus transaction_contract",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": 4,
+      "formula": "one 32-element occurrence; FP32 stage emits four 32-byte transactions, UINT8 stage emits one packed 32-byte transaction",
+      "input_source": "transaction_contract logical_element_count=32, ga_lane_count=8, issue_cycles=4 and pack_factor=4",
+      "old_value": 32,
+      "owner": "logical ScheduleIR",
+      "path": "/dram_loop_configs/LC1/end",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001 plus transaction_contract",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": 4,
+      "formula": "one 32-element occurrence; FP32 stage emits four 32-byte transactions, UINT8 stage emits one packed 32-byte transaction",
+      "input_source": "transaction_contract logical_element_count=32, ga_lane_count=8, issue_cycles=4 and pack_factor=4",
+      "old_value": 8,
+      "owner": "logical ScheduleIR",
+      "path": "/dram_loop_configs/LC2/end",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001 plus transaction_contract",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": 1,
+      "formula": "one 32-element occurrence; FP32 stage emits four 32-byte transactions, UINT8 stage emits one packed 32-byte transaction",
+      "input_source": "transaction_contract logical_element_count=32, ga_lane_count=8, issue_cycles=4 and pack_factor=4",
+      "old_value": 2,
+      "owner": "logical ScheduleIR",
+      "path": "/dram_loop_configs/LC2/last_index",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": "mul",
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": "mac",
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE00/alu_opcode",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": 0.0637499988079071,
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": 0.06375,
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE00/inport1/constant",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": 0,
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": 12582975.75,
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE00/inport2/constant",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": null,
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": "constant",
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE00/inport2/mode",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": {
+        "$absent": true
+      },
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": "int32_sub",
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE01/alu_opcode",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": {
+        "$absent": true
+      },
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": 0,
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE01/inport0/constant",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": {
+        "$absent": true
+      },
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": null,
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE01/inport0/keep_last_index",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": {
+        "$absent": true
+      },
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": "buffer",
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE01/inport0/mode",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": {
+        "$absent": true
+      },
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": "GA_PE.PE00",
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE01/inport0/src_id",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": {
+        "$absent": true
+      },
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": 1262485504,
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE01/inport1/constant",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": {
+        "$absent": true
+      },
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": null,
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE01/inport1/keep_last_index",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": {
+        "$absent": true
+      },
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": "constant",
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE01/inport1/mode",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": {
+        "$absent": true
+      },
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": null,
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE01/inport1/src_id",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": {
+        "$absent": true
+      },
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": 0,
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE01/inport2/constant",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": {
+        "$absent": true
+      },
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": null,
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE01/inport2/keep_last_index",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": {
+        "$absent": true
+      },
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": null,
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE01/inport2/mode",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": {
+        "$absent": true
+      },
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": null,
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE01/inport2/src_id",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": {
+        "$absent": true
+      },
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": null,
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE01/transout_last_index",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": "mul",
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": "mac",
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE02/alu_opcode",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": 0.0637499988079071,
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": 0.06375,
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE02/inport1/constant",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": 0,
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": 12582975.75,
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE02/inport2/constant",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": null,
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": "constant",
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE02/inport2/mode",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": {
+        "$absent": true
+      },
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": "int32_sub",
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE03/alu_opcode",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": {
+        "$absent": true
+      },
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": 0,
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE03/inport0/constant",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": {
+        "$absent": true
+      },
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": null,
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE03/inport0/keep_last_index",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": {
+        "$absent": true
+      },
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": "buffer",
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE03/inport0/mode",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": {
+        "$absent": true
+      },
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": "GA_PE.PE02",
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE03/inport0/src_id",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": {
+        "$absent": true
+      },
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": 1262485504,
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE03/inport1/constant",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": {
+        "$absent": true
+      },
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": null,
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE03/inport1/keep_last_index",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": {
+        "$absent": true
+      },
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": "constant",
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE03/inport1/mode",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": {
+        "$absent": true
+      },
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": null,
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE03/inport1/src_id",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": {
+        "$absent": true
+      },
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": 0,
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE03/inport2/constant",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": {
+        "$absent": true
+      },
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": null,
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE03/inport2/keep_last_index",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": {
+        "$absent": true
+      },
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": null,
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE03/inport2/mode",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": {
+        "$absent": true
+      },
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": null,
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE03/inport2/src_id",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": {
+        "$absent": true
+      },
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": null,
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE03/transout_last_index",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": "mul",
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": "mac",
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE10/alu_opcode",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": 0.0637499988079071,
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": 0.06375,
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE10/inport1/constant",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": 0,
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": 12582975.75,
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE10/inport2/constant",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": null,
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": "constant",
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE10/inport2/mode",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": {
+        "$absent": true
+      },
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": "int32_sub",
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE11/alu_opcode",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": {
+        "$absent": true
+      },
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": 0,
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE11/inport0/constant",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": {
+        "$absent": true
+      },
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": null,
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE11/inport0/keep_last_index",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": {
+        "$absent": true
+      },
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": "buffer",
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE11/inport0/mode",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": {
+        "$absent": true
+      },
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": "GA_PE.PE10",
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE11/inport0/src_id",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": {
+        "$absent": true
+      },
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": 1262485504,
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE11/inport1/constant",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": {
+        "$absent": true
+      },
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": null,
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE11/inport1/keep_last_index",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": {
+        "$absent": true
+      },
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": "constant",
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE11/inport1/mode",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": {
+        "$absent": true
+      },
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": null,
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE11/inport1/src_id",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": {
+        "$absent": true
+      },
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": 0,
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE11/inport2/constant",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": {
+        "$absent": true
+      },
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": null,
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE11/inport2/keep_last_index",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": {
+        "$absent": true
+      },
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": null,
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE11/inport2/mode",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": {
+        "$absent": true
+      },
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": null,
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE11/inport2/src_id",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": {
+        "$absent": true
+      },
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": null,
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE11/transout_last_index",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": "mul",
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": "mac",
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE12/alu_opcode",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": 0.0637499988079071,
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": 0.06375,
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE12/inport1/constant",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": 0,
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": 12582975.75,
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE12/inport2/constant",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": null,
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": "constant",
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE12/inport2/mode",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": {
+        "$absent": true
+      },
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": "int32_sub",
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE13/alu_opcode",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": {
+        "$absent": true
+      },
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": 0,
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE13/inport0/constant",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": {
+        "$absent": true
+      },
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": null,
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE13/inport0/keep_last_index",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": {
+        "$absent": true
+      },
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": "buffer",
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE13/inport0/mode",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": {
+        "$absent": true
+      },
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": "GA_PE.PE12",
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE13/inport0/src_id",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": {
+        "$absent": true
+      },
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": 1262485504,
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE13/inport1/constant",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": {
+        "$absent": true
+      },
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": null,
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE13/inport1/keep_last_index",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": {
+        "$absent": true
+      },
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": "constant",
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE13/inport1/mode",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": {
+        "$absent": true
+      },
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": null,
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE13/inport1/src_id",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": {
+        "$absent": true
+      },
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": 0,
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE13/inport2/constant",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": {
+        "$absent": true
+      },
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": null,
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE13/inport2/keep_last_index",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": {
+        "$absent": true
+      },
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": null,
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE13/inport2/mode",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": {
+        "$absent": true
+      },
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": null,
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE13/inport2/src_id",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": {
+        "$absent": true
+      },
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": null,
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE13/transout_last_index",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": "mul",
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": "mac",
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE20/alu_opcode",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": 0.0637499988079071,
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": 0.06375,
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE20/inport1/constant",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": 0,
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": 12582975.75,
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE20/inport2/constant",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": null,
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": "constant",
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE20/inport2/mode",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": {
+        "$absent": true
+      },
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": "int32_sub",
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE21/alu_opcode",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": {
+        "$absent": true
+      },
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": 0,
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE21/inport0/constant",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": {
+        "$absent": true
+      },
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": null,
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE21/inport0/keep_last_index",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": {
+        "$absent": true
+      },
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": "buffer",
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE21/inport0/mode",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": {
+        "$absent": true
+      },
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": "GA_PE.PE20",
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE21/inport0/src_id",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": {
+        "$absent": true
+      },
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": 1262485504,
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE21/inport1/constant",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": {
+        "$absent": true
+      },
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": null,
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE21/inport1/keep_last_index",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": {
+        "$absent": true
+      },
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": "constant",
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE21/inport1/mode",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": {
+        "$absent": true
+      },
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": null,
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE21/inport1/src_id",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": {
+        "$absent": true
+      },
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": 0,
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE21/inport2/constant",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": {
+        "$absent": true
+      },
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": null,
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE21/inport2/keep_last_index",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": {
+        "$absent": true
+      },
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": null,
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE21/inport2/mode",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": {
+        "$absent": true
+      },
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": null,
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE21/inport2/src_id",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": {
+        "$absent": true
+      },
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": null,
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE21/transout_last_index",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": "mul",
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": "mac",
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE22/alu_opcode",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": 0.0637499988079071,
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": 0.06375,
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE22/inport1/constant",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": 0,
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": 12582975.75,
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE22/inport2/constant",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": null,
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": "constant",
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE22/inport2/mode",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": {
+        "$absent": true
+      },
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": "int32_sub",
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE23/alu_opcode",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": {
+        "$absent": true
+      },
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": 0,
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE23/inport0/constant",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": {
+        "$absent": true
+      },
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": null,
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE23/inport0/keep_last_index",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": {
+        "$absent": true
+      },
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": "buffer",
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE23/inport0/mode",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": {
+        "$absent": true
+      },
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": "GA_PE.PE22",
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE23/inport0/src_id",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": {
+        "$absent": true
+      },
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": 1262485504,
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE23/inport1/constant",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": {
+        "$absent": true
+      },
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": null,
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE23/inport1/keep_last_index",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": {
+        "$absent": true
+      },
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": "constant",
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE23/inport1/mode",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": {
+        "$absent": true
+      },
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": null,
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE23/inport1/src_id",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": {
+        "$absent": true
+      },
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": 0,
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE23/inport2/constant",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": {
+        "$absent": true
+      },
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": null,
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE23/inport2/keep_last_index",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": {
+        "$absent": true
+      },
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": null,
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE23/inport2/mode",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": {
+        "$absent": true
+      },
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": null,
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE23/inport2/src_id",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": {
+        "$absent": true
+      },
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": null,
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE23/transout_last_index",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": "mul",
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": "mac",
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE30/alu_opcode",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": 0.0637499988079071,
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": 0.06375,
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE30/inport1/constant",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": 0,
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": 12582975.75,
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE30/inport2/constant",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": null,
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": "constant",
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE30/inport2/mode",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": {
+        "$absent": true
+      },
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": "int32_sub",
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE31/alu_opcode",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": {
+        "$absent": true
+      },
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": 0,
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE31/inport0/constant",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": {
+        "$absent": true
+      },
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": null,
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE31/inport0/keep_last_index",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": {
+        "$absent": true
+      },
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": "buffer",
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE31/inport0/mode",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": {
+        "$absent": true
+      },
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": "GA_PE.PE30",
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE31/inport0/src_id",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": {
+        "$absent": true
+      },
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": 1262485504,
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE31/inport1/constant",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": {
+        "$absent": true
+      },
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": null,
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE31/inport1/keep_last_index",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": {
+        "$absent": true
+      },
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": "constant",
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE31/inport1/mode",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": {
+        "$absent": true
+      },
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": null,
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE31/inport1/src_id",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": {
+        "$absent": true
+      },
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": 0,
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE31/inport2/constant",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": {
+        "$absent": true
+      },
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": null,
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE31/inport2/keep_last_index",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": {
+        "$absent": true
+      },
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": null,
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE31/inport2/mode",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": {
+        "$absent": true
+      },
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": null,
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE31/inport2/src_id",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": {
+        "$absent": true
+      },
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": null,
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE31/transout_last_index",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": "mul",
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": "mac",
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE32/alu_opcode",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": 0.0637499988079071,
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": 0.06375,
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE32/inport1/constant",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": 0,
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": 12582975.75,
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE32/inport2/constant",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": null,
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": "constant",
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE32/inport2/mode",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": {
+        "$absent": true
+      },
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": "int32_sub",
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE33/alu_opcode",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": {
+        "$absent": true
+      },
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": 0,
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE33/inport0/constant",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": {
+        "$absent": true
+      },
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": null,
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE33/inport0/keep_last_index",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": {
+        "$absent": true
+      },
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": "buffer",
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE33/inport0/mode",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": {
+        "$absent": true
+      },
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": "GA_PE.PE32",
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE33/inport0/src_id",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": {
+        "$absent": true
+      },
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": 1262485504,
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE33/inport1/constant",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": {
+        "$absent": true
+      },
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": null,
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE33/inport1/keep_last_index",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": {
+        "$absent": true
+      },
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": "constant",
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE33/inport1/mode",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": {
+        "$absent": true
+      },
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": null,
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE33/inport1/src_id",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": {
+        "$absent": true
+      },
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": 0,
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE33/inport2/constant",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": {
+        "$absent": true
+      },
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": null,
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE33/inport2/keep_last_index",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": {
+        "$absent": true
+      },
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": null,
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE33/inport2/mode",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": {
+        "$absent": true
+      },
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": null,
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE33/inport2/src_id",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": {
+        "$absent": true
+      },
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": null,
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE33/transout_last_index",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": "false",
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": "true",
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/outport/int32touint8",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": 0,
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": 1,
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/outport/src_id",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-CONFIG-SEMANTIC-OWNERSHIP-001 plus this diagnostic stage_contract",
+      "base_field": true,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": "0x0",
+      "formula": "explicit diagnostic region base selected from stage DAG; no inherited server or package address",
+      "input_source": "stage_contract input_address/output_address",
+      "old_value": "0b00000_00_0000000000000_000000_0000",
+      "owner": "planner/address binder",
+      "path": "/stream_engine/stream0/base_addr",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001 plus transaction_contract",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": 128,
+      "formula": "one 32-element occurrence; FP32 stage emits four 32-byte transactions, UINT8 stage emits one packed 32-byte transaction",
+      "input_source": "transaction_contract logical_element_count=32, ga_lane_count=8, issue_cycles=4 and pack_factor=4",
+      "old_value": 1024,
+      "owner": "logical ScheduleIR",
+      "path": "/stream_engine/stream0/dim_stride/1",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-CONFIG-SEMANTIC-OWNERSHIP-001 plus this diagnostic stage_contract",
+      "base_field": true,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": "0x800000",
+      "formula": "explicit diagnostic region base selected from stage DAG; no inherited server or package address",
+      "input_source": "stage_contract input_address/output_address",
+      "old_value": "0b00000_11_0000000000000_000000_0000",
+      "owner": "planner/address binder",
+      "path": "/stream_engine/stream2/base_addr",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001 plus transaction_contract",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": 1,
+      "formula": "one 32-element occurrence; FP32 stage emits four 32-byte transactions, UINT8 stage emits one packed 32-byte transaction",
+      "input_source": "transaction_contract logical_element_count=32, ga_lane_count=8, issue_cycles=4 and pack_factor=4",
+      "old_value": 4,
+      "owner": "logical ScheduleIR",
+      "path": "/stream_engine/stream2/buf_spatial_stride/1",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001 plus transaction_contract",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": 10,
+      "formula": "one 32-element occurrence; FP32 stage emits four 32-byte transactions, UINT8 stage emits one packed 32-byte transaction",
+      "input_source": "transaction_contract logical_element_count=32, ga_lane_count=8, issue_cycles=4 and pack_factor=4",
+      "old_value": 9,
+      "owner": "logical ScheduleIR",
+      "path": "/stream_engine/stream2/buf_spatial_stride/10",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001 plus transaction_contract",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": 11,
+      "formula": "one 32-element occurrence; FP32 stage emits four 32-byte transactions, UINT8 stage emits one packed 32-byte transaction",
+      "input_source": "transaction_contract logical_element_count=32, ga_lane_count=8, issue_cycles=4 and pack_factor=4",
+      "old_value": 13,
+      "owner": "logical ScheduleIR",
+      "path": "/stream_engine/stream2/buf_spatial_stride/11",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001 plus transaction_contract",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": 12,
+      "formula": "one 32-element occurrence; FP32 stage emits four 32-byte transactions, UINT8 stage emits one packed 32-byte transaction",
+      "input_source": "transaction_contract logical_element_count=32, ga_lane_count=8, issue_cycles=4 and pack_factor=4",
+      "old_value": 17,
+      "owner": "logical ScheduleIR",
+      "path": "/stream_engine/stream2/buf_spatial_stride/12",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001 plus transaction_contract",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": 13,
+      "formula": "one 32-element occurrence; FP32 stage emits four 32-byte transactions, UINT8 stage emits one packed 32-byte transaction",
+      "input_source": "transaction_contract logical_element_count=32, ga_lane_count=8, issue_cycles=4 and pack_factor=4",
+      "old_value": 21,
+      "owner": "logical ScheduleIR",
+      "path": "/stream_engine/stream2/buf_spatial_stride/13",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001 plus transaction_contract",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": 14,
+      "formula": "one 32-element occurrence; FP32 stage emits four 32-byte transactions, UINT8 stage emits one packed 32-byte transaction",
+      "input_source": "transaction_contract logical_element_count=32, ga_lane_count=8, issue_cycles=4 and pack_factor=4",
+      "old_value": 25,
+      "owner": "logical ScheduleIR",
+      "path": "/stream_engine/stream2/buf_spatial_stride/14",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001 plus transaction_contract",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": 15,
+      "formula": "one 32-element occurrence; FP32 stage emits four 32-byte transactions, UINT8 stage emits one packed 32-byte transaction",
+      "input_source": "transaction_contract logical_element_count=32, ga_lane_count=8, issue_cycles=4 and pack_factor=4",
+      "old_value": 29,
+      "owner": "logical ScheduleIR",
+      "path": "/stream_engine/stream2/buf_spatial_stride/15",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001 plus transaction_contract",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": 2,
+      "formula": "one 32-element occurrence; FP32 stage emits four 32-byte transactions, UINT8 stage emits one packed 32-byte transaction",
+      "input_source": "transaction_contract logical_element_count=32, ga_lane_count=8, issue_cycles=4 and pack_factor=4",
+      "old_value": 8,
+      "owner": "logical ScheduleIR",
+      "path": "/stream_engine/stream2/buf_spatial_stride/2",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001 plus transaction_contract",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": 3,
+      "formula": "one 32-element occurrence; FP32 stage emits four 32-byte transactions, UINT8 stage emits one packed 32-byte transaction",
+      "input_source": "transaction_contract logical_element_count=32, ga_lane_count=8, issue_cycles=4 and pack_factor=4",
+      "old_value": 12,
+      "owner": "logical ScheduleIR",
+      "path": "/stream_engine/stream2/buf_spatial_stride/3",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001 plus transaction_contract",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": 4,
+      "formula": "one 32-element occurrence; FP32 stage emits four 32-byte transactions, UINT8 stage emits one packed 32-byte transaction",
+      "input_source": "transaction_contract logical_element_count=32, ga_lane_count=8, issue_cycles=4 and pack_factor=4",
+      "old_value": 16,
+      "owner": "logical ScheduleIR",
+      "path": "/stream_engine/stream2/buf_spatial_stride/4",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001 plus transaction_contract",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": 5,
+      "formula": "one 32-element occurrence; FP32 stage emits four 32-byte transactions, UINT8 stage emits one packed 32-byte transaction",
+      "input_source": "transaction_contract logical_element_count=32, ga_lane_count=8, issue_cycles=4 and pack_factor=4",
+      "old_value": 20,
+      "owner": "logical ScheduleIR",
+      "path": "/stream_engine/stream2/buf_spatial_stride/5",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001 plus transaction_contract",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": 6,
+      "formula": "one 32-element occurrence; FP32 stage emits four 32-byte transactions, UINT8 stage emits one packed 32-byte transaction",
+      "input_source": "transaction_contract logical_element_count=32, ga_lane_count=8, issue_cycles=4 and pack_factor=4",
+      "old_value": 24,
+      "owner": "logical ScheduleIR",
+      "path": "/stream_engine/stream2/buf_spatial_stride/6",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001 plus transaction_contract",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": 7,
+      "formula": "one 32-element occurrence; FP32 stage emits four 32-byte transactions, UINT8 stage emits one packed 32-byte transaction",
+      "input_source": "transaction_contract logical_element_count=32, ga_lane_count=8, issue_cycles=4 and pack_factor=4",
+      "old_value": 28,
+      "owner": "logical ScheduleIR",
+      "path": "/stream_engine/stream2/buf_spatial_stride/7",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001 plus transaction_contract",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": 8,
+      "formula": "one 32-element occurrence; FP32 stage emits four 32-byte transactions, UINT8 stage emits one packed 32-byte transaction",
+      "input_source": "transaction_contract logical_element_count=32, ga_lane_count=8, issue_cycles=4 and pack_factor=4",
+      "old_value": 1,
+      "owner": "logical ScheduleIR",
+      "path": "/stream_engine/stream2/buf_spatial_stride/8",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001 plus transaction_contract",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": 9,
+      "formula": "one 32-element occurrence; FP32 stage emits four 32-byte transactions, UINT8 stage emits one packed 32-byte transaction",
+      "input_source": "transaction_contract logical_element_count=32, ga_lane_count=8, issue_cycles=4 and pack_factor=4",
+      "old_value": 5,
+      "owner": "logical ScheduleIR",
+      "path": "/stream_engine/stream2/buf_spatial_stride/9",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001 plus transaction_contract",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": 128,
+      "formula": "one 32-element occurrence; FP32 stage emits four 32-byte transactions, UINT8 stage emits one packed 32-byte transaction",
+      "input_source": "transaction_contract logical_element_count=32, ga_lane_count=8, issue_cycles=4 and pack_factor=4",
+      "old_value": 256,
+      "owner": "logical ScheduleIR",
+      "path": "/stream_engine/stream2/dim_stride/1",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001 plus transaction_contract",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": 0,
+      "formula": "one 32-element occurrence; FP32 stage emits four 32-byte transactions, UINT8 stage emits one packed 32-byte transaction",
+      "input_source": "transaction_contract logical_element_count=32, ga_lane_count=8, issue_cycles=4 and pack_factor=4",
+      "old_value": 3,
+      "owner": "logical ScheduleIR",
+      "path": "/stream_engine/stream2/idx_size/0",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001 plus transaction_contract",
+      "base_field": false,
+      "config": "stage0_mul_to_fp32_scratch.json",
+      "expected_new_value": 31,
+      "formula": "one 32-element occurrence; FP32 stage emits four 32-byte transactions, UINT8 stage emits one packed 32-byte transaction",
+      "input_source": "transaction_contract logical_element_count=32, ga_lane_count=8, issue_cycles=4 and pack_factor=4",
+      "old_value": 7,
+      "owner": "logical ScheduleIR",
+      "path": "/stream_engine/stream2/idx_size/1",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001 plus transaction_contract",
+      "base_field": false,
+      "config": "stage1_magic_decode_to_uint8.json",
+      "expected_new_value": 1,
+      "formula": "one 32-element occurrence; FP32 stage emits four 32-byte transactions, UINT8 stage emits one packed 32-byte transaction",
+      "input_source": "transaction_contract logical_element_count=32, ga_lane_count=8, issue_cycles=4 and pack_factor=4",
+      "old_value": 4,
+      "owner": "logical ScheduleIR",
+      "path": "/dram_loop_configs/LC0/end",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001 plus transaction_contract",
+      "base_field": false,
+      "config": "stage1_magic_decode_to_uint8.json",
+      "expected_new_value": 4,
+      "formula": "one 32-element occurrence; FP32 stage emits four 32-byte transactions, UINT8 stage emits one packed 32-byte transaction",
+      "input_source": "transaction_contract logical_element_count=32, ga_lane_count=8, issue_cycles=4 and pack_factor=4",
+      "old_value": 32,
+      "owner": "logical ScheduleIR",
+      "path": "/dram_loop_configs/LC1/end",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001 plus transaction_contract",
+      "base_field": false,
+      "config": "stage1_magic_decode_to_uint8.json",
+      "expected_new_value": 1,
+      "formula": "one 32-element occurrence; FP32 stage emits four 32-byte transactions, UINT8 stage emits one packed 32-byte transaction",
+      "input_source": "transaction_contract logical_element_count=32, ga_lane_count=8, issue_cycles=4 and pack_factor=4",
+      "old_value": 8,
+      "owner": "logical ScheduleIR",
+      "path": "/dram_loop_configs/LC2/end",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001 plus transaction_contract",
+      "base_field": false,
+      "config": "stage1_magic_decode_to_uint8.json",
+      "expected_new_value": 1,
+      "formula": "one 32-element occurrence; FP32 stage emits four 32-byte transactions, UINT8 stage emits one packed 32-byte transaction",
+      "input_source": "transaction_contract logical_element_count=32, ga_lane_count=8, issue_cycles=4 and pack_factor=4",
+      "old_value": 2,
+      "owner": "logical ScheduleIR",
+      "path": "/dram_loop_configs/LC2/last_index",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage1_magic_decode_to_uint8.json",
+      "expected_new_value": 1.0,
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": 0.06375,
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE00/inport1/constant",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage1_magic_decode_to_uint8.json",
+      "expected_new_value": 12582912.0,
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": 12582975.75,
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE00/inport2/constant",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage1_magic_decode_to_uint8.json",
+      "expected_new_value": 1.0,
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": 0.06375,
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE02/inport1/constant",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage1_magic_decode_to_uint8.json",
+      "expected_new_value": 12582912.0,
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": 12582975.75,
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE02/inport2/constant",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage1_magic_decode_to_uint8.json",
+      "expected_new_value": 1.0,
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": 0.06375,
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE10/inport1/constant",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage1_magic_decode_to_uint8.json",
+      "expected_new_value": 12582912.0,
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": 12582975.75,
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE10/inport2/constant",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage1_magic_decode_to_uint8.json",
+      "expected_new_value": 1.0,
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": 0.06375,
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE12/inport1/constant",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage1_magic_decode_to_uint8.json",
+      "expected_new_value": 12582912.0,
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": 12582975.75,
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE12/inport2/constant",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage1_magic_decode_to_uint8.json",
+      "expected_new_value": 1.0,
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": 0.06375,
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE20/inport1/constant",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage1_magic_decode_to_uint8.json",
+      "expected_new_value": 12582912.0,
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": 12582975.75,
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE20/inport2/constant",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage1_magic_decode_to_uint8.json",
+      "expected_new_value": 1.0,
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": 0.06375,
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE22/inport1/constant",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage1_magic_decode_to_uint8.json",
+      "expected_new_value": 12582912.0,
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": 12582975.75,
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE22/inport2/constant",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage1_magic_decode_to_uint8.json",
+      "expected_new_value": 1.0,
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": 0.06375,
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE30/inport1/constant",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage1_magic_decode_to_uint8.json",
+      "expected_new_value": 12582912.0,
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": 12582975.75,
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE30/inport2/constant",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage1_magic_decode_to_uint8.json",
+      "expected_new_value": 1.0,
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": 0.06375,
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE32/inport1/constant",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage1_magic_decode_to_uint8.json",
+      "expected_new_value": 12582912.0,
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": 12582975.75,
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE32/inport2/constant",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "stage1_magic_decode_to_uint8.json",
+      "expected_new_value": "false",
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": "true",
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/inport/inport0/int32tofp32",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-CONFIG-SEMANTIC-OWNERSHIP-001 plus this diagnostic stage_contract",
+      "base_field": true,
+      "config": "stage1_magic_decode_to_uint8.json",
+      "expected_new_value": "0x800000",
+      "formula": "explicit diagnostic region base selected from stage DAG; no inherited server or package address",
+      "input_source": "stage_contract input_address/output_address",
+      "old_value": "0b00000_00_0000000000000_000000_0000",
+      "owner": "planner/address binder",
+      "path": "/stream_engine/stream0/base_addr",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001 plus transaction_contract",
+      "base_field": false,
+      "config": "stage1_magic_decode_to_uint8.json",
+      "expected_new_value": 128,
+      "formula": "one 32-element occurrence; FP32 stage emits four 32-byte transactions, UINT8 stage emits one packed 32-byte transaction",
+      "input_source": "transaction_contract logical_element_count=32, ga_lane_count=8, issue_cycles=4 and pack_factor=4",
+      "old_value": 1024,
+      "owner": "logical ScheduleIR",
+      "path": "/stream_engine/stream0/dim_stride/1",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-CONFIG-SEMANTIC-OWNERSHIP-001 plus this diagnostic stage_contract",
+      "base_field": true,
+      "config": "stage1_magic_decode_to_uint8.json",
+      "expected_new_value": "0x1000000",
+      "formula": "explicit diagnostic region base selected from stage DAG; no inherited server or package address",
+      "input_source": "stage_contract input_address/output_address",
+      "old_value": "0b00000_11_0000000000000_000000_0000",
+      "owner": "planner/address binder",
+      "path": "/stream_engine/stream2/base_addr",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001 plus transaction_contract",
+      "base_field": false,
+      "config": "stage1_magic_decode_to_uint8.json",
+      "expected_new_value": 32,
+      "formula": "one 32-element occurrence; FP32 stage emits four 32-byte transactions, UINT8 stage emits one packed 32-byte transaction",
+      "input_source": "transaction_contract logical_element_count=32, ga_lane_count=8, issue_cycles=4 and pack_factor=4",
+      "old_value": 256,
+      "owner": "logical ScheduleIR",
+      "path": "/stream_engine/stream2/dim_stride/1",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001 plus transaction_contract",
+      "base_field": false,
+      "config": "negative_control_fused.json",
+      "expected_new_value": 1,
+      "formula": "one 32-element occurrence; FP32 stage emits four 32-byte transactions, UINT8 stage emits one packed 32-byte transaction",
+      "input_source": "transaction_contract logical_element_count=32, ga_lane_count=8, issue_cycles=4 and pack_factor=4",
+      "old_value": 4,
+      "owner": "logical ScheduleIR",
+      "path": "/dram_loop_configs/LC0/end",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001 plus transaction_contract",
+      "base_field": false,
+      "config": "negative_control_fused.json",
+      "expected_new_value": 4,
+      "formula": "one 32-element occurrence; FP32 stage emits four 32-byte transactions, UINT8 stage emits one packed 32-byte transaction",
+      "input_source": "transaction_contract logical_element_count=32, ga_lane_count=8, issue_cycles=4 and pack_factor=4",
+      "old_value": 32,
+      "owner": "logical ScheduleIR",
+      "path": "/dram_loop_configs/LC1/end",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001 plus transaction_contract",
+      "base_field": false,
+      "config": "negative_control_fused.json",
+      "expected_new_value": 1,
+      "formula": "one 32-element occurrence; FP32 stage emits four 32-byte transactions, UINT8 stage emits one packed 32-byte transaction",
+      "input_source": "transaction_contract logical_element_count=32, ga_lane_count=8, issue_cycles=4 and pack_factor=4",
+      "old_value": 8,
+      "owner": "logical ScheduleIR",
+      "path": "/dram_loop_configs/LC2/end",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001 plus transaction_contract",
+      "base_field": false,
+      "config": "negative_control_fused.json",
+      "expected_new_value": 1,
+      "formula": "one 32-element occurrence; FP32 stage emits four 32-byte transactions, UINT8 stage emits one packed 32-byte transaction",
+      "input_source": "transaction_contract logical_element_count=32, ga_lane_count=8, issue_cycles=4 and pack_factor=4",
+      "old_value": 2,
+      "owner": "logical ScheduleIR",
+      "path": "/dram_loop_configs/LC2/last_index",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "negative_control_fused.json",
+      "expected_new_value": 0.0637499988079071,
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": 0.06375,
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE00/inport1/constant",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "negative_control_fused.json",
+      "expected_new_value": 12582912.0,
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": 12582975.75,
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE00/inport2/constant",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "negative_control_fused.json",
+      "expected_new_value": 0.0637499988079071,
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": 0.06375,
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE02/inport1/constant",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "negative_control_fused.json",
+      "expected_new_value": 12582912.0,
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": 12582975.75,
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE02/inport2/constant",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "negative_control_fused.json",
+      "expected_new_value": 0.0637499988079071,
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": 0.06375,
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE10/inport1/constant",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "negative_control_fused.json",
+      "expected_new_value": 12582912.0,
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": 12582975.75,
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE10/inport2/constant",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "negative_control_fused.json",
+      "expected_new_value": 0.0637499988079071,
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": 0.06375,
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE12/inport1/constant",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "negative_control_fused.json",
+      "expected_new_value": 12582912.0,
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": 12582975.75,
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE12/inport2/constant",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "negative_control_fused.json",
+      "expected_new_value": 0.0637499988079071,
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": 0.06375,
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE20/inport1/constant",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "negative_control_fused.json",
+      "expected_new_value": 12582912.0,
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": 12582975.75,
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE20/inport2/constant",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "negative_control_fused.json",
+      "expected_new_value": 0.0637499988079071,
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": 0.06375,
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE22/inport1/constant",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "negative_control_fused.json",
+      "expected_new_value": 12582912.0,
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": 12582975.75,
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE22/inport2/constant",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "negative_control_fused.json",
+      "expected_new_value": 0.0637499988079071,
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": 0.06375,
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE30/inport1/constant",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "negative_control_fused.json",
+      "expected_new_value": 12582912.0,
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": 12582975.75,
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE30/inport2/constant",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "negative_control_fused.json",
+      "expected_new_value": 0.0637499988079071,
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": 0.06375,
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE32/inport1/constant",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-EXACT-UINT8-QUANT-TAIL-ORDER-001 and CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+      "base_field": false,
+      "config": "negative_control_fused.json",
+      "expected_new_value": 12582912.0,
+      "formula": "stage0=MUL then FP32 materialization; stage1=MAC(x,1.0,magic), INT32_SUB(magic_bits-zp), UINT8 saturation; negative control=fused MAC",
+      "input_source": "discriminator bits, stage_contract numeric order, zero_point and HWC8 lane mapping",
+      "old_value": 12582975.75,
+      "owner": "operator numeric/layout contract",
+      "path": "/general_array/PE_array/PE32/inport2/constant",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-CONFIG-SEMANTIC-OWNERSHIP-001 plus this diagnostic stage_contract",
+      "base_field": true,
+      "config": "negative_control_fused.json",
+      "expected_new_value": "0x0",
+      "formula": "explicit diagnostic region base selected from stage DAG; no inherited server or package address",
+      "input_source": "stage_contract input_address/output_address",
+      "old_value": "0b00000_00_0000000000000_000000_0000",
+      "owner": "planner/address binder",
+      "path": "/stream_engine/stream0/base_addr",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001 plus transaction_contract",
+      "base_field": false,
+      "config": "negative_control_fused.json",
+      "expected_new_value": 128,
+      "formula": "one 32-element occurrence; FP32 stage emits four 32-byte transactions, UINT8 stage emits one packed 32-byte transaction",
+      "input_source": "transaction_contract logical_element_count=32, ga_lane_count=8, issue_cycles=4 and pack_factor=4",
+      "old_value": 1024,
+      "owner": "logical ScheduleIR",
+      "path": "/stream_engine/stream0/dim_stride/1",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-CONFIG-SEMANTIC-OWNERSHIP-001 plus this diagnostic stage_contract",
+      "base_field": true,
+      "config": "negative_control_fused.json",
+      "expected_new_value": "0x1800000",
+      "formula": "explicit diagnostic region base selected from stage DAG; no inherited server or package address",
+      "input_source": "stage_contract input_address/output_address",
+      "old_value": "0b00000_11_0000000000000_000000_0000",
+      "owner": "planner/address binder",
+      "path": "/stream_engine/stream2/base_addr",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    },
+    {
+      "authorization": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001 plus transaction_contract",
+      "base_field": false,
+      "config": "negative_control_fused.json",
+      "expected_new_value": 32,
+      "formula": "one 32-element occurrence; FP32 stage emits four 32-byte transactions, UINT8 stage emits one packed 32-byte transaction",
+      "input_source": "transaction_contract logical_element_count=32, ga_lane_count=8, issue_cycles=4 and pack_factor=4",
+      "old_value": 256,
+      "owner": "logical ScheduleIR",
+      "path": "/stream_engine/stream2/dim_stride/1",
+      "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001"
+    }
+  ],
+  "diff_granularity": "leaf",
+  "multiple_owner_action": "fail closed",
+  "per_config_count": {
+    "negative_control_fused.json": 24,
+    "stage0_mul_to_fp32_scratch.json": 173,
+    "stage1_magic_decode_to_uint8.json": 25
+  },
+  "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+  "schema": "exact-uint8-quant-tail-materialized-leaf-ownership-v1",
+  "trusted_static_config": {
+    "path": "ndp-sim/jsons/quant_from_buffer_int32MN_uint8MN.json",
+    "sha256": "db638f0640e74217e80e61350a2fe400f7b495e2201f17c39915328cdd455ba2",
+    "use": "field/topology oracle only; not a ResNet target substitute"
+  },
+  "unknown_diff_action": "fail closed"
+}

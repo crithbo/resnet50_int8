@@ -1,0 +1,40 @@
+{
+  "schema": "human-json-package-release-analysis-v1",
+  "operator_family": "human_mac_int32_uint8",
+  "human_authored_input": true,
+  "candidate_release": false,
+  "server_execution_performed": false,
+  "server_root": "NDP_copy03",
+  "server_lease_present": false,
+  "authorized_delta": {
+    "field": "general_array.outport.src_id",
+    "from": 1,
+    "to": 0
+  },
+  "invariants": {
+    "LC2.last_index": 1
+  },
+  "corrected_candidate": {
+    "path": "artifacts/human_mac_int32_uint8_20260727_v1/mac_int32_uint8.corrected_v3.json",
+    "size_bytes": 13941,
+    "sha256": "b7087828cf6235147d1c61a40835ed4a38ed437abc14ad6871708ad487becc26"
+  },
+  "package_release": {
+    "path": "artifacts/human_mac_int32_uint8_20260727_v1/server_package/human_mac_int32_uint8_v3_stock_rtl_fd2.zip",
+    "size_bytes": 140663,
+    "sha256": "5bcc26c80a995063b6b8c071eea4962426dd0547d782df771c61cf1fa3024e52",
+    "manifest_sha256": "ad4040eab6456b7548e6bc02635b7aa61a2b1dfb87334f784e48dc62f8d5b92b",
+    "package_rtl_entries": 0,
+    "only_command": "bash PREPARE_AND_RUN.sh /absolute/path/to/NDP_copy03",
+    "expected_return": "human_mac_int32_uint8_v3_stock_rtl_fd2_return.zip"
+  },
+  "preflight": {
+    "passed": true,
+    "native_double_rebuild_equal": true,
+    "formal_payload_count": 28
+  },
+  "evidence_level": "E2_LOCAL_ONLY",
+  "dynamic_status": "DYNAMIC_REQUIRED",
+  "blocker_delta": "Local configuration candidate rebuilt; stock-RTL run awaits group-C lease.",
+  "rule_delta_proposal": "NONE_NEW"
+}

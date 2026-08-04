@@ -1,0 +1,116 @@
+{
+  "schema": "qlinearadd-node0007-first-request-chain-diagnostic-contract-v10",
+  "status": "PACKAGE_READY_NOT_RUN",
+  "package_class": "DIAGNOSTIC_ONLY_NOT_FUNCTIONAL_FIX",
+  "candidate_release": false,
+  "evidence_level": "E2_LOCAL_ONLY",
+  "node": "node0007",
+  "target_stage": "op_a_dequant",
+  "numeric_analysis_repeated": false,
+  "workload_analysis_repeated": false,
+  "consumed_reuse_assets": true,
+  "functional_fix": false,
+  "functional_rtl_modified": false,
+  "server_action": false,
+  "return_analysis": {
+    "last_proven_good": "op_a_dequant execution command accepted",
+    "first_bad_interval": "actual slice_start_run through first accepted MSE0 DRAM request",
+    "local_root_cause_adjudication": "UNRESOLVED_AFTER_EXHAUSTIVE_LOCAL_AUDIT_WITHIN_OP_A_DEQUANT_START_COMP_TO_FIRST_MSE_REQUEST",
+    "why_not_config_fix": [
+      "the prior observer counted sem2iga_exec_start and did not prove actual slice_start_run",
+      "the prior observer probed fixed LC0/LC2/LC_PE1 rather than the final mapped LC2/LC4/LC6/LC13/LC18 chain",
+      "an empty Memory_AG_Idx_Queue can accept initial selected index inputs, so shared-LC fanout alone does not prove a ready-cycle root cause",
+      "no qualified dynamic boundary currently distinguishes slice start, LC output, MSE index match, queue write, address-generator accept, and request enqueue"
+    ],
+    "forbidden_inference": "shared LC topology is not claimed as the root cause"
+  },
+  "frozen_workload": {
+    "source_package": "artifacts/operator_config_validation/r5-server-test-packages/r5_qadd_n7_progress_canon_v8.zip",
+    "source_package_sha256": "b74b18f906fbf32851ce016906c599889236e7088ad7209607e52368bad69100",
+    "workload_file_count": 99,
+    "changed_after_namespace_normalization": [],
+    "configuration_numeric_semantics_unchanged": true,
+    "timeout_unchanged": true,
+    "formal_readback_unchanged": true
+  },
+  "diagnostic_scope": {
+    "actual_start": "slice_start_run rising edge",
+    "active_physical_lcs": [
+      2,
+      4,
+      6,
+      13,
+      18
+    ],
+    "active_lc_evidence": [
+      "enable level snapshot",
+      "output-valid level snapshot",
+      "output-ready level snapshot",
+      "qualified output handshake count"
+    ],
+    "selected_mse0_evidence": [
+      "three index input valid/ready/qualified handshake counts",
+      "match",
+      "queue empty/full",
+      "queue write",
+      "address-generator valid/ready/qualified handshake",
+      "request enqueue valid/ready/qualified handshake"
+    ],
+    "selected_mse4_evidence": [
+      "three index input valid/ready/qualified handshake counts",
+      "match",
+      "queue empty/full",
+      "queue write"
+    ],
+    "level_samples_are_progress": false,
+    "canonical_decision": "evidence/CANONICAL_PROGRESS_DECISION.json",
+    "stall_window_cycles": 1048576,
+    "heartbeat_cycles": 262144
+  },
+  "package_release": {
+    "zip": "artifacts/operator_config_validation/r5-server-test-packages/r5_qadd_n7_first_request_chain_v10.zip",
+    "zip_sha256": "573121def027a04b33650122e82d6c32cb8fbc4c9162cfc6cc831237a01869cf",
+    "zip_bytes": 38033628,
+    "sidecar": "artifacts/operator_config_validation/r5-server-test-packages/r5_qadd_n7_first_request_chain_v10.zip.sha256",
+    "sidecar_sha256": "c3a567adddf784e967c0bbf7106fb07535fdc92898ce00219d31422be7acd514",
+    "single_command": "bash PREPARE_AND_RUN.sh /absolute/path/to/NDP_copyXX",
+    "expected_return": "r5_qadd_n7_first_request_chain_v10_return.zip",
+    "expected_return_sidecar": "r5_qadd_n7_first_request_chain_v10_return.zip.sha256",
+    "final_zip_rule_self_audit_pass": true,
+    "errors": 0,
+    "negative_controls": "18/18 fail closed"
+  },
+  "read_receipts": [
+    {
+      "path": ".agents/rules/生成前必读索引.md",
+      "sha256": "12583308ec9a16dbb8ea15571a5280291fed7e152167d2e4e8e00509a9a6370f",
+      "current_match": true
+    },
+    {
+      "path": ".agents/rules/服务器测试包生成规则.md",
+      "sha256": "7672b44bbcb7e130792d6b288188caa2509dc72b1ea3962bf44ffb82588009aa",
+      "current_match": true
+    },
+    {
+      "path": ".agents/rules/QLinearAdd算子配置规则.md",
+      "sha256": "c38935c63469a165ffe6b79c9e3d08de47bbbd9b9e0613cbc16253c138e4b76b",
+      "current_match": true
+    },
+    {
+      "path": "NDP_copy01/README_HARDWARE_SIM_ENTRY.md",
+      "sha256": "4318f3a28de399fb522740315f11bdddf346e71969cf1e45686899a568b042d7",
+      "current_match": true
+    }
+  ],
+  "quarantined_identities": [
+    "r5_qadd_n7_nested_lc_progress_bind_v6",
+    "r5_qadd_n7_progress_canon_v7",
+    "r5_qadd_n7_progress_canon_v8",
+    "r5_qadd_n7_first_request_chain_v9"
+  ],
+  "machine_report": {
+    "path": "artifacts/operator_config_validation/r5-qlinearadd-node0007-first-request-chain-v10/report.json",
+    "sha256": "7ede3635578b920a79b6971170518a5896160c0133a878b6ed97480c0e444c54"
+  },
+  "test_receipt": "artifacts/operator_config_validation/r5-qlinearadd-node0007-first-request-chain-v10/test_receipt.json"
+}

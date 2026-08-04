@@ -1,0 +1,91 @@
+{
+  "schema": "native-ndp-server-return-profile-v1",
+  "profile_id": "gap-hwop0071-sum-v1",
+  "scope": "GAP UINT8-to-INT32 centered sum stage only; excludes divide-by-49 and UINT8 requantize",
+  "workload_binding": {
+    "path": "artifacts/operator_config_validation/r5-server-workloads/gap_hwop0071_sum_graph",
+    "manifest_sha256": "fd88c18dde5316d0538351e31095178e3461ac14867108722ec06c9457b99fdc",
+    "sca_cfg_sha256": "226925d6510ae85c38863bbcf54955e29602e3fe07d93e1d6c9ae7cf1a7ca86d",
+    "sca_cfg_D_sha256": "578ef4c61949668d5d7434234d7206e58aa06d5ef34ec96e7c5697cda9c2cf99",
+    "payload_tree_sha256": "8f644eaac10f0994cc657a23a44604de5aa1c55bbbf4371f26f3802a55d18c56"
+  },
+  "expected": {
+    "exec_length": 17,
+    "preload_object_count": 18,
+    "readback_matrix_count": 16,
+    "active_slices": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15
+    ],
+    "readback_length_128bit_per_slice": 512,
+    "input_dtype": "uint8",
+    "output_dtype": "int32"
+  },
+  "diagnostics": {
+    "recommended_observer_plusargs": [
+      "+RETURN_OBSERVER",
+      "+RETURN_OBS_SLICE=0",
+      "+RETURN_OBS_STALL_CYCLES=4096",
+      "+RETURN_OBS_HEARTBEAT_CYCLES=4096"
+    ],
+    "input_mse_candidates": [
+      0
+    ],
+    "output_mse_candidates": [
+      4
+    ],
+    "ga_pe_coordinates": [
+      "PE00",
+      "PE02",
+      "PE10",
+      "PE12",
+      "PE20",
+      "PE22",
+      "PE30",
+      "PE32"
+    ],
+    "checkpoint_order": [
+      "invocation",
+      "sca_binding",
+      "preload",
+      "execplan",
+      "dispatch",
+      "slice_start",
+      "read_request",
+      "read_return",
+      "compute_finish",
+      "write_address",
+      "write_data",
+      "global_complete",
+      "readback",
+      "numeric_compare"
+    ],
+    "known_failure_signatures": [
+      "wrong or missing SCA path before preload",
+      "read request without read return",
+      "write address without write data",
+      "GA pipeline0 valid held while bp_post and enable stay low",
+      "compute completion without formal D readback",
+      "D readback numeric mismatch"
+    ]
+  },
+  "claim_boundary": {
+    "numeric_pass": "all 16 returned matrices exactly match the independent local INT32 Golden",
+    "formal_e4": "also requires an approved server/RTL identity receipt",
+    "formal_e5": "requires an independent second run with the same workload and environment identity"
+  }
+}

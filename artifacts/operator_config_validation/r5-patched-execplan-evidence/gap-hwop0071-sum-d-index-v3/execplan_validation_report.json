@@ -1,0 +1,68 @@
+{
+  "schema": "operator-config-execplan-validation-report-v1",
+  "graph_root": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\gap-hwop0071-sum-d-index-v3\\pipeline_output",
+  "valid": true,
+  "first_error": null,
+  "issues": [],
+  "facts": {
+    "target_profile": {
+      "slices": 28,
+      "banks_per_slice": 4,
+      "ddr_rows": 6144,
+      "ddr_columns": 64,
+      "subwords_per_column": 16,
+      "read_streams": 4,
+      "write_streams": 1,
+      "buffers": 6
+    },
+    "graph": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\gap-hwop0071-sum-d-index-v3\\pipeline_output\\graph_input_withbaseaddr.json",
+    "graph_sha256": "66928400ee70b761c776f1b42638f613bb4651579e6eda6bb315541894ca816f",
+    "execplan": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\gap-hwop0071-sum-d-index-v3\\pipeline_output\\install\\execplan.txt",
+    "execplan_sha256": "7b221b48a43ddd630f90c2f653f675b5f72d01bd3eb4a984c8cef27b14fc7ba5",
+    "instruction_count_64bit": 33,
+    "execplan_lines_128bit": 17,
+    "operator_count": 1,
+    "load_config_count": 1,
+    "sfu_load_config_count": 0,
+    "start_comp_count": 1,
+    "stages": [
+      {
+        "stage_index": 0,
+        "op_id": "op0",
+        "op_type": "resnet50_gap_sum_uint8_int32",
+        "load_instruction_index": 1,
+        "start_instruction_index": 32,
+        "slice_mask": "0x000FFFF",
+        "source_config": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\gap-hwop0071-sum-d-index-v3\\mapping_evidence\\op0\\source_config.json",
+        "source_config_sha256": "34cbeab0ccee74ff735a1fb8b9632b5aa43f0cdbd49b383069f5e6edd860ddf4",
+        "artifact_dir": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\gap-hwop0071-sum-d-index-v3\\mapping_evidence\\op0",
+        "artifact_valid": true,
+        "next_config_state": {
+          "IGA": "842c00d1b8f895e53d2e4a8eac831e1582b8dd0d247bb1cbb43cd73e1238e42b",
+          "LSU": "1aea46c1d506d1c34675fe7a1d9c0f3e9b42a1245982989d713ae6df8621f983",
+          "SA": null,
+          "GA": "2c6d8fb12d2c3e394eeae7881ddcf59546e49c02451661e1f4c4478c486c8a9a"
+        },
+        "pipeline_json": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\gap-hwop0071-sum-d-index-v3\\pipeline_output\\jsons\\op0_resnet50_gap_sum_uint8_int32.json",
+        "pipeline_json_sha256": "7b71df34a771ae77d58ea0ff0415036bc94f45a7f7fc1b60ff9488079362e1ec",
+        "pipeline_artifact_sha256": {
+          "mapping_review.json": "c6e146b5b76d0292b932b61cd470311dbc7236f7bfa3f9d81598973fb0a6fb3f",
+          "parsed_bitstream.txt": "5d1016a42962498ff29ff6ac8c0a679d60ee668f5a1b7b229903b361bf8bcf43",
+          "modules_dump_64b.bin": "598d635da8ccf0726f0baca9eb7f91895f6e2ac1f7bd869407908b973a9e5445",
+          "modules_dump_128b.bin": "82037feb1a58526d5658f9dbc3aee53b9fb6463f9c5f341d39e8c2df07db0a8c"
+        },
+        "config_base_addr": "0x0001AC00",
+        "config_length_64bit_words": 48,
+        "config_path": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\gap-hwop0071-sum-d-index-v3\\pipeline_output\\install\\cfg_pkg\\op0_resnet50_gap_sum_uint8_int32_bitstream_128b.bin",
+        "config_sha256": "82037feb1a58526d5658f9dbc3aee53b9fb6463f9c5f341d39e8c2df07db0a8c"
+      }
+    ],
+    "final_config_state": {
+      "IGA": "842c00d1b8f895e53d2e4a8eac831e1582b8dd0d247bb1cbb43cd73e1238e42b",
+      "LSU": "1aea46c1d506d1c34675fe7a1d9c0f3e9b42a1245982989d713ae6df8621f983",
+      "SA": null,
+      "GA": "2c6d8fb12d2c3e394eeae7881ddcf59546e49c02451661e1f4c4478c486c8a9a"
+    },
+    "issue_count": 0
+  }
+}

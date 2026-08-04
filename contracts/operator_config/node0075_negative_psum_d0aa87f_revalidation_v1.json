@@ -1,0 +1,266 @@
+{
+  "blocker_delta": {
+    "closed": [],
+    "not_reached": [
+      "B_MATMUL_NODE0075_FINAL_A_CONSUMER_MATERIALIZER_MISSING",
+      "B_MATMUL_TAIL",
+      "B_QUANT_TAIL_SIGNED_INT32_INGRESS",
+      "B_QUANT_TAIL_FMA_ROUNDING_POINT",
+      "B_QUANT_TAIL_MAGIC_DOMAIN_BOUND"
+    ],
+    "retained_exact": [
+      "B_MATMUL_NODE0075_SA_NEGATIVE_PSUM_ZERO_BOUNDARY_REACHABLE"
+    ],
+    "source_sync": "UPDATED_8F2F318_TO_D0AA87F"
+  },
+  "candidate_release": false,
+  "claim_boundary": "Fresh owner-side d0aa87f directed and complete recurrence revalidation. PACKAGE_RELEASE=NONE; no downstream node0075 materialization or server artifact was emitted.",
+  "current_rtl_identity": {
+    "SA_PE_Float_CSA.v": "429a29a929a508f7562f9c78d4ab2cd4095961296d0e6f65e8419a4444a6145a",
+    "SA_PE_Float_Control.v": "00107da5137ada324407ba7dbf3e74d6e32428a42631aa23f44c5077ea7b7eeb",
+    "functional_fix_commit": "cb11353d4196b4af26aac18b4dcc39ba0027e8bc",
+    "trassic_commit": "d0aa87f682880a260fb792aaac88f70a23aba414"
+  },
+  "directed_rtl_gate": {
+    "adjudication": "Four adjacent controls pass; only frozen exact cancellation -19+19 observes 0x80000000 instead of 0x00000000.",
+    "cases": {
+      "neg18_plus19": {
+        "csa_raw_bits": "0xffffffff",
+        "expected_bits": "0x00000001",
+        "int_result_sign": "0",
+        "magnitude_bits": "0x00000012",
+        "observed_bits": "0x00000001",
+        "pass": true,
+        "psum_bits": "0xffffffee"
+      },
+      "neg19_plus19": {
+        "csa_raw_bits": "0x00000000",
+        "expected_bits": "0x00000000",
+        "int_result_sign": "1",
+        "magnitude_bits": "0x00000013",
+        "observed_bits": "0x80000000",
+        "pass": false,
+        "psum_bits": "0xffffffed"
+      },
+      "neg20_plus19": {
+        "csa_raw_bits": "0x00000001",
+        "expected_bits": "0xffffffff",
+        "int_result_sign": "1",
+        "magnitude_bits": "0x00000014",
+        "observed_bits": "0xffffffff",
+        "pass": true,
+        "psum_bits": "0xffffffec"
+      },
+      "pos7_plus19": {
+        "csa_raw_bits": "0x0000001a",
+        "expected_bits": "0x0000001a",
+        "int_result_sign": "0",
+        "magnitude_bits": "0x00000007",
+        "observed_bits": "0x0000001a",
+        "pass": true,
+        "psum_bits": "0x00000007"
+      },
+      "zero_plus19": {
+        "csa_raw_bits": "0x00000013",
+        "expected_bits": "0x00000013",
+        "int_result_sign": "0",
+        "magnitude_bits": "0x00000000",
+        "observed_bits": "0x00000013",
+        "pass": true,
+        "psum_bits": "0x00000000"
+      }
+    },
+    "compile_exit": 0,
+    "simulation_exit": 0
+  },
+  "first_divergence": {
+    "config_expressible": false,
+    "functional_rtl_mutation_authorized": false,
+    "id": "B_MATMUL_NODE0075_SA_NEGATIVE_PSUM_ZERO_BOUNDARY_REACHABLE",
+    "live_leaf": "SA_PE_Float_Control now provides full-width magnitude 0x00000013, but SA_PE_Float_CSA computes Int_Res_Sign as c_Result0_wire[31] XOR i_SignC. Exact magnitude cancellation has c_Result0_wire=0 and retains i_SignC=1, while result bits[30:0] are zero, producing noncanonical 0x80000000.",
+    "witness": {
+      "a_u8_lanes": [
+        28,
+        13,
+        1,
+        0
+      ],
+      "b_s8_lanes": [
+        1,
+        -2,
+        17,
+        -2
+      ],
+      "dot4_s32": 19,
+      "expected_next_s32": 0,
+      "k_group": 3,
+      "lane_products": [
+        28,
+        -26,
+        17,
+        0
+      ],
+      "m": 0,
+      "n": 65,
+      "psum_in_s32": -19
+    }
+  },
+  "full_frozen_recurrence_gate": {
+    "boundary_hit_digest": "e1b6c87ad2eed55be91edc2462a84a5a16c930223beaf9d21278e942615a363c",
+    "complete": true,
+    "computed_accumulator_sha256": "2688a80d7470963839de58d5003ab280e8dc2757af66595352a75161c302e57c",
+    "dot4_range": [
+      -3539,
+      13286
+    ],
+    "enumerated_occurrences": 8192000,
+    "first_lexicographic_hit": {
+      "a_u8_lanes": [
+        2,
+        8,
+        0,
+        3
+      ],
+      "b_s8_lanes": [
+        -6,
+        12,
+        -15,
+        3
+      ],
+      "dot4_s32": 93,
+      "expected_next_s32": 0,
+      "k_group": 287,
+      "lane_products": [
+        -12,
+        96,
+        0,
+        9
+      ],
+      "m": 0,
+      "n": 51,
+      "psum_in_s32": -93
+    },
+    "first_stream_order_hit": {
+      "a_u8_lanes": [
+        28,
+        13,
+        1,
+        0
+      ],
+      "b_s8_lanes": [
+        1,
+        -2,
+        17,
+        -2
+      ],
+      "dot4_s32": 19,
+      "expected_next_s32": 0,
+      "k_group": 3,
+      "lane_products": [
+        28,
+        -26,
+        17,
+        0
+      ],
+      "m": 0,
+      "n": 65,
+      "psum_in_s32": -19
+    },
+    "formal_accumulator_match": true,
+    "formal_accumulator_mismatch_count": 0,
+    "implementation": "fresh direct m->k_group recurrence; does not import the prior node0075 reachability module or report",
+    "input_receipts": {
+      "artifacts/reference_model/resnet50-v1-12-int8.onnx": "c234f30975989788b4405f25253275aae247ab6dbdd34aaa69ab0a59ff76f6d0",
+      "artifacts/w3/golden_batch16/tensors/tensor-6fbd5707d5f08110.npy": "c2d08ebd45a564d63e499b333a9576bbdafc71448ee693c8a199a7cf65193f12",
+      "artifacts/w3/subop_batch16/tensors/tensor-internal-node-0075-accumulate.npy": "ee8422fe7c20f0cc40adb18abcd0b8b0f9c433a6c2283e8c87262e3a7d419ec3",
+      "weight_initializer_value_sha256": "0a04b48f313e071330869b5638d696e008a35801c74db1778f9376a8c6008688"
+    },
+    "negative_psum_occurrences": 4343952,
+    "negative_to_exact_zero": 272,
+    "planned_occurrences": 8192000,
+    "psum_in_range": [
+      -45141,
+      121038
+    ]
+  },
+  "materializer_and_traffic": {
+    "actual_accepted_32byte_reads": 0,
+    "actual_accepted_a_traffic_bytes": 0,
+    "actual_materialized_reload_passes": 0,
+    "actual_unique_consumer_accepted_bytes": 0,
+    "authorized_post_fix_minimum": {
+      "accepted_a_traffic_bytes": 262144,
+      "accepted_reads_per_slice": 512,
+      "accepted_reads_total": 8192,
+      "formula": "ceil(1000/(16*8))=8",
+      "passes": 8,
+      "unique_producer_owned_storage_bytes": 32768
+    },
+    "reason": "Fail-fast precedes consumer materialization; the authorized 8-pass figures remain counterfactual and are not acceptance."
+  },
+  "mutations": {
+    "functional_rtl": false,
+    "other_operator_family_assets": false,
+    "plan": false,
+    "public_rules": false,
+    "server_upload_run_or_lease": false
+  },
+  "outputs": {
+    "bitstream": false,
+    "config_bound_e2": false,
+    "consumer_materializer": false,
+    "execplan": false,
+    "handler_or_registry": false,
+    "mapping": false,
+    "op_json_schema_or_template": false,
+    "sca": false,
+    "server_package": false,
+    "target_json": false
+  },
+  "owner": {
+    "family": "QLinearMatMul/node0075",
+    "mainline_thread": "019fbec2-fe93-7e03-9314-cff6f222f33d",
+    "owner_thread": "019fc775-8de0-7f10-bc4a-026a4673776f"
+  },
+  "package_release": "NONE",
+  "rule_confirmation": {
+    "claim_boundary": "Frozen node0075 natural C-order recurrence and exact active d0aa87f RTL only; no family-wide or server-side claim.",
+    "evidence": "Exact d0aa87f active RTL fails one reachable frozen exact-cancellation occurrence while adjacent controls pass; the complete recurrence has 272 such hits.",
+    "rule_ids": [
+      "CDA-SA-INT8-RTL-COMPATIBILITY-001",
+      "CDA-SA-INT8-CONV-MATMUL-COMMON-GATE-001",
+      "CDA-CONFIG-MATERIALIZED-ROUNDTRIP-001"
+    ]
+  },
+  "rule_delta_proposal": {
+    "reason": "Current rules already require current-identity arithmetic compatibility and fail-fast before materialization/package.",
+    "required": false
+  },
+  "schema": "resnet50-node0075-negative-psum-d0aa87f-revalidation-v1",
+  "source_receipts": {
+    ".agents/agent.md": "d9fe95839c2c92a83083d956392a66876c1007fbb7922522c6a8920babab6721",
+    ".agents/plan.md": "7e576abb1d965450886480eb604dbd887c06a2989d30ac90ec9ec2639ddf1af8",
+    ".agents/rules/INT8_SA点积专项规则.md": "54a1e12541aaeb6f62dadb19c47a6154eb0462b758a35a9a5bc4a0043cb37dce",
+    ".agents/rules/NDP硬件字段语义.md": "603d57805bc5a5bdfca7406c402bc94db60c06ea6682493d672abb91671b1055",
+    ".agents/rules/服务器测试包生成规则.md": "5761987d07f425a316bd845e390405c0c64d78c9a371b9cce22cc491c8f25f48",
+    ".agents/rules/生成前必读索引.md": "db339fb8f47105b76deef85cdd43cfc85af6358a0c8155571fde54c2006f26c5",
+    ".agents/rules/算子配置规则.md": "cbaffcc5fb3bea7da9f0c199bb2e7f06445a676ab456bdfd505b90dd89825171",
+    ".agents/rules/精确UINT8量化尾专项规则.md": "1685bd6527111bf014a738dbef4ee85b5b8d3e54c0565cb63eda9417d5c9425e",
+    ".agents/task_records/20260803_node0071_node0075_uint8_identity_alias_integration.md": "7a727936c9994655b06219cb5092d8b9dc7276a3aa755f16ccccd0643282b12c",
+    ".agents/task_records/20260803_node0075_a_repeated_read_diagnostic_bypass_authorization.md": "be56cf012296f7efc37c76dd522adb2194c6dae467137bf6ceb1778db439b58c",
+    ".agents/task_records/20260803_node0075_materializer_mainline_authorization.md": "36be8174ec9afcb7430761812def6bcd5c78756197cf1fd9b6f449bf4d6077c7",
+    ".agents/task_records/20260803_node0075_operator_family_owner_split.md": "f786df93feee00c66bffa4096de7e7c550c001cdcd2c3d6d5bcfe11a7121c5a6",
+    ".agents/task_records/20260803_trassic_master_d0aa87f_active_rtl_sync.md": "9ecce80032be2d9573512928d806fecdbdb31caf7344b516ae88c7762b8409d6",
+    "NDP_copy01/rtl/Slice/Specialized_Array/SA_PE/SA_PE_ALU/SA_ALU.v": "c986ea2de79381afb220ccef83f28466ec3bdda39cd4d80255419bfa214fee06",
+    "NDP_copy01/rtl/Slice/Specialized_Array/SA_PE/SA_PE_ALU/SA_PE_Float_CSA.v": "429a29a929a508f7562f9c78d4ab2cd4095961296d0e6f65e8419a4444a6145a",
+    "NDP_copy01/rtl/Slice/Specialized_Array/SA_PE/SA_PE_ALU/SA_PE_Float_Control.v": "00107da5137ada324407ba7dbf3e74d6e32428a42631aa23f44c5077ea7b7eeb",
+    "NDP_copy01/rtl/Slice/Specialized_Array/SA_PE/SA_PE_ALU/SA_PE_Mul_Array.v": "135306563de4407c7d1279c942a7d1ce4e347dd8d263e3fd4a7d63f0e8a2587a",
+    "artifacts/rtl_sync/trassic_master_d0aa87f_20260803/report.json": "fb104ea11c9a5ad2d3b83998cec331fb7b0440b781cd2beb690de915ed8c2771",
+    "contracts/operator_config/node0071_node0075_uint8_identity_alias_integration_v1.json": "73d831d075317c4bf05aa4ca2f8c541835884f6fa9124fbd9dd5199f591cb0e1",
+    "outputs/node0075_negative_psum_d0aa87f_revalidation/current_rtl_and_recurrence.json": "fd10530f88c444e829d1248c0e73c51fb5a17639012546eaba4b0d8cf42ad2a5",
+    "tests/rtl/node0075_negative_psum_d0aa87f_recheck_tb.sv": "fac6c5a00dac1dcf7a08aa2a78f2e7f37f434673326fa3dba73107d30a805428",
+    "tools/run_node0075_negative_psum_d0aa87f_recheck.py": "534c15d89709267dc7caf692977cde2689bcc89497b0ead11be6ddd8d5945f65"
+  },
+  "status": "HARDWARE_CAPABILITY_BLOCKED",
+  "test_id": "r5-node0075-negative-psum-d0aa87f-revalidation-v1"
+}

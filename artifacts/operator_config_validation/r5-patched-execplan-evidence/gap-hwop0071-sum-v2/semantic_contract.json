@@ -1,0 +1,95 @@
+{
+  "schema": "operator-config-semantic-contract-v1",
+  "graph_sha256": "66928400ee70b761c776f1b42638f613bb4651579e6eda6bb315541894ca816f",
+  "target_profile": {
+    "slices": 28,
+    "banks_per_slice": 4,
+    "ddr_rows": 6144,
+    "ddr_columns": 64,
+    "subwords_per_column": 16,
+    "read_streams": 4,
+    "write_streams": 1,
+    "buffers": 6
+  },
+  "candidate_scope": {
+    "node_id": "node-0071",
+    "hw_op_id": "hwop-0071-00",
+    "slice_count": 16,
+    "formal_target_config": false,
+    "server_execution_claim": false,
+    "purpose": "full native NDP-Sim GAP sum package awaiting hardware"
+  },
+  "source_identities": {
+    "typed_config_parameter_contract_sha256": "abbc87b0b13c92611a90fe1767b32b15fe9c49f23bee616ca2bb51219dd181bd",
+    "typed_stage_sha256": "b15631e17852aa6180b07426b580027b45eb042611ba8b24a1c2546ba8db4b5f",
+    "typed_requant_stage_sha256": "9c41d2df9c2939a60e5ad256f64ab314c1b6f1afa93bb733279eb63a8862fe0e",
+    "schedule_sha256": "074c283b8d752062ae0b3e03394d60e6f94f2f2e3bc75a42387eeb5da0708d3b",
+    "strict_config_sha256": "bc1c593106c0dd25251af67c5500983218051dc21d19d33f8c91942c9e412e76",
+    "patchset_sha256": "aea2b0462eb736f42fc881b99e91e29c153d5b4e984982b1e4b2bf8597e23487",
+    "transport_manifest_sha256": "ff3d26d5ad9db79f3a38329b898a9d46383128f67fb50661aaaad931acb2e91a",
+    "mapping_bundle_manifest_sha256": "4eee7bb7dd2a2e61a4acb0dc51fc6189d386d1def23e15e41811c0be77235605",
+    "request_proof_content_sha256": "74fbc0143cdee28818a066215a57793807f388576545042402e35b93af85a537",
+    "independent_mismatch_count": 0
+  },
+  "operators": {
+    "op0": {
+      "op_type": "resnet50_gap_sum_uint8_int32",
+      "layouts": {
+        "A": "UINT8 C8HW8 [256,7,7,8], 100352-byte payload plus 64-byte zero suffix guard",
+        "D": "INT32 C8 [256,8], 8192 bytes per slice"
+      },
+      "qparams": {
+        "policy": "explicit",
+        "bindings": {
+          "A": {
+            "scale": {
+              "dtype": "float32",
+              "element_count": 1,
+              "float32_bits": "0x3d9b232c",
+              "scalar": 0.0757506787776947,
+              "shape": [
+                1
+              ],
+              "value_kind": "scalar",
+              "value_sha256": "9a334018ba4b8b6d80aa844775179c5aecd0833dd028f6acf97dcb970a3570d2"
+            },
+            "zero_point": {
+              "dtype": "uint8",
+              "element_count": 1,
+              "scalar": 0,
+              "shape": [
+                1
+              ],
+              "value_kind": "scalar",
+              "value_sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d"
+            },
+            "source": "typed_config_parameter_contract:w4-28-c7-resnet50-batch16-typed-parameters-v1:hwop-0071-00@b15631e17852aa6180b07426b580027b45eb042611ba8b24a1c2546ba8db4b5f;scale=hwop-0071-01@9c41d2df9c2939a60e5ad256f64ab314c1b6f1afa93bb733279eb63a8862fe0e"
+          }
+        }
+      },
+      "stage": {
+        "role": "node-0071 spatial sum over 49 values; one batch per slice",
+        "dependencies": []
+      },
+      "tail": {
+        "policy": "exact",
+        "stream_padding": {
+          "logical_spatial_values": 49,
+          "scheduled_spatial_values": 56,
+          "padding_value": 0
+        }
+      },
+      "provenance": {
+        "source_config": {
+          "artifact": "mapping_evidence/op0/source_config.json",
+          "sha256": "5cbf02721fd01619b7cd2e5f99de13f5d697e7ebdbf783ff91ace24cf772a7ad"
+        },
+        "mapping_evidence": {
+          "artifact": "mapping_evidence/op0/mapping_evidence.json",
+          "sha256": "ea5799ed31e6d386e37f92a66825314e727d713c847805f628bd94a5bdb75898"
+        }
+      }
+    }
+  },
+  "contract_sha256": "7e50a42d68d89c43917ad3aa640aaf0cc6e8f224fdb07b453f4398802d97b878"
+}

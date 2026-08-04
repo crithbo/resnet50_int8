@@ -1,0 +1,113 @@
+[pipeline] regenerating bitstream for op_w0_s00 (resnet50_requant_node0004_w0_s00) ...
+[pipeline] regenerating bitstream for op_w0_s01 (resnet50_requant_node0004_w0_s01) ...
+[pipeline] regenerating bitstream for op_w0_s02 (resnet50_requant_node0004_w0_s02) ...
+[pipeline] regenerating bitstream for op_w0_s03 (resnet50_requant_node0004_w0_s03) ...
+[pipeline] regenerating bitstream for op_w0_s04 (resnet50_requant_node0004_w0_s04) ...
+[pipeline] regenerating bitstream for op_w0_s05 (resnet50_requant_node0004_w0_s05) ...
+[pipeline] regenerating bitstream for op_w0_s06 (resnet50_requant_node0004_w0_s06) ...
+[pipeline] regenerating bitstream for op_w0_s07 (resnet50_requant_node0004_w0_s07) ...
+[pipeline] regenerating bitstream for op_w1_s00 (resnet50_requant_node0004_w1_s00) ...
+[pipeline] regenerating bitstream for op_w1_s01 (resnet50_requant_node0004_w1_s01) ...
+[pipeline] regenerating bitstream for op_w1_s02 (resnet50_requant_node0004_w1_s02) ...
+[pipeline] regenerating bitstream for op_w1_s03 (resnet50_requant_node0004_w1_s03) ...
+[pipeline] regenerating bitstream for op_w1_s04 (resnet50_requant_node0004_w1_s04) ...
+[pipeline] regenerating bitstream for op_w1_s05 (resnet50_requant_node0004_w1_s05) ...
+[pipeline] regenerating bitstream for op_w1_s06 (resnet50_requant_node0004_w1_s06) ...
+[pipeline] regenerating bitstream for op_w1_s07 (resnet50_requant_node0004_w1_s07) ...
+[pipeline] regenerating bitstream for op_w2_s00 (resnet50_requant_node0004_w2_s00) ...
+[pipeline] regenerating bitstream for op_w2_s01 (resnet50_requant_node0004_w2_s01) ...
+[pipeline] regenerating bitstream for op_w2_s02 (resnet50_requant_node0004_w2_s02) ...
+[pipeline] regenerating bitstream for op_w2_s03 (resnet50_requant_node0004_w2_s03) ...
+[pipeline] regenerating bitstream for op_w2_s04 (resnet50_requant_node0004_w2_s04) ...
+[pipeline] regenerating bitstream for op_w2_s05 (resnet50_requant_node0004_w2_s05) ...
+[pipeline] regenerating bitstream for op_w2_s06 (resnet50_requant_node0004_w2_s06) ...
+[pipeline] regenerating bitstream for op_w2_s07 (resnet50_requant_node0004_w2_s07) ...
+[pipeline] Regenerated bitstream + JSON for 24 operator(s) under C:\Users\15383\AppData\Local\Temp\r3-execplan-gsdax9ym\run2\tool\model_execplan\output\graph.
+Parsed operators: 24
+  - op_w0_s00 (resnet50_requant_node0004_w0_s00), inputs=[A], output_shape=(1, 3136, 8), used_slices=0001000100010001000100010001 (count=7)
+  - op_w0_s01 (resnet50_requant_node0004_w0_s01), inputs=[A], output_shape=(1, 3136, 8), used_slices=0001000100010001000100010001 (count=7)
+  - op_w0_s02 (resnet50_requant_node0004_w0_s02), inputs=[A], output_shape=(1, 3136, 8), used_slices=0100010001000100010001000100 (count=7)
+  - op_w0_s03 (resnet50_requant_node0004_w0_s03), inputs=[A], output_shape=(1, 3136, 8), used_slices=0100010001000100010001000100 (count=7)
+  - op_w0_s04 (resnet50_requant_node0004_w0_s04), inputs=[A], output_shape=(1, 3136, 8), used_slices=1000100010001000100010001000 (count=7)
+  - op_w0_s05 (resnet50_requant_node0004_w0_s05), inputs=[A], output_shape=(1, 3136, 8), used_slices=1000100010001000100010001000 (count=7)
+  - op_w0_s06 (resnet50_requant_node0004_w0_s06), inputs=[A], output_shape=(1, 3136, 8), used_slices=0010001000100010001000100010 (count=7)
+  - op_w0_s07 (resnet50_requant_node0004_w0_s07), inputs=[A], output_shape=(1, 3136, 8), used_slices=0010001000100010001000100010 (count=7)
+  - op_w1_s00 (resnet50_requant_node0004_w1_s00), inputs=[A], output_shape=(1, 3136, 8), used_slices=0001000100010001000100010001 (count=7)
+  - op_w1_s01 (resnet50_requant_node0004_w1_s01), inputs=[A], output_shape=(1, 3136, 8), used_slices=0001000100010001000100010001 (count=7)
+  - op_w1_s02 (resnet50_requant_node0004_w1_s02), inputs=[A], output_shape=(1, 3136, 8), used_slices=0100010001000100010001000100 (count=7)
+  - op_w1_s03 (resnet50_requant_node0004_w1_s03), inputs=[A], output_shape=(1, 3136, 8), used_slices=0100010001000100010001000100 (count=7)
+  - op_w1_s04 (resnet50_requant_node0004_w1_s04), inputs=[A], output_shape=(1, 3136, 8), used_slices=1000100010001000100010001000 (count=7)
+  - op_w1_s05 (resnet50_requant_node0004_w1_s05), inputs=[A], output_shape=(1, 3136, 8), used_slices=1000100010001000100010001000 (count=7)
+  - op_w1_s06 (resnet50_requant_node0004_w1_s06), inputs=[A], output_shape=(1, 3136, 8), used_slices=0010001000100010001000100010 (count=7)
+  - op_w1_s07 (resnet50_requant_node0004_w1_s07), inputs=[A], output_shape=(1, 3136, 8), used_slices=0010001000100010001000100010 (count=7)
+  - op_w2_s00 (resnet50_requant_node0004_w2_s00), inputs=[A], output_shape=(1, 3136, 8), used_slices=0000000000000000000000010001 (count=2)
+  - op_w2_s01 (resnet50_requant_node0004_w2_s01), inputs=[A], output_shape=(1, 3136, 8), used_slices=0000000000000000000000010001 (count=2)
+  - op_w2_s02 (resnet50_requant_node0004_w2_s02), inputs=[A], output_shape=(1, 3136, 8), used_slices=0000000000000000000001000100 (count=2)
+  - op_w2_s03 (resnet50_requant_node0004_w2_s03), inputs=[A], output_shape=(1, 3136, 8), used_slices=0000000000000000000001000100 (count=2)
+  - op_w2_s04 (resnet50_requant_node0004_w2_s04), inputs=[A], output_shape=(1, 3136, 8), used_slices=0000000000000000000010001000 (count=2)
+  - op_w2_s05 (resnet50_requant_node0004_w2_s05), inputs=[A], output_shape=(1, 3136, 8), used_slices=0000000000000000000010001000 (count=2)
+  - op_w2_s06 (resnet50_requant_node0004_w2_s06), inputs=[A], output_shape=(1, 3136, 8), used_slices=0000000000000000000000100010 (count=2)
+  - op_w2_s07 (resnet50_requant_node0004_w2_s07), inputs=[A], output_shape=(1, 3136, 8), used_slices=0000000000000000000000100010 (count=2)
+Address assignments: 48
+  - op_w0_s00.input.A: shape=(1, 3136, 8), size=100352B, base=0x00000000, slice0=0x00000000
+  - op_w0_s00.output.D: shape=(1, 3136, 8), size=25088B, base=0x00018800, slice0=0x00018800
+  - op_w0_s01.input.A: shape=(1, 3136, 8), size=100352B, base=0x0001EA00, slice0=0x0001EA00
+  - op_w0_s01.output.D: shape=(1, 3136, 8), size=25088B, base=0x00037200, slice0=0x00037200
+  - op_w0_s02.input.A: shape=(1, 3136, 8), size=100352B, base=0x0003D400, slice2=0x0403D400
+  - op_w0_s02.output.D: shape=(1, 3136, 8), size=25088B, base=0x00055C00, slice2=0x04055C00
+  - op_w0_s03.input.A: shape=(1, 3136, 8), size=100352B, base=0x0005BE00, slice2=0x0405BE00
+  - op_w0_s03.output.D: shape=(1, 3136, 8), size=25088B, base=0x00074600, slice2=0x04074600
+  - op_w0_s04.input.A: shape=(1, 3136, 8), size=100352B, base=0x0007A800, slice3=0x0607A800
+  - op_w0_s04.output.D: shape=(1, 3136, 8), size=25088B, base=0x00093000, slice3=0x06093000
+  - op_w0_s05.input.A: shape=(1, 3136, 8), size=100352B, base=0x00099200, slice3=0x06099200
+  - op_w0_s05.output.D: shape=(1, 3136, 8), size=25088B, base=0x000B1A00, slice3=0x060B1A00
+  - op_w0_s06.input.A: shape=(1, 3136, 8), size=100352B, base=0x000B7C00, slice1=0x020B7C00
+  - op_w0_s06.output.D: shape=(1, 3136, 8), size=25088B, base=0x000D0400, slice1=0x020D0400
+  - op_w0_s07.input.A: shape=(1, 3136, 8), size=100352B, base=0x000D6600, slice1=0x020D6600
+  - op_w0_s07.output.D: shape=(1, 3136, 8), size=25088B, base=0x000EEE00, slice1=0x020EEE00
+  - op_w1_s00.input.A: shape=(1, 3136, 8), size=100352B, base=0x000F5000, slice0=0x000F5000
+  - op_w1_s00.output.D: shape=(1, 3136, 8), size=25088B, base=0x0010D800, slice0=0x0010D800
+  - op_w1_s01.input.A: shape=(1, 3136, 8), size=100352B, base=0x00113A00, slice0=0x00113A00
+  - op_w1_s01.output.D: shape=(1, 3136, 8), size=25088B, base=0x0012C200, slice0=0x0012C200
+  - op_w1_s02.input.A: shape=(1, 3136, 8), size=100352B, base=0x00132400, slice2=0x04132400
+  - op_w1_s02.output.D: shape=(1, 3136, 8), size=25088B, base=0x0014AC00, slice2=0x0414AC00
+  - op_w1_s03.input.A: shape=(1, 3136, 8), size=100352B, base=0x00150E00, slice2=0x04150E00
+  - op_w1_s03.output.D: shape=(1, 3136, 8), size=25088B, base=0x00169600, slice2=0x04169600
+  - op_w1_s04.input.A: shape=(1, 3136, 8), size=100352B, base=0x0016F800, slice3=0x0616F800
+  - op_w1_s04.output.D: shape=(1, 3136, 8), size=25088B, base=0x00188000, slice3=0x06188000
+  - op_w1_s05.input.A: shape=(1, 3136, 8), size=100352B, base=0x0018E200, slice3=0x0618E200
+  - op_w1_s05.output.D: shape=(1, 3136, 8), size=25088B, base=0x001A6A00, slice3=0x061A6A00
+  - op_w1_s06.input.A: shape=(1, 3136, 8), size=100352B, base=0x001ACC00, slice1=0x021ACC00
+  - op_w1_s06.output.D: shape=(1, 3136, 8), size=25088B, base=0x001C5400, slice1=0x021C5400
+  - op_w1_s07.input.A: shape=(1, 3136, 8), size=100352B, base=0x001CB600, slice1=0x021CB600
+  - op_w1_s07.output.D: shape=(1, 3136, 8), size=25088B, base=0x001E3E00, slice1=0x021E3E00
+  - op_w2_s00.input.A: shape=(1, 3136, 8), size=100352B, base=0x001EA000, slice0=0x001EA000
+  - op_w2_s00.output.D: shape=(1, 3136, 8), size=25088B, base=0x00202800, slice0=0x00202800
+  - op_w2_s01.input.A: shape=(1, 3136, 8), size=100352B, base=0x00208A00, slice0=0x00208A00
+  - op_w2_s01.output.D: shape=(1, 3136, 8), size=25088B, base=0x00221200, slice0=0x00221200
+  - op_w2_s02.input.A: shape=(1, 3136, 8), size=100352B, base=0x00227400, slice2=0x04227400
+  - op_w2_s02.output.D: shape=(1, 3136, 8), size=25088B, base=0x0023FC00, slice2=0x0423FC00
+  - op_w2_s03.input.A: shape=(1, 3136, 8), size=100352B, base=0x00245E00, slice2=0x04245E00
+  - op_w2_s03.output.D: shape=(1, 3136, 8), size=25088B, base=0x0025E600, slice2=0x0425E600
+  - op_w2_s04.input.A: shape=(1, 3136, 8), size=100352B, base=0x00264800, slice3=0x06264800
+  - op_w2_s04.output.D: shape=(1, 3136, 8), size=25088B, base=0x0027D000, slice3=0x0627D000
+  - op_w2_s05.input.A: shape=(1, 3136, 8), size=100352B, base=0x00283200, slice3=0x06283200
+  - op_w2_s05.output.D: shape=(1, 3136, 8), size=25088B, base=0x0029BA00, slice3=0x0629BA00
+  - op_w2_s06.input.A: shape=(1, 3136, 8), size=100352B, base=0x002A1C00, slice1=0x022A1C00
+  - op_w2_s06.output.D: shape=(1, 3136, 8), size=25088B, base=0x002BA400, slice1=0x022BA400
+  - op_w2_s07.input.A: shape=(1, 3136, 8), size=100352B, base=0x002C0600, slice1=0x022C0600
+  - op_w2_s07.output.D: shape=(1, 3136, 8), size=25088B, base=0x002D8E00, slice1=0x022D8E00
+Generated commands: 293
+Command metadata: {'load_config_count': '24', 'clock_enable_count': '1', 'write_reg_count': '244', 'skipped_unchanged_write_count': '268', 'control_write_count': '0', 'start_comp_count': '24', 'skipped_control_ops_same_size': '0', 'parsed_register_fields': '739', 'parsed_register_addresses': '279', 'unresolved_control_names': '', 'note': 'One global Clock_Enable is emitted before all operators; each operator then emits Load_Config, Write_Reg updates, and Start_Comp; control-register writes are emitted only when template initial_size differs from target size.'}
+  cmd[0] = 0x00000007FFFFFFF9
+  cmd[1] = 0x44002DF008888888
+  cmd[2] = 0x0300100040440024
+  cmd[3] = 0x0300200040440044
+  cmd[4] = 0x0300300040440064
+  cmd[5] = 0x0300400040440084
+  cmd[6] = 0x03005000404400A4
+  cmd[7] = 0x03006000404400C4
+Instruction stream written to: C:\Users\15383\AppData\Local\Temp\r3-execplan-gsdax9ym\run2\tool\model_execplan\output\graph\install\execplan.txt
+Instruction explanation written to: C:\Users\15383\AppData\Local\Temp\r3-execplan-gsdax9ym\run2\tool\model_execplan\output\graph\instructions_explained.txt
+Install manifest written to: C:\Users\15383\AppData\Local\Temp\r3-execplan-gsdax9ym\run2\tool\model_execplan\output\graph\sca_cfg.json
+Input with baseaddr written to: C:\Users\15383\AppData\Local\Temp\r3-execplan-gsdax9ym\run2\tool\model_execplan\output\graph\graph_withbaseaddr.json

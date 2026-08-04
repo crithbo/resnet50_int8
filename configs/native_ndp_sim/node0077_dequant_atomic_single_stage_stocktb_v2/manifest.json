@@ -1,0 +1,93 @@
+{
+  "candidate_release": false,
+  "claim_boundary": "diagnostic atomic contract only; no bitstream, server run, full node0077 E4, E5, or formal target claim",
+  "counts": {
+    "a_preload_128bit_lines": 2,
+    "d_formal_128bit_lines": 8,
+    "element_total": 32,
+    "logical_occurrence": 1,
+    "mse4_accepted_write_beats": 8,
+    "physical_slice_instance": 2,
+    "stage": 1
+  },
+  "counts_as_node0077_e4": false,
+  "counts_as_node0077_e5": false,
+  "dynamic_baseline": "NO_DYNAMIC_BASELINE",
+  "evidence_level": "E2_LOCAL_CONTRACT_ONLY",
+  "files": {
+    "config.json": {
+      "sha256": "c974e9ca8bdd8635a2cf804bbb90b7c72aae2265084dd4256e4fa267da846718",
+      "size_bytes": 12317
+    },
+    "coverage_contract.json": {
+      "sha256": "1a1d36626094ce00dc20d22fc6e074afd0878cccf849d021cf19de8ddb438e8c",
+      "size_bytes": 451
+    },
+    "derivation_provenance.json": {
+      "sha256": "4263927e6f97d0f32d491ecb191beaf9c2586b5aabfc1b4f7b56fa7df5984a98",
+      "size_bytes": 1556
+    },
+    "expected_mse4_writes.json": {
+      "sha256": "a0713ce764d86458c35a07ed7c6b68b3c408be5ba4f78daf77140b317b4f8cd4",
+      "size_bytes": 3038
+    },
+    "generation_receipt.json": {
+      "sha256": "e50561cec5daeb5b8bd12badeb4f9b6bf75e74ce3d9e4397993df560c56db392",
+      "size_bytes": 5743
+    },
+    "golden_fp32_cwh.npy": {
+      "sha256": "6a0759a2768def78452ec553b3a59c256700e29108197db6661a3f05505e8be0",
+      "size_bytes": 256
+    },
+    "golden_slice00_128b.txt": {
+      "sha256": "3d77e78c5fd2460ef679223c12580455ab0b0e1df4ee725a82caf9e6758f72b5",
+      "size_bytes": 516
+    },
+    "golden_slice01_128b.txt": {
+      "sha256": "4d6e5afa95a2d0053be3b45d8b2fb87044da267db9dbaa41b5892afd140a6083",
+      "size_bytes": 516
+    },
+    "input_slice00_128b.txt": {
+      "sha256": "4ae94a271660f195c1c3f47fa9410f7e618070f84390d5f3e198f2aa18ee9c21",
+      "size_bytes": 129
+    },
+    "input_slice01_128b.txt": {
+      "sha256": "0f5b1b5c4df96a72dd5cf5771af9feeb95647c4feecf2d760b1730424683192e",
+      "size_bytes": 129
+    },
+    "input_uint8_cwh.npy": {
+      "sha256": "f1d3b500bc9c907f1138daaeeeaaaed9dc1e29fed01a4a098b55fd888c07e481",
+      "size_bytes": 160
+    },
+    "lifecycle_contract.json": {
+      "sha256": "5d381e28115c30bd816cbaa1fd6129d5f019d65ac1ba572a7bfce4f5eeb6fb5f",
+      "size_bytes": 693
+    },
+    "typed_graph.json": {
+      "sha256": "96075f3791b68023da4033fd5f2f3b2daef2e8068fd5572ceb8ed4f6991518e9",
+      "size_bytes": 1468
+    }
+  },
+  "formal_target_instance_allowed": false,
+  "generation_receipt_sha256": "695532d7a87574d3686657abe0332ba81c4d7d8fae448f6a44a1a78bef77d221",
+  "manifest_sha256": "3b4f95864e694cd2d17e6a0d26c9bbf9cd29dcedc6ad8ec1c01ab6a187107d54",
+  "remaining_blockers": [
+    "B_DEQUANT_SERVER_E4_E5"
+  ],
+  "request_id": "r5:hwop-0077-00",
+  "rule_ids": [
+    "CDA-CONFIG-SEMANTIC-OWNERSHIP-001",
+    "CDA-CONFIG-MATERIALIZED-ROUNDTRIP-001",
+    "CDA-DEQUANT-ONNX-ORDER-001",
+    "CDA-DEQUANT-NO-AFFINE-MAC-001",
+    "CDA-DEQUANT-TWO-STAGE-GA-001",
+    "CDA-DEQUANT-NORMAL-OUTBUFFER-001",
+    "CDA-DEQUANT-STREAM-LIFECYCLE-001",
+    "CDA-DEQUANT-D-BUFFER-SUPPLY-CONSERVATION-001",
+    "CDA-DEQUANT-ATOMIC-STOCK-TB-001"
+  ],
+  "schema": "dequant-node0077-atomic-single-stage-contract-v2",
+  "scope": "one CWH16 occurrence replicated on slices0+1, one GA stage",
+  "server_package": false,
+  "status": "LOCAL_DYNAMIC_CONTRACT_MATERIALIZED_NOT_RUN"
+}

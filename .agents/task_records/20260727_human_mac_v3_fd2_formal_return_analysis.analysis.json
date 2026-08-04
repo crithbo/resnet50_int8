@@ -1,0 +1,124 @@
+{
+  "schema": "human-json-stock-rtl-return-analysis-v1",
+  "source": {
+    "absolute_path": "C:\\Users\\15383\\xwechat_files\\wxid_vwpfpfs4fgyk22_29b7\\msg\\file\\2026-07\\human_mac_int32_uint8_v3_stock_rtl_fd2_return.zip",
+    "size_bytes": 62980,
+    "sha256": "d2d8a8d39f5cb36f4fd45229fb4a9edd41b77fd61c166f33b31c11191f06df41",
+    "adjacent_sha256_sidecar_present": false
+  },
+  "expected_package": {
+    "path": "artifacts/human_mac_int32_uint8_20260727_v1/server_package/human_mac_int32_uint8_v3_stock_rtl_fd2.zip",
+    "size_bytes": 140663,
+    "sha256": "5bcc26c80a995063b6b8c071eea4962426dd0547d782df771c61cf1fa3024e52",
+    "manifest_sha256": "ad4040eab6456b7548e6bc02635b7aa61a2b1dfb87334f784e48dc62f8d5b92b"
+  },
+  "identity": {
+    "formal_return_identity_verified": false,
+    "reason": "required adjacent return SHA256 sidecar is absent",
+    "internal_receipt_install_name_matches": true,
+    "internal_receipt_manifest_sha256_matches": true,
+    "returned_file_allowlist_receipt_present": true,
+    "package_preflight_passed": true,
+    "package_local_identity_gate_passed": true,
+    "post_compile_same": true,
+    "post_run_same": true
+  },
+  "compile_and_run": {
+    "compile_exit": 0,
+    "sim_exit": 0,
+    "slice_start_time_ps": 58837000,
+    "slice_completed_time_ps": 59952000,
+    "slice_completed_after_cycles": 891,
+    "natural_finish_observed": true,
+    "finish_time_ps": 68828125,
+    "vcs_cpu_seconds": 17.5,
+    "timeout_or_fatal_observed": false,
+    "stuck": false
+  },
+  "formal_d": {
+    "readback_file_count": 28,
+    "readback_bytes_each": 8256,
+    "lines_each": 64,
+    "bytes_per_line": 16,
+    "known_equal_lines_total": 448,
+    "known_mismatch_lines_total": 0,
+    "unknown_x_lines_total": 1344,
+    "per_slice": {
+      "known_equal_line_range": [0, 15],
+      "unknown_x_line_range": [16, 63],
+      "known_equal_bytes": 256,
+      "unknown_bytes": 768
+    },
+    "result_gate_passed": false,
+    "numeric_result": "FAIL_PARTIAL_OUTPUT_COVERAGE"
+  },
+  "observer": {
+    "present": false,
+    "facts": []
+  },
+  "last_trusted_boundary": {
+    "stage": "human_corrected_v3_static_json",
+    "fact": "stream2.dim_stride[1] is 256 and would cover the 1024-byte uint8 output contiguously over four LC0 occurrences"
+  },
+  "first_divergence": {
+    "stage": "native_control_register_materialization_before_encoding",
+    "field": "stream_engine.stream2.dim_stride[1]",
+    "static_human_value": 256,
+    "materialized_value": 1024,
+    "cause": "quant_from_buffer_int32MN_uint8MN handler computes write port1 as d_n * 32; with d_n=32 this overwrites the human value with 1024",
+    "source": "artifacts/human_mac_int32_uint8_20260727_v1/nativechain_v3_a/model_execplan/src/execution_plan_generator/control_registers.py:770",
+    "application_source": "artifacts/human_mac_int32_uint8_20260727_v1/nativechain_v3_a/model_execplan/src/execution_plan_generator/output_writer.py:145"
+  },
+  "address_coverage": {
+    "transaction_bytes": 32,
+    "transactions_per_lc0_occurrence": 8,
+    "bytes_written_per_lc0_occurrence": 256,
+    "lc0_occurrences": 4,
+    "materialized_offset_ranges": [
+      [0, 255],
+      [1024, 1279],
+      [2048, 2303],
+      [3072, 3327]
+    ],
+    "formal_readback_offset_range": [0, 1023],
+    "formal_readback_written_intersection": [0, 255],
+    "formal_readback_unwritten_range": [256, 1023]
+  },
+  "adjudication": {
+    "lc2_last_index_issue": false,
+    "ga_src_id_v3_issue": false,
+    "human_static_json_stride_issue": false,
+    "native_materialization_stride_issue": true,
+    "dynamic_baseline_available": false,
+    "classification": [
+      "RETURN_IDENTITY_INCOMPLETE_SIDECAR_MISSING",
+      "FIRST_DYNAMIC_FAILURE",
+      "NO_DYNAMIC_BASELINE",
+      "NATURAL_COMPLETION",
+      "FORMAL_D_PARTIAL_COVERAGE",
+      "NATIVE_MATERIALIZATION_FIELD_OVERWRITE"
+    ]
+  },
+  "blocker_delta": {
+    "closed": [
+      "corrected-v3 GA source selection no longer prevents computation or completion",
+      "LC2.last_index=1 is not implicated by this return"
+    ],
+    "opened_or_confirmed": [
+      "write-stream outer dim_stride is overwritten from 256 to 1024 during native materialization",
+      "required return sidecar is missing"
+    ]
+  },
+  "rule_delta_proposal": {
+    "id": "HUMAN-JSON-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+    "proposal": "Before encoding, diff static human JSON against the address-bound/materialized JSON and fail if any non-base field changes without an explicit per-field ownership rule; re-prove readback byte coverage from the materialized occurrence/address equation.",
+    "public_rule_files_modified": false
+  },
+  "package_release": null,
+  "read_receipts": {
+    ".agents/plan.md": "50f13a7394b130a6ee50cbf5639de0a56f5684bec07af432f50870a75e12e312",
+    ".agents/rules/生成前必读索引.md": "6ae4c7fe09fcdb39a48357cfef645c272f67e7a81d09b5547ebd9a929e6ce1a4",
+    ".agents/rules/服务器测试包生成规则.md": "72f22cc21e328eb06a841418a39640a924de0c533e6d0ac6d8822dfd0771d524",
+    ".agents/rules/GAP_int32_mac_bypass_rules.md": "f53fecb9106705d113354b4ab81356cbdc8179e602b2f7e584390bafe57e67a8"
+  }
+}

@@ -1,0 +1,95 @@
+{
+  "candidate_release": false,
+  "contract_sha256": "44601505b56481a28818d76a107eb781f54045c70778d74fc8c461ac9c969a91",
+  "coverage": {
+    "all_four_slice_replicas_bit_equal": true,
+    "head_count": 7,
+    "logical_file_count": 49,
+    "nonempty_file_count": 245,
+    "physical_file_count": 196,
+    "replicas_per_head": 4,
+    "slice_count": 28,
+    "stages": [
+      "op0",
+      "op1",
+      "op2",
+      "op3",
+      "op4"
+    ]
+  },
+  "formal_target_config": false,
+  "identity_boundary": {
+    "hardware_readback": false,
+    "onnx_original_weight_payload": false,
+    "payload_kind": "DETERMINISTIC_SYNTHETIC"
+  },
+  "inputs": {
+    "active_stage_producer_contract": {
+      "path": "contracts/operator_config/deepseek_prefill_rule_normalized_stage_v1.json",
+      "sha256": "b59312280d0e11cdae398b4ab7c3cd467061e2b8db48bfb7c37d0373c0a334c1",
+      "size_bytes": 5517
+    },
+    "manifest": {
+      "path": "artifacts/operator_config_validation/ds_softmax_numeric_v1/manifest.json",
+      "sha256": "6f99641ae9fbaeaf97208298a3d3819ba8eabd0ece823aef8e5a25074a36d2f5",
+      "size_bytes": 102593
+    },
+    "materialized_jsons": [
+      {
+        "path": "artifacts/operator_config_validation/ds_softmax_v1/a/t/model_execplan/output/ds_softmax_v1/jsons/op0_prefill_mac_fp32MN_fp32MN_fp32MN.json",
+        "sha256": "3f61320ad95a340f21105980daa2522231f666f9fd9d2693cb13b56b1e607774",
+        "size_bytes": 15107
+      },
+      {
+        "path": "artifacts/operator_config_validation/ds_softmax_v1/a/t/model_execplan/output/ds_softmax_v1/jsons/op1_prefill_max_fp32MN_fp32MN.json",
+        "sha256": "95be9346bd2d289b9b0139fe66663525a240122497c331d6138bb0f555e8b693",
+        "size_bytes": 12142
+      },
+      {
+        "path": "artifacts/operator_config_validation/ds_softmax_v1/a/t/model_execplan/output/ds_softmax_v1/jsons/op2_prefill_sub_SFU_fp32MN_fp32M_fp32MN.json",
+        "sha256": "0e84a7823f7bc24458f6cd02d70baa7bfdce0c135a5f5225bf1561f91137369c",
+        "size_bytes": 19713
+      },
+      {
+        "path": "artifacts/operator_config_validation/ds_softmax_v1/a/t/model_execplan/output/ds_softmax_v1/jsons/op3_prefill_sum_rec_fp32MN_fp32MN.json",
+        "sha256": "ecefbd50da78e75c1951d7987cdfdbca4b81d239a8154cba06ff411e091c047e",
+        "size_bytes": 16518
+      },
+      {
+        "path": "artifacts/operator_config_validation/ds_softmax_v1/a/t/model_execplan/output/ds_softmax_v1/jsons/op4_prefill_mul_fp32MN_fp32M_fp16MN.json",
+        "sha256": "c6e75d1845cb15f33f9cb54d1b4cc790a555cd6823dc20584af63aa31953cbf6",
+        "size_bytes": 14791
+      }
+    ],
+    "native_formula_consumer": {
+      "path": "ndp-sim/generate_python_golden/deepseek1.5b_3_time_golden_smallsize.py",
+      "sha256": "4dde1877861b9feec6c4650a662d1c9b633cfe5be9abcabfa1839bde6e776053",
+      "size_bytes": 53478
+    },
+    "native_relayout_consumer": {
+      "path": "ndp-sim/generate_python_golden/single_op_data/relayout_softmax.py",
+      "sha256": "6046cc49a57ea0a203df971942ff3ca4c92531accedc62b3f400759f61d43efb",
+      "size_bytes": 14553
+    },
+    "scale": {
+      "path": "ndp-sim/generate_python_golden/softmax_scale.bin",
+      "sha256": "08334c86b963804acd3bea683d9a8f57e81da5594d278ced1d8644a7a85198ab",
+      "size_bytes": 4
+    }
+  },
+  "numeric_result": {
+    "formula": "prob=fp16(exp(fp32(scale*qk+mask-row_max))*reciprocal(sum(exp(...))))",
+    "logical_payload_matches_independent_formula": true,
+    "max_fp16_row_sum_error": 0.000244140625,
+    "max_masked_probability": 0.0,
+    "physical_payload_matches_native_relayout": true,
+    "scale_fp32": 0.0883883461356163
+  },
+  "rule_ids": [
+    "CDA-DEEPSEEK-SOFTMAX-PAYLOAD-COVERAGE-001",
+    "CDA-DEEPSEEK-SOFTMAX-NORMALIZED-ROUNDTRIP-001"
+  ],
+  "schema": "deepseek-softmax-synthetic-numeric-e2-v1",
+  "server_package_generated": false,
+  "status": "LOCAL_NUMERIC_E2_COMPLETE"
+}

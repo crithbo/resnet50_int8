@@ -1,0 +1,33 @@
+{
+  "schema": "native-mapping-state-v1",
+  "last_mapping_cost": 0.0,
+  "fallback_nodes": [],
+  "graph_nodes": [
+    "DRAM_LC.LC0",
+    "DRAM_LC.LC1",
+    "DRAM_LC.LC2",
+    "GA_PE.PE01",
+    "GA_PE.PE03",
+    "GA_PE.PE11",
+    "GA_PE.PE13",
+    "GA_PE.PE21",
+    "GA_PE.PE23",
+    "GA_PE.PE31",
+    "GA_PE.PE33",
+    "GROUP0.COL_LC",
+    "GROUP0.ROW_LC",
+    "GROUP1.COL_LC",
+    "GROUP1.ROW_LC",
+    "LC_PE.PE0",
+    "LC_PE.PE1",
+    "LC_PE.PE2",
+    "STREAM.stream0",
+    "STREAM.stream2"
+  ],
+  "connection_count": 13,
+  "mapping_size": 22,
+  "python_version": "3.12.13",
+  "seed": 42,
+  "heuristic_iterations": 10000,
+  "heuristic_restarts": 10
+}

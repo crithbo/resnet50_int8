@@ -20,6 +20,15 @@ if str(ROOT) not in sys.path:
 from resnet50_pipeline.conv_execplan_hardware import (  # noqa: E402
     validate_conv_hardware_execplan_package,
 )
+from resnet50_pipeline.native_json_maxpool_package import (  # noqa: E402
+    validate_native_json_maxpool_package,
+)
+from resnet50_pipeline.native_json_ring_gemm_package import (  # noqa: E402
+    validate_native_json_ring_gemm_package,
+)
+from resnet50_pipeline.native_json_ring_gemm_package_v2 import (  # noqa: E402
+    validate_native_json_ring_gemm_package_v2,
+)
 
 
 OBSERVATION_FULL_FSDB = "full_fsdb"
@@ -283,13 +292,16 @@ def run_overlay_round1_selfcheck(
     make_launch_index = runner.index('  "${run_argv[@]}"')
     if not cleanup_index < make_environment_index < make_launch_index:
         raise ValueError("runner make-environment sanitization order differs")
+    expected_preinstalled_file_count = sum(
+        1 for path in (package / "install").rglob("*") if path.is_file()
+    )
     preinstalled_file_count = sum(
         1 for path in (runtime_root / "install").rglob("*") if path.is_file()
     )
-    if preinstalled_file_count != 272:
+    if preinstalled_file_count != expected_preinstalled_file_count:
         raise ValueError(
             "round1 full install preloaded file count differs: "
-            f"{preinstalled_file_count} != 272"
+            f"{preinstalled_file_count} != {expected_preinstalled_file_count}"
         )
 
     forbidden_awk_loop = "for (index ="
@@ -304,7 +316,15 @@ def run_overlay_round1_selfcheck(
 
     bash_path = _find_bash()
     bash_syntax = subprocess.run(
-        [bash_path, "-lc", 'bash -n "$1"', "round1-bash-n", runner_path.as_posix()],
+        [
+            bash_path,
+            "--noprofile",
+            "--norc",
+            "-c",
+            'export PATH=/usr/bin:/bin:$PATH; bash -n "$1"',
+            "round1-bash-n",
+            runner_path.as_posix(),
+        ],
         capture_output=True,
         text=True,
         encoding="utf-8",
@@ -315,7 +335,13 @@ def run_overlay_round1_selfcheck(
     if bash_syntax.returncode != 0:
         raise ValueError(f"round1 runner Bash syntax failed: {bash_syntax.stderr}")
     awk_version = subprocess.run(
-        [bash_path, "-lc", "awk --version | head -n 1"],
+        [
+            bash_path,
+            "--noprofile",
+            "--norc",
+            "-c",
+            "export PATH=/usr/bin:/bin:$PATH; awk --version | head -n 1",
+        ],
         capture_output=True,
         text=True,
         encoding="utf-8",
@@ -326,7 +352,13 @@ def run_overlay_round1_selfcheck(
     if awk_version.returncode != 0 or "GNU Awk" not in awk_version.stdout:
         raise ValueError("round1 behavior tests require GNU awk")
     sink_enumeration = subprocess.run(
-        [bash_path, "-lc", f"awk '{sink_program}'"],
+        [
+            bash_path,
+            "--noprofile",
+            "--norc",
+            "-c",
+            f"export PATH=/usr/bin:/bin:$PATH; awk '{sink_program}'",
+        ],
         capture_output=True,
         text=True,
         encoding="utf-8",
@@ -469,8 +501,10 @@ def run_overlay_round1_selfcheck(
         identity_failure = subprocess.run(
             [
                 bash_path,
-                "-lc",
-                'cd "$1"; SERVER_RUN_ID=run1 bash "$2"',
+                "--noprofile",
+                "--norc",
+                "-c",
+                'export PATH=/usr/bin:/bin:$PATH; cd "$1"; SERVER_RUN_ID=run1 bash "$2"',
                 "round1-runner-identity",
                 identity_ndp.as_posix(),
                 tampered_runner.name,
@@ -562,8 +596,10 @@ def run_overlay_round1_selfcheck(
         zip_smoke = subprocess.run(
             [
                 bash_path,
-                "-lc",
-                'export PATH="$1:$PATH"; cd "$2"; zip -q -r smoke.zip payload',
+                "--noprofile",
+                "--norc",
+                "-c",
+                'export PATH="$1:/usr/bin:/bin:$PATH"; cd "$2"; zip -q -r smoke.zip payload',
                 "round1-zip-shim",
                 zip_shim_bash_dir,
                 zip_smoke_root.as_posix(),
@@ -593,9 +629,11 @@ def run_overlay_round1_selfcheck(
         cleanup_fault = subprocess.run(
             [
                 bash_path,
-                "-lc",
+                "--noprofile",
+                "--norc",
+                "-c",
                 (
-                    'export PATH="$2:$PATH"; '
+                    'export PATH="$2:/usr/bin:/bin:$PATH"; '
                     'rm() { command rm "$@"; return 42; }; export -f rm; '
                     'cd "$1"; SERVER_RUN_ID=run1 bash "$3"'
                 ),
@@ -673,8 +711,10 @@ def run_overlay_round1_selfcheck(
             return subprocess.run(
                 [
                     bash_path,
-                    "-lc",
-                    'export PATH="$4:$PATH"; export DIR_HOME="$5"; bash "$1" "$2" "$3"',
+                    "--noprofile",
+                    "--norc",
+                    "-c",
+                    'export PATH="$4:/usr/bin:/bin:$PATH"; export DIR_HOME="$5"; bash "$1" "$2" "$3"',
                     "round1-entrypoint",
                     entrypoint_probe.as_posix(),
                     entrypoint_root.as_posix(),
@@ -820,8 +860,10 @@ def run_overlay_round1_selfcheck(
             return subprocess.run(
                 [
                     bash_path,
-                    "-lc",
-                    'bash "$1" "$2" "$3" "$4" "$5" "$6" "$7"',
+                    "--noprofile",
+                    "--norc",
+                    "-c",
+                    'export PATH=/usr/bin:/bin:$PATH; bash "$1" "$2" "$3" "$4" "$5" "$6" "$7"',
                     "round1-static-install",
                     static_probe.as_posix(),
                     copied_ndp.as_posix(),
@@ -931,8 +973,10 @@ def run_overlay_round1_selfcheck(
         sink_result = subprocess.run(
             [
                 bash_path,
-                "-lc",
-                'bash "$1" "$2"',
+                "--noprofile",
+                "--norc",
+                "-c",
+                'export PATH=/usr/bin:/bin:$PATH; bash "$1" "$2"',
                 "round1-sink",
                 sink_probe.as_posix(),
                 sink_root.as_posix(),
@@ -967,8 +1011,10 @@ def run_overlay_round1_selfcheck(
         collision_result = subprocess.run(
             [
                 bash_path,
-                "-lc",
-                'bash "$1" "$2"',
+                "--noprofile",
+                "--norc",
+                "-c",
+                'export PATH=/usr/bin:/bin:$PATH; bash "$1" "$2"',
                 "round1-sink-collision",
                 sink_probe.as_posix(),
                 collision_root.as_posix(),
@@ -1014,8 +1060,10 @@ def run_overlay_round1_selfcheck(
             guard_result = subprocess.run(
                 [
                     bash_path,
-                    "-lc",
-                    'bash "$1" "$2" "$3"',
+                    "--noprofile",
+                    "--norc",
+                    "-c",
+                    'export PATH=/usr/bin:/bin:$PATH; bash "$1" "$2" "$3"',
                     "round1-runtime-log-guard",
                     runtime_log_guard_probe.as_posix(),
                     guard_root.as_posix(),
@@ -1086,8 +1134,10 @@ def run_overlay_round1_selfcheck(
             return subprocess.run(
                 [
                     bash_path,
-                    "-lc",
-                    'bash "$1" "$2" "$3" "$4" "$5"',
+                    "--noprofile",
+                    "--norc",
+                    "-c",
+                    'export PATH=/usr/bin:/bin:$PATH; bash "$1" "$2" "$3" "$4" "$5"',
                     "round1-failure",
                     failure_probe.as_posix(),
                     failure_root.as_posix(),
@@ -1141,8 +1191,10 @@ def run_overlay_round1_selfcheck(
         invalid_run_id = subprocess.run(
             [
                 bash_path,
-                "-lc",
-                'export PATH="$1:$PATH"; cd "$2"; SERVER_RUN_ID=run3 bash "$3"',
+                "--noprofile",
+                "--norc",
+                "-c",
+                'export PATH="$1:/usr/bin:/bin:$PATH"; cd "$2"; SERVER_RUN_ID=run3 bash "$3"',
                 "round1-invalid-run-id",
                 zip_shim_bash_dir,
                 copied_ndp.as_posix(),
@@ -1246,8 +1298,10 @@ def run_overlay_round1_selfcheck(
             completed = subprocess.run(
                 [
                     bash_path,
-                    "-lc",
-                    'bash "$1" "$2" "$3" "$4" "$5"',
+                    "--noprofile",
+                    "--norc",
+                    "-c",
+                    'export PATH=/usr/bin:/bin:$PATH; bash "$1" "$2" "$3" "$4" "$5"',
                     "round1-behavior",
                     probe_script.as_posix(),
                     copied_ndp.as_posix(),
@@ -1274,7 +1328,10 @@ def run_overlay_round1_selfcheck(
                     "status": "passed",
                     "observed_exit_status": completed.returncode,
                     "verified_outcome": {
-                        "zero": "full_install_with_272_preloads_and_zero_readback_accepted_count_0",
+                        "zero": (
+                            "full_install_with_"
+                            f"{expected_preinstalled_file_count}_preloads_and_zero_readback_accepted_count_0"
+                        ),
                         "valid": "one_complete_128bit_lf_readback_accepted_count_1",
                         "extra": "unexpected_output_namespace_file_rejected",
                         "missing_final_lf": "live_count_0_and_final_expected_count_1_rejected",
@@ -1522,7 +1579,15 @@ def build_overlay(
     # This is the single authoritative package preflight.  The validator checks
     # the exact manifest file set, 4-KiB-safe SCA/SCA_D transport, Repeat_Num,
     # semantic-region reconstruction, and the frozen runner/dump contracts.
-    package_preflight = validate_conv_hardware_execplan_package(package)
+    package_kind = _json(package / "manifest.json").get("kind")
+    if package_kind == "native_json_maxpool_hardware_execplan_package":
+        package_preflight = validate_native_json_maxpool_package(package)
+    elif package_kind == "native_json_ring_gemm_hardware_execplan_package":
+        package_preflight = validate_native_json_ring_gemm_package(package)
+    elif package_kind == "native_json_ring_gemm_hardware_execplan_package_v2":
+        package_preflight = validate_native_json_ring_gemm_package_v2(package)
+    else:
+        package_preflight = validate_conv_hardware_execplan_package(package)
     if package_preflight.get("status") != "hardware_execplan_package_validated":
         raise ValueError("authoritative hardware execplan package preflight failed")
     package_manifest = _json(package / "manifest.json")
@@ -1579,6 +1644,13 @@ def build_overlay(
         raise ValueError("runner contract lacks a valid runtime stage count") from error
     legacy_fixed_pair_observer = (
         testbench_observer_mode == "fixed_slice0_start_slice1_finish"
+    )
+    testbench_observer_contract = completion_gate.get("testbench_observer")
+    full_mask_ring_observer = (
+        legacy_fixed_pair_observer
+        and isinstance(testbench_observer_contract, dict)
+        and testbench_observer_contract.get("final_stage_is_full_mask_ring_group")
+        is True
     )
     bank_frame_logging_policy = (
         "slice_start_only_plus_runtime_devnull_sinks"
@@ -1665,7 +1737,11 @@ def build_overlay(
                 [
                     "exact preload PASS count",
                     "exact fixed slice0-start/slice1-finish pair count",
-                    "finish-slice-only final stage after all other final-shard slices barrier",
+                    (
+                        "one full-mask Ring4 start followed by its same-mask completion barrier"
+                        if full_mask_ring_observer
+                        else "finish-slice-only final stage after all other final-shard slices barrier"
+                    ),
                     "unique Simulation completed successfully marker",
                     "exact readback region set",
                 ]
@@ -3865,6 +3941,16 @@ unavailable, return run/{revision_slug}_return/."""
         waveform = f"run/sim_results/{revision_slug}_diag.vpd"
     else:
         if legacy_fixed_pair_observer:
+            fixed_pair_fence_description = (
+                "The single runtime stage starts the complete physical Ring4 group "
+                "with mask 0x000000F and is immediately followed by a same-mask "
+                "completion barrier. All four output regions are prefilled with a "
+                "nonzero sentinel, so an unexecuted or missing writeback cannot pass."
+                if full_mask_ring_observer
+                else "The final shard's non-slice1 members complete behind their own "
+                "barrier before the finish-slice-only final stage, so the final "
+                "observed slice1 event fences the complete output mask."
+            )
             run_instructions = f"""SERVER_RUN_ID=run1 bash {runner_name}
 
 This keeps DUMP_FSDB=0, deletes run/csrc before compilation, and uses the
@@ -3887,9 +3973,7 @@ the server Makefile's SIMV/SIM_OPTS and therefore never invokes its full-result
 archive target. Neither action modifies RTL/testbench or the server Makefile. The
 {expected_runtime_stage_count} real runtime stages are barrier ordered for the immutable fixed slice0-start/
 slice1-finish observer, whose Repeat_Num is {expected_testbench_repeat_num}.
-The final shard's non-slice1 members complete behind their own barrier before
-the finish-slice-only final stage, so the final observed slice1 event fences
-the complete output mask. The fail-closed
+{fixed_pair_fence_description} The fail-closed
 runner also requires the exact preload PASS count, one natural simulation
 completion marker, and the exact readback region set. Phase-specific progress
 watchdogs stop stalled preload/first-start/observer/readback work. Readback polling
@@ -3910,7 +3994,9 @@ Return both run/sim_results_{revision_slug}_run1.zip and
 run/sim_results_{revision_slug}_run2.zip. The two run IDs use distinct return
 directories and archives."""
             observation_description = (
-                "legacy_fixed_pair_completion_ucli_reserved_clock_no_waveform"
+                "full_ring4_fixed_pair_completion_ucli_reserved_clock_no_waveform"
+                if full_mask_ring_observer
+                else "legacy_fixed_pair_completion_ucli_reserved_clock_no_waveform"
             )
         else:
             run_instructions = f"""SERVER_RUN_ID=run1 bash {runner_name}
@@ -3940,7 +4026,7 @@ inventory and testbench SHA-256 are recorded in the returned metadata."""
         f"install/cfg_pkg/{install_name}/."
     )
 
-    readme = f"""NDP node-0004 {revision_slug} runtime-only server overlay
+    readme = f"""NDP {package_manifest.get('node_id', 'unknown-node')} {revision_slug} runtime-only server overlay
 
 This directory is NOT a complete NDP_copy01 replacement.
 Before extraction, verify the delivered archive from its containing directory:

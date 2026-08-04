@@ -1,0 +1,12 @@
+{
+  "op0_matrixD_slice0": {
+    "base_addr": "0x00000040",
+    "path": "sim_results/formal_readback/op0_matrixD_slice0.txt",
+    "length": 8
+  },
+  "op0_matrixD_slice1": {
+    "base_addr": "0x02000040",
+    "path": "sim_results/formal_readback/op0_matrixD_slice1.txt",
+    "length": 8
+  }
+}

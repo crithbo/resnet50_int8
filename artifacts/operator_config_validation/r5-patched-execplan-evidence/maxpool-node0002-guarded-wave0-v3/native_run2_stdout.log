@@ -1,0 +1,21 @@
+[pipeline] regenerating bitstream for op0 (maxpool_config_16_112_112_stride2_padding1) ...
+[pipeline] Regenerated bitstream + JSON for 1 operator(s) under C:\Users\15383\AppData\Local\Temp\r3-execplan-so89bj58\run2\tool\model_execplan\output\graph.
+Parsed operators: 1
+  - op0 (maxpool_config_16_112_112_stride2_padding1), inputs=[A], output_shape=(56, 56, 16), used_slices=1111111111111111111111111111 (count=28)
+Address assignments: 2
+  - op0.input.A: shape=(1, 1, 201168), size=201168B, base=0x00000000, slice0=0x00000000
+  - op0.output.D: shape=(56, 56, 16), size=50176B, base=0x000311D0, slice0=0x000311D0
+Generated commands: 57
+Command metadata: {'load_config_count': '1', 'clock_enable_count': '1', 'write_reg_count': '54', 'skipped_unchanged_write_count': '58', 'control_write_count': '0', 'start_comp_count': '1', 'skipped_control_ops_same_size': '0', 'parsed_register_fields': '739', 'parsed_register_addresses': '279', 'unresolved_control_names': '', 'note': 'One global Clock_Enable is emitted before all operators; each operator then emits Load_Config, Write_Reg updates, and Start_Comp; control-register writes are emitted only when template initial_size differs from target size.'}
+  cmd[0] = 0x00000007FFFFFFF9
+  cmd[1] = 0x3C0003D87FFFFFF8
+  cmd[2] = 0x077004004044000C
+  cmd[3] = 0x0770080040440014
+  cmd[4] = 0x07700C004044001C
+  cmd[5] = 0x0770100040440024
+  cmd[6] = 0x077014004044002C
+  cmd[7] = 0x0770180040440034
+Instruction stream written to: C:\Users\15383\AppData\Local\Temp\r3-execplan-so89bj58\run2\tool\model_execplan\output\graph\install\execplan.txt
+Instruction explanation written to: C:\Users\15383\AppData\Local\Temp\r3-execplan-so89bj58\run2\tool\model_execplan\output\graph\instructions_explained.txt
+Install manifest written to: C:\Users\15383\AppData\Local\Temp\r3-execplan-so89bj58\run2\tool\model_execplan\output\graph\sca_cfg.json
+Input with baseaddr written to: C:\Users\15383\AppData\Local\Temp\r3-execplan-so89bj58\run2\tool\model_execplan\output\graph\graph_withbaseaddr.json

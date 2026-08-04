@@ -11,10 +11,14 @@ from typing import Any
 
 from resnet50_pipeline.bitstream_binding import bitstream_text_identity
 from resnet50_pipeline.conv_instance import (
+    CONV_TRANSPORT_ABI_SIGNED_A_LOCAL,
     FIRST_REAL_CONV_NODE_ID,
     build_conv_target_request,
 )
-from resnet50_pipeline.conv_sa_contract import validate_first_conv_sa_contract
+from resnet50_pipeline.conv_sa_contract import (
+    validate_first_conv_sa_contract,
+    validate_first_conv_signed_a_local_contract,
+)
 from run_conv_full_encoder import _connection_pairs
 
 
@@ -120,7 +124,10 @@ def main() -> int:
     contract_path = args.contract or request.semantic_contract_path
 
     config = _load(config_path)
-    validate_first_conv_sa_contract(config)
+    if request.transport_abi == CONV_TRANSPORT_ABI_SIGNED_A_LOCAL:
+        validate_first_conv_signed_a_local_contract(config)
+    else:
+        validate_first_conv_sa_contract(config)
     contract = _load(contract_path)
     if _sha256(config_path) != contract["config"]["sha256"]:
         raise ValueError("real 1x1 Conv config hash differs")

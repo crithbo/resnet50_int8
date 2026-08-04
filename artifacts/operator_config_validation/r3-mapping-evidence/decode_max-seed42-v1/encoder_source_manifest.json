@@ -1,0 +1,83 @@
+{
+  "schema": "sha256-tree-manifest-v1",
+  "root": "bitstream",
+  "file_count": 15,
+  "tree_sha256": "27c0601a4f8745b47d044a41ec98e612bacc9f18dd5b5547267e99d0440defa5",
+  "files": [
+    {
+      "path": "__init__.py",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "bit.py",
+      "size": 8145,
+      "sha256": "6ba6b9b3a0a8f4baed9daa89af8c781db92a3f84b575a1e97126e7a5c9029fad"
+    },
+    {
+      "path": "config/__init__.py",
+      "size": 367,
+      "sha256": "f27f2b12c621534317204bc66f3db1b622de5a20e87c86e3b0885d3d5ce79e78"
+    },
+    {
+      "path": "config/base.py",
+      "size": 8754,
+      "sha256": "100d44403386f17327da1938888156291891f1d564d151c8eb02127e829459cc"
+    },
+    {
+      "path": "config/buffer.py",
+      "size": 1847,
+      "sha256": "39b6c32786ca83a1ffd247a99dafea2f966aa1c490ef587fa1594759456355a4"
+    },
+    {
+      "path": "config/general.py",
+      "size": 11738,
+      "sha256": "eb9d5ee9ef273182e05b718aca378f87d0a1ccb5366ae463d8482c8c94c3482f"
+    },
+    {
+      "path": "config/loop.py",
+      "size": 13871,
+      "sha256": "7a25a5e6e29e35ce07c437a6e44ac654cda0dcc110fda1ba82cdeacb0b12aa35"
+    },
+    {
+      "path": "config/mapper.py",
+      "size": 68924,
+      "sha256": "104da1e761a02af0074384dfb67e0dc0f07fad3f18fe7ed49537a841cda4867e"
+    },
+    {
+      "path": "config/neighbor.py",
+      "size": 1038,
+      "sha256": "9b85d41ef6e4ce1bbd5118e54814993b02f3075ba108db6b1ea4dd79985264e0"
+    },
+    {
+      "path": "config/special.py",
+      "size": 3436,
+      "sha256": "0c989cf657eaa429f9b2b37848105abe3448b3926e22e09ae98c42ddd4f8447a"
+    },
+    {
+      "path": "config/stream.py",
+      "size": 14083,
+      "sha256": "00e0610719670f24e22139ee0a3a453ae6e90f90e5d572f578c5f489f5a813d1"
+    },
+    {
+      "path": "index.py",
+      "size": 20443,
+      "sha256": "2b71290671cef1c137e31fdf7e35e89454e3614a3e620f1f5f387f193a128306"
+    },
+    {
+      "path": "main.py",
+      "size": 13403,
+      "sha256": "32f3452fae24b933576e93b9607651bfbfcb4705e6781fe3f14ecbe675d4e63c"
+    },
+    {
+      "path": "parse.py",
+      "size": 22540,
+      "sha256": "a6bd0f9dc288b518389a677570cf34a08ebec72a430e9a85c085570d3be869f0"
+    },
+    {
+      "path": "visualize.py",
+      "size": 4830,
+      "sha256": "627026585dda5f8cac50434798ab7ba93e133b54b8c36de472f97532ff235311"
+    }
+  ]
+}

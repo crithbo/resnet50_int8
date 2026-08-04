@@ -1,0 +1,58 @@
+{
+  "schema": "human-mac-runtime-root-v2-package-release-analysis",
+  "mainline": "019fa2ca-72bc-7753-8d58-81e59bc76c88",
+  "family": "human MAC int32 to uint8",
+  "return_analysis": {
+    "server_run_performed": false,
+    "server_lease": "NONE",
+    "result_profile": "VERSION_UNBOUND_DIAGNOSTIC_ONLY",
+    "candidate_release": false,
+    "counts_as_E4": false,
+    "counts_as_E5": false,
+    "server_source_identity": "INTENTIONALLY_UNBOUND"
+  },
+  "audit_correction": {
+    "deviation": "Read-only accidental access to NDP_copy01/README_HARDWARE_SIM_ENTRY.md during initial routing read.",
+    "further_ndp_copy_access": false,
+    "derivation_impact": false,
+    "proof": {
+      "frozen_source_zip_only_for_payload": true,
+      "execution_fragments_match_source_package_runner": true,
+      "forbidden_string_audit_passed": true,
+      "semantic_payload_byte_identity_passed": true
+    }
+  },
+  "package_release": {
+    "identity": "human_mac_int32_uint8_v3_runtime_root_v2",
+    "path": "artifacts/human_mac_int32_uint8_20260727_v1/runtime_root_v2_final/human_mac_int32_uint8_v3_runtime_root_v2.zip",
+    "size_bytes": 144024,
+    "sha256": "af9a1acdd79db6e3889b0ae86aab65ccd0c0386ab053e1d21a3736e99c02a229",
+    "manifest_sha256": "83b9db8cd3e5820dfc15859d101af558332342aa6173b9f364a7a8a327843c23",
+    "sidecar": "artifacts/human_mac_int32_uint8_20260727_v1/runtime_root_v2_final/human_mac_int32_uint8_v3_runtime_root_v2.zip.sha256",
+    "only_command": "bash PREPARE_AND_RUN.sh /absolute/path/to/server_root",
+    "expected_return": "human_mac_int32_uint8_v3_runtime_root_v2_return.zip",
+    "package_rtl_entries": 0
+  },
+  "source_package": {
+    "path": "artifacts/human_mac_int32_uint8_20260727_v1/server_package/human_mac_int32_uint8_v3_stock_rtl_fd2.zip",
+    "sha256": "5bcc26c80a995063b6b8c071eea4962426dd0547d782df771c61cf1fa3024e52"
+  },
+  "read_receipt": {
+    "server_rule_sha256": "72f22cc21e328eb06a841418a39640a924de0c533e6d0ac6d8822dfd0771d524",
+    "rule_id": "CDA-SERVER-USER-SUPPLIED-ROOT-NO-SOURCE-PREFLIGHT-001",
+    "superseded_rule_hash_absent_from_package": true
+  },
+  "final_self_check": {
+    "passed": true,
+    "check_count": 23,
+    "path": "artifacts/human_mac_int32_uint8_20260727_v1/runtime_root_v2_final/final_self_check.json",
+    "sha256": "ffa4e2bfc79f66b374d956e7d501a0b0552ddf5bd38795daa5c3aa88a69d6ae4",
+    "two_fresh_builds_identical": true
+  },
+  "blocker_delta": {
+    "package_compatibility": "CLOSED_LOCAL",
+    "server_execution": "BLOCKED_NO_LEASE",
+    "hardware_e4_e5": "NOT_APPLICABLE_VERSION_UNBOUND"
+  },
+  "rule_delta_proposal": "NONE_NEW"
+}

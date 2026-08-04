@@ -1,0 +1,212 @@
+{
+  "schema": "maxpool-node0002-config-only-e2-contract-v1",
+  "status": "approved_local_e2_only",
+  "claim_boundary": "CONFIG_ONLY_CORRECTNESS_BASELINE",
+  "evidence_level": "E2",
+  "formal_target_instance_allowed": false,
+  "target": {
+    "node_id": "node-0002",
+    "hw_stage_id": "r5:hwop-0002-00",
+    "onnx_name": "resnetv17_pool0_fwd",
+    "op_type": "MaxPoolUint8",
+    "input": {
+      "tensor_id": "tensor-f6c1a8fb6fd529e8",
+      "dtype": "uint8",
+      "shape": [
+        16,
+        64,
+        112,
+        112
+      ],
+      "layout": "NCHW"
+    },
+    "output": {
+      "tensor_id": "tensor-8d2f28c80ac24676",
+      "dtype": "uint8",
+      "shape": [
+        16,
+        64,
+        56,
+        56
+      ],
+      "layout": "NCHW"
+    },
+    "kernel_shape": [
+      3,
+      3
+    ],
+    "strides": [
+      2,
+      2
+    ],
+    "pads": [
+      1,
+      1,
+      1,
+      1
+    ],
+    "ceil_mode": 0,
+    "storage_order": 0,
+    "qdomain": {
+      "input_scale": 0.021563487127423286,
+      "input_zero_point": 0,
+      "output_scale": 0.021563487127423286,
+      "output_zero_point": 0,
+      "policy": "identity_qdomain_inherited_from_typed_producer"
+    },
+    "typed_request_sha256": "6126a69fcd131b9fe3e12450acb2d54c5b6f93e91779a44150bf302ece018578"
+  },
+  "source_authority": {
+    "active_audit": {
+      "path": "contracts/operator_config/resnet50_ndpsim_reuse_gap_audit_v1.json",
+      "sha256": "ca3daf485f4098793e1c4544139c22e62119dbe5743e0db02e4e07d7c301c7c5",
+      "classification": "EXACT_TEMPLATE_AVAILABLE_FLOW_AND_DYNAMIC_CLOSURE_MISSING"
+    },
+    "typed_lowering": {
+      "path": "contracts/resnet50_r5_lowering_bundle.json",
+      "sha256": "bf661e4eda2011025d9922708ab46a64f8d1b3c279527b88aa7d630bb3545432"
+    },
+    "oracle_template": {
+      "path": "ndp-sim/jsons/maxpool_config_16_112_112_stride2_padding1.json",
+      "sha256": "a0091f3fae223abd5225c54b833cf3bb578b3fea6b202883c5cbf4be50d60cb1",
+      "role": "arithmetic_and_topology_oracle_only_not_automatic_target_pass"
+    },
+    "strict_guarded_source": {
+      "path": "artifacts/operator_config_validation/r5-patched-mapping-evidence/maxpool-node0002-guarded-address-bound-v2/source_config.json",
+      "sha256": "f5ae3d62eba31d734561050365e39745fd5929759710d24f998fd7ff5c7d1e7b"
+    },
+    "padding_contract": {
+      "path": "contracts/maxpool_node0002_zero_padding_contract.json",
+      "role": "authorizes hash-bound null-to-zero padding identity normalization only"
+    }
+  },
+  "schedule": {
+    "graph": "configs/maxpool/node0002_config_only_e2_v1/graph.json",
+    "stage_order": [
+      "op0",
+      "op1",
+      "op2"
+    ],
+    "active_slice_counts": [
+      28,
+      28,
+      8
+    ],
+    "physical_occurrence_count": 64,
+    "tile_order": "batch-major then channel_start 0,16,32,48",
+    "serialization": "Load_Config -> address Write_Reg -> Start_Comp for each op",
+    "lifetime": "each guarded A allocation remains live through its matching Start_Comp; its D region becomes visible after that Start_Comp; no cross-op alias"
+  },
+  "materialization_ownership": {
+    "rule_id": "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+    "trusted_static_to_final_diff_policy": "逐 leaf diff；除下列 base_addr 外不允许任何变化",
+    "planner_owned_fields": [
+      {
+        "path": "$.stream_engine.stream0.base_addr",
+        "owner": "native model_execplan address planner and output binder",
+        "input_source": "graph_withbaseaddr.operators[op_id].inputs.A.base_addr",
+        "formula": "flat 16-byte aligned monotonic allocation after the previous graph tensor",
+        "old_value": 0,
+        "expected_new_values_by_op": {
+          "op0": 0,
+          "op1": 251344,
+          "op2": 502688
+        },
+        "authorization": "planner/address binder owns physical base fields"
+      },
+      {
+        "path": "$.stream_engine.stream1.base_addr",
+        "owner": "native model_execplan address planner and output binder",
+        "input_source": "graph_withbaseaddr.operators[op_id].output.base_addr",
+        "formula": "A_base + guarded_A_allocation_bytes(201168)",
+        "old_value": 201168,
+        "expected_new_values_by_op": {
+          "op0": 201168,
+          "op1": 452512,
+          "op2": 703856
+        },
+        "authorization": "planner/address binder owns physical base fields"
+      }
+    ],
+    "authorized_non_base_final_mutations": [],
+    "static_oracle_to_strict_derivation": [
+      {
+        "path": "$.stream_engine.stream0.padding_reg_value",
+        "owner": "maxpool zero-padding contract",
+        "input_source": "contracts/maxpool_node0002_zero_padding_contract.json",
+        "formula": "UINT8 max identity = 0",
+        "old_value": null,
+        "expected_new_value": 0,
+        "authorization": "approved_for_one_hash_bound_legacy_normalization"
+      },
+      {
+        "path": "$.stream_engine.stream0.base_addr",
+        "owner": "guarded C4HWC4 storage contract",
+        "input_source": "452-byte prefix guard and native graph A base",
+        "formula": "planner A allocation base; logical coordinate (0,0) is at byte 452 through the stream index equation",
+        "old_value": 1024,
+        "expected_new_value": 0,
+        "authorization": "guarded transport materialization"
+      },
+      {
+        "path": "$.stream_engine.stream1.base_addr",
+        "owner": "guarded C4HWC4 storage contract",
+        "input_source": "guarded A allocation_bytes=201168",
+        "formula": "D_base = A_base + 201168",
+        "old_value": 201728,
+        "expected_new_value": 201168,
+        "authorization": "guarded transport materialization"
+      }
+    ]
+  },
+  "formal_output_coverage": {
+    "source": "final materialized occurrence/address equation",
+    "transaction_bytes": 32,
+    "transaction_base_formula": "D_base + channel_group*12544 + y*224 + x_pair*32",
+    "domains": {
+      "channel_group": "[0,4)",
+      "y": "[0,56)",
+      "x_pair": "[0,7)"
+    },
+    "transactions_per_occurrence": 1568,
+    "unique_bytes_per_occurrence": 50176,
+    "occurrence_count": 64,
+    "formal_total_written_bytes": 3211264,
+    "required_relation": "written byte set equals [D_base,D_base+50176) for every active op/slice occurrence"
+  },
+  "input_replay_boundary": {
+    "rule_id": "CDA-CONFIG-ONLY-INPUT-REPLAY-NONCOMPUTATIONAL-001",
+    "source_producer": "formal W3 producer r5:hwop-0001-01",
+    "tensor_identity": "tensor-f6c1a8fb6fd529e8",
+    "source_path": "artifacts/w3/golden_batch16/tensors/tensor-f6c1a8fb6fd529e8.npy",
+    "dtype": "uint8",
+    "shape": [
+      16,
+      64,
+      112,
+      112
+    ],
+    "allowed_index_mapping": "batch-major/channel tiles [batch,channel_start:channel_start+16,:,:] packed into guarded C4HWC4 without value transformation",
+    "allowed_address_mapping": "op0/op1/op2 A allocation selected by ordered tile occurrence; per-slice base comes from final execplan/SCA",
+    "uncomputed_boundary": "host does not precompute or inject scaled, rounded, saturated, pooled, final-output or other internal MaxPool tensors; tensor-8d2f28c80ac24676 is read only as independent golden after execution"
+  },
+  "bypass_annotation": {
+    "bypass_reason": "NONE_ARITHMETIC_REUSE_WITH_TARGET_BINDING_REQUIRED",
+    "contradicted_or_missing_native_path": "the exact ndp-sim template is not an automatic target pass; native MaxPool handler registration and complete full-node dynamic target flow are missing, and the public GA INT8 max pipeline rule remains contradicted",
+    "exact_equivalence_scope": "only frozen ResNet50 node-0002, batch16 uint8 [16,64,112,112] -> [16,64,56,56], 3x3 stride2 pads1, identical input/output qdomain",
+    "materialized_configuration_mechanism": "three serialized native occurrences with 28+28+8 active slices, independent guarded C4HWC4 A/D allocations, native planner base binding, exact-zero mapper, bitstream, Load_Config/Write_Reg/Start_Comp execplan and SCA",
+    "performance_and_resource_cost": "three config loads and Start_Comp stages; six independent physical allocations per slice address space; 64 tile occurrences; no throughput/resource-efficiency claim",
+    "unresolved_production_blocker": "no authoritative target E4/E5 execution; no server identity or run; conflict between current isolated unsigned-byte-max evidence and public CDA-GA-INT8-MAX-PIPE-001 remains for mainline adjudication",
+    "claim_boundary": "CONFIG_ONLY_CORRECTNESS_BASELINE; local E2 only; not production, performance, target-simulator, formal-D, E4 or E5 release"
+  },
+  "negative_controls": {
+    "template_presence_is_target_pass": false,
+    "non_base_final_diff_without_ownership": "reject",
+    "wave2_mask_28_instead_of_8": "reject",
+    "output_stride_or_partial_coverage": "reject"
+  },
+  "public_rule_receipt": {
+    ".agents/rules/算子配置规则.md": "407fc0320d0587c362730c74e9b1d87cbd8e2ab686051173ceacadb6ac31c2cc",
+    ".agents/rules/生成前必读索引.md": "3940dc4d6f6d0b5d52347acd6fe5655281562dc09d4082c298cf70c7dbfb4f19"
+  }
+}

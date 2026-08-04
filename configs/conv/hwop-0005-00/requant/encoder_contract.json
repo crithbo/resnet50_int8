@@ -1,0 +1,292 @@
+{
+  "encoder_command": {
+    "entrypoint": "bitstream/main.py",
+    "heuristic_iterations": 10000,
+    "heuristic_restarts": 10,
+    "heuristic_search": true,
+    "seed": 42
+  },
+  "encoder_repository": {
+    "commit": "d4ffc32c9b29a858d83e13706cd837c5549521a4",
+    "name": "ndp-sim-ref"
+  },
+  "hw_op_id": "hwop-0005-01",
+  "node_id": "node-0005",
+  "record_count": 8,
+  "records": [
+    {
+      "binding_id": "hwop-0005-01.shard-00",
+      "config": {
+        "path": "configs/conv/hwop-0005-00/requant/shard-00.json",
+        "sha256": "451dc37ac00e30e991d170e8cd4b8ce814c772fd108c85f3e840b20138669e0f",
+        "size_bytes": 16519
+      },
+      "encode_a_root": "artifacts/w5/hwop-0005-00/senior3x3-v2/requant-encoder/encode-a/shard-00",
+      "encode_b_root": "artifacts/w5/hwop-0005-00/senior3x3-v2/requant-encoder/encode-b/shard-00",
+      "official_encoder": {
+        "mapping_review.semantic.json": {
+          "sha256": "f1b33af7b42a700cd900d7e6a6c51af62dbe7fbe81a1123c0887eb1c45b1731d",
+          "size_bytes": 3494
+        },
+        "modules_dump_128b.bin": {
+          "line_count": 34,
+          "line_width_bits": 128,
+          "logical_sha256": "5402ce759d2bcb930a2f4ecb067e0d01bfd3aabe38af97dbf8b671130ba1dae3",
+          "logical_size_bytes": 4386,
+          "raw_sha256": "6a2b5679d45218fc1a88fd46fbad8780b6b647887886f72a509ca0ff4b101db0",
+          "raw_size_bytes": 4420
+        },
+        "modules_dump_64b.bin": {
+          "sha256": "3006e107747d2bdefa2af032e665d67a5a94838ca1b873a974ea679481418a05",
+          "size_bytes": 4488
+        },
+        "parsed_bitstream.txt": {
+          "sha256": "637dad0172873073d2c9680441ea4858ca3df5b4d81eed9b030ab69e3fc711a0",
+          "size_bytes": 4916
+        }
+      },
+      "repeat_outputs_identical": true,
+      "shard_index": 0
+    },
+    {
+      "binding_id": "hwop-0005-01.shard-01",
+      "config": {
+        "path": "configs/conv/hwop-0005-00/requant/shard-01.json",
+        "sha256": "adf5a6c37ef499d537c823e38b6fd246e14c4f02d0769dd8b0e3b5903c1e95ed",
+        "size_bytes": 16520
+      },
+      "encode_a_root": "artifacts/w5/hwop-0005-00/senior3x3-v2/requant-encoder/encode-a/shard-01",
+      "encode_b_root": "artifacts/w5/hwop-0005-00/senior3x3-v2/requant-encoder/encode-b/shard-01",
+      "official_encoder": {
+        "mapping_review.semantic.json": {
+          "sha256": "f1b33af7b42a700cd900d7e6a6c51af62dbe7fbe81a1123c0887eb1c45b1731d",
+          "size_bytes": 3494
+        },
+        "modules_dump_128b.bin": {
+          "line_count": 34,
+          "line_width_bits": 128,
+          "logical_sha256": "fff2f84a9fa0a65f394d8c5e225473a521ff5ec1d465e8d34f011014c69d3478",
+          "logical_size_bytes": 4386,
+          "raw_sha256": "ddbfbae8c915f8a2e5c25334c4a0772fbe75125d2a8c6db86bcded02f811bae0",
+          "raw_size_bytes": 4420
+        },
+        "modules_dump_64b.bin": {
+          "sha256": "9dc752bc98f8f3e360f664b751595a7d0ad857e5bd2747b3369415a4831cb6af",
+          "size_bytes": 4488
+        },
+        "parsed_bitstream.txt": {
+          "sha256": "1442a60f6695a965803f8e5cbea5ee7881a771eee569393758e4ae59de27a5fd",
+          "size_bytes": 4916
+        }
+      },
+      "repeat_outputs_identical": true,
+      "shard_index": 1
+    },
+    {
+      "binding_id": "hwop-0005-01.shard-02",
+      "config": {
+        "path": "configs/conv/hwop-0005-00/requant/shard-02.json",
+        "sha256": "eaeeeb4b02fd9cfcfaff47fa8a9d5e4afa3457873f211f783f57bfff0e2a0ff7",
+        "size_bytes": 16518
+      },
+      "encode_a_root": "artifacts/w5/hwop-0005-00/senior3x3-v2/requant-encoder/encode-a/shard-02",
+      "encode_b_root": "artifacts/w5/hwop-0005-00/senior3x3-v2/requant-encoder/encode-b/shard-02",
+      "official_encoder": {
+        "mapping_review.semantic.json": {
+          "sha256": "f1b33af7b42a700cd900d7e6a6c51af62dbe7fbe81a1123c0887eb1c45b1731d",
+          "size_bytes": 3494
+        },
+        "modules_dump_128b.bin": {
+          "line_count": 34,
+          "line_width_bits": 128,
+          "logical_sha256": "ae6b10c03c2519ee10972d1591f6cd29b242a4a77ef74e4a3e110b4c986bb205",
+          "logical_size_bytes": 4386,
+          "raw_sha256": "a86c96c6478f916e6a6aa65d17f53361eb9a3ae2f3756716fd4f7eb69dc6ad60",
+          "raw_size_bytes": 4420
+        },
+        "modules_dump_64b.bin": {
+          "sha256": "a86f30decd93c96f99094b3b79c5300f06f70a74cddddc72ff99a3e5d182d7f9",
+          "size_bytes": 4488
+        },
+        "parsed_bitstream.txt": {
+          "sha256": "e470250cd4d8475d77f904d9baaa6ed7e93acc4d5feeae875f7d061d24016d2d",
+          "size_bytes": 4916
+        }
+      },
+      "repeat_outputs_identical": true,
+      "shard_index": 2
+    },
+    {
+      "binding_id": "hwop-0005-01.shard-03",
+      "config": {
+        "path": "configs/conv/hwop-0005-00/requant/shard-03.json",
+        "sha256": "c416825362e07f228dcc070234bd7436f8484336ee8c2dddf1a6654ee2d2138b",
+        "size_bytes": 16523
+      },
+      "encode_a_root": "artifacts/w5/hwop-0005-00/senior3x3-v2/requant-encoder/encode-a/shard-03",
+      "encode_b_root": "artifacts/w5/hwop-0005-00/senior3x3-v2/requant-encoder/encode-b/shard-03",
+      "official_encoder": {
+        "mapping_review.semantic.json": {
+          "sha256": "f1b33af7b42a700cd900d7e6a6c51af62dbe7fbe81a1123c0887eb1c45b1731d",
+          "size_bytes": 3494
+        },
+        "modules_dump_128b.bin": {
+          "line_count": 34,
+          "line_width_bits": 128,
+          "logical_sha256": "c652d16284123c149d612c696267a4058ae27b2542452f2ff984e1e058bc76fc",
+          "logical_size_bytes": 4386,
+          "raw_sha256": "58d8644354b48e44b35b0d1dcb57890f6a8c124d6e4b6d1b2386f5ac6b9526e7",
+          "raw_size_bytes": 4420
+        },
+        "modules_dump_64b.bin": {
+          "sha256": "ba071adcbbe6f3a2a0e9f65d3f4d06844b0de3bef8252bfb95e7651c2c2df80b",
+          "size_bytes": 4488
+        },
+        "parsed_bitstream.txt": {
+          "sha256": "51d401b1adf67800bcd2fe12b7dc7e9d3c65ea2963a03369da437f737e28f4e0",
+          "size_bytes": 4916
+        }
+      },
+      "repeat_outputs_identical": true,
+      "shard_index": 3
+    },
+    {
+      "binding_id": "hwop-0005-01.shard-04",
+      "config": {
+        "path": "configs/conv/hwop-0005-00/requant/shard-04.json",
+        "sha256": "871753eaef4dc38adc7aa0c56644b35570b8c2fe0e7b7bbec701de8050206536",
+        "size_bytes": 16520
+      },
+      "encode_a_root": "artifacts/w5/hwop-0005-00/senior3x3-v2/requant-encoder/encode-a/shard-04",
+      "encode_b_root": "artifacts/w5/hwop-0005-00/senior3x3-v2/requant-encoder/encode-b/shard-04",
+      "official_encoder": {
+        "mapping_review.semantic.json": {
+          "sha256": "f1b33af7b42a700cd900d7e6a6c51af62dbe7fbe81a1123c0887eb1c45b1731d",
+          "size_bytes": 3494
+        },
+        "modules_dump_128b.bin": {
+          "line_count": 34,
+          "line_width_bits": 128,
+          "logical_sha256": "87cf36e2b4d3b17f77db44de013454ecca55053573be45f0ec635f4b563957c5",
+          "logical_size_bytes": 4386,
+          "raw_sha256": "61c00cd0b597de315b40356445d6856ef2dcd321794ae2ae20322486564ceefa",
+          "raw_size_bytes": 4420
+        },
+        "modules_dump_64b.bin": {
+          "sha256": "bfd9aac25df9b5e29bdfa6776637c1813a151d595f7429d4f9b9cc5f5e6dbc65",
+          "size_bytes": 4488
+        },
+        "parsed_bitstream.txt": {
+          "sha256": "7a4306bc886423366ccab2b9ea63e5b61376af42e3e87d046c33bbd5e43f5158",
+          "size_bytes": 4916
+        }
+      },
+      "repeat_outputs_identical": true,
+      "shard_index": 4
+    },
+    {
+      "binding_id": "hwop-0005-01.shard-05",
+      "config": {
+        "path": "configs/conv/hwop-0005-00/requant/shard-05.json",
+        "sha256": "e1e172e55574ab49381d9be892f5c15920d5ef3aab1fbb5ce39d4141ae897607",
+        "size_bytes": 16523
+      },
+      "encode_a_root": "artifacts/w5/hwop-0005-00/senior3x3-v2/requant-encoder/encode-a/shard-05",
+      "encode_b_root": "artifacts/w5/hwop-0005-00/senior3x3-v2/requant-encoder/encode-b/shard-05",
+      "official_encoder": {
+        "mapping_review.semantic.json": {
+          "sha256": "f1b33af7b42a700cd900d7e6a6c51af62dbe7fbe81a1123c0887eb1c45b1731d",
+          "size_bytes": 3494
+        },
+        "modules_dump_128b.bin": {
+          "line_count": 34,
+          "line_width_bits": 128,
+          "logical_sha256": "c268c9467ffb89de2f406089dd95b9444e80c3d57a24d6755dcf03128eea0bae",
+          "logical_size_bytes": 4386,
+          "raw_sha256": "55bdb1e9f10d38a83788c3ccb4bc3c09945d48f0094b6e977bb0d982986b2ad5",
+          "raw_size_bytes": 4420
+        },
+        "modules_dump_64b.bin": {
+          "sha256": "47d3682d3bed49397fc3a87a693d7cd1465b33a22f70bc004958df8c724b2dad",
+          "size_bytes": 4488
+        },
+        "parsed_bitstream.txt": {
+          "sha256": "7c49dc05483cb5687f57762cc86c3670875298ff0a999320fdd050266d3f2ffa",
+          "size_bytes": 4916
+        }
+      },
+      "repeat_outputs_identical": true,
+      "shard_index": 5
+    },
+    {
+      "binding_id": "hwop-0005-01.shard-06",
+      "config": {
+        "path": "configs/conv/hwop-0005-00/requant/shard-06.json",
+        "sha256": "f2636292756b75b7ea0cf5776bcfa69ad6f91602551e0587b5a70a1eb63ef524",
+        "size_bytes": 16521
+      },
+      "encode_a_root": "artifacts/w5/hwop-0005-00/senior3x3-v2/requant-encoder/encode-a/shard-06",
+      "encode_b_root": "artifacts/w5/hwop-0005-00/senior3x3-v2/requant-encoder/encode-b/shard-06",
+      "official_encoder": {
+        "mapping_review.semantic.json": {
+          "sha256": "f1b33af7b42a700cd900d7e6a6c51af62dbe7fbe81a1123c0887eb1c45b1731d",
+          "size_bytes": 3494
+        },
+        "modules_dump_128b.bin": {
+          "line_count": 34,
+          "line_width_bits": 128,
+          "logical_sha256": "7cb95746ecda693bff7092cea6c4f54acdaecb482025d989f51e38dd8825689f",
+          "logical_size_bytes": 4386,
+          "raw_sha256": "c4231b028e0e99266b9ecbaae7dee4fbbfd01d7adccb2fcfbcba1e0c4fcfc3df",
+          "raw_size_bytes": 4420
+        },
+        "modules_dump_64b.bin": {
+          "sha256": "5c27d22907bafab0a2b7b50418702404b288f1388e914917c629856c8f3557fd",
+          "size_bytes": 4488
+        },
+        "parsed_bitstream.txt": {
+          "sha256": "f6dca6aea95995e2c29b134feb3e77fbca04289c7ca916a5fa9b8e0cd22f31a9",
+          "size_bytes": 4916
+        }
+      },
+      "repeat_outputs_identical": true,
+      "shard_index": 6
+    },
+    {
+      "binding_id": "hwop-0005-01.shard-07",
+      "config": {
+        "path": "configs/conv/hwop-0005-00/requant/shard-07.json",
+        "sha256": "145c0688f8d8f7e28ece8461aeac1a4cc809d3a616609ed4298292a0a4589a99",
+        "size_bytes": 16521
+      },
+      "encode_a_root": "artifacts/w5/hwop-0005-00/senior3x3-v2/requant-encoder/encode-a/shard-07",
+      "encode_b_root": "artifacts/w5/hwop-0005-00/senior3x3-v2/requant-encoder/encode-b/shard-07",
+      "official_encoder": {
+        "mapping_review.semantic.json": {
+          "sha256": "f1b33af7b42a700cd900d7e6a6c51af62dbe7fbe81a1123c0887eb1c45b1731d",
+          "size_bytes": 3494
+        },
+        "modules_dump_128b.bin": {
+          "line_count": 34,
+          "line_width_bits": 128,
+          "logical_sha256": "d06f487aa7b3f6e3d00626cf9d643fc6e114845d87ccedf6adfad6def379f970",
+          "logical_size_bytes": 4386,
+          "raw_sha256": "921ce41ab377e8e7f3d4c7045c74454a666d5d38012e1cf88460a5939cc516f4",
+          "raw_size_bytes": 4420
+        },
+        "modules_dump_64b.bin": {
+          "sha256": "0d3891ec70c43721f0f4530282b8d650caba05d32c6ee9306c68bb9577ab23b2",
+          "size_bytes": 4488
+        },
+        "parsed_bitstream.txt": {
+          "sha256": "c22b23fd4d49fb34a6d75a4c84e1163294c510908f7588330b687facc502fd91",
+          "size_bytes": 4916
+        }
+      },
+      "repeat_outputs_identical": true,
+      "shard_index": 7
+    }
+  ],
+  "schema_version": "resnet50-conv-requant-encoder-contract-0.1",
+  "status": "official_encoder_double_run_bound"
+}

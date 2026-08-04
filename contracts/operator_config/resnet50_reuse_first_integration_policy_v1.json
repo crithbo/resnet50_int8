@@ -1,0 +1,121 @@
+{
+  "schema": "resnet50-reuse-first-integration-policy-v1",
+  "date": "2026-07-28",
+  "status": "REUSE_FIRST_NO_OPERATOR_RETEST_ACTIVE",
+  "user_directive": "Reusable operators and primitives enter whole-network integration without operator-level retesting; reopen only the owner of the first integrated divergence.",
+  "active_rule": {
+    "id": "CDA-REUSE-FIRST-DEFERRED-RETEST-001",
+    "path": ".agents/rules/算子配置规则.md",
+    "sha256": "cbaffcc5fb3bea7da9f0c199bb2e7f06445a676ab456bdfd505b90dd89825171"
+  },
+  "routing_index": {
+    "path": ".agents/rules/生成前必读索引.md",
+    "sha256": "12583308ec9a16dbb8ea15571a5280291fed7e152167d2e4e8e00509a9a6370f"
+  },
+  "source_audit": {
+    "path": "contracts/operator_config/resnet50_ndpsim_reuse_gap_audit_v1.json",
+    "sha256": "ca3daf485f4098793e1c4544139c22e62119dbe5743e0db02e4e07d7c301c7c5"
+  },
+  "progress": {
+    "onnx_nodes_total": 78,
+    "hardware_stages_total": 133,
+    "non_conv_nodes_with_reuse_route": 25,
+    "non_conv_nodes_total": 25,
+    "full_node_direct_reuse_candidates": 4,
+    "full_node_direct_reuse_candidate_nodes": [
+      "node-0002",
+      "node-0072",
+      "node-0073",
+      "node-0077"
+    ],
+    "partial_composite_nodes_reusing_completed_front_half": 18,
+    "partial_composite_breakdown": {
+      "QLinearAdd_stage0": 17,
+      "QLinearGlobalAveragePool_sum": 1
+    },
+    "exact_uint8_tail_consumer_nodes": 74,
+    "int8_sa_consumer_nodes": 54,
+    "whole_network_integration_assembly_complete": false,
+    "whole_network_integration_assembly_count": "0/1",
+    "complete_onnx_node_local_config_only_e2": "2/78",
+    "formal_three_party_nodes": "1/78"
+  },
+  "reuse_classes": {
+    "EXACT_FULL_OPERATOR": {
+      "families": [
+        "DequantizeLinear",
+        "MaxPool",
+        "Flatten/View"
+      ],
+      "action": "Bind immutable assets directly into the integrated graph without operator-level retest."
+    },
+    "APPROVED_EQUIVALENT": {
+      "families": [
+        "QLinearAdd stage0",
+        "QLinearGlobalAveragePool sum",
+        "serialized ConvInt32Accumulate"
+      ],
+      "action": "Reuse the approved computation boundary and parameterize it for integration; do not repeat already completed arithmetic tests."
+    },
+    "STRUCTURE_OR_PRIMITIVE_ONLY": {
+      "families": [
+        "QuantizeLinear",
+        "RequantizeUint8",
+        "AverageRequantizeUint8",
+        "QLinearMatMul",
+        "QLinearConv"
+      ],
+      "action": "Reuse matching fields, topology and transport; implement only the shared missing capability."
+    }
+  },
+  "remaining_shared_capabilities": [
+    {
+      "id": "R5_GAP_EXACT_UINT8_QUANT_TAIL",
+      "consumer_node_count": 74,
+      "work": "Implement once, parameterize across all consumers, and validate first in the integrated network."
+    },
+    {
+      "id": "R5_GAP_INT8_SA_DOT_PRODUCT",
+      "consumer_node_count": 54,
+      "work": "Parameterize the serialized stock-RTL correctness route across Conv and MatMul classes without per-node retest."
+    }
+  ],
+  "integration_only_checks": [
+    "133-stage typed topology and edge identity",
+    "global allocation, address, alias and lifetime",
+    "CONFIG inheritance and stage terminal",
+    "execplan, SCA and artifact reference completeness",
+    "first whole-network config-bound comparison"
+  ],
+  "operator_level_retests_skipped": [
+    "operator golden",
+    "operator directed unittest",
+    "operator-only config-bound simulator",
+    "operator-only dynamic run",
+    "unchanged native template reconstruction"
+  ],
+  "failure_routing": {
+    "trigger": "first integrated numeric, address, lifetime, terminal or dynamic divergence",
+    "action": "Reopen only the owning family and preserve all unrelated reuse bindings."
+  },
+  "claim_boundary": {
+    "reuse_status": "REUSE_ACCEPTED_FOR_INTEGRATION",
+    "counts_as_e2": false,
+    "counts_as_e4": false,
+    "counts_as_e5": false,
+    "counts_as_formal_target": false,
+    "closes_deferred_blockers": false
+  },
+  "authorization_boundary": {
+    "functional_rtl_modified": false,
+    "server_files_inspected": false,
+    "server_package_generated": false,
+    "server_upload_or_run": false,
+    "server_lease_granted": false
+  },
+  "generation_receipt": {
+    "plan_path": ".agents/plan.md",
+    "plan_sha256": "bbcce23cad0f7fed5bb800b55db2dd6728173cb4ac6c1ac041df5d1c2dee2c25",
+    "plan_is_mutable_provenance_only": true
+  }
+}

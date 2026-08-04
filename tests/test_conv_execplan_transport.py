@@ -39,12 +39,21 @@ class ConvExecplanTransportTests(unittest.TestCase):
                 self.assertEqual(report["config_artifact_count"], artifacts)
                 self.assertEqual(
                     report["n2n"],
-                    {
-                        "mem_loop": 4,
-                        "src_slice_sel": 1,
-                        "dst_slice_sel": 1,
-                        "ping_pong": 0,
-                    },
+                    (
+                        {
+                            "mem_loop": 0,
+                            "src_slice_sel": 0,
+                            "dst_slice_sel": 0,
+                            "ping_pong": 0,
+                        }
+                        if node_id == "node-0004"
+                        else {
+                            "mem_loop": 4,
+                            "src_slice_sel": 1,
+                            "dst_slice_sel": 1,
+                            "ping_pong": 0,
+                        }
+                    ),
                 )
                 accumulate, requant = value["operators"]
                 self.assertEqual(accumulate["instance_id"], requant["instance_id"])
@@ -72,7 +81,7 @@ class ConvExecplanTransportTests(unittest.TestCase):
     def test_transport_abi_is_explicit_and_stage_consistent(self) -> None:
         self.assertEqual(
             self.first["operators"][0]["attributes"]["target"]["transport_abi"],
-            "conv_sa_q8k8_v2",
+            "conv_sa_s8a_u8b_local_v3",
         )
         for mutation in ("missing", "unknown", "mismatch"):
             value = copy.deepcopy(self.first)

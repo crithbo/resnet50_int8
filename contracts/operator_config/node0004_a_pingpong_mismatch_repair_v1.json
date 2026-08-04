@@ -1,0 +1,181 @@
+{
+  "schema": "node0004-a-pingpong-mismatch-repair-v1",
+  "status": "DETERMINISTIC_CONFIGURATION_ERROR_REPAIRED_LOCALLY",
+  "node_id": "node-0004",
+  "hw_op_id": "r5:hwop-0004-00",
+  "scope": "C0 ConvInt32Accumulate",
+  "numeric_analysis_repeated": false,
+  "node0004_workload_rebuilt": false,
+  "frozen_matrix_and_golden_payloads_reused": true,
+  "functional_rtl_modified": false,
+  "server_action": false,
+  "first_divergence": {
+    "boundary": "MSE0 A producer selector versus SA inport0 A consumer selector",
+    "frozen_fields": {
+      "stream_engine.stream0.ping_pong": 0,
+      "stream_engine.stream0.pingpong_last_index": null,
+      "special_array.inport0.pingpong_en": 1,
+      "special_array.inport0.pingpong_last_index": 4
+    },
+    "mechanism": [
+      "MSE0 selector resets to 0 and cannot toggle while ping_pong=0, so READ0 writes physical buffer0 only.",
+      "SA inport0 selector resets to 0 and toggles after an accepted last transaction whose last_index is at most 4.",
+      "After the first boundary SA reads physical buffer1, but no producer has written buffer1.",
+      "Buffer0 eventually fills because MSE0 continues targeting it and SA no longer drains it; A is absent at the PE while B can be held, so ALU/output/Buffer5/terminal cannot progress."
+    ],
+    "v12_symptom_match": {
+      "A_B_C_memory_read_data_seen": true,
+      "buffer4_read_seen": true,
+      "buffer5_write_seen": false,
+      "sa_group_output_valid_seen": false
+    }
+  },
+  "rtl_evidence": [
+    {
+      "path": "NDP_copy01/rtl/Slice/LSU/Stream_Engine/Memory_Stream_Engine/Memory_RD_Stream_Engine/WR_Buffer_AG.sv",
+      "sha256": "8db8ad4af47a3ddf911ab18a178fdc5288d7daebe8694c5c7380d8bea4e98c2b",
+      "lines": [197, 213],
+      "claim": "producer selector toggles only when mse_pingpong_enable is asserted and the accepted last boundary qualifies"
+    },
+    {
+      "path": "NDP_copy01/rtl/Slice/LSU/Stream_Engine/Stream_Engine_Connect.sv",
+      "sha256": "0ca375c4af56f7f6fe9e7055a39ac7370d91e6048b2aa9f3ae0a4910deae5425",
+      "lines": [219, 232],
+      "claim": "MSE selector physically chooses the first or second buffer of its pair"
+    },
+    {
+      "path": "NDP_copy01/rtl/Slice/LSU/Buffer_Manager_Cluster/Buffer_Manager_Cluster_Connect.sv",
+      "sha256": "fcdf9372b846a7c51cf968d4cd3e2b4234443ae93c8c22af35724efaef3e611f",
+      "lines": [155, 172],
+      "claim": "MSE0 pair maps to physical buffers0/1"
+    },
+    {
+      "path": "NDP_copy01/rtl/Slice/Specialized_Array/SA_Inport/SA_Inport_Connect.sv",
+      "sha256": "86c9bba21c7da019b4b4cc16ae6f26660932d6730ebb3a45cb6ca7887ad09c83",
+      "lines": [30, 94],
+      "claim": "SA has an independent selected source and toggles it on its own accepted last boundary"
+    },
+    {
+      "path": "NDP_copy01/rtl/Slice/Specialized_Array/SA_PE/SA_PE_Control_Block.sv",
+      "sha256": "e254af41c5354d93d31cd9196d79a0a365ea880b86286ea0c15e3a4f41122ca6",
+      "lines": [147, 198, 288, 298],
+      "claim": "ALU acceptance requires matched operands; focused TB proves held B plus later A is reachable"
+    }
+  ],
+  "repair": {
+    "owner": "Conv signed-A local materializer",
+    "formula": "stream0.ping_pong = special_array.inport0.pingpong_en; stream0.pingpong_last_index = special_array.inport0.pingpong_last_index",
+    "authorized_leaf_changes": [
+      {
+        "path": "stream_engine.stream0.ping_pong",
+        "old": 0,
+        "new": 1
+      },
+      {
+        "path": "stream_engine.stream0.pingpong_last_index",
+        "old": null,
+        "new": 4
+      }
+    ],
+    "other_logical_leaf_changes": 0,
+    "old_bitstream_sha256": "9a88191349f3e9976bc9143fd659fa8ae928581f4e5de1ec5eb513e68d8be310",
+    "new_bitstream_sha256": "3bded4cbee96e59294544287ea8928e78e0cbaba1fb389b2f2f9498600ce293b"
+  },
+  "local_proof": {
+    "report": {
+      "path": "artifacts/operator_config_validation/r5-node0004-a-pingpong-fix-c0-v2/local_rebuild_report.json",
+      "sha256": "7242059e08b9699c01e0ae61b775c6c50767c4769bd3b3be3f5dcde20e179fb2"
+    },
+    "logical_leaf_diff_exact": true,
+    "mapping_bitstream_execplan_sca_rebuilt": true,
+    "frozen_A_B_C_matrix_count": 84,
+    "frozen_A_B_C_byte_identity": true,
+    "focused_rtl_tests": [
+      {
+        "name": "SA held-B then later-A operand reachability",
+        "source_sha256": "6fcc93c0071d86e4cc7489605a20fd81efa2a4fb77fc315aeab1d4bfff7baacd",
+        "compile_exit": 0,
+        "run_exit": 0
+      },
+      {
+        "name": "Buffer0/2 16-occurrence address-clear-finish reachability",
+        "source_sha256": "e291204d13993671a178fc9b6eda327d9f908df9957cec97ae45f3d60ea6dd95",
+        "compile_exit": 0,
+        "run_exit": 0
+      }
+    ],
+    "unit_test": {
+      "command": ".venv/Scripts/python.exe -m unittest tests.test_conv_sa_hardware_contract",
+      "exit_code": 0,
+      "tests": 4
+    }
+  },
+  "package_release": {
+    "status": "PACKAGE_READY_NOT_RUN",
+    "superseded": {
+      "name": "r5_n4_hw_v13_abpe_boundary.zip",
+      "sha256": "a9e941dbb108f3672d05005ce04e02314dbfb87b410626a0233f1e07c830e5c9",
+      "status": "QUARANTINED_DETERMINISTIC_CONFIGURATION_ERROR"
+    },
+    "zip": {
+      "path": "artifacts/operator_config_validation/r5-server-test-packages/r5_n4_hw_v14_a_pingpong_fix.zip",
+      "bytes": 5813418,
+      "sha256": "4bf890b5ad57d8952226125de4979e96e0c00a1d347d2fb59aec7cabb1cf44b2"
+    },
+    "sidecar": {
+      "path": "artifacts/operator_config_validation/r5-server-test-packages/r5_n4_hw_v14_a_pingpong_fix.zip.sha256",
+      "sha256": "43e2e00970979f2e4caab9629a2cf023bd9689604bea81e6364b0ad478b6cc50"
+    },
+    "command": "bash r5_n4_hw_v14_a_pingpong_fix/PREPARE_AND_RUN.sh /absolute/path/to/NDP_copy",
+    "expected_return": "r5_n4_hw_v14_a_pingpong_fix_return.zip",
+    "candidate_release": false,
+    "server_rtl_entries": 0
+  },
+  "final_zip_rule_self_audit": {
+    "path": "artifacts/operator_config_validation/r5-server-test-packages/r5_n4_hw_v14_a_pingpong_fix.final_rule_self_audit.json",
+    "sha256": "f720913bdaa72ea119414bc9f85e6870c7de91278e1014ed94f6475bb93ce42b",
+    "FINAL_ZIP_RULE_SELF_AUDIT_PASS": true,
+    "errors": 0,
+    "all_required_negative_controls_fail_closed": true,
+    "validator_exit_code": 0,
+    "negative_controls": [
+      "old_bitstream_reintroduced",
+      "unilateral_a_pingpong",
+      "missing_fix_manifest",
+      "missing_rebuilt_bitstream",
+      "missing_observer_source",
+      "missing_observer_incdir",
+      "missing_observer_enable_macro",
+      "missing_runtime_return_binding",
+      "persistent_high_level_not_n_transactions",
+      "summary_only_append",
+      "conflicting_double_decision",
+      "missing_reason",
+      "missing_boundary",
+      "return exact-set and budget controls"
+    ]
+  },
+  "active_receipts": {
+    "plan_mutable_provenance": "68cf915698b905c24f8e346dca0fac7b2012df3eaf18e563c9799685e9043025",
+    "index": "12583308ec9a16dbb8ea15571a5280291fed7e152167d2e4e8e00509a9a6370f",
+    "common_operator": "cbaffcc5fb3bea7da9f0c199bb2e7f06445a676ab456bdfd505b90dd89825171",
+    "ndp_fields": "603d57805bc5a5bdfca7406c402bc94db60c06ea6682493d672abb91671b1055",
+    "server_package": "7672b44bbcb7e130792d6b288188caa2509dc72b1ea3962bf44ffb82588009aa",
+    "int8_sa": "54a1e12541aaeb6f62dadb19c47a6154eb0462b758a35a9a5bc4a0043cb37dce",
+    "hardware_sim_entry": "4318f3a28de399fb522740315f11bdddf346e71969cf1e45686899a568b042d7"
+  },
+  "blocker_delta": {
+    "closed": [
+      "B_NODE0004_A_PRODUCER_CONSUMER_PINGPONG_MISMATCH"
+    ],
+    "opened": [
+      "B_NODE0004_V14_DYNAMIC_RETURN_PENDING"
+    ],
+    "unchanged": [
+      "E3_NOT_ESTABLISHED",
+      "E4_NOT_ESTABLISHED",
+      "E5_NOT_ESTABLISHED"
+    ]
+  },
+  "rule_delta_proposal": []
+}

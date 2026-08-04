@@ -1,0 +1,65 @@
+{
+  "schema": "maxpool-uint8-zero-padding-contract-v1",
+  "status": "approved_for_one_hash_bound_legacy_normalization",
+  "authorization": {
+    "source_path": "ndp-sim/jsons/maxpool_config_16_112_112_stride2_padding1.json",
+    "source_sha256": "a0091f3fae223abd5225c54b833cf3bb578b3fea6b202883c5cbf4be50d60cb1",
+    "normalized_canonical_sha256": "62c0c27a605f0c9040cf176955a73286e68f4c8df2f6b6d30b5281c0e5afb4de",
+    "json_path": "$.stream_engine.stream0.padding_reg_value",
+    "before": null,
+    "after": 0,
+    "scope": "strict materialization and local mapping evidence only",
+    "formal_target_config": false,
+    "server_execution_claim": false
+  },
+  "operator_semantics": {
+    "operator": "MaxPool",
+    "logical_dtype": "uint8",
+    "value_domain": [
+      0,
+      255
+    ],
+    "max_identity": 0,
+    "reason": "zero is the minimum UINT8 value, so replacing an excluded spatial border with byte 0 cannot increase a MaxPool result",
+    "sample_shape": [
+      1,
+      112,
+      112,
+      16
+    ],
+    "shape_scope": "resnet50_node_0002_local_tile",
+    "kernel_shape": [
+      3,
+      3
+    ],
+    "strides": [
+      2,
+      2
+    ],
+    "pads": [
+      1,
+      1,
+      1,
+      1
+    ]
+  },
+  "evidence": {
+    "model_graph": {
+      "path": "artifacts/w3/model_graph.json",
+      "sha256": "f030c5d4e43f63fbbcce771e4c4ea9e88b042be0a2c988e7f51de2c0e17ac410",
+      "model_sha256": "c234f30975989788b4405f25253275aae247ab6dbdd34aaa69ab0a59ff76f6d0",
+      "node_id": "node-0002",
+      "input_tensor_id": "tensor-f6c1a8fb6fd529e8"
+    },
+    "rtl_semantics_record": {
+      "path": "contracts/maxpool_rtl_semantics_evidence.json",
+      "sha256": "af186419bdc0728d60044ac751d2c873cd2b7a30485f335f0cfa620da2a817aa",
+      "arithmetic_source_sha256": "5bcc09111624f403cc2aab291f79fd32a6dd40ce7d9624db6306f8cde94906dc",
+      "padding_source_sha256": "87d1c9a05e8a1a51a5b78f7838962b381da74e7d471297b6da68f8a449aefe08",
+      "input_pairs": 65536,
+      "byte_lane_checks": 262144,
+      "assignment": "rd_chl_queue_rd_padding_mask[PADDING_INDEX] ? mse_padding_reg_value"
+    }
+  },
+  "contract_sha256": "6939df36a3012291ca1faa88b1d3ebc30fe90143e524c8208137bedd3ab948c0"
+}

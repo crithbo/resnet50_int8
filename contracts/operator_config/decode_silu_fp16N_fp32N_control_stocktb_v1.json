@@ -1,0 +1,104 @@
+{
+  "schema": "decode-silu-fp16n-fp32n-stocktb-control-v1",
+  "candidate_release": false,
+  "counts_as_requant_e4": false,
+  "counts_as_requant_e5": false,
+  "claim": "shared native SFU SiLU/fp16-to-fp32/normal-outbuffer path only",
+  "claim_excludes": [
+    "Requant guard semantics",
+    "Requant round stage",
+    "Requant alias lifetime",
+    "Requant E4/E5"
+  ],
+  "oracle": {
+    "path": "ndp-sim/jsons/decode_silu_fp16N_fp32N.json",
+    "sha256": "eafb7ec7cd47006dda15c1fc60d00601563a7a9f7e8ae12da3ce45e57baec6be",
+    "byte_identity_preserved": true
+  },
+  "derived_address_bound_config": {
+    "path": "artifacts/operator_config_validation/r5-decode-silu-control-stocktb-v1/native-tool-d/ndp-sim/model_execplan/output/control_graph/jsons/op0_decode_silu_fp16N_fp32N.json",
+    "sha256": "a2b65c89f36712ce9af190b4dc0ddfd7f53136d9909dd199f277ef710b9c5bc2",
+    "is_oracle_byte_identity": false
+  },
+  "native_rebuild": {
+    "fixed_seed": 42,
+    "independent_empty_cache_run_count": 2,
+    "outputs_identical_excluding_visualization": true,
+    "mapping_sha256": "2b1c7bbe409a349c0ec668dc4030515dc1e99219a74c789b6a1677f25bbd2ff1",
+    "bitstream_sha256": "7327afb213a7e6017bfb9150c92ed8adca6a430f62225a3f7625e896863ed083"
+  },
+  "execution": {
+    "active_slices": [
+      0,
+      1
+    ],
+    "slice_mask": "0x0000003",
+    "repeat_num": 1,
+    "start_comp_count": 1,
+    "exec_lines_128bit": 3,
+    "preload_count": 5,
+    "formal_readback_count": 2,
+    "formal_d_lines_per_slice": 8
+  },
+  "golden": {
+    "method": "FP16 exact conversion, FIFO_128to64 low-half-before-high SFU load order, RTL BST coefficient selection, SiLU.txt FP32 slope/intercept, exact-rational fused multiply-add rounded once to FP32 RNE",
+    "sfu_128b_to_32b_order": "text lanes [2,3,0,1] per 128-bit line",
+    "sfu_consumed_word_count": 197,
+    "not_high_precision_silu": true,
+    "lane_layout_assumption_removed_by_uniform_32byte_transactions": true,
+    "slices": {
+      "slice00": {
+        "transaction_values": [
+          -1.0,
+          0.0
+        ],
+        "input_sha256": "fb6c4a432287a13ee3f13484377d9c58ea3922f8f6e0b27c6a08c1598efa01ed",
+        "golden_sha256": "05c58a2ee58c092bfc04b832d3e2824d539dcafd9ddb735b1f36b700414e0e5a",
+        "unique_cases": [
+          {
+            "input_fp16_bits": "0xbc00",
+            "converted_fp32_bits": "0xbf800000",
+            "coefficient_index": 23,
+            "slope_bits": "0x3dad0980",
+            "intercept_bits": "0xbe3ceb13",
+            "output_fp32_bits": "0xbe89b7ea"
+          },
+          {
+            "input_fp16_bits": "0x0000",
+            "converted_fp32_bits": "0x00000000",
+            "coefficient_index": 33,
+            "slope_bits": "0x3f000000",
+            "intercept_bits": "0x397ff6ab",
+            "output_fp32_bits": "0x397ff6ab"
+          }
+        ]
+      },
+      "slice01": {
+        "transaction_values": [
+          -4.0,
+          4.0
+        ],
+        "input_sha256": "56972ae3000d352d3fdcde8f7dc5404d82257f36ae6688c5a8a128e2c8e2caea",
+        "golden_sha256": "d1930726f617f4e19531e1b07071f4b7656ee46a736392e88cf542345298137e",
+        "unique_cases": [
+          {
+            "input_fp16_bits": "0xc400",
+            "converted_fp32_bits": "0xc0800000",
+            "coefficient_index": 10,
+            "slope_bits": "0xbd5f3921",
+            "intercept_bits": "0xbe947a3d",
+            "output_fp32_bits": "0xbd9376b2"
+          },
+          {
+            "input_fp16_bits": "0x4400",
+            "converted_fp32_bits": "0x40800000",
+            "coefficient_index": 56,
+            "slope_bits": "0x3f86950b",
+            "intercept_bits": "0xbe8e34b8",
+            "output_fp32_bits": "0x407b637f"
+          }
+        ]
+      }
+    }
+  }
+}

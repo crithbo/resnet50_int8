@@ -1,0 +1,53 @@
+{
+  "schema": "qlinearadd_stage0_config_only_contract_v1",
+  "status": "STAGE0_CONFIG_BOUND_VALIDATION_ONLY_TAIL_BLOCKED",
+  "candidate_release": false,
+  "claim": null,
+  "allowed_claim_name": "CONFIG_ONLY_CORRECTNESS_BASELINE",
+  "bypass_annotation": {
+    "bypass_reason": "Functional RTL is frozen and the native add_dequant path terminates at FP32 while reassociating each affine branch; exhaustive scalar testing finds final-UINT8 counterexamples at node0007 and node0070.",
+    "contradicted_or_missing_native_path": "Reject native add_dequant constants 1, MAC affine reassociation, and its lack of output quantization; native FP32 add is structural only.",
+    "exact_equivalence_scope": "All 17 frozen QLinearAdd instances, complete uint8 scalar A/B domain for W3 branch dequant plus FP32 sum, all stage0 occurrences, node0076 broadcast replay, scratch non-alias and accepted-handshake lifetimes. UINT8 output quantization is excluded.",
+    "materialized_configuration_mechanism": "Three serialized physical stages per instance: exact W3 A-dequant, exact W3 B-dequant, and paired FP32 add, with explicit FP32 DRAM scratch, completion barriers, normal outbuffer, and B replay.",
+    "performance_and_resource_cost": "51 physical stages for 17 logical operators, three FP32 scratch allocations per instance, two dequant write/read round trips before the sum, serialized barriers, and low GA utilization.",
+    "unresolved_production_blocker": "Shared exact UINT8 quant tail remains NO_UNCONDITIONAL_PURE_CONFIG_PROVEN; native JSON lowering, mapper/bitstream, execplan/SCA and server E4/E5 are not produced by this partial stage0 artifact.",
+    "claim_boundary": "CONFIG_ONLY_CORRECTNESS_BASELINE is not claimed for complete QLinearAdd. This artifact is a stage0-only configuration-bound correctness candidate ending at SUM_F32; Y UINT8, rounding, zero-point addition and saturation remain outside the materialized scope."
+  },
+  "materialized_configuration": {
+    "path": "configs/qlinearadd_stage0_config_only/qlinearadd_stage0_config_only_v1.json",
+    "file_sha256": "04479a175adb059757a05e1de602f7cb7fd61f71317341a61842eb76c998295e",
+    "canonical_configuration_sha256": "40d1dfea8eb3404f7918b3ab2821f04a20d6bac0320b12165f3349517eb312d0",
+    "instance_count": 17,
+    "physical_stage_count": 51,
+    "scratch_allocation_count": 51
+  },
+  "closed_scope": [
+    "six-qparam typed transport into stage0 constants",
+    "W3 per-operation float32 A and B dequantization",
+    "paired FP32 add and shared-LC backpressure equation",
+    "node0076 1000-element B-scaled replay across 16 batches",
+    "explicit scratch allocation, non-overlap, barriers and stage0 lifetime",
+    "complete uint8 scalar A/B domain for stage0 numeric semantics",
+    "native affine-reassociation negative control"
+  ],
+  "open_scope": [
+    "exact UINT8 quant tail",
+    "final Y allocation/write/readback",
+    "native static JSON lowering",
+    "mapping and bitstream",
+    "execplan and SCA/SCA_D",
+    "server E4/E5"
+  ],
+  "dependency_on_quant_tail": {
+    "dependency_id": "R5_GAP_EXACT_UINT8_QUANT_TAIL",
+    "decision": "NO_UNCONDITIONAL_PURE_CONFIG_PROVEN",
+    "materialized": false,
+    "output_y_materialized": false
+  },
+  "package_release": {
+    "status": "NOT_GENERATED_NO_LEASE_AND_COMPLETE_QADD_UNCLOSED",
+    "server_inspected": false,
+    "uploaded": false,
+    "run": false
+  }
+}

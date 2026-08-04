@@ -1,0 +1,35 @@
+{
+  "candidate_json_emission_allowed_ids": [
+    "r5:hwop-0001-01"
+  ],
+  "candidate_release": false,
+  "contract_id": "requant-family-54-stage-classification-v1",
+  "contract_sha256": "2c1186a8457b4d3ecd933a7e6bb2775e58d3f6eda375316bd74cf2ff2427920a",
+  "counts": {
+    "current_guard_contradicted": 21,
+    "node0001_full_local_e2": 1,
+    "numeric_compatible_physical_e2_pending": 32,
+    "total": 54
+  },
+  "dynamic_release_ready": false,
+  "formal_target_instance_allowed": false,
+  "remaining_blockers": [
+    "B_REQUANT_SHAPE_LIFETIME_MATERIALIZED_E2",
+    "B_REQUANT_NONZERO_ZP_SIGNED_DOMAIN",
+    "B_REQUANT_MAGIC_ZP_TIE_PARITY",
+    "B_REQUANT_MATMUL_2D_LAYOUT",
+    "B_REQUANT_SERVER_E4_E5"
+  ],
+  "report_semantic_sha256": "469856d22b2470c366d615e6af7d0f65d2d729b4e208c282d07c0418cebd11ca",
+  "rule_ids": [
+    "CDA-REQUANT-FAMILY-QPARAM-CLASSIFICATION-001",
+    "CDA-REQUANT-FAMILY-W3-REPLAY-001",
+    "CDA-REQUANT-NONZERO-ZP-GUARD-001",
+    "CDA-REQUANT-ZP-TIE-PARITY-001",
+    "CDA-REQUANT-FAMILY-EMISSION-BOUNDARY-001"
+  ],
+  "schema": "operator-config-semantic-contract-v1",
+  "scope": "all 54 ResNet50 RequantizeUint8 typed requests",
+  "server_package": false,
+  "status": "NUMERIC_CLASSIFICATION_COMPLETE_PHYSICAL_GENERALIZATION_FAIL_CLOSED"
+}

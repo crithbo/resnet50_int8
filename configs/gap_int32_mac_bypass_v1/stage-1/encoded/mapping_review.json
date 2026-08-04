@@ -1,0 +1,177 @@
+{
+  "summary": {
+    "total_nodes": 19,
+    "mapped_nodes": 22,
+    "connections": 13
+  },
+  "node_to_resource": [
+    {
+      "node": "GROUP0.COL_LC",
+      "resource": "COL_LC0"
+    },
+    {
+      "node": "GROUP1.COL_LC",
+      "resource": "COL_LC3"
+    },
+    {
+      "node": "GROUP2.COL_LC",
+      "resource": "COL_LC4"
+    },
+    {
+      "node": "GA_PE.PE00",
+      "resource": "GENERIC"
+    },
+    {
+      "node": "GA_PE.PE02",
+      "resource": "GENERIC"
+    },
+    {
+      "node": "GA_PE.PE10",
+      "resource": "GENERIC"
+    },
+    {
+      "node": "GA_PE.PE12",
+      "resource": "GENERIC"
+    },
+    {
+      "node": "GA_PE.PE20",
+      "resource": "GENERIC"
+    },
+    {
+      "node": "GA_PE.PE22",
+      "resource": "GENERIC"
+    },
+    {
+      "node": "GA_PE.PE30",
+      "resource": "GENERIC"
+    },
+    {
+      "node": "GA_PE.PE32",
+      "resource": "GENERIC"
+    },
+    {
+      "node": "GROUP0",
+      "resource": "GROUP0"
+    },
+    {
+      "node": "GROUP1",
+      "resource": "GROUP3"
+    },
+    {
+      "node": "GROUP2",
+      "resource": "GROUP4"
+    },
+    {
+      "node": "DRAM_LC.LC0",
+      "resource": "LC0"
+    },
+    {
+      "node": "DRAM_LC.LC1",
+      "resource": "LC1"
+    },
+    {
+      "node": "GROUP0.ROW_LC",
+      "resource": "ROW_LC0"
+    },
+    {
+      "node": "GROUP1.ROW_LC",
+      "resource": "ROW_LC3"
+    },
+    {
+      "node": "GROUP2.ROW_LC",
+      "resource": "ROW_LC4"
+    },
+    {
+      "node": "STREAM.stream0",
+      "resource": "READ_STREAM0"
+    },
+    {
+      "node": "STREAM.stream1",
+      "resource": "READ_STREAM3"
+    },
+    {
+      "node": "STREAM.stream2",
+      "resource": "WRITE_STREAM0"
+    }
+  ],
+  "connection_mapping": [
+    {
+      "src_node": "DRAM_LC.LC0",
+      "src_resource": "LC0",
+      "dst_node": "DRAM_LC.LC1",
+      "dst_resource": "LC1"
+    },
+    {
+      "src_node": "DRAM_LC.LC1",
+      "src_resource": "LC1",
+      "dst_node": "GROUP0.ROW_LC",
+      "dst_resource": "ROW_LC0"
+    },
+    {
+      "src_node": "GROUP0.ROW_LC",
+      "src_resource": "ROW_LC0",
+      "dst_node": "GROUP0.COL_LC",
+      "dst_resource": "COL_LC0"
+    },
+    {
+      "src_node": "DRAM_LC.LC1",
+      "src_resource": "LC1",
+      "dst_node": "GROUP1.ROW_LC",
+      "dst_resource": "ROW_LC3"
+    },
+    {
+      "src_node": "GROUP1.ROW_LC",
+      "src_resource": "ROW_LC3",
+      "dst_node": "GROUP1.COL_LC",
+      "dst_resource": "COL_LC3"
+    },
+    {
+      "src_node": "DRAM_LC.LC1",
+      "src_resource": "LC1",
+      "dst_node": "GROUP2.ROW_LC",
+      "dst_resource": "ROW_LC4"
+    },
+    {
+      "src_node": "GROUP2.ROW_LC",
+      "src_resource": "ROW_LC4",
+      "dst_node": "GROUP2.COL_LC",
+      "dst_resource": "COL_LC4"
+    },
+    {
+      "src_node": "DRAM_LC.LC0",
+      "src_resource": "LC0",
+      "dst_node": "STREAM.stream0",
+      "dst_resource": "READ_STREAM0"
+    },
+    {
+      "src_node": "DRAM_LC.LC1",
+      "src_resource": "LC1",
+      "dst_node": "STREAM.stream0",
+      "dst_resource": "READ_STREAM0"
+    },
+    {
+      "src_node": "DRAM_LC.LC0",
+      "src_resource": "LC0",
+      "dst_node": "STREAM.stream1",
+      "dst_resource": "READ_STREAM3"
+    },
+    {
+      "src_node": "DRAM_LC.LC1",
+      "src_resource": "LC1",
+      "dst_node": "STREAM.stream1",
+      "dst_resource": "READ_STREAM3"
+    },
+    {
+      "src_node": "DRAM_LC.LC0",
+      "src_resource": "LC0",
+      "dst_node": "STREAM.stream2",
+      "dst_resource": "WRITE_STREAM0"
+    },
+    {
+      "src_node": "DRAM_LC.LC1",
+      "src_resource": "LC1",
+      "dst_node": "STREAM.stream2",
+      "dst_resource": "WRITE_STREAM0"
+    }
+  ]
+}

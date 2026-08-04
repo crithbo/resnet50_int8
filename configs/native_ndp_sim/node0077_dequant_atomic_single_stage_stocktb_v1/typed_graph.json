@@ -1,0 +1,63 @@
+{
+  "operators": [
+    {
+      "config_sha256": "e1c8205f692bcb814f681e0fdd4b04f310238765aca081209238a8cce92464c0",
+      "constants": {
+        "negative_zero_point": {
+          "dtype": "float32",
+          "float32_bits": [
+            "0xc2700000"
+          ],
+          "values": [
+            -60.0
+          ]
+        },
+        "x_scale": {
+          "dtype": "float32",
+          "float32_bits": [
+            "0x3e01622d"
+          ]
+        }
+      },
+      "id": "op0",
+      "inputs": {
+        "A": {
+          "base_addr": "0x00000000",
+          "dtype": "uint8",
+          "shape": [
+            16,
+            1,
+            1
+          ],
+          "source": {
+            "type": "external"
+          },
+          "tensor_id": "dequant.atomic.A"
+        }
+      },
+      "output": {
+        "base_addr": "0x00000010",
+        "dtype": "float32",
+        "shape": [
+          16,
+          1,
+          1
+        ],
+        "tensor_id": "dequant.atomic.D"
+      },
+      "stage": "dequantize",
+      "type": "resnet50_dequant_node0077_uint8_fp32",
+      "used_slices": "0b0000000000000000000000000011"
+    }
+  ],
+  "params": {
+    "candidate_release": false,
+    "diagnostic_only": true,
+    "logical_occurrence_count": 1,
+    "physical_slice_instance_count": 2,
+    "request_id": "r5:hwop-0077-00"
+  },
+  "plan_id": "dequant-node0077-atomic-single-stage-stocktb-v1",
+  "schema_version": "0.1",
+  "used_slices": "0b0000000000000000000000000011"
+}

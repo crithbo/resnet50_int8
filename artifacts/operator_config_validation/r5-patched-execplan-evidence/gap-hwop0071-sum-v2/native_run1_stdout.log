@@ -1,0 +1,21 @@
+[pipeline] regenerating bitstream for op0 (resnet50_gap_sum_uint8_int32) ...
+[pipeline] Regenerated bitstream + JSON for 1 operator(s) under C:\Users\15383\AppData\Local\Temp\r3-execplan-zzrl97gy\run1\tool\model_execplan\output\graph_address_seed.
+Parsed operators: 1
+  - op0 (resnet50_gap_sum_uint8_int32), inputs=[A], output_shape=(2048, 1, 1), used_slices=0000000000001111111111111111 (count=16)
+Address assignments: 2
+  - op0.input.A: shape=(1, 1, 100416), size=100416B, base=0x00000000, slice0=0x00000000
+  - op0.output.D: shape=(2048, 1, 1), size=8192B, base=0x00018840, slice0=0x00018840
+Generated commands: 33
+Command metadata: {'load_config_count': '1', 'clock_enable_count': '1', 'write_reg_count': '30', 'skipped_unchanged_write_count': '34', 'control_write_count': '0', 'start_comp_count': '1', 'skipped_control_ops_same_size': '0', 'parsed_register_fields': '739', 'parsed_register_addresses': '279', 'unresolved_control_names': '', 'note': 'One global Clock_Enable is emitted before all operators; each operator then emits Load_Config, Write_Reg updates, and Start_Comp; control-register writes are emitted only when template initial_size differs from target size.'}
+  cmd[0] = 0x000000078007FFF9
+  cmd[1] = 0x300001AC0007FFF8
+  cmd[2] = 0x037004004044000C
+  cmd[3] = 0x0370080040440014
+  cmd[4] = 0x03700C004044001C
+  cmd[5] = 0x0370100040440024
+  cmd[6] = 0x037014004044002C
+  cmd[7] = 0x0370180040440034
+Instruction stream written to: C:\Users\15383\AppData\Local\Temp\r3-execplan-zzrl97gy\run1\tool\model_execplan\output\graph_address_seed\install\execplan.txt
+Instruction explanation written to: C:\Users\15383\AppData\Local\Temp\r3-execplan-zzrl97gy\run1\tool\model_execplan\output\graph_address_seed\instructions_explained.txt
+Install manifest written to: C:\Users\15383\AppData\Local\Temp\r3-execplan-zzrl97gy\run1\tool\model_execplan\output\graph_address_seed\sca_cfg.json
+Input with baseaddr written to: C:\Users\15383\AppData\Local\Temp\r3-execplan-zzrl97gy\run1\tool\model_execplan\output\graph_address_seed\graph_address_seed_withbaseaddr.json

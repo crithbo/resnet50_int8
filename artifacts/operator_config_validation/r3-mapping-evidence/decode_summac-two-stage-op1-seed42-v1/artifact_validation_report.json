@@ -1,0 +1,3318 @@
+{
+  "schema": "operator-config-artifact-validation-report-v1",
+  "source": "source_config.json",
+  "artifact_dir": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r3-mapping-evidence\\operator-config-evidence-3uij9wq4\\bundle",
+  "valid": true,
+  "first_error": null,
+  "issues": [],
+  "facts": {
+    "json_validation": {
+      "valid": true,
+      "issue_count": 0
+    },
+    "mapping": {
+      "mapped_nodes": 16,
+      "connections": 13,
+      "rtl_reachable_connections": 13
+    },
+    "mapping_evidence": {
+      "mapping_review_sha256": "014a0c5e34026ce60856985fecfaf6ec9ae0d2f94fb0c9b762ffc46c18370472",
+      "penalty": 0.0,
+      "mapping_mode": "heuristic",
+      "cache": {
+        "policy": "same-run-generated-loaded",
+        "initial_file_count": 0,
+        "final_file_count": 1,
+        "loaded": true,
+        "loaded_origin": "same-run-generated",
+        "portable": true,
+        "bundled": true,
+        "sha256": "8f275040835125c2fd4678be098c2f3483be32ad083377bc4dd29864de616ba7"
+      },
+      "encoder": {
+        "repository": "ndp-sim",
+        "commit": "ec12424516ae0304228dd2321d4e604fe225e04e",
+        "bitstream_tree_sha256": "27c0601a4f8745b47d044a41ec98e612bacc9f18dd5b5547267e99d0440defa5",
+        "source_manifest": "encoder_source_manifest.json",
+        "source_manifest_sha256": "a69af964b84d317c431c9a2ce6f3c59e57babdff911e090ac9e9ab21f29d5ba6"
+      }
+    },
+    "native_implicit_buffer_defaults": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "mirror": {
+      "unpadded_bits": 2252,
+      "binary_64_lines": 36,
+      "binary_128_lines": 18,
+      "bit_range_count": 407,
+      "bit_ranges": [
+        {
+          "path": "$.CONFIG[0]",
+          "section": "CONFIG",
+          "slot": 0,
+          "chunk": 0,
+          "start": 0,
+          "end": 1
+        },
+        {
+          "path": "$.CONFIG[1]",
+          "section": "CONFIG",
+          "slot": 0,
+          "chunk": 0,
+          "start": 1,
+          "end": 2
+        },
+        {
+          "path": "$.CONFIG[2]",
+          "section": "CONFIG",
+          "slot": 0,
+          "chunk": 0,
+          "start": 2,
+          "end": 3
+        },
+        {
+          "path": "$.CONFIG[3]",
+          "section": "CONFIG",
+          "slot": 0,
+          "chunk": 0,
+          "start": 3,
+          "end": 4
+        },
+        {
+          "path": "$.CONFIG[4]",
+          "section": "CONFIG",
+          "slot": 0,
+          "chunk": 0,
+          "start": 4,
+          "end": 5
+        },
+        {
+          "path": "$.CONFIG[5]",
+          "section": "CONFIG",
+          "slot": 0,
+          "chunk": 0,
+          "start": 5,
+          "end": 6
+        },
+        {
+          "path": "$.CONFIG[6]",
+          "section": "CONFIG",
+          "slot": 0,
+          "chunk": 0,
+          "start": 6,
+          "end": 7
+        },
+        {
+          "path": "$.CONFIG[7]",
+          "section": "CONFIG",
+          "slot": 0,
+          "chunk": 0,
+          "start": 7,
+          "end": 8
+        },
+        {
+          "path": "$bitstream.iga_lc[0].present",
+          "section": "iga_lc",
+          "slot": 0,
+          "chunk": 0,
+          "start": 8,
+          "end": 9
+        },
+        {
+          "path": "$.dram_loop_configs.LC1.src_id",
+          "section": "iga_lc",
+          "slot": 0,
+          "chunk": 0,
+          "start": 9,
+          "end": 13
+        },
+        {
+          "path": "$.dram_loop_configs.LC1.outmost_loop",
+          "section": "iga_lc",
+          "slot": 0,
+          "chunk": 0,
+          "start": 13,
+          "end": 14
+        },
+        {
+          "path": "$.dram_loop_configs.LC1.start",
+          "section": "iga_lc",
+          "slot": 0,
+          "chunk": 0,
+          "start": 14,
+          "end": 31
+        },
+        {
+          "path": "$.dram_loop_configs.LC1.stride",
+          "section": "iga_lc",
+          "slot": 0,
+          "chunk": 0,
+          "start": 31,
+          "end": 48
+        },
+        {
+          "path": "$.dram_loop_configs.LC1.end",
+          "section": "iga_lc",
+          "slot": 0,
+          "chunk": 0,
+          "start": 48,
+          "end": 65
+        },
+        {
+          "path": "$.dram_loop_configs.LC1.last_index",
+          "section": "iga_lc",
+          "slot": 0,
+          "chunk": 0,
+          "start": 65,
+          "end": 69
+        },
+        {
+          "path": "$bitstream.iga_lc[1].present",
+          "section": "iga_lc",
+          "slot": 1,
+          "chunk": 0,
+          "start": 69,
+          "end": 70
+        },
+        {
+          "path": "$bitstream.iga_lc[2].present",
+          "section": "iga_lc",
+          "slot": 2,
+          "chunk": 0,
+          "start": 70,
+          "end": 71
+        },
+        {
+          "path": "$.dram_loop_configs.LC0.src_id",
+          "section": "iga_lc",
+          "slot": 2,
+          "chunk": 0,
+          "start": 71,
+          "end": 75
+        },
+        {
+          "path": "$.dram_loop_configs.LC0.outmost_loop",
+          "section": "iga_lc",
+          "slot": 2,
+          "chunk": 0,
+          "start": 75,
+          "end": 76
+        },
+        {
+          "path": "$.dram_loop_configs.LC0.start",
+          "section": "iga_lc",
+          "slot": 2,
+          "chunk": 0,
+          "start": 76,
+          "end": 93
+        },
+        {
+          "path": "$.dram_loop_configs.LC0.stride",
+          "section": "iga_lc",
+          "slot": 2,
+          "chunk": 0,
+          "start": 93,
+          "end": 110
+        },
+        {
+          "path": "$.dram_loop_configs.LC0.end",
+          "section": "iga_lc",
+          "slot": 2,
+          "chunk": 0,
+          "start": 110,
+          "end": 127
+        },
+        {
+          "path": "$.dram_loop_configs.LC0.last_index",
+          "section": "iga_lc",
+          "slot": 2,
+          "chunk": 0,
+          "start": 127,
+          "end": 131
+        },
+        {
+          "path": "$bitstream.iga_lc[3].present",
+          "section": "iga_lc",
+          "slot": 3,
+          "chunk": 0,
+          "start": 131,
+          "end": 132
+        },
+        {
+          "path": "$bitstream.iga_lc[4].present",
+          "section": "iga_lc",
+          "slot": 4,
+          "chunk": 0,
+          "start": 132,
+          "end": 133
+        },
+        {
+          "path": "$bitstream.iga_lc[5].present",
+          "section": "iga_lc",
+          "slot": 5,
+          "chunk": 0,
+          "start": 133,
+          "end": 134
+        },
+        {
+          "path": "$bitstream.iga_lc[6].present",
+          "section": "iga_lc",
+          "slot": 6,
+          "chunk": 0,
+          "start": 134,
+          "end": 135
+        },
+        {
+          "path": "$bitstream.iga_lc[7].present",
+          "section": "iga_lc",
+          "slot": 7,
+          "chunk": 0,
+          "start": 135,
+          "end": 136
+        },
+        {
+          "path": "$bitstream.iga_lc[8].present",
+          "section": "iga_lc",
+          "slot": 8,
+          "chunk": 0,
+          "start": 136,
+          "end": 137
+        },
+        {
+          "path": "$bitstream.iga_lc[9].present",
+          "section": "iga_lc",
+          "slot": 9,
+          "chunk": 0,
+          "start": 137,
+          "end": 138
+        },
+        {
+          "path": "$bitstream.iga_lc[10].present",
+          "section": "iga_lc",
+          "slot": 10,
+          "chunk": 0,
+          "start": 138,
+          "end": 139
+        },
+        {
+          "path": "$bitstream.iga_lc[11].present",
+          "section": "iga_lc",
+          "slot": 11,
+          "chunk": 0,
+          "start": 139,
+          "end": 140
+        },
+        {
+          "path": "$bitstream.iga_lc[12].present",
+          "section": "iga_lc",
+          "slot": 12,
+          "chunk": 0,
+          "start": 140,
+          "end": 141
+        },
+        {
+          "path": "$bitstream.iga_lc[13].present",
+          "section": "iga_lc",
+          "slot": 13,
+          "chunk": 0,
+          "start": 141,
+          "end": 142
+        },
+        {
+          "path": "$bitstream.iga_lc[14].present",
+          "section": "iga_lc",
+          "slot": 14,
+          "chunk": 0,
+          "start": 142,
+          "end": 143
+        },
+        {
+          "path": "$.dram_loop_configs.LC2.src_id",
+          "section": "iga_lc",
+          "slot": 14,
+          "chunk": 0,
+          "start": 143,
+          "end": 147
+        },
+        {
+          "path": "$.dram_loop_configs.LC2.outmost_loop",
+          "section": "iga_lc",
+          "slot": 14,
+          "chunk": 0,
+          "start": 147,
+          "end": 148
+        },
+        {
+          "path": "$.dram_loop_configs.LC2.start",
+          "section": "iga_lc",
+          "slot": 14,
+          "chunk": 0,
+          "start": 148,
+          "end": 165
+        },
+        {
+          "path": "$.dram_loop_configs.LC2.stride",
+          "section": "iga_lc",
+          "slot": 14,
+          "chunk": 0,
+          "start": 165,
+          "end": 182
+        },
+        {
+          "path": "$.dram_loop_configs.LC2.end",
+          "section": "iga_lc",
+          "slot": 14,
+          "chunk": 0,
+          "start": 182,
+          "end": 199
+        },
+        {
+          "path": "$.dram_loop_configs.LC2.last_index",
+          "section": "iga_lc",
+          "slot": 14,
+          "chunk": 0,
+          "start": 199,
+          "end": 203
+        },
+        {
+          "path": "$bitstream.iga_lc[15].present",
+          "section": "iga_lc",
+          "slot": 15,
+          "chunk": 0,
+          "start": 203,
+          "end": 204
+        },
+        {
+          "path": "$bitstream.iga_lc[16].present",
+          "section": "iga_lc",
+          "slot": 16,
+          "chunk": 0,
+          "start": 204,
+          "end": 205
+        },
+        {
+          "path": "$.dram_loop_configs.LC3.src_id",
+          "section": "iga_lc",
+          "slot": 16,
+          "chunk": 0,
+          "start": 205,
+          "end": 209
+        },
+        {
+          "path": "$.dram_loop_configs.LC3.outmost_loop",
+          "section": "iga_lc",
+          "slot": 16,
+          "chunk": 0,
+          "start": 209,
+          "end": 210
+        },
+        {
+          "path": "$.dram_loop_configs.LC3.start",
+          "section": "iga_lc",
+          "slot": 16,
+          "chunk": 0,
+          "start": 210,
+          "end": 227
+        },
+        {
+          "path": "$.dram_loop_configs.LC3.stride",
+          "section": "iga_lc",
+          "slot": 16,
+          "chunk": 0,
+          "start": 227,
+          "end": 244
+        },
+        {
+          "path": "$.dram_loop_configs.LC3.end",
+          "section": "iga_lc",
+          "slot": 16,
+          "chunk": 0,
+          "start": 244,
+          "end": 261
+        },
+        {
+          "path": "$.dram_loop_configs.LC3.last_index",
+          "section": "iga_lc",
+          "slot": 16,
+          "chunk": 0,
+          "start": 261,
+          "end": 265
+        },
+        {
+          "path": "$bitstream.iga_lc[17].present",
+          "section": "iga_lc",
+          "slot": 17,
+          "chunk": 0,
+          "start": 265,
+          "end": 266
+        },
+        {
+          "path": "$bitstream.iga_lc[18].present",
+          "section": "iga_lc",
+          "slot": 18,
+          "chunk": 0,
+          "start": 266,
+          "end": 267
+        },
+        {
+          "path": "$bitstream.iga_lc[19].present",
+          "section": "iga_lc",
+          "slot": 19,
+          "chunk": 0,
+          "start": 267,
+          "end": 268
+        },
+        {
+          "path": "$bitstream.iga_row_lc[0].present",
+          "section": "iga_row_lc",
+          "slot": 0,
+          "chunk": 0,
+          "start": 268,
+          "end": 269
+        },
+        {
+          "path": "$.buffer_loop_configs.GROUP0.ROW_LC.src_id",
+          "section": "iga_row_lc",
+          "slot": 0,
+          "chunk": 0,
+          "start": 269,
+          "end": 273
+        },
+        {
+          "path": "$.buffer_loop_configs.GROUP0.ROW_LC.start",
+          "section": "iga_row_lc",
+          "slot": 0,
+          "chunk": 0,
+          "start": 273,
+          "end": 276
+        },
+        {
+          "path": "$.buffer_loop_configs.GROUP0.ROW_LC.stride",
+          "section": "iga_row_lc",
+          "slot": 0,
+          "chunk": 0,
+          "start": 276,
+          "end": 279
+        },
+        {
+          "path": "$.buffer_loop_configs.GROUP0.ROW_LC.end",
+          "section": "iga_row_lc",
+          "slot": 0,
+          "chunk": 0,
+          "start": 279,
+          "end": 282
+        },
+        {
+          "path": "$.buffer_loop_configs.GROUP0.ROW_LC.last_index",
+          "section": "iga_row_lc",
+          "slot": 0,
+          "chunk": 0,
+          "start": 282,
+          "end": 286
+        },
+        {
+          "path": "$bitstream.iga_row_lc[1].present",
+          "section": "iga_row_lc",
+          "slot": 1,
+          "chunk": 0,
+          "start": 286,
+          "end": 287
+        },
+        {
+          "path": "$bitstream.iga_row_lc[2].present",
+          "section": "iga_row_lc",
+          "slot": 2,
+          "chunk": 0,
+          "start": 287,
+          "end": 288
+        },
+        {
+          "path": "$bitstream.iga_row_lc[3].present",
+          "section": "iga_row_lc",
+          "slot": 3,
+          "chunk": 0,
+          "start": 288,
+          "end": 289
+        },
+        {
+          "path": "$bitstream.iga_row_lc[4].present",
+          "section": "iga_row_lc",
+          "slot": 4,
+          "chunk": 0,
+          "start": 289,
+          "end": 290
+        },
+        {
+          "path": "$.buffer_loop_configs.GROUP1.ROW_LC.src_id",
+          "section": "iga_row_lc",
+          "slot": 4,
+          "chunk": 0,
+          "start": 290,
+          "end": 294
+        },
+        {
+          "path": "$.buffer_loop_configs.GROUP1.ROW_LC.start",
+          "section": "iga_row_lc",
+          "slot": 4,
+          "chunk": 0,
+          "start": 294,
+          "end": 297
+        },
+        {
+          "path": "$.buffer_loop_configs.GROUP1.ROW_LC.stride",
+          "section": "iga_row_lc",
+          "slot": 4,
+          "chunk": 0,
+          "start": 297,
+          "end": 300
+        },
+        {
+          "path": "$.buffer_loop_configs.GROUP1.ROW_LC.end",
+          "section": "iga_row_lc",
+          "slot": 4,
+          "chunk": 0,
+          "start": 300,
+          "end": 303
+        },
+        {
+          "path": "$.buffer_loop_configs.GROUP1.ROW_LC.last_index",
+          "section": "iga_row_lc",
+          "slot": 4,
+          "chunk": 0,
+          "start": 303,
+          "end": 307
+        },
+        {
+          "path": "$bitstream.iga_col_lc[0].present",
+          "section": "iga_col_lc",
+          "slot": 0,
+          "chunk": 0,
+          "start": 307,
+          "end": 308
+        },
+        {
+          "path": "$.buffer_loop_configs.GROUP0.COL_LC.src_id",
+          "section": "iga_col_lc",
+          "slot": 0,
+          "chunk": 0,
+          "start": 308,
+          "end": 312
+        },
+        {
+          "path": "$.buffer_loop_configs.GROUP0.COL_LC.start",
+          "section": "iga_col_lc",
+          "slot": 0,
+          "chunk": 0,
+          "start": 312,
+          "end": 318
+        },
+        {
+          "path": "$.buffer_loop_configs.GROUP0.COL_LC.stride",
+          "section": "iga_col_lc",
+          "slot": 0,
+          "chunk": 0,
+          "start": 318,
+          "end": 324
+        },
+        {
+          "path": "$.buffer_loop_configs.GROUP0.COL_LC.end",
+          "section": "iga_col_lc",
+          "slot": 0,
+          "chunk": 0,
+          "start": 324,
+          "end": 330
+        },
+        {
+          "path": "$.buffer_loop_configs.GROUP0.COL_LC.last_index",
+          "section": "iga_col_lc",
+          "slot": 0,
+          "chunk": 0,
+          "start": 330,
+          "end": 334
+        },
+        {
+          "path": "$bitstream.iga_col_lc[1].present",
+          "section": "iga_col_lc",
+          "slot": 1,
+          "chunk": 0,
+          "start": 334,
+          "end": 335
+        },
+        {
+          "path": "$bitstream.iga_col_lc[2].present",
+          "section": "iga_col_lc",
+          "slot": 2,
+          "chunk": 0,
+          "start": 335,
+          "end": 336
+        },
+        {
+          "path": "$bitstream.iga_col_lc[3].present",
+          "section": "iga_col_lc",
+          "slot": 3,
+          "chunk": 0,
+          "start": 336,
+          "end": 337
+        },
+        {
+          "path": "$bitstream.iga_col_lc[4].present",
+          "section": "iga_col_lc",
+          "slot": 4,
+          "chunk": 0,
+          "start": 337,
+          "end": 338
+        },
+        {
+          "path": "$.buffer_loop_configs.GROUP1.COL_LC.src_id",
+          "section": "iga_col_lc",
+          "slot": 4,
+          "chunk": 0,
+          "start": 338,
+          "end": 342
+        },
+        {
+          "path": "$.buffer_loop_configs.GROUP1.COL_LC.start",
+          "section": "iga_col_lc",
+          "slot": 4,
+          "chunk": 0,
+          "start": 342,
+          "end": 348
+        },
+        {
+          "path": "$.buffer_loop_configs.GROUP1.COL_LC.stride",
+          "section": "iga_col_lc",
+          "slot": 4,
+          "chunk": 0,
+          "start": 348,
+          "end": 354
+        },
+        {
+          "path": "$.buffer_loop_configs.GROUP1.COL_LC.end",
+          "section": "iga_col_lc",
+          "slot": 4,
+          "chunk": 0,
+          "start": 354,
+          "end": 360
+        },
+        {
+          "path": "$.buffer_loop_configs.GROUP1.COL_LC.last_index",
+          "section": "iga_col_lc",
+          "slot": 4,
+          "chunk": 0,
+          "start": 360,
+          "end": 364
+        },
+        {
+          "path": "$bitstream.iga_pe[0].present",
+          "section": "iga_pe",
+          "slot": 0,
+          "chunk": 0,
+          "start": 364,
+          "end": 365
+        },
+        {
+          "path": "$bitstream.iga_pe[0].present",
+          "section": "iga_pe",
+          "slot": 0,
+          "chunk": 1,
+          "start": 365,
+          "end": 366
+        },
+        {
+          "path": "$bitstream.iga_pe[1].present",
+          "section": "iga_pe",
+          "slot": 1,
+          "chunk": 0,
+          "start": 366,
+          "end": 367
+        },
+        {
+          "path": "$bitstream.iga_pe[1].present",
+          "section": "iga_pe",
+          "slot": 1,
+          "chunk": 1,
+          "start": 367,
+          "end": 368
+        },
+        {
+          "path": "$bitstream.iga_pe[2].present",
+          "section": "iga_pe",
+          "slot": 2,
+          "chunk": 0,
+          "start": 368,
+          "end": 369
+        },
+        {
+          "path": "$bitstream.iga_pe[2].present",
+          "section": "iga_pe",
+          "slot": 2,
+          "chunk": 1,
+          "start": 369,
+          "end": 370
+        },
+        {
+          "path": "$bitstream.iga_pe[3].present",
+          "section": "iga_pe",
+          "slot": 3,
+          "chunk": 0,
+          "start": 370,
+          "end": 371
+        },
+        {
+          "path": "$bitstream.iga_pe[3].present",
+          "section": "iga_pe",
+          "slot": 3,
+          "chunk": 1,
+          "start": 371,
+          "end": 372
+        },
+        {
+          "path": "$bitstream.iga_pe[4].present",
+          "section": "iga_pe",
+          "slot": 4,
+          "chunk": 0,
+          "start": 372,
+          "end": 373
+        },
+        {
+          "path": "$.lc_pe_configs.PE0._padding",
+          "section": "iga_pe",
+          "slot": 4,
+          "chunk": 0,
+          "start": 373,
+          "end": 389
+        },
+        {
+          "path": "$.lc_pe_configs.PE0.alu_opcode",
+          "section": "iga_pe",
+          "slot": 4,
+          "chunk": 0,
+          "start": 389,
+          "end": 391
+        },
+        {
+          "path": "$.lc_pe_configs.PE0.inport2.src_id",
+          "section": "iga_pe",
+          "slot": 4,
+          "chunk": 0,
+          "start": 391,
+          "end": 395
+        },
+        {
+          "path": "$.lc_pe_configs.PE0.inport2.keep_last_index",
+          "section": "iga_pe",
+          "slot": 4,
+          "chunk": 0,
+          "start": 395,
+          "end": 399
+        },
+        {
+          "path": "$.lc_pe_configs.PE0.inport2.mode",
+          "section": "iga_pe",
+          "slot": 4,
+          "chunk": 0,
+          "start": 399,
+          "end": 401
+        },
+        {
+          "path": "$.lc_pe_configs.PE0.inport1.src_id",
+          "section": "iga_pe",
+          "slot": 4,
+          "chunk": 0,
+          "start": 401,
+          "end": 405
+        },
+        {
+          "path": "$.lc_pe_configs.PE0.inport1.keep_last_index",
+          "section": "iga_pe",
+          "slot": 4,
+          "chunk": 0,
+          "start": 405,
+          "end": 409
+        },
+        {
+          "path": "$.lc_pe_configs.PE0.inport1.mode",
+          "section": "iga_pe",
+          "slot": 4,
+          "chunk": 0,
+          "start": 409,
+          "end": 411
+        },
+        {
+          "path": "$.lc_pe_configs.PE0.inport0.src_id",
+          "section": "iga_pe",
+          "slot": 4,
+          "chunk": 0,
+          "start": 411,
+          "end": 415
+        },
+        {
+          "path": "$.lc_pe_configs.PE0.inport0.keep_last_index",
+          "section": "iga_pe",
+          "slot": 4,
+          "chunk": 0,
+          "start": 415,
+          "end": 419
+        },
+        {
+          "path": "$.lc_pe_configs.PE0.inport0.mode",
+          "section": "iga_pe",
+          "slot": 4,
+          "chunk": 0,
+          "start": 419,
+          "end": 421
+        },
+        {
+          "path": "$bitstream.iga_pe[4].present",
+          "section": "iga_pe",
+          "slot": 4,
+          "chunk": 1,
+          "start": 421,
+          "end": 422
+        },
+        {
+          "path": "$.lc_pe_configs.PE0.inport2.constant",
+          "section": "iga_pe",
+          "slot": 4,
+          "chunk": 1,
+          "start": 422,
+          "end": 438
+        },
+        {
+          "path": "$.lc_pe_configs.PE0.inport1.constant",
+          "section": "iga_pe",
+          "slot": 4,
+          "chunk": 1,
+          "start": 438,
+          "end": 454
+        },
+        {
+          "path": "$.lc_pe_configs.PE0.inport0.constant",
+          "section": "iga_pe",
+          "slot": 4,
+          "chunk": 1,
+          "start": 454,
+          "end": 470
+        },
+        {
+          "path": "$bitstream.iga_pe[5].present",
+          "section": "iga_pe",
+          "slot": 5,
+          "chunk": 0,
+          "start": 470,
+          "end": 471
+        },
+        {
+          "path": "$bitstream.iga_pe[5].present",
+          "section": "iga_pe",
+          "slot": 5,
+          "chunk": 1,
+          "start": 471,
+          "end": 472
+        },
+        {
+          "path": "$bitstream.iga_pe[6].present",
+          "section": "iga_pe",
+          "slot": 6,
+          "chunk": 0,
+          "start": 472,
+          "end": 473
+        },
+        {
+          "path": "$.lc_pe_configs.PE1._padding",
+          "section": "iga_pe",
+          "slot": 6,
+          "chunk": 0,
+          "start": 473,
+          "end": 489
+        },
+        {
+          "path": "$.lc_pe_configs.PE1.alu_opcode",
+          "section": "iga_pe",
+          "slot": 6,
+          "chunk": 0,
+          "start": 489,
+          "end": 491
+        },
+        {
+          "path": "$.lc_pe_configs.PE1.inport2.src_id",
+          "section": "iga_pe",
+          "slot": 6,
+          "chunk": 0,
+          "start": 491,
+          "end": 495
+        },
+        {
+          "path": "$.lc_pe_configs.PE1.inport2.keep_last_index",
+          "section": "iga_pe",
+          "slot": 6,
+          "chunk": 0,
+          "start": 495,
+          "end": 499
+        },
+        {
+          "path": "$.lc_pe_configs.PE1.inport2.mode",
+          "section": "iga_pe",
+          "slot": 6,
+          "chunk": 0,
+          "start": 499,
+          "end": 501
+        },
+        {
+          "path": "$.lc_pe_configs.PE1.inport1.src_id",
+          "section": "iga_pe",
+          "slot": 6,
+          "chunk": 0,
+          "start": 501,
+          "end": 505
+        },
+        {
+          "path": "$.lc_pe_configs.PE1.inport1.keep_last_index",
+          "section": "iga_pe",
+          "slot": 6,
+          "chunk": 0,
+          "start": 505,
+          "end": 509
+        },
+        {
+          "path": "$.lc_pe_configs.PE1.inport1.mode",
+          "section": "iga_pe",
+          "slot": 6,
+          "chunk": 0,
+          "start": 509,
+          "end": 511
+        },
+        {
+          "path": "$.lc_pe_configs.PE1.inport0.src_id",
+          "section": "iga_pe",
+          "slot": 6,
+          "chunk": 0,
+          "start": 511,
+          "end": 515
+        },
+        {
+          "path": "$.lc_pe_configs.PE1.inport0.keep_last_index",
+          "section": "iga_pe",
+          "slot": 6,
+          "chunk": 0,
+          "start": 515,
+          "end": 519
+        },
+        {
+          "path": "$.lc_pe_configs.PE1.inport0.mode",
+          "section": "iga_pe",
+          "slot": 6,
+          "chunk": 0,
+          "start": 519,
+          "end": 521
+        },
+        {
+          "path": "$bitstream.iga_pe[6].present",
+          "section": "iga_pe",
+          "slot": 6,
+          "chunk": 1,
+          "start": 521,
+          "end": 522
+        },
+        {
+          "path": "$.lc_pe_configs.PE1.inport2.constant",
+          "section": "iga_pe",
+          "slot": 6,
+          "chunk": 1,
+          "start": 522,
+          "end": 538
+        },
+        {
+          "path": "$.lc_pe_configs.PE1.inport1.constant",
+          "section": "iga_pe",
+          "slot": 6,
+          "chunk": 1,
+          "start": 538,
+          "end": 554
+        },
+        {
+          "path": "$.lc_pe_configs.PE1.inport0.constant",
+          "section": "iga_pe",
+          "slot": 6,
+          "chunk": 1,
+          "start": 554,
+          "end": 570
+        },
+        {
+          "path": "$bitstream.iga_pe[7].present",
+          "section": "iga_pe",
+          "slot": 7,
+          "chunk": 0,
+          "start": 570,
+          "end": 571
+        },
+        {
+          "path": "$bitstream.iga_pe[7].present",
+          "section": "iga_pe",
+          "slot": 7,
+          "chunk": 1,
+          "start": 571,
+          "end": 572
+        },
+        {
+          "path": "$bitstream.iga_pe[8].present",
+          "section": "iga_pe",
+          "slot": 8,
+          "chunk": 0,
+          "start": 572,
+          "end": 573
+        },
+        {
+          "path": "$bitstream.iga_pe[8].present",
+          "section": "iga_pe",
+          "slot": 8,
+          "chunk": 1,
+          "start": 573,
+          "end": 574
+        },
+        {
+          "path": "$bitstream.iga_pe[9].present",
+          "section": "iga_pe",
+          "slot": 9,
+          "chunk": 0,
+          "start": 574,
+          "end": 575
+        },
+        {
+          "path": "$bitstream.iga_pe[9].present",
+          "section": "iga_pe",
+          "slot": 9,
+          "chunk": 1,
+          "start": 575,
+          "end": 576
+        },
+        {
+          "path": "$bitstream.se_rd_mse[0].present",
+          "section": "se_rd_mse",
+          "slot": 0,
+          "chunk": 0,
+          "start": 576,
+          "end": 577
+        },
+        {
+          "path": "$.stream_engine.stream0.mem_idx_mode",
+          "section": "se_rd_mse",
+          "slot": 0,
+          "chunk": 0,
+          "start": 577,
+          "end": 583
+        },
+        {
+          "path": "$.stream_engine.stream0.mem_idx_keep_last_index",
+          "section": "se_rd_mse",
+          "slot": 0,
+          "chunk": 0,
+          "start": 583,
+          "end": 595
+        },
+        {
+          "path": "$.stream_engine.stream0.idx",
+          "section": "se_rd_mse",
+          "slot": 0,
+          "chunk": 0,
+          "start": 595,
+          "end": 610
+        },
+        {
+          "path": "$.stream_engine.stream0.mem_idx_constant",
+          "section": "se_rd_mse",
+          "slot": 0,
+          "chunk": 0,
+          "start": 610,
+          "end": 634
+        },
+        {
+          "path": "$.stream_engine.stream0.buf_idx_mode",
+          "section": "se_rd_mse",
+          "slot": 0,
+          "chunk": 0,
+          "start": 634,
+          "end": 635
+        },
+        {
+          "path": "$bitstream.se_rd_mse[0].present",
+          "section": "se_rd_mse",
+          "slot": 0,
+          "chunk": 1,
+          "start": 635,
+          "end": 636
+        },
+        {
+          "path": "$.stream_engine.stream0.buf_idx_mode",
+          "section": "se_rd_mse",
+          "slot": 0,
+          "chunk": 1,
+          "start": 636,
+          "end": 637
+        },
+        {
+          "path": "$.stream_engine.stream0.buf_idx_keep_last_index",
+          "section": "se_rd_mse",
+          "slot": 0,
+          "chunk": 1,
+          "start": 637,
+          "end": 645
+        },
+        {
+          "path": "$.stream_engine.stream0.ping_pong",
+          "section": "se_rd_mse",
+          "slot": 0,
+          "chunk": 1,
+          "start": 645,
+          "end": 646
+        },
+        {
+          "path": "$.stream_engine.stream0.pingpong_last_index",
+          "section": "se_rd_mse",
+          "slot": 0,
+          "chunk": 1,
+          "start": 646,
+          "end": 650
+        },
+        {
+          "path": "$.stream_engine.stream0.base_addr",
+          "section": "se_rd_mse",
+          "slot": 0,
+          "chunk": 1,
+          "start": 650,
+          "end": 680
+        },
+        {
+          "path": "$.stream_engine.stream0.idx_size",
+          "section": "se_rd_mse",
+          "slot": 0,
+          "chunk": 1,
+          "start": 680,
+          "end": 694
+        },
+        {
+          "path": "$bitstream.se_rd_mse[0].present",
+          "section": "se_rd_mse",
+          "slot": 0,
+          "chunk": 2,
+          "start": 694,
+          "end": 695
+        },
+        {
+          "path": "$.stream_engine.stream0.idx_size",
+          "section": "se_rd_mse",
+          "slot": 0,
+          "chunk": 2,
+          "start": 695,
+          "end": 705
+        },
+        {
+          "path": "$.stream_engine.stream0.idx_size_log",
+          "section": "se_rd_mse",
+          "slot": 0,
+          "chunk": 2,
+          "start": 705,
+          "end": 714
+        },
+        {
+          "path": "$.stream_engine.stream0.total_size",
+          "section": "se_rd_mse",
+          "slot": 0,
+          "chunk": 2,
+          "start": 714,
+          "end": 722
+        },
+        {
+          "path": "$.stream_engine.stream0.dim_stride",
+          "section": "se_rd_mse",
+          "slot": 0,
+          "chunk": 2,
+          "start": 722,
+          "end": 753
+        },
+        {
+          "path": "$bitstream.se_rd_mse[0].present",
+          "section": "se_rd_mse",
+          "slot": 0,
+          "chunk": 3,
+          "start": 753,
+          "end": 754
+        },
+        {
+          "path": "$.stream_engine.stream0.dim_stride",
+          "section": "se_rd_mse",
+          "slot": 0,
+          "chunk": 3,
+          "start": 754,
+          "end": 783
+        },
+        {
+          "path": "$.stream_engine.stream0.address_remapping",
+          "section": "se_rd_mse",
+          "slot": 0,
+          "chunk": 3,
+          "start": 783,
+          "end": 812
+        },
+        {
+          "path": "$bitstream.se_rd_mse[0].present",
+          "section": "se_rd_mse",
+          "slot": 0,
+          "chunk": 4,
+          "start": 812,
+          "end": 813
+        },
+        {
+          "path": "$.stream_engine.stream0.address_remapping",
+          "section": "se_rd_mse",
+          "slot": 0,
+          "chunk": 4,
+          "start": 813,
+          "end": 871
+        },
+        {
+          "path": "$bitstream.se_rd_mse[0].present",
+          "section": "se_rd_mse",
+          "slot": 0,
+          "chunk": 5,
+          "start": 871,
+          "end": 872
+        },
+        {
+          "path": "$.stream_engine.stream0.address_remapping",
+          "section": "se_rd_mse",
+          "slot": 0,
+          "chunk": 5,
+          "start": 872,
+          "end": 915
+        },
+        {
+          "path": "$.stream_engine.stream0.padding_reg_value",
+          "section": "se_rd_mse",
+          "slot": 0,
+          "chunk": 5,
+          "start": 915,
+          "end": 923
+        },
+        {
+          "path": "$.stream_engine.stream0.padding_enable",
+          "section": "se_rd_mse",
+          "slot": 0,
+          "chunk": 5,
+          "start": 923,
+          "end": 926
+        },
+        {
+          "path": "$.stream_engine.stream0.idx_padding_range",
+          "section": "se_rd_mse",
+          "slot": 0,
+          "chunk": 5,
+          "start": 926,
+          "end": 930
+        },
+        {
+          "path": "$bitstream.se_rd_mse[0].present",
+          "section": "se_rd_mse",
+          "slot": 0,
+          "chunk": 6,
+          "start": 930,
+          "end": 931
+        },
+        {
+          "path": "$.stream_engine.stream0.idx_padding_range",
+          "section": "se_rd_mse",
+          "slot": 0,
+          "chunk": 6,
+          "start": 931,
+          "end": 989
+        },
+        {
+          "path": "$bitstream.se_rd_mse[0].present",
+          "section": "se_rd_mse",
+          "slot": 0,
+          "chunk": 7,
+          "start": 989,
+          "end": 990
+        },
+        {
+          "path": "$.stream_engine.stream0.idx_padding_range",
+          "section": "se_rd_mse",
+          "slot": 0,
+          "chunk": 7,
+          "start": 990,
+          "end": 1000
+        },
+        {
+          "path": "$.stream_engine.stream0.tailing_enable",
+          "section": "se_rd_mse",
+          "slot": 0,
+          "chunk": 7,
+          "start": 1000,
+          "end": 1003
+        },
+        {
+          "path": "$.stream_engine.stream0.idx_tailing_range",
+          "section": "se_rd_mse",
+          "slot": 0,
+          "chunk": 7,
+          "start": 1003,
+          "end": 1048
+        },
+        {
+          "path": "$bitstream.se_rd_mse[0].present",
+          "section": "se_rd_mse",
+          "slot": 0,
+          "chunk": 8,
+          "start": 1048,
+          "end": 1049
+        },
+        {
+          "path": "$.stream_engine.stream0.idx_tailing_range",
+          "section": "se_rd_mse",
+          "slot": 0,
+          "chunk": 8,
+          "start": 1049,
+          "end": 1076
+        },
+        {
+          "path": "$.stream_engine.stream0.buf_spatial_stride",
+          "section": "se_rd_mse",
+          "slot": 0,
+          "chunk": 8,
+          "start": 1076,
+          "end": 1107
+        },
+        {
+          "path": "$bitstream.se_rd_mse[0].present",
+          "section": "se_rd_mse",
+          "slot": 0,
+          "chunk": 9,
+          "start": 1107,
+          "end": 1108
+        },
+        {
+          "path": "$.stream_engine.stream0.buf_spatial_stride",
+          "section": "se_rd_mse",
+          "slot": 0,
+          "chunk": 9,
+          "start": 1108,
+          "end": 1157
+        },
+        {
+          "path": "$.stream_engine.stream0.buf_spatial_size",
+          "section": "se_rd_mse",
+          "slot": 0,
+          "chunk": 9,
+          "start": 1157,
+          "end": 1162
+        },
+        {
+          "path": "$.stream_engine.stream0.buf_full_last_index",
+          "section": "se_rd_mse",
+          "slot": 0,
+          "chunk": 9,
+          "start": 1162,
+          "end": 1166
+        },
+        {
+          "path": "$bitstream.se_rd_mse[1].present",
+          "section": "se_rd_mse",
+          "slot": 1,
+          "chunk": 0,
+          "start": 1166,
+          "end": 1167
+        },
+        {
+          "path": "$bitstream.se_rd_mse[1].present",
+          "section": "se_rd_mse",
+          "slot": 1,
+          "chunk": 1,
+          "start": 1167,
+          "end": 1168
+        },
+        {
+          "path": "$bitstream.se_rd_mse[1].present",
+          "section": "se_rd_mse",
+          "slot": 1,
+          "chunk": 2,
+          "start": 1168,
+          "end": 1169
+        },
+        {
+          "path": "$bitstream.se_rd_mse[1].present",
+          "section": "se_rd_mse",
+          "slot": 1,
+          "chunk": 3,
+          "start": 1169,
+          "end": 1170
+        },
+        {
+          "path": "$bitstream.se_rd_mse[1].present",
+          "section": "se_rd_mse",
+          "slot": 1,
+          "chunk": 4,
+          "start": 1170,
+          "end": 1171
+        },
+        {
+          "path": "$bitstream.se_rd_mse[1].present",
+          "section": "se_rd_mse",
+          "slot": 1,
+          "chunk": 5,
+          "start": 1171,
+          "end": 1172
+        },
+        {
+          "path": "$bitstream.se_rd_mse[1].present",
+          "section": "se_rd_mse",
+          "slot": 1,
+          "chunk": 6,
+          "start": 1172,
+          "end": 1173
+        },
+        {
+          "path": "$bitstream.se_rd_mse[1].present",
+          "section": "se_rd_mse",
+          "slot": 1,
+          "chunk": 7,
+          "start": 1173,
+          "end": 1174
+        },
+        {
+          "path": "$bitstream.se_rd_mse[1].present",
+          "section": "se_rd_mse",
+          "slot": 1,
+          "chunk": 8,
+          "start": 1174,
+          "end": 1175
+        },
+        {
+          "path": "$bitstream.se_rd_mse[1].present",
+          "section": "se_rd_mse",
+          "slot": 1,
+          "chunk": 9,
+          "start": 1175,
+          "end": 1176
+        },
+        {
+          "path": "$bitstream.se_rd_mse[2].present",
+          "section": "se_rd_mse",
+          "slot": 2,
+          "chunk": 0,
+          "start": 1176,
+          "end": 1177
+        },
+        {
+          "path": "$bitstream.se_rd_mse[2].present",
+          "section": "se_rd_mse",
+          "slot": 2,
+          "chunk": 1,
+          "start": 1177,
+          "end": 1178
+        },
+        {
+          "path": "$bitstream.se_rd_mse[2].present",
+          "section": "se_rd_mse",
+          "slot": 2,
+          "chunk": 2,
+          "start": 1178,
+          "end": 1179
+        },
+        {
+          "path": "$bitstream.se_rd_mse[2].present",
+          "section": "se_rd_mse",
+          "slot": 2,
+          "chunk": 3,
+          "start": 1179,
+          "end": 1180
+        },
+        {
+          "path": "$bitstream.se_rd_mse[2].present",
+          "section": "se_rd_mse",
+          "slot": 2,
+          "chunk": 4,
+          "start": 1180,
+          "end": 1181
+        },
+        {
+          "path": "$bitstream.se_rd_mse[2].present",
+          "section": "se_rd_mse",
+          "slot": 2,
+          "chunk": 5,
+          "start": 1181,
+          "end": 1182
+        },
+        {
+          "path": "$bitstream.se_rd_mse[2].present",
+          "section": "se_rd_mse",
+          "slot": 2,
+          "chunk": 6,
+          "start": 1182,
+          "end": 1183
+        },
+        {
+          "path": "$bitstream.se_rd_mse[2].present",
+          "section": "se_rd_mse",
+          "slot": 2,
+          "chunk": 7,
+          "start": 1183,
+          "end": 1184
+        },
+        {
+          "path": "$bitstream.se_rd_mse[2].present",
+          "section": "se_rd_mse",
+          "slot": 2,
+          "chunk": 8,
+          "start": 1184,
+          "end": 1185
+        },
+        {
+          "path": "$bitstream.se_rd_mse[2].present",
+          "section": "se_rd_mse",
+          "slot": 2,
+          "chunk": 9,
+          "start": 1185,
+          "end": 1186
+        },
+        {
+          "path": "$bitstream.se_rd_mse[3].present",
+          "section": "se_rd_mse",
+          "slot": 3,
+          "chunk": 0,
+          "start": 1186,
+          "end": 1187
+        },
+        {
+          "path": "$bitstream.se_rd_mse[3].present",
+          "section": "se_rd_mse",
+          "slot": 3,
+          "chunk": 1,
+          "start": 1187,
+          "end": 1188
+        },
+        {
+          "path": "$bitstream.se_rd_mse[3].present",
+          "section": "se_rd_mse",
+          "slot": 3,
+          "chunk": 2,
+          "start": 1188,
+          "end": 1189
+        },
+        {
+          "path": "$bitstream.se_rd_mse[3].present",
+          "section": "se_rd_mse",
+          "slot": 3,
+          "chunk": 3,
+          "start": 1189,
+          "end": 1190
+        },
+        {
+          "path": "$bitstream.se_rd_mse[3].present",
+          "section": "se_rd_mse",
+          "slot": 3,
+          "chunk": 4,
+          "start": 1190,
+          "end": 1191
+        },
+        {
+          "path": "$bitstream.se_rd_mse[3].present",
+          "section": "se_rd_mse",
+          "slot": 3,
+          "chunk": 5,
+          "start": 1191,
+          "end": 1192
+        },
+        {
+          "path": "$bitstream.se_rd_mse[3].present",
+          "section": "se_rd_mse",
+          "slot": 3,
+          "chunk": 6,
+          "start": 1192,
+          "end": 1193
+        },
+        {
+          "path": "$bitstream.se_rd_mse[3].present",
+          "section": "se_rd_mse",
+          "slot": 3,
+          "chunk": 7,
+          "start": 1193,
+          "end": 1194
+        },
+        {
+          "path": "$bitstream.se_rd_mse[3].present",
+          "section": "se_rd_mse",
+          "slot": 3,
+          "chunk": 8,
+          "start": 1194,
+          "end": 1195
+        },
+        {
+          "path": "$bitstream.se_rd_mse[3].present",
+          "section": "se_rd_mse",
+          "slot": 3,
+          "chunk": 9,
+          "start": 1195,
+          "end": 1196
+        },
+        {
+          "path": "$bitstream.se_wr_mse[0].present",
+          "section": "se_wr_mse",
+          "slot": 0,
+          "chunk": 0,
+          "start": 1196,
+          "end": 1197
+        },
+        {
+          "path": "$.stream_engine.stream1._padding",
+          "section": "se_wr_mse",
+          "slot": 0,
+          "chunk": 0,
+          "start": 1197,
+          "end": 1200
+        },
+        {
+          "path": "$.stream_engine.stream1.mem_idx_mode",
+          "section": "se_wr_mse",
+          "slot": 0,
+          "chunk": 0,
+          "start": 1200,
+          "end": 1206
+        },
+        {
+          "path": "$.stream_engine.stream1.mem_idx_keep_last_index",
+          "section": "se_wr_mse",
+          "slot": 0,
+          "chunk": 0,
+          "start": 1206,
+          "end": 1218
+        },
+        {
+          "path": "$.stream_engine.stream1.idx",
+          "section": "se_wr_mse",
+          "slot": 0,
+          "chunk": 0,
+          "start": 1218,
+          "end": 1233
+        },
+        {
+          "path": "$.stream_engine.stream1.mem_idx_constant",
+          "section": "se_wr_mse",
+          "slot": 0,
+          "chunk": 0,
+          "start": 1233,
+          "end": 1257
+        },
+        {
+          "path": "$.stream_engine.stream1.buf_idx_mode",
+          "section": "se_wr_mse",
+          "slot": 0,
+          "chunk": 0,
+          "start": 1257,
+          "end": 1259
+        },
+        {
+          "path": "$bitstream.se_wr_mse[0].present",
+          "section": "se_wr_mse",
+          "slot": 0,
+          "chunk": 1,
+          "start": 1259,
+          "end": 1260
+        },
+        {
+          "path": "$.stream_engine.stream1.buf_idx_keep_last_index",
+          "section": "se_wr_mse",
+          "slot": 0,
+          "chunk": 1,
+          "start": 1260,
+          "end": 1268
+        },
+        {
+          "path": "$.stream_engine.stream1.ping_pong",
+          "section": "se_wr_mse",
+          "slot": 0,
+          "chunk": 1,
+          "start": 1268,
+          "end": 1269
+        },
+        {
+          "path": "$.stream_engine.stream1.pingpong_last_index",
+          "section": "se_wr_mse",
+          "slot": 0,
+          "chunk": 1,
+          "start": 1269,
+          "end": 1273
+        },
+        {
+          "path": "$.stream_engine.stream1.base_addr",
+          "section": "se_wr_mse",
+          "slot": 0,
+          "chunk": 1,
+          "start": 1273,
+          "end": 1303
+        },
+        {
+          "path": "$.stream_engine.stream1.idx_size",
+          "section": "se_wr_mse",
+          "slot": 0,
+          "chunk": 1,
+          "start": 1303,
+          "end": 1322
+        },
+        {
+          "path": "$bitstream.se_wr_mse[0].present",
+          "section": "se_wr_mse",
+          "slot": 0,
+          "chunk": 2,
+          "start": 1322,
+          "end": 1323
+        },
+        {
+          "path": "$.stream_engine.stream1.idx_size",
+          "section": "se_wr_mse",
+          "slot": 0,
+          "chunk": 2,
+          "start": 1323,
+          "end": 1328
+        },
+        {
+          "path": "$.stream_engine.stream1.idx_size_log",
+          "section": "se_wr_mse",
+          "slot": 0,
+          "chunk": 2,
+          "start": 1328,
+          "end": 1337
+        },
+        {
+          "path": "$.stream_engine.stream1.total_size",
+          "section": "se_wr_mse",
+          "slot": 0,
+          "chunk": 2,
+          "start": 1337,
+          "end": 1345
+        },
+        {
+          "path": "$.stream_engine.stream1.dim_stride",
+          "section": "se_wr_mse",
+          "slot": 0,
+          "chunk": 2,
+          "start": 1345,
+          "end": 1385
+        },
+        {
+          "path": "$bitstream.se_wr_mse[0].present",
+          "section": "se_wr_mse",
+          "slot": 0,
+          "chunk": 3,
+          "start": 1385,
+          "end": 1386
+        },
+        {
+          "path": "$.stream_engine.stream1.dim_stride",
+          "section": "se_wr_mse",
+          "slot": 0,
+          "chunk": 3,
+          "start": 1386,
+          "end": 1406
+        },
+        {
+          "path": "$.stream_engine.stream1.address_remapping",
+          "section": "se_wr_mse",
+          "slot": 0,
+          "chunk": 3,
+          "start": 1406,
+          "end": 1448
+        },
+        {
+          "path": "$bitstream.se_wr_mse[0].present",
+          "section": "se_wr_mse",
+          "slot": 0,
+          "chunk": 4,
+          "start": 1448,
+          "end": 1449
+        },
+        {
+          "path": "$.stream_engine.stream1.address_remapping",
+          "section": "se_wr_mse",
+          "slot": 0,
+          "chunk": 4,
+          "start": 1449,
+          "end": 1511
+        },
+        {
+          "path": "$bitstream.se_wr_mse[0].present",
+          "section": "se_wr_mse",
+          "slot": 0,
+          "chunk": 5,
+          "start": 1511,
+          "end": 1512
+        },
+        {
+          "path": "$.stream_engine.stream1.address_remapping",
+          "section": "se_wr_mse",
+          "slot": 0,
+          "chunk": 5,
+          "start": 1512,
+          "end": 1538
+        },
+        {
+          "path": "$.stream_engine.stream1.tailing_enable",
+          "section": "se_wr_mse",
+          "slot": 0,
+          "chunk": 5,
+          "start": 1538,
+          "end": 1541
+        },
+        {
+          "path": "$.stream_engine.stream1.idx_tailing_range",
+          "section": "se_wr_mse",
+          "slot": 0,
+          "chunk": 5,
+          "start": 1541,
+          "end": 1574
+        },
+        {
+          "path": "$bitstream.se_wr_mse[0].present",
+          "section": "se_wr_mse",
+          "slot": 0,
+          "chunk": 6,
+          "start": 1574,
+          "end": 1575
+        },
+        {
+          "path": "$.stream_engine.stream1.idx_tailing_range",
+          "section": "se_wr_mse",
+          "slot": 0,
+          "chunk": 6,
+          "start": 1575,
+          "end": 1614
+        },
+        {
+          "path": "$.stream_engine.stream1.buf_spatial_stride",
+          "section": "se_wr_mse",
+          "slot": 0,
+          "chunk": 6,
+          "start": 1614,
+          "end": 1637
+        },
+        {
+          "path": "$bitstream.se_wr_mse[0].present",
+          "section": "se_wr_mse",
+          "slot": 0,
+          "chunk": 7,
+          "start": 1637,
+          "end": 1638
+        },
+        {
+          "path": "$.stream_engine.stream1.buf_spatial_stride",
+          "section": "se_wr_mse",
+          "slot": 0,
+          "chunk": 7,
+          "start": 1638,
+          "end": 1695
+        },
+        {
+          "path": "$.stream_engine.stream1.buf_spatial_size",
+          "section": "se_wr_mse",
+          "slot": 0,
+          "chunk": 7,
+          "start": 1695,
+          "end": 1700
+        },
+        {
+          "path": "$bitstream.se_nse[0].present",
+          "section": "se_nse",
+          "slot": 0,
+          "chunk": 0,
+          "start": 1700,
+          "end": 1701
+        },
+        {
+          "path": "$bitstream.se_nse[1].present",
+          "section": "se_nse",
+          "slot": 1,
+          "chunk": 0,
+          "start": 1701,
+          "end": 1702
+        },
+        {
+          "path": "$bitstream.buffer_manager_cluster[0].present",
+          "section": "buffer_manager_cluster",
+          "slot": 0,
+          "chunk": 0,
+          "start": 1702,
+          "end": 1703
+        },
+        {
+          "path": "$.buffer_config.buffer0.dst_port",
+          "section": "buffer_manager_cluster",
+          "slot": 0,
+          "chunk": 0,
+          "start": 1703,
+          "end": 1704
+        },
+        {
+          "path": "$.buffer_config.buffer0.buf_full_last_index",
+          "section": "buffer_manager_cluster",
+          "slot": 0,
+          "chunk": 0,
+          "start": 1704,
+          "end": 1708
+        },
+        {
+          "path": "$.buffer_config.buffer0.buffer_nbr_cnt",
+          "section": "buffer_manager_cluster",
+          "slot": 0,
+          "chunk": 0,
+          "start": 1708,
+          "end": 1713
+        },
+        {
+          "path": "$.buffer_config.buffer0.nbr_enable",
+          "section": "buffer_manager_cluster",
+          "slot": 0,
+          "chunk": 0,
+          "start": 1713,
+          "end": 1714
+        },
+        {
+          "path": "$.buffer_config.buffer0.buffer_life_time",
+          "section": "buffer_manager_cluster",
+          "slot": 0,
+          "chunk": 0,
+          "start": 1714,
+          "end": 1718
+        },
+        {
+          "path": "$.buffer_config.buffer0.mode",
+          "section": "buffer_manager_cluster",
+          "slot": 0,
+          "chunk": 0,
+          "start": 1718,
+          "end": 1719
+        },
+        {
+          "path": "$.buffer_config.buffer0.mask",
+          "section": "buffer_manager_cluster",
+          "slot": 0,
+          "chunk": 0,
+          "start": 1719,
+          "end": 1727
+        },
+        {
+          "path": "$.buffer_config.buffer0.buf_end_row_addr",
+          "section": "buffer_manager_cluster",
+          "slot": 0,
+          "chunk": 0,
+          "start": 1727,
+          "end": 1729
+        },
+        {
+          "path": "$bitstream.buffer_manager_cluster[1].present",
+          "section": "buffer_manager_cluster",
+          "slot": 1,
+          "chunk": 0,
+          "start": 1729,
+          "end": 1730
+        },
+        {
+          "path": "$.buffer_config.buffer1.dst_port",
+          "section": "buffer_manager_cluster",
+          "slot": 1,
+          "chunk": 0,
+          "start": 1730,
+          "end": 1731
+        },
+        {
+          "path": "$.buffer_config.buffer1.buf_full_last_index",
+          "section": "buffer_manager_cluster",
+          "slot": 1,
+          "chunk": 0,
+          "start": 1731,
+          "end": 1735
+        },
+        {
+          "path": "$.buffer_config.buffer1.buffer_nbr_cnt",
+          "section": "buffer_manager_cluster",
+          "slot": 1,
+          "chunk": 0,
+          "start": 1735,
+          "end": 1740
+        },
+        {
+          "path": "$.buffer_config.buffer1.nbr_enable",
+          "section": "buffer_manager_cluster",
+          "slot": 1,
+          "chunk": 0,
+          "start": 1740,
+          "end": 1741
+        },
+        {
+          "path": "$.buffer_config.buffer1.buffer_life_time",
+          "section": "buffer_manager_cluster",
+          "slot": 1,
+          "chunk": 0,
+          "start": 1741,
+          "end": 1745
+        },
+        {
+          "path": "$.buffer_config.buffer1.mode",
+          "section": "buffer_manager_cluster",
+          "slot": 1,
+          "chunk": 0,
+          "start": 1745,
+          "end": 1746
+        },
+        {
+          "path": "$.buffer_config.buffer1.mask",
+          "section": "buffer_manager_cluster",
+          "slot": 1,
+          "chunk": 0,
+          "start": 1746,
+          "end": 1754
+        },
+        {
+          "path": "$.buffer_config.buffer1.buf_end_row_addr",
+          "section": "buffer_manager_cluster",
+          "slot": 1,
+          "chunk": 0,
+          "start": 1754,
+          "end": 1756
+        },
+        {
+          "path": "$bitstream.buffer_manager_cluster[2].present",
+          "section": "buffer_manager_cluster",
+          "slot": 2,
+          "chunk": 0,
+          "start": 1756,
+          "end": 1757
+        },
+        {
+          "path": "$.buffer_config.buffer2.dst_port",
+          "section": "buffer_manager_cluster",
+          "slot": 2,
+          "chunk": 0,
+          "start": 1757,
+          "end": 1758
+        },
+        {
+          "path": "$.buffer_config.buffer2.buf_full_last_index",
+          "section": "buffer_manager_cluster",
+          "slot": 2,
+          "chunk": 0,
+          "start": 1758,
+          "end": 1762
+        },
+        {
+          "path": "$.buffer_config.buffer2.buffer_nbr_cnt",
+          "section": "buffer_manager_cluster",
+          "slot": 2,
+          "chunk": 0,
+          "start": 1762,
+          "end": 1767
+        },
+        {
+          "path": "$.buffer_config.buffer2.nbr_enable",
+          "section": "buffer_manager_cluster",
+          "slot": 2,
+          "chunk": 0,
+          "start": 1767,
+          "end": 1768
+        },
+        {
+          "path": "$.buffer_config.buffer2.buffer_life_time",
+          "section": "buffer_manager_cluster",
+          "slot": 2,
+          "chunk": 0,
+          "start": 1768,
+          "end": 1772
+        },
+        {
+          "path": "$.buffer_config.buffer2.mode",
+          "section": "buffer_manager_cluster",
+          "slot": 2,
+          "chunk": 0,
+          "start": 1772,
+          "end": 1773
+        },
+        {
+          "path": "$.buffer_config.buffer2.mask",
+          "section": "buffer_manager_cluster",
+          "slot": 2,
+          "chunk": 0,
+          "start": 1773,
+          "end": 1781
+        },
+        {
+          "path": "$.buffer_config.buffer2.buf_end_row_addr",
+          "section": "buffer_manager_cluster",
+          "slot": 2,
+          "chunk": 0,
+          "start": 1781,
+          "end": 1783
+        },
+        {
+          "path": "$bitstream.buffer_manager_cluster[3].present",
+          "section": "buffer_manager_cluster",
+          "slot": 3,
+          "chunk": 0,
+          "start": 1783,
+          "end": 1784
+        },
+        {
+          "path": "$.buffer_config.buffer3.dst_port",
+          "section": "buffer_manager_cluster",
+          "slot": 3,
+          "chunk": 0,
+          "start": 1784,
+          "end": 1785
+        },
+        {
+          "path": "$.buffer_config.buffer3.buf_full_last_index",
+          "section": "buffer_manager_cluster",
+          "slot": 3,
+          "chunk": 0,
+          "start": 1785,
+          "end": 1789
+        },
+        {
+          "path": "$.buffer_config.buffer3.buffer_nbr_cnt",
+          "section": "buffer_manager_cluster",
+          "slot": 3,
+          "chunk": 0,
+          "start": 1789,
+          "end": 1794
+        },
+        {
+          "path": "$.buffer_config.buffer3.nbr_enable",
+          "section": "buffer_manager_cluster",
+          "slot": 3,
+          "chunk": 0,
+          "start": 1794,
+          "end": 1795
+        },
+        {
+          "path": "$.buffer_config.buffer3.buffer_life_time",
+          "section": "buffer_manager_cluster",
+          "slot": 3,
+          "chunk": 0,
+          "start": 1795,
+          "end": 1799
+        },
+        {
+          "path": "$.buffer_config.buffer3.mode",
+          "section": "buffer_manager_cluster",
+          "slot": 3,
+          "chunk": 0,
+          "start": 1799,
+          "end": 1800
+        },
+        {
+          "path": "$.buffer_config.buffer3.mask",
+          "section": "buffer_manager_cluster",
+          "slot": 3,
+          "chunk": 0,
+          "start": 1800,
+          "end": 1808
+        },
+        {
+          "path": "$.buffer_config.buffer3.buf_end_row_addr",
+          "section": "buffer_manager_cluster",
+          "slot": 3,
+          "chunk": 0,
+          "start": 1808,
+          "end": 1810
+        },
+        {
+          "path": "$bitstream.buffer_manager_cluster[4].present",
+          "section": "buffer_manager_cluster",
+          "slot": 4,
+          "chunk": 0,
+          "start": 1810,
+          "end": 1811
+        },
+        {
+          "path": "$.buffer_config.buffer4.dst_port",
+          "section": "buffer_manager_cluster",
+          "slot": 4,
+          "chunk": 0,
+          "start": 1811,
+          "end": 1812
+        },
+        {
+          "path": "$.buffer_config.buffer4.buf_full_last_index",
+          "section": "buffer_manager_cluster",
+          "slot": 4,
+          "chunk": 0,
+          "start": 1812,
+          "end": 1816
+        },
+        {
+          "path": "$.buffer_config.buffer4.buffer_nbr_cnt",
+          "section": "buffer_manager_cluster",
+          "slot": 4,
+          "chunk": 0,
+          "start": 1816,
+          "end": 1821
+        },
+        {
+          "path": "$.buffer_config.buffer4.nbr_enable",
+          "section": "buffer_manager_cluster",
+          "slot": 4,
+          "chunk": 0,
+          "start": 1821,
+          "end": 1822
+        },
+        {
+          "path": "$.buffer_config.buffer4.buffer_life_time",
+          "section": "buffer_manager_cluster",
+          "slot": 4,
+          "chunk": 0,
+          "start": 1822,
+          "end": 1826
+        },
+        {
+          "path": "$.buffer_config.buffer4.mode",
+          "section": "buffer_manager_cluster",
+          "slot": 4,
+          "chunk": 0,
+          "start": 1826,
+          "end": 1827
+        },
+        {
+          "path": "$.buffer_config.buffer4.mask",
+          "section": "buffer_manager_cluster",
+          "slot": 4,
+          "chunk": 0,
+          "start": 1827,
+          "end": 1835
+        },
+        {
+          "path": "$.buffer_config.buffer4.buf_end_row_addr",
+          "section": "buffer_manager_cluster",
+          "slot": 4,
+          "chunk": 0,
+          "start": 1835,
+          "end": 1837
+        },
+        {
+          "path": "$bitstream.buffer_manager_cluster[5].present",
+          "section": "buffer_manager_cluster",
+          "slot": 5,
+          "chunk": 0,
+          "start": 1837,
+          "end": 1838
+        },
+        {
+          "path": "$.buffer_config.buffer5.dst_port",
+          "section": "buffer_manager_cluster",
+          "slot": 5,
+          "chunk": 0,
+          "start": 1838,
+          "end": 1839
+        },
+        {
+          "path": "$.buffer_config.buffer5.buf_full_last_index",
+          "section": "buffer_manager_cluster",
+          "slot": 5,
+          "chunk": 0,
+          "start": 1839,
+          "end": 1843
+        },
+        {
+          "path": "$.buffer_config.buffer5.buffer_nbr_cnt",
+          "section": "buffer_manager_cluster",
+          "slot": 5,
+          "chunk": 0,
+          "start": 1843,
+          "end": 1848
+        },
+        {
+          "path": "$.buffer_config.buffer5.nbr_enable",
+          "section": "buffer_manager_cluster",
+          "slot": 5,
+          "chunk": 0,
+          "start": 1848,
+          "end": 1849
+        },
+        {
+          "path": "$.buffer_config.buffer5.buffer_life_time",
+          "section": "buffer_manager_cluster",
+          "slot": 5,
+          "chunk": 0,
+          "start": 1849,
+          "end": 1853
+        },
+        {
+          "path": "$.buffer_config.buffer5.mode",
+          "section": "buffer_manager_cluster",
+          "slot": 5,
+          "chunk": 0,
+          "start": 1853,
+          "end": 1854
+        },
+        {
+          "path": "$.buffer_config.buffer5.mask",
+          "section": "buffer_manager_cluster",
+          "slot": 5,
+          "chunk": 0,
+          "start": 1854,
+          "end": 1862
+        },
+        {
+          "path": "$.buffer_config.buffer5.buf_end_row_addr",
+          "section": "buffer_manager_cluster",
+          "slot": 5,
+          "chunk": 0,
+          "start": 1862,
+          "end": 1864
+        },
+        {
+          "path": "$bitstream.ga_inport_group[0].present",
+          "section": "ga_inport_group",
+          "slot": 0,
+          "chunk": 0,
+          "start": 1864,
+          "end": 1865
+        },
+        {
+          "path": "$.general_array.inport.inport0.mask",
+          "section": "ga_inport_group",
+          "slot": 0,
+          "chunk": 0,
+          "start": 1865,
+          "end": 1873
+        },
+        {
+          "path": "$.general_array.inport.inport0.src_id",
+          "section": "ga_inport_group",
+          "slot": 0,
+          "chunk": 0,
+          "start": 1873,
+          "end": 1874
+        },
+        {
+          "path": "$.general_array.inport.inport0.pingpong_en",
+          "section": "ga_inport_group",
+          "slot": 0,
+          "chunk": 0,
+          "start": 1874,
+          "end": 1875
+        },
+        {
+          "path": "$.general_array.inport.inport0.pingpong_last_index",
+          "section": "ga_inport_group",
+          "slot": 0,
+          "chunk": 0,
+          "start": 1875,
+          "end": 1879
+        },
+        {
+          "path": "$.general_array.inport.inport0.nbr_enable",
+          "section": "ga_inport_group",
+          "slot": 0,
+          "chunk": 0,
+          "start": 1879,
+          "end": 1880
+        },
+        {
+          "path": "$.general_array.inport.inport0.fp16tofp32",
+          "section": "ga_inport_group",
+          "slot": 0,
+          "chunk": 0,
+          "start": 1880,
+          "end": 1881
+        },
+        {
+          "path": "$.general_array.inport.inport0.bf16tofp32",
+          "section": "ga_inport_group",
+          "slot": 0,
+          "chunk": 0,
+          "start": 1881,
+          "end": 1882
+        },
+        {
+          "path": "$.general_array.inport.inport0.int32tofp32",
+          "section": "ga_inport_group",
+          "slot": 0,
+          "chunk": 0,
+          "start": 1882,
+          "end": 1883
+        },
+        {
+          "path": "$.general_array.inport.inport0.uint8tofp32",
+          "section": "ga_inport_group",
+          "slot": 0,
+          "chunk": 0,
+          "start": 1883,
+          "end": 1884
+        },
+        {
+          "path": "$.general_array.inport.inport0.uint8toint32",
+          "section": "ga_inport_group",
+          "slot": 0,
+          "chunk": 0,
+          "start": 1884,
+          "end": 1885
+        },
+        {
+          "path": "$bitstream.ga_inport_group[1].present",
+          "section": "ga_inport_group",
+          "slot": 1,
+          "chunk": 0,
+          "start": 1885,
+          "end": 1886
+        },
+        {
+          "path": "$bitstream.ga_inport_group[2].present",
+          "section": "ga_inport_group",
+          "slot": 2,
+          "chunk": 0,
+          "start": 1886,
+          "end": 1887
+        },
+        {
+          "path": "$bitstream.ga_outport_group[0].present",
+          "section": "ga_outport_group",
+          "slot": 0,
+          "chunk": 0,
+          "start": 1887,
+          "end": 1888
+        },
+        {
+          "path": "$.general_array.outport.mask",
+          "section": "ga_outport_group",
+          "slot": 0,
+          "chunk": 0,
+          "start": 1888,
+          "end": 1896
+        },
+        {
+          "path": "$.general_array.outport.src_id",
+          "section": "ga_outport_group",
+          "slot": 0,
+          "chunk": 0,
+          "start": 1896,
+          "end": 1897
+        },
+        {
+          "path": "$.general_array.outport.fp32tofp16",
+          "section": "ga_outport_group",
+          "slot": 0,
+          "chunk": 0,
+          "start": 1897,
+          "end": 1898
+        },
+        {
+          "path": "$.general_array.outport.fp32tobf16",
+          "section": "ga_outport_group",
+          "slot": 0,
+          "chunk": 0,
+          "start": 1898,
+          "end": 1899
+        },
+        {
+          "path": "$.general_array.outport.int32touint8",
+          "section": "ga_outport_group",
+          "slot": 0,
+          "chunk": 0,
+          "start": 1899,
+          "end": 1900
+        },
+        {
+          "path": "$bitstream.ga_pe[0].present",
+          "section": "ga_pe",
+          "slot": 0,
+          "chunk": 0,
+          "start": 1900,
+          "end": 1901
+        },
+        {
+          "path": "$.general_array.PE_array.PE00.alu_opcode",
+          "section": "ga_pe",
+          "slot": 0,
+          "chunk": 0,
+          "start": 1901,
+          "end": 1906
+        },
+        {
+          "path": "$.general_array.PE_array.PE00.transout_last_index",
+          "section": "ga_pe",
+          "slot": 0,
+          "chunk": 0,
+          "start": 1906,
+          "end": 1910
+        },
+        {
+          "path": "$.general_array.PE_array.PE00.inport2.src_id",
+          "section": "ga_pe",
+          "slot": 0,
+          "chunk": 0,
+          "start": 1910,
+          "end": 1913
+        },
+        {
+          "path": "$.general_array.PE_array.PE00.inport2.keep_last_index",
+          "section": "ga_pe",
+          "slot": 0,
+          "chunk": 0,
+          "start": 1913,
+          "end": 1917
+        },
+        {
+          "path": "$.general_array.PE_array.PE00.inport2.mode",
+          "section": "ga_pe",
+          "slot": 0,
+          "chunk": 0,
+          "start": 1917,
+          "end": 1919
+        },
+        {
+          "path": "$.general_array.PE_array.PE00.inport1.src_id",
+          "section": "ga_pe",
+          "slot": 0,
+          "chunk": 0,
+          "start": 1919,
+          "end": 1922
+        },
+        {
+          "path": "$.general_array.PE_array.PE00.inport1.keep_last_index",
+          "section": "ga_pe",
+          "slot": 0,
+          "chunk": 0,
+          "start": 1922,
+          "end": 1926
+        },
+        {
+          "path": "$.general_array.PE_array.PE00.inport1.mode",
+          "section": "ga_pe",
+          "slot": 0,
+          "chunk": 0,
+          "start": 1926,
+          "end": 1928
+        },
+        {
+          "path": "$.general_array.PE_array.PE00.inport0.src_id",
+          "section": "ga_pe",
+          "slot": 0,
+          "chunk": 0,
+          "start": 1928,
+          "end": 1931
+        },
+        {
+          "path": "$.general_array.PE_array.PE00.inport0.keep_last_index",
+          "section": "ga_pe",
+          "slot": 0,
+          "chunk": 0,
+          "start": 1931,
+          "end": 1935
+        },
+        {
+          "path": "$.general_array.PE_array.PE00.inport0.mode",
+          "section": "ga_pe",
+          "slot": 0,
+          "chunk": 0,
+          "start": 1935,
+          "end": 1937
+        },
+        {
+          "path": "$bitstream.ga_pe[0].present",
+          "section": "ga_pe",
+          "slot": 0,
+          "chunk": 1,
+          "start": 1937,
+          "end": 1938
+        },
+        {
+          "path": "$.general_array.PE_array.PE00._padding0",
+          "section": "ga_pe",
+          "slot": 0,
+          "chunk": 1,
+          "start": 1938,
+          "end": 1942
+        },
+        {
+          "path": "$.general_array.PE_array.PE00.inport0.constant",
+          "section": "ga_pe",
+          "slot": 0,
+          "chunk": 1,
+          "start": 1942,
+          "end": 1974
+        },
+        {
+          "path": "$bitstream.ga_pe[0].present",
+          "section": "ga_pe",
+          "slot": 0,
+          "chunk": 2,
+          "start": 1974,
+          "end": 1975
+        },
+        {
+          "path": "$.general_array.PE_array.PE00._padding1",
+          "section": "ga_pe",
+          "slot": 0,
+          "chunk": 2,
+          "start": 1975,
+          "end": 1979
+        },
+        {
+          "path": "$.general_array.PE_array.PE00.inport1.constant",
+          "section": "ga_pe",
+          "slot": 0,
+          "chunk": 2,
+          "start": 1979,
+          "end": 2011
+        },
+        {
+          "path": "$bitstream.ga_pe[0].present",
+          "section": "ga_pe",
+          "slot": 0,
+          "chunk": 3,
+          "start": 2011,
+          "end": 2012
+        },
+        {
+          "path": "$.general_array.PE_array.PE00._padding2",
+          "section": "ga_pe",
+          "slot": 0,
+          "chunk": 3,
+          "start": 2012,
+          "end": 2016
+        },
+        {
+          "path": "$.general_array.PE_array.PE00.inport2.constant",
+          "section": "ga_pe",
+          "slot": 0,
+          "chunk": 3,
+          "start": 2016,
+          "end": 2048
+        },
+        {
+          "path": "$bitstream.ga_pe[1].present",
+          "section": "ga_pe",
+          "slot": 1,
+          "chunk": 0,
+          "start": 2048,
+          "end": 2049
+        },
+        {
+          "path": "$.general_array.PE_array.PE01.alu_opcode",
+          "section": "ga_pe",
+          "slot": 1,
+          "chunk": 0,
+          "start": 2049,
+          "end": 2054
+        },
+        {
+          "path": "$.general_array.PE_array.PE01.transout_last_index",
+          "section": "ga_pe",
+          "slot": 1,
+          "chunk": 0,
+          "start": 2054,
+          "end": 2058
+        },
+        {
+          "path": "$.general_array.PE_array.PE01.inport2.src_id",
+          "section": "ga_pe",
+          "slot": 1,
+          "chunk": 0,
+          "start": 2058,
+          "end": 2061
+        },
+        {
+          "path": "$.general_array.PE_array.PE01.inport2.keep_last_index",
+          "section": "ga_pe",
+          "slot": 1,
+          "chunk": 0,
+          "start": 2061,
+          "end": 2065
+        },
+        {
+          "path": "$.general_array.PE_array.PE01.inport2.mode",
+          "section": "ga_pe",
+          "slot": 1,
+          "chunk": 0,
+          "start": 2065,
+          "end": 2067
+        },
+        {
+          "path": "$.general_array.PE_array.PE01.inport1.src_id",
+          "section": "ga_pe",
+          "slot": 1,
+          "chunk": 0,
+          "start": 2067,
+          "end": 2070
+        },
+        {
+          "path": "$.general_array.PE_array.PE01.inport1.keep_last_index",
+          "section": "ga_pe",
+          "slot": 1,
+          "chunk": 0,
+          "start": 2070,
+          "end": 2074
+        },
+        {
+          "path": "$.general_array.PE_array.PE01.inport1.mode",
+          "section": "ga_pe",
+          "slot": 1,
+          "chunk": 0,
+          "start": 2074,
+          "end": 2076
+        },
+        {
+          "path": "$.general_array.PE_array.PE01.inport0.src_id",
+          "section": "ga_pe",
+          "slot": 1,
+          "chunk": 0,
+          "start": 2076,
+          "end": 2079
+        },
+        {
+          "path": "$.general_array.PE_array.PE01.inport0.keep_last_index",
+          "section": "ga_pe",
+          "slot": 1,
+          "chunk": 0,
+          "start": 2079,
+          "end": 2083
+        },
+        {
+          "path": "$.general_array.PE_array.PE01.inport0.mode",
+          "section": "ga_pe",
+          "slot": 1,
+          "chunk": 0,
+          "start": 2083,
+          "end": 2085
+        },
+        {
+          "path": "$bitstream.ga_pe[1].present",
+          "section": "ga_pe",
+          "slot": 1,
+          "chunk": 1,
+          "start": 2085,
+          "end": 2086
+        },
+        {
+          "path": "$.general_array.PE_array.PE01._padding0",
+          "section": "ga_pe",
+          "slot": 1,
+          "chunk": 1,
+          "start": 2086,
+          "end": 2090
+        },
+        {
+          "path": "$.general_array.PE_array.PE01.inport0.constant",
+          "section": "ga_pe",
+          "slot": 1,
+          "chunk": 1,
+          "start": 2090,
+          "end": 2122
+        },
+        {
+          "path": "$bitstream.ga_pe[1].present",
+          "section": "ga_pe",
+          "slot": 1,
+          "chunk": 2,
+          "start": 2122,
+          "end": 2123
+        },
+        {
+          "path": "$.general_array.PE_array.PE01._padding1",
+          "section": "ga_pe",
+          "slot": 1,
+          "chunk": 2,
+          "start": 2123,
+          "end": 2127
+        },
+        {
+          "path": "$.general_array.PE_array.PE01.inport1.constant",
+          "section": "ga_pe",
+          "slot": 1,
+          "chunk": 2,
+          "start": 2127,
+          "end": 2159
+        },
+        {
+          "path": "$bitstream.ga_pe[1].present",
+          "section": "ga_pe",
+          "slot": 1,
+          "chunk": 3,
+          "start": 2159,
+          "end": 2160
+        },
+        {
+          "path": "$.general_array.PE_array.PE01._padding2",
+          "section": "ga_pe",
+          "slot": 1,
+          "chunk": 3,
+          "start": 2160,
+          "end": 2164
+        },
+        {
+          "path": "$.general_array.PE_array.PE01.inport2.constant",
+          "section": "ga_pe",
+          "slot": 1,
+          "chunk": 3,
+          "start": 2164,
+          "end": 2196
+        },
+        {
+          "path": "$bitstream.ga_pe[2].present",
+          "section": "ga_pe",
+          "slot": 2,
+          "chunk": 0,
+          "start": 2196,
+          "end": 2197
+        },
+        {
+          "path": "$bitstream.ga_pe[2].present",
+          "section": "ga_pe",
+          "slot": 2,
+          "chunk": 1,
+          "start": 2197,
+          "end": 2198
+        },
+        {
+          "path": "$bitstream.ga_pe[2].present",
+          "section": "ga_pe",
+          "slot": 2,
+          "chunk": 2,
+          "start": 2198,
+          "end": 2199
+        },
+        {
+          "path": "$bitstream.ga_pe[2].present",
+          "section": "ga_pe",
+          "slot": 2,
+          "chunk": 3,
+          "start": 2199,
+          "end": 2200
+        },
+        {
+          "path": "$bitstream.ga_pe[3].present",
+          "section": "ga_pe",
+          "slot": 3,
+          "chunk": 0,
+          "start": 2200,
+          "end": 2201
+        },
+        {
+          "path": "$bitstream.ga_pe[3].present",
+          "section": "ga_pe",
+          "slot": 3,
+          "chunk": 1,
+          "start": 2201,
+          "end": 2202
+        },
+        {
+          "path": "$bitstream.ga_pe[3].present",
+          "section": "ga_pe",
+          "slot": 3,
+          "chunk": 2,
+          "start": 2202,
+          "end": 2203
+        },
+        {
+          "path": "$bitstream.ga_pe[3].present",
+          "section": "ga_pe",
+          "slot": 3,
+          "chunk": 3,
+          "start": 2203,
+          "end": 2204
+        },
+        {
+          "path": "$bitstream.ga_pe[4].present",
+          "section": "ga_pe",
+          "slot": 4,
+          "chunk": 0,
+          "start": 2204,
+          "end": 2205
+        },
+        {
+          "path": "$bitstream.ga_pe[4].present",
+          "section": "ga_pe",
+          "slot": 4,
+          "chunk": 1,
+          "start": 2205,
+          "end": 2206
+        },
+        {
+          "path": "$bitstream.ga_pe[4].present",
+          "section": "ga_pe",
+          "slot": 4,
+          "chunk": 2,
+          "start": 2206,
+          "end": 2207
+        },
+        {
+          "path": "$bitstream.ga_pe[4].present",
+          "section": "ga_pe",
+          "slot": 4,
+          "chunk": 3,
+          "start": 2207,
+          "end": 2208
+        },
+        {
+          "path": "$bitstream.ga_pe[5].present",
+          "section": "ga_pe",
+          "slot": 5,
+          "chunk": 0,
+          "start": 2208,
+          "end": 2209
+        },
+        {
+          "path": "$bitstream.ga_pe[5].present",
+          "section": "ga_pe",
+          "slot": 5,
+          "chunk": 1,
+          "start": 2209,
+          "end": 2210
+        },
+        {
+          "path": "$bitstream.ga_pe[5].present",
+          "section": "ga_pe",
+          "slot": 5,
+          "chunk": 2,
+          "start": 2210,
+          "end": 2211
+        },
+        {
+          "path": "$bitstream.ga_pe[5].present",
+          "section": "ga_pe",
+          "slot": 5,
+          "chunk": 3,
+          "start": 2211,
+          "end": 2212
+        },
+        {
+          "path": "$bitstream.ga_pe[6].present",
+          "section": "ga_pe",
+          "slot": 6,
+          "chunk": 0,
+          "start": 2212,
+          "end": 2213
+        },
+        {
+          "path": "$bitstream.ga_pe[6].present",
+          "section": "ga_pe",
+          "slot": 6,
+          "chunk": 1,
+          "start": 2213,
+          "end": 2214
+        },
+        {
+          "path": "$bitstream.ga_pe[6].present",
+          "section": "ga_pe",
+          "slot": 6,
+          "chunk": 2,
+          "start": 2214,
+          "end": 2215
+        },
+        {
+          "path": "$bitstream.ga_pe[6].present",
+          "section": "ga_pe",
+          "slot": 6,
+          "chunk": 3,
+          "start": 2215,
+          "end": 2216
+        },
+        {
+          "path": "$bitstream.ga_pe[7].present",
+          "section": "ga_pe",
+          "slot": 7,
+          "chunk": 0,
+          "start": 2216,
+          "end": 2217
+        },
+        {
+          "path": "$bitstream.ga_pe[7].present",
+          "section": "ga_pe",
+          "slot": 7,
+          "chunk": 1,
+          "start": 2217,
+          "end": 2218
+        },
+        {
+          "path": "$bitstream.ga_pe[7].present",
+          "section": "ga_pe",
+          "slot": 7,
+          "chunk": 2,
+          "start": 2218,
+          "end": 2219
+        },
+        {
+          "path": "$bitstream.ga_pe[7].present",
+          "section": "ga_pe",
+          "slot": 7,
+          "chunk": 3,
+          "start": 2219,
+          "end": 2220
+        },
+        {
+          "path": "$bitstream.ga_pe[8].present",
+          "section": "ga_pe",
+          "slot": 8,
+          "chunk": 0,
+          "start": 2220,
+          "end": 2221
+        },
+        {
+          "path": "$bitstream.ga_pe[8].present",
+          "section": "ga_pe",
+          "slot": 8,
+          "chunk": 1,
+          "start": 2221,
+          "end": 2222
+        },
+        {
+          "path": "$bitstream.ga_pe[8].present",
+          "section": "ga_pe",
+          "slot": 8,
+          "chunk": 2,
+          "start": 2222,
+          "end": 2223
+        },
+        {
+          "path": "$bitstream.ga_pe[8].present",
+          "section": "ga_pe",
+          "slot": 8,
+          "chunk": 3,
+          "start": 2223,
+          "end": 2224
+        },
+        {
+          "path": "$bitstream.ga_pe[9].present",
+          "section": "ga_pe",
+          "slot": 9,
+          "chunk": 0,
+          "start": 2224,
+          "end": 2225
+        },
+        {
+          "path": "$bitstream.ga_pe[9].present",
+          "section": "ga_pe",
+          "slot": 9,
+          "chunk": 1,
+          "start": 2225,
+          "end": 2226
+        },
+        {
+          "path": "$bitstream.ga_pe[9].present",
+          "section": "ga_pe",
+          "slot": 9,
+          "chunk": 2,
+          "start": 2226,
+          "end": 2227
+        },
+        {
+          "path": "$bitstream.ga_pe[9].present",
+          "section": "ga_pe",
+          "slot": 9,
+          "chunk": 3,
+          "start": 2227,
+          "end": 2228
+        },
+        {
+          "path": "$bitstream.ga_pe[10].present",
+          "section": "ga_pe",
+          "slot": 10,
+          "chunk": 0,
+          "start": 2228,
+          "end": 2229
+        },
+        {
+          "path": "$bitstream.ga_pe[10].present",
+          "section": "ga_pe",
+          "slot": 10,
+          "chunk": 1,
+          "start": 2229,
+          "end": 2230
+        },
+        {
+          "path": "$bitstream.ga_pe[10].present",
+          "section": "ga_pe",
+          "slot": 10,
+          "chunk": 2,
+          "start": 2230,
+          "end": 2231
+        },
+        {
+          "path": "$bitstream.ga_pe[10].present",
+          "section": "ga_pe",
+          "slot": 10,
+          "chunk": 3,
+          "start": 2231,
+          "end": 2232
+        },
+        {
+          "path": "$bitstream.ga_pe[11].present",
+          "section": "ga_pe",
+          "slot": 11,
+          "chunk": 0,
+          "start": 2232,
+          "end": 2233
+        },
+        {
+          "path": "$bitstream.ga_pe[11].present",
+          "section": "ga_pe",
+          "slot": 11,
+          "chunk": 1,
+          "start": 2233,
+          "end": 2234
+        },
+        {
+          "path": "$bitstream.ga_pe[11].present",
+          "section": "ga_pe",
+          "slot": 11,
+          "chunk": 2,
+          "start": 2234,
+          "end": 2235
+        },
+        {
+          "path": "$bitstream.ga_pe[11].present",
+          "section": "ga_pe",
+          "slot": 11,
+          "chunk": 3,
+          "start": 2235,
+          "end": 2236
+        },
+        {
+          "path": "$bitstream.ga_pe[12].present",
+          "section": "ga_pe",
+          "slot": 12,
+          "chunk": 0,
+          "start": 2236,
+          "end": 2237
+        },
+        {
+          "path": "$bitstream.ga_pe[12].present",
+          "section": "ga_pe",
+          "slot": 12,
+          "chunk": 1,
+          "start": 2237,
+          "end": 2238
+        },
+        {
+          "path": "$bitstream.ga_pe[12].present",
+          "section": "ga_pe",
+          "slot": 12,
+          "chunk": 2,
+          "start": 2238,
+          "end": 2239
+        },
+        {
+          "path": "$bitstream.ga_pe[12].present",
+          "section": "ga_pe",
+          "slot": 12,
+          "chunk": 3,
+          "start": 2239,
+          "end": 2240
+        },
+        {
+          "path": "$bitstream.ga_pe[13].present",
+          "section": "ga_pe",
+          "slot": 13,
+          "chunk": 0,
+          "start": 2240,
+          "end": 2241
+        },
+        {
+          "path": "$bitstream.ga_pe[13].present",
+          "section": "ga_pe",
+          "slot": 13,
+          "chunk": 1,
+          "start": 2241,
+          "end": 2242
+        },
+        {
+          "path": "$bitstream.ga_pe[13].present",
+          "section": "ga_pe",
+          "slot": 13,
+          "chunk": 2,
+          "start": 2242,
+          "end": 2243
+        },
+        {
+          "path": "$bitstream.ga_pe[13].present",
+          "section": "ga_pe",
+          "slot": 13,
+          "chunk": 3,
+          "start": 2243,
+          "end": 2244
+        },
+        {
+          "path": "$bitstream.ga_pe[14].present",
+          "section": "ga_pe",
+          "slot": 14,
+          "chunk": 0,
+          "start": 2244,
+          "end": 2245
+        },
+        {
+          "path": "$bitstream.ga_pe[14].present",
+          "section": "ga_pe",
+          "slot": 14,
+          "chunk": 1,
+          "start": 2245,
+          "end": 2246
+        },
+        {
+          "path": "$bitstream.ga_pe[14].present",
+          "section": "ga_pe",
+          "slot": 14,
+          "chunk": 2,
+          "start": 2246,
+          "end": 2247
+        },
+        {
+          "path": "$bitstream.ga_pe[14].present",
+          "section": "ga_pe",
+          "slot": 14,
+          "chunk": 3,
+          "start": 2247,
+          "end": 2248
+        },
+        {
+          "path": "$bitstream.ga_pe[15].present",
+          "section": "ga_pe",
+          "slot": 15,
+          "chunk": 0,
+          "start": 2248,
+          "end": 2249
+        },
+        {
+          "path": "$bitstream.ga_pe[15].present",
+          "section": "ga_pe",
+          "slot": 15,
+          "chunk": 1,
+          "start": 2249,
+          "end": 2250
+        },
+        {
+          "path": "$bitstream.ga_pe[15].present",
+          "section": "ga_pe",
+          "slot": 15,
+          "chunk": 2,
+          "start": 2250,
+          "end": 2251
+        },
+        {
+          "path": "$bitstream.ga_pe[15].present",
+          "section": "ga_pe",
+          "slot": 15,
+          "chunk": 3,
+          "start": 2251,
+          "end": 2252
+        }
+      ]
+    },
+    "issue_count": 0
+  },
+  "next_config_state": {
+    "IGA": "b887c9fd5c186b942f9389d87fa9225b4c1492850a281f7aa38a119a574ac791",
+    "LSU": "d845ae139120eadac4ef13c881f948fbe6a658a1843bb4cd18633a22be6700a5",
+    "SA": null,
+    "GA": "ca1135086cf3504b105263eebf2bb2bcf2efce8977e96b33b50b7b551c7e72ee"
+  }
+}

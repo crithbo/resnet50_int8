@@ -1,0 +1,221 @@
+{
+  "schema": "conv-sa-c0-local-rtl-audit-v1",
+  "audit_id": "conv_sa_c0_local_rtl_and_alternative_entry_audit_20260728",
+  "scope": "C0_READ_ONLY_CODE_AUDIT",
+  "target_request": {
+    "request_id": "r5:hwop-0004-00",
+    "request_sha256": "e27e10169168f3889df4c03bf15cb21de074abf3f3767dc4bee288425165874b",
+    "hw_op_type": "ConvInt32Accumulate",
+    "x": "uint8[16,64,56,56]",
+    "w": "int8[64,64,1,1]",
+    "bias": "int32[64]",
+    "output": "int32[16,64,56,56]",
+    "x_zero_point": 0,
+    "w_zero_point_domain": "per-channel all zero"
+  },
+  "receipts": {
+    "plan_mutable_provenance_sha256": "e823f9d6cba28fff4659d0e2ba3ab3e0651be989feb0fd560a628095133d3fc9",
+    "generation_index_sha256": "12583308ec9a16dbb8ea15571a5280291fed7e152167d2e4e8e00509a9a6370f",
+    "operator_config_rule_sha256": "cbaffcc5fb3bea7da9f0c199bb2e7f06445a676ab456bdfd505b90dd89825171",
+    "int8_sa_rule_sha256": "630edcd5736f653e66da775b9ac4839159d79a9009db01f873f25d964f5dc3da",
+    "authorization_sha256": "7f7a481eae45fe21c3077d74930c6288c72fba744139d7692db0a43199f17b77",
+    "untrusted_history_override_sha256": "6626f3192390fe3b93483746f1dbd6a61cc13f21cd5b55559738cd3dfbad7c06"
+  },
+  "verdicts": {
+    "RTL_DEFECT_CONFIRMED": true,
+    "NO_EXACT_ALTERNATIVE_ENTRY": true,
+    "SERIALIZED_CONFIG_FALLBACK_IS_ONLY_AVAILABLE_EXACT_ROUTE": false,
+    "NEW_CONV_BYPASS_GENERATION_ALLOWED": false,
+    "PATH_CONFIG_BYPASS": false,
+    "PATH_NORMAL_OR_ALTERNATIVE": false,
+    "fail_closed_reason": "The stock SA INT8 path both mis-reduces multi-lane products and discards nonzero DataC/psum. A composite SA-one-product-to-INT32-scratch plus GA int32_mac tree is source/config expressible at primitive level, but remains proposal-only because no active Conv product-scratch address schedule, typed handler/materializer, final occurrence coverage, or lifecycle binding exists. The previously proposed serialized SA-internal-psum route is not exact."
+  },
+  "route_classification": {
+    "NORMAL_EXACT_ENTRY": {
+      "status": false,
+      "first_blocker": "SA_INT8_DATAC_GATED_ZERO",
+      "secondary_blockers": [
+        "SA_INT8_DUPLICATE_CARRY_SHIFT",
+        "SA_INT8_REDUCTION_WIDTH_AND_COUT"
+      ]
+    },
+    "SA_SERIALIZED_PSUM": {
+      "status": false,
+      "first_blocker": "SA_INT8_DATAC_GATED_ZERO",
+      "boundary": "A single nonzero lane is exact only for DataC=0; feedback/bias psum is discarded."
+    },
+    "SA_PRODUCT_PLUS_GA_TREE": {
+      "status": "proposal-only",
+      "source_config_expressible": true,
+      "first_blocker": "B_CONV_SA_PRODUCT_SCRATCH_SCHEDULE_AND_OWNERSHIP",
+      "proven_primitives": [
+        "SA one-nonzero-lane product with DataC=0",
+        "32-bit SA outport pass-through to buffer/GA",
+        "GA opcode14 int32_mac(A,1,C) modulo-2^32 arithmetic",
+        "node0071 stage2+ explicit INT32 scratch reload and same-mask barrier"
+      ],
+      "unclosed_conv_bindings": [
+        "stage1 signed product write address bijection and full byte coverage",
+        "node0004 64-term spatial/channel schedule",
+        "family 3x3x64 576-term schedule and odd-level zero tails",
+        "bias and nonzero-x_zp correction ownership and delivery",
+        "typed Conv handler, mapper, and manual materializer authorization",
+        "GA dual-stream tag matching, drain/barrier, buffer visibility, and lifetime",
+        "resource/traffic feasibility under the selected tiling"
+      ]
+    }
+  },
+  "first_divergences": [
+    {
+      "id": "SA_INT8_DATAC_GATED_ZERO",
+      "source": "NDP_copy01/rtl/Slice/Specialized_Array/SA_PE/SA_PE_ALU/SA_PE_Float_Control.v",
+      "lines": [253, 258],
+      "consumer": "NDP_copy01/rtl/Slice/Specialized_Array/SA_PE/SA_PE_ALU/SA_PE_Mul_Array.v:212",
+      "proof": "INT8 has i_Mode=0, so o_AddExp=0 and o_AddNZero=0. The multiplier pipeline stores i_FractC only when i_AddNZero=1, hence DataC is replaced by zero before the final integer CSA."
+    },
+    {
+      "id": "SA_INT8_DUPLICATE_CARRY_SHIFT",
+      "source": "NDP_copy01/rtl/Slice/Specialized_Array/SA_PE/SA_PE_ALU/SA_PE_Mul_Array.v",
+      "lines": [279, 295],
+      "upstream": "NDP_copy01/rtl/utils/CSA/CSA_4to2.v:31",
+      "proof": "CSA_4to2 already returns carry_temp shifted left once. SA_PE_Mul_Array shifts carry_int left a second time in last_B."
+    },
+    {
+      "id": "SA_INT8_REDUCTION_WIDTH_AND_COUT",
+      "source": "NDP_copy01/rtl/Slice/Specialized_Array/SA_PE/SA_PE_ALU/SA_PE_Mul_Array.v",
+      "lines": [279, 292],
+      "proof": "Four legal s8*u8 products span [-130560,129540], requiring signed18. The first compressor is signed17, its cout is disconnected, and its outputs are sign-extended from bit 16."
+    }
+  ],
+  "capability_matrix": [
+    {
+      "entry": "SA int8 GEMM four-lane",
+      "arithmetic_exact": false,
+      "typed_ingress_exact": true,
+      "psum32_exact": false,
+      "available_exact_entry": false,
+      "reason": "duplicate carry shift, signed17 reduction, discarded cout, and DataC forced to zero"
+    },
+    {
+      "entry": "SA int8 GEMV",
+      "arithmetic_exact": false,
+      "typed_ingress_exact": true,
+      "psum32_exact": false,
+      "available_exact_entry": false,
+      "reason": "mode changes enabled rows/output organization, not the shared SA_PE_ALU integer datapath"
+    },
+    {
+      "entry": "SA serialized one nonzero product lane",
+      "arithmetic_exact": "only when DataC=0",
+      "typed_ingress_exact": true,
+      "psum32_exact": false,
+      "available_exact_entry": false,
+      "reason": "one product avoids the first compressor carry defect but does not restore the discarded accumulator"
+    },
+    {
+      "entry": "SA fp16/bf16 reinterpretation",
+      "arithmetic_exact": false,
+      "typed_ingress_exact": false,
+      "psum32_exact": false,
+      "available_exact_entry": false,
+      "reason": "floating format, alignment, and rounding do not preserve full-domain integer product or modulo-2^32 accumulation"
+    },
+    {
+      "entry": "GA int32_mac",
+      "arithmetic_exact": true,
+      "typed_ingress_exact": false,
+      "psum32_exact": true,
+      "available_exact_entry": false,
+      "reason": "active GA inport zero-extends uint8 but has no signed-int8-to-int32 conversion; no active Conv handler or closed signed-ingress/dual-stream/barrier schedule binds the typed request"
+    },
+    {
+      "entry": "SA one-product -> INT32 scratch -> GA int32_mac tree",
+      "arithmetic_exact": true,
+      "typed_ingress_exact": true,
+      "psum32_exact": true,
+      "available_exact_entry": "proposal-only",
+      "reason": "all required arithmetic and transport primitives exist, and node0071 proves later-stage INT32 scratch reload locally; Conv-specific product-scratch addressing, 64/576-term schedule, correction, ownership, lifecycle, and resource feasibility are not materialized or validated"
+    },
+    {
+      "entry": "IGA int MAC",
+      "arithmetic_exact": false,
+      "typed_ingress_exact": false,
+      "psum32_exact": false,
+      "available_exact_entry": false,
+      "reason": "the IGA datapath and outbuffer are 16-bit index-generation resources"
+    }
+  ],
+  "dynamic_proofs": [
+    {
+      "testbench": "tests/rtl_audit/int8_sa_stock_dot4_tb.sv",
+      "testbench_sha256": "005c8d1ac8f1174c9e27732d743a0c12801da921e5779b89d1ba5a5d9d08c8d1",
+      "rtl_binding": "active vcs_utils_filelist.f plus SA_PE_filelist.f",
+      "result": "TB_PASS",
+      "meaning": "All declared exact controls and negative controls classified as expected; this is a component-level active-RTL proof, not node0004 E2."
+    },
+    {
+      "testbench": "tests/rtl_audit/int32_ga_mac_tb.sv",
+      "testbench_sha256": "727245663d0cc841bcedb70354644c5529f70f13d0c572bd8aa3b4f83e9d734a",
+      "rtl_binding": "active vcs_utils_filelist.f plus GA_ALU and GA_PE_ALU sources",
+      "result": "TB_PASS",
+      "meaning": "GA opcode 14 is bit-exact signed int32 A*B+C modulo 2^32 for the tested positive, negative, mixed-sign, wrap, and large-product cases; ingress and topology are not proven."
+    }
+  ],
+  "source_sha256": {
+    "contracts/resnet50_r5_lowering_bundle.json": "bf661e4eda2011025d9922708ab46a64f8d1b3c279527b88aa7d630bb3545432",
+    "resnet50_pipeline/ndp_patch_toolchain.py": "be29dd65770dd8c3897e14b801a68e3bb3d3a4ebcc16a518b7cdb81d5fe7d8f0",
+    "ndp-sim/bitstream/config/special.py": "0c989cf657eaa429f9b2b37848105abe3448b3926e22e09ae98c42ddd4f8447a",
+    "ndp-sim/bitstream/config/general.py": "eb9d5ee9ef273182e05b718aca378f87d0a1ccb5366ae463d8482c8c94c3482f",
+    "ndp-sim/bitstream/config/mapper.py": "c7685cc297e4e11ccafa23758a46d20986e5db931fcb3c4e21f5f4a0a2534226",
+    "ndp-sim/model_execplan/src/execution_plan_generator/control_registers.py": "cd12ee5f31231e856f9f63f61746a8e43435228d0268813c3eb8c4630e09a941",
+    "NDP_copy01/Makefile.tb_NDP_Top_new_phy": "528d93f3c7f458d256bdbaf1d9ec39edfbfe5bd8a924e2bf0786914a634f4aba",
+    "NDP_copy01/rtl/filelists/NDP_Top_phy_filelist.f": "b6720607b2757d50d13de6efc109e240aa32e56b51c7dd7e30ec0150a34e4b6a",
+    "NDP_copy01/rtl/filelists/Slice_filelist.f": "4ac3832bb06b7fb424779b163a36e6b898d954c41c1d3dd7f5964d0bddbc9b9f",
+    "NDP_copy01/rtl/filelists/Specialized_Array_filelist.f": "b978643437cf13c2528e27df602f77f295c4da0c607a957ca3e1bac072ad63c8",
+    "NDP_copy01/rtl/filelists/SA_PE_Group_filelist.f": "c9f22ba23dee25ba7a0cb504f67566593058f37fa24078610177db9a0f1fedd1",
+    "NDP_copy01/rtl/filelists/SA_PE_filelist.f": "5ede1ba8f93cd0a42b9e41abef886cdbaef0850a290e5f830c27f5c3a7a06545",
+    "NDP_copy01/rtl/filelists/vcs_utils_filelist.f": "b23382f1f39822f01cbb9889dd5804c1beccada37102ad532c05ad6067ef7ce0",
+    "NDP_copy01/rtl/Slice/Specialized_Array/Specialized_Array_Config.sv": "e0eb610d4332ea8817d4667cee58b6d804edd4c43093ee41b4dc1ef51893bce2",
+    "NDP_copy01/rtl/Slice/Specialized_Array/SA_PE/SA_PE_ALU.sv": "f26c2e859410ec72390107df92bd765ef56cf79085fba61773bfb5e920d37b0d",
+    "NDP_copy01/rtl/Slice/Specialized_Array/SA_PE/SA_PE_Outbuffer.sv": "be66a8c68e8c31398ccf7784eff73fd733831498bf5580c22f457d445cd229be",
+    "NDP_copy01/rtl/Slice/Specialized_Array/SA_PE/SA_PE_ALU/SA_PE_Float_Control.v": "3b52be953e7ac212156218c5448b343f98ebca8dd7ed07849964a25588db465b",
+    "NDP_copy01/rtl/Slice/Specialized_Array/SA_PE/SA_PE_ALU/SA_PE_Mul_Array.v": "89ea1999ffc4a8a8b1459ba86525664ce78baa19a04179b1154e3635e8d2ff35",
+    "NDP_copy01/rtl/utils/CSA/CSA_4to2.v": "5d6aad5595e712bbfee6578e6986fc50b5d36f47d954c8ab2fa331a6ff0e6549",
+    "NDP_copy01/rtl/Slice/Specialized_Array/SA_Outport/SA_Outport.sv": "72718fb2520de8276cc3960d11fdbf7fd78d9f715ef723f02dd21ca90b7bb967",
+    "NDP_copy01/rtl/Slice/Slice_cdc.sv": "dab0ef9c59cfa98f6e149d6cee985f8a59862de458187671a37f09db66ff70c2",
+    "NDP_copy01/rtl/Slice/General_Array/GA_Inport/GA_Inport.sv": "42a7ac1d740c758de9656ee0d41663ef1c8b11253e76ba2e20be6faee2d12e17",
+    "NDP_copy01/rtl/Slice/General_Array/GA_PE_Group/GA_PE_ALU.sv": "8a73c66755df0897034d7bdbc7183f663aeba630d16ccae07e8e879d689eb9aa",
+    "NDP_copy01/rtl/Slice/General_Array/GA_PE_Group/GA_ALU/GA_PE_Float_Control.v": "96802498b791085c182d7e22eeaf24075ff625eaebb6b4fe2579c07d9b160577",
+    "NDP_copy01/rtl/Slice/General_Array/GA_PE_Group/GA_ALU/GA_PE_Mul_Array.v": "77985966396d37def7033e7e8692703f4cd340bb9675497e35e23a304384e297",
+    "NDP_copy01/rtl/Slice/General_Array/GA_PE_Group/GA_ALU/GA_PE_Float_CSA.v": "5bcc09111624f403cc2aab291f79fd32a6dd40ce7d9624db6306f8cde94906dc",
+    ".agents/rules/GAP_int32_mac_bypass_rules.md": "b194d525fb7c1647b3fdaabd51d88dc4bc9b874ce7a910d4fdd1ca125b56fd96",
+    ".agents/task_records/20260727_gap_sum_config_only_local_e2_v1.md": "cc9f431570f4a114c0d80bc2bb19adb5e5e3e7592e7f2943379d5899f529d30c",
+    "resnet50_pipeline/gap_sum_config_only.py": "b22090abb53ccd7659db9d1e610611f6c7a119941c547f4e32a1405e78716664",
+    "contracts/operator_config/gap_sum_config_only_local_e2_v1.json": "15318caf31dc13e702b66c9b0e7849a844210a5a887ef52cf3d84610e04be697"
+  },
+  "claim_boundary": {
+    "static": "Active local source and filelist prove the wiring, field decode, arithmetic defects, absent signed-int8 GA converter, and absent active Conv handler.",
+    "dynamic": "Local Icarus simulations exercise the active SA_ALU and GA int32_mac component hierarchies only.",
+    "not_claimed": [
+      "fresh node0004 JSON",
+      "mapping or bitstream instance",
+      "execplan or SCA",
+      "address or lifetime closure",
+      "full NDP top completion",
+      "server identity or execution",
+      "Conv local E2"
+    ],
+    "historical_node0004_assets_consumed_as_positive_evidence": false
+  },
+  "blocker_delta": [
+    "ADD B_SA_INT8_DATAC_PSUM_GATED_ZERO",
+    "KEEP B_SA_INT8_DUPLICATE_CARRY_SHIFT",
+    "KEEP B_SA_INT8_REDUCTION_WIDTH",
+    "KEEP B_CONV_INT8_SA",
+    "KEEP B_CONV_BIAS_PSUM",
+    "KEEP B_SA_SERIALIZED_FALLBACK_MATERIALIZATION",
+    "ADD B_CONV_SA_PRODUCT_SCRATCH_SCHEDULE_AND_OWNERSHIP",
+    "ADD B_CONV_GA_EXACT_ALTERNATIVE_TYPED_TOPOLOGY if the composite route is selected for C1"
+  ],
+  "package_release": "NONE"
+}

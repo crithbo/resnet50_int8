@@ -1,0 +1,68 @@
+{
+  "schema": "operator-config-execplan-validation-report-v1",
+  "graph_root": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\_refresh-maxpool-after-deepseek-v1\\pipeline_output",
+  "valid": true,
+  "first_error": null,
+  "issues": [],
+  "facts": {
+    "target_profile": {
+      "slices": 28,
+      "banks_per_slice": 4,
+      "ddr_rows": 6144,
+      "ddr_columns": 64,
+      "subwords_per_column": 16,
+      "read_streams": 4,
+      "write_streams": 1,
+      "buffers": 6
+    },
+    "graph": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\_refresh-maxpool-after-deepseek-v1\\pipeline_output\\graph_withbaseaddr.json",
+    "graph_sha256": "871c665990e918a2d1280be5c11c45225d624353520aceb667bec039b59d63eb",
+    "execplan": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\_refresh-maxpool-after-deepseek-v1\\pipeline_output\\install\\execplan.txt",
+    "execplan_sha256": "e38004f09cc76062c6d510d0c531588de58eb145e479b39d6b09de93d7ad99cf",
+    "instruction_count_64bit": 57,
+    "execplan_lines_128bit": 29,
+    "operator_count": 1,
+    "load_config_count": 1,
+    "sfu_load_config_count": 0,
+    "start_comp_count": 1,
+    "stages": [
+      {
+        "stage_index": 0,
+        "op_id": "op0",
+        "op_type": "maxpool_config_16_112_112_stride2_padding1",
+        "load_instruction_index": 1,
+        "start_instruction_index": 56,
+        "slice_mask": "0xFFFFFFF",
+        "source_config": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\_refresh-maxpool-after-deepseek-v1\\mapping_evidence\\op0\\source_config.json",
+        "source_config_sha256": "f5ae3d62eba31d734561050365e39745fd5929759710d24f998fd7ff5c7d1e7b",
+        "artifact_dir": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\_refresh-maxpool-after-deepseek-v1\\mapping_evidence\\op0",
+        "artifact_valid": true,
+        "next_config_state": {
+          "IGA": "99fe7bd16e0018ed8321e910c591a7858a3850a726d0f5ebfc6e70d0d880e2b2",
+          "LSU": "95227258294f15f9cb771e13df431a5b4f9c1ce7566d0431c95eff9d624b8a5f",
+          "SA": null,
+          "GA": "37da3da45f33b8c8320090a00735deb1e88fd3e90324f77092bd58341939115d"
+        },
+        "pipeline_json": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\_refresh-maxpool-after-deepseek-v1\\pipeline_output\\jsons\\op0_maxpool_config_16_112_112_stride2_padding1.json",
+        "pipeline_json_sha256": "f5ae3d62eba31d734561050365e39745fd5929759710d24f998fd7ff5c7d1e7b",
+        "pipeline_artifact_sha256": {
+          "mapping_review.json": "9d5fe3762dbc8c901237105bc42a7706137a1a9dd73e579abf0c64c7464e464b",
+          "parsed_bitstream.txt": "ee212abb29190586adee66f00cf7b904eb14677784ab4f67aaa0884c86bed8e6",
+          "modules_dump_64b.bin": "1058cc7f41376aed59ea86de015edd7ff59bb2c6cffa18cc40d0af7b7e507737",
+          "modules_dump_128b.bin": "f7dd01b39f03121b4512affd99b63f383c66e02f1a0e4e55c9cec9525b6e7f90"
+        },
+        "config_base_addr": "0x0003D800",
+        "config_length_64bit_words": 60,
+        "config_path": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-patched-execplan-evidence\\_refresh-maxpool-after-deepseek-v1\\pipeline_output\\install\\cfg_pkg\\op0_maxpool_config_16_112_112_stride2_padding1_bitstream_128b.bin",
+        "config_sha256": "f7dd01b39f03121b4512affd99b63f383c66e02f1a0e4e55c9cec9525b6e7f90"
+      }
+    ],
+    "final_config_state": {
+      "IGA": "99fe7bd16e0018ed8321e910c591a7858a3850a726d0f5ebfc6e70d0d880e2b2",
+      "LSU": "95227258294f15f9cb771e13df431a5b4f9c1ce7566d0431c95eff9d624b8a5f",
+      "SA": null,
+      "GA": "37da3da45f33b8c8320090a00735deb1e88fd3e90324f77092bd58341939115d"
+    },
+    "issue_count": 0
+  }
+}

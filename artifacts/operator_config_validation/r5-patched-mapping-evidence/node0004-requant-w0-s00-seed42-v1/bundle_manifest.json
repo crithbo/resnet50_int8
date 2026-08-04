@@ -1,0 +1,76 @@
+{
+  "schema": "operator-config-mapping-evidence-bundle-v1",
+  "created_utc": "2026-07-23T07:59:48.067640+00:00",
+  "read_only_native_source": true,
+  "source_config_sha256": "daea673d398cc3774d249f655d132f612afcad5a6e9b4d395271cba6891277e2",
+  "mapping_evidence_sha256": "7209a0583b912069bca63c0b22480da8cd67a38e35a3860ece47ea762e4ecd14",
+  "artifact_validation_report_sha256": "cb981859dd5c1e6104b39dfcba06aba90f5561c0ac46b9346c3b3c7c3dd98858",
+  "summary": {
+    "valid": true,
+    "penalty": 0.0,
+    "fallback_used": false,
+    "cache_policy": "same-run-generated-not-loaded",
+    "cache_loaded_origin": "none",
+    "native_wrapper_missing_return_observed": false,
+    "unpadded_bits": 4304,
+    "bit_range_count": 653
+  },
+  "files": {
+    "artifact_validation_report.json": {
+      "size": 140341,
+      "sha256": "cb981859dd5c1e6104b39dfcba06aba90f5561c0ac46b9346c3b3c7c3dd98858"
+    },
+    "detailed_dump.txt": {
+      "size": 45958,
+      "sha256": "55231c10ad6d648a9afcd79c76c7cfdf5c981297084ae20261f73f30cad31a9e"
+    },
+    "encoder_source_manifest.json": {
+      "size": 2481,
+      "sha256": "89f2f11f8429d917f9bc7e15cc6a74365ed14f075cd8428bfb78f2e971d4dac1"
+    },
+    "mapping_cache/9d12e681247ecaa7.json": {
+      "size": 348,
+      "sha256": "99e3a6979931efda47bde52487affea79d148b3a029f63e608c8c6b478a84162"
+    },
+    "mapping_evidence.json": {
+      "size": 2789,
+      "sha256": "7209a0583b912069bca63c0b22480da8cd67a38e35a3860ece47ea762e4ecd14"
+    },
+    "mapping_review.json": {
+      "size": 5450,
+      "sha256": "45265e39cc7bcd32bcae9adde60fee3cb693cf9bd3d7cacf3dbee2f6c7572ac3"
+    },
+    "modules_dump_128b.bin": {
+      "size": 4420,
+      "sha256": "bd2a61886aadbb83327bdc39ccbab4ce42293716e0f175ec5b5c8aa306e62e6d"
+    },
+    "modules_dump_64b.bin": {
+      "size": 4488,
+      "sha256": "3e9c8f10e1c9f9ac6685a5cd1a349f1c0471348ee5d5a8db0bf7f87300ae0a26"
+    },
+    "native_mapping_state.json": {
+      "size": 836,
+      "sha256": "618b6d6980aa265219c696526eafab1cef9a750becda012396bc6b5949529a63"
+    },
+    "native_stderr.log": {
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "native_stdout.log": {
+      "size": 51798,
+      "sha256": "95ecf3f9f1e209fa726e21da90fb685a77a7a5dfe220cd03bc71f60d947c34ca"
+    },
+    "parsed_bitstream.txt": {
+      "size": 4916,
+      "sha256": "cfbde84abff47164a72e88cdf36b5b85bdeb3cacb5de978b49dd5b03a1e29804"
+    },
+    "patchset_manifest.json": {
+      "size": 1841,
+      "sha256": "e6a0fab2404ae0188ffe595803246a2a4c75184f6b58fce54f2b9e6012ff7b1e"
+    },
+    "source_config.json": {
+      "size": 16532,
+      "sha256": "daea673d398cc3774d249f655d132f612afcad5a6e9b4d395271cba6891277e2"
+    }
+  }
+}

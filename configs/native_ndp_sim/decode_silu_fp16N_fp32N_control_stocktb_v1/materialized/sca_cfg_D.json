@@ -1,0 +1,12 @@
+{
+  "op0_matrixD_slice0": {
+    "base_addr": "0x00000040",
+    "path": "install/op0/slice00/matrix_D_linearized_128bit.txt",
+    "length": 8
+  },
+  "op0_matrixD_slice1": {
+    "base_addr": "0x02000040",
+    "path": "install/op0/slice01/matrix_D_linearized_128bit.txt",
+    "length": 8
+  }
+}

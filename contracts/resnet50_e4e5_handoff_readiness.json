@@ -1,0 +1,533 @@
+{
+  "schema": "resnet50-e4e5-handoff-readiness-v1",
+  "status": "historical_packages_present_current_semantic_gates_block_e4",
+  "inputs": {
+    "project_closure": {
+      "path": "contracts/resnet50_project_closure.json",
+      "sha256": "7857cbdd855c9e798e3bd98e8ae1b14504903be1fcba9e5f9c9105b1e73773ae",
+      "size_bytes": 259911
+    },
+    "lowering_bundle": {
+      "path": "contracts/resnet50_r5_lowering_bundle.json",
+      "sha256": "318cac3df84cf12577bb6e975b7639ab766bb41063a45c8b1b65fdbe99501aeb",
+      "size_bytes": 1971398
+    },
+    "runtime_golden": {
+      "path": "artifacts/w3/golden_batch16/manifest.json",
+      "sha256": "f7e90cf1f087acf255e93d98d1788e0fb0b4c77bbe935ea9addb17feea583180",
+      "size_bytes": 170131
+    },
+    "subop_golden": {
+      "path": "artifacts/w3/subop_batch16/manifest.json",
+      "sha256": "8bfdd042570408c1df793044407a8e6262bfa261b3cc6f02f64b94ad47d9c1c2",
+      "size_bytes": 49674
+    },
+    "protocol_template": {
+      "path": "contracts/server_execution_protocol.template.json",
+      "sha256": "bc5eb50cd33edd68f6df3b8fb0380118af3a998b0692d69d11d1b073a6145d47",
+      "size_bytes": 1005
+    },
+    "node0004_server_candidate": {
+      "path": "artifacts/operator_config_validation/r5-server-candidates/node0004-nopp-r1-v2/candidate_manifest.json",
+      "sha256": "a1aa67e2aff8a65d0723fa1c2d6ed3dd3a418e135d0c8e66e340f53ae85f35a6",
+      "size_bytes": 70912
+    },
+    "maxpool_server_candidate": {
+      "path": "artifacts/operator_config_validation/r5-server-candidates/maxpool-node0002-guarded-wave0-v1/candidate_manifest.json",
+      "sha256": "29ce1d52ed4874d6f20ba9a623b1fb3a89a346768672436326b6e850fef2936b",
+      "size_bytes": 20298
+    }
+  },
+  "coverage": {
+    "representative_count": 10,
+    "ready_package_count": 0,
+    "blocked_package_count": 10,
+    "server_test_candidate_ready_count": 0,
+    "server_test_candidate_blocked_count": 10,
+    "historical_server_test_candidate_package_count": 2,
+    "zero_copy_standalone_not_applicable_count": 1,
+    "formal_target_stage_count": 0,
+    "formal_e4_pass_count": 0,
+    "formal_e5_pass_count": 0
+  },
+  "representatives": [
+    {
+      "hw_op_type": "QuantizeLinear",
+      "hw_op_id": "hwop-0000-00",
+      "node_id": "node-0000",
+      "stage": "quantize",
+      "lowering_request_sha256": "ee1505278dc1ca63af266e592a059ab62475a8ffb7ac5dbe87b0c35859fc732c",
+      "formal_target_config_ready": false,
+      "historical_unresolved_blockers": [
+        "B_EXECPLAN_TYPED_TRANSPORT",
+        "B_LAYOUT_APPROVAL",
+        "B_QUANT_FP32_INPUT_PATH",
+        "B_QUANT_ROUNDING_EXECUTION"
+      ],
+      "effective_resolved_blockers": {
+        "B_LAYOUT_APPROVAL": "r5-resolution-layout-w4-approved-v1"
+      },
+      "effective_unresolved_blockers": [
+        "B_EXECPLAN_TYPED_TRANSPORT",
+        "B_QUANT_FP32_INPUT_PATH",
+        "B_QUANT_ROUNDING_EXECUTION"
+      ],
+      "rtl_semantic_blockers": [],
+      "effective_blockers": [
+        "B_EXECPLAN_TYPED_TRANSPORT",
+        "B_QUANT_FP32_INPUT_PATH",
+        "B_QUANT_ROUNDING_EXECUTION"
+      ],
+      "local_lowering_resolved": false,
+      "readiness_axes": {
+        "json_emitter_ready": false,
+        "rtl_semantics_compatible": false,
+        "dynamic_release_ready": false
+      },
+      "local_disposition": "blocked_by_unresolved_local_semantics",
+      "historical_candidate_package_present": false,
+      "server_test_candidate_ready": false,
+      "candidate_kind": null,
+      "candidate_manifest": null,
+      "e4": "blocked_before_package",
+      "e5": "blocked_before_e4"
+    },
+    {
+      "hw_op_type": "ConvInt32Accumulate",
+      "hw_op_id": "hwop-0004-00",
+      "node_id": "node-0004",
+      "stage": "accumulate",
+      "lowering_request_sha256": "e27e10169168f3889df4c03bf15cb21de074abf3f3767dc4bee288425165874b",
+      "formal_target_config_ready": false,
+      "historical_unresolved_blockers": [
+        "B_CONV_BIAS_PSUM",
+        "B_CONV_INT8_SA",
+        "B_EXECPLAN_TYPED_TRANSPORT",
+        "B_LAYOUT_APPROVAL"
+      ],
+      "effective_resolved_blockers": {
+        "B_EXECPLAN_TYPED_TRANSPORT": "r5-resolution-conv-and-gap-typed-transport-closed-v2",
+        "B_LAYOUT_APPROVAL": "r5-resolution-layout-w4-approved-v1"
+      },
+      "effective_unresolved_blockers": [
+        "B_CONV_BIAS_PSUM",
+        "B_CONV_INT8_SA"
+      ],
+      "rtl_semantic_blockers": [
+        "B_SA_INT8_CSA_NUMERIC"
+      ],
+      "effective_blockers": [
+        "B_CONV_BIAS_PSUM",
+        "B_CONV_INT8_SA",
+        "B_SA_INT8_CSA_NUMERIC"
+      ],
+      "local_lowering_resolved": false,
+      "readiness_axes": {
+        "json_emitter_ready": false,
+        "rtl_semantics_compatible": false,
+        "dynamic_release_ready": false
+      },
+      "local_disposition": "blocked_by_unresolved_local_semantics",
+      "historical_candidate_package_present": true,
+      "server_test_candidate_ready": false,
+      "candidate_kind": "historical_matrix_complete_experimental_liveness_smoke_semantics_blocked",
+      "candidate_manifest": {
+        "path": "artifacts/operator_config_validation/r5-server-candidates/node0004-nopp-r1-v2/candidate_manifest.json",
+        "sha256": "a1aa67e2aff8a65d0723fa1c2d6ed3dd3a418e135d0c8e66e340f53ae85f35a6",
+        "size_bytes": 70912
+      },
+      "e4": "historical_package_blocked_by_current_semantic_gates",
+      "e5": "blocked_before_e4_by_current_semantic_gates"
+    },
+    {
+      "hw_op_type": "RequantizeUint8",
+      "hw_op_id": "hwop-0004-01",
+      "node_id": "node-0004",
+      "stage": "requantize",
+      "lowering_request_sha256": "ed833d0512b0256756f3d7e39cfd79aac04a901d0095f11f103e7216e6dccb5b",
+      "formal_target_config_ready": false,
+      "historical_unresolved_blockers": [
+        "B_EXECPLAN_TYPED_TRANSPORT",
+        "B_LAYOUT_APPROVAL",
+        "B_REQUANT_TARGET_NUMERICS"
+      ],
+      "effective_resolved_blockers": {
+        "B_EXECPLAN_TYPED_TRANSPORT": "r5-resolution-conv-and-gap-typed-transport-closed-v2",
+        "B_LAYOUT_APPROVAL": "r5-resolution-layout-w4-approved-v1"
+      },
+      "effective_unresolved_blockers": [
+        "B_REQUANT_TARGET_NUMERICS"
+      ],
+      "rtl_semantic_blockers": [
+        "B_GA_INT32TOFP32_INPUT_DOMAIN"
+      ],
+      "effective_blockers": [
+        "B_GA_INT32TOFP32_INPUT_DOMAIN",
+        "B_REQUANT_TARGET_NUMERICS"
+      ],
+      "local_lowering_resolved": false,
+      "readiness_axes": {
+        "json_emitter_ready": false,
+        "rtl_semantics_compatible": false,
+        "dynamic_release_ready": false
+      },
+      "local_disposition": "blocked_by_unresolved_local_semantics",
+      "historical_candidate_package_present": false,
+      "server_test_candidate_ready": false,
+      "candidate_kind": null,
+      "candidate_manifest": null,
+      "e4": "blocked_before_package",
+      "e5": "blocked_before_e4"
+    },
+    {
+      "hw_op_type": "MaxPoolUint8",
+      "hw_op_id": "hwop-0002-00",
+      "node_id": "node-0002",
+      "stage": "pool",
+      "lowering_request_sha256": "6126a69fcd131b9fe3e12450acb2d54c5b6f93e91779a44150bf302ece018578",
+      "formal_target_config_ready": false,
+      "historical_unresolved_blockers": [
+        "B_LAYOUT_APPROVAL",
+        "B_MAXPOOL_SHAPE_GENERALIZATION",
+        "B_MAXPOOL_UINT8_SEMANTICS"
+      ],
+      "effective_resolved_blockers": {
+        "B_LAYOUT_APPROVAL": "r5-resolution-layout-w4-approved-v1",
+        "B_MAXPOOL_SHAPE_GENERALIZATION": "r5-resolution-node0002-maxpool-shape-address-v1",
+        "B_MAXPOOL_UINT8_SEMANTICS": "r5-resolution-node0002-maxpool-uint8-padding-v1"
+      },
+      "effective_unresolved_blockers": [],
+      "rtl_semantic_blockers": [
+        "B_GA_INT8_MAX_FLOW",
+        "B_GA_INT8_MAX_NUMERIC"
+      ],
+      "effective_blockers": [
+        "B_GA_INT8_MAX_FLOW",
+        "B_GA_INT8_MAX_NUMERIC"
+      ],
+      "local_lowering_resolved": true,
+      "readiness_axes": {
+        "json_emitter_ready": true,
+        "rtl_semantics_compatible": false,
+        "dynamic_release_ready": false
+      },
+      "local_disposition": "draft_json_emitter_ready_rtl_semantics_blocked",
+      "historical_candidate_package_present": true,
+      "server_test_candidate_ready": false,
+      "candidate_kind": "historical_matrix_complete_locally_resolved_config_semantics_blocked",
+      "candidate_manifest": {
+        "path": "artifacts/operator_config_validation/r5-server-candidates/maxpool-node0002-guarded-wave0-v1/candidate_manifest.json",
+        "sha256": "29ce1d52ed4874d6f20ba9a623b1fb3a89a346768672436326b6e850fef2936b",
+        "size_bytes": 20298
+      },
+      "e4": "historical_package_blocked_by_current_semantic_gates",
+      "e5": "blocked_before_e4_by_current_semantic_gates"
+    },
+    {
+      "hw_op_type": "QLinearAddUint8",
+      "hw_op_id": "hwop-0007-00",
+      "node_id": "node-0007",
+      "stage": "add_requantize",
+      "lowering_request_sha256": "591444cb674346d9c79ef15d66bc3a70a1617858593b8566aef4bc234aed02e3",
+      "formal_target_config_ready": false,
+      "historical_unresolved_blockers": [
+        "B_ADD_UINT8_REQUANT",
+        "B_EXECPLAN_TYPED_TRANSPORT",
+        "B_LAYOUT_APPROVAL"
+      ],
+      "effective_resolved_blockers": {
+        "B_LAYOUT_APPROVAL": "r5-resolution-layout-w4-approved-v1"
+      },
+      "effective_unresolved_blockers": [
+        "B_ADD_UINT8_REQUANT",
+        "B_EXECPLAN_TYPED_TRANSPORT"
+      ],
+      "rtl_semantic_blockers": [],
+      "effective_blockers": [
+        "B_ADD_UINT8_REQUANT",
+        "B_EXECPLAN_TYPED_TRANSPORT"
+      ],
+      "local_lowering_resolved": false,
+      "readiness_axes": {
+        "json_emitter_ready": false,
+        "rtl_semantics_compatible": false,
+        "dynamic_release_ready": false
+      },
+      "local_disposition": "blocked_by_unresolved_local_semantics",
+      "historical_candidate_package_present": false,
+      "server_test_candidate_ready": false,
+      "candidate_kind": null,
+      "candidate_manifest": null,
+      "e4": "blocked_before_package",
+      "e5": "blocked_before_e4"
+    },
+    {
+      "hw_op_type": "GlobalAverageSumInt32",
+      "hw_op_id": "hwop-0071-00",
+      "node_id": "node-0071",
+      "stage": "sum",
+      "lowering_request_sha256": "9df690a675c74d2d9e43a78b516ce4045f1d978014bca4ad2abcaaab9dc295f4",
+      "formal_target_config_ready": false,
+      "historical_unresolved_blockers": [
+        "B_EXECPLAN_TYPED_TRANSPORT",
+        "B_GAP_CENTERED_SUM",
+        "B_LAYOUT_APPROVAL",
+        "B_SUM_COMPLETION",
+        "B_SUM_CROSS_SLICE"
+      ],
+      "effective_resolved_blockers": {
+        "B_EXECPLAN_TYPED_TRANSPORT": "r5-resolution-conv-and-gap-typed-transport-closed-v2",
+        "B_GAP_CENTERED_SUM": "r5-resolution-hwop0071-gap-centered-sum-zero-zp-v1",
+        "B_LAYOUT_APPROVAL": "r5-resolution-layout-w4-approved-v1",
+        "B_SUM_COMPLETION": "r5-resolution-hwop0071-gap-terminal-chain-v1",
+        "B_SUM_CROSS_SLICE": "r5-resolution-hwop0071-gap-sample-local-reduction-v1"
+      },
+      "effective_unresolved_blockers": [],
+      "rtl_semantic_blockers": [
+        "B_GAP_D_INDEX_CARRIER_SEMANTICS",
+        "B_GAP_GA_ACCUM_STATE"
+      ],
+      "effective_blockers": [
+        "B_GAP_D_INDEX_CARRIER_SEMANTICS",
+        "B_GAP_GA_ACCUM_STATE"
+      ],
+      "local_lowering_resolved": true,
+      "readiness_axes": {
+        "json_emitter_ready": true,
+        "rtl_semantics_compatible": false,
+        "dynamic_release_ready": false
+      },
+      "local_disposition": "draft_json_emitter_ready_rtl_semantics_blocked",
+      "historical_candidate_package_present": false,
+      "server_test_candidate_ready": false,
+      "candidate_kind": null,
+      "candidate_manifest": null,
+      "e4": "blocked_before_package",
+      "e5": "blocked_before_e4"
+    },
+    {
+      "hw_op_type": "AverageRequantizeUint8",
+      "hw_op_id": "hwop-0071-01",
+      "node_id": "node-0071",
+      "stage": "requantize",
+      "lowering_request_sha256": "ed3e236ba5fc8d320e0cec2bbe8775d7a80ac9746d2111621af385a8ac86757c",
+      "formal_target_config_ready": false,
+      "historical_unresolved_blockers": [
+        "B_EXECPLAN_TYPED_TRANSPORT",
+        "B_GAP_DIV_REQUANT",
+        "B_LAYOUT_APPROVAL",
+        "B_REQUANT_TARGET_NUMERICS"
+      ],
+      "effective_resolved_blockers": {
+        "B_LAYOUT_APPROVAL": "r5-resolution-layout-w4-approved-v1"
+      },
+      "effective_unresolved_blockers": [
+        "B_EXECPLAN_TYPED_TRANSPORT",
+        "B_GAP_DIV_REQUANT",
+        "B_REQUANT_TARGET_NUMERICS"
+      ],
+      "rtl_semantic_blockers": [
+        "B_GA_INT32TOFP32_INPUT_DOMAIN"
+      ],
+      "effective_blockers": [
+        "B_EXECPLAN_TYPED_TRANSPORT",
+        "B_GAP_DIV_REQUANT",
+        "B_GA_INT32TOFP32_INPUT_DOMAIN",
+        "B_REQUANT_TARGET_NUMERICS"
+      ],
+      "local_lowering_resolved": false,
+      "readiness_axes": {
+        "json_emitter_ready": false,
+        "rtl_semantics_compatible": false,
+        "dynamic_release_ready": false
+      },
+      "local_disposition": "blocked_by_unresolved_local_semantics",
+      "historical_candidate_package_present": false,
+      "server_test_candidate_ready": false,
+      "candidate_kind": null,
+      "candidate_manifest": null,
+      "e4": "blocked_before_package",
+      "e5": "blocked_before_e4"
+    },
+    {
+      "hw_op_type": "View",
+      "hw_op_id": "hwop-0073-00",
+      "node_id": "node-0073",
+      "stage": "view",
+      "lowering_request_sha256": "6ad8751fdab5f31fac84c8092964a60b6eab284e408aa458955cbddd0dab91e0",
+      "formal_target_config_ready": false,
+      "historical_unresolved_blockers": [
+        "B_LAYOUT_APPROVAL"
+      ],
+      "effective_resolved_blockers": {
+        "B_LAYOUT_APPROVAL": "r5-resolution-layout-w4-approved-v1"
+      },
+      "effective_unresolved_blockers": [],
+      "rtl_semantic_blockers": [],
+      "effective_blockers": [],
+      "local_lowering_resolved": true,
+      "readiness_axes": {
+        "json_emitter_ready": false,
+        "rtl_semantics_compatible": true,
+        "dynamic_release_ready": false
+      },
+      "local_disposition": "candidate_zero_copy_binding_allowed",
+      "historical_candidate_package_present": false,
+      "server_test_candidate_ready": false,
+      "candidate_kind": "zero_copy_no_standalone_operator_package",
+      "candidate_manifest": null,
+      "e4": "not_applicable_as_standalone_zero_copy",
+      "e5": "requires_full_network_alias_validation"
+    },
+    {
+      "hw_op_type": "MatMulInt32Accumulate",
+      "hw_op_id": "hwop-0075-00",
+      "node_id": "node-0075",
+      "stage": "accumulate",
+      "lowering_request_sha256": "67453b2893d8dcee976f871f21e35313d08949a45779c2a8aecc4e31d6c24553",
+      "formal_target_config_ready": false,
+      "historical_unresolved_blockers": [
+        "B_EXECPLAN_TYPED_TRANSPORT",
+        "B_LAYOUT_APPROVAL",
+        "B_MATMUL_INT8_SA",
+        "B_MATMUL_PSUM",
+        "B_MATMUL_TAIL"
+      ],
+      "effective_resolved_blockers": {
+        "B_LAYOUT_APPROVAL": "r5-resolution-layout-w4-approved-v1"
+      },
+      "effective_unresolved_blockers": [
+        "B_EXECPLAN_TYPED_TRANSPORT",
+        "B_MATMUL_INT8_SA",
+        "B_MATMUL_PSUM",
+        "B_MATMUL_TAIL"
+      ],
+      "rtl_semantic_blockers": [
+        "B_SA_INT8_CSA_NUMERIC"
+      ],
+      "effective_blockers": [
+        "B_EXECPLAN_TYPED_TRANSPORT",
+        "B_MATMUL_INT8_SA",
+        "B_MATMUL_PSUM",
+        "B_MATMUL_TAIL",
+        "B_SA_INT8_CSA_NUMERIC"
+      ],
+      "local_lowering_resolved": false,
+      "readiness_axes": {
+        "json_emitter_ready": false,
+        "rtl_semantics_compatible": false,
+        "dynamic_release_ready": false
+      },
+      "local_disposition": "blocked_by_unresolved_local_semantics",
+      "historical_candidate_package_present": false,
+      "server_test_candidate_ready": false,
+      "candidate_kind": null,
+      "candidate_manifest": null,
+      "e4": "blocked_before_package",
+      "e5": "blocked_before_e4"
+    },
+    {
+      "hw_op_type": "DequantizeLinear",
+      "hw_op_id": "hwop-0077-00",
+      "node_id": "node-0077",
+      "stage": "dequantize",
+      "lowering_request_sha256": "cb8522a4ba2386ce3c303f5de274b2fa2e130d719c09933c686a11d28d9b7f63",
+      "formal_target_config_ready": false,
+      "historical_unresolved_blockers": [
+        "B_DEQUANT_STANDALONE",
+        "B_EXECPLAN_TYPED_TRANSPORT",
+        "B_LAYOUT_APPROVAL"
+      ],
+      "effective_resolved_blockers": {
+        "B_LAYOUT_APPROVAL": "r5-resolution-layout-w4-approved-v1"
+      },
+      "effective_unresolved_blockers": [
+        "B_DEQUANT_STANDALONE",
+        "B_EXECPLAN_TYPED_TRANSPORT"
+      ],
+      "rtl_semantic_blockers": [],
+      "effective_blockers": [
+        "B_DEQUANT_STANDALONE",
+        "B_EXECPLAN_TYPED_TRANSPORT"
+      ],
+      "local_lowering_resolved": false,
+      "readiness_axes": {
+        "json_emitter_ready": false,
+        "rtl_semantics_compatible": false,
+        "dynamic_release_ready": false
+      },
+      "local_disposition": "blocked_by_unresolved_local_semantics",
+      "historical_candidate_package_present": false,
+      "server_test_candidate_ready": false,
+      "candidate_kind": null,
+      "candidate_manifest": null,
+      "e4": "blocked_before_package",
+      "e5": "blocked_before_e4"
+    }
+  ],
+  "server_protocol": {
+    "schema": "resnet50-server-execution-protocol-v1",
+    "template": "contracts/server_execution_protocol.template.json",
+    "approved_protocol_present": false,
+    "runner": "tools/run_e4e5_server_protocol.py",
+    "required_phase_order": [
+      "load",
+      "start",
+      "wait",
+      "readback"
+    ],
+    "command_policy": "only user-supplied approved argv; no inferred server commands"
+  },
+  "run_matrix": [
+    {
+      "run_id": "run1",
+      "gate": "E4",
+      "requirements": [
+        "formal target package hashes validated before execution",
+        "server RTL identity matches approved protocol",
+        "natural completion and raw readback returned",
+        "inverse-layout result matches independent W3/subop golden"
+      ]
+    },
+    {
+      "run_id": "run2",
+      "gate": "E5",
+      "requirements": [
+        "same package, RTL identity and execution protocol as run1",
+        "independent second natural completion and raw readback",
+        "run1/run2 logical result and environment receipts agree",
+        "boundary case covers the representative family semantics"
+      ]
+    }
+  ],
+  "execution_command_templates": [],
+  "blocked_historical_command_templates": [
+    {
+      "candidate": "node0004-nopp-r1-v2",
+      "scope": "historical liveness smoke only; execution is blocked by current SA INT8 numeric semantics",
+      "blockers": [
+        "B_SA_INT8_CSA_NUMERIC"
+      ],
+      "e4": "python tools/run_e4e5_server_protocol.py --protocol <approved.json> --package artifacts/operator_config_validation/r5-server-candidates/node0004-nopp-r1-v2 --output <fresh-node0004-run1> --run-id run1",
+      "e5": "python tools/run_e4e5_server_protocol.py --protocol <approved.json> --package artifacts/operator_config_validation/r5-server-candidates/node0004-nopp-r1-v2 --output <fresh-node0004-run2> --run-id run2"
+    },
+    {
+      "candidate": "maxpool-node0002-guarded-wave0-v1",
+      "scope": "historical node0002 wave0 package; execution is blocked by current GA INT8 max numeric/flow semantics",
+      "blockers": [
+        "B_GA_INT8_MAX_NUMERIC",
+        "B_GA_INT8_MAX_FLOW"
+      ],
+      "e4": "python tools/run_e4e5_server_protocol.py --protocol <approved.json> --package artifacts/operator_config_validation/r5-server-candidates/maxpool-node0002-guarded-wave0-v1 --output <fresh-maxpool-run1> --run-id run1",
+      "e5": "python tools/run_e4e5_server_protocol.py --protocol <approved.json> --package artifacts/operator_config_validation/r5-server-candidates/maxpool-node0002-guarded-wave0-v1 --output <fresh-maxpool-run2> --run-id run2"
+    }
+  ],
+  "prohibited_substitutions": [
+    "local formula mismatch=0 is not E4",
+    "server process completion without raw readback is not E4",
+    "one E4 run is not repeated E5",
+    "candidate config files are not formal target packages",
+    "a matrix-complete local candidate is not an E4 pass until the approved server protocol returns raw readback",
+    "historical packages with contradicted RTL semantics must not be submitted as current E4 candidates"
+  ]
+}

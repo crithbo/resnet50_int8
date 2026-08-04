@@ -1,0 +1,126 @@
+{
+  "known_counterexamples": [
+    "CDA-GA-INPORT-CONVERT-001",
+    "guard is required before negative INT32 reaches round MAC"
+  ],
+  "omitted_files": [
+    {
+      "path": ".agents/rules/服务器测试包生成规则.md",
+      "reason": "this task does not generate a server package"
+    },
+    {
+      "path": "NDP_copy01/rtl/**",
+      "reason": "no RTL is modified; stable field semantics and the already-closed source topology own this derivation"
+    }
+  ],
+  "open_dynamic_gates": [
+    "B_REQUANT_SERVER_E4_E5"
+  ],
+  "read_at": "2026-07-26",
+  "read_receipt": [
+    {
+      "label": "agent_policy",
+      "path": ".agents/agent.md",
+      "reason": "rule routing and field semantics",
+      "sha256": "367f4f4260246d40531d83cc6d24fe94946cb05bce6fbef18c428f05b634c083",
+      "size_bytes": 3439
+    },
+    {
+      "label": "generation_read_index",
+      "path": ".agents/rules/生成前必读索引.md",
+      "reason": "rule routing and field semantics",
+      "sha256": "539e8dfbe52ad9fc8bd9fdef8c69d448fb5fd713e938e3adc5f663f82fd806d7",
+      "size_bytes": 5650
+    },
+    {
+      "label": "operator_rules",
+      "path": ".agents/rules/算子配置规则.md",
+      "reason": "rule routing and field semantics",
+      "sha256": "a5fbe2f0fa2e26d8cd4ebfe8772d5a3c69516d6918cfaa5087198706a352427b",
+      "size_bytes": 12168
+    },
+    {
+      "label": "hardware_field_semantics",
+      "path": ".agents/rules/NDP硬件字段语义.md",
+      "reason": "rule routing and field semantics",
+      "sha256": "7f446adb1719658ce75c2614c6d619fc2c7cdcabf5e4fd34945482645539158f",
+      "size_bytes": 12602
+    },
+    {
+      "label": "requant_rules",
+      "path": ".agents/rules/RequantizeUint8算子配置规则.md",
+      "reason": "rule routing and field semantics",
+      "sha256": "6e3be32694a3962166980e52bcff8d3b47a867a5c7d628c3446724d9c84932d1",
+      "size_bytes": 13671
+    },
+    {
+      "label": "node0001_materializer",
+      "path": "resnet50_pipeline/requantize_uint8_vertical.py",
+      "reason": "actual source topology or direct consumer",
+      "sha256": "3cda9c43019afaf6be255d3783d4bf2f91087aaec6afc12381b68e34f37320a0",
+      "size_bytes": 75801
+    },
+    {
+      "label": "node0001_server_evidence_consumer",
+      "path": "tools/requant_node0001_server_runtime.py",
+      "reason": "actual source topology or direct consumer",
+      "sha256": "9c91cac49673f1c79545a210ce83547dc0882069aeedc0333d2d7dfc646fa9eb",
+      "size_bytes": 63303
+    },
+    {
+      "label": "native_loop_encoder",
+      "path": "ndp-sim/bitstream/config/loop.py",
+      "reason": "actual source topology or direct consumer",
+      "sha256": "7a25a5e6e29e35ce07c437a6e44ac654cda0dcc110fda1ba82cdeacb0b12aa35",
+      "size_bytes": 13871
+    },
+    {
+      "label": "native_stream_encoder",
+      "path": "ndp-sim/bitstream/config/stream.py",
+      "reason": "actual source topology or direct consumer",
+      "sha256": "00e0610719670f24e22139ee0a3a453ae6e90f90e5d572f578c5f489f5a813d1",
+      "size_bytes": 14083
+    },
+    {
+      "label": "native_buffer_encoder",
+      "path": "ndp-sim/bitstream/config/buffer.py",
+      "reason": "actual source topology or direct consumer",
+      "sha256": "39b6c32786ca83a1ffd247a99dafea2f966aa1c490ef587fa1594759456355a4",
+      "size_bytes": 1847
+    },
+    {
+      "label": "native_ga_encoder",
+      "path": "ndp-sim/bitstream/config/general.py",
+      "reason": "actual source topology or direct consumer",
+      "sha256": "eb9d5ee9ef273182e05b718aca378f87d0a1ccb5366ae463d8482c8c94c3482f",
+      "size_bytes": 11738
+    },
+    {
+      "label": "source_guard_final_json",
+      "path": "artifacts/operator_config_validation/r5-requant-node0001-two-stage-e2-v1/native_evidence/jsons/op_w0_s00_guard_resnet50_requant_guard_node0001.json",
+      "reason": "actual source topology or direct consumer",
+      "sha256": "c9bb71629553913fe15fe07dc89e24ac504afc4f5c45470199c33273a242abc6",
+      "size_bytes": 12542
+    },
+    {
+      "label": "source_round_final_json",
+      "path": "artifacts/operator_config_validation/r5-requant-node0001-two-stage-e2-v1/native_evidence/jsons/op_w0_s00_round_resnet50_requant_round_node0001_s00.json",
+      "reason": "actual source topology or direct consumer",
+      "sha256": "19f42dcd43d0a27f66ac189a2fb20cb475b39fc3bc276ba181fed1cf98120c1a",
+      "size_bytes": 17336
+    }
+  ],
+  "receipt_sha256": "8b78d1945992ffd6695a9b7c4a61b0a194c34ae9775046b04939ed0c325f8a24",
+  "rule_ids": [
+    "CDA-CONFIG-SEMANTIC-OWNERSHIP-001",
+    "CDA-CONFIG-MATERIALIZED-ROUNDTRIP-001",
+    "CDA-REQUANT-QPARAM-001",
+    "CDA-REQUANT-INT32-GUARD-001",
+    "CDA-REQUANT-SFU-LUT-001",
+    "CDA-REQUANT-TWO-STAGE-001",
+    "CDA-REQUANT-ROUND-MAGIC-001",
+    "CDA-REQUANT-ATOMIC-SINGLE-OCCURRENCE-001"
+  ],
+  "schema": "requant-atomic-generation-read-receipt-v1",
+  "scope": "derive two strict JSONs and deterministic dynamic expectations; no bitstream, server package, server run, or RTL change"
+}

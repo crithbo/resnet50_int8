@@ -29,24 +29,24 @@
         "hwop-0004-01"
       ],
       "node_id": "node-0004",
-      "path": "artifacts/w5/hwop-0004-00/v19/execplan_request.json",
-      "sha256": "105f2bc78556f7ae8a33cd2c20bb3b6e63a4acc40e1138ba90a125b12a577e06",
-      "size_bytes": 242134,
+      "path": "artifacts/w5/hwop-0004-00/v20/execplan_request.json",
+      "sha256": "48515484abcc3c445cb3c8163e7cfe55405d3defb08d043c8b65d9c74749b23f",
+      "size_bytes": 245855,
       "validation": {
         "config_artifact_count": 12,
         "instance_id": "conv:node-0004:hwop-0004-00+hwop-0004-01",
         "n2n": {
-          "dst_slice_sel": 1,
-          "mem_loop": 4,
+          "dst_slice_sel": 0,
+          "mem_loop": 0,
           "ping_pong": 0,
-          "src_slice_sel": 1
+          "src_slice_sel": 0
         },
         "node_id": "node-0004",
         "operator_count": 2,
         "requant_channel_count": 64,
         "requant_shard_count": 8,
         "status": "typed_transport_validated",
-        "transport_abi": "conv_sa_q8k8_v2",
+        "transport_abi": "conv_sa_s8a_u8b_local_v3",
         "typed_constant_count": 8,
         "unique_flush_count": 64
       }

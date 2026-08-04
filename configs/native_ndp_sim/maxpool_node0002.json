@@ -1,0 +1,33 @@
+{
+  "used_slices": 28,
+  "operators": [
+    {
+      "id": "op0",
+      "type": "maxpool_config_16_112_112_stride2_padding1",
+      "used_slices": "0b1111111111111111111111111111",
+      "inputs": {
+        "A": {
+          "shape": [
+            16,
+            112,
+            112
+          ],
+          "dtype": "uint8",
+          "remapping": null,
+          "source": {
+            "type": "external"
+          }
+        }
+      },
+      "output": {
+        "shape": [
+          16,
+          56,
+          56
+        ],
+        "dtype": "uint8",
+        "remapping": null
+      }
+    }
+  ]
+}

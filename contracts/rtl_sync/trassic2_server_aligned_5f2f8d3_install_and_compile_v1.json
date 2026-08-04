@@ -1,0 +1,86 @@
+{
+  "contract_id": "trassic2-server-aligned-5f2f8d3-install-and-compile-v1",
+  "created_at": "2026-07-29",
+  "authorization": {
+    "user_requested_active_local_overwrite": true,
+    "functional_rtl_repair_authorized": false,
+    "server_files_inspected": false,
+    "source_interpretation": "Authenticated GitHub master snapshot is the available server-aligned source; return packages do not contain a complete server RTL tree."
+  },
+  "source": {
+    "repository": "xlsjdjdk/Trassic2.0_RTL",
+    "branch": "master",
+    "commit": "5f2f8d3a2358c090143caa35957c07ff3650ff4c",
+    "archive": "C:/Users/15383/Downloads/Trassic2.0_RTL-master.zip",
+    "archive_sha256": "bdf0ce9f83ba8e0b3e1354bd559f61a4eb3e2a4c6187934c78c880d28e7c3faa",
+    "snapshot_root": "Trassic2.0_RTL/code/NDP_rtl",
+    "file_count": 2257
+  },
+  "installation": {
+    "active_target": "NDP_copy01/rtl",
+    "backup": "NDP_copy01/rtl_pre_server_aligned_5f2f8d3a_20260729",
+    "backup_file_count": 2265,
+    "active_file_count": 2257,
+    "source_to_active_hash_diff_count": 0,
+    "recoverable": true,
+    "backup_deleted": false
+  },
+  "key_identities": {
+    "sa_alu": {
+      "path": "NDP_copy01/rtl/Slice/Specialized_Array/SA_PE/SA_PE_ALU/SA_ALU.v",
+      "sha256": "42142fb407df4eeb9855b9ed730a1c08eb16d3ab30392ecc3d1e3f9d2abb7f2e"
+    },
+    "sa_pe_mul_array": {
+      "path": "NDP_copy01/rtl/Slice/Specialized_Array/SA_PE/SA_PE_ALU/SA_PE_Mul_Array.v",
+      "sha256": "081eafbbe625104866ec711bec1683b8eb0a28f9a4f8992514429a0c787d27ee"
+    },
+    "sa_pe_float_control": {
+      "path": "NDP_copy01/rtl/Slice/Specialized_Array/SA_PE/SA_PE_ALU/SA_PE_Float_Control.v",
+      "sha256": "8e9ecb2966943fd3758baf4da592ac0da1b26e6484d60f695d3e70929034f79f"
+    },
+    "ga_inport": {
+      "path": "NDP_copy01/rtl/Slice/General_Array/GA_Inport/GA_Inport.sv",
+      "sha256": "da2c6a0af7d08bd87f35e95dfa272e0d7f15425f16d57beb4940b246c8006248"
+    }
+  },
+  "compile_reproduction": {
+    "compiler": "C:/iverilog/bin/iverilog.exe",
+    "language": "SystemVerilog-2012",
+    "top": "int8_sa_stock_dot4_tb",
+    "testbench": "tests/rtl_audit/int8_sa_stock_dot4_tb.sv",
+    "exit_code": 1,
+    "elaboration_passed": false,
+    "first_error": "NDP_copy01/rtl/Slice/Specialized_Array/SA_PE/SA_PE_ALU/SA_ALU.v:124: port `slice_rst` is not a port of u_SA_PE_Mul_Array.",
+    "server_return_signature_match": true,
+    "controlled_substitution": {
+      "description": "The same elaboration used the backed-up callee SA_PE_Mul_Array.v while every other source remained server-aligned.",
+      "backup_callee_sha256": "89ea1999ffc4a8a8b1459ba86525664ce78baa19a04179b1154e3635e8d2ff35",
+      "exit_code": 0,
+      "elaboration_passed": true,
+      "interpretation": "The interface regression is isolated to the caller/callee change in SA_PE_Mul_Array; this control is not a functional release because the backup callee retains the old INT8 carry equation."
+    }
+  },
+  "first_divergence": {
+    "classification": "SERVER_ALIGNED_RTL_CALLER_CALLEE_INTERFACE_MISMATCH",
+    "caller": "NDP_copy01/rtl/Slice/Specialized_Array/SA_PE/SA_PE_ALU/SA_ALU.v:124-127",
+    "caller_behavior": "Instantiates SA_PE_Mul_Array and connects .slice_rst(slice_rst).",
+    "callee": "NDP_copy01/rtl/Slice/Specialized_Array/SA_PE/SA_PE_ALU/SA_PE_Mul_Array.v:1-6",
+    "callee_behavior": "The module port list has clk and rst_n but no slice_rst.",
+    "historical_difference": "The backed-up SA_PE_Mul_Array declared slice_rst and contained an else-if(slice_rst) pipeline reset branch; the server-aligned revision removed both while SA_ALU remained unchanged.",
+    "confirmed_rtl_defect": true,
+    "configuration_or_package_fix": false
+  },
+  "hardware_owner_guidance": {
+    "minimum_requirement": "Make the SA_ALU caller and SA_PE_Mul_Array callee use one consistent interface in the same commit.",
+    "preferred_compatibility_direction": "Restore input slice_rst and the intended slice-reset pipeline branch in SA_PE_Mul_Array while retaining the corrected INT8 carry handoff last_B=carry_int[31:0].",
+    "alternative_requires_review": "Removing .slice_rst from SA_ALU may compile but changes reset semantics and must be justified against neighboring SA pipeline state.",
+    "post_fix_gate": "Compile/elaborate the active NDP filelist before rerunning unchanged node0004 v3 and GAP node0071 v2 packages."
+  },
+  "claim_boundary": {
+    "local_active_tree_is_server_aligned_snapshot": true,
+    "server_exact_commit_bound": false,
+    "compile_failure_reproduced": true,
+    "simulation_started": false,
+    "functional_rtl_modified_by_mainline": false
+  }
+}

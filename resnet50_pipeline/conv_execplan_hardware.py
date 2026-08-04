@@ -18,7 +18,11 @@ from .bitstream_binding import (
     validate_recorded_bitstream_identity,
 )
 from .conv_execplan_transport import validate_conv_execplan_request
-from .conv_instance import FIRST_REAL_CONV_NODE_ID, build_conv_target_request
+from .conv_instance import (
+    CONV_TRANSPORT_ABI_SIGNED_A_LOCAL,
+    FIRST_REAL_CONV_NODE_ID,
+    build_conv_target_request,
+)
 from .hardware_simulation_frontend import (
     HardwareSimulationPreparationError,
     build_execution_stages,
@@ -1906,15 +1910,24 @@ def generate_conv_hardware_execplan(
     assignments: dict[str, Any] = {}
     io_map: dict[str, str] = {}
 
-    # The physical packer and target stream ABI now share one orientation:
-    # stream0/A is Q8xC4 activation, stream1/B is K8xC4 weight, and C is K8
-    # bias.  Crossing A/B here would silently reintroduce the v8 mismatch.
-    accumulate_ports = {"A": "A", "B": "B", "C": "bias"}
-    accumulate_shapes = {
-        "A": activation_sample_shape,
-        "B": weight_shape,
-        "C": bias_shape,
-    }
+    if target_request.transport_abi == CONV_TRANSPORT_ABI_SIGNED_A_LOCAL:
+        # v3 follows the RTL arithmetic contract, not ONNX operand names:
+        # target A/inport0/DataA is signed weight; target B and B'/inport1/DataB
+        # are two address-identical local activation producers.
+        accumulate_ports = {"A": "B", "B": "A", "B'": "A", "C": "bias"}
+        accumulate_shapes = {
+            "A": weight_shape,
+            "B": activation_sample_shape,
+            "B'": activation_sample_shape,
+            "C": bias_shape,
+        }
+    else:
+        accumulate_ports = {"A": "A", "B": "B", "C": "bias"}
+        accumulate_shapes = {
+            "A": activation_sample_shape,
+            "B": weight_shape,
+            "C": bias_shape,
+        }
     accumulate_ids: list[str] = []
     runtime_accumulate_waves: list[dict[str, Any]] = []
     for wave in waves:
@@ -1928,15 +1941,18 @@ def generate_conv_hardware_execplan(
                 op_type="resnet_qlinearconv_int32_accumulate",
                 used_slices=int(wave["slice_mask"]),
                 inputs={
-                    "A": api["TensorSpec"](
-                        activation_sample_shape, dtype="uint8", source=external
-                    ),
-                    "B": api["TensorSpec"](
-                        weight_shape, dtype="int8", source=external
-                    ),
-                    "C": api["TensorSpec"](
-                        bias_shape, dtype="int32", source=external
-                    ),
+                    input_name: api["TensorSpec"](
+                        accumulate_shapes[input_name],
+                        dtype=(
+                            "int32"
+                            if input_name == "C"
+                            else "int8"
+                            if accumulate_ports[input_name] == "B"
+                            else "uint8"
+                        ),
+                        source=external,
+                    )
+                    for input_name in accumulate_ports
                 },
                 output=api["TensorSpec"](p_sample_shape, dtype="int32"),
                 instance_id=instance_id,
@@ -2434,6 +2450,11 @@ def generate_conv_hardware_execplan(
             },
         ]
     )
+    execution_plan_descriptor = sca.get("ExecutionPlan")
+    execution_plan_is_chunked = (
+        isinstance(execution_plan_descriptor, Mapping)
+        and isinstance(execution_plan_descriptor.get("chunked_transport"), Mapping)
+    )
     runner_contract: dict[str, Any] = {
         "schema_version": "resnet50-conv-model-execplan-runner-0.1",
         "preload": {
@@ -2449,8 +2470,14 @@ def generate_conv_hardware_execplan(
                 "immutable_tb_parser_abi": {
                     "name": "line-oriented-json-close-resets-entry-v1",
                     "load_trigger": "a line containing } with both prior exact base_addr and path fields",
-                    "execution_plan_head": "nested chunked_transport closes before the complete semantic path",
-                    "execution_plan_outer_close_loads_semantic_path": False,
+                    "execution_plan_head": (
+                        "nested chunked_transport closes before the complete semantic path"
+                        if execution_plan_is_chunked
+                        else "flat ExecutionPlan descriptor loads the complete semantic path"
+                    ),
+                    "execution_plan_outer_close_loads_semantic_path": (
+                        not execution_plan_is_chunked
+                    ),
                     "serialized_order_is_authoritative": True,
                     "validated_transfer_count": len(_sca_transport_entries(sca)),
                 },
@@ -2735,16 +2762,34 @@ def generate_conv_hardware_execplan(
         "runtime_io_bindings": {
             **{
                 f"{operator_id}.input.A": (
-                    "freeze/A local sample slot (activation -> READ_STREAM0)"
+                    "freeze/B (signed weight -> READ_STREAM0)"
+                    if target_request.transport_abi
+                    == CONV_TRANSPORT_ABI_SIGNED_A_LOCAL
+                    else "freeze/A local sample slot (activation -> READ_STREAM0)"
                 )
                 for operator_id in accumulate_ids
             },
             **{
                 f"{operator_id}.input.B": (
-                    "freeze/B (weight -> READ_STREAM1)"
+                    "freeze/A local sample slot (unsigned activation -> READ_STREAM1)"
+                    if target_request.transport_abi
+                    == CONV_TRANSPORT_ABI_SIGNED_A_LOCAL
+                    else "freeze/B (weight -> READ_STREAM1)"
                 )
                 for operator_id in accumulate_ids
             },
+            **(
+                {
+                    f"{operator_id}.input.B'": (
+                        "freeze/A same local sample slot "
+                        "(unsigned activation B-prime -> READ_STREAM2)"
+                    )
+                    for operator_id in accumulate_ids
+                }
+                if target_request.transport_abi
+                == CONV_TRANSPORT_ABI_SIGNED_A_LOCAL
+                else {}
+            ),
             **{
                 f"{operator_id}.input.C": (
                     "freeze/bias (bias -> READ_STREAM3)"
@@ -2861,6 +2906,45 @@ def _expected_testbench_repeat_num(
                 "fixed-pair testbench observer ordering is invalid"
             )
         last_finish = int(pair["slice1_finish_stage"])
+    if observer.get("final_stage_is_full_mask_ring_group") is True:
+        if (
+            runtime_operator_count != 1
+            or raw_repeat != 1
+            or last_finish != 0
+            or int(observer.get("final_pair_finishes_at_stage", -1)) != 0
+            or observer.get("all_prior_stages_barrier_ordered") is not True
+            or observer.get("final_stage_slice_mask") != "0x000000F"
+            or observer.get("final_stage_is_finish_slice_only") is not False
+            or observer.get("final_stage_completion_barrier_mask") != "0x000000F"
+            or observer.get(
+                "readback_after_final_finish_is_full_mask_completion_safe"
+            )
+            is not True
+        ):
+            raise ConvHardwareExecplanError(
+                "fixed-pair Ring4 observer does not bind one full-mask runtime stage"
+            )
+        runtime_operators = manifest.get("runtime_operators")
+        if not isinstance(runtime_operators, list) or len(runtime_operators) != 1:
+            raise ConvHardwareExecplanError(
+                "fixed-pair Ring4 package must contain one runtime operator"
+            )
+        final = runtime_operators[0]
+        if not isinstance(final, Mapping):
+            raise ConvHardwareExecplanError(
+                "fixed-pair Ring4 runtime operator is malformed"
+            )
+        attributes = final.get("attributes")
+        if (
+            final.get("slice_mask") != "0x000000F"
+            or not isinstance(attributes, Mapping)
+            or attributes.get("runtime_partition") != "full_ring_group"
+            or attributes.get("selected_slices") != [0, 1, 2, 3]
+        ):
+            raise ConvHardwareExecplanError(
+                "fixed-pair Ring4 runtime operator is not the complete four-slice group"
+            )
+        return raw_repeat
     if (
         last_finish != runtime_operator_count - 1
         or int(observer.get("final_pair_finishes_at_stage", -1)) != last_finish
@@ -3240,6 +3324,11 @@ def validate_conv_hardware_execplan_package(output_root: Path) -> dict[str, Any]
     runner = _read_json_object(root / "runner_contract.json")
     dump_contract = _read_json_object(root / "dump_contract.json")
     _validate_runtime_completion_barrier_contract(root, manifest, sca, runner)
+    execution_plan_descriptor = sca.get("ExecutionPlan")
+    execution_plan_is_chunked = (
+        isinstance(execution_plan_descriptor, Mapping)
+        and isinstance(execution_plan_descriptor.get("chunked_transport"), Mapping)
+    )
     try:
         parser_abi = runner["preload"]["sca_cfg"]["immutable_tb_parser_abi"]
         parser_abi_count = int(parser_abi["validated_transfer_count"])
@@ -3250,7 +3339,8 @@ def validate_conv_hardware_execplan_package(output_root: Path) -> dict[str, Any]
     if (
         parser_abi.get("name") != "line-oriented-json-close-resets-entry-v1"
         or parser_abi.get("serialized_order_is_authoritative") is not True
-        or parser_abi.get("execution_plan_outer_close_loads_semantic_path") is not False
+        or parser_abi.get("execution_plan_outer_close_loads_semantic_path")
+        != (not execution_plan_is_chunked)
         or parser_abi_count != serialized_transfer_count
     ):
         raise ConvHardwareExecplanError(

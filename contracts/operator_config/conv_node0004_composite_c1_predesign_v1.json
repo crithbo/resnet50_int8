@@ -1,0 +1,597 @@
+{
+  "bypass_annotation": {
+    "bypass_reason": "stock four-lane INT8 SA has duplicate carry shift, signed17 reduction range loss, and INT8 DataC/psum gating",
+    "claim_boundary": "proposal-only machine predesign; not a CONFIG_ONLY_CORRECTNESS_BASELINE",
+    "contradicted_or_missing_native_path": "normal four-lane dot, SA internal psum, and a registered composite Conv typed/materializer entry",
+    "exact_equivalence_scope": "node0004 1x1 Cin64 accumulate only; modulo-2^32 product/tree/correction arithmetic over all 3,211,264 outputs",
+    "materialized_configuration_mechanism": null,
+    "performance_and_resource_cost": "205,520,896 scalar SA product occurrences at 25% dot4-lane utilization; six GA tree levels plus one correction level; 128 OC8 tiles in five waves; 13,046,304 bytes/tile",
+    "unresolved_production_blocker": "SA scalar-product physical materializer/terminal first; exact UINT8 tail remains independently blocked"
+  },
+  "emission": {
+    "bitstream_generated": false,
+    "candidate_release": false,
+    "config_bound_simulator_generated": false,
+    "execplan_or_sca_generated": false,
+    "mapping_generated": false,
+    "package_release": "NONE",
+    "server_package_generated": false,
+    "target_json_generated": false
+  },
+  "feasibility": {
+    "capacity": "CLOSED_WITH_OC8_TILING_FIVE_WAVES",
+    "complete_target": false,
+    "first_physical_blocker": "B_CONV_C1_SA_SCALAR_PRODUCT_MATERIALIZER_AND_TERMINAL",
+    "first_physical_blocker_detail": "No authorized typed/manual materializer currently binds the single-nonzero-dot4 SA product occurrence to final LC/MSE/Buffer bank columns, tag/last terminal, direct INT32 scratch write, and 205,520,896-occurrence coverage. Symbolic addresses cannot substitute for final JSON/bitstream occurrence inversion.",
+    "ga_tree_physical_materialization": "PROPOSAL_ONLY",
+    "logical_schedule": "CLOSED_SYMBOLIC_AND_W3_BIT_EXACT",
+    "next_blockers": [
+      "B_CONV_GA_EXACT_ALTERNATIVE_TYPED_TOPOLOGY",
+      "B_CONV_SA_PRODUCT_SCRATCH_SCHEDULE_AND_OWNERSHIP",
+      "B_QUANT_TAIL_SIGNED_INT32_INGRESS",
+      "B_QUANT_TAIL_FMA_ROUNDING_POINT",
+      "B_QUANT_TAIL_TYPED_BINDING",
+      "B_EXECPLAN_TYPED_TRANSPORT"
+    ],
+    "sa_physical_materialization": "BLOCKED",
+    "tail_materialization": "BLOCKED"
+  },
+  "identity": {
+    "hw_op_id": "hwop-0004-00",
+    "hw_op_type": "ConvInt32Accumulate",
+    "node_id": "node-0004",
+    "onnx_name": "fused resnetv17_stage1_conv0_fwd_quant",
+    "onnx_op_type": "QLinearConv",
+    "stage": "accumulate"
+  },
+  "mainline_thread_id": "019fa2ca-72bc-7753-8d58-81e59bc76c88",
+  "numeric_oracle": {
+    "bias_payload_sha256": "40bc2a3acbd553ffc067ea1c7b1c31cb59f18fca30451f55809ff76d2594bc0b",
+    "claim_boundary": "Independent golden validation only; no product, partial-sum, accumulator, scaled, rounded, saturated, or final tensor is emitted.",
+    "computed_accumulator_payload_sha256": "1ec864892d82279beff561927500f55ebec636daf2fb7c624a1e153dd5e17532",
+    "correction_equals_bias": true,
+    "correction_maximum": 27356,
+    "correction_minimum": -1166214,
+    "correction_payload_sha256": "40bc2a3acbd553ffc067ea1c7b1c31cb59f18fca30451f55809ff76d2594bc0b",
+    "formal_accumulator_payload_sha256": "1ec864892d82279beff561927500f55ebec636daf2fb7c624a1e153dd5e17532",
+    "formal_element_count": 3211264,
+    "full_w3_mismatch_count": 0,
+    "w_zero_point_maximum": 0,
+    "w_zero_point_minimum": 0,
+    "weight_payload_sha256": "ff6ee89cbc889e0708d483f22b2a8f0e09f2cde13f65dcac061eb30551f68b48",
+    "x_zero_point": 0
+  },
+  "receipt_only_integration_refresh": {
+    "claim_boundary": "No W3/model numeric replay, target materialization, simulator, package, server inspection, upload, run, or lease.",
+    "classification": "ACTIVE_RULE_RECEIPT_ONLY",
+    "conclusion_changed": false,
+    "frozen_formal_element_count": 3211264,
+    "frozen_full_w3_mismatch_count": 0,
+    "frozen_numeric_oracle_sha256": "a2ba3cafbbac11e1ebd537bb91d7d88fe9770c61e202b78801ba042268ef6a41",
+    "new_rule_bindings": [
+      "CDA-COMPOSITE-SCRATCH-GLOBAL-VS-TILED-CAPACITY-001",
+      "CDA-PREDESIGN-SYMBOLIC-ADDRESS-NOT-PHYSICAL-COVERAGE-001"
+    ],
+    "numeric_analysis_repeated": false,
+    "tail_adjudication": "B_QUANT_TAIL_RAW_SIGNED_INT32_MAX0_OPCODE=OPEN_CONTRADICTED",
+    "target_or_package_generated": false
+  },
+  "receipts": {
+    "plan_mutable_provenance": {
+      "current_match_required": false,
+      "path": ".agents/plan.md",
+      "sha256_at_receipt_refresh": "971f3c7d479e6ad80cf39450d0f56bc3bad5a898daca152f2c859593cf27b017"
+    },
+    "semantic": [
+      {
+        "gate": "current_match_fail_closed",
+        "path": ".agents/rules/\u751f\u6210\u524d\u5fc5\u8bfb\u7d22\u5f15.md",
+        "sha256": "12583308ec9a16dbb8ea15571a5280291fed7e152167d2e4e8e00509a9a6370f"
+      },
+      {
+        "gate": "current_match_fail_closed",
+        "path": ".agents/rules/\u7b97\u5b50\u914d\u7f6e\u89c4\u5219.md",
+        "sha256": "cbaffcc5fb3bea7da9f0c199bb2e7f06445a676ab456bdfd505b90dd89825171"
+      },
+      {
+        "gate": "current_match_fail_closed",
+        "path": ".agents/rules/NDP\u786c\u4ef6\u5b57\u6bb5\u8bed\u4e49.md",
+        "sha256": "a955834fc059f08bada8131adc94db5c05112eb1e6acc0a0976eee7e6ae17c59"
+      },
+      {
+        "gate": "current_match_fail_closed",
+        "path": ".agents/rules/INT8_SA\u70b9\u79ef\u4e13\u9879\u89c4\u5219.md",
+        "sha256": "af4eb4c3795c8a8dfaba7dca47839906eb02dbb46bb17ec040f893638005502b"
+      },
+      {
+        "gate": "current_match_fail_closed",
+        "path": ".agents/rules/GAP_int32_mac_bypass_rules.md",
+        "sha256": "b194d525fb7c1647b3fdaabd51d88dc4bc9b874ce7a910d4fdd1ca125b56fd96"
+      },
+      {
+        "gate": "current_match_fail_closed",
+        "path": ".agents/rules/\u7cbe\u786eUINT8\u91cf\u5316\u5c3e\u4e13\u9879\u89c4\u5219.md",
+        "sha256": "32c47b83e98d9dd9cbf1f8be7f25dd99d86ddecb583d5972b61b1e72d3b931be"
+      },
+      {
+        "gate": "current_match_fail_closed",
+        "path": ".agents/rules/RequantizeUint8\u7b97\u5b50\u914d\u7f6e\u89c4\u5219.md",
+        "sha256": "d9ec14cc6975e9596f3fe56e762cd4797c8ba6c70fa235503f5954e97c6f863f"
+      },
+      {
+        "gate": "current_match_fail_closed",
+        "path": ".agents/task_records/20260728_conv_c0_mainline_adjudication_and_composite_c1_authorization.md",
+        "sha256": "6415f8adfdd163a6c360a46e9392371c386b900b85722b9eee8a8d3760a89e2a"
+      },
+      {
+        "gate": "current_match_fail_closed",
+        "path": ".agents/task_records/20260728_conv_node0004_composite_c1_mainline_adjudication.md",
+        "sha256": "1f343efe8383b65ffb836427ba4994dcd78f7e0869b98882a831920ff34e9760"
+      }
+    ],
+    "sources": [
+      {
+        "path": "contracts/resnet50_r5_lowering_bundle.json",
+        "sha256": "bf661e4eda2011025d9922708ab46a64f8d1b3c279527b88aa7d630bb3545432"
+      },
+      {
+        "path": "artifacts/reference_model/resnet50-v1-12-int8.onnx",
+        "sha256": "c234f30975989788b4405f25253275aae247ab6dbdd34aaa69ab0a59ff76f6d0"
+      },
+      {
+        "path": "artifacts/w3/golden_batch16/tensors/tensor-8d2f28c80ac24676.npy",
+        "sha256": "e4039c779c0083ff3cbe76845b4ba313e9b2e095e4faa72d329cbfa04f6cae1b"
+      },
+      {
+        "path": "artifacts/w3/subop_batch16/tensors/tensor-internal-node-0004-accumulate.npy",
+        "sha256": "32de6ea94086ce09da37b4f3c5b12ee51275c7b0f6d7b4a9875b0b9900ca25ac"
+      },
+      {
+        "path": "contracts/operator_config/node0004_exact_uint8_tail_fresh_c1_dependency_v1.json",
+        "sha256": "aa4962dda8bcdeef7776a2a913a58bb4f10b363d6e4bb31502fa57b7c5246ce6"
+      },
+      {
+        "path": "contracts/operator_config/requant_conv53_exact_tail_binding_v1.json",
+        "sha256": "075df2abdab13f7c94679b411a9822213f3975bc7341c7415a2c3577d5cdf113"
+      },
+      {
+        "path": "ndp-sim/model_execplan/src/execution_plan_generator/models.py",
+        "sha256": "7e627747aa01daadc1a53887b1e501f9431527011bc60b6783145ace8a6c79fc"
+      },
+      {
+        "path": "ndp-sim/model_execplan/src/execution_plan_generator/control_registers.py",
+        "sha256": "cd12ee5f31231e856f9f63f61746a8e43435228d0268813c3eb8c4630e09a941"
+      },
+      {
+        "path": "ndp-sim/model_execplan/src/execution_plan_generator/template_manager.py",
+        "sha256": "2d17fbdaa67c8f307739c1c90887d780d5b7037282c535e154239aca064d85ea"
+      },
+      {
+        "path": "ndp-sim/bitstream/config/mapper.py",
+        "sha256": "c7685cc297e4e11ccafa23758a46d20986e5db931fcb3c4e21f5f4a0a2534226"
+      },
+      {
+        "path": "ndp-sim/bitstream/config/general.py",
+        "sha256": "eb9d5ee9ef273182e05b718aca378f87d0a1ccb5366ae463d8482c8c94c3482f"
+      }
+    ]
+  },
+  "schedule": {
+    "correction_leaf": {
+      "a_mode": "buffer_terminal",
+      "accepted_occurrences_per_tile": 25088,
+      "b_mode": "constant_int32_one",
+      "barrier_after": "corrected accumulator D write drain",
+      "c_mode": "keep_replay_oc8",
+      "equation": "D=low32(root*1+correction[oc])",
+      "formula_general_wzp_zero": "bias[oc]-x_zp*sum_k(w[oc,k])",
+      "node0004_formula": "bias[oc]",
+      "opcode": "int32_mac",
+      "opcode_value": 14,
+      "status": "SOURCE_EXPRESSIBLE_PROPOSAL_ONLY",
+      "unique_constant_bytes_per_tile": 32
+    },
+    "coverage": {
+      "corrected_accumulator": {
+        "byte_count": 12845056,
+        "element_count": 3211264,
+        "formal_nchw_inverse_required": true
+      },
+      "final_materialized_address_hash": null,
+      "product_all_tiles": {
+        "byte_count": 822083584,
+        "element_count": 205520896,
+        "logical_inverse": "tile_id,q,k -> n,oc,oh,ow,k using tile.inverse",
+        "multiplicity": 1,
+        "tile_count": 128
+      },
+      "product_per_tile": {
+        "byte_count": 6422528,
+        "element_count": 1605632,
+        "multiplicity": 1,
+        "proof": "(q,k)->q*64+k is an affine bijection over q in [0,25088), k in [0,64)",
+        "relative_byte_interval": [
+          0,
+          6422528
+        ]
+      },
+      "status": "SYMBOLIC_BIJECTION_CLOSED__FINAL_OCCURRENCE_ADDRESS_ENUMERATION_BLOCKED",
+      "tree_stage_output_elements_all_tiles": [
+        102760448,
+        51380224,
+        25690112,
+        12845056,
+        6422528,
+        3211264
+      ]
+    },
+    "logical": {
+      "equation": "acc[n,oc,oh,ow]=bias[oc]+sum_k((u8(x[n,k,oh,ow])-x_zp)*(s8(w[oc,k])-w_zp[oc]))",
+      "k": 64,
+      "node0004_specialization": "x_zp=0 and all w_zp=0",
+      "output_elements": 3211264,
+      "product_elements": 205520896,
+      "shape": [
+        16,
+        64,
+        56,
+        56
+      ]
+    },
+    "memory": {
+      "aggregate_28_slice_capacity_bytes": 704643072,
+      "capacity_verdict": "FULL_LAYER_RESIDENCY_IMPOSSIBLE__OC8_TILE_RESIDENCY_FITS",
+      "full_product_scratch_bytes": 822083584,
+      "full_product_scratch_exceeds_aggregate_by_bytes": 117440512,
+      "per_slice_capacity_bytes": 25165824,
+      "per_slice_headroom_bytes": 12119520,
+      "region_overlap_count": 0,
+      "regions": [
+        {
+          "alignment": 16,
+          "end_exclusive": 200704,
+          "name": "input_nchw_u8",
+          "offset": 0,
+          "size_bytes": 200704
+        },
+        {
+          "alignment": 16,
+          "end_exclusive": 201216,
+          "name": "weight_oc8_k64_s8",
+          "offset": 200704,
+          "size_bytes": 512
+        },
+        {
+          "alignment": 16,
+          "end_exclusive": 201248,
+          "name": "correction_oc8_i32",
+          "offset": 201216,
+          "size_bytes": 32
+        },
+        {
+          "alignment": 16,
+          "end_exclusive": 6623776,
+          "name": "product_q_k_i32",
+          "offset": 201248,
+          "size_bytes": 6422528
+        },
+        {
+          "alignment": 16,
+          "end_exclusive": 9835040,
+          "name": "tree_l1_q_j_i32",
+          "offset": 6623776,
+          "size_bytes": 3211264
+        },
+        {
+          "alignment": 16,
+          "end_exclusive": 11440672,
+          "name": "tree_l2_q_j_i32",
+          "offset": 9835040,
+          "size_bytes": 1605632
+        },
+        {
+          "alignment": 16,
+          "end_exclusive": 12243488,
+          "name": "tree_l3_q_j_i32",
+          "offset": 11440672,
+          "size_bytes": 802816
+        },
+        {
+          "alignment": 16,
+          "end_exclusive": 12644896,
+          "name": "tree_l4_q_j_i32",
+          "offset": 12243488,
+          "size_bytes": 401408
+        },
+        {
+          "alignment": 16,
+          "end_exclusive": 12845600,
+          "name": "tree_l5_q_j_i32",
+          "offset": 12644896,
+          "size_bytes": 200704
+        },
+        {
+          "alignment": 16,
+          "end_exclusive": 12945952,
+          "name": "tree_l6_q_j_i32",
+          "offset": 12845600,
+          "size_bytes": 100352
+        },
+        {
+          "alignment": 16,
+          "end_exclusive": 13046304,
+          "name": "corrected_accumulator_hwc8_i32",
+          "offset": 12945952,
+          "size_bytes": 100352
+        }
+      ],
+      "tile_residency_bytes": 13046304,
+      "visibility": "Each producer region is disjoint; every stage requires complete write drain and same-active-mask barrier before consumer reload."
+    },
+    "sa_single_product": {
+      "data_c": 0,
+      "dot4_lane_utilization": 0.25,
+      "equation": "i32(s8(weight))*i32(u8(input))",
+      "logical_occurrences": 205520896,
+      "nonzero_dot4_product_lanes_per_logical_occurrence": 1,
+      "physical_parallel_grouping": null,
+      "status": "SOURCE_PRIMITIVE_PROVEN__MATERIALIZER_PENDING",
+      "zero_dot4_product_lanes_per_logical_occurrence": 3
+    },
+    "terminal_and_ownership": {
+      "claim_boundary": "Logical terminals are equations, not encoded last_index/tag proof. Every null physical leaf is a generation stop.",
+      "ga_stage_terminal": "j=output_width-1 terminates one q group; q=25087 terminates one tile stage",
+      "logical_loop_order": [
+        "tile_id",
+        "q",
+        "k"
+      ],
+      "logical_product_terminal": "k=63 terminates one output's product group; q=25087 terminates one tile",
+      "owners": [
+        {
+          "field": "logical geometry and typed constants",
+          "owner": "typed request/formal ONNX",
+          "status": "CLOSED"
+        },
+        {
+          "field": "tile axes, region sizes, symbolic byte equations",
+          "owner": "composite C1 predesign planner",
+          "status": "CLOSED_PROPOSAL_ONLY"
+        },
+        {
+          "field": "SA lane packing, LC/MSE, Buffer bank/column, terminal",
+          "owner": null,
+          "status": "B_CONV_C1_SA_SCALAR_PRODUCT_MATERIALIZER_AND_TERMINAL"
+        },
+        {
+          "field": "GA A/C roots, tag/FIFO, barrier and writeback",
+          "owner": "future composite manual materializer",
+          "status": "PROPOSAL_ONLY"
+        },
+        {
+          "field": "all base_addr and final physical occurrences",
+          "owner": null,
+          "status": "UNBOUND_NO_TARGET_JSON"
+        },
+        {
+          "field": "exact UINT8 tail",
+          "owner": "parallel shared-tail/max0 audit",
+          "status": "BLOCKED_NOT_CONSUMABLE"
+        }
+      ],
+      "physical_buffer_lifetime": null,
+      "physical_last_index": null,
+      "physical_lc_src_id": null,
+      "physical_sa_transout": null
+    },
+    "tile": {
+      "axes": [
+        "n",
+        "oc_group8"
+      ],
+      "formal_nchw_accumulator_byte": "4*(((n*64+oc)*56+oh)*56+ow)",
+      "inverse": {
+        "lane": "q%8",
+        "n": "tile_id//8",
+        "oc": "8*(tile_id%8)+lane",
+        "oh": "(q//8)//56",
+        "ow": "(q//8)%56",
+        "spatial": "q//8"
+      },
+      "output_elements": 25088,
+      "product_elements": 1605632,
+      "product_scratch_byte": "product_q_k_i32.base+4*(q*64+k)",
+      "q": "((oh*56+ow)*8+lane)",
+      "source_w_byte": "oc*64+k",
+      "source_x_byte": "(((n*64+k)*56+oh)*56+ow)",
+      "tile_count": 128,
+      "tile_id": "n*8+oc_group8",
+      "waves_over_28_slices": [
+        28,
+        28,
+        28,
+        28,
+        16
+      ]
+    },
+    "traffic_lower_bound": {
+      "correction_root_plus_keep_seed_read_bytes": 12849152,
+      "correction_write_bytes": 12845056,
+      "excludes": [
+        "config traffic",
+        "read-modify-write amplification",
+        "cache-line padding",
+        "tail stages"
+      ],
+      "ga_tree_read_bytes": 1618477056,
+      "ga_tree_write_bytes": 809238528,
+      "product_write_bytes": 822083584,
+      "sa_operand_read_bytes": 411041792,
+      "total_accumulate_bytes": 3686535168
+    },
+    "tree": {
+      "buffer_banks": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "buffer_byte": 0,
+      "buffer_word_columns": [
+        0,
+        4,
+        8,
+        12,
+        16,
+        20,
+        24,
+        28
+      ],
+      "normal_fifo_contract": "0<=occupancy<=2 on accepted read/write only",
+      "odd_tail_count": 0,
+      "pair_operations": 202309632,
+      "stage_count": 6,
+      "stages": [
+        {
+          "a_address": "product_q_k_i32.base + 4*(q*64 + 2*j)",
+          "a_terminal_owner": true,
+          "accepted_pair_occurrences_per_tile": 802816,
+          "b_mode": "constant_int32_one",
+          "barrier_after": "D write drain before next stage reconfigure",
+          "c_address": "product_q_k_i32.base + 4*(q*64 + 2*j + 1)",
+          "c_mode": "buffer",
+          "d_address": "tree_l1_q_j_i32.base + 4*(q*32 + j)",
+          "equation": "D=low32(A*1+C)",
+          "input_region": "product_q_k_i32",
+          "input_width": 64,
+          "normal_fifo_required": true,
+          "opcode": "int32_mac",
+          "opcode_value": 14,
+          "output_region": "tree_l1_q_j_i32",
+          "output_width": 32,
+          "stage": 1,
+          "transout_last_index": null
+        },
+        {
+          "a_address": "tree_l1_q_j_i32.base + 4*(q*32 + 2*j)",
+          "a_terminal_owner": true,
+          "accepted_pair_occurrences_per_tile": 401408,
+          "b_mode": "constant_int32_one",
+          "barrier_after": "D write drain before next stage reconfigure",
+          "c_address": "tree_l1_q_j_i32.base + 4*(q*32 + 2*j + 1)",
+          "c_mode": "buffer",
+          "d_address": "tree_l2_q_j_i32.base + 4*(q*16 + j)",
+          "equation": "D=low32(A*1+C)",
+          "input_region": "tree_l1_q_j_i32",
+          "input_width": 32,
+          "normal_fifo_required": true,
+          "opcode": "int32_mac",
+          "opcode_value": 14,
+          "output_region": "tree_l2_q_j_i32",
+          "output_width": 16,
+          "stage": 2,
+          "transout_last_index": null
+        },
+        {
+          "a_address": "tree_l2_q_j_i32.base + 4*(q*16 + 2*j)",
+          "a_terminal_owner": true,
+          "accepted_pair_occurrences_per_tile": 200704,
+          "b_mode": "constant_int32_one",
+          "barrier_after": "D write drain before next stage reconfigure",
+          "c_address": "tree_l2_q_j_i32.base + 4*(q*16 + 2*j + 1)",
+          "c_mode": "buffer",
+          "d_address": "tree_l3_q_j_i32.base + 4*(q*8 + j)",
+          "equation": "D=low32(A*1+C)",
+          "input_region": "tree_l2_q_j_i32",
+          "input_width": 16,
+          "normal_fifo_required": true,
+          "opcode": "int32_mac",
+          "opcode_value": 14,
+          "output_region": "tree_l3_q_j_i32",
+          "output_width": 8,
+          "stage": 3,
+          "transout_last_index": null
+        },
+        {
+          "a_address": "tree_l3_q_j_i32.base + 4*(q*8 + 2*j)",
+          "a_terminal_owner": true,
+          "accepted_pair_occurrences_per_tile": 100352,
+          "b_mode": "constant_int32_one",
+          "barrier_after": "D write drain before next stage reconfigure",
+          "c_address": "tree_l3_q_j_i32.base + 4*(q*8 + 2*j + 1)",
+          "c_mode": "buffer",
+          "d_address": "tree_l4_q_j_i32.base + 4*(q*4 + j)",
+          "equation": "D=low32(A*1+C)",
+          "input_region": "tree_l3_q_j_i32",
+          "input_width": 8,
+          "normal_fifo_required": true,
+          "opcode": "int32_mac",
+          "opcode_value": 14,
+          "output_region": "tree_l4_q_j_i32",
+          "output_width": 4,
+          "stage": 4,
+          "transout_last_index": null
+        },
+        {
+          "a_address": "tree_l4_q_j_i32.base + 4*(q*4 + 2*j)",
+          "a_terminal_owner": true,
+          "accepted_pair_occurrences_per_tile": 50176,
+          "b_mode": "constant_int32_one",
+          "barrier_after": "D write drain before next stage reconfigure",
+          "c_address": "tree_l4_q_j_i32.base + 4*(q*4 + 2*j + 1)",
+          "c_mode": "buffer",
+          "d_address": "tree_l5_q_j_i32.base + 4*(q*2 + j)",
+          "equation": "D=low32(A*1+C)",
+          "input_region": "tree_l4_q_j_i32",
+          "input_width": 4,
+          "normal_fifo_required": true,
+          "opcode": "int32_mac",
+          "opcode_value": 14,
+          "output_region": "tree_l5_q_j_i32",
+          "output_width": 2,
+          "stage": 5,
+          "transout_last_index": null
+        },
+        {
+          "a_address": "tree_l5_q_j_i32.base + 4*(q*2 + 2*j)",
+          "a_terminal_owner": true,
+          "accepted_pair_occurrences_per_tile": 25088,
+          "b_mode": "constant_int32_one",
+          "barrier_after": "D write drain before next stage reconfigure",
+          "c_address": "tree_l5_q_j_i32.base + 4*(q*2 + 2*j + 1)",
+          "c_mode": "buffer",
+          "d_address": "tree_l6_q_j_i32.base + 4*(q*1 + j)",
+          "equation": "D=low32(A*1+C)",
+          "input_region": "tree_l5_q_j_i32",
+          "input_width": 2,
+          "normal_fifo_required": true,
+          "opcode": "int32_mac",
+          "opcode_value": 14,
+          "output_region": "tree_l6_q_j_i32",
+          "output_width": 1,
+          "stage": 6,
+          "transout_last_index": null
+        }
+      ],
+      "status": "SOURCE_EXPRESSIBLE_PROPOSAL_ONLY",
+      "tag_contract": "A is terminal carrier; C matches A occurrence/tag",
+      "widths": [
+        64,
+        32,
+        16,
+        8,
+        4,
+        2,
+        1
+      ]
+    }
+  },
+  "schema": "conv-node0004-composite-c1-predesign-v1",
+  "status": "PROPOSAL_ONLY_FEASIBILITY__RECEIPTS_REFRESHED__TARGET_GENERATION_STOPPED",
+  "test_id": "r5_conv_node0004_composite_c1_predesign_v1",
+  "typed_request_sha256": "e27e10169168f3889df4c03bf15cb21de074abf3f3767dc4bee288425165874b"
+}

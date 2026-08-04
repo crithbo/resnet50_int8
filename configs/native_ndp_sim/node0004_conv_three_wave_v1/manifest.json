@@ -1,0 +1,72 @@
+{
+  "operator_allocation_bytes": 402496,
+  "records": [
+    {
+      "active_slice_count": 28,
+      "canonical_config_sha256": "4852edc3064bdfdf4c8cc3f04c368d43f802065579b5afafc98c5ebabe5b7013",
+      "op_id": "op_w0",
+      "operator_type": "resnet50_conv_node0004_wave0",
+      "sample_ids": [
+        0,
+        3,
+        6,
+        8,
+        10,
+        12,
+        14
+      ],
+      "stream_base_addresses": {
+        "A": "0x00000000",
+        "B": "0x00000400",
+        "C": "0x00031400",
+        "D": "0x00031440"
+      },
+      "wave_index": 0
+    },
+    {
+      "active_slice_count": 28,
+      "canonical_config_sha256": "d7f69d6f53b7b2cf052b4278be2db229e5808bad04b7090b0ae297b778a37ef6",
+      "op_id": "op_w1",
+      "operator_type": "resnet50_conv_node0004_wave1",
+      "sample_ids": [
+        1,
+        4,
+        7,
+        9,
+        11,
+        13,
+        15
+      ],
+      "stream_base_addresses": {
+        "A": "0x00062440",
+        "B": "0x00062840",
+        "C": "0x00093840",
+        "D": "0x00093880"
+      },
+      "wave_index": 1
+    },
+    {
+      "active_slice_count": 8,
+      "canonical_config_sha256": "f4bdb7ddaa219c7a7a1939d1608660d4ec9aab15a59c1e90f64b4c2b42c2c0c7",
+      "op_id": "op_w2",
+      "operator_type": "resnet50_conv_node0004_wave2",
+      "sample_ids": [
+        2,
+        5
+      ],
+      "stream_base_addresses": {
+        "A": "0x000C4880",
+        "B": "0x000C4C80",
+        "C": "0x000F5C80",
+        "D": "0x000F5CC0"
+      },
+      "wave_index": 2
+    }
+  ],
+  "schema": "resnet50-node0004-conv-three-wave-config-set-v1",
+  "source": {
+    "path": "configs/native_ndp_sim/node0004_accumulate_wave0_nopp_r1_strict_v1/config.json",
+    "policy": "current strict zero-ping-pong source; address-only three-wave specialization",
+    "sha256": "2fe3fc865a6bfb8f37d0c34afe2adb730de35568d02892d9705895b0261b9ae8"
+  }
+}

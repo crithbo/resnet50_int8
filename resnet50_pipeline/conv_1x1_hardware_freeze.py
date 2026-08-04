@@ -16,12 +16,14 @@ from .bitstream_binding import (
     require_same_logical_bitstream,
 )
 from .conv_instance import (
+    CONV_TRANSPORT_ABI_SIGNED_A_LOCAL,
     FIRST_REAL_CONV_NODE_ID,
     ConvTargetRequest,
     build_conv_target_request,
 )
 from .conv28_layout import (
     CONV28_HARDWARE_LAYOUT_ABI,
+    CONV28_SIGNED_A_LOCAL_LAYOUT_ABI,
     GROUP4X7_BATCH_CHANNEL28_PROFILE,
     QLinearConvPhysicalLayout,
 )
@@ -161,7 +163,11 @@ def _selected_bundle(
     validate_conv_hardware_quantization_preconditions(values)
     layout = QLinearConvPhysicalLayout(
         profile_id=GROUP4X7_BATCH_CHANNEL28_PROFILE,
-        layout_abi=CONV28_HARDWARE_LAYOUT_ABI,
+        layout_abi=(
+            CONV28_SIGNED_A_LOCAL_LAYOUT_ABI
+            if request.transport_abi == CONV_TRANSPORT_ABI_SIGNED_A_LOCAL
+            else CONV28_HARDWARE_LAYOUT_ABI
+        ),
     )
     bundle = layout.forward(
         activation=values["A"],
@@ -240,51 +246,55 @@ def _encoder_sources(
     requant_encoder_root: Path | None = None,
 ) -> tuple[list[tuple[Path, str]], list[tuple[Path, str]]]:
     spec = request.spec
-    if spec.node_id == FIRST_REAL_CONV_NODE_ID:
-        if accumulate_encoder_root is not None:
-            encoder_root = accumulate_encoder_root.resolve()
-            if requant_encoder_root is None:
-                raise ValueError(
-                    "revised first-Conv freeze requires an explicit requant_encoder_root"
-                )
-            selected_requant_root = requant_encoder_root.resolve()
-            bitstreams = [
+    if accumulate_encoder_root is not None:
+        encoder_root = accumulate_encoder_root.resolve()
+        if requant_encoder_root is None:
+            raise ValueError("explicit accumulate encoder root requires a requant encoder root")
+        selected_requant_root = requant_encoder_root.resolve()
+        accumulate_name = (
+            "conv_1x1_real_bitstream"
+            if spec.node_id == FIRST_REAL_CONV_NODE_ID
+            else "accumulate_bitstream"
+        )
+        bitstreams = [
+            (
+                (
+                    encoder_root / f"modules_dump_{width}.bin"
+                    if (encoder_root / f"modules_dump_{width}.bin").is_file()
+                    else encoder_root / f"{accumulate_name}_{width}.bin"
+                ),
+                f"bitstreams/accumulate/{accumulate_name}_{width}.bin",
+            )
+            for width in ("128b", "64b")
+        ]
+        parsed = [
+            (
+                encoder_root / "parsed_bitstream.txt",
+                "encoder_evidence/accumulate/parsed_bitstream.txt",
+            )
+        ]
+        for shard_index in range(spec.requant_shard_count):
+            shard_root = selected_requant_root / f"shard-{shard_index:02d}"
+            bitstreams.extend(
                 (
                     (
-                        encoder_root / f"modules_dump_{width}.bin"
-                        if (encoder_root / f"modules_dump_{width}.bin").is_file()
-                        else encoder_root / f"conv_1x1_real_bitstream_{width}.bin"
+                        shard_root / f"modules_dump_{width}.bin"
+                        if (shard_root / f"modules_dump_{width}.bin").is_file()
+                        else shard_root
+                        / f"shard-{shard_index:02d}_bitstream_{width}.bin"
                     ),
-                    f"bitstreams/accumulate/conv_1x1_real_bitstream_{width}.bin",
+                    f"bitstreams/requant/shard-{shard_index:02d}_bitstream_{width}.bin",
                 )
                 for width in ("128b", "64b")
-            ]
-            for shard_index in range(spec.requant_shard_count):
-                bitstreams.extend(
-                    (
-                        selected_requant_root
-                        / f"shard-{shard_index:02d}"
-                        / f"modules_dump_{width}.bin",
-                        f"bitstreams/requant/shard-{shard_index:02d}_bitstream_{width}.bin",
-                    )
-                    for width in ("128b", "64b")
-                )
-            parsed = [
+            )
+            parsed.append(
                 (
-                    encoder_root / "parsed_bitstream.txt",
-                    "encoder_evidence/accumulate/parsed_bitstream.txt",
-                )
-            ]
-            parsed.extend(
-                (
-                    selected_requant_root
-                    / f"shard-{shard_index:02d}"
-                    / "parsed_bitstream.txt",
+                    shard_root / "parsed_bitstream.txt",
                     f"encoder_evidence/requant/shard-{shard_index:02d}/parsed_bitstream.txt",
                 )
-                for shard_index in range(spec.requant_shard_count)
             )
-            return bitstreams, parsed
+        return bitstreams, parsed
+    if spec.node_id == FIRST_REAL_CONV_NODE_ID:
         bitstreams = [
             (
                 project_root
@@ -360,20 +370,27 @@ def _candidate_encoder_sources(
         if isinstance(record, dict)
     }
     spec = request.spec
-    expected = {"hwop-0004-00.config"} | {
-        f"hwop-0004-01.shard-{index:02d}" for index in range(spec.requant_shard_count)
+    accumulate_artifact_id = f"{spec.accumulate_hw_op_id}.config"
+    expected = {accumulate_artifact_id} | {
+        f"{spec.requant_hw_op_id}.shard-{index:02d}"
+        for index in range(spec.requant_shard_count)
     }
     if set(by_artifact) != expected:
         raise ValueError("native encoder candidate artifact set differs")
 
     bitstreams: list[tuple[Path, str]] = []
     parsed: list[tuple[Path, str]] = []
-    accumulate_root = candidate_root / by_artifact["hwop-0004-00.config"]["run_a_root"]
+    accumulate_root = candidate_root / by_artifact[accumulate_artifact_id]["run_a_root"]
+    accumulate_name = (
+        "conv_1x1_real_bitstream"
+        if spec.node_id == FIRST_REAL_CONV_NODE_ID
+        else "accumulate_bitstream"
+    )
     for width in ("128b", "64b"):
         bitstreams.append(
             (
                 accumulate_root / f"modules_dump_{width}.bin",
-                f"bitstreams/accumulate/conv_1x1_real_bitstream_{width}.bin",
+                f"bitstreams/accumulate/{accumulate_name}_{width}.bin",
             )
         )
     parsed.append(
@@ -383,7 +400,7 @@ def _candidate_encoder_sources(
         )
     )
     for shard_index in range(spec.requant_shard_count):
-        record = by_artifact[f"hwop-0004-01.shard-{shard_index:02d}"]
+        record = by_artifact[f"{spec.requant_hw_op_id}.shard-{shard_index:02d}"]
         shard_root = candidate_root / record["run_a_root"]
         for width in ("128b", "64b"):
             bitstreams.append(
@@ -440,7 +457,8 @@ def _build_bitstream_bindings(
     requant_manifest = _load_json(request.requant_manifest_path)
     encoder_contract_records: dict[int, dict[str, Any]] = {}
     requant_encoder_contract_sha256: str | None = None
-    if spec.node_id == FIRST_REAL_CONV_NODE_ID:
+    has_requant_encoder_contract = request.requant_encoder_contract_path.is_file()
+    if has_requant_encoder_contract:
         requant_encoder_contract = _load_json(request.requant_encoder_contract_path)
         encoder_contract_records = {
             int(item["shard_index"]): item
@@ -457,7 +475,9 @@ def _build_bitstream_bindings(
     }
     records: list[dict[str, Any]] = []
 
-    if spec.node_id == FIRST_REAL_CONV_NODE_ID:
+    # Every typed candidate carries independent accumulate encoder evidence in
+    # its semantic contract, so freeze it together with the requant records.
+    if request.semantic_contract_path.is_file():
         semantic_contract = _load_json(request.semantic_contract_path)
         expected_config = semantic_contract.get("config", {})
         expected_outputs = semantic_contract.get("official_encoder", {}).get(
@@ -466,9 +486,12 @@ def _build_bitstream_bindings(
         config_sha = _sha256(request.accumulate_config_path.read_bytes())
         if config_sha != expected_config.get("sha256"):
             raise ValueError("accumulate JSON differs from its semantic contract")
-        accumulate_relative = (
-            "bitstreams/accumulate/conv_1x1_real_bitstream_128b.bin"
+        accumulate_basename = (
+            "conv_1x1_real_bitstream_128b.bin"
+            if spec.node_id == FIRST_REAL_CONV_NODE_ID
+            else "accumulate_bitstream_128b.bin"
         )
+        accumulate_relative = f"bitstreams/accumulate/{accumulate_basename}"
         source = source_by_relative[accumulate_relative]
         source_identity = bitstream_text_identity(source, line_width_bits=128)
         expected_bitstream = expected_outputs.get("modules_dump_128b.bin", {})
@@ -520,7 +543,11 @@ def _build_bitstream_bindings(
                 "role": "accumulate",
                 "config": {
                     "source_path": request.accumulate_config_relative,
-                    "freeze_path": "configs/conv_1x1_real.json",
+                    "freeze_path": (
+                        "configs/conv_1x1_real.json"
+                        if spec.node_id == FIRST_REAL_CONV_NODE_ID
+                        else "configs/accumulate.json"
+                    ),
                     "sha256": config_sha,
                 },
                 "official_encoder": {
@@ -563,7 +590,7 @@ def _build_bitstream_bindings(
             f"encoder_evidence/requant/shard-{shard_index:02d}/parsed_bitstream.txt"
         )
         parsed_source = parsed_by_relative[parsed_relative]
-        if spec.node_id == FIRST_REAL_CONV_NODE_ID:
+        if has_requant_encoder_contract:
             encoder_contract_record = encoder_contract_records[shard_index]
             contract_config = encoder_contract_record.get("config", {})
             contract_outputs = encoder_contract_record.get("official_encoder", {})
@@ -699,6 +726,9 @@ def export_hardware_freeze(
         typed_request_sha256 = str(
             preflight.get("target_configuration", {})
             .get("typed_execplan_transport", {})
+            .get("sha256")
+            or preflight.get("configs", {})
+            .get("typed_execplan_request", {})
             .get("sha256", "")
         )
         native_candidate_binding = _bind_native_encoder_candidate(
@@ -707,6 +737,11 @@ def export_hardware_freeze(
             candidate_root,
             expected_node_id=spec.node_id,
             expected_typed_request_sha256=typed_request_sha256,
+            expected_artifact_ids={f"{spec.accumulate_hw_op_id}.config"}
+            | {
+                f"{spec.requant_hw_op_id}.shard-{index:02d}"
+                for index in range(spec.requant_shard_count)
+            },
         )
         preflight_binding = preflight.get("native_encoder_candidate")
         required_match_fields = (
@@ -861,7 +896,7 @@ def export_hardware_freeze(
             for index in range(spec.requant_shard_count)
         ],
     ]
-    if spec.node_id == FIRST_REAL_CONV_NODE_ID:
+    if request.requant_encoder_contract_path.is_file():
         config_sources.append(
             (
                 request.requant_encoder_contract_path,

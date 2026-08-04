@@ -1,0 +1,204 @@
+{
+  "schema": "mandatory-generation-read-receipt-v1",
+  "task": "rq_node0001_guardonly_sfu_eventedge_stock_v1",
+  "read_date": "2026-07-27",
+  "status": "complete",
+  "scope": {
+    "workload_policy": "reuse the already verified frozen Requant guard-only workload byte-for-byte",
+    "semantic_rebuild": false,
+    "observer_change_only": true,
+    "functional_rtl_change": false,
+    "tb_driver_change": false,
+    "candidate_release": false,
+    "counts_as_e4_or_e5": false
+  },
+  "mandatory_sources": [
+    {
+      "path": ".agents/agent.md",
+      "size_bytes": 3439,
+      "sha256": "367f4f4260246d40531d83cc6d24fe94946cb05bce6fbef18c428f05b634c083",
+      "read_completely": true
+    },
+    {
+      "path": ".agents/plan.md",
+      "size_bytes": 14003,
+      "sha256": "df3eef8487a17af0cabd5e7aeb6f7f0ebc0611a536b85c4df959b9e1c4fd7ada",
+      "read_completely": true
+    },
+    {
+      "path": ".agents/rules/生成前必读索引.md",
+      "size_bytes": 5650,
+      "sha256": "539e8dfbe52ad9fc8bd9fdef8c69d448fb5fd713e938e3adc5f663f82fd806d7",
+      "read_completely": true
+    },
+    {
+      "path": ".agents/rules/服务器测试包生成规则.md",
+      "size_bytes": 18061,
+      "sha256": "f3fe8dd18c9e2009db4a2736c6c1e86841760d8ec023bb7b57562f27f5faff04",
+      "read_completely": true
+    },
+    {
+      "path": ".agents/rules/RequantizeUint8算子配置规则.md",
+      "size_bytes": 32798,
+      "sha256": "44e8ee38d1361f15d78bf5d7918fa10e4648370153178ad10d044fd5c9d26265",
+      "read_completely": true
+    },
+    {
+      "path": "NDP_copy01/README_HARDWARE_SIM_ENTRY.md",
+      "size_bytes": 5461,
+      "sha256": "4318f3a28de399fb522740315f11bdddf346e71969cf1e45686899a568b042d7",
+      "read_completely": true
+    }
+  ],
+  "authoritative_dynamic_evidence": [
+    {
+      "path": "server_returns/rq_node0001_guardonly_sfu_numeric_stock_v1_return_analysis_20260727.json",
+      "size_bytes": 5256,
+      "sha256": "8dc774b0ddc23b7108414651a3fa7d24b68463232fca06e6ab72952d3adfe22b",
+      "read_completely": true
+    },
+    {
+      "path": ".agents/task_records/20260727_requant_guardonly_sfu_numeric_v1_return_analysis.md",
+      "size_bytes": 2724,
+      "sha256": "ce38cde297f04420ce83c3c85e2ef610510575e8f5c3b0797430641cb7d0da64",
+      "read_completely": true
+    },
+    {
+      "path": "server_returns/decode_silu_fp16N_fp32N_control_stock_v1_return_analysis_20260727.json",
+      "size_bytes": 5367,
+      "sha256": "894b01355a888316a9f9475e38cfb2a565689895ba842955e31cc187dd3f8f6a",
+      "read_completely": true
+    },
+    {
+      "path": ".agents/task_records/20260727_decode_silu_control_stock_v1_return_analysis.md",
+      "size_bytes": 2454,
+      "sha256": "b1cda36fc10c592c9093b20dbe69dd546fb25177b8e057e1a37c1c5513502a3e",
+      "read_completely": true
+    }
+  ],
+  "builders_and_runtime_consumers": [
+    {
+      "path": "tools/build_requant_atomic_onecmd_server_test.py",
+      "size_bytes": 63987,
+      "sha256": "5318d204100fdb92dec561f3f412fd88bd1f45e49bb3cf60bf1447f1259cf1aa",
+      "read_completely": true
+    },
+    {
+      "path": "tools/build_requant_guard_only_onecmd_server_test.py",
+      "size_bytes": 139777,
+      "sha256": "8f24eee1bd73dc5c0de505f87d34d3a1ae9b8a500bf6339e28cd490b24a9a3c0",
+      "read_completely": true
+    },
+    {
+      "path": "tools/requant_atomic_server_runtime.py",
+      "size_bytes": 67158,
+      "sha256": "f7954105d325f98243d1e3adfcb1dd85f6410d53f7ca8a02cbcba715a600d05e",
+      "read_completely": true
+    },
+    {
+      "path": "tools/requant_node0001_server_runtime.py",
+      "size_bytes": 70456,
+      "sha256": "0d3383a8e054f763880c504166794c428bfd9eb27347d0c06a302f0d2aad98a1",
+      "read_completely": true
+    },
+    {
+      "path": "tools/requant_guard_eventedge_server_runtime.py",
+      "size_bytes": 20204,
+      "sha256": "de0faddd4b4a354e2a005e42903b0aa519ee37cf31cac5c4c2d650a793c3daa9",
+      "read_completely": true
+    },
+    {
+      "path": "tools/build_requant_guard_eventedge_onecmd_server_test.py",
+      "size_bytes": 43884,
+      "sha256": "58399857a35f6f71e14afd5c824f295f4eef2ba753960a53e03269643298fbde",
+      "read_completely": true
+    }
+  ],
+  "rtl_and_tb_consumers_read_only": [
+    {
+      "path": "NDP_copy01/rtl/Slice/General_Array/GA_PE_Group/GA_SFU_PE/GA_SFU_PE.sv",
+      "size_bytes": 21404,
+      "sha256": "fe09e7d44651cbc86dead5ee8bd406c90b8ffd4ad74b68acc3f46ea21781ffca"
+    },
+    {
+      "path": "NDP_copy01/rtl/Slice/General_Array/GA_PE_Group/GA_SFU_PE/GA_SFU_PE_Preprocess.sv",
+      "size_bytes": 5044,
+      "sha256": "79a285e4988e36b5fbb0ef4646131fd3ca559d7bc7ea0d4ee2751b544e2eb548"
+    },
+    {
+      "path": "NDP_copy01/rtl/Slice/General_Array/GA_PE_Group/GA_SFU_PE/GA_SFU_PE_Postprocess.sv",
+      "size_bytes": 4759,
+      "sha256": "074564e6b2a26dfbefd710082fedaf0f8c6e758f2bca3681b1f6404579c5ac06"
+    },
+    {
+      "path": "NDP_copy01/rtl/Slice/General_Array/GA_PE_Group/GA_PE_Inbuffer.sv",
+      "size_bytes": 34326,
+      "sha256": "25fa4dd2c6fe8301bc3651d660df72059ea2787c0c26a2841a1d4e439586b518"
+    },
+    {
+      "path": "NDP_copy01/rtl/Slice/General_Array/GA_PE_Group/GA_PE_Outbuffer.sv",
+      "size_bytes": 19879,
+      "sha256": "0e4c024c159cb02c2ec6425490fa09abf151a2cf99034b03c36d80dbc9a72de8"
+    },
+    {
+      "path": "NDP_copy01/rtl/Slice/General_Array/GA_PE_Group/GA_PE_ALU.sv",
+      "size_bytes": 2085,
+      "sha256": "8a73c66755df0897034d7bdbc7183f663aeba630d16ccae07e8e879d689eb9aa"
+    },
+    {
+      "path": "NDP_copy01/rtl/Slice/General_Array/GA_PE_Group/GA_ALU/GA_ALU.v",
+      "size_bytes": 11108,
+      "sha256": "9ccbe59e35f55fca07ba159fb87185c5274de86b15618d781e3c0fec712d94f6"
+    },
+    {
+      "path": "NDP_copy01/rtl/Slice/General_Array/GA_PE_Group/GA_SFU_LUT.sv",
+      "size_bytes": 19687,
+      "sha256": "617aa05513ccf183fbadfc49495113403dfa13d41c6dc51ea22870d8dbfb3566"
+    },
+    {
+      "path": "NDP_copy01/rtl/Slice/General_Array/GA_PE_Group/GA_PE/GA_PE.sv",
+      "size_bytes": 13511,
+      "sha256": "6cbce65264885ae7c211e217511e047b8c999cca9c2369f043a5586bb0fc0fd3"
+    },
+    {
+      "path": "NDP_copy01/rtl/Slice/General_Array/GA_Outport/GA_Outport.sv",
+      "size_bytes": 15846,
+      "sha256": "8b1a3f12f44a2dbbe65ff41853397c06f7f591c1472b93ab8dd1698587b328db"
+    },
+    {
+      "path": "NDP_copy01/rtl/Slice/LSU/Stream_Engine/Memory_Stream_Engine/Memory_WR_Stream_Engine/WR_Memory_AG.sv",
+      "size_bytes": 21813,
+      "sha256": "7ecfdf2e4a9493f1f470cac03b4b581f6bde95126ab163a55dff8918d3aaa09f"
+    },
+    {
+      "path": "NDP_copy01/tb_NDP_Top_new_phy.sv",
+      "size_bytes": 342445,
+      "sha256": "e068f7500f0c71c2ba2c756f74a4519c33d13d4afe0fa4cc9f6c9e79b1e3f994"
+    },
+    {
+      "path": "NDP_copy01/Makefile.tb_NDP_Top_new_phy",
+      "size_bytes": 17683,
+      "sha256": "528d93f3c7f458d256bdbaf1d9ec39edfbfe5bd8a924e2bf0786914a634f4aba"
+    },
+    {
+      "path": "NDP_copy01/native_return_observer.svh",
+      "size_bytes": 111824,
+      "sha256": "47f0d66728f47c92f9f93f8cf87b47a0ff8567d587c3a099e2d03f610af09f49"
+    }
+  ],
+  "consumer_selection": {
+    "planner_mapper_encoder_reopened": false,
+    "reason": "This successor is explicitly forbidden to change or re-encode the frozen JSON, mapping, bitstream, execplan, input, RequantGuard, golden, and expected-write workload. Their exact size/SHA tree is checked against the verified predecessor. Only the actual server bootstrap, observer, VCS/TB include, GA SFU/ALU/outbuffer, MSE4, and return consumers are active."
+  },
+  "rules_applied": [
+    "CDA-SERVER-PACKAGE-BOOTSTRAP-IMMUTABILITY-001",
+    "CDA-SERVER-OBSERVER-XMR-ELABORATION-CONSTANT-001",
+    "CDA-SERVER-OBSERVER-DECOUPLED-HANDSHAKE-001",
+    "CDA-SERVER-OBSERVER-CAPTURE-EDGE-WITNESS-001",
+    "CDA-SERVER-OBSERVER-EVENT-QUALIFICATION-001",
+    "CDA-SERVER-TB-TARGET-DIRECTORY-ISOLATION-001",
+    "CDA-REQUANT-GUARD-CHECKPOINT-ROUTING-001",
+    "CDA-REQUANT-GUARD-DIAGNOSTIC-EVIDENCE-BOUNDARY-001",
+    "CDA-REQUANT-NATIVE-SILU-CONTROL-V1-DYNAMIC-EVIDENCE-001"
+  ]
+}

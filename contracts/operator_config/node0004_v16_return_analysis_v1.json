@@ -1,0 +1,197 @@
+{
+  "schema": "node0004-v16-return-analysis-v1",
+  "status": "LONG_RUNNING_HANG_AFTER_FIRST_SA_OPERAND_ACCEPT",
+  "valid": true,
+  "errors": [],
+  "identity": {
+    "return_zip": "C:\\Users\\15383\\xwechat_files\\wxid_vwpfpfs4fgyk22_29b7\\msg\\file\\2026-07\\r5_n4_hw_v16_abpe_runnerpc_return.zip",
+    "return_zip_bytes": 77352,
+    "return_zip_sha256": "561e29d888b8970d44ff90405d8709cc6e9aae63393d02261652aa5ff7888d4f",
+    "sidecar": "C:\\Users\\15383\\xwechat_files\\wxid_vwpfpfs4fgyk22_29b7\\msg\\file\\2026-07\\r5_n4_hw_v16_abpe_runnerpc_return.zip.sha256",
+    "sidecar_sha256": "a008d8eb75a328dd5543adf90c584212798a0bef11f578e462aabea7e67ca513",
+    "sidecar_valid": true,
+    "source_zip": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-server-test-packages\\r5_n4_hw_v16_abpe_runnerpc.zip",
+    "source_zip_sha256": "e0f6d1effba71e505d22203ec2a43b4a538aaeeb515b806f6953603a342bcec1",
+    "install_name": "r5_n4_hw_v16_abpe_runnerpc",
+    "identity_valid": true,
+    "observer_sha256": "61dd2dd47558672b4929b8cd30b9147fa3a68c1a12e67dfa4865b33f8e4fb3ee",
+    "current_rule_drift_receipt": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8\\artifacts\\operator_config_validation\\r5-server-test-packages\\r5_n4_hw_v16_abpe_runnerpc.rule_drift_507ca909.json",
+    "current_rule_drift_receipt_sha256": "cfc12f55e51eed1e4deb865a13d58170720bddc56007298caf4acccad659a23b",
+    "current_rule_drift_valid": true
+  },
+  "return_envelope": {
+    "crc_pass": true,
+    "single_root": "r5_n4_hw_v16_abpe_runnerpc_return",
+    "entry_count": 14,
+    "exact_set_valid": true,
+    "allowlist_record_count": 13,
+    "hash_size_mismatches": []
+  },
+  "preflight": {
+    "valid": true,
+    "package": {
+      "schema": "node0004-hang-localization-preflight-v7",
+      "valid": true,
+      "install_name": "r5_n4_hw_v16_abpe_runnerpc",
+      "package_file_count": 95,
+      "c0_input_leaf_count": 86,
+      "c0_absent_d_leaf_count": 28,
+      "observer_sha256": "61dd2dd47558672b4929b8cd30b9147fa3a68c1a12e67dfa4865b33f8e4fb3ee",
+      "observer_runtime_enabled": true,
+      "progress_log_return_bound": true,
+      "host_monotonic_log_return_bound": true
+    },
+    "install": {
+      "schema": "node0004-hang-localization-install-v7",
+      "valid": true,
+      "file_count": 89,
+      "runtime_d_initially_absent": true
+    },
+    "observer": {
+      "schema": "node0004-package-local-observer-precompile-v1",
+      "valid": true,
+      "errors": [],
+      "package_root": "/home/panqs/ndp/r5_n4_hw_v16_abpe_runnerpc",
+      "observer_relative_path": "tb_probe/native_return_observer.svh",
+      "observer_path": "/home/panqs/ndp/r5_n4_hw_v16_abpe_runnerpc/tb_probe/native_return_observer.svh",
+      "observer_readable": true,
+      "observer_symlink": false,
+      "expected_sha256": "61dd2dd47558672b4929b8cd30b9147fa3a68c1a12e67dfa4865b33f8e4fb3ee",
+      "observed_sha256": "61dd2dd47558672b4929b8cd30b9147fa3a68c1a12e67dfa4865b33f8e4fb3ee",
+      "identity_match": true,
+      "compile_include_directory": "/home/panqs/ndp/r5_n4_hw_v16_abpe_runnerpc/tb_probe",
+      "xmr_static_gate": {
+        "rule_id": "CDA-SERVER-OBSERVER-XMR-ELABORATION-CONSTANT-001",
+        "status": "pass",
+        "checked_generated_instance_reference_count": 208,
+        "declared_genvars": [
+          "return_obs_abpe_col",
+          "return_obs_abpe_group",
+          "return_obs_abpe_row",
+          "return_obs_abpe_slice",
+          "return_obs_buf_slot",
+          "return_obs_group",
+          "return_obs_row",
+          "return_obs_slice"
+        ],
+        "runtime_indexed_generated_instance_reference_count": 0
+      },
+      "server_file_written": false,
+      "functional_rtl_modified": false,
+      "expected_identity_source": "package_manifest.json:observer_binding_four_way.source.sha256"
+    }
+  },
+  "dynamic": {
+    "compile_exit_status": 0,
+    "compile_valid": true,
+    "run_exit_status": 0,
+    "signal_status": "NONE",
+    "runtime_binding_valid": true,
+    "simulation_started": true,
+    "diagnostic_fatal_terminal": true,
+    "natural_terminal": false,
+    "canonical_valid": true,
+    "canonical": {
+      "schema": "node0004_hang_diag",
+      "version": "1",
+      "decision": "LONG_RUNNING_HANG_AT_BUFFER4_READ_WITNESS_TO_BUFFER5_WRITE_WITNESS",
+      "reason": "STALL_WINDOW_EXCEEDED",
+      "boundary": "BUFFER4_READ_WITNESS_TO_BUFFER5_WRITE_WITNESS",
+      "stage": "c0",
+      "start_comp": "1",
+      "completed_stages": "0",
+      "active_cycles": "1310720",
+      "window_first": "1",
+      "window_last": "5",
+      "window_cycles": "262144",
+      "no_progress_windows": "4",
+      "consecutive_progress_windows": "0",
+      "qualified_progress": "144",
+      "qualified_delta": "0",
+      "req0": "32",
+      "req1": "32",
+      "req3": "28",
+      "rdata0": "12",
+      "rdata1": "12",
+      "rdata3": "24",
+      "d_req": "4",
+      "d_wdata": "0",
+      "content_digest": "QIOV1_144_0_5",
+      "buf4_wr_edge": "2",
+      "buf4_rd_edge": "1",
+      "buf5_wr_edge": "0",
+      "buf5_rd_edge": "1",
+      "buf4_wr_raw": "1310652",
+      "buf4_rd_raw": "319",
+      "buf5_wr_raw": "0",
+      "buf5_rd_raw": "1310706",
+      "slice_finish": "0"
+    },
+    "qualified_progress_sequence": [
+      144,
+      144,
+      144,
+      144,
+      144
+    ],
+    "qualified_delta_sequence": [
+      144,
+      0,
+      0,
+      0,
+      0
+    ],
+    "abpe_valid": true,
+    "abpe": {
+      "event": "DIAG_DECISION",
+      "a_group_accept": "1",
+      "b_group_accept": "1",
+      "c_group_accept": "8",
+      "alu_accept": "64",
+      "pe_out_accept": "0",
+      "sa_group_out_accept": "0",
+      "masked_a": "0x0",
+      "masked_b": "0xffffffffffffffff",
+      "all_matched": "0x0",
+      "out_valid": "0x0"
+    },
+    "formal_d_member_count": 0,
+    "formal_d_readback": false,
+    "mismatch_zero_with_all_missing_is_pass": false
+  },
+  "first_divergence": {
+    "last_good": "MSE0/1/3 returned data; A/B/C each reached SA; 64 PE operand accepts prove one complete A/B product issue",
+    "first_bad": "after that issue, A is absent while B remains held; no second PE operand accept, PE output, SA group output, or Buffer5 write occurs for four qualified windows",
+    "boundary": "MSE0_RETURN_TO_BUFFER0_1_TO_SA_INPORT0_SECOND_ACCEPT",
+    "not_transout_last_index_error": "transout_last_index=2 intentionally accumulates upstream last_index>2; no PE output after only the first product is not by itself a transout failure"
+  },
+  "hang_root_cause": {
+    "classification": "UNRESOLVED_AFTER_EXHAUSTIVE_AUDIT",
+    "known_failed_interval": "A producer/Buffer0-1/SA-inport0 delivery and reuse after the first matched product",
+    "excluded": [
+      "compile or observer binding failure",
+      "external timeout without an internal stall",
+      "absence of initial A/B/C delivery",
+      "normal transout_last_index=2 accumulation semantics",
+      "tail, later stage barrier, or formal-D comparison"
+    ],
+    "missing_runtime_discriminator": [
+      "MSE0 producer ping-pong selector and accepted writes per Buffer0/1",
+      "Buffer0/1 valid/full/clear/lifetime state",
+      "SA inport0 selected source and accepted events per source",
+      "PE pipeline0 and ALU-to-outbuffer write handshake"
+    ],
+    "functional_rtl_implicated": false,
+    "configuration_error_proven": false
+  },
+  "evidence_levels": {
+    "E3": true,
+    "E4": false,
+    "E5": false,
+    "joint_gate_passed": false,
+    "reason": "bound compile and simulation/observer execution exist, but the DUT did not reach natural terminal and no 320-item formal D readback exists"
+  },
+  "numeric_analysis_repeated": false,
+  "node0004_workload_rebuilt": false,
+  "frozen_source_consumed_read_only": true
+}

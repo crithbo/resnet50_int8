@@ -1,0 +1,25 @@
+{
+  "Exec_Base": "0x0000_0C00",
+  "Exec_Length": 3,
+  "Repeat_Num": 1,
+  "ExecutionPlan": {
+    "base_addr": "0x00000C00",
+    "path": "install/execplan.txt"
+  },
+  "op0_matrixA_slice0": {
+    "base_addr": "0x00000000",
+    "path": "install/op0/slice00/matrix_A_linearized_128bit.txt"
+  },
+  "op0_matrixA_slice1": {
+    "base_addr": "0x02000000",
+    "path": "install/op0/slice01/matrix_A_linearized_128bit.txt"
+  },
+  "op0_config": {
+    "base_addr": "0x00000400",
+    "path": "install/cfg_pkg/op0_decode_silu_fp16N_fp32N_bitstream_128b.bin"
+  },
+  "op0_sfu_config": {
+    "base_addr": "0x00000800",
+    "path": "install/cfg_pkg/SiLU.txt"
+  }
+}

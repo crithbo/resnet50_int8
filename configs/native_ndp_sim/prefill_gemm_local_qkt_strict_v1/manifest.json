@@ -1,0 +1,86 @@
+{
+  "schema": "operator-config-strict-materialization-v1",
+  "status": "strict_config_materialized_from_bit_equivalent_cleanup",
+  "source": {
+    "path": "ndp-sim/jsons/prefill_gemm_local_qkt.json",
+    "sha256": "e2b4f2e8e119fa29b3a4202b4476f838fd071e106322809745169ee70cef4de6",
+    "read_only": true
+  },
+  "normalized": {
+    "path": "config.json",
+    "sha256": "4fe185c6cab0b7ada29430b43879264ba63f4303f10fec56f32885a29d02cc2f",
+    "canonical_sha256": "d43b7da7c30d3371951a919cb2c30177961c2ce3a1ca8b940a4df18a315daf87"
+  },
+  "changes": [
+    {
+      "kind": "typed_null_index_mode",
+      "path": "$.stream_engine.stream2.mem_idx_mode[2]",
+      "before": 0,
+      "after": null
+    }
+  ],
+  "change_set_sha256": "7d439b680ca7ce0a4406b723ff12a9cad677d541aef6036291bee34a3e783139",
+  "strict_validation": {
+    "valid": true,
+    "issue_count": 0,
+    "target_profile": {
+      "slices": 28,
+      "banks_per_slice": 4,
+      "ddr_rows": 6144,
+      "ddr_columns": 64,
+      "subwords_per_column": 16,
+      "read_streams": 4,
+      "write_streams": 1,
+      "buffers": 6
+    }
+  },
+  "native_field_probe": {
+    "returncode": 0,
+    "command": [
+      "<python>",
+      "-c",
+      "<native FIELD_MAP/_encode_field differential probe>",
+      "<original-config>",
+      "<normalized-config>",
+      "<changes>",
+      "<proof-output>"
+    ],
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "proof_sha256": "88f67fe96c3ae405e122423ec1ea56caa17182aeae53539faf142be7871fc7f4",
+    "proof": {
+      "all_equivalent": true,
+      "entries": [
+        {
+          "equal": true,
+          "native_module": "WriteStreamEngineConfig",
+          "native_status": "encoded-by-field-map",
+          "normalized_encoded": [
+            [
+              24,
+              6
+            ]
+          ],
+          "original_encoded": [
+            [
+              24,
+              6
+            ]
+          ],
+          "path": "$.stream_engine.stream2.mem_idx_mode[2]"
+        }
+      ],
+      "schema": "operator-config-native-field-probe-v1",
+      "scope": "changed fields only; this is not a full mapping or bitstream proof"
+    },
+    "all_equivalent": true
+  },
+  "adjudication": {
+    "legacy_source_identity": "intentional-reject",
+    "normalization_decision": "approved-typed-null-native-field-equivalent",
+    "reason": "the native mem_idx_mode mapper encodes integer 0 and typed null identically",
+    "source_rewrite_authorized": false,
+    "activation_gate": "R3 full evidence closure and explicit source/generator remediation"
+  },
+  "source_rewrite_performed": false
+}

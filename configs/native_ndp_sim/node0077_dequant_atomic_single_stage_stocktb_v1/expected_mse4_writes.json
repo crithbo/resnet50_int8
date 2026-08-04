@@ -1,0 +1,101 @@
+{
+  "active_slices": [
+    0,
+    1
+  ],
+  "duplicate_or_extra_write_allowed": false,
+  "expected_count_per_slice": 4,
+  "physical_engine": "MSE4_WRITE_STREAM0",
+  "schema": "dequant-atomic-mse4-write-contract-v1",
+  "total_expected_accepted_write_count": 8,
+  "writes": [
+    {
+      "beat_index": 0,
+      "byte_address": "0x00000010",
+      "data": "0xc06a81f2c0b5f20fc0ee8d03c0f29814",
+      "data_sha256": "9e5ff7bb64f9ce640c20d7410d0e8458a8762a533ca8dd93571d1dc13efeccdd",
+      "role": "dequantize",
+      "slice_id": 0,
+      "stage_index": 0,
+      "strobe": "0xffff",
+      "word_address_128b": "0x1"
+    },
+    {
+      "beat_index": 1,
+      "byte_address": "0x00000020",
+      "data": "0x3ec213443e01622d00000000be01622d",
+      "data_sha256": "ef413ca1df1b00da8fb6287f5b2f629c88083114faaed68a5185119d6df0dcb3",
+      "role": "dequantize",
+      "slice_id": 0,
+      "stage_index": 0,
+      "strobe": "0xffff",
+      "word_address_128b": "0x2"
+    },
+    {
+      "beat_index": 2,
+      "byte_address": "0x00000030",
+      "data": "0x41097850410772c7408d83613f01622d",
+      "data_sha256": "b660ac155cbd932fb554de79f93900ca47bd7da3926118f3d7230894f1dcabf7",
+      "role": "dequantize",
+      "slice_id": 0,
+      "stage_index": 0,
+      "strobe": "0xffff",
+      "word_address_128b": "0x3"
+    },
+    {
+      "beat_index": 3,
+      "byte_address": "0x00000040",
+      "data": "0xc0118e7341c51b9141c418cc41846a7a",
+      "data_sha256": "cdd0a9e415aacd92a1e429eba4789092b4f1a24837ed4e2afaa8d081b6471909",
+      "role": "dequantize",
+      "slice_id": 0,
+      "stage_index": 0,
+      "strobe": "0xffff",
+      "word_address_128b": "0x4"
+    },
+    {
+      "beat_index": 0,
+      "byte_address": "0x00000010",
+      "data": "0x41c51b9141c418cc41846a7a41097850",
+      "data_sha256": "b9ebadb0c5b9ecb0c5b8fa5501d1758aa26d6d765db58acdf0d3f88891bc06b7",
+      "role": "dequantize",
+      "slice_id": 1,
+      "stage_index": 0,
+      "strobe": "0xffff",
+      "word_address_128b": "0x1"
+    },
+    {
+      "beat_index": 1,
+      "byte_address": "0x00000020",
+      "data": "0xc0b5f20fc0ee8d03c0f29814c0118e73",
+      "data_sha256": "565a2ac8ec550896d614cade710ebdcf8602596dbb126ef4d6f2fe85a3c9c4e2",
+      "role": "dequantize",
+      "slice_id": 1,
+      "stage_index": 0,
+      "strobe": "0xffff",
+      "word_address_128b": "0x2"
+    },
+    {
+      "beat_index": 2,
+      "byte_address": "0x00000030",
+      "data": "0x3e01622d00000000be01622dc06a81f2",
+      "data_sha256": "da5da00ea44550a336716a38b5130d8ed3fc1c518c6170efff1091cc2898ad32",
+      "role": "dequantize",
+      "slice_id": 1,
+      "stage_index": 0,
+      "strobe": "0xffff",
+      "word_address_128b": "0x3"
+    },
+    {
+      "beat_index": 3,
+      "byte_address": "0x00000040",
+      "data": "0x410772c7408d83613f01622d3ec21344",
+      "data_sha256": "2e526c592d02e90e45d6bf225981a7cbd93eb27aa6ba7d736254dc5da564c5ba",
+      "role": "dequantize",
+      "slice_id": 1,
+      "stage_index": 0,
+      "strobe": "0xffff",
+      "word_address_128b": "0x4"
+    }
+  ]
+}

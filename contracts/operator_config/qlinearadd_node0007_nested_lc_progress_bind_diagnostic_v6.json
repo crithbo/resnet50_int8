@@ -1,0 +1,91 @@
+{
+  "frozen_workload": {
+    "bitstream_changed": false,
+    "consumed_reuse_assets": true,
+    "execplan_changed": false,
+    "final_json_changed": false,
+    "golden_changed": false,
+    "mapping_changed": false,
+    "numeric_analysis_repeated": false,
+    "request_count_with_multiplicity": 37352448,
+    "sca_changed_except_install_namespace": false,
+    "six_qparams_changed": false,
+    "w3_order_changed": false
+  },
+  "functional_fix": false,
+  "functional_rtl_modified": false,
+  "hw_op_id": "hwop-0007-00",
+  "node_id": "node-0007",
+  "observer_binding_fix": {
+    "actual_compile_binding_required": true,
+    "changes_timeout": false,
+    "changes_workload": false,
+    "claim": "DIAGNOSTIC_ONLY_NOT_FUNCTIONAL_FIX",
+    "compile_enable_macro": "NATIVE_RETURN_OBSERVER_ENABLE",
+    "compile_include_directory": "$package_root/tb_probe",
+    "drives_dut": false,
+    "installation_mode": "PACKAGE_LOCAL_INCLUDE_ONLY",
+    "package_path": "tb_probe/native_return_observer.svh",
+    "read_only": true,
+    "root_cause": "PACKAGE_OBSERVER_INCLUDE_SOURCE_NOT_BOUND",
+    "server_source_modified": false,
+    "source_path": "NDP_copy01/native_return_observer.svh",
+    "source_sha256": "47f0d66728f47c92f9f93f8cf87b47a0ff8567d587c3a099e2d03f610af09f49"
+  },
+  "package_release": {
+    "candidate_release": false,
+    "evidence_level": "E2_LOCAL_ONLY",
+    "sidecar": "artifacts/operator_config_validation/r5-server-test-packages/r5_qadd_n7_nested_lc_progress_bind_v6.zip.sha256",
+    "status": "PACKAGE_READY_NOT_RUN",
+    "zip": "artifacts/operator_config_validation/r5-server-test-packages/r5_qadd_n7_nested_lc_progress_bind_v6.zip",
+    "zip_sha256": "9a48fb417b34afaa0835f8ee0bab8bb22a337808fb6e88d9e9b1205922f1ce90"
+  },
+  "progress_localization": {
+    "deep_checkpoint_limit": 64,
+    "enabled_by_default": true,
+    "heartbeat_cycles": 262144,
+    "host_sample_period_seconds": 60,
+    "minimum_monotonic_windows_for_progress": 2,
+    "stall_window_cycles": 1048576,
+    "target_slice": 0,
+    "unique_error_interval": "op_a_dequant first Start_Comp: LC/read accepted progress -> GA/buffer5/write completion -> LC last -> slice_cmpt_finish"
+  },
+  "provenance": {
+    "hardware_rule": {
+      "path": ".agents/rules/NDP硬件字段语义.md",
+      "policy": "current_match",
+      "sha256": "603d57805bc5a5bdfca7406c402bc94db60c06ea6682493d672abb91671b1055"
+    },
+    "plan": {
+      "path": ".agents/plan.md",
+      "policy": "mutable_provenance",
+      "sha256": "b1623373ee6f5c442807eeb4d2a68ce33e36d5686d98873ff1a3e1587d1eea34"
+    },
+    "qlinearadd_rule": {
+      "path": ".agents/rules/QLinearAdd算子配置规则.md",
+      "policy": "current_match",
+      "sha256": "fea780962c9029e589ece90de2af8c70058aee25cffaf9822f1e16f28ff2ecba"
+    },
+    "server_package_rule": {
+      "path": ".agents/rules/服务器测试包生成规则.md",
+      "policy": "current_match",
+      "sha256": "06ec5cde2920f6aa0f11e4a2ec23d9cec2621015afe706ab8ec83e3d4603089c"
+    }
+  },
+  "return_analysis": {
+    "dynamic_attempt_counted": false,
+    "first_divergence": "VCS include resolution for native_return_observer.svh",
+    "path": "artifacts/operator_config_validation/r5-qlinearadd-node0007-nested-lc-progress-v5-return-analysis/report.json",
+    "sha256": "9032def1bfe9c4645626c4c99cf13fcafedfd2fb5d152fd48303835326dab198",
+    "simulation_started": false,
+    "status": "PACKAGE_PROGRESS_DIAGNOSTIC_FAILURE"
+  },
+  "schema": "qlinearadd-node0007-nested-lc-progress-bind-diagnostic-v6",
+  "server_action_performed": false,
+  "source_package": {
+    "immutable": true,
+    "path": "artifacts/operator_config_validation/r5-server-test-packages/r5_qadd_n7_nested_lc_progress_v5.zip",
+    "sha256": "f184410ced99830d4737bea58ccd0590e87ae0525c77d95265b0ef756a184a8e"
+  },
+  "status": "DIAGNOSTIC_ONLY_NOT_FUNCTIONAL_FIX"
+}

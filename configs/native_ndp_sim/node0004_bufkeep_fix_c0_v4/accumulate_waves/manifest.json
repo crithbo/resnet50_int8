@@ -1,0 +1,76 @@
+{
+  "schema": "resnet50-node0004-conv-three-wave-config-set-v1",
+  "source": {
+    "path": "configs/native_ndp_sim/node0004_bufkeep_fix_c0_v4/accumulate_base.json",
+    "sha256": "b6471445db18bc59998975695599bd75f2051362a6d3c549822f222951524d29",
+    "policy": "strict source with MSE0/SA-inport0 matched A ping-pong; address-only three-wave specialization"
+  },
+  "operator_allocation_bytes": 402496,
+  "wave_address_policy": "reuse_same_local_allocation",
+  "records": [
+    {
+      "wave_index": 0,
+      "operator_type": "resnet50_conv_node0004_wave0",
+      "op_id": "op_w0",
+      "active_slice_count": 28,
+      "sample_ids": [
+        0,
+        3,
+        6,
+        8,
+        10,
+        12,
+        14
+      ],
+      "stream_base_addresses": {
+        "A": "0x00000000",
+        "B": "0x00000400",
+        "C": "0x00031400",
+        "D": "0x00031440",
+        "B'": "0x00000400"
+      },
+      "canonical_config_sha256": "d5485650eea4e68f127d7c3c2429f794e413774c0ae65af6769156da09d5e8c0"
+    },
+    {
+      "wave_index": 1,
+      "operator_type": "resnet50_conv_node0004_wave1",
+      "op_id": "op_w1",
+      "active_slice_count": 28,
+      "sample_ids": [
+        1,
+        4,
+        7,
+        9,
+        11,
+        13,
+        15
+      ],
+      "stream_base_addresses": {
+        "A": "0x00000000",
+        "B": "0x00000400",
+        "C": "0x00031400",
+        "D": "0x00031440",
+        "B'": "0x00000400"
+      },
+      "canonical_config_sha256": "d5485650eea4e68f127d7c3c2429f794e413774c0ae65af6769156da09d5e8c0"
+    },
+    {
+      "wave_index": 2,
+      "operator_type": "resnet50_conv_node0004_wave2",
+      "op_id": "op_w2",
+      "active_slice_count": 8,
+      "sample_ids": [
+        2,
+        5
+      ],
+      "stream_base_addresses": {
+        "A": "0x00000000",
+        "B": "0x00000400",
+        "C": "0x00031400",
+        "D": "0x00031440",
+        "B'": "0x00000400"
+      },
+      "canonical_config_sha256": "d5485650eea4e68f127d7c3c2429f794e413774c0ae65af6769156da09d5e8c0"
+    }
+  ]
+}

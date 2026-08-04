@@ -1,0 +1,78 @@
+{
+  "params": {
+    "used_slices": 28,
+    "node_id": "node-0004",
+    "wave_index": 0,
+    "revision": "nopp_r1",
+    "source": "W3 golden_batch16 + subop_batch16 through signed-A Conv28 layout",
+    "logical_samples": [
+      0,
+      3,
+      6,
+      8,
+      10,
+      12,
+      14
+    ],
+    "execution_scope": "single-stage zero-ping-pong smoke"
+  },
+  "used_slices": 28,
+  "operators": [
+    {
+      "id": "op0",
+      "type": "node0004_accumulate_wave0_nopp_r1",
+      "used_slices": "0b1111111111111111111111111111",
+      "inputs": {
+        "A": {
+          "shape": [
+            1,
+            1,
+            1024
+          ],
+          "dtype": "int8",
+          "bank_interleave": 1,
+          "remapping": null,
+          "source": {
+            "type": "external"
+          }
+        },
+        "B": {
+          "shape": [
+            1,
+            1,
+            200704
+          ],
+          "dtype": "uint8",
+          "bank_interleave": 1,
+          "remapping": null,
+          "source": {
+            "type": "external"
+          }
+        },
+        "C": {
+          "shape": [
+            1,
+            1,
+            16
+          ],
+          "dtype": "int32",
+          "bank_interleave": 1,
+          "remapping": null,
+          "source": {
+            "type": "external"
+          }
+        }
+      },
+      "output": {
+        "shape": [
+          1,
+          1,
+          50176
+        ],
+        "dtype": "int32",
+        "bank_interleave": 1,
+        "remapping": null
+      }
+    }
+  ]
+}

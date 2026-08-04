@@ -1,0 +1,585 @@
+{
+  "artifact": {
+    "path": "artifacts/operator_config_validation/r5-dequant-node0072-config-only-e2-v1/local_e2_report.json",
+    "sha256": "50e30f52bcc95fb3f3e89b2690bc163c77b4de3d77474dd9fecb569ed5176a43",
+    "size_bytes": 55596
+  },
+  "bypass_annotation": {
+    "baseline_classification": "CONFIG_ONLY_CORRECTNESS_BASELINE",
+    "bypass_reason": "Reuse the proven node0077 two-stage ordinary-GA subtract/add then multiply schedule because the typed target rejects the standalone native/handler and typed-transport paths.",
+    "claim_boundary": "Local materialized E2 correctness only; not a formal target config, not production/performance approval, not server/hardware evidence, and not transferable to node0077 or any other Dequant instance.",
+    "contradicted_or_missing_native_path": [
+      "r5:hwop-0072-00.field.ga_standalone_uint8_to_fp32_dequant",
+      "r5:hwop-0072-00.field.execplan_typed_parameter_transport",
+      "r5:hwop-0072-00.field.rtl28_physical_port_layout"
+    ],
+    "exact_equivalence_scope": "Only node0072 uint8[16,2048,1,1], scale bits 0x3cbf57ec, zero-point 0, frozen W3 input domain and padded 28x1184 physical layout; two-stage, one-stage multiply and W3 golden are bit-identical here.",
+    "materialized_configuration_mechanism": "One standalone A-read/D-write operator using four ordinary GA add PEs with -0.0f followed by four ordinary GA multiply PEs with x_scale; official mapper/bitstream and typed execplan/SCA bind 28 slices.",
+    "performance_and_resource_cost": "Uses 8 GA PEs and two dependent arithmetic levels instead of the numerically sufficient 4-PE single multiply level; 28 slices each execute 74 occurrences, with 384 padded elements globally. This adds one GA stage of latency/dependency and lowers PE/throughput efficiency.",
+    "unresolved_production_blocker": [
+      "B_DEQUANT_NODE0072_NATIVE_STANDALONE_PATH",
+      "B_DEQUANT_NODE0072_FORMAL_LAYOUT_APPROVAL",
+      "B_DEQUANT_NODE0072_HARDWARE_E4_E5",
+      "B_DEQUANT_NODE0072_TO_NODE0073_INTEGRATED_BINDING"
+    ]
+  },
+  "candidate_release": false,
+  "contract_content_sha256": "279afbd412439d0e4343f7e5431f486ce8b08dc477f2c5acb6111b3df3d47530",
+  "formal_target_instance_allowed": false,
+  "gates": {
+    "address_lifetime_closed": true,
+    "config_bound_simulator_bit_exact": true,
+    "execplan_sca_closed": true,
+    "final_json_valid": true,
+    "final_output_byte_coverage_closed": true,
+    "hardware_evidence": false,
+    "input_replay_noncomputational": true,
+    "mapping_bitstream_closed": true,
+    "materialized_nonbase_field_ownership_closed": true,
+    "node0072_to_node0073_integrated_binding": false,
+    "production_release": false,
+    "two_isolated_materializations_identical": true,
+    "typed_target_bound": true
+  },
+  "input_replay_contract": {
+    "allowed_index_address_mapping": "Logical C-order flat index k maps to slice=floor(k/1184), local_word=k mod 1184, A address=A_base+local_word; only the final 384 physical words are zero padding.",
+    "dtype_or_value_transform_during_replay": false,
+    "host_precomputed_final_output": false,
+    "host_precomputed_internal_tensor": false,
+    "replayed_constants": {
+      "x_scale_bits": "0x3cbf57ec",
+      "x_zero_point": 0
+    },
+    "rule_id": "CDA-CONFIG-ONLY-INPUT-REPLAY-NONCOMPUTATIONAL-001",
+    "source_producer": {
+      "node_id": "node-0071",
+      "op_type": "QLinearGlobalAveragePool",
+      "source": "artifacts/w3/model_graph.json"
+    },
+    "tensor_identity": {
+      "dtype": "uint8",
+      "path": "artifacts/w3/golden_batch16/tensors/tensor-ab32f279540568c3.npy",
+      "payload_sha256": "b0b78ce73942e90566b05edfe6bd5ca5e924d3865e0232b31a58d9ffabb41067",
+      "sha256": "70e76086c96394b1cc0a50cf316663b4ea1def7f0d0b73568dd83662d6556b55",
+      "shape": [
+        16,
+        2048,
+        1,
+        1
+      ],
+      "size_bytes": 32896,
+      "tensor_id": "tensor-ab32f279540568c3"
+    },
+    "uncrossed_computation_boundary": "Host copies only the typed uint8 producer output and frozen constants; no subtract, scale, rounding, saturation, or final Dequant output is precomputed. Both Dequant arithmetic stages execute in the configured GA."
+  },
+  "node0073_integrated_binding_handoff": {
+    "addressed_asset_hashes": {
+      "addressed_graph_sha256": "2c9cf00cd6ac03ac2f09236a4868d7b2fb6bd61f3e48a18de13d3f4630a3d7d1",
+      "execplan_sha256": "fdcdd46b878cdf7582b072ec1438a0211a01f34bf7245a280ea6dd1e7e322687",
+      "final_address_bound_config_sha256": "de212d8d49bc963bc08a5691879433c165ef2aa938aa2581b56c25e75a92da50",
+      "layout_evidence_sha256": "4a8d3ac9ef7f965b944ef8d116b324f2229dabdd86b9b39a7699fd984f55b61a",
+      "sca_d_sha256": "68e6cf00f09bc16ebdfddab72b63b9f3cb4fd0d3a4d8e3a80bb06162a09ff1ae",
+      "sca_sha256": "a1131970cc29df9baf7e0186f8fdc5e00785681dd6c05d2592ae75cf7a61fc2a"
+    },
+    "claim_boundary": "Exact standalone physical storage handoff only. A shared multi-operator execplan, address alias/lifetime visibility, and node0073 consumption have not been materialized or dynamically accepted.",
+    "consumer": {
+      "binding_role": "input storage handoff only",
+      "node_id": "node-0073"
+    },
+    "final_write_completion": {
+      "config_bound_simulator_all_physical_d_writes_complete": true,
+      "dynamic_hardware_final_write_accepted": false,
+      "execplan_start_and_all_slice_d_address_writes_accepted": true,
+      "integrated_node0072_to_node0073_lifetime_accepted": false,
+      "static_validator_completion_path_accepted": true
+    },
+    "final_written_byte_coverage": {
+      "logical_inverse_complete": true,
+      "logical_inverse_unique": true,
+      "logical_valid_bytes": 131072,
+      "padding_bytes": 1536,
+      "per_slice_complete": true,
+      "physical_written_bytes": 132608
+    },
+    "integrated_binding_status": "UNRESOLVED",
+    "logical_contract": {
+      "byte_strides": [
+        8192,
+        4,
+        4,
+        4
+      ],
+      "dtype": "float32",
+      "layout": "C-order logical tensor reconstructed from slice shards",
+      "logical_span_bytes": 131072,
+      "shape": [
+        16,
+        2048,
+        1,
+        1
+      ]
+    },
+    "physical_contract": {
+      "bytes_per_slice": 4736,
+      "padding_bytes": 1536,
+      "physical_written_span_bytes": 132608,
+      "slice_bindings": [
+        {
+          "d_offset_from_a_bytes": 1184,
+          "physical_d_base_addr": "0x000004a0",
+          "physical_d_span_bytes": 4736,
+          "slice_id": 0,
+          "written_byte_coverage": {
+            "complete": true,
+            "covered_bytes": 4736,
+            "end_offset_exclusive": 4736,
+            "start_offset": 0,
+            "unique": true
+          }
+        },
+        {
+          "d_offset_from_a_bytes": 1184,
+          "physical_d_base_addr": "0x020004a0",
+          "physical_d_span_bytes": 4736,
+          "slice_id": 1,
+          "written_byte_coverage": {
+            "complete": true,
+            "covered_bytes": 4736,
+            "end_offset_exclusive": 4736,
+            "start_offset": 0,
+            "unique": true
+          }
+        },
+        {
+          "d_offset_from_a_bytes": 1184,
+          "physical_d_base_addr": "0x040004a0",
+          "physical_d_span_bytes": 4736,
+          "slice_id": 2,
+          "written_byte_coverage": {
+            "complete": true,
+            "covered_bytes": 4736,
+            "end_offset_exclusive": 4736,
+            "start_offset": 0,
+            "unique": true
+          }
+        },
+        {
+          "d_offset_from_a_bytes": 1184,
+          "physical_d_base_addr": "0x060004a0",
+          "physical_d_span_bytes": 4736,
+          "slice_id": 3,
+          "written_byte_coverage": {
+            "complete": true,
+            "covered_bytes": 4736,
+            "end_offset_exclusive": 4736,
+            "start_offset": 0,
+            "unique": true
+          }
+        },
+        {
+          "d_offset_from_a_bytes": 1184,
+          "physical_d_base_addr": "0x080004a0",
+          "physical_d_span_bytes": 4736,
+          "slice_id": 4,
+          "written_byte_coverage": {
+            "complete": true,
+            "covered_bytes": 4736,
+            "end_offset_exclusive": 4736,
+            "start_offset": 0,
+            "unique": true
+          }
+        },
+        {
+          "d_offset_from_a_bytes": 1184,
+          "physical_d_base_addr": "0x0a0004a0",
+          "physical_d_span_bytes": 4736,
+          "slice_id": 5,
+          "written_byte_coverage": {
+            "complete": true,
+            "covered_bytes": 4736,
+            "end_offset_exclusive": 4736,
+            "start_offset": 0,
+            "unique": true
+          }
+        },
+        {
+          "d_offset_from_a_bytes": 1184,
+          "physical_d_base_addr": "0x0c0004a0",
+          "physical_d_span_bytes": 4736,
+          "slice_id": 6,
+          "written_byte_coverage": {
+            "complete": true,
+            "covered_bytes": 4736,
+            "end_offset_exclusive": 4736,
+            "start_offset": 0,
+            "unique": true
+          }
+        },
+        {
+          "d_offset_from_a_bytes": 1184,
+          "physical_d_base_addr": "0x0e0004a0",
+          "physical_d_span_bytes": 4736,
+          "slice_id": 7,
+          "written_byte_coverage": {
+            "complete": true,
+            "covered_bytes": 4736,
+            "end_offset_exclusive": 4736,
+            "start_offset": 0,
+            "unique": true
+          }
+        },
+        {
+          "d_offset_from_a_bytes": 1184,
+          "physical_d_base_addr": "0x100004a0",
+          "physical_d_span_bytes": 4736,
+          "slice_id": 8,
+          "written_byte_coverage": {
+            "complete": true,
+            "covered_bytes": 4736,
+            "end_offset_exclusive": 4736,
+            "start_offset": 0,
+            "unique": true
+          }
+        },
+        {
+          "d_offset_from_a_bytes": 1184,
+          "physical_d_base_addr": "0x120004a0",
+          "physical_d_span_bytes": 4736,
+          "slice_id": 9,
+          "written_byte_coverage": {
+            "complete": true,
+            "covered_bytes": 4736,
+            "end_offset_exclusive": 4736,
+            "start_offset": 0,
+            "unique": true
+          }
+        },
+        {
+          "d_offset_from_a_bytes": 1184,
+          "physical_d_base_addr": "0x140004a0",
+          "physical_d_span_bytes": 4736,
+          "slice_id": 10,
+          "written_byte_coverage": {
+            "complete": true,
+            "covered_bytes": 4736,
+            "end_offset_exclusive": 4736,
+            "start_offset": 0,
+            "unique": true
+          }
+        },
+        {
+          "d_offset_from_a_bytes": 1184,
+          "physical_d_base_addr": "0x160004a0",
+          "physical_d_span_bytes": 4736,
+          "slice_id": 11,
+          "written_byte_coverage": {
+            "complete": true,
+            "covered_bytes": 4736,
+            "end_offset_exclusive": 4736,
+            "start_offset": 0,
+            "unique": true
+          }
+        },
+        {
+          "d_offset_from_a_bytes": 1184,
+          "physical_d_base_addr": "0x180004a0",
+          "physical_d_span_bytes": 4736,
+          "slice_id": 12,
+          "written_byte_coverage": {
+            "complete": true,
+            "covered_bytes": 4736,
+            "end_offset_exclusive": 4736,
+            "start_offset": 0,
+            "unique": true
+          }
+        },
+        {
+          "d_offset_from_a_bytes": 1184,
+          "physical_d_base_addr": "0x1a0004a0",
+          "physical_d_span_bytes": 4736,
+          "slice_id": 13,
+          "written_byte_coverage": {
+            "complete": true,
+            "covered_bytes": 4736,
+            "end_offset_exclusive": 4736,
+            "start_offset": 0,
+            "unique": true
+          }
+        },
+        {
+          "d_offset_from_a_bytes": 1184,
+          "physical_d_base_addr": "0x1c0004a0",
+          "physical_d_span_bytes": 4736,
+          "slice_id": 14,
+          "written_byte_coverage": {
+            "complete": true,
+            "covered_bytes": 4736,
+            "end_offset_exclusive": 4736,
+            "start_offset": 0,
+            "unique": true
+          }
+        },
+        {
+          "d_offset_from_a_bytes": 1184,
+          "physical_d_base_addr": "0x1e0004a0",
+          "physical_d_span_bytes": 4736,
+          "slice_id": 15,
+          "written_byte_coverage": {
+            "complete": true,
+            "covered_bytes": 4736,
+            "end_offset_exclusive": 4736,
+            "start_offset": 0,
+            "unique": true
+          }
+        },
+        {
+          "d_offset_from_a_bytes": 1184,
+          "physical_d_base_addr": "0x200004a0",
+          "physical_d_span_bytes": 4736,
+          "slice_id": 16,
+          "written_byte_coverage": {
+            "complete": true,
+            "covered_bytes": 4736,
+            "end_offset_exclusive": 4736,
+            "start_offset": 0,
+            "unique": true
+          }
+        },
+        {
+          "d_offset_from_a_bytes": 1184,
+          "physical_d_base_addr": "0x220004a0",
+          "physical_d_span_bytes": 4736,
+          "slice_id": 17,
+          "written_byte_coverage": {
+            "complete": true,
+            "covered_bytes": 4736,
+            "end_offset_exclusive": 4736,
+            "start_offset": 0,
+            "unique": true
+          }
+        },
+        {
+          "d_offset_from_a_bytes": 1184,
+          "physical_d_base_addr": "0x240004a0",
+          "physical_d_span_bytes": 4736,
+          "slice_id": 18,
+          "written_byte_coverage": {
+            "complete": true,
+            "covered_bytes": 4736,
+            "end_offset_exclusive": 4736,
+            "start_offset": 0,
+            "unique": true
+          }
+        },
+        {
+          "d_offset_from_a_bytes": 1184,
+          "physical_d_base_addr": "0x260004a0",
+          "physical_d_span_bytes": 4736,
+          "slice_id": 19,
+          "written_byte_coverage": {
+            "complete": true,
+            "covered_bytes": 4736,
+            "end_offset_exclusive": 4736,
+            "start_offset": 0,
+            "unique": true
+          }
+        },
+        {
+          "d_offset_from_a_bytes": 1184,
+          "physical_d_base_addr": "0x280004a0",
+          "physical_d_span_bytes": 4736,
+          "slice_id": 20,
+          "written_byte_coverage": {
+            "complete": true,
+            "covered_bytes": 4736,
+            "end_offset_exclusive": 4736,
+            "start_offset": 0,
+            "unique": true
+          }
+        },
+        {
+          "d_offset_from_a_bytes": 1184,
+          "physical_d_base_addr": "0x2a0004a0",
+          "physical_d_span_bytes": 4736,
+          "slice_id": 21,
+          "written_byte_coverage": {
+            "complete": true,
+            "covered_bytes": 4736,
+            "end_offset_exclusive": 4736,
+            "start_offset": 0,
+            "unique": true
+          }
+        },
+        {
+          "d_offset_from_a_bytes": 1184,
+          "physical_d_base_addr": "0x2c0004a0",
+          "physical_d_span_bytes": 4736,
+          "slice_id": 22,
+          "written_byte_coverage": {
+            "complete": true,
+            "covered_bytes": 4736,
+            "end_offset_exclusive": 4736,
+            "start_offset": 0,
+            "unique": true
+          }
+        },
+        {
+          "d_offset_from_a_bytes": 1184,
+          "physical_d_base_addr": "0x2e0004a0",
+          "physical_d_span_bytes": 4736,
+          "slice_id": 23,
+          "written_byte_coverage": {
+            "complete": true,
+            "covered_bytes": 4736,
+            "end_offset_exclusive": 4736,
+            "start_offset": 0,
+            "unique": true
+          }
+        },
+        {
+          "d_offset_from_a_bytes": 1184,
+          "physical_d_base_addr": "0x300004a0",
+          "physical_d_span_bytes": 4736,
+          "slice_id": 24,
+          "written_byte_coverage": {
+            "complete": true,
+            "covered_bytes": 4736,
+            "end_offset_exclusive": 4736,
+            "start_offset": 0,
+            "unique": true
+          }
+        },
+        {
+          "d_offset_from_a_bytes": 1184,
+          "physical_d_base_addr": "0x320004a0",
+          "physical_d_span_bytes": 4736,
+          "slice_id": 25,
+          "written_byte_coverage": {
+            "complete": true,
+            "covered_bytes": 4736,
+            "end_offset_exclusive": 4736,
+            "start_offset": 0,
+            "unique": true
+          }
+        },
+        {
+          "d_offset_from_a_bytes": 1184,
+          "physical_d_base_addr": "0x340004a0",
+          "physical_d_span_bytes": 4736,
+          "slice_id": 26,
+          "written_byte_coverage": {
+            "complete": true,
+            "covered_bytes": 4736,
+            "end_offset_exclusive": 4736,
+            "start_offset": 0,
+            "unique": true
+          }
+        },
+        {
+          "d_offset_from_a_bytes": 1184,
+          "physical_d_base_addr": "0x360004a0",
+          "physical_d_span_bytes": 4736,
+          "slice_id": 27,
+          "written_byte_coverage": {
+            "complete": true,
+            "covered_bytes": 4736,
+            "end_offset_exclusive": 4736,
+            "start_offset": 0,
+            "unique": true
+          }
+        }
+      ],
+      "slice_count": 28,
+      "valid_logical_bytes": 131072,
+      "words_per_slice": 1184
+    },
+    "producer": {
+      "node_id": "node-0072",
+      "output_tensor_id": "tensor-50c285690f899b1b",
+      "request_id": "r5:hwop-0072-00"
+    },
+    "storage_owner": "node0072 standalone D allocation in the official addressed execplan; node0073 does not own or relocate these bytes in this contract",
+    "unresolved_blocker": "B_DEQUANT_NODE0072_TO_NODE0073_INTEGRATED_BINDING"
+  },
+  "node0077_structural_reference_rule_patterns": [
+    "CDA-DEQUANT-TWO-STAGE-GA-001",
+    "CDA-DEQUANT-NORMAL-OUTBUFFER-001",
+    "CDA-DEQUANT-D-BUFFER-SUPPLY-CONSERVATION-001",
+    "CDA-DEQUANT-MAPPING-BINDING-001"
+  ],
+  "remaining_blockers": [
+    "B_DEQUANT_NODE0072_NATIVE_STANDALONE_PATH",
+    "B_DEQUANT_NODE0072_FORMAL_LAYOUT_APPROVAL",
+    "B_DEQUANT_NODE0072_HARDWARE_E4_E5",
+    "B_DEQUANT_NODE0072_TO_NODE0073_INTEGRATED_BINDING"
+  ],
+  "request_id": "r5:hwop-0072-00",
+  "rule_ids": [
+    "CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+    "CDA-CONFIG-ONLY-INPUT-REPLAY-NONCOMPUTATIONAL-001",
+    "CDA-CONFIG-MATERIALIZED-NONBASE-FIELD-OWNERSHIP-001",
+    "CDA-CONFIG-SEMANTIC-OWNERSHIP-001",
+    "CDA-CONFIG-MATERIALIZED-ROUNDTRIP-001",
+    "CDA-CONFIG-FULL-REBUILD-PROVENANCE-001"
+  ],
+  "schema": "dequant-node0072-config-only-correctness-contract-v1",
+  "status": "CONFIG_ONLY_CORRECTNESS_BASELINE",
+  "toolchain_consumer_receipt": {
+    "consumers": [
+      {
+        "path": "ndp-sim-ref/model_execplan/main.py",
+        "sha256": "d5b942bbec74635fb03a2b9053f3333b04fea0c440b7b13128f84b2405d345be",
+        "size_bytes": 10417
+      },
+      {
+        "path": "ndp-sim-ref/model_execplan/src/execution_plan_generator/json_loader.py",
+        "sha256": "a3ac009d0f452c610bfb97f2562eaaf60cb0c4981ace7f337372ce5178b92dee",
+        "size_bytes": 35633
+      },
+      {
+        "path": "ndp-sim-ref/model_execplan/src/execution_plan_generator/control_registers.py",
+        "sha256": "5fe1c5f363a0ff57c1db26281d75a0cc365a260395f2130155fb6ccdc4fcb8dd",
+        "size_bytes": 72648
+      },
+      {
+        "path": "ndp-sim-ref/model_execplan/src/execution_plan_generator/output_writer.py",
+        "sha256": "383f39f2e61900d1e4dddcffa90faff80bc315266f77350c597b8eecc60a23aa",
+        "size_bytes": 47969
+      },
+      {
+        "path": "ndp-sim-ref/model_execplan/src/execution_plan_generator/pipeline.py",
+        "sha256": "a4905e18eb3e843b58d4049096971288087bfedf2c2cc58f038bb14e2a9b28b5",
+        "size_bytes": 11628
+      },
+      {
+        "path": "ndp-sim-ref/model_execplan/src/execution_plan_generator/instruction_generator.py",
+        "sha256": "cdc7d4dcdf41ec79571d53a909a2b2d8f1ab7897a404969b5cf49d416fc85315",
+        "size_bytes": 35666
+      },
+      {
+        "path": "ndp-sim-ref/bitstream/main.py",
+        "sha256": "32f3452fae24b933576e93b9607651bfbfcb4705e6781fe3f14ecbe675d4e63c",
+        "size_bytes": 13403
+      },
+      {
+        "path": "ndp-sim-ref/bitstream/parse.py",
+        "sha256": "a6bd0f9dc288b518389a677570cf34a08ebec72a430e9a85c085570d3be869f0",
+        "size_bytes": 22540
+      },
+      {
+        "path": "ndp-sim-ref/bitstream/config/mapper.py",
+        "sha256": "8e2504d3262bd47ce13b9d75c8bebe58a6900bdf9af03360bf563d653dd88641",
+        "size_bytes": 69295
+      },
+      {
+        "path": "ndp-sim-ref/bitstream/config/general.py",
+        "sha256": "eb9d5ee9ef273182e05b718aca378f87d0a1ccb5366ae463d8482c8c94c3482f",
+        "size_bytes": 11738
+      }
+    ],
+    "functional_rtl_modified": false,
+    "isolated_patch_applied": false,
+    "source_tree": "ndp-sim-ref isolated read-only copies",
+    "source_tree_modified": false
+  }
+}

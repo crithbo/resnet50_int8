@@ -1,0 +1,42 @@
+{
+  "additional_atomic_contracts": {
+    "alias-lifetime": "disabled_until_matching_first_divergence",
+    "guard-only": "disabled_until_matching_first_divergence",
+    "round-only": "disabled_until_matching_first_divergence"
+  },
+  "candidate_release": false,
+  "config_manifest": {
+    "path": "configs/native_ndp_sim/node0001_requant_single_occurrence_two_stage_v1/manifest.json",
+    "sha256": "17ec522f48de0d31dea4212b03b4f97253b93e850731240a828705b5d056d1da",
+    "size_bytes": 4179
+  },
+  "contract_id": "requant-node0001-single-occurrence-two-stage-dynamic-v1",
+  "contract_sha256": "a7609c097c22443ee6f67fb7218966fec71f9d39d1ea2a81372dea5cd72c3a86",
+  "counts_as_node0001_e4": false,
+  "counts_as_node0001_e5": false,
+  "default_dynamic_contract": "single-occurrence-two-stage",
+  "dynamic_release_ready": false,
+  "formal_target_instance_allowed": false,
+  "local_report": {
+    "path": "artifacts/operator_config_validation/r5-requant-node0001-single-occurrence-two-stage-v1/local_contract_report.json",
+    "sha256": "48372744dbfb43d5c207f2fd850fff3ef75f6c6457542416c0450c67cac4a44d",
+    "size_bytes": 1359
+  },
+  "remaining_blockers": [
+    "B_REQUANT_SERVER_E4_E5"
+  ],
+  "request_id": "r5:hwop-0001-01",
+  "rule_ids": [
+    "CDA-CONFIG-SEMANTIC-OWNERSHIP-001",
+    "CDA-CONFIG-MATERIALIZED-ROUNDTRIP-001",
+    "CDA-REQUANT-QPARAM-001",
+    "CDA-REQUANT-INT32-GUARD-001",
+    "CDA-REQUANT-SFU-LUT-001",
+    "CDA-REQUANT-TWO-STAGE-001",
+    "CDA-REQUANT-ROUND-MAGIC-001",
+    "CDA-REQUANT-ATOMIC-SINGLE-OCCURRENCE-001"
+  ],
+  "schema": "operator-config-semantic-contract-v1",
+  "server_package": false,
+  "status": "LOCAL_DYNAMIC_CONTRACT_MATERIALIZED_NOT_RUN"
+}

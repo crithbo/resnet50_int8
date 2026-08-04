@@ -1,0 +1,1100 @@
+{
+  "deepseek_reduction_stage_dag": {
+    "graph": {
+      "path": "ndp-sim/model_execplan/op_json/rmsnorm.json",
+      "sha256": "ad046825c4b4d3265a33b8614fcb0a179157d78321f79cb96a95541c7bcb4097",
+      "size_bytes": 2006
+    },
+    "local_to_remote_dependency": "op0->op1",
+    "rule": "insert remote reduction only when the local output preserves a slice-partitioned reduction axis",
+    "stage_types": [
+      "prefill_summac_fp32MN_fp32MN",
+      "prefill_remote_sum_fp32MN_fp32MN",
+      "prefill_mac_SFU_fp32MN_fp32MN",
+      "prefill_mul_fp32MN_fp32M_fp32MN"
+    ]
+  },
+  "evidence_sha256": "92fd3e158eb87ab64fcdcfae92dcf4f3715d7b79913797a3a1038f835ed35a57",
+  "gap_resolution": {
+    "completion": {
+      "authorized_exact_template": true,
+      "local_config_completion_resolved": true,
+      "server_execution_claim": false,
+      "strict_validator": {
+        "buffer_tag_carrier": "GROUP1.COL_LC",
+        "possible_last_indices": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "terminal_condition": "last=1 && last_index=0, then final DDR write-data handshake",
+        "write_stream": "stream1",
+        "write_target": "D"
+      }
+    },
+    "cross_slice_classification": {
+      "deepseek_remote_sum_rule": "remote reduction is selected only when a preceding local stage partitions one reduction domain across slices, as in the hash-bound RMSNorm op0->op1 stage DAG",
+      "reason": "the reduction axes are spatial only; one slice receives one complete batch sample and the exact config emits all 2048 channel sums, so no output element has a reduction domain split across slices",
+      "required": false
+    },
+    "exact_schedule": {
+      "active_slice_count": 16,
+      "available_slice_count": 28,
+      "batch_count": 16,
+      "channels_per_sample": 2048,
+      "input_bytes_per_slice": 100352,
+      "output_bytes_per_slice": 8192,
+      "output_channels_covered_per_slice": 2048,
+      "reduction_axes": [
+        2,
+        3
+      ],
+      "reduction_domain_per_output": 49,
+      "samples_per_slice": 1,
+      "wave_active_slice_counts": [
+        16
+      ]
+    },
+    "hw_op_id": "hwop-0071-00",
+    "remaining_release_gates": [
+      "B_ADDRESS_MAPPING_EXECPLAN_SCA",
+      "B_SERVER_E4_E5"
+    ],
+    "request_id": "r5:hwop-0071-00",
+    "resolved_local_blockers": [
+      "B_EXECPLAN_TYPED_TRANSPORT",
+      "B_SUM_COMPLETION",
+      "B_SUM_CROSS_SLICE"
+    ],
+    "typed_parameter_consumption": {
+      "mode": "compile_time_specialization",
+      "parameter": "x_zero_point",
+      "runtime_parameter_transport_required": false,
+      "specialization": "sum(uint8(x)-0) becomes plain uint8-to-int32 sum; zero also binds the padding additive identity",
+      "value": 0
+    }
+  },
+  "inputs": {
+    "deepseek_stage_ir": {
+      "path": "contracts/operator_config/deepseek_stage_ir_crosswalk_v1.json",
+      "sha256": "80e3570045f549b572a0b0a5de820006775dfc37be46bcd498fec772ba8c3782",
+      "size_bytes": 674233
+    },
+    "gap_padding_and_numeric_contract": {
+      "path": "contracts/operator_config/gap_sum_zero_padding_contract_v1.json",
+      "sha256": "41229531143c8d3d9c4928993db28c8f44cbee937bf4cbbd34bd5d59f28d432b",
+      "size_bytes": 3042
+    },
+    "gap_strict_config": {
+      "path": "configs/native_ndp_sim/avgpool_config_2048_7_7_strict_v1/config.json",
+      "sha256": "bc1c593106c0dd25251af67c5500983218051dc21d19d33f8c91942c9e412e76",
+      "size_bytes": 12083
+    },
+    "gap_strict_materialization": {
+      "path": "configs/native_ndp_sim/avgpool_config_2048_7_7_strict_v1/manifest.json",
+      "sha256": "3dcc4b4b89a5e0f78a0cd2bcb603a870e057460dea58d6ab227797a55b5a6aa2",
+      "size_bytes": 3141
+    },
+    "hardware_evidence": {
+      "path": "contracts/operator_config/ndpsim_json_hardware_evidence_v1.json",
+      "sha256": "00312081d6013b610c85be42fbf6552555b15b3597af53e475a74b8c618d59e9",
+      "size_bytes": 108095
+    }
+  },
+  "policy": {
+    "address_binding_mapping_execplan_and_sca_remain_separate": true,
+    "deepseek_exact_configs_are_authorized_reference_semantics": true,
+    "local_and_remote_reduction_are_distinguished_by_partitioned_axis": true,
+    "terminal_static_closure_is_not_server_e4_e5": true,
+    "zero_typed_parameter_may_be_compile_time_specialized": true
+  },
+  "reference_reduction_templates": {
+    "decode_remote_sum_fp32N_fp32N": {
+      "ga_opcodes": [
+        "sum"
+      ],
+      "graph_shapes": [
+        {
+          "graph_path": "ndp-sim/generate_python_golden/model_execplan/op_json/decode_all.json",
+          "graph_used_slices": 28,
+          "inputs": [
+            {
+              "dtype": "fp32",
+              "partition_type": "slice0",
+              "port": "A",
+              "remapping": null,
+              "shape": [
+                1,
+                "used_slices",
+                1
+              ],
+              "source": "op-1",
+              "source_kind": "relative_predecessor",
+              "write_reg_hint": null
+            }
+          ],
+          "operator_id": "op1",
+          "output": {
+            "dtype": null,
+            "partition_type": null,
+            "remapping": null,
+            "shape": [
+              1,
+              1,
+              1
+            ],
+            "write_reg_hint": null
+          },
+          "stage_used_slices": "0b1111111111111111111111111111"
+        },
+        {
+          "graph_path": "ndp-sim/generate_python_golden/model_execplan/op_json/decode_remote_sum_fp32N_fp32N_graph.json",
+          "graph_used_slices": 28,
+          "inputs": [
+            {
+              "dtype": "fp32",
+              "partition_type": "slice0",
+              "port": "A",
+              "remapping": null,
+              "shape": [
+                1,
+                "used_slices",
+                1
+              ],
+              "source": "op-1",
+              "source_kind": "relative_predecessor",
+              "write_reg_hint": null
+            }
+          ],
+          "operator_id": "op1",
+          "output": {
+            "dtype": null,
+            "partition_type": null,
+            "remapping": null,
+            "shape": [
+              1,
+              1,
+              1
+            ],
+            "write_reg_hint": null
+          },
+          "stage_used_slices": "0b1111111111111111111111111111"
+        },
+        {
+          "graph_path": "ndp-sim/generate_python_golden/model_execplan/op_json/fp32max_control_r1/decode_all.json",
+          "graph_used_slices": 28,
+          "inputs": [
+            {
+              "dtype": "fp32",
+              "partition_type": "slice0",
+              "port": "A",
+              "remapping": null,
+              "shape": [
+                1,
+                "used_slices",
+                1
+              ],
+              "source": "op-1",
+              "source_kind": "relative_predecessor",
+              "write_reg_hint": null
+            }
+          ],
+          "operator_id": "op1",
+          "output": {
+            "dtype": null,
+            "partition_type": null,
+            "remapping": null,
+            "shape": [
+              1,
+              1,
+              1
+            ],
+            "write_reg_hint": null
+          },
+          "stage_used_slices": "0b1111111111111111111111111111"
+        },
+        {
+          "graph_path": "ndp-sim/generate_python_golden/model_execplan/op_json/fp32max_control_r1/decode_remote_sum_fp32N_fp32N_graph.json",
+          "graph_used_slices": 28,
+          "inputs": [
+            {
+              "dtype": "fp32",
+              "partition_type": "slice0",
+              "port": "A",
+              "remapping": null,
+              "shape": [
+                1,
+                "used_slices",
+                1
+              ],
+              "source": "op-1",
+              "source_kind": "relative_predecessor",
+              "write_reg_hint": null
+            }
+          ],
+          "operator_id": "op1",
+          "output": {
+            "dtype": null,
+            "partition_type": null,
+            "remapping": null,
+            "shape": [
+              1,
+              1,
+              1
+            ],
+            "write_reg_hint": null
+          },
+          "stage_used_slices": "0b1111111111111111111111111111"
+        },
+        {
+          "graph_path": "ndp-sim/generate_python_golden/model_execplan/op_json/maxdiag_r1/decode_all.json",
+          "graph_used_slices": 28,
+          "inputs": [
+            {
+              "dtype": "fp32",
+              "partition_type": "slice0",
+              "port": "A",
+              "remapping": null,
+              "shape": [
+                1,
+                "used_slices",
+                1
+              ],
+              "source": "op-1",
+              "source_kind": "relative_predecessor",
+              "write_reg_hint": null
+            }
+          ],
+          "operator_id": "op1",
+          "output": {
+            "dtype": null,
+            "partition_type": null,
+            "remapping": null,
+            "shape": [
+              1,
+              1,
+              1
+            ],
+            "write_reg_hint": null
+          },
+          "stage_used_slices": "0b1111111111111111111111111111"
+        },
+        {
+          "graph_path": "ndp-sim/generate_python_golden/model_execplan/op_json/maxdiag_r1/decode_remote_sum_fp32N_fp32N_graph.json",
+          "graph_used_slices": 28,
+          "inputs": [
+            {
+              "dtype": "fp32",
+              "partition_type": "slice0",
+              "port": "A",
+              "remapping": null,
+              "shape": [
+                1,
+                "used_slices",
+                1
+              ],
+              "source": "op-1",
+              "source_kind": "relative_predecessor",
+              "write_reg_hint": null
+            }
+          ],
+          "operator_id": "op1",
+          "output": {
+            "dtype": null,
+            "partition_type": null,
+            "remapping": null,
+            "shape": [
+              1,
+              1,
+              1
+            ],
+            "write_reg_hint": null
+          },
+          "stage_used_slices": "0b1111111111111111111111111111"
+        }
+      ],
+      "role": "remote_reduction",
+      "stage_ids": [
+        "ds:18e1a1db91a8b64b96cf",
+        "ds:477ae7343355c97083b2",
+        "ds:670ea207f9580aa74f32",
+        "ds:6a8ead38efd42cdeae54",
+        "ds:cd3c842711a1ed428116",
+        "ds:f3765175bc2d9cae4d66"
+      ],
+      "stage_occurrence_count": 6,
+      "strict_terminal_evidence": {
+        "completion": {
+          "buffer_tag_carrier": "GROUP1.COL_LC",
+          "possible_last_indices": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ],
+          "terminal_condition": "last=1 && last_index=0, then final DDR write-data handshake",
+          "write_stream": "stream1",
+          "write_target": "D"
+        },
+        "config": {
+          "path": "ndp-sim/jsons/decode_remote_sum_fp32N_fp32N.json",
+          "sha256": "5886828fe28930d72b6bcbef17c4da4c88a0c9da5301dfc15e16f5437747edc1",
+          "size_bytes": 8426
+        },
+        "config_mask": "11011101",
+        "config_state": {
+          "GA": {
+            "enable": 1,
+            "update": 1
+          },
+          "IGA": {
+            "enable": 1,
+            "update": 1
+          },
+          "LSU": {
+            "enable": 1,
+            "update": 1
+          },
+          "SA": {
+            "enable": 0,
+            "update": 0
+          }
+        },
+        "next_config_state": {
+          "GA": "394fb5fcfb641cc8f1f0c9cdf88a9b0f16030d1f0b3ba056fe91b2276ff3234a",
+          "IGA": "443438253290258b985dd1df9de715ba6c4f6f96480b87f3cc1cdef3ab6d955a",
+          "LSU": "6a26090dacea02f5c855d891cd16b053d9db45b11c6cddde4400605fcde599c4",
+          "SA": null
+        }
+      }
+    },
+    "decode_summac_fp32N_fp32N": {
+      "ga_opcodes": [
+        "mul",
+        "summac"
+      ],
+      "graph_shapes": [
+        {
+          "graph_path": "ndp-sim/generate_python_golden/model_execplan/op_json/decode_all.json",
+          "graph_used_slices": 28,
+          "inputs": [
+            {
+              "dtype": "fp32",
+              "partition_type": null,
+              "port": "A",
+              "remapping": null,
+              "shape": [
+                1,
+                1,
+                "hidden_size//used_slices"
+              ],
+              "source": {
+                "type": "external"
+              },
+              "source_kind": "external",
+              "write_reg_hint": null
+            }
+          ],
+          "operator_id": "op0",
+          "output": {
+            "dtype": null,
+            "partition_type": null,
+            "remapping": null,
+            "shape": [
+              1,
+              1,
+              1
+            ],
+            "write_reg_hint": null
+          },
+          "stage_used_slices": "0b1111111111111111111111111111"
+        },
+        {
+          "graph_path": "ndp-sim/generate_python_golden/model_execplan/op_json/decode_summac_fp32N_fp32N_graph.json",
+          "graph_used_slices": 28,
+          "inputs": [
+            {
+              "dtype": "fp32",
+              "partition_type": null,
+              "port": "A",
+              "remapping": null,
+              "shape": [
+                1,
+                1,
+                "hidden_size//used_slices"
+              ],
+              "source": {
+                "type": "external"
+              },
+              "source_kind": "external",
+              "write_reg_hint": null
+            }
+          ],
+          "operator_id": "op0",
+          "output": {
+            "dtype": null,
+            "partition_type": null,
+            "remapping": null,
+            "shape": [
+              1,
+              1,
+              1
+            ],
+            "write_reg_hint": null
+          },
+          "stage_used_slices": "0b1111111111111111111111111111"
+        },
+        {
+          "graph_path": "ndp-sim/generate_python_golden/model_execplan/op_json/fp32max_control_r1/decode_all.json",
+          "graph_used_slices": 28,
+          "inputs": [
+            {
+              "dtype": "fp32",
+              "partition_type": null,
+              "port": "A",
+              "remapping": null,
+              "shape": [
+                1,
+                1,
+                "hidden_size//used_slices"
+              ],
+              "source": {
+                "type": "external"
+              },
+              "source_kind": "external",
+              "write_reg_hint": null
+            }
+          ],
+          "operator_id": "op0",
+          "output": {
+            "dtype": null,
+            "partition_type": null,
+            "remapping": null,
+            "shape": [
+              1,
+              1,
+              1
+            ],
+            "write_reg_hint": null
+          },
+          "stage_used_slices": "0b1111111111111111111111111111"
+        },
+        {
+          "graph_path": "ndp-sim/generate_python_golden/model_execplan/op_json/fp32max_control_r1/decode_summac_fp32N_fp32N_graph.json",
+          "graph_used_slices": 28,
+          "inputs": [
+            {
+              "dtype": "fp32",
+              "partition_type": null,
+              "port": "A",
+              "remapping": null,
+              "shape": [
+                1,
+                1,
+                "hidden_size//used_slices"
+              ],
+              "source": {
+                "type": "external"
+              },
+              "source_kind": "external",
+              "write_reg_hint": null
+            }
+          ],
+          "operator_id": "op0",
+          "output": {
+            "dtype": null,
+            "partition_type": null,
+            "remapping": null,
+            "shape": [
+              1,
+              1,
+              1
+            ],
+            "write_reg_hint": null
+          },
+          "stage_used_slices": "0b1111111111111111111111111111"
+        },
+        {
+          "graph_path": "ndp-sim/generate_python_golden/model_execplan/op_json/maxdiag_r1/decode_all.json",
+          "graph_used_slices": 28,
+          "inputs": [
+            {
+              "dtype": "fp32",
+              "partition_type": null,
+              "port": "A",
+              "remapping": null,
+              "shape": [
+                1,
+                1,
+                "hidden_size//used_slices"
+              ],
+              "source": {
+                "type": "external"
+              },
+              "source_kind": "external",
+              "write_reg_hint": null
+            }
+          ],
+          "operator_id": "op0",
+          "output": {
+            "dtype": null,
+            "partition_type": null,
+            "remapping": null,
+            "shape": [
+              1,
+              1,
+              1
+            ],
+            "write_reg_hint": null
+          },
+          "stage_used_slices": "0b1111111111111111111111111111"
+        },
+        {
+          "graph_path": "ndp-sim/generate_python_golden/model_execplan/op_json/maxdiag_r1/decode_summac_fp32N_fp32N_graph.json",
+          "graph_used_slices": 28,
+          "inputs": [
+            {
+              "dtype": "fp32",
+              "partition_type": null,
+              "port": "A",
+              "remapping": null,
+              "shape": [
+                1,
+                1,
+                "hidden_size//used_slices"
+              ],
+              "source": {
+                "type": "external"
+              },
+              "source_kind": "external",
+              "write_reg_hint": null
+            }
+          ],
+          "operator_id": "op0",
+          "output": {
+            "dtype": null,
+            "partition_type": null,
+            "remapping": null,
+            "shape": [
+              1,
+              1,
+              1
+            ],
+            "write_reg_hint": null
+          },
+          "stage_used_slices": "0b1111111111111111111111111111"
+        }
+      ],
+      "role": "local_reduction",
+      "stage_ids": [
+        "ds:264145a91314c3603f3a",
+        "ds:29f001ad79bfe0f25ff1",
+        "ds:4a5ae86117b0fee3b024",
+        "ds:6a779b3e8504e58c58a7",
+        "ds:c5c36618c961ac8a734a",
+        "ds:d5c62c5e38efd820ba9f"
+      ],
+      "stage_occurrence_count": 6,
+      "strict_terminal_evidence": {
+        "completion": {
+          "buffer_tag_carrier": "GROUP1.COL_LC",
+          "possible_last_indices": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ],
+          "terminal_condition": "last=1 && last_index=0, then final DDR write-data handshake",
+          "write_stream": "stream1",
+          "write_target": "D"
+        },
+        "config": {
+          "path": "ndp-sim/jsons/decode_summac_fp32N_fp32N.json",
+          "sha256": "7f7387dd21bb422a906a2cd71c332ff0e57ce8e42ed148a50d1713f37f95f8f3",
+          "size_bytes": 9103
+        },
+        "config_mask": "11011101",
+        "config_state": {
+          "GA": {
+            "enable": 1,
+            "update": 1
+          },
+          "IGA": {
+            "enable": 1,
+            "update": 1
+          },
+          "LSU": {
+            "enable": 1,
+            "update": 1
+          },
+          "SA": {
+            "enable": 0,
+            "update": 0
+          }
+        },
+        "next_config_state": {
+          "GA": "ca1135086cf3504b105263eebf2bb2bcf2efce8977e96b33b50b7b551c7e72ee",
+          "IGA": "b887c9fd5c186b942f9389d87fa9225b4c1492850a281f7aa38a119a574ac791",
+          "LSU": "af9d18c08d1b608f31c3ea99f4d4723ac9448bec893f4c3a64da43196b0da970",
+          "SA": null
+        }
+      }
+    },
+    "prefill_remote_sum_4slice_fp16MN_fp32MN": {
+      "ga_opcodes": [
+        "mul",
+        "sum"
+      ],
+      "graph_shapes": [],
+      "role": "remote_reduction",
+      "stage_ids": [],
+      "stage_occurrence_count": 0,
+      "strict_terminal_evidence": {
+        "completion": {
+          "buffer_tag_carrier": "GROUP1.COL_LC",
+          "possible_last_indices": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ],
+          "terminal_condition": "last=1 && last_index=0, then final DDR write-data handshake",
+          "write_stream": "stream1",
+          "write_target": "D"
+        },
+        "config": {
+          "path": "ndp-sim/jsons/prefill_remote_sum_4slice_fp16MN_fp32MN.json",
+          "sha256": "9ebaec3af598ebf8a25ef9664e5517a6c107ce48416fc0ac76e05b9b6578c37c",
+          "size_bytes": 20674
+        },
+        "config_mask": "11011101",
+        "config_state": {
+          "GA": {
+            "enable": 1,
+            "update": 1
+          },
+          "IGA": {
+            "enable": 1,
+            "update": 1
+          },
+          "LSU": {
+            "enable": 1,
+            "update": 1
+          },
+          "SA": {
+            "enable": 0,
+            "update": 0
+          }
+        },
+        "next_config_state": {
+          "GA": "79d187d3e9d7187cff43375db8e5870e06f3f32b497ec21500f7f3202da2c3d9",
+          "IGA": "f8278e90e84dde48a1d24e205724530cf78f5182490d75545ea1e6bc4bc19970",
+          "LSU": "a2a429eeda8c6679789928dd5242e1ac1c6f2eb3b32b5289f4cd473846d48bc4",
+          "SA": null
+        }
+      }
+    },
+    "prefill_remote_sum_4slice_fp32MN_fp32MN": {
+      "ga_opcodes": [
+        "sum"
+      ],
+      "graph_shapes": [
+        {
+          "graph_path": "ndp-sim/model_execplan/op_json/prefill_remote_sum_4slice_fp32MN_fp32MN.json",
+          "graph_used_slices": 28,
+          "inputs": [
+            {
+              "dtype": null,
+              "partition_type": null,
+              "port": "A",
+              "remapping": null,
+              "shape": [
+                1,
+                "slice_per_head",
+                "sequence_length*sequence_length"
+              ],
+              "source": "op-1",
+              "source_kind": "relative_predecessor",
+              "write_reg_hint": null
+            }
+          ],
+          "operator_id": "op0",
+          "output": {
+            "dtype": null,
+            "partition_type": null,
+            "remapping": null,
+            "shape": [
+              1,
+              1,
+              "sequence_length*sequence_length"
+            ],
+            "write_reg_hint": null
+          },
+          "stage_used_slices": "0b1000100010001000100010001000"
+        }
+      ],
+      "role": "remote_reduction",
+      "stage_ids": [
+        "ds:c6c9f04b9f9a4dee4234"
+      ],
+      "stage_occurrence_count": 1,
+      "strict_terminal_evidence": {
+        "completion": {
+          "buffer_tag_carrier": "GROUP1.COL_LC",
+          "possible_last_indices": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ],
+          "terminal_condition": "last=1 && last_index=0, then final DDR write-data handshake",
+          "write_stream": "stream1",
+          "write_target": "D"
+        },
+        "config": {
+          "path": "ndp-sim/jsons/prefill_remote_sum_4slice_fp32MN_fp32MN.json",
+          "sha256": "86930ae15d348b433eef49aef78878874ca809b39fe0bad09a1072f04e07afda",
+          "size_bytes": 13666
+        },
+        "config_mask": "11011101",
+        "config_state": {
+          "GA": {
+            "enable": 1,
+            "update": 1
+          },
+          "IGA": {
+            "enable": 1,
+            "update": 1
+          },
+          "LSU": {
+            "enable": 1,
+            "update": 1
+          },
+          "SA": {
+            "enable": 0,
+            "update": 0
+          }
+        },
+        "next_config_state": {
+          "GA": "fd5a07f82e34c1229be3cf10eeeba957e1f1bdc7ef100a24c9d1b8f4869a8393",
+          "IGA": "dcc143fe319d41b57b80f108818c89768a9fd41cfeff892aa3fcd80e39a053c4",
+          "LSU": "c3381ec765c3c5dffe650a5869e796bafa23c89aa2396f7af97d3dd43601eea8",
+          "SA": null
+        }
+      }
+    },
+    "prefill_remote_sum_fp32MN_fp32MN": {
+      "ga_opcodes": [
+        "sum"
+      ],
+      "graph_shapes": [
+        {
+          "graph_path": "ndp-sim/model_execplan/op_json/rmsnorm.json",
+          "graph_used_slices": 28,
+          "inputs": [
+            {
+              "dtype": null,
+              "partition_type": null,
+              "port": "A",
+              "remapping": null,
+              "shape": [
+                1,
+                "used_slices",
+                "sequence_length"
+              ],
+              "source": "op0",
+              "source_kind": "local_stage",
+              "write_reg_hint": null
+            }
+          ],
+          "operator_id": "op1",
+          "output": {
+            "dtype": null,
+            "partition_type": null,
+            "remapping": null,
+            "shape": [
+              1,
+              1,
+              "sequence_length"
+            ],
+            "write_reg_hint": null
+          },
+          "stage_used_slices": "0b1000000000000000000000000000"
+        },
+        {
+          "graph_path": "ndp-sim/model_execplan/op_json/rmsnorm_kv.json",
+          "graph_used_slices": 28,
+          "inputs": [
+            {
+              "dtype": null,
+              "partition_type": null,
+              "port": "A",
+              "remapping": null,
+              "shape": [
+                1,
+                "slice_per_head",
+                "sequence_length"
+              ],
+              "source": "op0",
+              "source_kind": "local_stage",
+              "write_reg_hint": null
+            }
+          ],
+          "operator_id": "op1",
+          "output": {
+            "dtype": null,
+            "partition_type": null,
+            "remapping": null,
+            "shape": [
+              1,
+              1,
+              "sequence_length"
+            ],
+            "write_reg_hint": null
+          },
+          "stage_used_slices": "0b1000100010001000100010001000"
+        }
+      ],
+      "role": "remote_reduction",
+      "stage_ids": [
+        "ds:5849149fe8b404715972",
+        "ds:825317305b3e60e13ca9"
+      ],
+      "stage_occurrence_count": 2,
+      "strict_terminal_evidence": {
+        "completion": {
+          "buffer_tag_carrier": "GROUP1.COL_LC",
+          "possible_last_indices": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ],
+          "terminal_condition": "last=1 && last_index=0, then final DDR write-data handshake",
+          "write_stream": "stream1",
+          "write_target": "D"
+        },
+        "config": {
+          "path": "ndp-sim/jsons/prefill_remote_sum_fp32MN_fp32MN.json",
+          "sha256": "44382b0405fc3192172f3ab6e4fb81dbd29701a7c8e16715d2a186743ef60708",
+          "size_bytes": 13667
+        },
+        "config_mask": "11011101",
+        "config_state": {
+          "GA": {
+            "enable": 1,
+            "update": 1
+          },
+          "IGA": {
+            "enable": 1,
+            "update": 1
+          },
+          "LSU": {
+            "enable": 1,
+            "update": 1
+          },
+          "SA": {
+            "enable": 0,
+            "update": 0
+          }
+        },
+        "next_config_state": {
+          "GA": "fd5a07f82e34c1229be3cf10eeeba957e1f1bdc7ef100a24c9d1b8f4869a8393",
+          "IGA": "ca83ab009cf0fe25a032ee60e7d2033f0c75fe45265a6473de1cb6d32517d401",
+          "LSU": "c3381ec765c3c5dffe650a5869e796bafa23c89aa2396f7af97d3dd43601eea8",
+          "SA": null
+        }
+      }
+    },
+    "prefill_summac_fp16MN_fp32MN": {
+      "ga_opcodes": [
+        "mul",
+        "summac"
+      ],
+      "graph_shapes": [],
+      "role": "local_reduction",
+      "stage_ids": [],
+      "stage_occurrence_count": 0,
+      "strict_terminal_evidence": {
+        "completion": {
+          "buffer_tag_carrier": "GROUP1.COL_LC",
+          "possible_last_indices": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ],
+          "terminal_condition": "last=1 && last_index=0, then final DDR write-data handshake",
+          "write_stream": "stream1",
+          "write_target": "D"
+        },
+        "config": {
+          "path": "ndp-sim/jsons/prefill_summac_fp16MN_fp32MN.json",
+          "sha256": "da91862f510562dbc30af72f4722f4645ae4b2c6086fe9689db730a5973984f7",
+          "size_bytes": 20611
+        },
+        "config_mask": "11011101",
+        "config_state": {
+          "GA": {
+            "enable": 1,
+            "update": 1
+          },
+          "IGA": {
+            "enable": 1,
+            "update": 1
+          },
+          "LSU": {
+            "enable": 1,
+            "update": 1
+          },
+          "SA": {
+            "enable": 0,
+            "update": 0
+          }
+        },
+        "next_config_state": {
+          "GA": "ed32ad8aee60dbcdff012d66a148bfcbd88e319ff2b9f072784959d414c68257",
+          "IGA": "ec21810cfa7516d55d2d3e43354761e50cc0ed617cbf86ed59f76a93d6b71682",
+          "LSU": "08e2ef3bbadde28680e7159d19d25cf414c85e3c5df2b32a9095e3914fab668e",
+          "SA": null
+        }
+      }
+    },
+    "prefill_summac_fp32MN_fp32MN": {
+      "ga_opcodes": [
+        "mul",
+        "summac"
+      ],
+      "graph_shapes": [
+        {
+          "graph_path": "ndp-sim/model_execplan/op_json/rmsnorm.json",
+          "graph_used_slices": 28,
+          "inputs": [
+            {
+              "dtype": null,
+              "partition_type": null,
+              "port": "A",
+              "remapping": null,
+              "shape": [
+                1,
+                "sequence_length",
+                "hidden_size//used_slices"
+              ],
+              "source": "op-1",
+              "source_kind": "relative_predecessor",
+              "write_reg_hint": null
+            }
+          ],
+          "operator_id": "op0",
+          "output": {
+            "dtype": null,
+            "partition_type": null,
+            "remapping": null,
+            "shape": [
+              1,
+              1,
+              "sequence_length"
+            ],
+            "write_reg_hint": null
+          },
+          "stage_used_slices": "0b1111111111111111111111111111"
+        },
+        {
+          "graph_path": "ndp-sim/model_execplan/op_json/rmsnorm_kv.json",
+          "graph_used_slices": 28,
+          "inputs": [
+            {
+              "dtype": null,
+              "partition_type": null,
+              "port": "A",
+              "remapping": null,
+              "shape": [
+                1,
+                "sequence_length",
+                "kv_padding_a"
+              ],
+              "source": {
+                "type": "external"
+              },
+              "source_kind": "external",
+              "write_reg_hint": null
+            }
+          ],
+          "operator_id": "op0",
+          "output": {
+            "dtype": null,
+            "partition_type": null,
+            "remapping": null,
+            "shape": [
+              1,
+              1,
+              "sequence_length"
+            ],
+            "write_reg_hint": null
+          },
+          "stage_used_slices": "0b1111111111111111111111111111"
+        }
+      ],
+      "role": "local_reduction",
+      "stage_ids": [
+        "ds:1f17f30778ebc527628d",
+        "ds:65b5765c30ba05a55029"
+      ],
+      "stage_occurrence_count": 2,
+      "strict_terminal_evidence": {
+        "completion": {
+          "buffer_tag_carrier": "GROUP1.COL_LC",
+          "possible_last_indices": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ],
+          "terminal_condition": "last=1 && last_index=0, then final DDR write-data handshake",
+          "write_stream": "stream1",
+          "write_target": "D"
+        },
+        "config": {
+          "path": "ndp-sim/jsons/prefill_summac_fp32MN_fp32MN.json",
+          "sha256": "bcbf94fc07e9610d98ebfcd11c0264a8f935b2020d06eda7e3131f271d2075ae",
+          "size_bytes": 19729
+        },
+        "config_mask": "11011101",
+        "config_state": {
+          "GA": {
+            "enable": 1,
+            "update": 1
+          },
+          "IGA": {
+            "enable": 1,
+            "update": 1
+          },
+          "LSU": {
+            "enable": 1,
+            "update": 1
+          },
+          "SA": {
+            "enable": 0,
+            "update": 0
+          }
+        },
+        "next_config_state": {
+          "GA": "713e4191bf23ba3e12d03b244d2760f4122bbedbf1035e32ba655a51905ccc82",
+          "IGA": "3b4c403715ef0bb0ddc9357dc9bb683d4f35e30bef5ce8cbb055430118c94ecd",
+          "LSU": "1d886384aba690176f721baaf33c2e5c76e28d8cdff645ec02ce7ed13495c4be",
+          "SA": null
+        }
+      }
+    }
+  },
+  "schema": "deepseek-reduction-to-resnet-gap-rule-evidence-v1",
+  "status": "deepseek_reduction_rules_extracted_exact_gap_local_schedule_closed"
+}

@@ -1,0 +1,588 @@
+{
+  "schema": "resnet50-r5-local-resolution-overlay-v1",
+  "status": "local_evidence_overlay_active_formal_server_release_not_granted",
+  "historical_contract": {
+    "path": "contracts/typed_config_parameter_contract.json",
+    "sha256": "abbc87b0b13c92611a90fe1767b32b15fe9c49f23bee616ca2bb51219dd181bd",
+    "size_bytes": 1619185
+  },
+  "policy": {
+    "historical_w4_contract_is_immutable": true,
+    "resolution_is_scope_and_hash_bound": true,
+    "candidate_config_emission_requires_no_unresolved_config_blockers": true,
+    "formal_target_release_requires_separate_e4_e5_approval": true,
+    "resolved_blocker_does_not_imply_server_execution": true
+  },
+  "resolutions": {
+    "B_LAYOUT_APPROVAL": {
+      "resolution_id": "r5-resolution-layout-w4-approved-v1",
+      "status": "resolved",
+      "scope": "all_typed_stages",
+      "hw_op_ids": [
+        "hwop-0000-00",
+        "hwop-0001-00",
+        "hwop-0001-01",
+        "hwop-0002-00",
+        "hwop-0003-00",
+        "hwop-0003-01",
+        "hwop-0004-00",
+        "hwop-0004-01",
+        "hwop-0005-00",
+        "hwop-0005-01",
+        "hwop-0006-00",
+        "hwop-0006-01",
+        "hwop-0007-00",
+        "hwop-0008-00",
+        "hwop-0008-01",
+        "hwop-0009-00",
+        "hwop-0009-01",
+        "hwop-0010-00",
+        "hwop-0010-01",
+        "hwop-0011-00",
+        "hwop-0012-00",
+        "hwop-0012-01",
+        "hwop-0013-00",
+        "hwop-0013-01",
+        "hwop-0014-00",
+        "hwop-0014-01",
+        "hwop-0015-00",
+        "hwop-0016-00",
+        "hwop-0016-01",
+        "hwop-0017-00",
+        "hwop-0017-01",
+        "hwop-0018-00",
+        "hwop-0018-01",
+        "hwop-0019-00",
+        "hwop-0019-01",
+        "hwop-0020-00",
+        "hwop-0021-00",
+        "hwop-0021-01",
+        "hwop-0022-00",
+        "hwop-0022-01",
+        "hwop-0023-00",
+        "hwop-0023-01",
+        "hwop-0024-00",
+        "hwop-0025-00",
+        "hwop-0025-01",
+        "hwop-0026-00",
+        "hwop-0026-01",
+        "hwop-0027-00",
+        "hwop-0027-01",
+        "hwop-0028-00",
+        "hwop-0029-00",
+        "hwop-0029-01",
+        "hwop-0030-00",
+        "hwop-0030-01",
+        "hwop-0031-00",
+        "hwop-0031-01",
+        "hwop-0032-00",
+        "hwop-0033-00",
+        "hwop-0033-01",
+        "hwop-0034-00",
+        "hwop-0034-01",
+        "hwop-0035-00",
+        "hwop-0035-01",
+        "hwop-0036-00",
+        "hwop-0036-01",
+        "hwop-0037-00",
+        "hwop-0038-00",
+        "hwop-0038-01",
+        "hwop-0039-00",
+        "hwop-0039-01",
+        "hwop-0040-00",
+        "hwop-0040-01",
+        "hwop-0041-00",
+        "hwop-0042-00",
+        "hwop-0042-01",
+        "hwop-0043-00",
+        "hwop-0043-01",
+        "hwop-0044-00",
+        "hwop-0044-01",
+        "hwop-0045-00",
+        "hwop-0046-00",
+        "hwop-0046-01",
+        "hwop-0047-00",
+        "hwop-0047-01",
+        "hwop-0048-00",
+        "hwop-0048-01",
+        "hwop-0049-00",
+        "hwop-0050-00",
+        "hwop-0050-01",
+        "hwop-0051-00",
+        "hwop-0051-01",
+        "hwop-0052-00",
+        "hwop-0052-01",
+        "hwop-0053-00",
+        "hwop-0054-00",
+        "hwop-0054-01",
+        "hwop-0055-00",
+        "hwop-0055-01",
+        "hwop-0056-00",
+        "hwop-0056-01",
+        "hwop-0057-00",
+        "hwop-0058-00",
+        "hwop-0058-01",
+        "hwop-0059-00",
+        "hwop-0059-01",
+        "hwop-0060-00",
+        "hwop-0060-01",
+        "hwop-0061-00",
+        "hwop-0061-01",
+        "hwop-0062-00",
+        "hwop-0063-00",
+        "hwop-0063-01",
+        "hwop-0064-00",
+        "hwop-0064-01",
+        "hwop-0065-00",
+        "hwop-0065-01",
+        "hwop-0066-00",
+        "hwop-0067-00",
+        "hwop-0067-01",
+        "hwop-0068-00",
+        "hwop-0068-01",
+        "hwop-0069-00",
+        "hwop-0069-01",
+        "hwop-0070-00",
+        "hwop-0071-00",
+        "hwop-0071-01",
+        "hwop-0072-00",
+        "hwop-0073-00",
+        "hwop-0074-00",
+        "hwop-0075-00",
+        "hwop-0075-01",
+        "hwop-0076-00",
+        "hwop-0077-00"
+      ],
+      "evidence": [
+        {
+          "path": "contracts/hardware_approval.json",
+          "sha256": "963b64087351a45d54f52a86fe3536804e4f24427c94ee912c521b3a93fe159b",
+          "size_bytes": 4293
+        }
+      ],
+      "claim_boundary": "profile and physical layout only; no operator numeric/server claim"
+    },
+    "B_EXECPLAN_TYPED_TRANSPORT": {
+      "resolution_id": "r5-resolution-conv-and-gap-typed-transport-closed-v2",
+      "status": "resolved",
+      "scope": "three_exact_closed_conv_instances_and_exact_gap_zero_point_compile_time_specialization",
+      "hw_op_ids": [
+        "hwop-0001-01",
+        "hwop-0003-00",
+        "hwop-0003-01",
+        "hwop-0004-00",
+        "hwop-0004-01",
+        "hwop-0008-00",
+        "hwop-0008-01",
+        "hwop-0071-00",
+        "hwop-0077-00"
+      ],
+      "evidence": [
+        {
+          "path": "contracts/conv_execplan_transport.json",
+          "sha256": "b92a9884fae9def2c69224b9cb1c8be06b0550055eb5a6b5e5cc82a620a49c88",
+          "size_bytes": 4747
+        },
+        {
+          "path": "contracts/operator_config/deepseek_reduction_rules_v1.json",
+          "sha256": "c3ddbb28f15a33bf9e81a043a9ce2f787eda2c8dda82f985fca922ae7ecbb81f",
+          "size_bytes": 33593
+        },
+        {
+          "path": "artifacts/operator_config_validation/r5-dequant-node0077-e2-v5/execplan_request.json",
+          "sha256": "ca5247687f70eb51002f7ae7c9dd55849d791d073abaae09a23d8e2c1daa16c0",
+          "size_bytes": 20971
+        },
+        {
+          "path": "artifacts/operator_config_validation/r5-dequant-node0077-e2-v5/local_e2_report.json",
+          "sha256": "3d059a3e73192b85e37130f474bcfd93e23db9353e728dc9c4158479440487e8",
+          "size_bytes": 19693
+        },
+        {
+          "path": "artifacts/operator_config_validation/r5-requant-node0001-two-stage-e2-v1/typed_graph.json",
+          "sha256": "8ec3604e8bf3667a459512f263a0d243fa973b13f0427174f7d5b218cb82ec8e",
+          "size_bytes": 51731
+        },
+        {
+          "path": "artifacts/operator_config_validation/r5-requant-node0001-two-stage-e2-v1/local_e2_report.json",
+          "sha256": "29b24ba2c0ca48348adb7e2c2b7a05508324474f506f0cabcadc1ded4f121990",
+          "size_bytes": 230039
+        }
+      ],
+      "claim_boundary": "only the six listed accumulate/requant stages and hwop-0071-00 x_zero_point=0 specialization, exact hwop-0077-00 Dequant typed transport, and exact hwop-0001-01 two-stage Requant typed transport"
+    },
+    "B_REQUANT_TARGET_NUMERICS": {
+      "resolution_id": "r5-resolution-hwop0001-requant-two-stage-local-e2-v1",
+      "status": "resolved",
+      "scope": "hwop0001_exact_positive_multiplier_yzp0_int32_hwc8_guard_then_round_saturate",
+      "hw_op_ids": [
+        "hwop-0001-01"
+      ],
+      "evidence": [
+        {
+          "path": "artifacts/operator_config_validation/r5-requant-node0001-two-stage-e2-v1/generation_receipt.json",
+          "sha256": "5993ccba612d8566ba470a66930263c8e5d26307955a22200cef82399f1a6cce",
+          "size_bytes": 5940
+        },
+        {
+          "path": "artifacts/operator_config_validation/r5-requant-node0001-two-stage-e2-v1/typed_graph.json",
+          "sha256": "8ec3604e8bf3667a459512f263a0d243fa973b13f0427174f7d5b218cb82ec8e",
+          "size_bytes": 51731
+        },
+        {
+          "path": "configs/native_ndp_sim/node0001_requant_two_stage_v1/manifest.json",
+          "sha256": "5a51a63464936240ed48bc23b1182e4be754adefbdac505c0f6e255917e6aad3",
+          "size_bytes": 4385
+        },
+        {
+          "path": "contracts/operator_config/requant_node0001_two_stage_contract_v1.json",
+          "sha256": "a1e6c12d745e8cb8efa0758ca0a237d8ee9ee102b096b00fcd0a7ea3f66f27d9",
+          "size_bytes": 1093
+        },
+        {
+          "path": "artifacts/operator_config_validation/r5-requant-node0001-two-stage-e2-v1/manifest.json",
+          "sha256": "636491b767d17020f54443864dd3dc427a640a917f90010ac4db3cd3889c327f",
+          "size_bytes": 106887
+        },
+        {
+          "path": "artifacts/operator_config_validation/r5-requant-node0001-two-stage-e2-v1/local_e2_report.json",
+          "sha256": "29b24ba2c0ca48348adb7e2c2b7a05508324474f506f0cabcadc1ded4f121990",
+          "size_bytes": 230039
+        }
+      ],
+      "claim_boundary": "exact node-0001 local E2 only: positive per-channel multipliers, y_zero_point=0, 24 occurrences and two-stage guard/round path; stock-RTL E4/E5 remain unresolved"
+    },
+    "B_DEQUANT_STANDALONE": {
+      "resolution_id": "r5-resolution-hwop0077-dequant-standalone-local-e2-v1",
+      "status": "resolved",
+      "scope": "hwop0077_exact_uint8_16x1000_to_fp32_two_stage_ga",
+      "hw_op_ids": [
+        "hwop-0077-00"
+      ],
+      "evidence": [
+        {
+          "path": "contracts/operator_config/node0077_dequant_generation_receipt_v5.json",
+          "sha256": "392194adf3bcd9d585745a0d9a0dfa18e7c3dac6b85ab81fea1bcc0198c879f7",
+          "size_bytes": 12132
+        },
+        {
+          "path": "contracts/operator_config/node0077_dequant_semantics_evidence_v5.json",
+          "sha256": "c3cb412d61ce1c61af717d000dad1911fba7a37f0ab8917f9a717d65dc3da78a",
+          "size_bytes": 2886
+        },
+        {
+          "path": "configs/native_ndp_sim/resnet50_dequant_node0077_uint8_fp32_strict_v5/config.json",
+          "sha256": "812c6d861bf41ce89233e16b2bdd1d9d8328aed9e07941070872d6409668bba1",
+          "size_bytes": 12374
+        },
+        {
+          "path": "artifacts/operator_config_validation/r5-dequant-node0077-e2-v5/execplan_request.json",
+          "sha256": "ca5247687f70eb51002f7ae7c9dd55849d791d073abaae09a23d8e2c1daa16c0",
+          "size_bytes": 20971
+        },
+        {
+          "path": "artifacts/operator_config_validation/r5-dequant-node0077-e2-v5/manifest.json",
+          "sha256": "459141d859e80dd45993ff51c6d4505570df9aaa3f4d8cecfaffdfb2873b5e3b",
+          "size_bytes": 1572
+        },
+        {
+          "path": "artifacts/operator_config_validation/r5-dequant-node0077-e2-v5/local_e2_report.json",
+          "sha256": "3d059a3e73192b85e37130f474bcfd93e23db9353e728dc9c4158479440487e8",
+          "size_bytes": 19693
+        }
+      ],
+      "claim_boundary": "exact node-0077 local E2, strict address-unbound JSON, address-bound two-copy lifecycle and independent W3 golden only; server E3/E4/E5 and formal release remain unresolved"
+    },
+    "B_MAXPOOL_SHAPE_GENERALIZATION": {
+      "resolution_id": "r5-resolution-node0002-maxpool-shape-address-v1",
+      "status": "resolved",
+      "scope": "node0002_exact_112x112x16_tile",
+      "hw_op_ids": [
+        "hwop-0002-00"
+      ],
+      "evidence": [
+        {
+          "path": "artifacts/operator_config_validation/r5-maxpool-node0002-guarded-wave0-v1/manifest.json",
+          "sha256": "91a1fdf61dedece2a3a6af47042376be19a9f3972e9093edc6899815ceeaa878",
+          "size_bytes": 30682
+        },
+        {
+          "path": "configs/native_ndp_sim/maxpool_config_16_112_112_stride2_padding1_strict_v1/manifest.json",
+          "sha256": "20debc3a8aed75c87cb0924cc278461f16e6cf4f28ef40daebbb2eb10b5330df",
+          "size_bytes": 3152
+        },
+        {
+          "path": "configs/native_ndp_sim/maxpool_config_16_112_112_stride2_padding1_guarded_address_bound_v2/manifest.json",
+          "sha256": "f24aeea22b960fcde68b81df1f6606687352a133f6c2c697385c6f23135c729e",
+          "size_bytes": 1479
+        },
+        {
+          "path": "artifacts/operator_config_validation/r5-patched-mapping-evidence/maxpool-node0002-guarded-address-bound-v2/bundle_manifest.json",
+          "sha256": "7867a16a9e32eb01bbaee17b6417436a31bbcd4f0abc0cd6fc8efe76f1342ed6",
+          "size_bytes": 2805
+        },
+        {
+          "path": "artifacts/operator_config_validation/r5-patched-execplan-evidence/maxpool-node0002-guarded-wave0-v3/bundle_manifest.json",
+          "sha256": "0c2df90e1f2d298ff703850328904e3d7142baca4690d24199e3da0eb64a1c57",
+          "size_bytes": 9209
+        },
+        {
+          "path": "artifacts/operator_config_validation/r5-patched-execplan-evidence/maxpool-node0002-guarded-wave0-v3/request_address_validation_report.json",
+          "sha256": "c00ce2648b6ae5295126d2e0715190ac25c029689c92e6d2fbc8b889794fa7ff",
+          "size_bytes": 163113
+        }
+      ],
+      "claim_boundary": "exact node-0002 local tile only; not arbitrary MaxPool shapes"
+    },
+    "B_MAXPOOL_UINT8_SEMANTICS": {
+      "resolution_id": "r5-resolution-node0002-maxpool-uint8-padding-v1",
+      "status": "resolved",
+      "scope": "node0002_exact_uint8_zero_padding",
+      "hw_op_ids": [
+        "hwop-0002-00"
+      ],
+      "evidence": [
+        {
+          "path": "contracts/maxpool_node0002_zero_padding_contract.json",
+          "sha256": "b2455d437e2b2d359f9d0cb4cc0bb279d11b5aa8e187320f4440018fc9cde233",
+          "size_bytes": 2261
+        },
+        {
+          "path": "contracts/maxpool_rtl_semantics_evidence.json",
+          "sha256": "af186419bdc0728d60044ac751d2c873cd2b7a30485f335f0cfa620da2a817aa",
+          "size_bytes": 1744
+        },
+        {
+          "path": "artifacts/operator_config_validation/r5-maxpool-node0002-guarded-wave0-v1/manifest.json",
+          "sha256": "91a1fdf61dedece2a3a6af47042376be19a9f3972e9093edc6899815ceeaa878",
+          "size_bytes": 30682
+        },
+        {
+          "path": "artifacts/operator_config_validation/r5-patched-execplan-evidence/maxpool-node0002-guarded-wave0-v3/request_address_validation_report.json",
+          "sha256": "c00ce2648b6ae5295126d2e0715190ac25c029689c92e6d2fbc8b889794fa7ff",
+          "size_bytes": 163113
+        }
+      ],
+      "claim_boundary": "static/isolated RTL plus local independent numerics; E4/E5 remain required"
+    },
+    "B_GAP_CENTERED_SUM": {
+      "resolution_id": "r5-resolution-hwop0071-gap-centered-sum-zero-zp-v1",
+      "status": "resolved",
+      "scope": "hwop0071_exact_16x2048x7x7_zero_point_zero",
+      "hw_op_ids": [
+        "hwop-0071-00"
+      ],
+      "evidence": [
+        {
+          "path": "contracts/operator_config/gap_sum_zero_padding_contract_v1.json",
+          "sha256": "41229531143c8d3d9c4928993db28c8f44cbee937bf4cbbd34bd5d59f28d432b",
+          "size_bytes": 3042
+        },
+        {
+          "path": "configs/native_ndp_sim/avgpool_config_2048_7_7_strict_v1/manifest.json",
+          "sha256": "3dcc4b4b89a5e0f78a0cd2bcb603a870e057460dea58d6ab227797a55b5a6aa2",
+          "size_bytes": 3141
+        },
+        {
+          "path": "configs/native_ndp_sim/avgpool_config_2048_7_7_strict_v1/config.json",
+          "sha256": "bc1c593106c0dd25251af67c5500983218051dc21d19d33f8c91942c9e412e76",
+          "size_bytes": 12083
+        }
+      ],
+      "claim_boundary": "exact x_zero_point=0 local eight-lane int32 sum and strict address-unbound JSON only; typed transport, cross-slice completion, address binding and E4/E5 remain unresolved"
+    },
+    "B_SUM_CROSS_SLICE": {
+      "resolution_id": "r5-resolution-hwop0071-gap-sample-local-reduction-v1",
+      "status": "resolved",
+      "scope": "hwop0071_exact_batch16_sample_per_slice_schedule",
+      "hw_op_ids": [
+        "hwop-0071-00"
+      ],
+      "evidence": [
+        {
+          "path": "contracts/operator_config/deepseek_reduction_rules_v1.json",
+          "sha256": "c3ddbb28f15a33bf9e81a043a9ce2f787eda2c8dda82f985fca922ae7ecbb81f",
+          "size_bytes": 33593
+        },
+        {
+          "path": "configs/native_ndp_sim/avgpool_config_2048_7_7_strict_v1/config.json",
+          "sha256": "bc1c593106c0dd25251af67c5500983218051dc21d19d33f8c91942c9e412e76",
+          "size_bytes": 12083
+        }
+      ],
+      "claim_boundary": "the exact reduction axes are spatial and each active slice owns one complete sample; arbitrary partitioning is not covered"
+    },
+    "B_SUM_COMPLETION": {
+      "resolution_id": "r5-resolution-hwop0071-gap-terminal-chain-v1",
+      "status": "resolved",
+      "scope": "hwop0071_exact_strict_config_terminal_chain",
+      "hw_op_ids": [
+        "hwop-0071-00"
+      ],
+      "evidence": [
+        {
+          "path": "contracts/operator_config/deepseek_reduction_rules_v1.json",
+          "sha256": "c3ddbb28f15a33bf9e81a043a9ce2f787eda2c8dda82f985fca922ae7ecbb81f",
+          "size_bytes": 33593
+        },
+        {
+          "path": "configs/native_ndp_sim/avgpool_config_2048_7_7_strict_v1/manifest.json",
+          "sha256": "3dcc4b4b89a5e0f78a0cd2bcb603a870e057460dea58d6ab227797a55b5a6aa2",
+          "size_bytes": 3141
+        }
+      ],
+      "claim_boundary": "static terminal-zero and exact authorized template semantics only; server E3/E4/E5 are not claimed"
+    }
+  },
+  "application_counts": {
+    "B_DEQUANT_STANDALONE": 1,
+    "B_EXECPLAN_TYPED_TRANSPORT": 9,
+    "B_GAP_CENTERED_SUM": 1,
+    "B_LAYOUT_APPROVAL": 134,
+    "B_MAXPOOL_SHAPE_GENERALIZATION": 1,
+    "B_MAXPOOL_UINT8_SEMANTICS": 1,
+    "B_REQUANT_TARGET_NUMERICS": 1,
+    "B_SUM_COMPLETION": 1,
+    "B_SUM_CROSS_SLICE": 1
+  },
+  "maxpool_local_closure": {
+    "slice_count": 28,
+    "request_count_with_multiplicity": 1517936,
+    "logical_payload_bytes_checked_with_multiplicity": 5619712,
+    "padding_masked_bytes_checked_with_multiplicity": 100800,
+    "logical_address_mismatch_count": 0,
+    "padding_mask_mismatch_count": 0,
+    "independent_w3_mismatch_count": 0,
+    "mapping_penalty": 0.0,
+    "execplan_sha256": "e38004f09cc76062c6d510d0c531588de58eb145e479b39d6b09de93d7ad99cf"
+  },
+  "gap_sum_local_semantics": {
+    "hw_op_id": "hwop-0071-00",
+    "input_zero_point": 0,
+    "spatial_element_count": 49,
+    "lane_count": 8,
+    "lane_opcode": "int32_sum",
+    "padding_identity": 0,
+    "strict_config_sha256": "bc1c593106c0dd25251af67c5500983218051dc21d19d33f8c91942c9e412e76",
+    "wave_active_slice_counts": [
+      16
+    ],
+    "cross_slice_reduction_required": false,
+    "terminal_possible_last_indices": [
+      0,
+      1,
+      2,
+      3
+    ]
+  },
+  "dequant_local_closure": {
+    "hw_op_id": "hwop-0077-00",
+    "request_id": "r5:hwop-0077-00",
+    "local_evidence_level": "E2",
+    "candidate_release": false,
+    "hardware_shape_cwh": [
+      16,
+      47,
+      1
+    ],
+    "slice_count": 28,
+    "hardware_elements_per_slice": 752,
+    "w3_element_count": 16000,
+    "w3_bit_exact": true,
+    "affine_mac_mismatch_count": 12976,
+    "mapping_penalty": 0,
+    "encoded_physical_pe_constants_verified": true,
+    "full_lifecycle_two_copy_deterministic": true,
+    "dynamic_e4_status": "FIRST_DYNAMIC_FAILURE",
+    "dynamic_evidence_level": "SERVER_INCOMPLETE",
+    "dynamic_baseline": "NO_DYNAMIC_BASELINE",
+    "e4_pass": false,
+    "e5_generation_allowed": false,
+    "last_proven_dynamic_boundary": "slice Start Comp",
+    "completed_slice_count": 0,
+    "formal_d_file_count": 0,
+    "remaining_blocker": "B_DEQUANT_SERVER_E4_E5"
+  },
+  "requant_local_closure": {
+    "hw_op_id": "hwop-0001-01",
+    "request_id": "r5:hwop-0001-01",
+    "local_evidence_level": "E2",
+    "candidate_release": false,
+    "occurrence_count": 24,
+    "stage_count": 48,
+    "static_config_type_count": 9,
+    "w3_element_count": 12845056,
+    "negative_element_count": 3246544,
+    "minus_one_element_count": 80,
+    "w3_bit_exact": true,
+    "bitstream_decoded_stage_count": 48,
+    "two_copy_deterministic_file_count": 486,
+    "consumer_intermediate_preload_count": 0,
+    "dynamic_e4_status": "FIRST_DYNAMIC_FAILURE",
+    "dynamic_evidence_level": "SERVER_INCOMPLETE",
+    "dynamic_baseline": "NO_DYNAMIC_BASELINE",
+    "failure_class": "server_test_infrastructure_compile_failure",
+    "simulation_started": false,
+    "lifecycle_start_count": 0,
+    "historical_guard_observation_count": 0,
+    "formal_d_file_count": 0,
+    "e4_pass": false,
+    "e5_generation_allowed": false,
+    "same_package_rerun_allowed": false,
+    "v2_partial_snapshot_return_kind": "RETURN_SNAPSHOT_NONAUTHORITATIVE",
+    "v2_partial_snapshot_counts_as_e4_attempt": false,
+    "v2_compile_repair_server_verified": true,
+    "v2_simulation_started": true,
+    "v2_preload_completed": 178,
+    "v2_slice_start_count": 1,
+    "v2_slice_completion_count": 0,
+    "v2_formal_d_file_count": 0,
+    "v2_hardware_hang_proven": false,
+    "v2_process_state": "UNKNOWN_CHECK_EXISTING_PROCESS_FIRST",
+    "v2_workload_scale": {
+      "classification": "FULL_TWO_STAGE_W3_E4_NOT_ATOMIC_SMOKE",
+      "requant": {
+        "repeat_num": 48,
+        "execplan_length": 317,
+        "sca_property_count": 181,
+        "preload_file_entry_count": 178,
+        "raw_input_bytes": 51380224,
+        "int32_element_count": 12845056,
+        "formal_d_entry_count": 156,
+        "formal_d_128bit_line_count": 1505280,
+        "formal_d_bytes": 24084480,
+        "guard_round_element_stage_operations": 25690112
+      },
+      "dequant_reference": {
+        "repeat_num": 1,
+        "execplan_length": 29,
+        "sca_property_count": 33,
+        "preload_file_entry_count": 30,
+        "raw_input_bytes": 21056,
+        "formal_d_entry_count": 28,
+        "formal_d_128bit_line_count": 5264,
+        "formal_d_bytes": 84224
+      },
+      "relative_scale": {
+        "raw_input_bytes_exact_ratio": "51380224/21056",
+        "raw_input_bytes_approx_multiple": 2440.17,
+        "formal_d_bytes_exact_ratio": "24084480/84224",
+        "formal_d_bytes_approx_multiple": 285.957,
+        "start_comp_multiple": 48
+      },
+      "stock_text_monitor_evidence": {
+        "waveform_dump_flags_disabled": true,
+        "local_files_announced": 420,
+        "bank_files_expected": 336,
+        "bank_files_announced_at_snapshot": 326,
+        "total_files_expected_after_first_start": 756,
+        "text_monitors_remain_active_with_waveform_dump_disabled": true
+      },
+      "runtime_risk_classification": "PLAUSIBLE_TEXT_IO_AND_SERIAL_FENCE_DOMINANCE_NOT_PROVEN_ROOT_CAUSE",
+      "snapshot_proves_hang": false,
+      "counts_as_formal_e4_attempt": false
+    },
+    "remaining_blocker": "B_REQUANT_SERVER_E4_E5"
+  },
+  "overlay_sha256": "5cf808c9f5a1cad5a9812e53343f27030c6e0499a75673c8f590c92ae244e7e0"
+}

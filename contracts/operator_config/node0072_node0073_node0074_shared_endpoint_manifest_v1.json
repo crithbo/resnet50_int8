@@ -1,0 +1,240 @@
+{
+  "accepted_lifetime_contract": {
+    "event_sequence": [
+      "allocation.bind_accepted",
+      "node0073.view_alias_bind_accepted",
+      "node0072.final_output_write_accepted",
+      "node0072.completion_accepted",
+      "node0074.first_input_data_accepted",
+      "node0074.final_input_data_accepted",
+      "allocation.release_accepted"
+    ],
+    "final_certificate": null,
+    "release_precondition": "node0074.final_input_data_accepted and no pending/replayed node0074-A reads"
+  },
+  "blockers": {
+    "B_QUANT_NODE0074_EXACT_DIVISION": {
+      "blocks_consumer_endpoint": true,
+      "owner": "node0074 Quantize",
+      "status": "OPEN"
+    },
+    "B_QUANT_NODE0074_FLATTEN_ENDPOINT_BINDING": {
+      "owner": "node0074 Quantize plus shared integration",
+      "status": "OPEN"
+    },
+    "B_VIEW_BUFFER_LIFETIME": {
+      "owner": "shared execplan accepted-handshake integration",
+      "status": "OPEN"
+    },
+    "B_VIEW_BYTE_OFFSET_IDENTITY": {
+      "owner": "shared allocator/addressed execplan integration",
+      "status": "OPEN"
+    },
+    "B_VIEW_CONSUMER_ALLOCATION": {
+      "owner": "node0074 Quantize",
+      "status": "OPEN"
+    },
+    "B_VIEW_PRODUCER_ALLOCATION": {
+      "delta": "narrowed by accepted node0072 standalone allocation, 28 slice bases and complete write coverage; shared allocator and dynamic final-write acceptance remain missing",
+      "status": "DEFERRED_TO_INTEGRATION"
+    }
+  },
+  "chain": [
+    {
+      "node_id": "node-0072",
+      "port": "D",
+      "request_id": "r5:hwop-0072-00",
+      "role": "storage producer",
+      "tensor_id": "tensor-50c285690f899b1b"
+    },
+    {
+      "node_id": "node-0073",
+      "request_id": "r5:hwop-0073-00",
+      "role": "metadata-only zero-copy alias",
+      "view_delta_bytes": 0
+    },
+    {
+      "node_id": "node-0074",
+      "port": "A",
+      "request_id": "r5:hwop-0074-00",
+      "role": "read-only consumer",
+      "tensor_id": "tensor-9b1363d3baf474c8"
+    }
+  ],
+  "claim_boundary": "CONFIG_ONLY_CORRECTNESS_BASELINE is not enabled. The shared endpoint and integrated target local E2 remain unclaimed until node0074 exact division and all final addressed allocator/layout/lifetime fields pass.",
+  "claim_enabled": false,
+  "claim_label": null,
+  "consumer_endpoint": {
+    "final_accepted_lifetime": null,
+    "final_consumer_base": null,
+    "final_producer_base": null,
+    "final_read_coverage": null,
+    "final_storage_identity": null,
+    "final_view_offset": null
+  },
+  "dependency_bindings": {
+    "consumer_layout": null,
+    "plan": {
+      "mutable_provenance": true,
+      "path": ".agents/plan.md",
+      "semantic_gate": false,
+      "sha256": "f9a3ce73baa73346c144f14bf005262f0b0caaf66d981da157a5a11c0a703183"
+    },
+    "rules": {
+      ".agents/rules/Flatten_View算子配置规则.md": {
+        "sha256": "28ba3a92fecbb83149d494867429c34aa3124040a5c59fe99c4b9481feb3b7ee"
+      },
+      ".agents/rules/生成前必读索引.md": {
+        "sha256": "12583308ec9a16dbb8ea15571a5280291fed7e152167d2e4e8e00509a9a6370f"
+      },
+      ".agents/rules/算子配置规则.md": {
+        "sha256": "cbaffcc5fb3bea7da9f0c199bb2e7f06445a676ab456bdfd505b90dd89825171"
+      }
+    },
+    "shared_addressed_graph": null,
+    "shared_allocator_plan": null,
+    "shared_execplan": null,
+    "source_assets": {
+      "consumer_rounding_discriminator": {
+        "path": "contracts/operator_config/exact_uint8_quant_tail_rounding_discriminator_v1.json",
+        "sha256": "82ab3276a8ae9ee35aeda366756dd4525dfac77c6e3ed40cf395d7a011f8a477"
+      },
+      "producer_contract": {
+        "path": "contracts/operator_config/node0072_dequant_config_only_correctness_baseline_v1.json",
+        "sha256": "cf5172db59a0a7c294e49445f63cd7c61919c3aa4640af180799d2dcef42c60f"
+      },
+      "producer_local_e2_report": {
+        "path": "artifacts/operator_config_validation/r5-dequant-node0072-config-only-e2-v1/local_e2_report.json",
+        "sha256": "50e30f52bcc95fb3f3e89b2690bc163c77b4de3d77474dd9fecb569ed5176a43"
+      },
+      "view_contract": {
+        "path": "contracts/operator_config/flatten_node0073_physical_view_v1.json",
+        "sha256": "067351563c40fb1b95e63f3b327e9758f19c49c72d3c48b348d223426ada9851"
+      },
+      "view_metadata": {
+        "path": "configs/view/node0073_zero_copy_view_v1.json",
+        "sha256": "a63655c339ab68b7edad6d7c9a30776d369749dda80d3b5661152ec07582bddc"
+      }
+    }
+  },
+  "integrated_target_local_e2": false,
+  "manifest_content_sha256": "dbbe9fe0faaaf9af9d77150236d8b2003f04784062f038bab8f1686ae03e8254",
+  "numeric_analysis_repeated": false,
+  "package_release": {
+    "lease": null,
+    "server_package": false,
+    "state": "NOT_BUILT",
+    "upload_or_run": false
+  },
+  "producer_standalone_evidence": {
+    "addressed_asset_hashes": {
+      "addressed_graph_sha256": "2c9cf00cd6ac03ac2f09236a4868d7b2fb6bd61f3e48a18de13d3f4630a3d7d1",
+      "execplan_sha256": "fdcdd46b878cdf7582b072ec1438a0211a01f34bf7245a280ea6dd1e7e322687",
+      "final_address_bound_config_sha256": "de212d8d49bc963bc08a5691879433c165ef2aa938aa2581b56c25e75a92da50",
+      "layout_evidence_sha256": "4a8d3ac9ef7f965b944ef8d116b324f2229dabdd86b9b39a7699fd984f55b61a",
+      "sca_d_sha256": "68e6cf00f09bc16ebdfddab72b63b9f3cb4fd0d3a4d8e3a80bb06162a09ff1ae",
+      "sca_sha256": "a1131970cc29df9baf7e0186f8fdc5e00785681dd6c05d2592ae75cf7a61fc2a"
+    },
+    "allocation_owner": "node0072 standalone D allocation in the official addressed execplan; node0073 does not own or relocate these bytes in this contract",
+    "dynamic_final_write_accepted": false,
+    "integrated_lifetime_accepted": false,
+    "logical_valid_write_coverage_bytes": 131072,
+    "padding_bytes": 1536,
+    "physical_written_span_bytes": 132608,
+    "scope": "not a shared multi-operator allocation certificate",
+    "slice_d_base_addresses": [
+      "0x000004a0",
+      "0x020004a0",
+      "0x040004a0",
+      "0x060004a0",
+      "0x080004a0",
+      "0x0a0004a0",
+      "0x0c0004a0",
+      "0x0e0004a0",
+      "0x100004a0",
+      "0x120004a0",
+      "0x140004a0",
+      "0x160004a0",
+      "0x180004a0",
+      "0x1a0004a0",
+      "0x1c0004a0",
+      "0x1e0004a0",
+      "0x200004a0",
+      "0x220004a0",
+      "0x240004a0",
+      "0x260004a0",
+      "0x280004a0",
+      "0x2a0004a0",
+      "0x2c0004a0",
+      "0x2e0004a0",
+      "0x300004a0",
+      "0x320004a0",
+      "0x340004a0",
+      "0x360004a0"
+    ],
+    "slice_write_coverage_complete": true,
+    "storage_id": null
+  },
+  "required_shared_endpoint": {
+    "address_equation": "node0074_A_base+consumer_byte_offset=node0072_D_base+producer_byte_offset+0",
+    "addressed_graph_required": true,
+    "allocator_plan_required": true,
+    "byte_span": 131072,
+    "consumer_byte_strides": [
+      8192,
+      4
+    ],
+    "consumer_layout_required": true,
+    "consumer_read_coverage_bytes": 131072,
+    "dtype": "float32",
+    "order": "C",
+    "producer_byte_strides": [
+      8192,
+      4,
+      4,
+      4
+    ],
+    "producer_layout_required": true,
+    "producer_write_coverage_bytes": 131072,
+    "storage_relation": "same storage_id and allocation owner"
+  },
+  "reuse_scope": {
+    "deferred_tests": [
+      "node0072 numeric/config-bound rerun",
+      "node0073 32768-element address mapping rerun",
+      "node0074 arithmetic target generation"
+    ],
+    "node0072": "accepted standalone D addressed handoff only",
+    "node0073": "frozen metadata-only zero-copy and 32768-element mapping",
+    "node0074": "exact-division discriminator and null endpoint dependency"
+  },
+  "reused_assets_consumed": true,
+  "schema": "resnet50-flatten-shared-endpoint-manifest-v1",
+  "shared_endpoint_binding": {
+    "accepted_lifetime_proven": false,
+    "allocation_base": null,
+    "allocation_owner_request_id": null,
+    "allocator_plan": null,
+    "consumer_addressed_execplan": null,
+    "consumer_byte_offset": null,
+    "consumer_integrated_read_coverage": null,
+    "consumer_layout_contract": null,
+    "no_pending_or_replayed_consumer_reads_at_release": null,
+    "producer_byte_offset": null,
+    "producer_integrated_write_coverage": null,
+    "same_base_plus_offset_proven": false,
+    "same_storage_proven": false,
+    "storage_id": null
+  },
+  "status": "ENDPOINT_BINDING_PENDING",
+  "view_alias": {
+    "allocates": false,
+    "allocation_owner": "activation_allocator_for_node0072_D",
+    "arithmetic_json": false,
+    "copies": false,
+    "hardware_requests": 0,
+    "releases": false,
+    "replays": false,
+    "required_view_delta_bytes": 0
+  }
+}

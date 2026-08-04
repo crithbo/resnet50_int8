@@ -1,0 +1,76 @@
+{
+  "operator_allocation_bytes": 402496,
+  "records": [
+    {
+      "active_slice_count": 28,
+      "canonical_config_sha256": "d5485650eea4e68f127d7c3c2429f794e413774c0ae65af6769156da09d5e8c0",
+      "op_id": "op_w0",
+      "operator_type": "resnet50_conv_node0004_wave0",
+      "sample_ids": [
+        0,
+        3,
+        6,
+        8,
+        10,
+        12,
+        14
+      ],
+      "stream_base_addresses": {
+        "A": "0x00000000",
+        "B": "0x00000400",
+        "B'": "0x00000400",
+        "C": "0x00031400",
+        "D": "0x00031440"
+      },
+      "wave_index": 0
+    },
+    {
+      "active_slice_count": 28,
+      "canonical_config_sha256": "d5485650eea4e68f127d7c3c2429f794e413774c0ae65af6769156da09d5e8c0",
+      "op_id": "op_w1",
+      "operator_type": "resnet50_conv_node0004_wave1",
+      "sample_ids": [
+        1,
+        4,
+        7,
+        9,
+        11,
+        13,
+        15
+      ],
+      "stream_base_addresses": {
+        "A": "0x00000000",
+        "B": "0x00000400",
+        "B'": "0x00000400",
+        "C": "0x00031400",
+        "D": "0x00031440"
+      },
+      "wave_index": 1
+    },
+    {
+      "active_slice_count": 8,
+      "canonical_config_sha256": "d5485650eea4e68f127d7c3c2429f794e413774c0ae65af6769156da09d5e8c0",
+      "op_id": "op_w2",
+      "operator_type": "resnet50_conv_node0004_wave2",
+      "sample_ids": [
+        2,
+        5
+      ],
+      "stream_base_addresses": {
+        "A": "0x00000000",
+        "B": "0x00000400",
+        "B'": "0x00000400",
+        "C": "0x00031400",
+        "D": "0x00031440"
+      },
+      "wave_index": 2
+    }
+  ],
+  "schema": "resnet50-node0004-conv-three-wave-config-set-v1",
+  "source": {
+    "path": "configs/native_ndp_sim/r5_conv_native_four_lane_df23e4d_v1/accumulate_base.json",
+    "policy": "strict source with MSE0/SA-inport0 matched A ping-pong; address-only three-wave specialization",
+    "sha256": "4a6e34cf047994862d08609ffe4e70ce1abbfd43d64f8b582c3651a013069eee"
+  },
+  "wave_address_policy": "reuse_same_local_allocation"
+}

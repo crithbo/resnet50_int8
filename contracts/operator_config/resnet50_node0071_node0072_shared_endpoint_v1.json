@@ -1,0 +1,614 @@
+{
+  "chain": [
+    "node-0071:D",
+    "node-0072:A"
+  ],
+  "claim_boundary": "Only the accepted GAP producer section is canonicalized. The Dequant consumer section and integrated lifecycle/config-bound E2 are missing; the full shared endpoint is not claimed.",
+  "control_plane_receipt": {
+    "common_rule_sha256": "cbaffcc5fb3bea7da9f0c199bb2e7f06445a676ab456bdfd505b90dd89825171",
+    "gap_rule_sha256": "b194d525fb7c1647b3fdaabd51d88dc4bc9b874ce7a910d4fdd1ca125b56fd96",
+    "mainline_thread_id": "019fa2ca-72bc-7753-8d58-81e59bc76c88",
+    "mutable_plan_sha256_at_generation": "ca96023deebdc274d052fb3248143a5b8a3fa3c9ba5de0bee9d793bb0fcac54d",
+    "plan_is_mutable_provenance_not_semantic_gate": true,
+    "routing_index_sha256": "12583308ec9a16dbb8ea15571a5280291fed7e152167d2e4e8e00509a9a6370f"
+  },
+  "cross_owner_gates": {
+    "integrated_config_bound_e2": "NOT_RUN",
+    "producer_visibility_to_consumer_first_read": "WAITING_FOR_DEQUANT_OWNER",
+    "release_event_and_no_replay_read": "WAITING_FOR_DEQUANT_OWNER",
+    "storage_base_offset_coverage_match": "WAITING_FOR_DEQUANT_OWNER",
+    "typed_tensor_identity_equal": true
+  },
+  "date": "2026-07-29",
+  "endpoint_id": "r5:endpoint:node-0071:D->node-0072:A",
+  "existing_package_rebuilt_or_modified": false,
+  "integrated_endpoint_closed": false,
+  "numeric_analysis_repeated": false,
+  "operator_e2_retested": false,
+  "operator_repair_package_generated": true,
+  "operator_repair_package_status": "PACKAGE_READY_NOT_RUN",
+  "owner_partition_policy": {
+    "each_operator_family_writes_only_its_owned_section": true,
+    "endpoint_closes_only_after_all_owner_sections_and_cross_owner_gates_pass": true,
+    "foreign_owner_sections_are_immutable": true,
+    "missing_owner_sections_are_explicit": true
+  },
+  "owner_sections": {
+    "QLinearGlobalAveragePool": {
+      "base_and_offset": {
+        "active_producer_slice_count": 16,
+        "base_formula": "D_base(slice)=0x000a2000+(slice_id<<25), 0<=slice_id<16",
+        "consumer_required_view_byte_offset": 0,
+        "inactive_slice_ids": [
+          16,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22,
+          23,
+          24,
+          25,
+          26,
+          27
+        ],
+        "inactive_slices_are_not_endpoint_padding": true,
+        "producer_allocation_byte_offset": 0,
+        "same_storage_requires_identical_active_slice_bases": true,
+        "slice0_base_addr": "0x000a2000",
+        "slice_address_stride_bytes": 33554432,
+        "target_slice_count": 28
+      },
+      "bypass_annotation": {
+        "bypass_reason": "Preserve the accepted node0071 configuration-only producer while binding its output into the whole-network endpoint.",
+        "claim_boundary": "CONFIG_ONLY_CORRECTNESS_BASELINE producer reuse only; not a closed node0071-to-node0072 endpoint, not a new E2, and not production/E3/E4/E5.",
+        "contradicted_or_missing_native_path": "repair_v9, transout, RTL_CONTROL and CONFIG_SEMANTICS repair routes remain frozen; no native integrated node0071-to-node0072 lifecycle contract is accepted.",
+        "exact_equivalence_scope": "Only the accepted node0071 uint8[16,2048,1,1] D storage, addresses, byte set and visibility/lifetime requirements.",
+        "materialized_configuration_mechanism": "Owner-partition canonical metadata binds the existing address-bound GAP D allocation; it adds no compute stage.",
+        "performance_and_resource_cost": "No new compute or scratch is added by this manifest; retaining the producer allocation through node0072 acceptance extends live memory lifetime. Any consumer bridge would add separate copy/relayout latency and storage and is not authorized here.",
+        "unresolved_production_blocker": "Dequant consumer owner section, integrated first-read/barrier/completion acceptance, v2 dynamic execution, native integration and E4/E5 are open."
+      },
+      "claim_boundary": {
+        "complete_onnx_local_config_only_e2_count_remains": "3/78",
+        "counts_as_e3_e4_or_e5": false,
+        "counts_as_new_e2": false,
+        "gap_complete_local_e2_preserved": true,
+        "integrated_endpoint_closed": false,
+        "package_ready_not_run_count_remains": 2,
+        "precise_materialized_json_count_incremented": false,
+        "reason": "This owner section freezes an accepted producer endpoint and does not materialize or execute a new operator."
+      },
+      "consumed_reuse_assets": true,
+      "consumer_match_requirements": {
+        "consumer_section_present": false,
+        "differing_sharding_base_or_offset_requires_explicit_consumer_owned_bridge": true,
+        "host_precomputed_internal_or_final_tensor_replay_allowed": false,
+        "no_differing_consumer_layout_is_declared_equivalent_here": true,
+        "required_active_slice_count": 16,
+        "required_dtype": "uint8",
+        "required_first_read_after_producer_visibility_event": true,
+        "required_identical_active_slice_bases": true,
+        "required_node": "node-0072",
+        "required_owner_family": "DequantizeLinear",
+        "required_port": "A",
+        "required_read_coverage_equals_producer_written_byte_set": true,
+        "required_shape": [
+          16,
+          2048,
+          1,
+          1
+        ],
+        "required_storage_id": "r5:activation:node-0071:D:tensor-ab32f279540568c3:batch-slice-sharded-16x2048-v1",
+        "required_valid_read_bytes": 32768,
+        "required_view_byte_offset": 0
+      },
+      "coverage": {
+        "active_slice_count": 16,
+        "bytes_per_active_slice": 2048,
+        "local_end_exclusive": "0x000a2800",
+        "local_first_address": "0x000a2000",
+        "local_last_transaction_address": "0x000a27e0",
+        "local_ordered_address_sha256": "4d53305b6b1f2c48f8cf5043262f8866d5d82d2b207db9146ff09ab05ac38b2d",
+        "local_written_byte_set_sha256": "3d900ae696639cb65053a0de41d9504e10bdbab3d7cbce764f94b06812f14d06",
+        "logical_inverse_complete": true,
+        "logical_inverse_unique": true,
+        "logical_mapping": "logical uint8[n,c,0,0] maps to slice=n and local byte offset=c, 0<=n<16, 0<=c<2048",
+        "logical_valid_bytes": 32768,
+        "physical_padding_bytes": 0,
+        "physical_written_bytes": 32768,
+        "slice_records": [
+          {
+            "allocation_byte_offset": 0,
+            "end_exclusive": "0x000a2800",
+            "final_written_byte_coverage_complete": true,
+            "final_written_byte_coverage_unique": true,
+            "first_transaction_addr": "0x000a2000",
+            "last_transaction_addr": "0x000a27e0",
+            "physical_d_base_addr": "0x000a2000",
+            "physical_padding_bytes": 0,
+            "physical_written_bytes": 2048,
+            "slice_id": 0,
+            "transaction_bytes": 32,
+            "transaction_count": 64,
+            "valid_logical_byte_offset": 0,
+            "valid_logical_bytes": 2048
+          },
+          {
+            "allocation_byte_offset": 0,
+            "end_exclusive": "0x020a2800",
+            "final_written_byte_coverage_complete": true,
+            "final_written_byte_coverage_unique": true,
+            "first_transaction_addr": "0x020a2000",
+            "last_transaction_addr": "0x020a27e0",
+            "physical_d_base_addr": "0x020a2000",
+            "physical_padding_bytes": 0,
+            "physical_written_bytes": 2048,
+            "slice_id": 1,
+            "transaction_bytes": 32,
+            "transaction_count": 64,
+            "valid_logical_byte_offset": 2048,
+            "valid_logical_bytes": 2048
+          },
+          {
+            "allocation_byte_offset": 0,
+            "end_exclusive": "0x040a2800",
+            "final_written_byte_coverage_complete": true,
+            "final_written_byte_coverage_unique": true,
+            "first_transaction_addr": "0x040a2000",
+            "last_transaction_addr": "0x040a27e0",
+            "physical_d_base_addr": "0x040a2000",
+            "physical_padding_bytes": 0,
+            "physical_written_bytes": 2048,
+            "slice_id": 2,
+            "transaction_bytes": 32,
+            "transaction_count": 64,
+            "valid_logical_byte_offset": 4096,
+            "valid_logical_bytes": 2048
+          },
+          {
+            "allocation_byte_offset": 0,
+            "end_exclusive": "0x060a2800",
+            "final_written_byte_coverage_complete": true,
+            "final_written_byte_coverage_unique": true,
+            "first_transaction_addr": "0x060a2000",
+            "last_transaction_addr": "0x060a27e0",
+            "physical_d_base_addr": "0x060a2000",
+            "physical_padding_bytes": 0,
+            "physical_written_bytes": 2048,
+            "slice_id": 3,
+            "transaction_bytes": 32,
+            "transaction_count": 64,
+            "valid_logical_byte_offset": 6144,
+            "valid_logical_bytes": 2048
+          },
+          {
+            "allocation_byte_offset": 0,
+            "end_exclusive": "0x080a2800",
+            "final_written_byte_coverage_complete": true,
+            "final_written_byte_coverage_unique": true,
+            "first_transaction_addr": "0x080a2000",
+            "last_transaction_addr": "0x080a27e0",
+            "physical_d_base_addr": "0x080a2000",
+            "physical_padding_bytes": 0,
+            "physical_written_bytes": 2048,
+            "slice_id": 4,
+            "transaction_bytes": 32,
+            "transaction_count": 64,
+            "valid_logical_byte_offset": 8192,
+            "valid_logical_bytes": 2048
+          },
+          {
+            "allocation_byte_offset": 0,
+            "end_exclusive": "0x0a0a2800",
+            "final_written_byte_coverage_complete": true,
+            "final_written_byte_coverage_unique": true,
+            "first_transaction_addr": "0x0a0a2000",
+            "last_transaction_addr": "0x0a0a27e0",
+            "physical_d_base_addr": "0x0a0a2000",
+            "physical_padding_bytes": 0,
+            "physical_written_bytes": 2048,
+            "slice_id": 5,
+            "transaction_bytes": 32,
+            "transaction_count": 64,
+            "valid_logical_byte_offset": 10240,
+            "valid_logical_bytes": 2048
+          },
+          {
+            "allocation_byte_offset": 0,
+            "end_exclusive": "0x0c0a2800",
+            "final_written_byte_coverage_complete": true,
+            "final_written_byte_coverage_unique": true,
+            "first_transaction_addr": "0x0c0a2000",
+            "last_transaction_addr": "0x0c0a27e0",
+            "physical_d_base_addr": "0x0c0a2000",
+            "physical_padding_bytes": 0,
+            "physical_written_bytes": 2048,
+            "slice_id": 6,
+            "transaction_bytes": 32,
+            "transaction_count": 64,
+            "valid_logical_byte_offset": 12288,
+            "valid_logical_bytes": 2048
+          },
+          {
+            "allocation_byte_offset": 0,
+            "end_exclusive": "0x0e0a2800",
+            "final_written_byte_coverage_complete": true,
+            "final_written_byte_coverage_unique": true,
+            "first_transaction_addr": "0x0e0a2000",
+            "last_transaction_addr": "0x0e0a27e0",
+            "physical_d_base_addr": "0x0e0a2000",
+            "physical_padding_bytes": 0,
+            "physical_written_bytes": 2048,
+            "slice_id": 7,
+            "transaction_bytes": 32,
+            "transaction_count": 64,
+            "valid_logical_byte_offset": 14336,
+            "valid_logical_bytes": 2048
+          },
+          {
+            "allocation_byte_offset": 0,
+            "end_exclusive": "0x100a2800",
+            "final_written_byte_coverage_complete": true,
+            "final_written_byte_coverage_unique": true,
+            "first_transaction_addr": "0x100a2000",
+            "last_transaction_addr": "0x100a27e0",
+            "physical_d_base_addr": "0x100a2000",
+            "physical_padding_bytes": 0,
+            "physical_written_bytes": 2048,
+            "slice_id": 8,
+            "transaction_bytes": 32,
+            "transaction_count": 64,
+            "valid_logical_byte_offset": 16384,
+            "valid_logical_bytes": 2048
+          },
+          {
+            "allocation_byte_offset": 0,
+            "end_exclusive": "0x120a2800",
+            "final_written_byte_coverage_complete": true,
+            "final_written_byte_coverage_unique": true,
+            "first_transaction_addr": "0x120a2000",
+            "last_transaction_addr": "0x120a27e0",
+            "physical_d_base_addr": "0x120a2000",
+            "physical_padding_bytes": 0,
+            "physical_written_bytes": 2048,
+            "slice_id": 9,
+            "transaction_bytes": 32,
+            "transaction_count": 64,
+            "valid_logical_byte_offset": 18432,
+            "valid_logical_bytes": 2048
+          },
+          {
+            "allocation_byte_offset": 0,
+            "end_exclusive": "0x140a2800",
+            "final_written_byte_coverage_complete": true,
+            "final_written_byte_coverage_unique": true,
+            "first_transaction_addr": "0x140a2000",
+            "last_transaction_addr": "0x140a27e0",
+            "physical_d_base_addr": "0x140a2000",
+            "physical_padding_bytes": 0,
+            "physical_written_bytes": 2048,
+            "slice_id": 10,
+            "transaction_bytes": 32,
+            "transaction_count": 64,
+            "valid_logical_byte_offset": 20480,
+            "valid_logical_bytes": 2048
+          },
+          {
+            "allocation_byte_offset": 0,
+            "end_exclusive": "0x160a2800",
+            "final_written_byte_coverage_complete": true,
+            "final_written_byte_coverage_unique": true,
+            "first_transaction_addr": "0x160a2000",
+            "last_transaction_addr": "0x160a27e0",
+            "physical_d_base_addr": "0x160a2000",
+            "physical_padding_bytes": 0,
+            "physical_written_bytes": 2048,
+            "slice_id": 11,
+            "transaction_bytes": 32,
+            "transaction_count": 64,
+            "valid_logical_byte_offset": 22528,
+            "valid_logical_bytes": 2048
+          },
+          {
+            "allocation_byte_offset": 0,
+            "end_exclusive": "0x180a2800",
+            "final_written_byte_coverage_complete": true,
+            "final_written_byte_coverage_unique": true,
+            "first_transaction_addr": "0x180a2000",
+            "last_transaction_addr": "0x180a27e0",
+            "physical_d_base_addr": "0x180a2000",
+            "physical_padding_bytes": 0,
+            "physical_written_bytes": 2048,
+            "slice_id": 12,
+            "transaction_bytes": 32,
+            "transaction_count": 64,
+            "valid_logical_byte_offset": 24576,
+            "valid_logical_bytes": 2048
+          },
+          {
+            "allocation_byte_offset": 0,
+            "end_exclusive": "0x1a0a2800",
+            "final_written_byte_coverage_complete": true,
+            "final_written_byte_coverage_unique": true,
+            "first_transaction_addr": "0x1a0a2000",
+            "last_transaction_addr": "0x1a0a27e0",
+            "physical_d_base_addr": "0x1a0a2000",
+            "physical_padding_bytes": 0,
+            "physical_written_bytes": 2048,
+            "slice_id": 13,
+            "transaction_bytes": 32,
+            "transaction_count": 64,
+            "valid_logical_byte_offset": 26624,
+            "valid_logical_bytes": 2048
+          },
+          {
+            "allocation_byte_offset": 0,
+            "end_exclusive": "0x1c0a2800",
+            "final_written_byte_coverage_complete": true,
+            "final_written_byte_coverage_unique": true,
+            "first_transaction_addr": "0x1c0a2000",
+            "last_transaction_addr": "0x1c0a27e0",
+            "physical_d_base_addr": "0x1c0a2000",
+            "physical_padding_bytes": 0,
+            "physical_written_bytes": 2048,
+            "slice_id": 14,
+            "transaction_bytes": 32,
+            "transaction_count": 64,
+            "valid_logical_byte_offset": 28672,
+            "valid_logical_bytes": 2048
+          },
+          {
+            "allocation_byte_offset": 0,
+            "end_exclusive": "0x1e0a2800",
+            "final_written_byte_coverage_complete": true,
+            "final_written_byte_coverage_unique": true,
+            "first_transaction_addr": "0x1e0a2000",
+            "last_transaction_addr": "0x1e0a27e0",
+            "physical_d_base_addr": "0x1e0a2000",
+            "physical_padding_bytes": 0,
+            "physical_written_bytes": 2048,
+            "slice_id": 15,
+            "transaction_bytes": 32,
+            "transaction_count": 64,
+            "valid_logical_byte_offset": 30720,
+            "valid_logical_bytes": 2048
+          }
+        ],
+        "transaction_bytes": 32,
+        "transaction_equation": "addr(slice,occurrence)=0x000a2000+(slice_id<<25)+32*occurrence, 0<=slice_id<16, 0<=occurrence<64",
+        "transactions_per_active_slice": 64
+      },
+      "final_accepted_write_completion": {
+        "config_bound_simulator_exact_uint8_payload_accepted": true,
+        "dynamic_hardware_final_write_accepted": false,
+        "evidence_scope": "FROZEN_NODE0071_COMPLETE_LOCAL_E2_REUSED_NOT_RERUN",
+        "execplan_all_eight_stages_and_final_barrier_accepted": true,
+        "final_round_d_all_active_slice_writes_complete": true,
+        "integrated_node0071_to_node0072_completion_accepted": false,
+        "local_readback_exact_payload_accepted": true,
+        "static_validator_completion_path_accepted": true
+      },
+      "frozen_complete_e2_identity": {
+        "artifact_manifest_file_sha256": "d457345b355c84a05639b95e0f4c5685ac974c936bef98c229afc27b57a45223",
+        "artifact_manifest_path": "artifacts/operator_config_validation/r5-gap-node0071-complete-config-only-local-e2-v1/manifest.json",
+        "artifact_manifest_semantic_sha256": "c85d1b003af441700076dd001f0adb8c4d1f32ef0c50107fb55be88dbd0ee0d6",
+        "claim": "CONFIG_ONLY_CORRECTNESS_BASELINE",
+        "config_bound_simulator_report_sha256": "c654d82cf2546490a01b7582195aa463d8b0032409c0435eca5222e031d413eb",
+        "contract_file_sha256": "61c6c388b64621b1df81736d4a505072755672446c863e27d10f829e214ac2bf",
+        "contract_path": "contracts/operator_config/gap_node0071_complete_config_only_local_e2_v1.json",
+        "contract_semantic_sha256": "5d98e0493eeb8c7caa9a34e8a3cc733db8def2b01de28698b0b05c4440ac4e90",
+        "evidence_level": "E2_LOCAL_COMPLETE_NODE",
+        "exact_uint8_payload_sha256": "b0b78ce73942e90566b05edfe6bd5ca5e924d3865e0232b31a58d9ffabb41067",
+        "existing_package": {
+          "dynamic_return_analysis_path": "artifacts/operator_config_validation/r5-gap-node0071-hw-v1-return-analysis/report.json",
+          "dynamic_return_analysis_sha256": "251971737d9a9cf09c361d87bd66cc0479f21e653ce81faa7fa7c839b3cef5f2",
+          "dynamic_return_status": "COMPILE_FAILED_NO_DYNAMIC_GAP_EVIDENCE",
+          "identity": "r5_node0071_gap_hw_v1",
+          "path": "artifacts/operator_config_validation/r5-server-test-packages/r5_node0071_gap_hw_v1.zip",
+          "rebuilt_or_modified_by_this_task": false,
+          "retained_read_only": true,
+          "sha256": "bb5818c4071eacd220c669941169e181b51018d0591d85d51b01f0a7bd732b74",
+          "size_bytes": 1766963,
+          "status": "PACKAGE_READY_NOT_RUN"
+        },
+        "materialized_roundtrip_report_sha256": "63321f7af1f89ddf865ac4337862eb9f93ef5a1c893643c10996c32c2560af80",
+        "replacement_candidate_package": {
+          "identity": "r5_n71_gap_v2_obs",
+          "numeric_analysis_repeated": false,
+          "path": "artifacts/operator_config_validation/r5-server-test-packages/r5_n71_gap_v2_obs.zip",
+          "repair_classification": "PACKAGE_LOCAL_OBSERVER_INCLUDE_BINDING_MISSING",
+          "server_file_write_required": false,
+          "sha256": "c3fe06f6e0110b41936b69ae264a24b2dc2d76779efc589c4fe34378b6891b8f",
+          "size_bytes": 1777110,
+          "source_numeric_payload_reused_without_rebuild": true,
+          "status": "PACKAGE_READY_NOT_RUN"
+        },
+        "validation_report_sha256": "90dc38576379e4cd847367a2713863a078a00e133d8ef965b1d0fe33065b5a16"
+      },
+      "immutable_sources": [
+        {
+          "path": "contracts/resnet50_r5_lowering_bundle.json",
+          "role": "typed node0071-D and node0072-A handoff identity",
+          "sha256": "bf661e4eda2011025d9922708ab46a64f8d1b3c279527b88aa7d630bb3545432"
+        },
+        {
+          "path": "contracts/operator_config/gap_node0071_complete_config_only_local_e2_v1.json",
+          "role": "accepted node0071 complete local E2 machine contract",
+          "sha256": "61c6c388b64621b1df81736d4a505072755672446c863e27d10f829e214ac2bf"
+        },
+        {
+          "path": "artifacts/operator_config_validation/r5-gap-node0071-complete-config-only-local-e2-v1/manifest.json",
+          "role": "accepted node0071 complete local E2 artifact manifest",
+          "sha256": "d457345b355c84a05639b95e0f4c5685ac974c936bef98c229afc27b57a45223"
+        },
+        {
+          "path": "artifacts/operator_config_validation/r5-gap-node0071-complete-config-only-local-e2-v1/validation_report.json",
+          "role": "accepted node0071 completion and address evidence",
+          "sha256": "90dc38576379e4cd847367a2713863a078a00e133d8ef965b1d0fe33065b5a16"
+        },
+        {
+          "path": "artifacts/operator_config_validation/r5-gap-node0071-complete-config-only-local-e2-v1/materialized_roundtrip_report.json",
+          "role": "accepted final address-bound occurrence and coverage evidence",
+          "sha256": "63321f7af1f89ddf865ac4337862eb9f93ef5a1c893643c10996c32c2560af80"
+        },
+        {
+          "path": "artifacts/operator_config_validation/r5-gap-node0071-complete-config-only-local-e2-v1/config_bound_simulator_report.json",
+          "role": "accepted exact uint8 config-bound payload evidence",
+          "sha256": "c654d82cf2546490a01b7582195aa463d8b0032409c0435eca5222e031d413eb"
+        },
+        {
+          "path": ".agents/task_records/20260729_gap_node0071_complete_local_e2_package_ready.md",
+          "role": "mainline-accepted node0071 E2 and package-ready record",
+          "sha256": "683628ef65608689adc315a8291dd58e22c2801b469ec27fda2dfacd63bd7317"
+        },
+        {
+          "path": "artifacts/operator_config_validation/r5-server-test-packages/r5_node0071_gap_hw_v1.zip",
+          "role": "frozen existing PACKAGE_READY_NOT_RUN zip; read-only identity",
+          "sha256": "bb5818c4071eacd220c669941169e181b51018d0591d85d51b01f0a7bd732b74"
+        },
+        {
+          "path": "artifacts/operator_config_validation/r5-server-test-packages/r5_node0071_gap_hw_v1.validation.json",
+          "role": "frozen existing package validation identity",
+          "sha256": "f749d43ba68d055a95278ffb8fdfad60575049fea31e976c6dc93c54fa6fa229"
+        },
+        {
+          "path": "artifacts/operator_config_validation/r5-gap-node0071-hw-v1-return-analysis/report.json",
+          "role": "adjudicated v1 compile failure and fail-closed gate evidence",
+          "sha256": "251971737d9a9cf09c361d87bd66cc0479f21e653ce81faa7fa7c839b3cef5f2"
+        },
+        {
+          "path": "artifacts/operator_config_validation/r5-server-test-packages/r5_n71_gap_v2_obs.zip",
+          "role": "fresh package-local observer repair candidate; not run",
+          "sha256": "c3fe06f6e0110b41936b69ae264a24b2dc2d76779efc589c4fe34378b6891b8f"
+        },
+        {
+          "path": "artifacts/operator_config_validation/r5-server-test-packages/r5_n71_gap_v2_obs.validation.json",
+          "role": "v2 deterministic build and package preflight receipt",
+          "sha256": "f5f34434ce0f89ac0a64f6eeb9bdeac51dcf101375f3bda0519959bac3b39f5c"
+        },
+        {
+          "path": "contracts/operator_config/resnet50_reuse_first_integration_policy_v1.json",
+          "role": "reuse-first integration policy",
+          "sha256": "c8886c946a15e281e2b9fc40c3e37523cc00d3aab330131572887f3d64de6960"
+        },
+        {
+          "path": ".agents/rules/GAP_int32_mac_bypass_rules.md",
+          "role": "GAP local E2 reuse and claim boundary authority",
+          "sha256": "b194d525fb7c1647b3fdaabd51d88dc4bc9b874ce7a910d4fdd1ca125b56fd96"
+        },
+        {
+          "path": ".agents/rules/算子配置规则.md",
+          "role": "config-only and reuse-first authority",
+          "sha256": "cbaffcc5fb3bea7da9f0c199bb2e7f06445a676ab456bdfd505b90dd89825171"
+        },
+        {
+          "path": ".agents/rules/生成前必读索引.md",
+          "role": "generation routing receipt",
+          "sha256": "12583308ec9a16dbb8ea15571a5280291fed7e152167d2e4e8e00509a9a6370f"
+        }
+      ],
+      "numeric_analysis_repeated": false,
+      "operator_e2_retested": false,
+      "owner_family": "QLinearGlobalAveragePool",
+      "owner_hwop": "r5:hwop-0071-01",
+      "owner_node": "node-0071",
+      "owner_port": "D",
+      "owner_section_content_sha256": "2113dd0f538757efc1cd48e313806d03f1ca133d4f40f021ba84d3ce94945473",
+      "package_rebuilt_or_modified": false,
+      "package_release": {
+        "existing_package_identity": "r5_node0071_gap_hw_v1",
+        "existing_package_rebuilt_or_modified": false,
+        "new_package_is_operator_only_not_integrated_endpoint": true,
+        "new_server_package_generated": true,
+        "replacement_candidate_identity": "r5_n71_gap_v2_obs",
+        "server_files_inspected": false,
+        "server_lease": false,
+        "server_upload_or_run": false,
+        "state": "V1_FAILED_V2_PACKAGE_READY_NOT_RUN"
+      },
+      "replacement_package_generated": true,
+      "reuse_class": "EXACT_FULL_OPERATOR",
+      "reuse_status": "REUSE_ACCEPTED_FOR_INTEGRATION",
+      "rule_ids": [
+        "CDA-CONFIG-ONLY-CORRECTNESS-BYPASS-001",
+        "CDA-CONFIG-ONLY-INPUT-REPLAY-NONCOMPUTATIONAL-001",
+        "CDA-REUSE-FIRST-DEFERRED-RETEST-001",
+        "CDA-GAP-INT32MAC-STAGE1-ALIGNED-EVEN-ODD-001",
+        "CDA-GAP-INT32MAC-SUM-STAGE-LOCAL-E2-001"
+      ],
+      "storage_identity": {
+        "allocation_owner": "r5:hwop-0071-01:D",
+        "allocation_owner_remains_producer": true,
+        "byte_offset_within_allocation": 0,
+        "consumer_may_relocate_or_repartition": false,
+        "dtype": "uint8",
+        "identity_class": "BATCH_SLICE_SHARDED_ACTIVATION",
+        "logical_byte_strides": [
+          2048,
+          1,
+          1,
+          1
+        ],
+        "logical_element_count": 32768,
+        "logical_shape": [
+          16,
+          2048,
+          1,
+          1
+        ],
+        "logical_valid_byte_span": 32768,
+        "physical_address_space": "NDP_PER_SLICE_DDR",
+        "storage_id": "r5:activation:node-0071:D:tensor-ab32f279540568c3:batch-slice-sharded-16x2048-v1",
+        "tensor_id": "tensor-ab32f279540568c3"
+      },
+      "sum_or_tail_numeric_reexecuted": false,
+      "typed_endpoint_identity": {
+        "consumer_requirement_only": {
+          "hwop": "r5:hwop-0072-00",
+          "node": "node-0072",
+          "onnx_op_type": "DequantizeLinear",
+          "owner_section_present": false,
+          "port": "A"
+        },
+        "dtype": "uint8",
+        "identity_sha256": "70e76086c96394b1cc0a50cf316663b4ea1def7f0d0b73568dd83662d6556b55",
+        "identity_source": "artifacts/w3/golden_batch16/manifest.json",
+        "onnx_name": "resnetv17_pool1_fwd_quantized",
+        "producer": {
+          "hwop": "r5:hwop-0071-01",
+          "node": "node-0071",
+          "onnx_op_type": "QLinearGlobalAveragePool",
+          "port": "D"
+        },
+        "producer_and_consumer_typed_identity_exact": true,
+        "shape": [
+          16,
+          2048,
+          1,
+          1
+        ],
+        "tensor_id": "tensor-ab32f279540568c3"
+      },
+      "visibility_and_lifetime": {
+        "allocation_owner": "r5:hwop-0071-01:D",
+        "consumer_first_legal_read": "after producer_visibility_event",
+        "consumer_must_materialize_first_read_acceptance_gate": true,
+        "integrated_visibility_lifetime_status": "DEFERRED_TO_DEQUANT_CONSUMER_OWNER",
+        "producer_allocation_must_remain_live_until_required_release_event": true,
+        "producer_local_readback_does_not_release_shared_endpoint": true,
+        "producer_local_visibility_evidence_accepted": true,
+        "producer_visibility_event": "node0071 final uint8 D byte-set accepted AND node0071 completion/final barrier accepted",
+        "required_release_event": "node0072 final A input-data accepted AND no pending/replayed read; fallback=node0072 completion accepted",
+        "shared_multi_operator_barrier_materialized": false
+      }
+    }
+  },
+  "required_missing_owner_sections": [
+    "DequantizeLinear"
+  ],
+  "schema": "resnet50-shared-endpoint-owner-manifest-v1",
+  "server_inspected_uploaded_or_run": false,
+  "server_package_generated": false,
+  "status": "PARTIAL_GAP_PRODUCER_SECTION_READY"
+}

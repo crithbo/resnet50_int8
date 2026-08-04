@@ -1,0 +1,2647 @@
+{
+  "c0_ledger": [
+    {
+      "audit_state": "core_control_and_counter_semantics_closed",
+      "classification": "RTL_PROVEN",
+      "ledger_id": "C0-LC",
+      "priority": 1,
+      "remaining": "audit every template/generator consumer; value-domain correctness remains stage-specific"
+    },
+    {
+      "audit_state": "core_packing_data_tag_and_flow_semantics_closed",
+      "classification": "RTL_PROVEN",
+      "ledger_id": "C0-LC-PE",
+      "priority": 2,
+      "remaining": "new stage arithmetic domains and schedules remain stage-specific; add has no authorized corpus instance"
+    },
+    {
+      "audit_state": "static_equations_closed_dynamic_outbuffer_pending",
+      "classification": "TEST_REQUIRED",
+      "ledger_id": "C0-MSE-MEMORY-AG",
+      "priority": 3,
+      "remaining": "generic first/stall/resume cycle behavior; the earlier sim6 GAP replay attribution is superseded by probe_v4/v5"
+    },
+    {
+      "audit_state": "static_lane_boundary_and_merge_semantics_closed",
+      "classification": "RTL_PROVEN",
+      "ledger_id": "C0-PADDING-TAIL-KEEP",
+      "priority": 4,
+      "remaining": "stage-specific bound selection and dynamic delayed-valid transport remain separate"
+    },
+    {
+      "audit_state": "static_address_owner_lifetime_semantics_closed",
+      "classification": "RTL_PROVEN",
+      "ledger_id": "C0-BUFFER",
+      "priority": 5,
+      "remaining": "neighbor multi-slice switch completion is retained under the N2N ledger; cycle-level MSE transport remains separate"
+    },
+    {
+      "audit_state": "static_equations_closed_int8_dot_and_ieee_corner_assumptions_contradicted",
+      "classification": "CONTRADICTED",
+      "ledger_id": "C0-SA",
+      "priority": 6,
+      "remaining": "cycle-level floating-point numerical conformance and enabled-bias execution have no authorized corpus sample; current INT8 Conv promotion is blocked by the exact CSA equation"
+    },
+    {
+      "audit_state": "static_equations_closed_int8_max_pipeline_and_int32_conversion_assumptions_contradicted",
+      "classification": "CONTRADICTED",
+      "ledger_id": "C0-GA",
+      "priority": 7,
+      "remaining": "cycle-level FP/SFU numerical conformance; sqrt and int32_mac have no authorized sample; GAP block1 accumulation state is localized but not yet rooted"
+    },
+    {
+      "audit_state": "static_equations_closed_ping_pong_field_and_zero_copy_assumptions_contradicted",
+      "classification": "CONTRADICTED",
+      "ledger_id": "C0-N2N-CONFIG-LIFETIME",
+      "priority": 8,
+      "remaining": "neighbor_stream1, mixed selector pairs and dynamic multi-stage clear/reconfigure sequencing lack authorized traces"
+    }
+  ],
+  "classification_vocabulary": [
+    "RTL_PROVEN",
+    "SAMPLE_SUPPORTED",
+    "TEST_REQUIRED",
+    "CONTRADICTED"
+  ],
+  "contract_sha256": "1fece17069a028f36fa154aade76460370417fe67ba69afe6f60421686b74a22",
+  "findings": [
+    {
+      "bitstream_and_register": {
+        "config_width_bits": 60,
+        "default_encoding": "None and inactive fields encode as zero; outmost_loop determines whether a zero src selector is semantically used",
+        "fields_msb_to_lsb": [
+          {
+            "bits": "[59:56]",
+            "field": "src_id",
+            "width": 4
+          },
+          {
+            "bits": "[55]",
+            "field": "outmost_loop",
+            "width": 1
+          },
+          {
+            "bits": "[54:38]",
+            "field": "start",
+            "width": 17
+          },
+          {
+            "bits": "[37:21]",
+            "field": "stride",
+            "width": 17
+          },
+          {
+            "bits": "[20:4]",
+            "field": "end",
+            "width": 17
+          },
+          {
+            "bits": "[3:0]",
+            "field": "last_index",
+            "width": 4
+          }
+        ],
+        "gap_example": {
+          "encoded_bits": "0101",
+          "logical_edge": "DRAM_LC.LC0 -> DRAM_LC.LC2",
+          "physical_edge": "LC4 -> LC6",
+          "relative_selector": 5
+        },
+        "spreadsheet_arbitration": "spreadsheet [47:0] ranges conflict with declared 17-bit start/stride/end; encoder and RTL agree on the 60-bit layout above, so spreadsheet offsets are not target packing authority",
+        "src_encoding": "logical edge is placed first; Connect encodes the destination-relative physical inport selector"
+      },
+      "classification": "RTL_PROVEN",
+      "issue_id": "CDA-LC-SRC-001",
+      "json_paths": [
+        "$.dram_loop_configs.LC*.src_id",
+        "$.dram_loop_configs.LC*.outmost_loop",
+        "$.dram_loop_configs.LC*.start",
+        "$.dram_loop_configs.LC*.stride",
+        "$.dram_loop_configs.LC*.end",
+        "$.dram_loop_configs.LC*.last_index"
+      ],
+      "minimal_examples": {
+        "negative": "LC2 src_id=LC0, start=0,end=1,stride=1 does not copy LC0 values; it emits local value 0 per trigger",
+        "positive": "LC2 src_id=LC0, start=100,end=104,stride=2: each accepted LC0 trigger causes local values 100,102"
+      },
+      "rtl_effect": {
+        "backpressure": "only the selected input receives the LC inbuffer backpressure when outmost_loop=0",
+        "counter_value": "initial_value, then signed(previous_data)+signed(stride_value); output is truncated to 16 data bits",
+        "last": "valid && signed(next_value) >= signed(end_value)-signed(stride_value)",
+        "last_index": "upstream_last ? upstream_last_index : local_index",
+        "outmost": "outmost_loop=1 replaces the selected tag with slice_start_run and ignores src_id for triggering",
+        "same": "upstream same suppresses duplicate trigger capture; outgoing same is regenerated while this LC output stalls",
+        "selected_input": "iga_lc_inport[iga_lc_src_id]",
+        "selected_payload_used": "tag only: valid,last,same,last_index; selected data is not consumed by the counter"
+      },
+      "scope": "all DRAM LC instances in the bound NDP_copy01 RTL and the bound ndp-sim encoder; numeric usefulness remains specific to the consuming stage",
+      "signedness_and_legal_subset": {
+        "current_strict_validator": "start/end signed 17-bit; generated stride positive unsigned 17-bit; active loop requires start<end",
+        "negative_stride": "not approved by this audit even though a two's-complement bit pattern can be packed",
+        "rtl_arithmetic": "17-bit start/stride/end are explicitly cast signed for addition and end comparison"
+      },
+      "title": "DRAM LC src_id selects a trigger/tag input, not a numeric value"
+    },
+    {
+      "bitstream_and_register": {
+        "configure_beat_width_bits": 48,
+        "configure_beats": 2,
+        "fields_msb_to_lsb": [
+          {
+            "bits": "[95:80]",
+            "field": "reserved_padding",
+            "width": 16
+          },
+          {
+            "bits": "[79:78]",
+            "field": "alu_opcode",
+            "width": 2
+          },
+          {
+            "bits": "[77:74]",
+            "field": "inport2.src_id",
+            "width": 4
+          },
+          {
+            "bits": "[73:70]",
+            "field": "inport2.keep_last_index",
+            "width": 4
+          },
+          {
+            "bits": "[69:68]",
+            "field": "inport2.mode",
+            "width": 2
+          },
+          {
+            "bits": "[67:64]",
+            "field": "inport1.src_id",
+            "width": 4
+          },
+          {
+            "bits": "[63:60]",
+            "field": "inport1.keep_last_index",
+            "width": 4
+          },
+          {
+            "bits": "[59:58]",
+            "field": "inport1.mode",
+            "width": 2
+          },
+          {
+            "bits": "[57:54]",
+            "field": "inport0.src_id",
+            "width": 4
+          },
+          {
+            "bits": "[53:50]",
+            "field": "inport0.keep_last_index",
+            "width": 4
+          },
+          {
+            "bits": "[49:48]",
+            "field": "inport0.mode",
+            "width": 2
+          },
+          {
+            "bits": "[47:32]",
+            "field": "inport2.constant",
+            "width": 16
+          },
+          {
+            "bits": "[31:16]",
+            "field": "inport1.constant",
+            "width": 16
+          },
+          {
+            "bits": "[15:0]",
+            "field": "inport0.constant",
+            "width": 16
+          }
+        ],
+        "rtl_load": "beat 0 low 32 bits load opcode/src/keep/mode; beat 1 presents constant0/1/2 in 16-bit lanes and only a port whose already-latched mode is 2'b11 captures it",
+        "source_selector": "the 4-bit src_id indexes ten physical inputs; mapper encodes LC neighbors as selectors 0..5 and LC-PE neighbors as selectors 6..9",
+        "spreadsheet_arbitration": "spreadsheet control widths agree, but its three constant rows declare 16 bits while each shown range spans only 12; encoder chunking and RTL 16-bit lanes are the packing authority",
+        "total_bits": 96
+      },
+      "classification": "RTL_PROVEN",
+      "issue_id": "CDA-LCPE-PACK-001",
+      "json_paths": [
+        "$.lc_pe_configs.PE*.alu_opcode",
+        "$.lc_pe_configs.PE*.inport[0-2].src_id",
+        "$.lc_pe_configs.PE*.inport[0-2].keep_last_index",
+        "$.lc_pe_configs.PE*.inport[0-2].mode",
+        "$.lc_pe_configs.PE*.inport[0-2].constant"
+      ],
+      "minimal_examples": {
+        "negative": "copying spreadsheet [35:0] constant offsets would produce three 12-bit lanes and cannot drive the RTL 48-bit constant beat",
+        "positive": "mul, port0=buffer(LC), port1=constant(1), port2=null encodes one control beat followed by constants {0,1,0}"
+      },
+      "scope": "all IGA LC-PE instances in the bound encoder/RTL; this does not approve any particular stage arithmetic schedule",
+      "title": "LC-PE is a two-beat 96-bit configuration with a 32-bit control register and three 16-bit constants"
+    },
+    {
+      "authorized_corpus": {
+        "authorized_config_count": 65,
+        "config_with_lc_pe_count": 63,
+        "constant_value_counts": {
+          "1": 157,
+          "16": 6,
+          "2": 6,
+          "2048": 1,
+          "32": 3,
+          "4": 8,
+          "512": 1,
+          "64": 4,
+          "8": 7
+        },
+        "evidence_boundary": "the authorized corpus proves the observed mul/mac combinations are used; add and unobserved mode/topology combinations rely on RTL equations only and are not approved stage migrations",
+        "examples": {
+          "mac": {
+            "modes_inport0_to_2": [
+              "keep",
+              "constant",
+              "buffer"
+            ],
+            "path": "jsons/gemm_ring_Vgen/jsons/op0_prefill_gemm_ring_4slice.json",
+            "pe": "PE0"
+          },
+          "mul": {
+            "modes_inport0_to_2": [
+              "buffer",
+              "constant",
+              null
+            ],
+            "path": "jsons/gemm_ring_Vgen/jsons/op0_prefill_gemm_ring_4slice.json",
+            "pe": "PE4"
+          }
+        },
+        "keep_threshold_counts": {
+          "1": 11,
+          "2": 15,
+          "3": 5,
+          "4": 5,
+          "5": 6
+        },
+        "lc_pe_instance_count": 193,
+        "mode_counts": {
+          "buffer": 193,
+          "constant": 193,
+          "keep": 42,
+          "null": 151
+        },
+        "observed_patterns": [
+          {
+            "instance_count": 42,
+            "modes_inport0_to_2": [
+              "keep",
+              "constant",
+              "buffer"
+            ],
+            "opcode": "mac"
+          },
+          {
+            "instance_count": 151,
+            "modes_inport0_to_2": [
+              "buffer",
+              "constant",
+              null
+            ],
+            "opcode": "mul"
+          }
+        ],
+        "opcode_counts": {
+          "mac": 42,
+          "mul": 151
+        },
+        "source_root_counts": {
+          "jsons": 12,
+          "ndp-sim/jsons": 53
+        },
+        "strict_subset_violation_count": 0
+      },
+      "classification": "RTL_PROVEN",
+      "evidence_boundary": "RTL proves all three equations; the 65 authorized configs contain 151 mul and 42 mac instances but zero add instances, so add has no sample-backed stage migration",
+      "issue_id": "CDA-LCPE-ALU-001",
+      "micro_examples_unsigned_hex": {
+        "add_ffff_plus_0002": "0x0001",
+        "mac_8000_times_0002_plus_0001": "0x0001",
+        "mul_ffff_times_0002": "0xfffe"
+      },
+      "operand_enable_contract": {
+        "add": "inport0 and inport1 enabled; inport2 null",
+        "mac": "inport0, inport1 and inport2 enabled",
+        "mul": "inport0 and inport1 enabled; inport2 null",
+        "reason": "a null used port leaves its data register without a defined operand; an enabled ignored port still gates matched/backpressure and is therefore not inert"
+      },
+      "rtl_equations": {
+        "add_opcode_0": "D = low16(s16(inport0) * 1 + s16(inport1)); inport2 is numerically ignored",
+        "implementation": "DW02_mult uses TC=1 and produces 32 bits; only its low 16 bits enter the 16-bit CLA, whose carry is discarded",
+        "mac_opcode_2": "D = low16(s16(inport0) * s16(inport1) + s16(inport2))",
+        "mul_opcode_1": "D = low16(s16(inport0) * s16(inport1)); inport2 is numerically ignored",
+        "opcode_3": "RTL default drives all ALU operands to zero; encoder and strict validator do not expose it as a legal opcode"
+      },
+      "signedness_and_constants": {
+        "constant_width_bits": 16,
+        "data_width_bits": 16,
+        "integer_interpretation": "two's-complement signed inputs",
+        "output_interpretation": "16-bit bit pattern; the consuming address/tag logic decides whether that pattern is useful",
+        "strict_constant_domain": "signed int16 decimal or exact 0x0000..0xffff raw bit pattern; floating/fractional LC-PE constants are rejected because the generic encoder would take the low 16 bits of an FP32 encoding"
+      },
+      "title": "LC-PE add, multiply and MAC are signed-input modulo-2^16 integer equations",
+      "validator_enforcement": [
+        "LC_PE.OPERAND_DISABLED",
+        "LC_PE.UNUSED_OPERAND_ENABLED",
+        "LC_PE.CONSTANT_DOMAIN",
+        "VALUE.SIGNED_RANGE"
+      ]
+    },
+    {
+      "classification": "RTL_PROVEN",
+      "ignored_field_gates": {
+        "constant_src_id": "rejected as GRAPH.UNUSED_SOURCE",
+        "keep_last_index_on_nonkeep": "rejected as TAG.UNUSED_KEEP_THRESHOLD"
+      },
+      "issue_id": "CDA-LCPE-MODE-TAG-001",
+      "minimal_examples": {
+        "negative": "changing the keep port's last_index cannot make it the output terminal carrier; only the buffer port drives output last/last_index",
+        "positive": "mac(keep x, constant stride, buffer y) holds x across y iterations and refreshes x at the configured inclusive y terminal boundary"
+      },
+      "mode_table": {
+        "buffer_01": "capture each accepted source value; release after each matched output handshake",
+        "constant_11": "capture the signed 16-bit configuration constant on the second configure beat and retain it",
+        "keep_10": "capture a source value and retain it until the buffer carrier reports last=1 and last_index <= keep_last_index",
+        "null_00": "port disabled and excluded from all-enabled matching"
+      },
+      "scope": "core LC-PE lifetime/tag/backpressure semantics; the correct threshold for a stage still requires its loop nest and terminal contract",
+      "tag_and_flow_equations": {
+        "buffer_tag_owner": "RTL selects the first buffer-mode port in priority order port0, port1, port2 for last/last_index",
+        "keep_release": "buffer_last && buffer_last_index <= configured keep_last_index (inclusive)",
+        "matched": "iga_pe_enable && every enabled port has a valid inbuffer value",
+        "output_tag": "valid=matched; last and last_index come only from the buffer carrier, not keep/constant operands",
+        "same_and_backpressure": "source same suppresses duplicate capture; the two-entry outbuffer regenerates same while stalled, and only selected enabled sources receive port backpressure",
+        "strict_subset": "validator requires exactly one buffer carrier, making the priority unambiguous"
+      },
+      "title": "LC-PE mode controls operand lifetime while one buffer port owns output terminal tags"
+    },
+    {
+      "authorized_corpus": {
+        "address_remapping_counts": {
+          "explicit_identity": 4,
+          "explicit_permutation": 8,
+          "null_default_identity": 165
+        },
+        "authorized_config_count": 65,
+        "buf_mode_patterns": {
+          "keep,buffer": 177
+        },
+        "constant_mode_count": 0,
+        "corpus_relation_violation_count": 0,
+        "derived_total_size_counts": {
+          "128": 5,
+          "16": 13,
+          "2": 1,
+          "32": 133,
+          "4": 24,
+          "64": 1
+        },
+        "ignored_nonnull_keep_threshold_counts": {
+          "buf_buffer": 97,
+          "mem_buffer": 86,
+          "mem_null": 6
+        },
+        "json_to_rtl_dimension_order": {
+          "buf_idx_mode": "JSON [row,col] maps to RTL [port1,port0]",
+          "json[0]": "RTL port2; innermost transaction dimension",
+          "json[1]": "RTL port1; middle transaction dimension",
+          "json[2]": "RTL port0; outermost transaction dimension"
+        },
+        "legacy_integer_zero_null_alias_count": 4,
+        "mem_mode_patterns": {
+          "buffer,keep,0": 4,
+          "buffer,keep,keep": 5,
+          "buffer,keep,null": 115,
+          "buffer,null,null": 42,
+          "keep,buffer,null": 9,
+          "keep,keep,buffer": 2
+        },
+        "stream_count": 177,
+        "stream_mode_counts": {
+          "read": 112,
+          "write": 65
+        }
+      },
+      "bitstream_and_register": {
+        "buffer_index_order": "JSON buf_idx_mode=[row,col] maps to RTL port1=row and port0=col",
+        "dimension_order": "BaseConfig packs list element 0 on the MSB side. Therefore JSON [dim0,dim1,dim2] maps to RTL [port2,port1,port0]; dim0 is the innermost byte layout dimension",
+        "field_widths_msb_to_lsb": {
+          "address_remapping": "26 x 5",
+          "base_addr": 30,
+          "buf_idx_keep_last_index": "2 x 4",
+          "buf_idx_mode": "2 x 1",
+          "dim_stride": "3 x 20",
+          "idx": "3 x 5",
+          "idx_size": "3 x 8",
+          "idx_size_log": "3 x 3 derived",
+          "mem_idx_constant": "3 x 8",
+          "mem_idx_keep_last_index": "3 x 4",
+          "mem_idx_mode": "3 x 2",
+          "ping_pong": 1,
+          "pingpong_last_index": 4,
+          "total_size": "8 derived"
+        },
+        "read_config_beats": "10 x 58-bit",
+        "read_config_bits": 580,
+        "write_config_beats": "8 x 62-bit",
+        "write_config_bits": 496,
+        "write_reserved_msb_bits": 3
+      },
+      "buffer_index_modes": {
+        "buffer_0": "consume row/col source each matched tuple",
+        "keep_1": "retain row/col source through the same inclusive terminal threshold equation",
+        "matching": "both row and col are always valid-required; the depth-16 Buffer AG index FIFO has no null/constant mode",
+        "strict_pair": "exactly one buffer and one keep; in all 177 authorized streams the JSON pair is [keep,buffer], meaning row is kept and col is the terminal carrier"
+      },
+      "classification": "RTL_PROVEN",
+      "dont_care_boundary": "RTL consults keep_last_index only in keep mode. The authorized corpus contains non-null ignored thresholds, so those fields are documented as don't-care and are not retroactively declared incorrect",
+      "issue_id": "CDA-MSE-PACK-MODE-001",
+      "json_paths": [
+        "$.stream_engine.stream*.mem_idx_mode",
+        "$.stream_engine.stream*.mem_idx_keep_last_index",
+        "$.stream_engine.stream*.idx",
+        "$.stream_engine.stream*.mem_idx_constant",
+        "$.stream_engine.stream*.buf_idx_mode",
+        "$.stream_engine.stream*.buf_idx_keep_last_index"
+      ],
+      "legacy_boundary": "four authorized exact-reference GEMM streams use integer 0, which the native mapper collapses to null. The strict target schema intentionally requires typed null and uses an encoding-equivalence materialization rather than silently accepting arbitrary integer modes",
+      "memory_index_modes": {
+        "buffer_01": "selected 16-bit source is consumed for every matched index tuple and owns terminal last/last_index",
+        "constant_11": "8-bit configuration pattern is sign-extended to a 16-bit index, then subsequent address multiplication treats that 16-bit vector as unsigned",
+        "keep_10": "selected source is retained until buffer_last && buffer_last_index <= keep_last_index",
+        "matching": "buffer/keep require selected-source valid; null/constant are synthesized valid; all three must match before the depth-8 Memory AG index FIFO is written",
+        "null_00": "index value is zero and the port is treated always-valid; source selector is numerically unused",
+        "tag_owner": "first buffer port in RTL priority port0,port1,port2; strict target requires exactly one buffer"
+      },
+      "title": "MSE vector packing reverses JSON dimensions into RTL ports and modes control index lifetime"
+    },
+    {
+      "classification": "RTL_PROVEN",
+      "issue_id": "CDA-MSE-ADDR-001",
+      "json_paths": [
+        "$.stream_engine.stream*.idx",
+        "$.stream_engine.stream*.mem_idx_constant",
+        "$.stream_engine.stream*.dim_stride",
+        "$.stream_engine.stream*.base_addr",
+        "$.stream_engine.stream*.address_remapping"
+      ],
+      "micro_examples": {
+        "identity_request": 308,
+        "identity_request_hex": "0x0000134",
+        "next_line_after_12_bytes_hex": "0x0000135"
+      },
+      "ordering_consequences": [
+        "remapping applies to transaction bias, not to base_addr",
+        "base_addr low four bits are discarded, so strict target requires 16-byte alignment",
+        "the 30-bit byte-address sum and final 26-bit line-address addition wrap at their RTL widths",
+        "a sign-extended constant index such as 0xff becomes u16(0xffff) for multiplication because the address operands are not declared signed"
+      ],
+      "rtl_equations": {
+        "drop_byte_offset": "U = T[29:4]",
+        "remap": "R[out_bit] = U[address_remapping[out_bit]] for out_bit 0..25; JSON null encodes identity",
+        "request_line_address": "A = low26(R + base_addr[29:4])",
+        "transaction_bias": "B = low30(sum(i=0..2, u16(rtl_idx[i]) * u20(rtl_stride[i])))",
+        "transfer_byte_address": "T = low30(B + transfer_bias_bytes)"
+      },
+      "scope": "static RD and WR Memory AG address equations. It does not prove dynamic outbuffer handshakes or stage-specific index-domain coverage",
+      "title": "MSE request address is remapped transaction bias plus aligned base address"
+    },
+    {
+      "authorized_corpus_total_sizes": {
+        "128": 5,
+        "16": 13,
+        "2": 1,
+        "32": 133,
+        "4": 24,
+        "64": 1
+      },
+      "classification": "RTL_PROVEN",
+      "derived_fields": {
+        "dimension_size": "S[j] = 1 when idx_size[j] is null, otherwise idx_size[j] + 1",
+        "idx_size_log_json": "[log2(S0), log2(S0*S1), 0], which becomes the corresponding reversed RTL vector",
+        "power_of_two_reason": "Data Channel derives per-lane inner coordinates with right shifts and bitwise masks, so each S[j] must be a power of two",
+        "total_size": "S[0] * S[1] * S[2], encoded in 8 bits"
+      },
+      "issue_id": "CDA-MSE-SPLIT-001",
+      "json_paths": [
+        "$.stream_engine.stream*.idx_size",
+        "$.stream_engine.stream*.buf_spatial_size"
+      ],
+      "scope": "static transaction derivation, line split, size and valid mask; first/stall/resume handshake timing remains TEST_REQUIRED because of the delayed-valid outbuffers",
+      "split_equations": {
+        "final_size": "min(bytes_remaining, try_size)",
+        "first_position": "P0 = transaction_bias[3:0]",
+        "first_try_size": "16 - P0",
+        "later_try_size": 16,
+        "next_transfer_bias": "current transfer_bias + final_size",
+        "partial_flag": "final_size < 16",
+        "valid_mask": "low16((((1 << final_size) - 1) << start_position))"
+      },
+      "title": "idx_size defines a power-of-two byte transaction split across 16-byte DDR lines",
+      "unaligned_32_byte_example": [
+        {
+          "byte_address": 4,
+          "partial": true,
+          "size": 12,
+          "start_position": 4,
+          "transfer_bias": 0,
+          "valid_mask": 65520
+        },
+        {
+          "byte_address": 16,
+          "partial": false,
+          "size": 16,
+          "start_position": 0,
+          "transfer_bias": 12,
+          "valid_mask": 65535
+        },
+        {
+          "byte_address": 32,
+          "partial": true,
+          "size": 4,
+          "start_position": 0,
+          "transfer_bias": 28,
+          "valid_mask": 15
+        }
+      ]
+    },
+    {
+      "classification": "RTL_PROVEN",
+      "dynamic_risk": "WR uses the same unreset vld_d and external valid=(vld_d||vld) equation as RD. The static RMW sequence is proven, but duplicate-request safety under ready/stall timing requires a cycle trace",
+      "issue_id": "CDA-MSE-WR-RMW-001",
+      "rtl_sequence": {
+        "full_unmasked_line": "rw remains 1 and the selected channel emits one direct write request",
+        "masked_line_step_1": "accepted transfer changes rw from 1 to 0 while capturing the line address, producing a read request",
+        "masked_line_step_2": "upstream address acceptance is held while rw=0; after the read request is accepted, the same channel changes rw back to 1 and emits the write to the held address",
+        "merge": "new buffer byte is selected only where valid_mask=1 and tail_mask=0; every other lane comes from returned old DDR data"
+      },
+      "title": "WR MSE performs read-modify-write for partial or tailed DDR lines",
+      "trigger": "transfer_mask_flag = (transfer_size < 16) || (any tail/branch lane is outside its inclusive range)"
+    },
+    {
+      "authorized_corpus": {
+        "authorized_config_count": 65,
+        "enabled_padding_null_value_count": 3,
+        "legacy_write_padding_field_count": 1,
+        "padding_enabled_dimension_count": 5,
+        "padding_enabled_stream_count": 3,
+        "padding_examples": [
+          {
+            "idx_padding_range": {
+              "low_bound": [
+                null,
+                0,
+                null
+              ],
+              "up_bound": [
+                null,
+                48,
+                null
+              ]
+            },
+            "padding_enable": [
+              0,
+              1,
+              0
+            ],
+            "padding_reg_value": null,
+            "path": "ndp-sim/jsons/avgpool_config_2048_7_7.json",
+            "stream": "stream0",
+            "target": "A"
+          },
+          {
+            "idx_padding_range": {
+              "low_bound": [
+                1,
+                1,
+                null
+              ],
+              "up_bound": [
+                112,
+                112,
+                null
+              ]
+            },
+            "padding_enable": [
+              1,
+              1,
+              0
+            ],
+            "padding_reg_value": null,
+            "path": "ndp-sim/jsons/maxpool_config_16_112_112_stride2_padding1.json",
+            "stream": "stream0",
+            "target": "A"
+          },
+          {
+            "idx_padding_range": {
+              "low_bound": [
+                1,
+                1,
+                null
+              ],
+              "up_bound": [
+                16,
+                16,
+                null
+              ]
+            },
+            "padding_enable": [
+              1,
+              1,
+              0
+            ],
+            "padding_reg_value": null,
+            "path": "ndp-sim/jsons/maxpool_config_16_16_16_stride2_padding1.json",
+            "stream": "stream0",
+            "target": "A"
+          }
+        ],
+        "read_stream_count": 112,
+        "sample_boundary": "padding has three authorized reference streams; tailing has no authorized enabled instance and is RTL-only in this corpus",
+        "tailing_enabled_stream_count": 0,
+        "write_stream_count": 65
+      },
+      "classification": "RTL_PROVEN",
+      "evidence_boundary": "three authorized read streams enable padding, but all authorized streams disable tailing. Tailing equations are RTL-proven without an enabled reference sample",
+      "issue_id": "CDA-MSE-LANE-BOUND-001",
+      "json_order_lane_equations": {
+        "dim0": "idx0 = low16(base0 + (q & (S0-1)))",
+        "dim1": "idx1 = low16(base1 + ((q >> log2(S0)) & (S1-1)))",
+        "dim2": "idx2 = low16(base2 + ((q >> log2(S0*S1)) & (S2-1)))",
+        "dimension_combine": "outside flags from the three dimensions are ORed",
+        "offset": "q = transfer_bias + conceptual_lane",
+        "outside": "enabled && (idx < low || idx > up); therefore low and up are both inclusive"
+      },
+      "json_paths": [
+        "$.stream_engine.stream*.idx_size",
+        "$.stream_engine.stream*.padding_enable",
+        "$.stream_engine.stream*.idx_padding_range",
+        "$.stream_engine.stream*.tailing_enable",
+        "$.stream_engine.stream*.idx_tailing_range"
+      ],
+      "micro_indexes": {
+        "base_10_20_30_size_4x2x1_offset_0": [
+          10,
+          20,
+          30
+        ],
+        "base_10_20_30_size_4x2x1_offset_5": [
+          11,
+          21,
+          30
+        ]
+      },
+      "packing": {
+        "dimension_alignment": "JSON dimension 0 fields land on RTL element 2, dimension 1 on element 1 and dimension 2 on element 0, matching the reversed transaction index vector",
+        "padding_bounds_bits": "low[3] + up[3], each 12 bits",
+        "padding_enable_bits": "3 x 1, read only",
+        "padding_value_bits": 8,
+        "tailing_bounds_bits": "low[3] + up[3], each 12 bits",
+        "tailing_enable_bits": "3 x 1, read and write"
+      },
+      "title": "Padding and tail bounds compare inclusive JSON-order per-byte indexes",
+      "width_boundary": "per-byte indexes are 16-bit modulo additions while bounds are zero-extended 12-bit values; strict target bounds therefore stay in 0..4095 and must be explicit only for enabled dimensions"
+    },
+    {
+      "classification": "RTL_PROVEN",
+      "dynamic_boundary": "the byte-selection equations are static and closed. RD request/data and WR request/write-data delayed-valid outbuffers still require cycle-level first/stall/resume proof",
+      "issue_id": "CDA-PADDING-TAIL-DATA-001",
+      "mask_equations": {
+        "conceptual_masks": "padding/tail comparisons are evaluated for conceptual transaction lanes 0..15 at transfer_bias+lane",
+        "physical_masks": "mask_physical = low16(mask_conceptual << transfer_start_position)",
+        "rank": "rank[i] = popcount(valid_mask[0:i]); every valid physical lane i is compacted to output rank[i]-1",
+        "valid_mask": "valid physical DDR lanes come only from line split: low16(((1<<size)-1)<<position)"
+      },
+      "read_selection": {
+        "priority": "padding_mask ? padding_reg_value : tail_mask ? 8'h00 : returned_DDR_byte",
+        "reorder": "valid-mask rank compacts all valid bytes. Padded and tailed bytes remain present as replacement data; they are not removed from the stream",
+        "request_behavior": "padding/tail does not suppress the Memory AG read request, even when all valid bytes are replaced"
+      },
+      "strict_materialization_boundary": "all three authorized padding examples encode null padding_reg_value as zero through BaseConfig. Exact references remain correct; derived strict targets must make the byte explicit under a hash-bound operator padding contract. One authorized legacy write stream also contains read-only padding keys and requires explicit encoding-equivalent materialization",
+      "title": "Padding, tailing, valid-mask shift and reorder select exact RD/WR byte sources",
+      "unaligned_overlap_example": {
+        "padding_mask_physical": 39312,
+        "padding_mask_unshifted": 39321,
+        "read_lane_sources": [
+          "invalid",
+          "invalid",
+          "invalid",
+          "invalid",
+          "padding",
+          "ddr",
+          "ddr",
+          "padding",
+          "padding",
+          "zero",
+          "zero",
+          "padding",
+          "padding",
+          "ddr",
+          "ddr",
+          "padding"
+        ],
+        "tailing_mask_physical": 3840,
+        "tailing_mask_unshifted": 61680,
+        "transaction_lane_indexes_json_order": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            0,
+            0
+          ],
+          [
+            2,
+            0,
+            0
+          ],
+          [
+            3,
+            0,
+            0
+          ],
+          [
+            0,
+            1,
+            0
+          ],
+          [
+            1,
+            1,
+            0
+          ],
+          [
+            2,
+            1,
+            0
+          ],
+          [
+            3,
+            1,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            0,
+            0
+          ],
+          [
+            2,
+            0,
+            0
+          ],
+          [
+            3,
+            0,
+            0
+          ],
+          [
+            0,
+            1,
+            0
+          ],
+          [
+            1,
+            1,
+            0
+          ],
+          [
+            2,
+            1,
+            0
+          ],
+          [
+            3,
+            1,
+            0
+          ]
+        ],
+        "valid_mask_physical": 65520,
+        "write_lane_sources": [
+          "old_ddr",
+          "old_ddr",
+          "old_ddr",
+          "old_ddr",
+          "new",
+          "new",
+          "new",
+          "new",
+          "old_ddr",
+          "old_ddr",
+          "old_ddr",
+          "old_ddr",
+          "new",
+          "new",
+          "new",
+          "new"
+        ]
+      },
+      "write_selection": {
+        "masked_byte": "new buffer byte when new_byte_mask=1, otherwise the old byte returned by the RMW read",
+        "new_byte_mask": "valid_mask & ~tail_mask",
+        "padding": "write stream has no encoded padding fields",
+        "request_behavior": "a fully tailed line still performs RMW and writes the old line back; RTL does not elide the transaction"
+      }
+    },
+    {
+      "authorized_corpus": {
+        "authorized_config_count": 65,
+        "buffer5_ga_source_count": 60,
+        "buffer5_sa_source_count": 5,
+        "buffer_instance_count": 193,
+        "buffer_name_counts": {
+          "buffer0": 65,
+          "buffer1": 8,
+          "buffer2": 36,
+          "buffer3": 8,
+          "buffer4": 11,
+          "buffer5": 65
+        },
+        "disabled_count": 0,
+        "explicit_enable_one_count": 145,
+        "implicit_enable_count": 48,
+        "logical_lifetime_counts": {
+          "1": 175,
+          "16": 2,
+          "4": 16
+        },
+        "mapped_buffer_missing_count": 0,
+        "mask_pattern_counts": {
+          "01010101": 1,
+          "10000000": 22,
+          "10101010": 8,
+          "11111111": 162
+        },
+        "mode_counts": {
+          "0": 169,
+          "1": 24
+        },
+        "neighbor_enabled_count": 6,
+        "neighbor_enabled_default_27_count": 4,
+        "neighbor_enabled_explicit_3_count": 2,
+        "pingpong_enabled_count": 5,
+        "pingpong_non_read_a_count": 0,
+        "pingpong_pair_mismatch_count": 0,
+        "pingpong_threshold_counts": {
+          "0|3": 10,
+          "0|4": 1,
+          "0|None": 161,
+          "1|3": 3,
+          "1|5": 2
+        },
+        "read_buffer_ignored_dst_port_count": 128,
+        "read_threshold_match_count": 112,
+        "sample_boundary": "all enabled ping-pong samples are READ_STREAM0/target A and configure identical buffer0/buffer1 pairs; neighbor-enabled samples cover only six buffer instances",
+        "spatial_size_counts": {
+          "16": 157,
+          "2": 1,
+          "4": 19
+        }
+      },
+      "classification": "RTL_PROVEN",
+      "issue_id": "CDA-BUFFER-AG-001",
+      "json_paths": [
+        "$.stream_engine.stream*.buf_spatial_stride",
+        "$.stream_engine.stream*.buf_spatial_size",
+        "$.stream_engine.stream*.buf_full_last_index",
+        "$.stream_engine.stream*.ping_pong",
+        "$.stream_engine.stream*.pingpong_last_index"
+      ],
+      "minimal_example": {
+        "base_col": 30,
+        "lanes": [
+          {
+            "bank": 7,
+            "bank_strobe": 4,
+            "byte_offset": 2,
+            "expanded_col": 30,
+            "lane": 0,
+            "row": 2,
+            "stride": 0
+          },
+          {
+            "bank": 7,
+            "bank_strobe": 8,
+            "byte_offset": 3,
+            "expanded_col": 31,
+            "lane": 1,
+            "row": 2,
+            "stride": 1
+          },
+          {
+            "bank": 0,
+            "bank_strobe": 1,
+            "byte_offset": 0,
+            "expanded_col": 0,
+            "lane": 2,
+            "row": 2,
+            "stride": 2
+          },
+          {
+            "bank": 0,
+            "bank_strobe": 2,
+            "byte_offset": 1,
+            "expanded_col": 1,
+            "lane": 3,
+            "row": 2,
+            "stride": 3
+          }
+        ],
+        "request_valid_mask": 15,
+        "row": 2
+      },
+      "rtl_equations": {
+        "active_lanes": "request_valid=(1<<buf_spatial_size)-1 over lanes 0..size-1; encoder reverses the JSON list for MSB-first packing, so RTL stride[i] still equals JSON stride[i]",
+        "bank_decode": "bank=col_lane[4:2], byte_offset=col_lane[1:0], strobe=1<<byte_offset; lanes hitting one bank OR their strobes into one 32-bit bank request",
+        "collision": "strict configs require distinct active five-bit strides. If exact columns collide, the write-data loop's highest numbered lane wins that byte; this alias is not an approved generated semantic",
+        "lane_address": "row_lane=row; col_lane=low5(col+stride[lane]); five-bit column overflow wraps within the same row and never carries into the two-bit row",
+        "physical_topology": "only READ_STREAM0 has a real buffer0/buffer1 pair. READ_STREAM1/2/3 are fixed to buffer2/3/4; WRITE_STREAM0 is fixed to buffer5 and its second selection returns ready with zero data",
+        "read_stream_pingpong": "request and write-data select the current bank; after an accepted last tag with last_index<=threshold, the selection toggles for the next request",
+        "terminal_threshold": "ping-pong toggles on last && last_index<=pingpong_last_index. A read stream also raises its NSE-full notification on last && last_index<=stream.buf_full_last_index",
+        "write_stream_pingpong": "buffer-read request uses the current selection and returned data uses its one-cycle delayed copy, matching the synchronous Buffer response"
+      },
+      "sample_boundary": "all five enabled authorized ping-pong instances are target A/READ_STREAM0, have an explicit inclusive threshold and configure identical buffer0/buffer1 pairs",
+      "title": "Buffer AG expands modulo-32 columns and ping-pong selects only physical buffer banks"
+    },
+    {
+      "array_traversal": {
+        "examples": {
+          "mode_0_end_row_1_lifetime_2": [
+            {
+              "expires_after_access": false,
+              "lifetime_index": 0,
+              "row": 0
+            },
+            {
+              "expires_after_access": false,
+              "lifetime_index": 0,
+              "row": 1
+            },
+            {
+              "expires_after_access": true,
+              "lifetime_index": 1,
+              "row": 0
+            },
+            {
+              "expires_after_access": true,
+              "lifetime_index": 1,
+              "row": 1
+            }
+          ],
+          "mode_1_end_row_1_lifetime_2": [
+            {
+              "expires_after_access": false,
+              "lifetime_index": 0,
+              "row": 0
+            },
+            {
+              "expires_after_access": true,
+              "lifetime_index": 1,
+              "row": 0
+            },
+            {
+              "expires_after_access": false,
+              "lifetime_index": 0,
+              "row": 1
+            },
+            {
+              "expires_after_access": true,
+              "lifetime_index": 1,
+              "row": 1
+            }
+          ]
+        },
+        "expiration": "for buffers0..4, the accepted Array read whose life_index=L-1 marks that row for clearing; neighbor mode can defer the physical clear until local/partner completion accounting permits it",
+        "mode_0": "row is inner: for life=0..L-1, visit row=0..buf_end_row_addr",
+        "mode_1": "lifetime is inner: for row=0..buf_end_row_addr, repeat life=0..L-1"
+      },
+      "bitstream_and_register": {
+        "config_width_bits": 26,
+        "defaults": "null/missing buffer_nbr_cnt encodes 27; logical buffer_life_time L encodes L-1 and therefore permits exactly L visits",
+        "enable": "enable is not in the 26-bit register. A present buffer object defaults enabled; disabled/empty configuration drives the configure-port enable low",
+        "fields_msb_to_lsb": [
+          {
+            "bits": "[25]",
+            "field": "dst_port/buf_src_id",
+            "width": 1
+          },
+          {
+            "bits": "[24:21]",
+            "field": "buf_full_last_index",
+            "width": 4
+          },
+          {
+            "bits": "[20:16]",
+            "field": "buffer_nbr_cnt",
+            "width": 5
+          },
+          {
+            "bits": "[15]",
+            "field": "nbr_enable",
+            "width": 1
+          },
+          {
+            "bits": "[14:11]",
+            "field": "buffer_life_time-1",
+            "width": 4
+          },
+          {
+            "bits": "[10]",
+            "field": "mode",
+            "width": 1
+          },
+          {
+            "bits": "[9:2]",
+            "field": "mask",
+            "width": 8
+          },
+          {
+            "bits": "[1:0]",
+            "field": "buf_end_row_addr",
+            "width": 2
+          }
+        ]
+      },
+      "classification": "RTL_PROVEN",
+      "dynamic_boundary": "single-slice Buffer ownership/readiness and the two counter equations are static and closed. Multi-slice neighbor barriers, finish-count interpretation and N2N ping-pong remain assigned to C0-N2N",
+      "issue_id": "CDA-BUFFER-MANAGER-001",
+      "json_paths": [
+        "$.buffer_config.buffer*.enable",
+        "$.buffer_config.buffer*.dst_port",
+        "$.buffer_config.buffer*.buf_full_last_index",
+        "$.buffer_config.buffer*.buffer_nbr_cnt",
+        "$.buffer_config.buffer*.nbr_enable",
+        "$.buffer_config.buffer*.buffer_life_time",
+        "$.buffer_config.buffer*.mode",
+        "$.buffer_config.buffer*.mask",
+        "$.buffer_config.buffer*.buf_end_row_addr"
+      ],
+      "ownership_and_readiness": {
+        "buffer_5": "the selected Array output writes buffer5 and the sole write stream consumes it. MSE reads require all requested bytes valid and clear exactly their strobed valid bits on acceptance",
+        "buffer_full_threshold": "on an accepted MSE write, Buffer Manager signals its Neighbor manager when last && last_index<=buffer.buf_full_last_index. The authorized read stream and its mapped buffer use equal thresholds",
+        "buffers_0_to_4": "MSE read streams write bytes into the buffer and the Array side reads them. MSE writes wait until every requested byte is invalid; Array reads wait until all four bytes in every masked bank are valid",
+        "dst_port_correction": "for buffer5, 0 selects Specialized Array output and 1 selects General Array output as the writer. For buffers0..4 the field does not select a destination: read data is wired to both arrays and downstream backpressure is ANDed",
+        "mask": "buffer_mask is the Array-side active bank set; it gates Array all-bank ready/valid, and N2N bank requests. It is not the MSE spatial-lane selector"
+      },
+      "title": "Buffer Manager separates MSE byte ownership from Array row lifetime and dst_port is buffer5 source-only"
+    },
+    {
+      "authorized_corpus": {
+        "authorized_config_count": 65,
+        "bias_enable_counts": {
+          "0": 8
+        },
+        "data_type_counts": {
+          "fp16": 8
+        },
+        "fp32tobf16_counts": {
+          "false": 8
+        },
+        "fp32tofp16_counts": {
+          "false": 4,
+          "true": 4
+        },
+        "inport2_topology_violation_count": 0,
+        "inport_signatures": [
+          {
+            "1|1|3|0": 3,
+            "1|1|3|1": 2,
+            "1|1|4|1": 1,
+            "1|1|5|0": 2
+          },
+          {
+            "1|1|3|0": 5,
+            "1|1|5|0": 3
+          },
+          {
+            "0|0|None|0": 8
+          }
+        ],
+        "mode_counts": {
+          "gemm": 4,
+          "gemv": 4
+        },
+        "outport_mode_counts": {
+          "col": 3,
+          "row": 5
+        },
+        "pair_threshold_match_count": 16,
+        "paths": [
+          "jsons/gemm_ring_Vgen/jsons/op0_prefill_gemm_ring_4slice.json",
+          "jsons/gemv_local/jsons/op0_prefill_gemv_local.json",
+          "ndp-sim/jsons/decode_gemv_local.json",
+          "ndp-sim/jsons/decode_gemv_ring.json",
+          "ndp-sim/jsons/gemv_config_local_M1N128K32.json",
+          "ndp-sim/jsons/prefill_gemm_local.json",
+          "ndp-sim/jsons/prefill_gemm_local_qkt.json",
+          "ndp-sim/jsons/prefill_gemm_ring_4slice.json"
+        ],
+        "sa_config_count": 8,
+        "sample_boundary": "all eight authorized SA references are FP16 with bias disabled; INT8, BF16 and enabled-bias arithmetic are RTL-only. All sixteen enabled inport0/inport1 ping-pong thresholds equal both physical buffer-pair full thresholds",
+        "transout_last_index_counts": {
+          "1": 1,
+          "2": 4,
+          "3": 3
+        }
+      },
+      "bitstream_and_register": {
+        "config_width_bits": 32,
+        "data_type_encoding": {
+          "2'b01": "unsupported: no PE pipeline/tag branch",
+          "bf16": "2'b11",
+          "fp16": "2'b10",
+          "int8": "2'b00"
+        },
+        "encoder_comment_correction": "SpecialArrayConfig's 24-bit/5-bit-inport docstring is stale; FIELD_MAP and RTL concatenate exactly 32 bits",
+        "fields_msb_to_lsb": [
+          {
+            "bits": "[31]",
+            "field": "mode",
+            "width": 1
+          },
+          {
+            "bits": "[30:24]",
+            "field": "inport2",
+            "width": 7
+          },
+          {
+            "bits": "[23:17]",
+            "field": "inport1",
+            "width": 7
+          },
+          {
+            "bits": "[16:10]",
+            "field": "inport0",
+            "width": 7
+          },
+          {
+            "bits": "[9:8]",
+            "field": "data_type",
+            "width": 2
+          },
+          {
+            "bits": "[7:4]",
+            "field": "transout_last_index",
+            "width": 4
+          },
+          {
+            "bits": "[3]",
+            "field": "bias_enable",
+            "width": 1
+          },
+          {
+            "bits": "[2]",
+            "field": "outport.mode/major",
+            "width": 1
+          },
+          {
+            "bits": "[1]",
+            "field": "fp32tofp16",
+            "width": 1
+          },
+          {
+            "bits": "[0]",
+            "field": "fp32tobf16",
+            "width": 1
+          }
+        ],
+        "inport_subfield": "each seven-bit inport is {enable,pingpong_en,pingpong_last_index[3:0],nbr_enable}"
+      },
+      "classification": "RTL_PROVEN",
+      "inport_switch_and_tags": {
+        "initial_source": 0,
+        "neighbor_last_mask": "nbr_enable clears every propagated last bit; N2N must supply the later completion boundary",
+        "pingpong_last_mask": "with ping-pong enabled, source0 last is suppressed and only source1 last can propagate; this hides the first half boundary and exposes the second",
+        "same_mask": "same is suppressed for one cycle after source selection changes",
+        "toggle": "on sa_enable && pingpong_en && selected_last && selected_last_index<=pingpong_last_index && all-PE-ready"
+      },
+      "issue_id": "CDA-SA-PACK-TOPOLOGY-001",
+      "json_paths": [
+        "$.special_array.mode",
+        "$.special_array.inport*.enable",
+        "$.special_array.inport*.pingpong_en",
+        "$.special_array.inport*.pingpong_last_index",
+        "$.special_array.inport*.nbr_enable",
+        "$.special_array.data_type",
+        "$.special_array.transout_last_index",
+        "$.special_array.bias_enable",
+        "$.special_array.outport.*"
+      ],
+      "mode_and_physical_topology": {
+        "inport0": "source0=buffer0, source1=buffer1; one selected 8-word row vector is broadcast across every PE column",
+        "inport1": "source0=buffer2, source1=buffer3; one selected 8-word column vector is broadcast across every PE row",
+        "inport2": "source0=buffer4 and source1 is hard zero because buffer5 is write-direction; it is column-broadcast. Therefore inport2 has no physical ping-pong pair",
+        "mode": "gemm encodes 0 and enables all 8x8 PEs; gemv encodes 1 and enables only PE row 0, all eight columns"
+      },
+      "title": "SA is a 32-bit config whose three inports bind fixed Buffer pairs and PE axes"
+    },
+    {
+      "classification": "RTL_PROVEN",
+      "dynamic_boundary": "the recurrence, bank-close predicate and terminal tag are static RTL equations. The authorized corpus has bias disabled in all eight SA samples, so enabled-bias timing still needs a focused execution trace",
+      "issue_id": "CDA-SA-ACCUM-TAG-001",
+      "json_paths": [
+        "$.special_array.bias_enable",
+        "$.special_array.transout_last_index",
+        "$.special_array.inport2.*"
+      ],
+      "operand_and_psum_equations": {
+        "bias_disabled": "the initial port is forced valid with data=0 and last_index=15, so every accumulator slot is seeded zero",
+        "bias_enabled": "inport2 valid/data seed the accumulator. Each accepted bias word is written to positions p,p+4,p+8,p+12 and increments the selected bank count by four, filling all 16 slots after four handshakes",
+        "operand_match": "one MAC launches when inport0.valid && inport1.valid; inport2 does not participate in operand matching",
+        "recurrence": "each matched A/B pair computes FMA(A,B,stored_psum); the result overwrites the current psum slot until a transout boundary makes that ping-pong bank readable"
+      },
+      "terminal_equations": {
+        "effect": "equal closes/switches the accumulator bank but does not set output last; below closes the bank and propagates result_last=1; above continues accumulation",
+        "ignore": "last && upstream_last_index>transout_last_index",
+        "matched": "last && upstream_last_index==transout_last_index",
+        "minimal_truth_table": [
+          {
+            "accumulator_bank_change": false,
+            "ignore": true,
+            "matched": false,
+            "out": false,
+            "result_last": false,
+            "upstream_last_index": 3
+          },
+          {
+            "accumulator_bank_change": true,
+            "ignore": false,
+            "matched": true,
+            "out": false,
+            "result_last": false,
+            "upstream_last_index": 2
+          },
+          {
+            "accumulator_bank_change": true,
+            "ignore": false,
+            "matched": false,
+            "out": true,
+            "result_last": true,
+            "upstream_last_index": 1
+          }
+        ],
+        "out": "last && upstream_last_index<transout_last_index",
+        "source_last": "last=last0||last1; if both assert, last_index0 has priority over last_index1"
+      },
+      "title": "SA seeds a 16-entry psum bank from bias or zero and transout compares loop depth"
+    },
+    {
+      "classification": "CONTRADICTED",
+      "contradicted_assumption": "INT8 SA computes psum + sum_j(s8(DataA[j]) * u8(DataB[j])) modulo 2^32",
+      "counterexamples": {
+        "four_negative_ones": {
+          "conventional_dot_plus_psum32": 4294967292,
+          "csa4_carry17_already_shifted": 131070,
+          "csa4_carry_sign_extended_then_shifted_again": 4294967292,
+          "csa4_sum17": 131070,
+          "data_a_signed_msb_to_lsb": [
+            -1,
+            -1,
+            -1,
+            -1
+          ],
+          "data_b_unsigned_msb_to_lsb": [
+            1,
+            1,
+            1,
+            1
+          ],
+          "matches_conventional_dot": false,
+          "products_17bit_twos_complement": [
+            131071,
+            131071,
+            131071,
+            131071
+          ],
+          "psum32": 0,
+          "rtl_result32": 4294967290
+        },
+        "four_positive_ones": {
+          "conventional_dot_plus_psum32": 4,
+          "csa4_carry17_already_shifted": 2,
+          "csa4_carry_sign_extended_then_shifted_again": 4,
+          "csa4_sum17": 2,
+          "data_a_signed_msb_to_lsb": [
+            1,
+            1,
+            1,
+            1
+          ],
+          "data_b_unsigned_msb_to_lsb": [
+            1,
+            1,
+            1,
+            1
+          ],
+          "matches_conventional_dot": false,
+          "products_17bit_twos_complement": [
+            1,
+            1,
+            1,
+            1
+          ],
+          "psum32": 0,
+          "rtl_result32": 6
+        }
+      },
+      "issue_id": "CDA-SA-INT8-CSA-001",
+      "project_impact": "the signed-A/unsigned-B port-role conclusion remains true, but it is insufficient to approve ResNet INT8 Conv or MatMul arithmetic. Existing project contracts that model a normal four-lane dot must remain blocked until the active RTL is fixed or a bit-accurate server trace proves a different synthesized implementation",
+      "rtl_equation": {
+        "csa4": "(s17,c17)=CSA_4to2(p0,p1,p2,p3), where c17 already contains carry_temp<<1",
+        "defect": "SA_PE_Mul_Array shifts c17 left a second time in last_B; the later CSA_3to2/CLA therefore cannot recover the ordinary four-product sum",
+        "lane_roles": "DataA bytes [31:24]..[7:0] are converted from signed two's-complement to magnitude; DataB bytes are unsigned",
+        "products": "p_j is the 17-bit sign extension of the signed 16-bit lane product",
+        "wired_result": "rtl32 = psum32 + signext32(s17) + (signext32(c17)<<1) mod 2^32"
+      },
+      "sample_boundary": "none of the eight user-authorized correct SA references uses INT8; all are FP16. Encoder success and layout tests therefore do not contradict this RTL-level finding",
+      "title": "Current SA INT8 RTL is not the conventional four-lane signed-A times unsigned-B dot product"
+    },
+    {
+      "authorized_corpus": {
+        "fp32tobf16_counts": {
+          "false": 8
+        },
+        "fp32tofp16_counts": {
+          "false": 4,
+          "true": 4
+        },
+        "outport_mode_counts": {
+          "col": 3,
+          "row": 5
+        }
+      },
+      "classification": "RTL_PROVEN",
+      "conversion_conflict": "if both flags are one, RTL prioritizes fp32tofp16 in both exponent selection and data writes; strict JSON forbids the ambiguous pair",
+      "issue_id": "CDA-SA-OUTPORT-001",
+      "json_paths": [
+        "$.special_array.mode",
+        "$.special_array.outport.mode",
+        "$.special_array.outport.fp32tofp16",
+        "$.special_array.outport.fp32tobf16"
+      ],
+      "routing_and_serialization": {
+        "fp16_or_bf16_conversion": "two converted results share one output word: first result in bits[15:0], second in bits[31:16]",
+        "gemm": "each of eight outports serializes source index 0..7; input last propagates only on source 7",
+        "gemv": "the source counter terminates every accepted item and therefore consumes source index 0 only",
+        "legacy_label_encoding": "JSON col->major bit 0; row->major bit 1",
+        "major_0": "out[out][source]=PE[out][source], no transpose",
+        "major_1": "out[out][source]=PE[source][out], transpose",
+        "no_conversion": "one 32-bit PE result becomes one output word"
+      },
+      "title": "SA outport major bit controls transpose, mode controls serialization, and 16-bit conversion packs pairs"
+    },
+    {
+      "bf16_equation": "keep exponent, fraction[22:16], guard=fraction[15], sticky=OR(fraction[14:0]); round nearest-even",
+      "classification": "CONTRADICTED",
+      "counterexamples": [
+        {
+          "fp32_bits": "0x3ffff000",
+          "ieee_rne_bits": "0x4000",
+          "rtl_bits": "0x3c00",
+          "target": "fp16"
+        },
+        {
+          "fp32_bits": "0x3fff8000",
+          "ieee_rne_bits": "0x4000",
+          "rtl_bits": "0x3f80",
+          "target": "bf16"
+        }
+      ],
+      "fp16_equation": {
+        "normal": "keep fraction[22:13], guard=fraction[12], sticky=OR(fraction[11:0]); round nearest-even",
+        "overflow": "FP32 exponent>=0x8f becomes signed infinity with zero fraction",
+        "underflow": "FP32 exponent<=0x70 becomes signed zero; the implemented subnormal path is commented out"
+      },
+      "issue_id": "CDA-SA-FP-CONVERT-001",
+      "sample_boundary": "four authorized SA references enable FP32-to-FP16 and none enable BF16 narrowing. Their configuration correctness does not prove exhaustive numerical behavior at the contradicted tie or subnormal corners",
+      "shared_corner_defect": "exponent increments only when kept_fraction_is_all_ones && guard && sticky. At an exact halfway tie with an odd all-one kept fraction, the fraction rounds to zero but the exponent does not increment",
+      "title": "SA FP32 narrowing is not a complete IEEE round-to-nearest-even conversion"
+    },
+    {
+      "authorized_corpus": {
+        "authorized_config_count": 65,
+        "ga_config_count": 60,
+        "inport_mode_counts": [
+          {
+            "buffer": 491,
+            "constant": 4,
+            "keep": 16
+          },
+          {
+            "None": 190,
+            "buffer": 178,
+            "constant": 79,
+            "keep": 64
+          },
+          {
+            "None": 336,
+            "buffer": 24,
+            "constant": 151
+          }
+        ],
+        "input_conversion_counts": [
+          {
+            "fp16tofp32": 8,
+            "int32tofp32": 1,
+            "none": 49,
+            "uint8tofp32": 1,
+            "uint8toint32": 1
+          },
+          {
+            "fp16tofp32": 6,
+            "none": 53,
+            "uint8tofp32": 1
+          },
+          {
+            "none": 60
+          }
+        ],
+        "input_pingpong_enabled_count": 0,
+        "opcode_counts": {
+          "add": 88,
+          "int32_sub": 8,
+          "int32_sum": 8,
+          "int8_max": 16,
+          "mac": 49,
+          "max": 25,
+          "mul": 126,
+          "rec": 17,
+          "rec_sqrt": 9,
+          "sfu_activation": 48,
+          "sub": 24,
+          "sum": 75,
+          "summac": 18
+        },
+        "output_conversion_counts": {
+          "fp32tofp16": 14,
+          "int32touint8": 1,
+          "none": 45
+        },
+        "paths": [
+          "jsons/gemv_local/jsons/op0_prefill_gemv_local.json",
+          "jsons/rmt_sum/remote_sum_decode_config_1_32.json",
+          "jsons/rope/jsons/op0_prefill_mul_fp32MN_fp32MN_fp32MN.json",
+          "jsons/rope/jsons/op1_prefill_mul_fp32MN_fp32MN_fp32MN.json",
+          "jsons/rope/jsons/op2_prefill_add_fp32MN_fp32MN_fp32MN.json",
+          "jsons/silu/jsons/op0_prefill_silu_fp16MN_fp32MN.json",
+          "jsons/softmax/jsons/op0_prefill_mac_fp32MN_fp32MN_fp32MN.json",
+          "jsons/softmax/jsons/op1_prefill_max_fp32MN_fp32MN.json",
+          "jsons/softmax/jsons/op2_prefill_sub_SFU_fp32MN_fp32M_fp32MN.json",
+          "jsons/softmax/jsons/op3_prefill_sum_rec_fp32MN_fp32MN.json",
+          "jsons/softmax/jsons/op4_prefill_mul_fp32MN_fp32M_fp16MN.json",
+          "ndp-sim/jsons/add_dequant_uint8CWH_uint8CWH_fp32CWH.json",
+          "ndp-sim/jsons/avgpool_config_2048_7_7.json",
+          "ndp-sim/jsons/decode_add_fp16N_fp32N_fp16N.json",
+          "ndp-sim/jsons/decode_add_fp16N_fp32N_fp32N.json",
+          "ndp-sim/jsons/decode_add_fp32N_fp16N_fp32N.json",
+          "ndp-sim/jsons/decode_add_fp32N_fp32N_fp16N.json",
+          "ndp-sim/jsons/decode_add_fp32N_fp32N_fp32N.json",
+          "ndp-sim/jsons/decode_gemv_local.json",
+          "ndp-sim/jsons/decode_gemv_ring.json",
+          "ndp-sim/jsons/decode_mac_SFU_fp32N_fp32N.json",
+          "ndp-sim/jsons/decode_mac_fp32N_fp32N_fp32N.json",
+          "ndp-sim/jsons/decode_max_fp32N_fp32N.json",
+          "ndp-sim/jsons/decode_mul_fp32N_fp16N_fp16N.json",
+          "ndp-sim/jsons/decode_mul_fp32N_fp32N_fp16N.json",
+          "ndp-sim/jsons/decode_mul_fp32N_fp32N_fp32N.json",
+          "ndp-sim/jsons/decode_mul_fp32N_fp32_fp16N.json",
+          "ndp-sim/jsons/decode_mul_fp32N_fp32_fp32N.json",
+          "ndp-sim/jsons/decode_remote_sum_fp32N_fp32N.json",
+          "ndp-sim/jsons/decode_silu_fp16N_fp32N.json",
+          "ndp-sim/jsons/decode_sub_SFU_fp32N_fp32_fp32N.json",
+          "ndp-sim/jsons/decode_sum_rec_fp32N_fp32N.json",
+          "ndp-sim/jsons/decode_summac_fp16N_fp32N.json",
+          "ndp-sim/jsons/decode_summac_fp32N_fp32N.json",
+          "ndp-sim/jsons/maxpool_config_16_112_112_stride2_padding1.json",
+          "ndp-sim/jsons/maxpool_config_16_16_16_stride2_padding1.json",
+          "ndp-sim/jsons/prefill_add_V_fp16MN_fp32N_fp16MN.json",
+          "ndp-sim/jsons/prefill_add_fp16MN_fp32N_fp32MN.json",
+          "ndp-sim/jsons/prefill_add_fp32MN_fp16MN_fp32MN.json",
+          "ndp-sim/jsons/prefill_add_fp32MN_fp32MN_fp16MN.json",
+          "ndp-sim/jsons/prefill_add_fp32MN_fp32MN_fp32MN.json",
+          "ndp-sim/jsons/prefill_mac_SFU_fp32MN_fp32MN.json",
+          "ndp-sim/jsons/prefill_mac_fp32MN_fp32MN_fp32MN.json",
+          "ndp-sim/jsons/prefill_max_fp32MN_fp32MN.json",
+          "ndp-sim/jsons/prefill_mul_fp32MN_fp16MN_fp16MN.json",
+          "ndp-sim/jsons/prefill_mul_fp32MN_fp32MN_fp32MN.json",
+          "ndp-sim/jsons/prefill_mul_fp32MN_fp32M_fp16MN.json",
+          "ndp-sim/jsons/prefill_mul_fp32MN_fp32M_fp32MN.json",
+          "ndp-sim/jsons/prefill_mul_fp32MN_fp32N_fp16MN.json",
+          "ndp-sim/jsons/prefill_remote_max_fp32MN_fp32MN.json",
+          "ndp-sim/jsons/prefill_remote_sum_4slice_fp16MN_fp32MN.json",
+          "ndp-sim/jsons/prefill_remote_sum_4slice_fp32MN_fp32MN.json",
+          "ndp-sim/jsons/prefill_remote_sum_fp32MN_fp32MN.json",
+          "ndp-sim/jsons/prefill_silu_fp16MN_fp32MN.json",
+          "ndp-sim/jsons/prefill_sub_SFU_fp32MN_fp32M_fp32MN.json",
+          "ndp-sim/jsons/prefill_sum_rec_fp32MN_fp32MN.json",
+          "ndp-sim/jsons/prefill_summac_fp16MN_fp32MN.json",
+          "ndp-sim/jsons/prefill_summac_fp32MN_fp32MN.json",
+          "ndp-sim/jsons/quant_from_buffer_int32MN_uint8MN.json",
+          "ndp-sim/jsons/sum_config_32_32.json"
+        ],
+        "pe_instance_count": 511,
+        "sample_boundary": "the 60 GA references contain no input ping-pong, BF16 input/output conversion, sqrt opcode or int32_mac opcode. INT8 max appears in two native MaxPool references and is dynamically stalled before writeback by the independently recorded pipeline0 defect",
+        "sfu_column_violation_count": 0,
+        "transout_last_index_counts": {
+          "1": 109,
+          "2": 24,
+          "3": 16,
+          "None": 362
+        }
+      },
+      "classification": "RTL_PROVEN",
+      "issue_id": "CDA-GA-PACK-ROUTE-001",
+      "json_paths": [
+        "$.general_array.inport.inport*",
+        "$.general_array.PE_array.PE**.inport*.src_id",
+        "$.general_array.outport"
+      ],
+      "packing": {
+        "inport": "20 bits: mask[19:12], src_id[11], pingpong[10], threshold[9:6], nbr[5], fp16[4], bf16[3], int32fp[2], uint8fp[1], uint8int32[0]",
+        "mode_encoding": {
+          "buffer": 1,
+          "constant": 3,
+          "keep": 2,
+          "null": 0
+        },
+        "null_transout_encoding": 15,
+        "outport": "12 bits: mask[11:4], src_id[3], fp16[2], bf16[1], int32uint8[0]",
+        "pe": "144 bits in four 36-bit beats. Beat0 is opcode5, transout4 and three {src3,keep4,mode2} ports; beats1..3 are {pad4,constant32} for ports0..2"
+      },
+      "routing": {
+        "ga_input_src0": "physical Buffer pair selected by the inport ping-pong state",
+        "ga_input_src1": "SA outport source0; ping-pong cannot switch this source",
+        "outport": "ports0..3 select rows0..3 from global column src_id 0/1; ports4..7 select rows0..3 from column src_id 2/3",
+        "pe_src0": "external GA input index row + 4*floor(col/2), shared by each two-column half",
+        "pe_src1_to_5": [
+          "northwest",
+          "north",
+          "northeast",
+          "west",
+          "east"
+        ]
+      },
+      "title": "GA config widths and all physical input, PE-neighbor and output selectors are exact"
+    },
+    {
+      "classification": "RTL_PROVEN",
+      "equations": {
+        "add_0": "A+B",
+        "int32_mac_14": "A*B+C",
+        "int32_sub_13": "A-B",
+        "int32_sum_12": "A+C, with transout self-accumulation",
+        "int8_max_11": "bytewise comparator between A and C; its current select polarity is contradicted separately",
+        "mac_6": "A*B+C",
+        "max_3": "max_fp32(A,C)",
+        "mul_2": "A*B",
+        "sfu_17_18_20_24": "normalize A for breakpoint search, select LUT slope/intercept, execute x_norm*slope+intercept, then restore reciprocal/sqrt/reciprocal-sqrt exponent or return the activation affine result",
+        "sub_1": "A-B",
+        "sum_4": "A+C, with transout self-accumulation",
+        "summac_5": "A*B+C, with transout self-accumulation"
+      },
+      "issue_id": "CDA-GA-OPCODE-OPERAND-001",
+      "nonnumeric_enabled_port_rule": "an operand ignored by the arithmetic may still be enabled as an intentional matching/backpressure dependency; the authorized four-slice remote-sum reference does this on B",
+      "required_operands": {
+        "A_B": [
+          "add",
+          "sub",
+          "mul",
+          "int32_sub"
+        ],
+        "A_B_C": [
+          "summac",
+          "mac",
+          "int32_mac"
+        ],
+        "A_C": [
+          "max",
+          "sum",
+          "int32_sum"
+        ],
+        "A_only": [
+          "rec",
+          "sqrt",
+          "rec_sqrt",
+          "sfu_activation"
+        ],
+        "A_with_internal_C_seed": [
+          "int8_max: C is forced to zero initially and then fed from the transout outbuffer"
+        ]
+      },
+      "sample_boundary": "the 60 GA references contain no input ping-pong, BF16 input/output conversion, sqrt opcode or int32_mac opcode. INT8 max appears in two native MaxPool references and is dynamically stalled before writeback by the independently recorded pipeline0 defect",
+      "sfu_topology": "only PE columns1 and3 instantiate GA_SFU_PE. Columns0 and2 force sfu_compute_en=0 and cannot implement opcode>=16",
+      "title": "GA opcode names decode to fixed A/B/C equations and SFU placement"
+    },
+    {
+      "classification": "CONTRADICTED",
+      "counterexamples": [
+        {
+          "expected_bits": "0xbf800000",
+          "input": "0xffffffff (-1)",
+          "rtl_bits": "0xcf000000",
+          "trace": {
+            "fraction_ceil": 0,
+            "guard": 0,
+            "input_bits": 4294967295,
+            "lzd_position": 30,
+            "result_bits": 3472883712,
+            "rtl_magnitude_low31": 1,
+            "rtl_min_flag_is_all_ones": true,
+            "sign": 1,
+            "sticky": false
+          }
+        },
+        {
+          "expected_bits": "0xcf000000",
+          "input": "0x80000000 (INT_MIN)",
+          "rtl_bits": "0xce800000",
+          "trace": {
+            "fraction_ceil": 0,
+            "guard": 0,
+            "input_bits": 2147483648,
+            "lzd_position": 0,
+            "result_bits": 3464495104,
+            "rtl_magnitude_low31": 0,
+            "rtl_min_flag_is_all_ones": false,
+            "sign": 1,
+            "sticky": false
+          }
+        }
+      ],
+      "defect": "negative magnitude discards the sign bit, while the special minimum detector is '&input' and therefore recognizes 0xffffffff (-1), not 0x80000000 (INT_MIN)",
+      "issue_id": "CDA-GA-INPORT-CONVERT-001",
+      "project_impact": "do not approve a general signed INT32-to-FP32 contract. The sole authorized use proves only its exact observed input domain, not these extreme patterns",
+      "serialization": {
+        "flag_priority": "fp16 > bf16 > int32fp > uint8fp > uint8int32; strict JSON rejects multiple enabled flags",
+        "fp16_or_bf16": "two outputs per word, low half first; last only on high half",
+        "int32tofp32": "one output per word",
+        "uint8tofp32_or_int32": "four outputs per word in byte order [7:0],[15:8],[23:16],[31:24]; last only on byte3"
+      },
+      "title": "GA input serialization is exact, but INT32-to-FP32 has two swapped extreme-value failures"
+    },
+    {
+      "classification": "RTL_PROVEN",
+      "issue_id": "CDA-GA-TRANSOUT-OUTPORT-001",
+      "operand_modes": {
+        "buffer": "consume and release normally",
+        "constant": "sign-extend the configured 32-bit pattern and never request upstream",
+        "keep": "retain until some buffer carrier ends with last_index<=keep threshold",
+        "null": "disable the operand valid gate"
+      },
+      "output_conversion": {
+        "fp16_or_bf16": "two converted results pack low16 then high16",
+        "fp_narrowing": "same exponent/subnormal/exact-half limitations as the SA converter; both modules contain the same equations",
+        "int32touint8": "signed saturate to [0,255], four results pack from low byte to high byte",
+        "none": "one result per 32-bit word"
+      },
+      "terminal": {
+        "equal_boundary": {
+          "ordinary_result_last": false,
+          "reduction_flush_trigger": true,
+          "reduction_result_forces_last_after_flush": true,
+          "threshold_equal_suppresses_pre_flush_last": true
+        },
+        "final_tag": "after flush, valid and last are forced for one cycle; last_index is retained from the outbuffer entry",
+        "flush_cycles": {
+          "fp32_or_sfu": 8,
+          "int32": 4,
+          "int8": 1
+        },
+        "flush_trigger": "reduction && buffer_last && buffer_last_index <= T",
+        "ordinary_result_last": "buffer_last && buffer_last_index < T",
+        "reduction_opcodes": [
+          "max",
+          "sum",
+          "summac",
+          "int8_max",
+          "int32_sum"
+        ]
+      },
+      "title": "GA terminal comparison, reduction flush, output routing and packing are exact"
+    },
+    {
+      "classification": "CONTRADICTED",
+      "dynamic_scope": "both native UINT8 MaxPool references reproduce reads and write-address requests but no write data/natural completion. The exact server RTL identity and a fixed-build rerun remain separate dynamic requirements",
+      "evidence_report": "contracts/ga_int8_pipeline_backpressure_defect_report_20260723.md",
+      "flow_equation": "alu_pipeline0_bp_post=(is_int32&&downstream)||(is_fp32&&pipeline1_enable). For int8_max both terms are zero; after the first valid item pipeline0_enable becomes zero and cannot clear or accept the second item",
+      "issue_id": "CDA-GA-INT8-MAX-PIPE-001",
+      "numeric_counterexample": {
+        "A": "0x04030201",
+        "C": "0x01020304",
+        "expected_unsigned_max": "0x04030304",
+        "rtl": "0x01020201"
+      },
+      "numeric_equation": "for each unsigned byte lane, the current final select returns min(A_lane,C_lane), not max(A_lane,C_lane)",
+      "project_impact": "all GA UINT8 MaxPool/int8_max promotion remains blocked. Changing only the ready path would still leave the min/max polarity defect",
+      "title": "GA int8_max is both numerically inverted and unable to accept a second item"
+    },
+    {
+      "authorized_corpus": {
+        "authorized_config_count": 65,
+        "mem_loop_counts": {
+          "28": 1,
+          "4": 2
+        },
+        "missing_enabled_full_row_pair_count": 0,
+        "n2n_config_count": 3,
+        "neighbor_stream_count": 3,
+        "paths": [
+          "jsons/gemm_ring_Vgen/jsons/op0_prefill_gemm_ring_4slice.json",
+          "ndp-sim/jsons/decode_gemv_ring.json",
+          "ndp-sim/jsons/prefill_gemm_ring_4slice.json"
+        ],
+        "ping_pong_counts": {
+          "1": 3
+        },
+        "sample_boundary": "all three references use neighbor_stream0 and ping_pong=1. Two four-slice references use high-ring selectors 1->1; one 28-slice reference uses low-ring selectors 0->0. No neighbor_stream1 or mixed-direction selector pair is authorized",
+        "selector_counts": {
+          "0->0": 1,
+          "1->1": 2
+        }
+      },
+      "classification": "RTL_PROVEN",
+      "issue_id": "CDA-N2N-ROUTE-TRANSFER-001",
+      "packing": "8 bits: src_slice_sel[7], dst_slice_sel[6], ping_pong[5], nse_cnt_size[4:0]=mem_loop-1",
+      "route": {
+        "endpoint_contract": "src_slice_sel chooses the incoming predecessor, while dst_slice_sel chooses which next-neighbor ready controls the outgoing stream. A coherent ring requires compatible selectors on every participating slice",
+        "examples": {
+          "slice0_high": {
+            "next": 2,
+            "previous": 1
+          },
+          "slice0_low": {
+            "next": 12,
+            "previous": 1
+          }
+        },
+        "selector0": "receive from LOW_PREV_MAP and use LOW_NEXT_MAP ready; the map is one 28-slice ring",
+        "selector1": "receive from HIGH_PREV_MAP and use HIGH_NEXT_MAP ready; the map is seven four-slice rings"
+      },
+      "title": "N2N selectors choose fixed low/high rings and mem_loop controls full-row material transfers",
+      "transfer": {
+        "barrier": "MSE is blocked while either independent incoming-write or outgoing-read controller count is nonzero",
+        "count": "mem_loop L performs L-1 neighbor transfers",
+        "each_transfer": "addresses rows0,1,2,3; each row carries 256 data bits, 32 valid bits, tag, same and ready/valid flow control",
+        "four_slice_example": {
+          "destination_buffers": [
+            "buffer1",
+            "buffer0",
+            "buffer1"
+          ],
+          "encoded_nse_cnt_size": 3,
+          "json_ping_pong_bit_controls_sequence": false,
+          "row_addresses_per_transfer": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "source_buffers": [
+            "buffer0",
+            "buffer1",
+            "buffer0"
+          ],
+          "transfer_count": 3
+        },
+        "stream0_buffers": "read buffer0/write buffer1, then alternate",
+        "stream1_buffers": "read buffer2/write buffer3, then alternate"
+      }
+    },
+    {
+      "classification": "CONTRADICTED",
+      "config_lifetime": "nse_enable is not cleared when the controller finishes. It persists until reset, slice_rst or se_nse_configure_clear. A disabled config beat clears the config register but has no symmetric nse_enable<=0 branch",
+      "handoff": "the engine issues real local buffer reads, transmits four 256-bit rows, and writes the partner buffer. This is a buffer-to-buffer material copy/rotation, not pointer aliasing or zero-copy ownership transfer",
+      "issue_id": "CDA-N2N-PINGPONG-LIFETIME-001",
+      "ping_pong": {
+        "initial_transfer": "outgoing selector resets to buffer1 then trigger toggles to buffer0; incoming selector resets to buffer0 then trigger toggles to buffer1",
+        "json_claim": "ping_pong selects whether alternating buffers are used",
+        "rtl_fact": "nse_pingpong_enable is decoded but its connection into Neighbor_Stream_Engine is commented out. In/out selectors toggle unconditionally on every MSE trigger and full four-row completion",
+        "strict_rule": "enabled N2N must encode ping_pong=1 to describe the hard-wired behavior; zero is rejected as semantically false"
+      },
+      "project_impact": "cross-stage reuse must prove a configure-clear/reconfigure boundary and matching neighbor-enabled physical pair. Do not derive a local/ring transform by adding only $.n2n",
+      "sample_boundary": "all three references use neighbor_stream0 and ping_pong=1. Two four-slice references use high-ring selectors 1->1; one 28-slice reference uses low-ring selectors 0->0. No neighbor_stream1 or mixed-direction selector pair is authorized",
+      "title": "N2N ping_pong is a decoded but unused bit, config persists, and handoff is not zero-copy"
+    },
+    {
+      "classification": "CONTRADICTED",
+      "coverage_diagnostic": {
+        "classification": "CONTRADICTED",
+        "derived_distinct_transaction_bases": 1,
+        "dimensions": [
+          {
+            "dimension": 0,
+            "domain": {
+              "carrier": {
+                "end": 1,
+                "kind": "local_lc_counter_domain",
+                "source": "DRAM_LC.LC2",
+                "src_id_role": "trigger_tag_dependency_only",
+                "start": 0,
+                "stride": 1,
+                "value_count": 1
+              },
+              "constant_operands": [
+                1
+              ],
+              "kind": "lc_pe_identity_mul_domain",
+              "opcode": "mul",
+              "source": "LC_PE.PE1",
+              "value_count": 1
+            },
+            "source": "LC_PE.PE1",
+            "stride_bytes": 32
+          }
+        ],
+        "first_derived_biases_bytes": [
+          0
+        ],
+        "necessary_condition_passed": false,
+        "output_bytes_per_sample": 8192,
+        "output_dtype": "int32",
+        "output_shape": [
+          16,
+          2048,
+          1,
+          1
+        ],
+        "request_id": "r5:hwop-0071-00",
+        "required_distinct_transaction_bases": 256,
+        "scope": "necessary D-address coverage only; passing does not prove ordering, tag/completion, payload, mapping, E4 or E5",
+        "transaction_bytes": 32,
+        "unresolved_dimensions": [],
+        "write_stream": "stream1"
+      },
+      "dynamic_confirmation": {
+        "occurrences_per_unique_address": 256,
+        "sim6_unique_request_addresses_128bit": [
+          "0x001884",
+          "0x001885"
+        ],
+        "sim6_write_request_count": 512
+      },
+      "impact": {
+        "generic_validator": "schema/topology/terminal checks passing do not prove typed output address-domain coverage",
+        "invalidated_outputs": [
+          "configs/native_ndp_sim/avgpool_config_2048_7_7_strict_v1/config.json",
+          "configs/stage_codegen/hwop-0071-00-v1/config.json",
+          "configs/stage_codegen/hwop-0071-00-native-address-bound-v1/config.json",
+          "artifacts/operator_config_validation/r5-server-candidates/gap-hwop0071-sum-v1/**",
+          "artifacts/operator_config_validation/r5-server-workloads/gap_hwop0071_sum_graph/**"
+        ],
+        "other_generators": "current Conv generators use src_id as trigger chains and create separate local-value roots where equal numeric branches are needed; no direct numeric inheritance was found, but their full semantics remain under their existing blockers",
+        "regeneration": "all derived mapping/bitstream/execplan/package artifacts require a new identity after the schedule fix",
+        "resnet133": "the exact GAP-sum stage is blocked; other stages are not automatically invalidated, but every derived LC numeric carrier must be audited independently",
+        "stage_backend": "must fail closed with B_GAP_D_INDEX_CARRIER_SEMANTICS until a new explicit 0..255 numeric index carrier is proven"
+      },
+      "issue_id": "CDA-GAP-D-INDEX-001",
+      "json_chain": [
+        "LC2 local domain is [0,1) => {0}",
+        "PE1 is LC2 * constant(1) => {0}",
+        "D stream idx[0]=PE1 and dim_stride[0]=32",
+        "one 32-byte C8 output transaction base is reachable"
+      ],
+      "stage_intent": {
+        "output_dtype": "int32",
+        "output_shape": [
+          16,
+          2048,
+          1,
+          1
+        ],
+        "per_active_slice": "one batch sample",
+        "request_id": "r5:hwop-0071-00",
+        "required_channel_blocks": 256
+      },
+      "title": "Current GAP D index carrier cannot cover the typed output"
+    },
+    {
+      "classification": "RTL_PROVEN",
+      "issue_id": "CDA-MSE-RD-VALID-001",
+      "json_paths": [
+        "$.stream_engine.stream*.mode",
+        "$.stream_engine.stream*.idx",
+        "$.stream_engine.stream*.idx_size",
+        "$.stream_engine.stream*.dim_stride",
+        "$.stream_engine.stream*.address_remapping",
+        "$.stream_engine.stream*.base_addr"
+      ],
+      "rtl_effect": {
+        "accepted_replay_condition": "the same channel's downstream ready must also be 1 during that delayed-only cycle",
+        "clear": "vld && downstream ready clears current vld",
+        "configurability": "no JSON/register bit disables vld_d; JSON determines the address sequence but not this control equation",
+        "delay": "vld_d <= previous vld every cycle",
+        "delay_register_reset": "vld_d has no explicit reset branch; startup convergence depends on clocking after current vld is reset",
+        "downstream_path": "Stream_Engine_Connect and slice2hub_crossbar pass valid/address and ready directly to the Datahub valid/ready arbitration path",
+        "enqueue": "selected empty channel captures mem_ag_ob_addr_in when transfer_addr_valid is asserted",
+        "external_valid": "vld_d || vld",
+        "replay_precondition": "after a ready clear, current vld=0 and vld_d=1 can present the stored address for one additional cycle"
+      },
+      "scope": "generic replay precondition in the bound read Memory AG; not proof that the sim6 mismatches used this condition",
+      "title": "RD Memory AG can expose one stale-valid cycle after clear"
+    },
+    {
+      "classification": "CONTRADICTED",
+      "evidence": [
+        "server_returns/gap_hwop0071_probe_v4_return_20260723/gap_probe_v4_analysis.json",
+        "server_returns/gap_hwop0071_probe_v4_return_20260723/gap_numeric_path_report_v4.json",
+        "server_returns/gap_hwop0071_probe_v4_return_20260723/GAP_PROBE_V4_DIAGNOSIS.md",
+        "server_returns/gap_hwop0071_probe_v5_return_20260723/GAP_PROBE_V5_ANALYSIS.md"
+      ],
+      "issue_id": "CDA-MSE0-RD-REPLAY-001",
+      "reason": "the two physical channels may interleave in different global orders. Per-channel FIFO association is the correct carrier identity and it matches throughout the measured MSE0 path",
+      "replacement_facts": {
+        "ddr_return_payload_associated": 8960,
+        "ddr_return_payload_mismatches": 0,
+        "deep_enqueue_to_local_request_compared": 256,
+        "deep_enqueue_to_local_request_mismatches": 0,
+        "extra_request_occurrences": 0,
+        "metadata_address_mismatches": 0,
+        "metadata_consume_window_events": 256,
+        "metadata_payload_mismatches": 0,
+        "missing_request_occurrences": 0,
+        "request_occurrence_actual": 8960,
+        "request_occurrence_expected": 8960
+      },
+      "scope": "contradicts the GAP-specific sim6 replay attribution, not the generic RTL fact that delayed valid can be exposed after clear",
+      "superseded_claim": "the cross-channel positional sequence mismatch and TB-derived IssueCh/IssueTime association identified an accepted vld_d address replay or MSE0 payload/metadata mismatch",
+      "title": "probe_v4/v5 overturn the sim6 MSE0 replay attribution"
+    },
+    {
+      "classification": "CONTRADICTED",
+      "dynamic_boundary": {
+        "block0_matches_golden": true,
+        "block0_packed_output": [
+          330,
+          113,
+          710,
+          43,
+          1560,
+          106,
+          124,
+          57
+        ],
+        "block0_time_ps": 700313000,
+        "block1_packed_actual": [
+          187,
+          193,
+          429,
+          156,
+          929,
+          111,
+          75,
+          34
+        ],
+        "block1_packed_golden": [
+          59,
+          407,
+          237,
+          436,
+          424,
+          198,
+          22,
+          7
+        ],
+        "block1_time_ps": 700388000,
+        "first_known_wrong_boundary": "GA final accumulation operands for C8 block1",
+        "full_int32_match_count": 10,
+        "full_int32_mismatch_count": 2038
+      },
+      "dynamic_root_cause": {
+        "classification": "ga_int32_sum_outbuffer_count_underflow_then_invalid_slot_reuse",
+        "first_reuse_time_ps": 700318000,
+        "first_transition": "700313000->700316000 ps count 1->3",
+        "invalid_slot_c_reuse_count": 217,
+        "outbuffer_depth": 2,
+        "underflow_transition_count": 8
+      },
+      "evidence": [
+        "server_returns/gap_hwop0071_probe_v5_return_20260723/GAP_PROBE_V5_ANALYSIS.md",
+        "server_returns/gap_rtl_three_way_identity_20260723/SERVER_RTL_THREE_WAY_IDENTITY_ANALYSIS.md",
+        "server_returns/gap_hwop0071_probe_v7_return_20260724/GAP_PROBE_V7_DIAGNOSIS.md",
+        "server_returns/gap_hwop0071_probe_v7_return_20260724/gap_probe_v7_analysis.json",
+        "server_returns/gap_hwop0071_probe_v7_return_20260724/gap_numeric_path_report_v7.json",
+        "server_returns/gap_hwop0071_probe_v7_return_20260724/native_return_acceptance_v7.json"
+      ],
+      "independent_config_failure": {
+        "classification": "CONFIG_SEMANTICS",
+        "expected_lines_per_slice": 512,
+        "mse4_request_count": 512,
+        "released_by_ga_fix": false,
+        "slice_count": 16,
+        "unique_d_address_count": 2
+      },
+      "issue_id": "CDA-GAP-GA-ACCUM-STATE-001",
+      "next_action": "keep RTL_CONTROL and CONFIG_SEMANTICS blockers orthogonal; require a functional RTL fix for GA and complete per-slice 512-line D coverage plus golden before release",
+      "project_impact": "GlobalAverageSumInt32 must carry B_GAP_GA_ACCUM_STATE; fixing the independent D-index carrier is necessary but cannot make this stage numerically compatible",
+      "proven_downstream": {
+        "ga_integer_add_matches_supplied_operands": true,
+        "mse4_packing_matches_ga_input0_plus_input2": true,
+        "mse4_request_handshakes": 512,
+        "mse4_write_data_handshakes": 512,
+        "old_511_count_was_monitor_loss": true
+      },
+      "rtl_identity": {
+        "github_differences_relevant_to_non_sfu_gap": false,
+        "server_local_critical_file_match_count": 14,
+        "server_local_critical_file_total": 14,
+        "static_local_rtl_analysis_allowed": true
+      },
+      "rule_ids": [
+        "CDA-GA-OUTBUFFER-OCCUPANCY-001",
+        "CDA-GA-INVALID-SLOT-ISOLATION-001",
+        "CDA-GA-CROSS-BLOCK-INIT-001",
+        "CDA-GAP-ORTHOGONAL-DEFECTS-001",
+        "CDA-GAP-D-READBACK-COVERAGE-001",
+        "CDA-MSE4-MONITOR-EVIDENCE-001",
+        "CDA-SERVER-FOCUSED-IDENTITY-001"
+      ],
+      "title": "Current GAP execution loses numerical state before the second GA output block"
+    }
+  ],
+  "next_audit": {
+    "fields": [
+      "GAP block0/block1 Buffer-to-GA and accumulator-state equation",
+      "generic MSE first/stall/resume conformance",
+      "GA floating-point and LUT numerical conformance",
+      "fixed-build GA int8_max rerun",
+      "N2N multi-stage clear/reconfigure sequence"
+    ],
+    "ledger_id": "C1-DYNAMIC-CONFORMANCE",
+    "reason": "All requested LC_PE, MSE static, padding/tail, buffer, SA, GA and N2N JSON-to-RTL equation groups are now closed or carry an explicit contradiction. Remaining work requires cycle traces, active-build identity or numerical conformance evidence"
+  },
+  "schema": "resnet50-stage-operator-semantics-audit-v1",
+  "scope": {
+    "closed": [
+      "DRAM LC src_id/outmost/value/tag/last/same core semantics",
+      "LC_PE packing/input-select/mode/opcode/keep/tag/signed-truncation core semantics",
+      "MSE packing/index-mode/address/remap/split/write-RMW static semantics",
+      "padding/tail per-lane index/bounds/priority/mask/reorder static semantics",
+      "Buffer AG lane/bank/ping-pong and Buffer Manager traversal/ownership static semantics",
+      "SA packing/topology/psum/terminal/outport static semantics and exact current INT8 CSA equation",
+      "GA packing/routing/operand/opcode/terminal/conversion static semantics",
+      "N2N ring selection/row transfer/bank rotation/controller/config-lifetime static semantics",
+      "exact r5:hwop-0071-00 D-index necessary coverage",
+      "RD Memory AG delayed-valid replay precondition",
+      "probe_v4 per-channel MSE0 request/return/payload/metadata association",
+      "probe_v5 MSE4 handshake count, packing and GA integer-add boundary",
+      "server/local critical GAP-path RTL normalized identity for 14/14 files"
+    ],
+    "functional_rtl_modified": false,
+    "not_closed": [
+      "LC_PE usefulness for any new stage/shape/topology",
+      "MSE first/stall/resume dynamic transport safety",
+      "GAP block1 Buffer-to-GA/inbuffer/tag/accumulator first divergence",
+      "GA SFU numerical conformance outside the configured LUT sample domain",
+      "N2N mixed-selector/neighbor_stream1 dynamic execution coverage"
+    ]
+  },
+  "source_identities": [
+    {
+      "path": "contracts/typed_config_parameter_contract.json",
+      "sha256": "abbc87b0b13c92611a90fe1767b32b15fe9c49f23bee616ca2bb51219dd181bd",
+      "size_bytes": 1619185
+    },
+    {
+      "path": "contracts/operator_config/operator_config_authority_v1.json",
+      "sha256": "9cb79f871e39d5c431d8f3b401877231bd7a3fcf6eb48a904bbb90490e399f9a",
+      "size_bytes": 68675
+    },
+    {
+      "path": "contracts/operator_config/register_semantics_v1.json",
+      "sha256": "0a67045847c3615570fcf8e5335cda5a79d8660f8f29022fcb9fcba2118a1375",
+      "size_bytes": 146926
+    },
+    {
+      "path": "ndp-sim/bitstream/config/base.py",
+      "sha256": "100d44403386f17327da1938888156291891f1d564d151c8eb02127e829459cc",
+      "size_bytes": 8754
+    },
+    {
+      "path": "ndp-sim/bitstream/config/loop.py",
+      "sha256": "7a25a5e6e29e35ce07c437a6e44ac654cda0dcc110fda1ba82cdeacb0b12aa35",
+      "size_bytes": 13871
+    },
+    {
+      "path": "ndp-sim/bitstream/config/mapper.py",
+      "sha256": "c7685cc297e4e11ccafa23758a46d20986e5db931fcb3c4e21f5f4a0a2534226",
+      "size_bytes": 68728
+    },
+    {
+      "path": "ndp-sim/bitstream/config/stream.py",
+      "sha256": "00e0610719670f24e22139ee0a3a453ae6e90f90e5d572f578c5f489f5a813d1",
+      "size_bytes": 14083
+    },
+    {
+      "path": "ndp-sim/bitstream/config/buffer.py",
+      "sha256": "39b6c32786ca83a1ffd247a99dafea2f966aa1c490ef587fa1594759456355a4",
+      "size_bytes": 1847
+    },
+    {
+      "path": "ndp-sim/bitstream/config/special.py",
+      "sha256": "0c989cf657eaa429f9b2b37848105abe3448b3926e22e09ae98c42ddd4f8447a",
+      "size_bytes": 3436
+    },
+    {
+      "path": "ndp-sim/bitstream/config/general.py",
+      "sha256": "eb9d5ee9ef273182e05b718aca378f87d0a1ccb5366ae463d8482c8c94c3482f",
+      "size_bytes": 11738
+    },
+    {
+      "path": "ndp-sim/bitstream/config/neighbor.py",
+      "sha256": "9b85d41ef6e4ce1bbd5118e54814993b02f3075ba108db6b1ea4dd79985264e0",
+      "size_bytes": 1038
+    },
+    {
+      "path": "ndp-sim/bitstream/parse.py",
+      "sha256": "a6bd0f9dc288b518389a677570cf34a08ebec72a430e9a85c085570d3be869f0",
+      "size_bytes": 22540
+    },
+    {
+      "path": "ndp-sim/bitstream/index.py",
+      "sha256": "2b71290671cef1c137e31fdf7e35e89454e3614a3e620f1f5f387f193a128306",
+      "size_bytes": 20443
+    },
+    {
+      "path": "ndp-sim/bitstream/bit.py",
+      "sha256": "6ba6b9b3a0a8f4baed9daa89af8c781db92a3f84b575a1e97126e7a5c9029fad",
+      "size_bytes": 8145
+    },
+    {
+      "path": "NDP_copy01/rtl/includes/NDP_Parameters.svh",
+      "sha256": "c7b2d96445f3351637ef611d5c03b23c006ebb9bb2a2e4d1212a09872ce5d767",
+      "size_bytes": 37397
+    },
+    {
+      "path": "NDP_copy01/rtl/Slice/Index_Generation_Array/IGA_LC/IGA_LC_Config.sv",
+      "sha256": "a4fd249164e9cc52e9f501c7fb9aa0ce09ded90d36768476428fb45177a55726",
+      "size_bytes": 4527
+    },
+    {
+      "path": "NDP_copy01/rtl/Slice/Index_Generation_Array/IGA_LC/IGA_LC_Connect.sv",
+      "sha256": "ab8c52963eeffac15d0f9bc84010967e371a097a1b7790aec08820d7af705b4b",
+      "size_bytes": 1705
+    },
+    {
+      "path": "NDP_copy01/rtl/Slice/Index_Generation_Array/IGA_LC/IGA_LC_Inbuffer.sv",
+      "sha256": "7a5eff394a30cbce52039f6f51ea4483c723fdbbc444055bc41e5629a28af6b3",
+      "size_bytes": 4139
+    },
+    {
+      "path": "NDP_copy01/rtl/Slice/Index_Generation_Array/IGA_LC/IGA_LC_Counter.sv",
+      "sha256": "3c2d6e095d48b4cae84cb510593325e750746663cc858525b8d09a96980eb220",
+      "size_bytes": 8957
+    },
+    {
+      "path": "NDP_copy01/rtl/Slice/Index_Generation_Array/IGA_PE/IGA_PE_Config.sv",
+      "sha256": "2084c3e368ed5f375d3e983ddfe5b89b2fbf7becb2ae3a9acec121f2728ac2c2",
+      "size_bytes": 8495
+    },
+    {
+      "path": "NDP_copy01/rtl/Slice/Index_Generation_Array/IGA_PE/IGA_PE_Connect.sv",
+      "sha256": "79114247fa65cb70d776119178b29322a64bf1aabcdc4c0a8352d248070d2ba1",
+      "size_bytes": 2502
+    },
+    {
+      "path": "NDP_copy01/rtl/Slice/Index_Generation_Array/IGA_PE/IGA_PE_Inbuffer.sv",
+      "sha256": "23656d9d9dfa313ad623f6eaea254ba479c291f66ed41660221477d8e88213ed",
+      "size_bytes": 11598
+    },
+    {
+      "path": "NDP_copy01/rtl/Slice/Index_Generation_Array/IGA_PE/IGA_PE_ALU.sv",
+      "sha256": "b68bd9fd2c82fc238b11c96228eb2404e9f7507bca2d2c407622b47ff18f0cac",
+      "size_bytes": 1935
+    },
+    {
+      "path": "NDP_copy01/rtl/Slice/Index_Generation_Array/IGA_PE/IGA_PE_INT_ALU.sv",
+      "sha256": "19c2eb57641ed13bbe285015796ab05698750aa516ff67108c0b68be64c416a2",
+      "size_bytes": 1212
+    },
+    {
+      "path": "NDP_copy01/rtl/Slice/Index_Generation_Array/IGA_PE/IGA_PE_Outbuffer.sv",
+      "sha256": "51ac97ba18a7dc882abb75ce5fc98f334e5a97ec9df346c9bf443744e318f505",
+      "size_bytes": 9561
+    },
+    {
+      "path": "NDP_copy01/rtl/Slice/Index_Generation_Array/IGA_PE/IGA_PE.sv",
+      "sha256": "fea83b3b87dc33350fe6f583cf72fd8c2b98fe1775ef25f41a83788cf121c2fa",
+      "size_bytes": 7346
+    },
+    {
+      "path": "NDP_copy01/rtl/Slice/LSU/Stream_Engine/Memory_Stream_Engine/Memory_AG_Idx_Queue.sv",
+      "sha256": "b555ab22523540a9aa49d3eb51dee6eea9962086a71429028c69964de3819989",
+      "size_bytes": 11430
+    },
+    {
+      "path": "NDP_copy01/rtl/Slice/LSU/Stream_Engine/Memory_Stream_Engine/Buffer_AG_Idx_Queue.sv",
+      "sha256": "bbf2d8542f29229953395edf28d9a9cfe48030419753ee52bc62cc09e6028e4d",
+      "size_bytes": 9977
+    },
+    {
+      "path": "NDP_copy01/rtl/Slice/LSU/Stream_Engine/Memory_Stream_Engine/Parallel_Prefix_Sum.sv",
+      "sha256": "abdc71e9bc0695308fd55e8485b956ddcab30ec0efda88bb984f2e1b107bc31a",
+      "size_bytes": 1894
+    },
+    {
+      "path": "NDP_copy01/rtl/Slice/LSU/Stream_Engine/Memory_Stream_Engine/Memory_RD_Stream_Engine/RD_Memory_AG.sv",
+      "sha256": "4a4e6d591099113eebdcce5b9231f209e1bc3166038132eb0448c0f65e30c4f6",
+      "size_bytes": 21972
+    },
+    {
+      "path": "NDP_copy01/rtl/Slice/LSU/Stream_Engine/Memory_Stream_Engine/Memory_RD_Stream_Engine/RD_Data_Channel.sv",
+      "sha256": "87d1c9a05e8a1a51a5b78f7838962b381da74e7d471297b6da68f8a449aefe08",
+      "size_bytes": 27590
+    },
+    {
+      "path": "NDP_copy01/rtl/Slice/LSU/Stream_Engine/Memory_Stream_Engine/Memory_WR_Stream_Engine/WR_Memory_AG.sv",
+      "sha256": "7ecfdf2e4a9493f1f470cac03b4b581f6bde95126ab163a55dff8918d3aaa09f",
+      "size_bytes": 21813
+    },
+    {
+      "path": "NDP_copy01/rtl/Slice/LSU/Stream_Engine/Memory_Stream_Engine/Memory_WR_Stream_Engine/WR_Data_Channel.sv",
+      "sha256": "4c838398e4f7c4ae300fd1c1dfc6cdf1a6365854e2c0946c38e17845f366e02e",
+      "size_bytes": 28718
+    },
+    {
+      "path": "NDP_copy01/rtl/Slice/LSU/Stream_Engine/Stream_Engine_Config.sv",
+      "sha256": "24552ad78ab8c0c584542cae0efe9e9c73e73fcb1c6bb31d79b8a1d87e8f6b3e",
+      "size_bytes": 23944
+    },
+    {
+      "path": "NDP_copy01/rtl/Slice/LSU/Stream_Engine/Stream_Engine_Connect.sv",
+      "sha256": "0ca375c4af56f7f6fe9e7055a39ac7370d91e6048b2aa9f3ae0a4910deae5425",
+      "size_bytes": 27947
+    },
+    {
+      "path": "NDP_copy01/rtl/Slice/LSU/Stream_Engine/Memory_Stream_Engine/Memory_RD_Stream_Engine/WR_Buffer_AG.sv",
+      "sha256": "8db8ad4af47a3ddf911ab18a178fdc5288d7daebe8694c5c7380d8bea4e98c2b",
+      "size_bytes": 9390
+    },
+    {
+      "path": "NDP_copy01/rtl/Slice/LSU/Stream_Engine/Memory_Stream_Engine/Memory_WR_Stream_Engine/RD_Buffer_AG.sv",
+      "sha256": "0bda9e4b33f81a2d8cbb4250f1dcfd31d505cc64774ebadee69feafa7c2f89e5",
+      "size_bytes": 9677
+    },
+    {
+      "path": "NDP_copy01/rtl/Slice/LSU/Buffer_Manager_Cluster/Buffer_Manager_Cluster_Config.sv",
+      "sha256": "851ef8829a46422e561d6dd1d39590b3c6274b8209465df7a973287e9e9ac600",
+      "size_bytes": 3544
+    },
+    {
+      "path": "NDP_copy01/rtl/Slice/LSU/Buffer_Manager_Cluster/Buffer_Manager_Cluster.sv",
+      "sha256": "4e0b14b70d6c7da37a85a4d89b9902b58a846b98427dbd269766eff90c65750c",
+      "size_bytes": 24646
+    },
+    {
+      "path": "NDP_copy01/rtl/Slice/LSU/Buffer_Manager_Cluster/Buffer_Manager_Cluster_Connect.sv",
+      "sha256": "fcdf9372b846a7c51cf968d4cd3e2b4234443ae93c8c22af35724efaef3e611f",
+      "size_bytes": 24900
+    },
+    {
+      "path": "NDP_copy01/rtl/Slice/LSU/Buffer_Manager_Cluster/Buffer_Manager.sv",
+      "sha256": "bca4456b9ff3203b52a81b3e5a0cbf064f993f38d5bc7398c39d1e43f0cd395d",
+      "size_bytes": 17577
+    },
+    {
+      "path": "NDP_copy01/rtl/Slice/LSU/Buffer_Manager_Cluster/Memory_Req_Manager.sv",
+      "sha256": "0ad04b8e9202eacbcb888364c664195eedecef837702c17c1c1711eee0f5635a",
+      "size_bytes": 8498
+    },
+    {
+      "path": "NDP_copy01/rtl/Slice/LSU/Buffer_Manager_Cluster/Array_Request_Manager.sv",
+      "sha256": "112be21e7e1ec7e7c863086778d887cb09ac39a7f28d59f5e9b3e8c29ca71a49",
+      "size_bytes": 14443
+    },
+    {
+      "path": "NDP_copy01/rtl/Slice/LSU/Buffer_Manager_Cluster/Neighbor_Req_Manager.sv",
+      "sha256": "aa49f9ff1ece0c20360ee65214577c6a4190e02afff66bc26f270a91f3d8de3d",
+      "size_bytes": 7590
+    },
+    {
+      "path": "NDP_copy01/rtl/Slice/LSU/Buffer_Manager_Cluster/Buffer.sv",
+      "sha256": "461736f72dc25c79b0f12f310f00d90c1da0f1be0d89d3bcc0f8d4cf4a7ca690",
+      "size_bytes": 25597
+    },
+    {
+      "path": "NDP_copy01/rtl/Slice/Specialized_Array/Specialized_Array_Config.sv",
+      "sha256": "e0eb610d4332ea8817d4667cee58b6d804edd4c43093ee41b4dc1ef51893bce2",
+      "size_bytes": 5247
+    },
+    {
+      "path": "NDP_copy01/rtl/Slice/Specialized_Array/Specialized_Array.sv",
+      "sha256": "f75dbf81a29a365d150d8a32d0e5dae5dfbcbba48fa49d2fa92d7acdfa9cf42b",
+      "size_bytes": 12419
+    },
+    {
+      "path": "NDP_copy01/rtl/Slice/Specialized_Array/SA_Inport/SA_Inport_Connect.sv",
+      "sha256": "86c9bba21c7da019b4b4cc16ae6f26660932d6730ebb3a45cb6ca7887ad09c83",
+      "size_bytes": 5317
+    },
+    {
+      "path": "NDP_copy01/rtl/Slice/Specialized_Array/SA_PE/SA_PE_Control_Block.sv",
+      "sha256": "e254af41c5354d93d31cd9196d79a0a365ea880b86286ea0c15e3a4f41122ca6",
+      "size_bytes": 15092
+    },
+    {
+      "path": "NDP_copy01/rtl/Slice/Specialized_Array/SA_PE/SA_PE_Outbuffer.sv",
+      "sha256": "be66a8c68e8c31398ccf7784eff73fd733831498bf5580c22f457d445cd229be",
+      "size_bytes": 25391
+    },
+    {
+      "path": "NDP_copy01/rtl/Slice/Specialized_Array/SA_PE/SA_PE_ALU.sv",
+      "sha256": "f26c2e859410ec72390107df92bd765ef56cf79085fba61773bfb5e920d37b0d",
+      "size_bytes": 1818
+    },
+    {
+      "path": "NDP_copy01/rtl/Slice/Specialized_Array/SA_PE/SA_PE_ALU/SA_PE_Float_Control.v",
+      "sha256": "3b52be953e7ac212156218c5448b343f98ebca8dd7ed07849964a25588db465b",
+      "size_bytes": 11857
+    },
+    {
+      "path": "NDP_copy01/rtl/Slice/Specialized_Array/SA_PE/SA_PE_ALU/SA_PE_Mul_Array.v",
+      "sha256": "89ea1999ffc4a8a8b1459ba86525664ce78baa19a04179b1154e3635e8d2ff35",
+      "size_bytes": 18540
+    },
+    {
+      "path": "NDP_copy01/rtl/Slice/Specialized_Array/SA_PE/SA_PE_ALU/SA_PE_Float_CSA.v",
+      "sha256": "1c7687f197b028da0cf09c46d9697c572f0cf1520b70732a2c616a6a5771ac69",
+      "size_bytes": 2396
+    },
+    {
+      "path": "NDP_copy01/rtl/Slice/Specialized_Array/SA_PE/SA_PE_ALU/SA_PE_Float_Last.v",
+      "sha256": "665061ba90a32350cc4981af6bf6e5ffeb9aaba83651371834a810945d0975f0",
+      "size_bytes": 8029
+    },
+    {
+      "path": "NDP_copy01/rtl/Slice/Specialized_Array/SA_Outport/SA_Outport_Connect.sv",
+      "sha256": "10d6ce519d3723a10f1c2cbd27092c77bb65086743bae85365df29bd21ee6778",
+      "size_bytes": 2759
+    },
+    {
+      "path": "NDP_copy01/rtl/Slice/Specialized_Array/SA_Outport/SA_Outport.sv",
+      "sha256": "72718fb2520de8276cc3960d11fdbf7fd78d9f715ef723f02dd21ca90b7bb967",
+      "size_bytes": 20677
+    },
+    {
+      "path": "NDP_copy01/rtl/utils/CSA/CSA_4to2.v",
+      "sha256": "5d6aad5595e712bbfee6578e6986fc50b5d36f47d954c8ab2fa331a6ff0e6549",
+      "size_bytes": 1109
+    },
+    {
+      "path": "NDP_copy01/rtl/utils/CSA/CSA_3to2.v",
+      "sha256": "0a83da7c1cb3b37426db186290f079e80a2c71f024bf7174e9d516f69941a874",
+      "size_bytes": 663
+    },
+    {
+      "path": "NDP_copy01/rtl/Slice/General_Array/GA_Inport/GA_Inport_Group_Config.sv",
+      "sha256": "5db5883ba6760660fb06334a82f8f132d6b8e95cc8e322e4860f9592722fbb62",
+      "size_bytes": 3704
+    },
+    {
+      "path": "NDP_copy01/rtl/Slice/General_Array/GA_Inport/GA_Inport_Connect.sv",
+      "sha256": "1af08761a3a5bc276f7c9403d8dfa98671e564a3ab490913fe298e0520495a31",
+      "size_bytes": 5667
+    },
+    {
+      "path": "NDP_copy01/rtl/Slice/General_Array/GA_Inport/GA_Inport.sv",
+      "sha256": "42a7ac1d740c758de9656ee0d41663ef1c8b11253e76ba2e20be6faee2d12e17",
+      "size_bytes": 25440
+    },
+    {
+      "path": "NDP_copy01/rtl/Slice/General_Array/GA_Outport/GA_Outport_Group_Config.sv",
+      "sha256": "d1173518e1e2abd0856a80995ee1756f52713d1b62d0a02c8817a5dada70751c",
+      "size_bytes": 3244
+    },
+    {
+      "path": "NDP_copy01/rtl/Slice/General_Array/GA_Outport/GA_Outport_Connect.sv",
+      "sha256": "54438ec1b6f612deaa427d6024ba044a52f09b2bd11a09335fbbece42560bcd7",
+      "size_bytes": 3077
+    },
+    {
+      "path": "NDP_copy01/rtl/Slice/General_Array/GA_Outport/GA_Outport.sv",
+      "sha256": "8b1a3f12f44a2dbbe65ff41853397c06f7f591c1472b93ab8dd1698587b328db",
+      "size_bytes": 15846
+    },
+    {
+      "path": "NDP_copy01/rtl/Slice/General_Array/GA_PE_Group/GA_PE_Group_Interconnect.sv",
+      "sha256": "1ea918b25d8eb1a9428246735fa61b530a6aaedbd94365996bf1851ae677fffd",
+      "size_bytes": 6771
+    },
+    {
+      "path": "NDP_copy01/rtl/Slice/General_Array/GA_PE_Group/GA_PE_Config.sv",
+      "sha256": "ea538aa832b8b16f82cafa445aaa3003acb7460882b0f79b1bf06693229204e9",
+      "size_bytes": 5535
+    },
+    {
+      "path": "NDP_copy01/rtl/Slice/General_Array/GA_PE_Group/GA_PE_Inbuffer.sv",
+      "sha256": "25fa4dd2c6fe8301bc3651d660df72059ea2787c0c26a2841a1d4e439586b518",
+      "size_bytes": 34326
+    },
+    {
+      "path": "NDP_copy01/rtl/Slice/General_Array/GA_PE_Group/GA_PE_Outbuffer.sv",
+      "sha256": "0e4c024c159cb02c2ec6425490fa09abf151a2cf99034b03c36d80dbc9a72de8",
+      "size_bytes": 19879
+    },
+    {
+      "path": "NDP_copy01/rtl/Slice/General_Array/GA_PE_Group/GA_PE_ALU.sv",
+      "sha256": "8a73c66755df0897034d7bdbc7183f663aeba630d16ccae07e8e879d689eb9aa",
+      "size_bytes": 2085
+    },
+    {
+      "path": "NDP_copy01/rtl/Slice/General_Array/GA_PE_Group/GA_PE/GA_PE.sv",
+      "sha256": "6cbce65264885ae7c211e217511e047b8c999cca9c2369f043a5586bb0fc0fd3",
+      "size_bytes": 13511
+    },
+    {
+      "path": "NDP_copy01/rtl/Slice/General_Array/GA_PE_Group/GA_ALU/GA_PE_Float_Control.v",
+      "sha256": "96802498b791085c182d7e22eeaf24075ff625eaebb6b4fe2579c07d9b160577",
+      "size_bytes": 6524
+    },
+    {
+      "path": "NDP_copy01/rtl/Slice/General_Array/GA_PE_Group/GA_ALU/GA_PE_Float_CSA.v",
+      "sha256": "5bcc09111624f403cc2aab291f79fd32a6dd40ce7d9624db6306f8cde94906dc",
+      "size_bytes": 2818
+    },
+    {
+      "path": "NDP_copy01/rtl/Slice/General_Array/GA_PE_Group/GA_ALU/GA_PE_Float_Last.v",
+      "sha256": "2e90094fd01155c0028ab1a414e7e10e9eaaf8ee46bc8f02af4d6ce9a841efa0",
+      "size_bytes": 9990
+    },
+    {
+      "path": "NDP_copy01/rtl/Slice/General_Array/GA_PE_Group/GA_SFU_PE/GA_SFU_PE.sv",
+      "sha256": "fe09e7d44651cbc86dead5ee8bd406c90b8ffd4ad74b68acc3f46ea21781ffca",
+      "size_bytes": 21404
+    },
+    {
+      "path": "NDP_copy01/rtl/Slice/General_Array/GA_PE_Group/GA_SFU_PE/GA_SFU_PE_Preprocess.sv",
+      "sha256": "79a285e4988e36b5fbb0ef4646131fd3ca559d7bc7ea0d4ee2751b544e2eb548",
+      "size_bytes": 5044
+    },
+    {
+      "path": "NDP_copy01/rtl/Slice/General_Array/GA_PE_Group/GA_SFU_PE/GA_SFU_PE_Postprocess.sv",
+      "sha256": "074564e6b2a26dfbefd710082fedaf0f8c6e758f2bca3681b1f6404579c5ac06",
+      "size_bytes": 4759
+    },
+    {
+      "path": "NDP_copy01/rtl/Slice/LSU/Stream_Engine/Neighbor_Stream_Engine/NSE_Controller.sv",
+      "sha256": "9068bc221f36d57ee94c11258aa37e294129b8fa3042e17b77700d32d7f78e97",
+      "size_bytes": 2582
+    },
+    {
+      "path": "NDP_copy01/rtl/Slice/LSU/Stream_Engine/Neighbor_Stream_Engine/Neighbor_In_AG.sv",
+      "sha256": "dfa2be6070f4bebc684c5a03f83ef0b7af3cd535d0632de5ff2f30757313f8b8",
+      "size_bytes": 3749
+    },
+    {
+      "path": "NDP_copy01/rtl/Slice/LSU/Stream_Engine/Neighbor_Stream_Engine/Neighbor_Out_AG.sv",
+      "sha256": "59e90848adcd11e3d77cc44bd2cdf062b14e95497cac17a2f94780a78b9fb11a",
+      "size_bytes": 5056
+    },
+    {
+      "path": "NDP_copy01/rtl/Slice/LSU/Stream_Engine/Stream_Engine_Config.sv",
+      "sha256": "24552ad78ab8c0c584542cae0efe9e9c73e73fcb1c6bb31d79b8a1d87e8f6b3e",
+      "size_bytes": 23944
+    },
+    {
+      "path": "NDP_copy01/rtl/Slice/LSU/Stream_Engine/Stream_Engine_Connect.sv",
+      "sha256": "0ca375c4af56f7f6fe9e7055a39ac7370d91e6048b2aa9f3ae0a4910deae5425",
+      "size_bytes": 27947
+    },
+    {
+      "path": "NDP_copy01/rtl/Slice/LSU/Buffer_Manager_Cluster/Buffer_Manager_Cluster_Connect.sv",
+      "sha256": "fcdf9372b846a7c51cf968d4cd3e2b4234443ae93c8c22af35724efaef3e611f",
+      "size_bytes": 24900
+    },
+    {
+      "path": "NDP_copy01/rtl/NDP_Top.sv",
+      "sha256": "c3915a84364725b3a8ab6cc97c8cf0b84d750d837b2e232510a5ff6498fbc9c6",
+      "size_bytes": 89054
+    },
+    {
+      "path": "contracts/ga_int8_pipeline_backpressure_defect_report_20260723.md",
+      "sha256": "95a23d13bc02af0a001beb8050f8645d14ed8683525fc44e520ab21ed062d97c",
+      "size_bytes": 12406
+    },
+    {
+      "path": "NDP_copy01/rtl/Slice/slice2hub_crossbar.sv",
+      "sha256": "1b66cd9857501fa111696215c7ff10bfdf06329e1e00d0cde496dc9a38a6923a",
+      "size_bytes": 19914
+    },
+    {
+      "path": "NDP_copy01/rtl/Datahub/Datahub_Req_Crossbar/datahub_req_crossbar.sv",
+      "sha256": "730e812bc92f7e20d1002559b7931b8e2fcc237454e6e58e75212ef870bb22c5",
+      "size_bytes": 10272
+    },
+    {
+      "path": "configs/native_ndp_sim/avgpool_config_2048_7_7_strict_v1/config.json",
+      "sha256": "bc1c593106c0dd25251af67c5500983218051dc21d19d33f8c91942c9e412e76",
+      "size_bytes": 12083
+    },
+    {
+      "path": "artifacts/operator_config_validation/r5-server-candidates/gap-hwop0071-sum-v1/config/op0/mapping_review.json",
+      "sha256": "627e20efca2c16a79211609533ef094c2ccae4e9c1996c686b7815048076da12",
+      "size_bytes": 3327
+    },
+    {
+      "path": "artifacts/operator_config_validation/r5-server-candidates/gap-hwop0071-sum-v1/config/op0/detailed_dump.txt",
+      "sha256": "67a83e43f498533e5f7c98834b322286cc1628eb3e4e792cea85d604b05cac8f",
+      "size_bytes": 30773
+    },
+    {
+      "path": "server_returns/gap_hwop0071_sim6_20260723/gap_numeric_path_report.json",
+      "sha256": "d8b80743f412f40ee4c1276cfc8c3f95d27d14499565da476f14f1c954decb6b",
+      "size_bytes": 5750
+    },
+    {
+      "path": "server_returns/gap_hwop0071_probe_v4_return_20260723/gap_probe_v4_analysis.json",
+      "sha256": "bf1b6100bca30f53842029c78d1c89fa6e4f9c3747bd091f99768dc1b5d00173",
+      "size_bytes": 4233
+    },
+    {
+      "path": "server_returns/gap_hwop0071_probe_v4_return_20260723/gap_numeric_path_report_v4.json",
+      "sha256": "db315929cab34d74964c6abb5dc31bf641053de8e8b19f424b3b3ea35835dd3d",
+      "size_bytes": 8921
+    },
+    {
+      "path": "server_returns/gap_hwop0071_probe_v4_return_20260723/GAP_PROBE_V4_DIAGNOSIS.md",
+      "sha256": "71bb23950ed94dd75562f3bb4a9949d829349022ca1e506657c6e44513fe91f7",
+      "size_bytes": 4878
+    },
+    {
+      "path": "server_returns/gap_hwop0071_probe_v5_return_20260723/GAP_PROBE_V5_ANALYSIS.md",
+      "sha256": "a1d22b099c75916468309deca691a78b29b33e648b01e5aa418a96430da067d7",
+      "size_bytes": 6503
+    },
+    {
+      "path": "server_returns/gap_hwop0071_probe_v7_return_20260724/gap_probe_v7_analysis.json",
+      "sha256": "b100d94084ccec3f9abf03a9504335bc1c9e8cde19374359e74d9b3571b37dfc",
+      "size_bytes": 13023
+    },
+    {
+      "path": "server_returns/gap_hwop0071_probe_v7_return_20260724/gap_numeric_path_report_v7.json",
+      "sha256": "c067a68029ec15ef3fdd66a45da3c4c1b597f5a7bc91d256258fc87fc602ba39",
+      "size_bytes": 9091
+    },
+    {
+      "path": "server_returns/gap_hwop0071_probe_v7_return_20260724/native_return_acceptance_v7.json",
+      "sha256": "1f6f873f0ce9edbf3004c7a0cae21c1331859db86464dc65dfeb9486acae931d",
+      "size_bytes": 14272
+    },
+    {
+      "path": "server_returns/gap_hwop0071_probe_v7_return_20260724/GAP_PROBE_V7_DIAGNOSIS.md",
+      "sha256": "81dbed4969ff850c1c58974feadd58b9f4b3602aaacafa7ac01266dddbbf4d81",
+      "size_bytes": 6658
+    },
+    {
+      "path": "server_returns/gap_rtl_three_way_identity_20260723/SERVER_RTL_THREE_WAY_IDENTITY_ANALYSIS.md",
+      "sha256": "466dd2b9666eaa6cce618aa79442cb246e9ca90616076067297cba87735f26cc",
+      "size_bytes": 5008
+    },
+    {
+      "path": "tools/analyze_gap_probe_log.py",
+      "sha256": "a3acfb3eb7057e7e426fa8af551e37bd6f305414c3ec86d5c2b284a7f4b361ac",
+      "size_bytes": 24582
+    },
+    {
+      "path": "artifacts/operator_config_validation/r5-server-test-packages/gap_hwop0071_sum_probe_v1.zip",
+      "sha256": "a01567efc37d740b8ef98f22adf37f71641b7a62d6816ca2e76fbbf07dd05a2b",
+      "size_bytes": 3265230
+    },
+    {
+      "path": "resnet50_pipeline/operator_config_validator.py",
+      "sha256": "fa1fe7b91956043e4ce0ab0ad71b9721163a6e1dbabb4de36b20f60819f4555d",
+      "size_bytes": 72707
+    },
+    {
+      "path": "resnet50_pipeline/operator_config_artifact_validator.py",
+      "sha256": "1c6e2bd4c28ef4f1c6cb034f0c6504bbc6a004b5441098fabcf280f1b4f96d2d",
+      "size_bytes": 63799
+    },
+    {
+      "path": "tools/generate_conv_1x1_real.py",
+      "sha256": "181c7862b8f68c4d1b3a2a0359f7fd960f18a740d12b9c89da7d369c39134bfd",
+      "size_bytes": 20417
+    },
+    {
+      "path": "tools/generate_conv_3x3_real.py",
+      "sha256": "f592a45701da8914390e0e443c5b285b4710f2fdbbadc86bbb0befeaa8550c87",
+      "size_bytes": 11490
+    }
+  ],
+  "status": "probe_v7_ingested_gap_ga_dynamic_root_cause_closed"
+}

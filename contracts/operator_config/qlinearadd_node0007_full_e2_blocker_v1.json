@@ -1,0 +1,123 @@
+{
+  "schema": "qlinearadd-node0007-full-e2-blocker-v1",
+  "status": "E2_FAILED_FIRST_BREAKPOINT",
+  "candidate_release": false,
+  "claim": null,
+  "node_id": "node-0007",
+  "hw_op_id": "hwop-0007-00",
+  "numeric_analysis_repeated": false,
+  "reuse_assets_consumed": true,
+  "reuse_bindings": [
+    {
+      "path": "contracts/operator_config/qlinearadd_stage0_config_only_contract_v1.json",
+      "sha256": "90eeb8eaa3bf3a3aacfa62a2cfa83728225a515183fb4607f9dba53aedaa7a50",
+      "reuse_class": "APPROVED_EQUIVALENT",
+      "scope": "node0007 W3 dequant/add order, six qparams, paired readiness, SUM_F32 and scratch lifetime"
+    },
+    {
+      "path": "resnet50_pipeline/node0004_assumed_hardware.py",
+      "sha256": "5f0eb131304c7d2edc6f17b68bca81c8dc3096e77c90dbad042582a5aeec718d",
+      "reuse_class": "STRUCTURE_OR_PRIMITIVE_ONLY",
+      "scope": "separate FP32 multiply scratch followed by magic-RNE/int32-sub/UINT8 saturation"
+    }
+  ],
+  "closed_before_breakpoint": {
+    "strict_static_configs": "5/5",
+    "mapping": "5/5 exact penalty=0 and fallback_used=false",
+    "scalar_tail_domain": "65536/65536 A/B uint8 pairs; final UINT8 mismatch=0",
+    "config_bound_physical_output": "16859136/16859136 bytes; mismatch=0",
+    "config_bound_logical_output": "12845056/12845056 elements; mismatch=0",
+    "host_precomputed_internal_tensor": false
+  },
+  "first_breakpoint": {
+    "gate": "native RTL request-address validation",
+    "code": "REQUEST.ROW_LIMIT",
+    "stage_index": 2,
+    "operator_id": "op_fp32_add",
+    "operator_type": "resnet50_qadd_node0007_fp32_add",
+    "slice_id": 0,
+    "stream": "WRITE_STREAM0",
+    "observed_row": 6144,
+    "required_equation": "request_row < 6144",
+    "source_output_base_addr": "0x005be000",
+    "typed_output_bytes_per_slice": 2408448,
+    "region_end_exclusive": "0x0080a000",
+    "first_invalid_row_boundary_address": "0x00600000",
+    "diagnosis": "The no-free address planner starts the FP32 add output at row 5880 of the current bank and does not relocate or split the 2408448-byte allocation before it reaches the forbidden row 6144. The final request set therefore cannot be represented by the current target row domain.",
+    "minimal_next_action": "Give the planner an authorized allocation rule that relocates/splits a region before row 6144, or define a QLinearAdd-owned tiled graph whose independently allocated FP32 sum regions each remain inside the target row domain; then rebuild final JSON through SCA from empty mapping state."
+  },
+  "unclosed_scope": [
+    "published final address-bound JSON",
+    "execplan/SCA/SCA_D evidence bundle",
+    "final address/lifetime/coverage roundtrip",
+    "complete local E2",
+    "server test package",
+    "E4/E5"
+  ],
+  "claim_boundary": "The node0007 numerical configuration candidate and five mappings are local evidence only. REQUEST.ROW_LIMIT prevents complete E2 and prevents CONFIG_ONLY_CORRECTNESS_BASELINE release.",
+  "package_release": {
+    "status": "NOT_GENERATED_E2_FAILED",
+    "package_ready_not_run": false,
+    "server_inspected": false,
+    "uploaded": false,
+    "run": false
+  },
+  "rule_delta_proposal": {
+    "target": ".agents/rules/QLinearAdd算子配置规则.md",
+    "proposal_id": "CDA-QADD-LARGE-FP32-SCRATCH-ROW-BOUNDARY-001",
+    "text": "Before mapping, replay each FP32 scratch allocation through the target slave/bank/row/column packing equation. If any request reaches row>=MAX_ROWS, fail closed unless the family graph explicitly splits or relocates the allocation and proves non-alias, barrier, lifetime and complete byte coverage for every tile."
+  },
+  "receipts": {
+    "mutable_plan": {
+      "path": ".agents/plan.md",
+      "sha256_observed_at_blocker_freeze": "2946e5080678e3f2f95fa9f834b3ed6f6888914cb4feb9ebef0bde1b563434df",
+      "drift_policy": "mutable provenance warning only"
+    },
+    "generation_index": {
+      "path": ".agents/rules/生成前必读索引.md",
+      "sha256": "12583308ec9a16dbb8ea15571a5280291fed7e152167d2e4e8e00509a9a6370f"
+    },
+    "operator_rule": {
+      "path": ".agents/rules/算子配置规则.md",
+      "sha256": "cbaffcc5fb3bea7da9f0c199bb2e7f06445a676ab456bdfd505b90dd89825171"
+    },
+    "qlinearadd_rule": {
+      "path": ".agents/rules/QLinearAdd算子配置规则.md",
+      "sha256": "981afd5aa0a0ee240c8e6c863cbac0c89dc299344554eb893d707cf96fe0b4ee"
+    },
+    "shared_quant_tail_rule": {
+      "path": ".agents/rules/精确UINT8量化尾专项规则.md",
+      "sha256": "1685bd6527111bf014a738dbef4ee85b5b8d3e54c0565cb63eda9417d5c9425e"
+    },
+    "hardware_semantics_rule": {
+      "path": ".agents/rules/NDP硬件字段语义.md",
+      "sha256": "18d71520dd4ededc5edd9bb316acd0cc0421a9a261cf14b28ea6997ddd0e844a"
+    },
+    "server_package_rule_not_activated": {
+      "path": ".agents/rules/服务器测试包生成规则.md",
+      "sha256": "153b0f03210f8e4f98b6b39a7ca7a40b11c788085ba3775826e42beb171167a2",
+      "reason": "complete local E2 did not close, so package generation was not entered"
+    }
+  },
+  "evidence": {
+    "graph": {
+      "path": "artifacts/operator_config_validation/r5-qlinearadd-node0007-full-e2-v1/graph.json",
+      "sha256": "82e36b05fa89492d2579f9ccd53eb1a7269abfc84062517f71d0fda0c99df306"
+    },
+    "fp32_add_static_config": {
+      "path": "configs/native_ndp_sim/qlinearadd_node0007_full_e2_v1/op_fp32_add.json",
+      "sha256": "bba1ae729af323dd37e9667bb62dd83b6f27f6b316bd35dca564a62fef4bfb7f"
+    },
+    "stderr": {
+      "path": "artifacts/operator_config_validation/r5-qlinearadd-node0007-full-e2-v1/native-build.stderr.log",
+      "sha256": "87ba87ed6993547f36405cffcec2effd680f5248de308afcc8401cfbbabd1811"
+    },
+    "mapping_bundle_manifests": {
+      "op_a_dequant": "19f1cc0d4c8cf579f8b8fdf3495737736314818e4778669e81196993b532f4b1",
+      "op_b_dequant": "43aa04bf9c46ce153efb5bf2b6d816965a844302261c0047a321dc97ad4e8482",
+      "op_fp32_add": "da954a2f93c62f60aae616b81b5f656b492ca023e5e4b5cd2a36c549d91c09c8",
+      "op_tail_mul": "736e85718701e1b8c1f5f00527947f5ed37b3a21ac61eb446f922f2276c08f48",
+      "op_tail_round": "620a037234e32bd1836a4484fe1cf8fe3950358b7bdc0bb6afa3b35194804644"
+    }
+  }
+}

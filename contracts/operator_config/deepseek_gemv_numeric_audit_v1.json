@@ -1,0 +1,45 @@
+{
+  "audit_sha256": "a86d061c54d000179c9d0a5fbdf3adafd1ac0b2c6fdcb59a9ab601b2e0d5ee55",
+  "comparison": {
+    "bitwise_fp16_equal": true,
+    "bitwise_fp16_mismatch_count": 0,
+    "element_count": 1792
+  },
+  "formula": "fp16_output = fp16(fp32_fma_accumulate(weight[896,1792].T, activation[896]))",
+  "identity_boundary": {
+    "classification": "TRUSTED_CROP_DERIVED_HWVERIFIED_NUMERIC_ORACLE",
+    "original_onnx_external_data_identity": false
+  },
+  "inputs": {
+    "activation": {
+      "path": "ndp-sim/generate_python_golden/python_golden_decode_hwverified/ffn_gate_gemv_in1_shape896x1x1_dtype_f16.bin",
+      "sha256": "ea7aac8148ca4298f8b588724c4696c183d64b4410890f0566278bbdac6ea34f",
+      "size_bytes": 1792
+    },
+    "expected_output": {
+      "path": "ndp-sim/generate_python_golden/python_golden_decode_hwverified/ffn_gate_gemv_out_shape1792x1x1_dtype_f16.bin",
+      "sha256": "e1a9370ee62b78e5e88a9a9d974713aad8addca04b00011acdae7028a5f6dfab",
+      "size_bytes": 3584
+    },
+    "weight": {
+      "path": "ndp-sim/generate_python_golden/python_golden_decode_hwverified/ffn_gate_gemv_in0_shape896x1792x1_dtype_f16.bin",
+      "sha256": "7db4786ea1adfeb9473f8fb51e4d0459eee938f47b6163714ce67fa213e5d4ce",
+      "size_bytes": 3211264
+    }
+  },
+  "instance": "ffn_gate_gemv",
+  "operator": "decode_gemv_ring",
+  "schema": "deepseek-gemv-numeric-audit-v1",
+  "shapes": {
+    "activation": [
+      896
+    ],
+    "output": [
+      1792
+    ],
+    "weight": [
+      896,
+      1792
+    ]
+  }
+}
