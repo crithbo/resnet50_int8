@@ -1,0 +1,116 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "server_post_sim_return_contract_v1.schema.json",
+  "title": "Exact final-ZIP post-simulation return-core contract v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "package_id",
+    "runner_member",
+    "helper_member",
+    "helper_sha256",
+    "request_member",
+    "request_sha256",
+    "invocation_mode",
+    "sim_exit_persisted_before_plugins",
+    "plugin_failure_blocks_core_return",
+    "required_scenarios",
+    "partial_exit_live_causal_record",
+    "claim_boundary"
+  ],
+  "properties": {
+    "schema": {"const": "server-post-sim-return-contract-v1"},
+    "package_id": {"$ref": "#/$defs/name"},
+    "runner_member": {"$ref": "#/$defs/path"},
+    "helper_member": {"$ref": "#/$defs/path"},
+    "helper_sha256": {"$ref": "#/$defs/sha"},
+    "request_member": {"$ref": "#/$defs/path"},
+    "request_sha256": {"$ref": "#/$defs/sha"},
+    "invocation_mode": {"const": "JSON_REQUEST_ONLY_NO_POSITIONAL_COLLECTOR"},
+    "sim_exit_persisted_before_plugins": {"const": true},
+    "plugin_failure_blocks_core_return": {"const": false},
+    "required_scenarios": {
+      "type": "array",
+      "prefixItems": [
+        {"const": "natural_success"},
+        {"const": "natural_success_plugin_failure"},
+        {"const": "simulation_nonzero"},
+        {"const": "idempotent_reentry"}
+      ],
+      "items": false
+    },
+    "partial_exit_live_causal_record": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "rule_id",
+        "enforcement",
+        "required_signals",
+        "final_block_ring_sole_input_forbidden",
+        "plugin_dispositions"
+      ],
+      "properties": {
+        "rule_id": {"const": "CDA-SERVER-DIAGNOSTIC-PARTIAL-EXIT-LIVE-CAUSAL-RECORD-001"},
+        "enforcement": {"const": "required_next_fresh"},
+        "required_signals": {
+          "type": "array",
+          "prefixItems": [{"const": "INT"}, {"const": "TERM"}],
+          "items": false
+        },
+        "final_block_ring_sole_input_forbidden": {"const": true},
+        "plugin_dispositions": {
+          "type": "array",
+          "items": {
+            "oneOf": [
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "plugin_id",
+                  "disposition",
+                  "input_root",
+                  "input_path",
+                  "fixture_member",
+                  "input_kind",
+                  "output_root",
+                  "output_path",
+                  "expected_exit_code",
+                  "timeout_seconds"
+                ],
+                "properties": {
+                  "plugin_id": {"$ref": "#/$defs/name"},
+                  "disposition": {"const": "LIVE_CAUSAL_FIXTURE"},
+                  "input_root": {"const": "attempt"},
+                  "input_path": {"$ref": "#/$defs/path"},
+                  "fixture_member": {"$ref": "#/$defs/path"},
+                  "input_kind": {"enum": ["QUALIFIED_LIVE_RECORD", "SIGNAL_SAFE_PERSISTED_EQUIVALENT"]},
+                  "output_root": {"const": "attempt"},
+                  "output_path": {"$ref": "#/$defs/path"},
+                  "expected_exit_code": {"const": 0},
+                  "timeout_seconds": {"type": "integer", "minimum": 1, "maximum": 30}
+                }
+              },
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["plugin_id", "disposition", "reason"],
+                "properties": {
+                  "plugin_id": {"$ref": "#/$defs/name"},
+                  "disposition": {"const": "NOT_APPLICABLE_NON_CAUSAL_PLUGIN"},
+                  "reason": {"type": "string", "minLength": 1}
+                }
+              }
+            ]
+          }
+        }
+      }
+    },
+    "claim_boundary": {"type": "string", "minLength": 1}
+  },
+  "$defs": {
+    "name": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"},
+    "path": {"type": "string", "minLength": 1, "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))(?!.*\\\\).+$"},
+    "sha": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }
+}

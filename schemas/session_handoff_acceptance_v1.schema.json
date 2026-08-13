@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "session_handoff_acceptance_v1.schema.json",
+  "title": "Session handoff acceptance v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "handoff_id",
+    "role_id",
+    "new_thread_id",
+    "capsule",
+    "registry_observed",
+    "all_receipts_current",
+    "snapshot_understood",
+    "conflicts",
+    "status",
+    "first_action",
+    "external_action_taken",
+    "claim_boundary"
+  ],
+  "properties": {
+    "schema": {"const": "session-handoff-acceptance-v1"},
+    "handoff_id": {"type": "string", "minLength": 1},
+    "role_id": {"type": "string", "minLength": 1},
+    "new_thread_id": {"type": "string", "minLength": 1},
+    "capsule": {"$ref": "#/$defs/fileReceipt"},
+    "registry_observed": {"$ref": "#/$defs/fileReceipt"},
+    "all_receipts_current": {"const": true},
+    "snapshot_understood": {"const": true},
+    "conflicts": {"type": "array", "maxItems": 0},
+    "status": {"const": "ACCEPTED_READ_ONLY"},
+    "first_action": {"type": "string", "minLength": 1},
+    "external_action_taken": {"const": false},
+    "claim_boundary": {"type": "string", "minLength": 1}
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "safeRelativePath": {"type": "string", "minLength": 1},
+    "fileReceipt": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "bytes", "sha256"],
+      "properties": {
+        "path": {"$ref": "#/$defs/safeRelativePath"},
+        "bytes": {"type": "integer", "minimum": 0},
+        "sha256": {"$ref": "#/$defs/sha256"}
+      }
+    }
+  }
+}
+

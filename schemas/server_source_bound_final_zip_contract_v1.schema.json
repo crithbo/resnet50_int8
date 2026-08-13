@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "server-source-bound-final-zip-contract-v1",
+  "title": "Source-bound observer exact final ZIP contract",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "rule_id",
+    "enforcement",
+    "members",
+    "compile_observer_token",
+    "runtime_plusarg",
+    "return_log_token",
+    "return_decision_token",
+    "claim_boundary"
+  ],
+  "properties": {
+    "schema": {"const": "server-source-bound-final-zip-contract-v1"},
+    "rule_id": {"const": "CDA-SERVER-SOURCE-BOUND-GENERATED-OBSERVER-001"},
+    "enforcement": {"const": "required_next_fresh"},
+    "members": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["catalog", "plan", "observer", "parser", "binding", "generation_report", "runner"],
+      "properties": {
+        "catalog": {"$ref": "#/$defs/safePath"},
+        "plan": {"$ref": "#/$defs/safePath"},
+        "observer": {"$ref": "#/$defs/safePath"},
+        "parser": {"$ref": "#/$defs/safePath"},
+        "binding": {"$ref": "#/$defs/safePath"},
+        "generation_report": {"$ref": "#/$defs/safePath"},
+        "runner": {"$ref": "#/$defs/safePath"}
+      }
+    },
+    "compile_observer_token": {"const": "source_bound_causal_observer.svh"},
+    "runtime_plusarg": {"const": "+CODEX_CAUSAL_OBSERVER"},
+    "return_log_token": {"const": "source_bound_causal.log"},
+    "return_decision_token": {"const": "source_bound_causal_decision.json"},
+    "claim_boundary": {"type": "string", "minLength": 1}
+  },
+  "$defs": {
+    "safePath": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))(?!.*\\\\).+$"
+    }
+  }
+}

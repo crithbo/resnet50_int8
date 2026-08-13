@@ -1,0 +1,94 @@
+{
+  "schema": "server-compile-provider-closure-dispatch-v1",
+  "rule_id": "CDA-SERVER-COMPILE-MODULE-PROVIDER-CLOSURE-001",
+  "supersedes_unactivated_draft": "CDA-SERVER-COMPILE-ARGV-EXTERNAL-DEPENDENCY-ATTESTATION-001",
+  "applicability": "required_next_fresh_when_actual_compile_requires_modules_not_defined_by_the_bound_DUT_source_closure",
+  "tool": "tools/server_compile_environment_gate.py",
+  "schema_path": "schemas/server_compile_environment_gate_v1.schema.json",
+  "activation_mode": "mainline_narrow_merge_required",
+  "blocking_mapping": {
+    "provider_probe_or_exact_source_closure": "server_start",
+    "compile_failure_core_audit": "return"
+  },
+  "path_absence_semantics": {
+    "named_y_or_incdir_path_absent": "record_only_until_complete_provider_closure_or_exact_probe_fails",
+    "reason": "serialized Conv v88 succeeded and resolved the required DW modules with the same named sim_ver argv tokens later seen in v89",
+    "forbidden_inference": "single_path_absence_implies_environment_root_cause"
+  },
+  "runtime_order": [
+    "arm_exactly_once_partial_return_finalizer",
+    "complete_package_install_and_root_layout_preflight",
+    "materialize_actual_compile_launch_request",
+    "for_make_wrappers_run_exact_make_just_print_with_same_makefile_target_and_variables",
+    "bind_makefile_recursive_source_top_filelist_compile_environment_and_provider_flags",
+    "scan_only_explicitly_bound_source_provider_candidates",
+    "if_required_modules_remain_unproven_run_small_package_owned_provider_lookup_probe",
+    "validate_probe_same_compiler_same_provider_flags_same_runtime_context_no_DUT_no_simulation",
+    "on_probe_failure_publish_aggregate_receipt_and_compile_not_started_core_return",
+    "on_probe_success_invoke_full_compile_from_the_original_launch_request"
+  ],
+  "provider_probe": {
+    "generated_top": "one empty instance per required module",
+    "required_modules": ["DW_ecc", "DW_sync", "DW_lod", "DW_fifo_s1_sf"],
+    "same_compiler_identity": true,
+    "same_provider_flag_projection": true,
+    "log_truncated": false,
+    "dut_compile_invoked": false,
+    "simulation_invoked": false,
+    "compile_exit_zero_and_no_unresolved_required": true
+  },
+  "semantic_fingerprint": {
+    "required": [
+      "compiler_identity",
+      "selected_makefile_sha256",
+      "recursive_source_identity_sha256",
+      "top_filelist_sha256",
+      "compile_environment_values",
+      "provider_flag_projection",
+      "provider_path_state"
+    ],
+    "known_good_use": "comparison_only_never_current_availability_proof",
+    "v88_v89_observer_define_difference_must_not_be_silently_normalized": true
+  },
+  "cross_family_reuse": {
+    "key": "runtime_context_plus_semantic_fingerprint_plus_provider_state_plus_required_module_set",
+    "runtime_context_requires": ["execution_epoch", "boot_id", "hostname", "compiler_identity"],
+    "failure_receipt_disposition": "hold_same-projection packages_without_full_DUT_compile",
+    "invalidation": [
+      "execution_epoch_or_boot_changed",
+      "compiler_identity_changed",
+      "makefile_source_filelist_or_compile_environment_changed",
+      "provider_flags_or_provider_state_changed",
+      "required_module_set_changed"
+    ]
+  },
+  "compile_failure_return": {
+    "required": [
+      "actual_compile_sim_argv",
+      "simulation_started_false_receipt",
+      "compile_core_with_first_true_compiler_error",
+      "return_core_manifest_exact_set"
+    ],
+    "aggregate_all_missing_or_stale_members": true
+  },
+  "forbidden": [
+    "blocking_on_one_missing_path_without_provider_closure",
+    "using_historical_success_as_current_provider_availability",
+    "arbitrary_server_tree_inventory",
+    "automatic_alternate_toolchain_selection",
+    "DUT_compile_or_simulation_from_provider_probe",
+    "make_wrapper_without_exact_just_print_resolution",
+    "reusing_probe_across_runtime_or_semantic_fingerprint_drift",
+    "treating_provider_readiness_as_DUT_compile_or_simulation_success"
+  ],
+  "frozen_real_evidence": [
+    "serialized_conv_v88b_same_sim_ver_tokens_compile_success_and_DW_resolution",
+    "serialized_conv_v89b_sim_ver_unreadable_then_DW_URMI",
+    "gap_v60_sim_ver_unreadable_then_DW_URMI",
+    "native_conv_p45_sim_ver_unreadable_then_DW_URMI",
+    "native_conv_p45_stale_dump_fsdb_argv_receipt",
+    "native_conv_p45_incomplete_compile_failure_return_core",
+    "gap_v60_platform_prose_selected_before_urmi"
+  ],
+  "claim_boundary": "Provider lookup readiness and compile-not-started return completeness only; no package config, DUT compile, simulation, natural terminal, formal-D, E4 or E5 claim."
+}

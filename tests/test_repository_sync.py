@@ -115,6 +115,7 @@ class RepositorySyncTests(unittest.TestCase):
             "ndp-sim-ref",
             "NDPFuncModel",
             "ndp-sim",
+            "Trassic2.0_RTL",
         })
         self.assertEqual(len(lock.external_evidence), 1)
         evidence = lock.external_evidence[0]

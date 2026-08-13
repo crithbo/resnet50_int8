@@ -1,0 +1,67 @@
+{
+  "schema": "current-family-pointer-registry-v1",
+  "families": {
+    "conv_native_four_lane": {
+      "record_globs": [
+        "*conv_native_four_lane*.md"
+      ]
+    },
+    "conv_serialized_node0004": {
+      "record_globs": [
+        "*conv_node0004*.md"
+      ]
+    },
+    "dequantize_linear": {
+      "record_globs": [
+        "*dequantize_linear*.md",
+        "*dequant_node0077*.md"
+      ]
+    },
+    "gap_node0071": {
+      "record_globs": [
+        "*gap_node0071*.md",
+        "*global_average_pool*.md"
+      ]
+    },
+    "maxpool_uint8": {
+      "record_globs": [
+        "*maxpool*.md"
+      ]
+    },
+    "qlinear_matmul_node0075": {
+      "record_globs": [
+        "*qlinear_matmul*.md",
+        "*node0075*.md"
+      ]
+    },
+    "qlinearadd_node0007": {
+      "record_globs": [
+        "*qlinearadd_node0007*.md",
+        "*qadd_node0007*.md"
+      ]
+    },
+    "quantize_linear": {
+      "record_globs": [
+        "*quantize_linear*.md"
+      ]
+    },
+    "requantize_uint8": {
+      "record_globs": [
+        "*requant*.md"
+      ]
+    },
+    "view_flatten": {
+      "record_globs": [
+        "*view_flatten*.md",
+        "*flatten_view*.md"
+      ]
+    }
+  },
+  "selection_contract": {
+    "storage_index_is_package_authority": true,
+    "pending_max_per_family": 1,
+    "record_must_contain_exact_package_base": true,
+    "latest_package_record_order": "YYYYMMDD_PREFIX_THEN_FILENAME",
+    "plan_is_mutable_provenance_only": true
+  }
+}

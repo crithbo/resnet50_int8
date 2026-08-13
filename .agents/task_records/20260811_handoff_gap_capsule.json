@@ -1,0 +1,115 @@
+{
+  "active_artifact_receipts": [
+    {
+      "bytes": 5871,
+      "path": ".agents/task_records/20260808_gap_node0071_v54_return_wait_rtl_fix.md",
+      "sha256": "eb2bbe6a3ae04baa9b76825008e6091151dae81733cf191f6e876d0cf7b57c28"
+    }
+  ],
+  "authority": {
+    "new_owner_before_activation": "READ_ONLY_ACCEPTANCE",
+    "old_owner_after_activation": "RETIRED_READ_ONLY",
+    "overlap_writers_allowed": false
+  },
+  "claim_boundary": "Ownership continuity only; no package, server, RTL, config or result claim.",
+  "current_mainline_thread_id": "019ff027-e7db-72a3-b282-cfad8708da05",
+  "current_task_snapshot": {
+    "next_action": "remain read-only until explicit RTL authorization",
+    "objective": "preserve the proven GAP functional RTL root and frozen v54 evidence",
+    "pointer": {
+      "bytes": 5871,
+      "path": ".agents/task_records/20260808_gap_node0071_v54_return_wait_rtl_fix.md",
+      "sha256": "eb2bbe6a3ae04baa9b76825008e6091151dae81733cf191f6e876d0cf7b57c28"
+    },
+    "status": "WAIT_RTL_FIX"
+  },
+  "first_action": "acknowledge activation and remain WAIT_RTL_FIX without building a package",
+  "handoff_id": "handoff-476c7d8501c53eda06710e600156dfa5",
+  "in_flight_snapshot": {
+    "lease_id": null,
+    "package": null,
+    "return_zip": null,
+    "server_root": null,
+    "state": "NONE"
+  },
+  "new_thread_id": "019ff02d-8225-7d21-9779-e46ce4130572",
+  "old_thread_id": "019fa366-cb1f-7ae2-880c-f527be0680cd",
+  "owner_epoch_after": 2,
+  "owner_epoch_before": 1,
+  "pending_messages": [
+    "current mainline is 019ff027-e7db-72a3-b282-cfad8708da05",
+    "no server/RTL/config/numeric action during ownership activation"
+  ],
+  "reason": "planned full-project session refresh after active-rule orthogonalization",
+  "registry_before": {
+    "bytes": 11867,
+    "path": "contracts/current_session_owner_registry_v1.json",
+    "sha256": "da14072292a23b9aa010d3f8c8e1277ed59480edeec1148982e72337a4fe9a2d"
+  },
+  "registry_epoch_before": 2,
+  "required_read_receipts": [
+    {
+      "bytes": 18926,
+      "path": ".agents/agent.md",
+      "sha256": "7a6fe116109b2c7953f3e1ff223160801e1d4df4ac6bfffc394c5ce4598294e4"
+    },
+    {
+      "bytes": 44636,
+      "path": ".agents/plan.md",
+      "sha256": "4f04b3e207a5fd200b6bbc6e66b6c0a312d1e4f24317cd9266d31d2018aecc13"
+    },
+    {
+      "bytes": 7874,
+      "path": ".agents/rules/生成前必读索引.md",
+      "sha256": "a69fc20ca32891912fb85b6060c743b7e25dbfc1ff690591432ccf1c4516bc86"
+    },
+    {
+      "bytes": 8677,
+      "path": ".agents/rules/会话转接与所有权规则.md",
+      "sha256": "9e3859dff32de42f0964ff3038ab7b78c84d142a24016ee552c706ef01e529b9"
+    },
+    {
+      "bytes": 11867,
+      "path": "contracts/current_session_owner_registry_v1.json",
+      "sha256": "da14072292a23b9aa010d3f8c8e1277ed59480edeec1148982e72337a4fe9a2d"
+    },
+    {
+      "bytes": 9894,
+      "path": "contracts/active_rule_registry_v1.json",
+      "sha256": "bf014463ea4532cb7ce4b95267ee35f8b47931a76df8eee92497aed31456de92"
+    },
+    {
+      "bytes": 37680,
+      "path": ".agents/rules/算子配置规则.md",
+      "sha256": "dc5243226bacde799b368d37fb9eb656e6b7e3d33a0a2932ae72ab35415ae3e1"
+    },
+    {
+      "bytes": 14974,
+      "path": ".agents/rules/NDP硬件字段语义.md",
+      "sha256": "603d57805bc5a5bdfca7406c402bc94db60c06ea6682493d672abb91671b1055"
+    },
+    {
+      "bytes": 144937,
+      "path": ".agents/rules/服务器测试包生成规则.md",
+      "sha256": "727f5dcb4a47fe054a13ed09b5a150f05de71148f820602a34b3ea38a4bbfe6a"
+    },
+    {
+      "bytes": 8116,
+      "path": ".agents/rules/GAP_int32_mac_bypass_rules.md",
+      "sha256": "4c3a88b8c6967812b0b64a550bb92a45117106f34996102335dc26fa1a211f8b"
+    },
+    {
+      "bytes": 6934,
+      "path": ".agents/rules/精确UINT8量化尾专项规则.md",
+      "sha256": "fef9ebcb1621e74ddd9aef0f936c5c8ce1fcf34c2be9000b1deeb4b11045ea4f"
+    },
+    {
+      "bytes": 3298,
+      "path": ".agents/rules/最小双Stage生命周期规则.md",
+      "sha256": "821b8b04b0e33d0a93e06a3a1bca8307b417bcb63f109cf12414891e9a0bc171"
+    }
+  ],
+  "role_id": "family.gap",
+  "role_kind": "FAMILY_OWNER",
+  "schema": "session-handoff-capsule-v1"
+}

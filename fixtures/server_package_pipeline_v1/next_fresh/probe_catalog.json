@@ -1,0 +1,4 @@
+{
+  "schema": "server-source-bound-probe-catalog-v1",
+  "fixture": "pipeline-presence-only; semantic validation is carried by the bound cheap-check receipt"
+}

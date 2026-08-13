@@ -1,0 +1,5 @@
+{
+  "schema": "server-package-pipeline-shadow-predicate-v1",
+  "event": "accepted_valid_and_ready",
+  "level_is_not_event": true
+}

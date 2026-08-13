@@ -1,0 +1,219 @@
+{
+  "schema": "current-pending-one-return-matrix-v1",
+  "source_state": {
+    "storage_index_sha256": "fc34f06104e3caf9657a7d2f2a9ecf88b4e86b9752345fe18f4a1861be030d35",
+    "serialized_conv_v60_disposition": "SUPERSEDED_BY_FORMAL_RETURN_AND_V61"
+  },
+  "packages": [
+    {
+      "family": "gap_node0071",
+      "package_base": "r5_n71_gap_v48_multislice_pipeline_diag",
+      "zip_sha256": "122257a3b7441e9af2a036f8d8fff1bb7339f014f9c6177f607587525ef359d3",
+      "task_record": ".agents/task_records/20260807_gap_node0071_v47_return_to_v48_multislice_pipeline_release.md",
+      "task_record_sha256": "ebceced290208cb9c2bcd2deb029fdef95565e75ede4d8fd49d5faf2adb6d13c",
+      "evidence_members": [
+        "r5_n71_gap_v48_multislice_pipeline_diag/package_tools/gap_node0071_multislice_pipeline_decision.py",
+        "r5_n71_gap_v48_multislice_pipeline_diag/TEST_PACKAGE_MANIFEST.json"
+      ],
+      "scope": "ALL_SLICES_CURRENT_PIPELINE_FIRST_MISSING_PLUS_TERMINAL_RESULT",
+      "candidates": [
+        {
+          "candidate_id": "CFG_START_OR_FINISH_MISSING",
+          "distinguished_by": ["cfg_start", "cfg_finish"],
+          "decision": "first_missing is cfg_start or cfg_finish",
+          "evidence_tokens": ["cfg_start", "cfg_finish", "first_missing"]
+        },
+        {
+          "candidate_id": "MSE0_OR_MSE3_ACCEPTANCE",
+          "distinguished_by": ["mse0", "mse3"],
+          "decision": "first_missing is mse0 or mse3",
+          "evidence_tokens": ["MSE0_OR_MSE3_ACCEPTANCE", "mse0", "mse3"]
+        },
+        {
+          "candidate_id": "GA_ACCEPTED_INPUT_OR_OUTPUT",
+          "distinguished_by": ["ga_in", "ga_out"],
+          "decision": "first_missing is ga_in or ga_out",
+          "evidence_tokens": ["GA_ACCEPTED_INPUT_OR_OUTPUT", "ga_in", "ga_out"]
+        },
+        {
+          "candidate_id": "MSE4_REQUEST_OR_WDATA_PAIR",
+          "distinguished_by": ["mse4_req", "mse4_wdata"],
+          "decision": "first_missing is mse4_req or mse4_wdata",
+          "evidence_tokens": ["MSE4_REQUEST_OR_WDATA_PAIR", "mse4_req", "mse4_wdata"]
+        },
+        {
+          "candidate_id": "SLICE_FINISH_OR_FINAL_RESULT",
+          "distinguished_by": ["finish", "natural_terminal", "formal_d_48"],
+          "decision": "all pipeline checkpoints complete, then terminal/result conjunction adjudicates closure",
+          "evidence_tokens": ["finish", "Natural terminal", "48 formal D"]
+        }
+      ],
+      "deferred_after_this_return": ["E4", "E5"]
+    },
+    {
+      "family": "qlinearadd_node0007",
+      "package_base": "r5_qadd_n7_fullchain_v45",
+      "zip_sha256": "913e6831d47b9673f4c50e0efe28ba95fce14a2b685278c9e19755c5797f113a",
+      "task_record": ".agents/task_records/20260807_qlinearadd_node0007_v37_to_v45_fullchain_release.md",
+      "task_record_sha256": "7b4e6422a4695256f44ec3b57b6db62933a837c0a0680a357cc3a9e62ef3e9b4",
+      "evidence_members": [
+        "r5_qadd_n7_fullchain_v45/diagnostics/candidate_observation_matrix.json",
+        "r5_qadd_n7_fullchain_v45/diagnostics/progress_contract.json"
+      ],
+      "scope": "SIX_STAGE_FULL_CHAIN_NATURAL_TERMINAL_AND_EXACT_28D",
+      "candidates": [
+        {
+          "candidate_id": "MSE0_INDEX_PAIR_STARVATION",
+          "distinguished_by": ["mse0_valid_ready_hs", "mse0_match_queue", "mse0_req_rdata"],
+          "decision": "A-side pair delivery is the first stopped qualified boundary",
+          "evidence_tokens": ["MSE0_INDEX_PAIR_STARVATION"]
+        },
+        {
+          "candidate_id": "MSE1_INDEX_PAIR_STARVATION",
+          "distinguished_by": ["mse1_valid_ready_hs", "mse1_match_queue", "mse1_req_rdata"],
+          "decision": "B-side pair delivery is the first stopped qualified boundary",
+          "evidence_tokens": ["MSE1_INDEX_PAIR_STARVATION"]
+        },
+        {
+          "candidate_id": "BUFFER0_DELIVERY_STALL",
+          "distinguished_by": ["mse0_buf", "buffer0_arm", "buffer0_array"],
+          "decision": "A-side reaches buffer but is not delivered to GA",
+          "evidence_tokens": ["BUFFER0_DELIVERY_STALL"]
+        },
+        {
+          "candidate_id": "BUFFER2_DELIVERY_STALL",
+          "distinguished_by": ["mse1_buf", "buffer2_arm", "buffer2_array"],
+          "decision": "B-side reaches buffer but is not delivered to GA",
+          "evidence_tokens": ["BUFFER2_DELIVERY_STALL"]
+        },
+        {
+          "candidate_id": "GA_OPERAND_OR_TAG_ASYMMETRY",
+          "distinguished_by": ["ga0_capture", "ga1_capture", "ga_pair", "ga_accept"],
+          "decision": "operand capture or pair-tag rejection is the first divergence",
+          "evidence_tokens": ["GA_OPERAND_CAPTURE_ASYMMETRY", "GA_PAIR_TAG_MASK_REJECT"]
+        },
+        {
+          "candidate_id": "GA_OUTPUT_STALL",
+          "distinguished_by": ["ga_accept", "ga_output"],
+          "decision": "GA accepts paired operands but output stops",
+          "evidence_tokens": ["GA_OUTPUT_STALL"]
+        },
+        {
+          "candidate_id": "SIX_STAGE_TERMINAL_OR_28D",
+          "distinguished_by": ["ordered_six", "natural_terminal", "formal_d_28"],
+          "decision": "ordered six stages complete, then natural terminal and exact final UINT8 28D jointly adjudicate",
+          "evidence_tokens": ["stage_count", "op_tail_round", "natural six-stage terminal", "28-D"]
+        }
+      ],
+      "deferred_after_this_return": ["E4", "E5"]
+    },
+    {
+      "family": "conv_serialized_node0004",
+      "package_base": "r5_n4_hw_v61_lcmap_argv_fix",
+      "zip_sha256": "c78e62cde4f8e185f801900773117017982920b9a479996a1c31af8a1dae1e96",
+      "task_record": ".agents/task_records/20260807_conv_node0004_v60_return_v61_lcmap_argv_successor.md",
+      "task_record_sha256": "4c9590a523ed7c8dfead51e30f89cdf9f80dfe086628eed5f375936b04adff1e",
+      "evidence_members": [
+        "r5_n4_hw_v61_lcmap_argv_fix/provenance/v50_return_v51_lc13_lc14_diag.json"
+      ],
+      "scope": "MAPPED_LOGICAL_LC13_TO_LC14_TO_LC15_FIRST_DIVERGENCE_PLUS_TERMINAL_RESULT",
+      "candidates": [
+        {
+          "candidate_id": "LC13_DOWNSTREAM_BACKPRESSURE",
+          "distinguished_by": ["lc13_held_valid", "lc13_destination_ready"],
+          "decision": "mapped LC13 holds output while its actual destination is not ready",
+          "evidence_tokens": ["LC13_DOWNSTREAM_BACKPRESSURE"]
+        },
+        {
+          "candidate_id": "LC14_SOURCE_OR_SAME_GOTTEN_SUPPRESSION",
+          "distinguished_by": ["lc14_source", "lc14_same_gotten", "lc14_input_ready"],
+          "decision": "mapped LC14 capture is suppressed before counter input",
+          "evidence_tokens": ["LC14_SOURCE_OR_SAME_GOTTEN_SUPPRESSION"]
+        },
+        {
+          "candidate_id": "LC14_COUNTER_NO_RELEASE",
+          "distinguished_by": ["lc14_counter_write", "lc14_counter_state", "lc14_output"],
+          "decision": "mapped LC14 counter accepts input but does not release output",
+          "evidence_tokens": ["LC14_COUNTER_NO_RELEASE"]
+        },
+        {
+          "candidate_id": "LC13_LOCAL_TERMINAL_FAILURE",
+          "distinguished_by": ["lc13_config", "lc13_tag", "lc13_output_count"],
+          "decision": "mapped LC13 local sequence never emits its terminal value",
+          "evidence_tokens": ["LC13_LOCAL_TERMINAL_FAILURE"]
+        },
+        {
+          "candidate_id": "LC14_TO_LC15_BACKPRESSURE",
+          "distinguished_by": ["lc14_output", "lc15_capture", "lc15_output"],
+          "decision": "mapped LC14 releases but mapped LC15 does not accept or release",
+          "evidence_tokens": ["LC14_TO_LC15_BACKPRESSURE"]
+        },
+        {
+          "candidate_id": "NATURAL_TERMINAL_OR_FORMAL_D_320",
+          "distinguished_by": ["natural_terminal", "formal_d_320"],
+          "decision": "mapped chain progresses, then natural terminal and exact 320D jointly adjudicate closure",
+          "evidence_tokens": ["Natural terminal", "Formal D", "320"]
+        }
+      ],
+      "deferred_after_this_return": ["E4", "E5"]
+    },
+    {
+      "family": "conv_native_four_lane",
+      "package_base": "r5_n4_0cc_p15_installonly",
+      "zip_sha256": "e323e3394124c9b8b655037ac916cc3e3510360cb0097f1f91f60bfb9508c9b8",
+      "task_record": ".agents/task_records/20260807_conv_native_four_lane_p14_to_p15_install_only_v2_release.md",
+      "task_record_sha256": "2a67f1ca992192daa51726ef617b61791ccec6bbfc20172cc806dff89b1ba23e",
+      "evidence_members": [
+        "r5_n4_0cc_p15_installonly/diagnostics/public_order_profile.json",
+        "r5_n4_0cc_p15_installonly/diagnostics/triggered_profile.json"
+      ],
+      "scope": "C0_CURRENT_FIRST_DIVERGENCE_ONLY",
+      "candidates": [
+        {
+          "candidate_id": "NCONV_ARM_NONACCEPT",
+          "distinguished_by": ["memory_request", "arm_request", "arm_response"],
+          "decision": "requests advance while ARM response acceptance stops",
+          "evidence_tokens": ["nconv_arm_nonaccept"]
+        },
+        {
+          "candidate_id": "NCONV_ARM_TERMINAL_MISSING",
+          "distinguished_by": ["arm_response", "arm_finish"],
+          "decision": "ARM accepts response traffic but finish remains zero",
+          "evidence_tokens": ["nconv_arm_terminal_missing"]
+        },
+        {
+          "candidate_id": "NCONV_SA_OUTPUT_GENERATION_STOP",
+          "distinguished_by": ["sa_input", "sa_output_raw_change", "sa_output"],
+          "decision": "accepted SA inputs advance but raw SA output is absent",
+          "evidence_tokens": ["nconv_sa_output_generation_stop"]
+        },
+        {
+          "candidate_id": "NCONV_SA_TO_BUFFER5_BACKPRESSURE",
+          "distinguished_by": ["sa_output_raw_change", "sa_output_buffer_ready", "sa_output"],
+          "decision": "raw SA output is held while Buffer-facing ready is low",
+          "evidence_tokens": ["nconv_sa_to_buffer5_backpressure"]
+        },
+        {
+          "candidate_id": "NCONV_MSE4_CONSUMER_STALL",
+          "distinguished_by": ["sa_output", "mse4_index", "buffer5_write"],
+          "decision": "SA output advances beyond MSE4 accepted index progress",
+          "evidence_tokens": ["nconv_mse4_consumer_stall"]
+        },
+        {
+          "candidate_id": "NCONV_SA_LAST_CLASSIFIER_GAP",
+          "distinguished_by": ["sa_input", "sa_output", "slice_finish"],
+          "decision": "terminal input tag is visible but output-last or slice finish is absent",
+          "evidence_tokens": ["nconv_sa_last_classifier_gap"]
+        },
+        {
+          "candidate_id": "NCONV_NATURAL_C0",
+          "distinguished_by": ["arm_finish", "sa_output", "mse4_index", "slice_finish"],
+          "decision": "all qualified c0 terminal boundaries occur",
+          "evidence_tokens": ["nconv_natural_c0"]
+        }
+      ],
+      "deferred_after_this_return": ["FULL_27_RUN_NATURAL_TERMINAL", "FORMAL_D_320", "E4", "E5"]
+    }
+  ],
+  "claim_boundary": "Read-only audit of exact current pending ZIPs and package-linked records. It does not modify or rebuild a package, run a family validator, upload, run a server, or promote E3/E4/E5."
+}

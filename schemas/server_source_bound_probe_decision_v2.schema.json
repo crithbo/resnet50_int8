@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "server-source-bound-probe-decision-v2",
+  "title": "Exact-instance source-bound diagnostic decision",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema", "decision", "reason", "matching_candidate_ids",
+    "observations", "candidate_match_count", "enabled_boundary_instances",
+    "missing_enabled_boundaries", "missing_required_summaries",
+    "raw_record_count", "accepted_target_record_count",
+    "ignored_non_target_record_count", "ignored_unknown_boundary_record_count",
+    "observed_instances", "live_event_count", "record_grouping_key",
+    "errors", "natural_terminal_claimed", "formal_d_claimed", "claim_boundary"
+  ],
+  "properties": {
+    "schema": {"const": "server-source-bound-probe-decision-v2"},
+    "decision": {"type": "string", "minLength": 1},
+    "reason": {"type": "string", "minLength": 1},
+    "matching_candidate_ids": {"type": "array", "maxItems": 1, "items": {"type": "string"}},
+    "observations": {"type": "object", "additionalProperties": {"type": "boolean"}},
+    "candidate_match_count": {"type": "integer", "minimum": 0, "maximum": 1},
+    "enabled_boundary_instances": {"type": "array", "items": {"type": "string"}},
+    "missing_enabled_boundaries": {"type": "array", "items": {"type": "string"}},
+    "missing_required_summaries": {"type": "array", "items": {"type": "string"}},
+    "raw_record_count": {"type": "integer", "minimum": 0},
+    "accepted_target_record_count": {"type": "integer", "minimum": 0},
+    "ignored_non_target_record_count": {"type": "integer", "minimum": 0},
+    "ignored_unknown_boundary_record_count": {"type": "integer", "minimum": 0},
+    "observed_instances": {"type": "object", "additionalProperties": {"type": "array", "items": {"type": "string"}}},
+    "live_event_count": {"type": "object", "additionalProperties": {"type": "integer", "minimum": 0}},
+    "record_grouping_key": {"const": ["boundary_id", "canonical_instance", "seq"]},
+    "errors": {"type": "array", "items": {"type": "string"}},
+    "natural_terminal_claimed": {"const": false},
+    "formal_d_claimed": {"const": false},
+    "claim_boundary": {"type": "string", "minLength": 1}
+  }
+}

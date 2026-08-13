@@ -1,0 +1,7 @@
+{
+  "schema": "server-package-cheap-check-result-v1",
+  "gate_id": "storage_rotation",
+  "pass": true,
+  "errors": [],
+  "warnings": []
+}

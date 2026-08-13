@@ -1,0 +1,150 @@
+{
+  "schema": "server_package_runtime_layout_two_conv_dispatch_v1",
+  "status": "PUBLIC_GATE_BUGFIX_COMPLETE_TWO_CONV_REDISPATCH_REQUIRES_MAINLINE_SYNC",
+  "target_mainline_task": "019fbec2-fe93-7e03-9314-cff6f222f33d",
+  "owner_task": "019fd276-14c5-7800-94db-87ebfb9ce632",
+  "scope": {
+    "included_families": [
+      {
+        "family": "conv_native_four_lane",
+        "held_current_identity": "p14",
+        "historical_failure_identity": "p12",
+        "failure_mechanism": "p14 stopped in local preflight because the old shared helper incorrectly required install/codex_runs to pre-exist; early finalizer returned a valid partial receipt"
+      },
+      {
+        "family": "conv_node0004_serialized",
+        "held_current_identity": "v59",
+        "historical_failure_identity": "v52",
+        "failure_mechanism": "v59 was not run and is held because it carries the same over-strict secondary-parent precondition"
+      }
+    ],
+    "not_retroactive": [
+      "global_average_pool current package",
+      "qlinearadd current package",
+      "any package already pending, running, returned, or under current return adjudication"
+    ]
+  },
+  "required_current_receipts": {
+    "server_rule": {
+      "path": ".agents/rules/服务器测试包生成规则.md",
+      "bytes": 93199,
+      "sha256": "160f42cb15a4972bd3e57d05912fad0e504279c47026bd4b23c9f14f8aa7601d"
+    },
+    "generation_index": {
+      "path": ".agents/rules/生成前必读索引.md",
+      "bytes": 14476,
+      "sha256": "56e4546f28ef4b679654676f44e33eb1741bdfccaeaff0cc535b400715482920"
+    },
+    "optimizer_rule": {
+      "path": ".agents/rules/整网测试收敛优化专项规则.md",
+      "bytes": 11713,
+      "sha256": "8a6de7c2779b269dbe8eb4ee2e535172f2832039051151820af2e80c06d73dc6"
+    },
+    "layout_helper": {
+      "path": "tools/server_package_runtime_layout.py",
+      "bytes": 11014,
+      "sha256": "7969ca56e13a7e0a0a83bdfd48d1409d28eef2ae0fd63ad08f0ec5c39e2d848a"
+    },
+    "layout_validator": {
+      "path": "tools/validate_server_package_runtime_layout.py",
+      "bytes": 29102,
+      "sha256": "66f779d9d472dabaf9a3d2f2b09b472d6bb6ea575865e223a8e80c11818813a5"
+    },
+    "layout_schema": {
+      "path": "schemas/server_package_runtime_layout_v1.schema.json",
+      "bytes": 7070,
+      "sha256": "529864182fc57bd3af47fc31dcb5697420b8f656303270e0b0ee862379faf79d"
+    },
+    "harness_schema": {
+      "path": "schemas/server_package_runtime_layout_harness_v1.schema.json",
+      "bytes": 4527,
+      "sha256": "9f77cd5921ff3b4e0f692425aaa27c6f6f7a18466c414e7bcc89a00b56ec67c3"
+    }
+  },
+  "family_rebuild_contract": {
+    "fresh_identity_required": true,
+    "server_package_build_profile": {
+      "lifecycle": "NEXT_FRESH_SUCCESSOR",
+      "runtime_layout_disposition": "blocking_applicable",
+      "family_validator_remains_authoritative": true
+    },
+    "final_zip_required_members": [
+      "SERVER_RUNTIME_LAYOUT_CONTRACT.json",
+      "package_tools/server_package_runtime_layout.py"
+    ],
+    "runtime_layout": {
+      "required_preexisting_parent_dirs": [
+        "install"
+      ],
+      "package_creatable_parent_dirs": [
+        "install/cfg_pkg",
+        "install/codex_runs"
+      ],
+      "cfg_root": "$server_root/install/cfg_pkg/<install_name>",
+      "run_root": "$server_root/install/codex_runs/<package_id>/<attempt>",
+      "evidence_root": "$server_root/install/codex_runs/<package_id>/<attempt>/evidence",
+      "compile_root": "$server_root/install/codex_runs/<package_id>/<attempt>/compile",
+      "ndp_root_direct_name_type_exact_set_unchanged": true,
+      "external_package_state_forbidden": true,
+      "fixed_atomic_return_root": "/home/panqs/ndp/simresult"
+    },
+    "required_exact_final_zip_checks": [
+      "manifest longest projected relative path exact string equals recomputed longest string",
+      "manifest declared longest chars equals len of recomputed longest string",
+      "manifest max projected absolute chars equals root budget plus slash plus recomputed longest chars",
+      "every read-input SCA path resolves from TB cwd server_root to an exact payload projected below cfg_root",
+      "runner SCA plusargs resolve to the projected SCA members below cfg_root",
+      "only real non-symlink install must pre-exist; cfg_pkg and codex_runs may be safely created by the package",
+      "all package-owned cfg/run/evidence/compile paths remain below install",
+      "same-name file or symlink, path escape, and non-fresh package/attempt leaf fail closed without deleting or overwriting unknown items",
+      "root direct name/type exact-set is unchanged in every safe-harness scenario",
+      "shared finalizer is armed before the first fallible path/package/install preflight",
+      "normal, preflight_fail, compile_fail, HUP, INT and TERM publish the required fixed-result receipt"
+    ],
+    "required_negative_controls": [
+      "wrong install prefix",
+      "missing matrix or bitstream",
+      "wrong declared longest length including the 112-versus-115 regression",
+      "external work root",
+      "new NDP-root direct entry",
+      "late finalizer arm",
+      "fixed result root drift",
+      "install absent, file or symlink",
+      "cfg_pkg or codex_runs same-name file or symlink"
+    ],
+    "validation_efficiency_policy": {
+      "blocking_scope": "ONLY_SERVER_START_INPUT_OPEN_STATE_SAFETY_OR_RETURN_CAUSAL_FAILURES",
+      "aggregate_all_cheap_errors_in_one_pass": true,
+      "shared_helper_regression_reused_without_per_family_rematerialization": true,
+      "secondary_parent_initial_absence": "RECORD_ONLY",
+      "manual_server_mkdir": "FORBIDDEN",
+      "noncausal_environment_or_identity_notes": "RECORD_ONLY"
+    },
+    "p14_permanent_regression": {
+      "fixture": "fixtures/server_package_runtime_layout_v1/p14_preflight_return_regression.json",
+      "command": "bash PREPARE_AND_RUN.sh /home/panqs/ndp/NDP_copy02",
+      "partial_return_path": "/home/panqs/ndp/simresult/r5_n4_0cc_p14_install_return.zip",
+      "partial_return_bytes": 2264,
+      "partial_return_sha256": "c08005d0a3daa9a8417488738ae3b67c77ab7b7a055d9f207ac722987060fd6d",
+      "duplicate_absent": true,
+      "early_finalizer": "PASS"
+    },
+    "family_specific_freeze": {
+      "workload_bytes": "UNCHANGED_EXCEPT_SCA_PATH_MATERIALIZATION_REQUIRED_BY_THIS_LAYOUT_FIX",
+      "config_numeric_qparam_golden": "BYTE_FROZEN",
+      "observer_and_functional_rtl": "BYTE_FROZEN",
+      "active_ndp_sim": "UNCHANGED",
+      "mapping_bitstream_execplan_sca_generation": "NO_REGENERATION_EXCEPT_MECHANICAL_SCA_PATH_PREFIX_BINDING",
+      "server_action": "FORBIDDEN_DURING_LOCAL_REBUILD"
+    }
+  },
+  "release_condition": {
+    "shared_runtime_layout_report_pass": true,
+    "shared_runtime_layout_errors": 0,
+    "family_final_zip_audit_pass": true,
+    "release_gate_matrix_runtime_layout_pass": true,
+    "package_storage_rotation_required_after_all_local_gates": true,
+    "server_upload_run_or_lease": false
+  },
+  "claim_boundary": "This redispatch authorizes only the two family owners, after mainline synchronization, to reconstruct fresh local successors of p14 and held v59 with the corrected install-only precondition. It does not authorize config/numeric/RTL/ISA/hardware changes, active ndp-sim changes, upload, server execution, lease, E3, E4 or E5 claims."
+}

@@ -1,0 +1,217 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "server_compile_environment_gate_v1.schema.json",
+  "title": "Provider-aware server compile closure and compile-failure receipts",
+  "oneOf": [
+    {"$ref": "#/$defs/request"},
+    {"$ref": "#/$defs/receipt"},
+    {"$ref": "#/$defs/probeReceipt"},
+    {"$ref": "#/$defs/reuseReceipt"},
+    {"$ref": "#/$defs/coreAuditRequest"},
+    {"$ref": "#/$defs/coreAuditReceipt"}
+  ],
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "argvBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["form"],
+      "properties": {
+        "form": {"enum": ["pair", "plus_prefix", "exact_token"]},
+        "option": {"type": "string"},
+        "prefix": {"type": "string"}
+      }
+    },
+    "providerCandidate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "kind", "path", "argv_bindings"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "kind": {"enum": ["source_directory", "source_file", "precompiled_library"]},
+        "path": {"type": "string", "minLength": 1},
+        "argv_bindings": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/argvBinding"}}
+      }
+    },
+    "providerSet": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "required_modules", "candidates"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "required_modules": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+        "candidates": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/providerCandidate"}}
+      }
+    },
+    "resolver": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["method", "argv", "stdout_path", "stdout_sha256", "compiler_basename", "exit_code"],
+      "properties": {
+        "method": {"const": "make_just_print"},
+        "argv": {"type": "array", "minItems": 2, "items": {"type": "string"}},
+        "stdout_path": {"type": "string", "minLength": 1},
+        "stdout_sha256": {"$ref": "#/$defs/sha256"},
+        "compiler_basename": {"type": "string", "minLength": 1},
+        "exit_code": {"const": 0}
+      }
+    },
+    "request": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schema", "package_id", "family", "execution_group", "actual_compile", "semantic_identity", "runtime_context", "provider_sets"],
+      "properties": {
+        "schema": {"const": "server-compile-provider-closure-request-v1"},
+        "package_id": {"type": "string", "minLength": 1},
+        "family": {"type": "string", "minLength": 1},
+        "execution_group": {"type": "string", "minLength": 1},
+        "actual_compile": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["cwd", "argv"],
+          "properties": {
+            "cwd": {"type": "string", "minLength": 1},
+            "argv": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+            "resolver": {"$ref": "#/$defs/resolver"}
+          }
+        },
+        "semantic_identity": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["selected_makefile_sha256", "recursive_source_identity_sha256", "top_filelist_sha256", "compile_environment"],
+          "properties": {
+            "selected_makefile_sha256": {"$ref": "#/$defs/sha256"},
+            "recursive_source_identity_sha256": {"$ref": "#/$defs/sha256"},
+            "top_filelist_sha256": {"$ref": "#/$defs/sha256"},
+            "compile_environment": {"type": "object", "additionalProperties": {"type": ["string", "null"]}}
+          }
+        },
+        "runtime_context": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["execution_epoch", "boot_id", "hostname"],
+          "properties": {
+            "execution_epoch": {"type": "string", "minLength": 1},
+            "boot_id": {"type": "string", "minLength": 1},
+            "hostname": {"type": "string", "minLength": 1},
+            "platform": {"type": "string"},
+            "machine": {"type": "string"}
+          }
+        },
+        "provider_sets": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/providerSet"}},
+        "known_good_compile": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["compile_exit", "resolved_modules", "semantic_fingerprint_sha256"],
+          "properties": {
+            "compile_exit": {"const": 0},
+            "resolved_modules": {"type": "array", "uniqueItems": true, "items": {"type": "string"}},
+            "semantic_fingerprint_sha256": {"$ref": "#/$defs/sha256"}
+          }
+        },
+        "production_probe_receipt": {"anyOf": [{"type": "null"}, {"$ref": "#/$defs/probeReceipt"}]},
+        "probe_spec": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["runtime_root", "cwd", "source_path", "log_path", "argv"],
+          "properties": {
+            "runtime_root": {"type": "string", "minLength": 1},
+            "cwd": {"type": "string", "minLength": 1},
+            "source_path": {"type": "string", "minLength": 1},
+            "log_path": {"type": "string", "minLength": 1},
+            "argv": {"type": "array", "minItems": 1, "items": {"type": "string"}}
+          }
+        }
+      }
+    },
+    "receipt": {
+      "type": "object",
+      "required": ["schema", "pass", "ready_for_full_compile", "disposition", "compile_invoked", "all_errors_collected", "blocking_category", "semantic_fingerprint_sha256", "provider_state_sha256", "reuse_projection_sha256", "provider_sets", "warnings", "errors"],
+      "properties": {
+        "schema": {"const": "server-compile-provider-closure-receipt-v1"},
+        "pass": {"type": "boolean"},
+        "ready_for_full_compile": {"type": "boolean"},
+        "disposition": {"enum": ["MODULE_PROVIDER_CLOSURE_READY", "PROVIDER_PROBE_REQUIRED", "BLOCKED_BEFORE_PROVIDER_PROBE"]},
+        "compile_invoked": {"const": false},
+        "all_errors_collected": {"const": true},
+        "blocking_category": {"const": "server_start"},
+        "semantic_fingerprint_sha256": {"$ref": "#/$defs/sha256"},
+        "provider_state_sha256": {"$ref": "#/$defs/sha256"},
+        "reuse_projection_sha256": {"$ref": "#/$defs/sha256"},
+        "provider_sets": {"type": "array"},
+        "warnings": {"type": "array"},
+        "errors": {"type": "array"}
+      }
+    },
+    "probeReceipt": {
+      "type": "object",
+      "required": ["schema", "semantic_fingerprint_sha256", "provider_state_sha256", "required_modules", "actual_probe_argv", "compile_exit", "unresolved_modules", "dut_compile_invoked", "simulation_invoked", "log_truncated", "pass", "errors"],
+      "properties": {
+        "schema": {"const": "server-compile-provider-probe-receipt-v1"},
+        "semantic_fingerprint_sha256": {"$ref": "#/$defs/sha256"},
+        "provider_state_sha256": {"$ref": "#/$defs/sha256"},
+        "required_modules": {"type": "array", "uniqueItems": true, "items": {"type": "string"}},
+        "actual_probe_argv": {"type": "array", "items": {"type": "string"}},
+        "compile_exit": {"type": ["integer", "null"]},
+        "unresolved_modules": {"type": "array", "items": {"type": "string"}},
+        "dut_compile_invoked": {"const": false},
+        "simulation_invoked": {"const": false},
+        "log_truncated": {"const": false},
+        "pass": {"type": "boolean"},
+        "errors": {"type": "array"}
+      }
+    },
+    "reuseReceipt": {
+      "type": "object",
+      "required": ["schema", "reuse_applicable", "same_reuse_projection", "prior_receipt_valid", "prior_ready", "disposition", "compile_invoked", "blocking_category"],
+      "properties": {
+        "schema": {"const": "server-compile-provider-closure-reuse-receipt-v1"},
+        "reuse_applicable": {"type": "boolean"},
+        "same_reuse_projection": {"type": "boolean"},
+        "prior_receipt_valid": {"type": "boolean"},
+        "prior_ready": {"type": "boolean"},
+        "disposition": {"enum": ["READY_BY_REUSED_PROVIDER_RECEIPT", "BLOCKED_BY_REUSED_PROVIDER_RECEIPT", "FRESH_PROVIDER_PROBE_REQUIRED"]},
+        "compile_invoked": {"const": false},
+        "blocking_category": {"const": "server_start"}
+      }
+    },
+    "coreAuditRequest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schema", "return_root", "required_members", "expected"],
+      "properties": {
+        "schema": {"const": "server-compile-failure-core-audit-request-v1"},
+        "return_root": {"type": "string", "minLength": 1},
+        "actual_argv_pointer": {"type": "string"},
+        "actual_cwd_pointer": {"type": "string"},
+        "required_members": {
+          "type": "object",
+          "required": ["actual_compile_sim_argv", "sim_exit_receipt", "compile_core", "return_core_manifest"],
+          "additionalProperties": {"type": "string", "minLength": 1}
+        },
+        "expected": {
+          "type": "object",
+          "required": ["package_id", "execution_id", "compile_cwd", "compile_argv"],
+          "properties": {
+            "package_id": {"type": "string"},
+            "execution_id": {"type": "string"},
+            "compile_cwd": {"type": "string"},
+            "compile_argv": {"type": "array", "minItems": 1, "items": {"type": "string"}}
+          }
+        }
+      }
+    },
+    "coreAuditReceipt": {
+      "type": "object",
+      "required": ["schema", "pass", "all_errors_collected", "blocking_category", "member_identities", "errors"],
+      "properties": {
+        "schema": {"const": "server-compile-failure-core-audit-receipt-v1"},
+        "pass": {"type": "boolean"},
+        "all_errors_collected": {"const": true},
+        "blocking_category": {"const": "return"},
+        "member_identities": {"type": "object"},
+        "errors": {"type": "array"}
+      }
+    }
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "all_receipts_current": true,
+  "capsule": {
+    "bytes": 4703,
+    "path": ".agents/task_records/20260811_handoff_conv_native_capsule.json",
+    "sha256": "d5d981e0b154fa54e688879465d573e0a0c52aa85cc7f9a84f35bea935733474"
+  },
+  "claim_boundary": "Read-only acceptance only. Authority remains with the old owner until activation.",
+  "conflicts": [],
+  "external_action_taken": false,
+  "first_action": "acknowledge activation, re-read current gate identities, then build the fresh native Conv successor locally",
+  "handoff_id": "handoff-0c0c6ba58da901a9b1e855e159b84187",
+  "new_thread_id": "019ff02d-974d-7c72-a4d5-de8dbf4ae60c",
+  "registry_observed": {
+    "bytes": 11867,
+    "path": "contracts/current_session_owner_registry_v1.json",
+    "sha256": "3d943ed00d67e4e913ca97bd591f75c75b7d2914ed7c4b60f5f80a58d45a5fa1"
+  },
+  "role_id": "family.conv.native",
+  "schema": "session-handoff-acceptance-v1",
+  "snapshot_understood": true,
+  "status": "ACCEPTED_READ_ONLY"
+}

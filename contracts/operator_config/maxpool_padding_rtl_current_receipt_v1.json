@@ -1,0 +1,43 @@
+{
+  "schema": "maxpool-padding-rtl-current-receipt-v1",
+  "status": "CURRENT_CLOUD_AUTHORITY_AND_LOCAL_MIRROR_MATCH",
+  "legacy_contract_bindings": [
+    {
+      "path": "contracts/maxpool_uint8_zero_padding_contract.json",
+      "sha256": "45389ea48820cce1007d952bd9b78256d11cba60c4adba52b20be9966df47c59",
+      "contract_sha256": "f67d825703784800b946fed4a4b99e286e055f219f46bcbb96a72412a688d83c"
+    },
+    {
+      "path": "contracts/maxpool_node0002_zero_padding_contract.json",
+      "sha256": "b2455d437e2b2d359f9d0cb4cc0bb279d11b5aa8e187320f4440018fc9cde233",
+      "contract_sha256": "6939df36a3012291ca1faa88b1d3ebc30fe90143e524c8208137bedd3ab948c0"
+    }
+  ],
+  "cloud_authority_checkout": {
+    "repository": "https://github.com/xlsjdjdk/Trassic2.0_RTL.git",
+    "commit": "0ccae916ef61904a64d6cf8ec1d1931b45e428d8",
+    "path": "Trassic2.0_RTL/code/NDP_rtl/Slice/LSU/Stream_Engine/Memory_Stream_Engine/Memory_RD_Stream_Engine/RD_Data_Channel.sv",
+    "size_bytes": 28128,
+    "sha256": "08b35e80c234c6567099c4da5e18ff0a18955e259b7c12bedff72325f744038c"
+  },
+  "local_runtime_mirror": {
+    "path": "NDP_copy01/rtl/Slice/LSU/Stream_Engine/Memory_Stream_Engine/Memory_RD_Stream_Engine/RD_Data_Channel.sv",
+    "size_bytes": 28128,
+    "sha256": "08b35e80c234c6567099c4da5e18ff0a18955e259b7c12bedff72325f744038c",
+    "byte_equal_to_cloud_authority_checkout": true
+  },
+  "padding_substitution": {
+    "source_line_span": [
+      288,
+      290
+    ],
+    "priority": [
+      "padding_mask selects configured padding byte",
+      "branch_or_tail_mask selects zero",
+      "otherwise select DDR input byte"
+    ],
+    "equation": "padding_mask ? padding_value : branch_or_tail_mask ? zero : ddr_data",
+    "source_fragment": "assign rd_data_chl_data[PADDING_INDEX] = rd_chl_queue_rd_padding_mask[PADDING_INDEX] ? mse_padding_reg_value : rd_chl_queue_rd_branch_mask[PADDING_INDEX] ? {`DDR_DATA_MIN_WIDTH{1'b0}} : rd_chl_ib_data[rd_chl_ib_sel][`DDR_DATA_MIN_WIDTH*PADDING_INDEX +: `DDR_DATA_MIN_WIDTH];"
+  },
+  "claim_boundary": "Read-only current RTL identity and padding substitution receipt. No MaxPool numeric-rule, functional-RTL, mapping, bitstream, execplan, SCA, server-package, or dynamic result claim."
+}

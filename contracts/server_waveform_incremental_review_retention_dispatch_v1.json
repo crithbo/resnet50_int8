@@ -1,0 +1,54 @@
+{
+  "schema": "server-waveform-incremental-review-retention-dispatch-v1",
+  "version": 1,
+  "rule_id": "CDA-SERVER-RETURN-WAVEFORM-INCREMENTAL-REVIEW-RETENTION-001",
+  "phase_boundary": {
+    "collection": "Raw attempt-local waveform collection and formal return remain complete, unbounded and non-truncated.",
+    "review": "Query exact signal sets and time windows; write one immutable chunk immediately and atomically advance the small current index.",
+    "retention": "Only after terminal family review plus family and mainline consumption may an unprotected heavy raw return be retired."
+  },
+  "review_order": [
+    "return/waveform/attempt identity and completeness",
+    "existing observer and registered event receipt",
+    "LAST_PROVEN_GOOD to FIRST_DIVERGENCE",
+    "direct source/queue/consumer/backpressure/terminal cone",
+    "expand only while two or more candidates remain"
+  ],
+  "unique_root_stop": {
+    "required": [
+      "exact source and execution identity",
+      "last_proven_good",
+      "first_divergence",
+      "complete transitions for the declared signal/time window",
+      "explicitly closed alternatives",
+      "unreviewed_scope and claim_boundary"
+    ],
+    "effect": "Stop further waveform scanning for the diagnosis objective; do not promote natural terminal, formal D, E3, E4 or E5."
+  },
+  "heavy_raw_slots_per_family_track": {
+    "maximum": 3,
+    "protected_roles": ["CURRENT", "BASELINE", "CAUSAL"],
+    "selection": "Oldest registered entry among terminal-reviewed, family+mainline-consumed, unprotected non-anchor returns.",
+    "when_no_safe_candidate": "Fail closed and require role rebalance or external cold archive; never delete an anchor blindly."
+  },
+  "retirement": {
+    "before_delete": [
+      "recheck exact regular return ZIP under declared storage root",
+      "recheck bytes and SHA",
+      "build deterministic core-only ZIP with every non-waveform member",
+      "embed original return and waveform identities",
+      "write prepared retirement receipt"
+    ],
+    "delete_scope": "One exact consumed local return ZIP only; never a directory, package, task record, report, core return or server state.",
+    "recoverability": "Raw waveform is explicitly not locally recoverable after retirement."
+  },
+  "shared_assets": {
+    "tool": "tools/server_waveform_incremental_review_retention.py",
+    "review_schema": "schemas/server_waveform_incremental_review_v1.schema.json",
+    "retention_schema": "schemas/server_waveform_return_retention_v1.schema.json",
+    "tests": "tests/test_server_waveform_incremental_review_retention.py",
+    "fixtures": "fixtures/server_waveform_incremental_review_retention_v1/"
+  },
+  "activation": "post_adjudication_returns_only; no current package rebuild and no server action",
+  "claim_boundary": "Local review continuity and storage lifecycle only; family diagnosis authority and all dynamic correctness gates remain unchanged."
+}

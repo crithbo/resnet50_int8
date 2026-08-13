@@ -1,0 +1,1657 @@
+{
+  "schema": "server_triggered_causal_observability_profiles_v1",
+  "version": 1,
+  "bundle_scope": "CURRENT_FIVE_DESIGN_BASELINE",
+  "policy": {
+    "application_scope": "NEXT_FRESH_SUCCESSOR_ONLY",
+    "decision_priority": "ONE_ROUND_HYPOTHESIS_DISCRIMINATION_FIRST",
+    "preferred_max_slowdown_percent": 50,
+    "slowdown_limit_hard": false,
+    "over_preferred_action": "REPORT_JUSTIFY_AND_OPTIMIZE_WITHOUT_DROPPING_REQUIRED_BOUNDARIES",
+    "default_log_budget_bytes": 16777216,
+    "default_active_boundary_budget": 64,
+    "default_ring_event_budget": 128,
+    "no_per_event_text_io": true,
+    "full_wave_dump": false,
+    "first_version_auto_terminate": false
+  },
+  "profiles": [
+    {
+      "profile_id": "gap_node0071_triggered_causal_v1",
+      "family": "global_average_pool",
+      "maturity": "DESIGN_READY_BINDING_AND_CALIBRATION_PENDING",
+      "release_eligible": false,
+      "current_package": {
+        "path": "artifacts/operator_config_validation/r5-server-test-packages/r5_n71_gap_v40_lc_supply_conservation_diag.zip",
+        "sha256": "7b3b31e42cc583f74db26972b494685105fc9532f3e4b85cab6e5792cb5e04c4",
+        "disposition": "READ_ONLY_NOT_MODIFIED"
+      },
+      "runtime_behavior": {
+        "read_only": true,
+        "drives_dut": false,
+        "changes_input": false,
+        "changes_ready_backpressure": false,
+        "changes_timing": false,
+        "changes_timeout": false,
+        "host_internal_tensor_replay": false,
+        "stage_gating": true
+      },
+      "performance_budget": {
+        "decision_priority": "ONE_ROUND_HYPOTHESIS_DISCRIMINATION_FIRST",
+        "preferred_max_slowdown_percent": 50,
+        "slowdown_limit_hard": false,
+        "calibration_status": "PENDING_FRESH_BOUND_PROFILE",
+        "calibration_method": "SAME_EVENT_TRACE_AB_WALLCLOCK",
+        "baseline_wall_seconds": null,
+        "instrumented_wall_seconds": null
+      },
+      "storage": {
+        "per_event_text_io": false,
+        "full_wave_dump": false,
+        "max_log_bytes": 16777216,
+        "ring_events": 128,
+        "diagnostic_budget_separation": {
+          "accounting_mode": "SEPARATE_QUALIFIED_AND_NON_PROGRESS",
+          "qualified_event_budget": 128,
+          "non_progress_state_budget": 128,
+          "state_activity_consumes_qualified_budget": false,
+          "state_overflow_policy": "COALESCE_OR_DROP_STATE_ONLY",
+          "late_qualified_event_policy": "REMAINS_ELIGIBLE_AFTER_STATE_BUDGET_EXHAUSTION"
+        },
+        "flush_policy": "TIME0_TRIGGER_STAGE_TRANSITION_EXIT_FINAL_ONLY"
+      },
+      "no_progress": {
+        "qualified_progress_only": true,
+        "qualified_measured_rate_required": true,
+        "auto_terminate": false,
+        "on_trigger": "SNAPSHOT_AND_CONTINUE_EXISTING_TIMEOUT"
+      },
+      "boundaries": [
+        {
+          "boundary_id": "gap.runtime.simulator_started",
+          "role": "infrastructure",
+          "stage_gate": "runtime",
+          "owner_clock_binding": "HOST_MONOTONIC",
+          "qualification": "actual simulator invocation receipt",
+          "direct_consumer_binding": "RUNNER_EXACT_CONSUMER_REQUIRED",
+          "records": [
+            "count",
+            "first_time",
+            "last_time"
+          ]
+        },
+        {
+          "boundary_id": "gap.mse.request",
+          "role": "source_produce",
+          "stage_gate": "sum_s1",
+          "owner_clock_binding": "EXACT_FINAL_SOURCE_REQUIRED",
+          "qualification": "owner-clock qualified request handshake for MSE0 and MSE3",
+          "direct_consumer_binding": "EXACT_FINAL_SOURCE_REQUIRED",
+          "records": [
+            "count",
+            "first_time",
+            "last_time",
+            "stage",
+            "slice"
+          ]
+        },
+        {
+          "boundary_id": "gap.prepared.accept",
+          "role": "queue_enqueue",
+          "stage_gate": "sum_s1",
+          "owner_clock_binding": "EXACT_FINAL_SOURCE_REQUIRED",
+          "qualification": "prepared-data qualified acceptance",
+          "direct_consumer_binding": "EXACT_FINAL_SOURCE_REQUIRED",
+          "records": [
+            "count",
+            "first_time",
+            "last_time",
+            "outstanding"
+          ]
+        },
+        {
+          "boundary_id": "gap.buffer_ag.enqueue",
+          "role": "queue_enqueue",
+          "stage_gate": "sum_s1",
+          "owner_clock_binding": "EXACT_FINAL_SOURCE_REQUIRED",
+          "qualification": "Buffer_AG qualified enqueue",
+          "direct_consumer_binding": "EXACT_FINAL_SOURCE_REQUIRED",
+          "records": [
+            "count",
+            "first_time",
+            "last_time",
+            "outstanding",
+            "max_occupancy",
+            "first_full_time"
+          ]
+        },
+        {
+          "boundary_id": "gap.buffer_ag.dequeue",
+          "role": "queue_dequeue",
+          "stage_gate": "sum_s1",
+          "owner_clock_binding": "EXACT_FINAL_SOURCE_REQUIRED",
+          "qualification": "Buffer_AG qualified dequeue",
+          "direct_consumer_binding": "EXACT_FINAL_SOURCE_REQUIRED",
+          "records": [
+            "count",
+            "first_time",
+            "last_time",
+            "outstanding",
+            "max_occupancy"
+          ]
+        },
+        {
+          "boundary_id": "gap.memory.accept",
+          "role": "consumer_accept",
+          "stage_gate": "sum_s1",
+          "owner_clock_binding": "EXACT_FINAL_SOURCE_REQUIRED",
+          "qualification": "Memory/shared-LC direct-consumer acceptance",
+          "direct_consumer_binding": "EXACT_FINAL_SOURCE_REQUIRED",
+          "records": [
+            "count",
+            "first_time",
+            "last_time",
+            "outstanding"
+          ]
+        },
+        {
+          "boundary_id": "gap.lc.ack",
+          "role": "output_accept",
+          "stage_gate": "sum_s1",
+          "owner_clock_binding": "EXACT_FINAL_SOURCE_REQUIRED",
+          "qualification": "shared-LC qualified acknowledgement",
+          "direct_consumer_binding": "EXACT_FINAL_SOURCE_REQUIRED",
+          "records": [
+            "count",
+            "first_time",
+            "last_time",
+            "last_tag"
+          ]
+        },
+        {
+          "boundary_id": "gap.terminal",
+          "role": "terminal_propagation",
+          "stage_gate": "sum_s1_to_tail_round",
+          "owner_clock_binding": "EXACT_FINAL_SOURCE_REQUIRED",
+          "qualification": "qualified intended terminal occurrence and natural completion",
+          "direct_consumer_binding": "EXACT_FINAL_SOURCE_REQUIRED",
+          "records": [
+            "count",
+            "first_time",
+            "last_time",
+            "last_terminal",
+            "stage"
+          ]
+        },
+        {
+          "boundary_id": "gap.formal_d",
+          "role": "formal_d_collection",
+          "stage_gate": "result",
+          "owner_clock_binding": "NOT_APPLICABLE",
+          "qualification": "48-item exact formal-D collector",
+          "direct_consumer_binding": "FORMAL_D_COLLECTOR_REQUIRED",
+          "records": [
+            "count",
+            "first_time",
+            "last_time",
+            "ordered_digest"
+          ]
+        }
+      ],
+      "hypotheses": [
+        {
+          "hypothesis_id": "gap_source_exhausted",
+          "classification": "TARGET_STAGE_NOT_REACHED",
+          "distinguished_by": [
+            "gap.mse.request",
+            "gap.prepared.accept"
+          ],
+          "decision": "request count stops before prepared acceptance without downstream occupancy"
+        },
+        {
+          "hypothesis_id": "gap_buffer_full_downstream_not_draining",
+          "classification": "DYNAMIC_FLOW_CONTROL_STALL",
+          "distinguished_by": [
+            "gap.buffer_ag.enqueue",
+            "gap.buffer_ag.dequeue",
+            "gap.memory.accept"
+          ],
+          "decision": "enqueue minus dequeue reaches exact full depth and Memory acceptance stops"
+        },
+        {
+          "hypothesis_id": "gap_shared_lc_non_ack",
+          "classification": "DYNAMIC_FLOW_CONTROL_STALL",
+          "distinguished_by": [
+            "gap.memory.accept",
+            "gap.lc.ack"
+          ],
+          "decision": "Memory accepts while shared-LC acknowledgement stops"
+        },
+        {
+          "hypothesis_id": "gap_terminal_lost",
+          "classification": "TERMINAL_PROPAGATION_FAILURE",
+          "distinguished_by": [
+            "gap.lc.ack",
+            "gap.terminal"
+          ],
+          "decision": "data path completes but intended terminal or natural completion is absent"
+        },
+        {
+          "hypothesis_id": "gap_result_collection_missing",
+          "classification": "RESULT_COLLECTION_FAILURE",
+          "distinguished_by": [
+            "gap.terminal",
+            "gap.formal_d"
+          ],
+          "decision": "natural terminal is present but the 48-item exact formal-D set is incomplete"
+        }
+      ],
+      "triggers": [
+        {
+          "trigger_id": "FIRST_QUEUE_FULL",
+          "condition": "first exact Buffer_AG full transition",
+          "snapshot_boundaries": [
+            "gap.prepared.accept",
+            "gap.buffer_ag.enqueue",
+            "gap.buffer_ag.dequeue",
+            "gap.memory.accept"
+          ],
+          "one_shot": true
+        },
+        {
+          "trigger_id": "FIRST_BRANCH_DIVERGENCE",
+          "condition": "Memory acceptance and shared-LC acknowledgement first diverge",
+          "snapshot_boundaries": [
+            "gap.memory.accept",
+            "gap.lc.ack"
+          ],
+          "one_shot": true
+        },
+        {
+          "trigger_id": "NO_PROGRESS_WINDOW",
+          "condition": "qualified measured-rate window expires without a new accepted/completion event",
+          "snapshot_boundaries": [
+            "gap.mse.request",
+            "gap.buffer_ag.enqueue",
+            "gap.buffer_ag.dequeue",
+            "gap.memory.accept",
+            "gap.lc.ack"
+          ],
+          "one_shot": false
+        },
+        {
+          "trigger_id": "TERMINAL_GAP",
+          "condition": "final data acceptance is observed without intended terminal propagation",
+          "snapshot_boundaries": [
+            "gap.lc.ack",
+            "gap.terminal",
+            "gap.formal_d"
+          ],
+          "one_shot": true
+        },
+        {
+          "trigger_id": "STAGE_TRANSITION",
+          "condition": "qualified stage transition",
+          "snapshot_boundaries": [
+            "gap.terminal"
+          ],
+          "one_shot": false
+        },
+        {
+          "trigger_id": "EXIT_OR_SIGNAL",
+          "condition": "EXIT HUP INT TERM or natural finalizer",
+          "snapshot_boundaries": [
+            "gap.runtime.simulator_started",
+            "gap.mse.request",
+            "gap.buffer_ag.enqueue",
+            "gap.buffer_ag.dequeue",
+            "gap.memory.accept",
+            "gap.lc.ack",
+            "gap.terminal",
+            "gap.formal_d"
+          ],
+          "one_shot": true
+        }
+      ],
+      "canonical_classifications": [
+        "TEST_INFRASTRUCTURE_FAILURE",
+        "SIM_NOT_STARTED",
+        "TARGET_STAGE_NOT_REACHED",
+        "DYNAMIC_FLOW_CONTROL_STALL",
+        "TERMINAL_PROPAGATION_FAILURE",
+        "RESULT_COLLECTION_FAILURE",
+        "NUMERIC_MISMATCH",
+        "NATURAL_SUCCESS",
+        "EVIDENCE_INCOMPLETE"
+      ],
+      "claim_boundary": "Design-only GAP causal observation matrix. Exact final-source consumers, owner clocks and A/B wall-clock calibration remain mandatory on a fresh successor."
+    },
+    {
+      "profile_id": "serialized_conv_node0004_triggered_causal_v1",
+      "family": "conv_int32_accumulate_serialized",
+      "maturity": "DESIGN_READY_BINDING_AND_CALIBRATION_PENDING",
+      "release_eligible": false,
+      "current_package": {
+        "path": "artifacts/operator_config_validation/r5-server-test-packages/r5_n4_hw_v47_lc9_split_cloudrtl.zip",
+        "sha256": "516173e54132e2ee31cf2d4f750c46a595bb0bf31afb7f5b6661fc5a0ed6a015",
+        "disposition": "READ_ONLY_NOT_MODIFIED"
+      },
+      "runtime_behavior": {
+        "read_only": true,
+        "drives_dut": false,
+        "changes_input": false,
+        "changes_ready_backpressure": false,
+        "changes_timing": false,
+        "changes_timeout": false,
+        "host_internal_tensor_replay": false,
+        "stage_gating": true
+      },
+      "performance_budget": {
+        "decision_priority": "ONE_ROUND_HYPOTHESIS_DISCRIMINATION_FIRST",
+        "preferred_max_slowdown_percent": 50,
+        "slowdown_limit_hard": false,
+        "calibration_status": "PENDING_FRESH_BOUND_PROFILE",
+        "calibration_method": "SAME_EVENT_TRACE_AB_WALLCLOCK",
+        "baseline_wall_seconds": null,
+        "instrumented_wall_seconds": null
+      },
+      "storage": {
+        "per_event_text_io": false,
+        "full_wave_dump": false,
+        "max_log_bytes": 16777216,
+        "ring_events": 128,
+        "diagnostic_budget_separation": {
+          "accounting_mode": "SEPARATE_QUALIFIED_AND_NON_PROGRESS",
+          "qualified_event_budget": 128,
+          "non_progress_state_budget": 128,
+          "state_activity_consumes_qualified_budget": false,
+          "state_overflow_policy": "COALESCE_OR_DROP_STATE_ONLY",
+          "late_qualified_event_policy": "REMAINS_ELIGIBLE_AFTER_STATE_BUDGET_EXHAUSTION"
+        },
+        "flush_policy": "TIME0_TRIGGER_STAGE_TRANSITION_EXIT_FINAL_ONLY"
+      },
+      "no_progress": {
+        "qualified_progress_only": true,
+        "qualified_measured_rate_required": true,
+        "auto_terminate": false,
+        "on_trigger": "SNAPSHOT_AND_CONTINUE_EXISTING_TIMEOUT"
+      },
+      "boundaries": [
+        {
+          "boundary_id": "sconv.runtime.simulator_started",
+          "role": "infrastructure",
+          "stage_gate": "runtime",
+          "owner_clock_binding": "HOST_MONOTONIC",
+          "qualification": "actual simulator invocation receipt",
+          "direct_consumer_binding": "RUNNER_EXACT_CONSUMER_REQUIRED",
+          "records": [
+            "count",
+            "first_time",
+            "last_time"
+          ]
+        },
+        {
+          "boundary_id": "sconv.buffer_source.push",
+          "role": "source_produce",
+          "stage_gate": "c0",
+          "owner_clock_binding": "EXACT_FINAL_SOURCE_REQUIRED",
+          "qualification": "qualified Buffer source push",
+          "direct_consumer_binding": "EXACT_FINAL_SOURCE_REQUIRED",
+          "records": [
+            "count",
+            "first_time",
+            "last_time",
+            "last_tag",
+            "last_terminal"
+          ]
+        },
+        {
+          "boundary_id": "sconv.lc9.advance",
+          "role": "queue_dequeue",
+          "stage_gate": "c0",
+          "owner_clock_binding": "EXACT_FINAL_SOURCE_REQUIRED",
+          "qualification": "qualified LC9 advancement",
+          "direct_consumer_binding": "EXACT_FINAL_SOURCE_REQUIRED",
+          "records": [
+            "count",
+            "first_time",
+            "last_time",
+            "outstanding",
+            "max_occupancy"
+          ]
+        },
+        {
+          "boundary_id": "sconv.pe1.input2_accept",
+          "role": "consumer_accept",
+          "stage_gate": "c0",
+          "owner_clock_binding": "EXACT_FINAL_SOURCE_REQUIRED",
+          "qualification": "qualified PE1 input-2 acceptance",
+          "direct_consumer_binding": "EXACT_FINAL_SOURCE_REQUIRED",
+          "records": [
+            "count",
+            "first_time",
+            "last_time",
+            "last_tag"
+          ]
+        },
+        {
+          "boundary_id": "sconv.pe1.match_output",
+          "role": "internal_match_compute",
+          "stage_gate": "c0",
+          "owner_clock_binding": "EXACT_FINAL_SOURCE_REQUIRED",
+          "qualification": "qualified PE1 internal match and output",
+          "direct_consumer_binding": "EXACT_FINAL_SOURCE_REQUIRED",
+          "records": [
+            "count",
+            "first_time",
+            "last_time",
+            "last_tag"
+          ]
+        },
+        {
+          "boundary_id": "sconv.memory_mse4.accept",
+          "role": "consumer_accept",
+          "stage_gate": "c0",
+          "owner_clock_binding": "EXACT_FINAL_SOURCE_REQUIRED",
+          "qualification": "qualified Memory MSE4 port-1 acceptance",
+          "direct_consumer_binding": "EXACT_FINAL_SOURCE_REQUIRED",
+          "records": [
+            "count",
+            "first_time",
+            "last_time",
+            "last_tag"
+          ]
+        },
+        {
+          "boundary_id": "sconv.row4.accept_output",
+          "role": "consumer_accept",
+          "stage_gate": "c0",
+          "owner_clock_binding": "EXACT_FINAL_SOURCE_REQUIRED",
+          "qualification": "qualified ROW4 acceptance and output",
+          "direct_consumer_binding": "EXACT_FINAL_SOURCE_REQUIRED",
+          "records": [
+            "count",
+            "first_time",
+            "last_time",
+            "last_tag"
+          ]
+        },
+        {
+          "boundary_id": "sconv.global_last0",
+          "role": "terminal_propagation",
+          "stage_gate": "c0",
+          "owner_clock_binding": "EXACT_FINAL_SOURCE_REQUIRED",
+          "qualification": "qualified global last-index zero propagation",
+          "direct_consumer_binding": "EXACT_FINAL_SOURCE_REQUIRED",
+          "records": [
+            "count",
+            "first_time",
+            "last_time",
+            "last_terminal",
+            "last_tag"
+          ]
+        },
+        {
+          "boundary_id": "sconv.formal_d",
+          "role": "formal_d_collection",
+          "stage_gate": "result",
+          "owner_clock_binding": "NOT_APPLICABLE",
+          "qualification": "320-item exact formal-D collector when full target is requested",
+          "direct_consumer_binding": "FORMAL_D_COLLECTOR_REQUIRED",
+          "records": [
+            "count",
+            "first_time",
+            "last_time",
+            "ordered_digest"
+          ]
+        }
+      ],
+      "hypotheses": [
+        {
+          "hypothesis_id": "sconv_lc9_not_advancing",
+          "classification": "DYNAMIC_FLOW_CONTROL_STALL",
+          "distinguished_by": [
+            "sconv.buffer_source.push",
+            "sconv.lc9.advance"
+          ],
+          "decision": "Buffer source continues while LC9 advancement stops"
+        },
+        {
+          "hypothesis_id": "sconv_pe1_internal_match_failure",
+          "classification": "DYNAMIC_FLOW_CONTROL_STALL",
+          "distinguished_by": [
+            "sconv.pe1.input2_accept",
+            "sconv.pe1.match_output"
+          ],
+          "decision": "PE1 accepts input-2 but internal match/output does not advance"
+        },
+        {
+          "hypothesis_id": "sconv_memory_branch_non_accept",
+          "classification": "DYNAMIC_FLOW_CONTROL_STALL",
+          "distinguished_by": [
+            "sconv.lc9.advance",
+            "sconv.memory_mse4.accept"
+          ],
+          "decision": "LC9 advances but Memory MSE4 port-1 does not accept"
+        },
+        {
+          "hypothesis_id": "sconv_row_branch_non_accept",
+          "classification": "DYNAMIC_FLOW_CONTROL_STALL",
+          "distinguished_by": [
+            "sconv.lc9.advance",
+            "sconv.row4.accept_output"
+          ],
+          "decision": "LC9 advances but ROW4 branch does not accept or output"
+        },
+        {
+          "hypothesis_id": "sconv_terminal_metadata_lost",
+          "classification": "TERMINAL_PROPAGATION_FAILURE",
+          "distinguished_by": [
+            "sconv.memory_mse4.accept",
+            "sconv.row4.accept_output",
+            "sconv.global_last0"
+          ],
+          "decision": "data branches advance but global-last0 is absent"
+        },
+        {
+          "hypothesis_id": "sconv_result_collection_missing",
+          "classification": "RESULT_COLLECTION_FAILURE",
+          "distinguished_by": [
+            "sconv.global_last0",
+            "sconv.formal_d"
+          ],
+          "decision": "terminal path completes but requested formal-D set is incomplete"
+        }
+      ],
+      "triggers": [
+        {
+          "trigger_id": "FIRST_QUEUE_FULL",
+          "condition": "first LC9 or Buffer carrier full transition",
+          "snapshot_boundaries": [
+            "sconv.buffer_source.push",
+            "sconv.lc9.advance"
+          ],
+          "one_shot": true
+        },
+        {
+          "trigger_id": "FIRST_BRANCH_DIVERGENCE",
+          "condition": "LC9 branch accepted counts first diverge",
+          "snapshot_boundaries": [
+            "sconv.lc9.advance",
+            "sconv.pe1.input2_accept",
+            "sconv.memory_mse4.accept",
+            "sconv.row4.accept_output"
+          ],
+          "one_shot": true
+        },
+        {
+          "trigger_id": "NO_PROGRESS_WINDOW",
+          "condition": "qualified measured-rate window expires without a new branch acceptance or completion",
+          "snapshot_boundaries": [
+            "sconv.buffer_source.push",
+            "sconv.lc9.advance",
+            "sconv.pe1.input2_accept",
+            "sconv.pe1.match_output",
+            "sconv.memory_mse4.accept",
+            "sconv.row4.accept_output"
+          ],
+          "one_shot": false
+        },
+        {
+          "trigger_id": "TERMINAL_GAP",
+          "condition": "branch data completes without global-last0",
+          "snapshot_boundaries": [
+            "sconv.memory_mse4.accept",
+            "sconv.row4.accept_output",
+            "sconv.global_last0",
+            "sconv.formal_d"
+          ],
+          "one_shot": true
+        },
+        {
+          "trigger_id": "STAGE_TRANSITION",
+          "condition": "qualified c0 transition",
+          "snapshot_boundaries": [
+            "sconv.global_last0"
+          ],
+          "one_shot": false
+        },
+        {
+          "trigger_id": "EXIT_OR_SIGNAL",
+          "condition": "EXIT HUP INT TERM or natural finalizer",
+          "snapshot_boundaries": [
+            "sconv.runtime.simulator_started",
+            "sconv.buffer_source.push",
+            "sconv.lc9.advance",
+            "sconv.pe1.input2_accept",
+            "sconv.pe1.match_output",
+            "sconv.memory_mse4.accept",
+            "sconv.row4.accept_output",
+            "sconv.global_last0",
+            "sconv.formal_d"
+          ],
+          "one_shot": true
+        }
+      ],
+      "canonical_classifications": [
+        "TEST_INFRASTRUCTURE_FAILURE",
+        "SIM_NOT_STARTED",
+        "TARGET_STAGE_NOT_REACHED",
+        "DYNAMIC_FLOW_CONTROL_STALL",
+        "TERMINAL_PROPAGATION_FAILURE",
+        "RESULT_COLLECTION_FAILURE",
+        "NUMERIC_MISMATCH",
+        "NATURAL_SUCCESS",
+        "EVIDENCE_INCOMPLETE"
+      ],
+      "claim_boundary": "Design-only serialized Conv LC9 multi-branch observation matrix. It does not alter or replace v47/v48 and requires exact fresh-successor HDL binding and calibration."
+    },
+    {
+      "profile_id": "qlinearadd_node0007_triggered_causal_v1",
+      "family": "qlinearadd",
+      "maturity": "DESIGN_READY_BINDING_AND_CALIBRATION_PENDING",
+      "release_eligible": false,
+      "current_package": {
+        "path": "artifacts/operator_config_validation/r5-server-test-packages/r5_qadd_n7_crow32_v35.zip",
+        "sha256": "45d40590376ec17f4dc831954e71570617beda989b49f4c376d4f42d891e2829",
+        "disposition": "READ_ONLY_NOT_MODIFIED"
+      },
+      "runtime_behavior": {
+        "read_only": true,
+        "drives_dut": false,
+        "changes_input": false,
+        "changes_ready_backpressure": false,
+        "changes_timing": false,
+        "changes_timeout": false,
+        "host_internal_tensor_replay": false,
+        "stage_gating": true
+      },
+      "performance_budget": {
+        "decision_priority": "ONE_ROUND_HYPOTHESIS_DISCRIMINATION_FIRST",
+        "preferred_max_slowdown_percent": 50,
+        "slowdown_limit_hard": false,
+        "calibration_status": "PENDING_FRESH_BOUND_PROFILE",
+        "calibration_method": "SAME_EVENT_TRACE_AB_WALLCLOCK",
+        "baseline_wall_seconds": null,
+        "instrumented_wall_seconds": null
+      },
+      "storage": {
+        "per_event_text_io": false,
+        "full_wave_dump": false,
+        "max_log_bytes": 16777216,
+        "ring_events": 128,
+        "diagnostic_budget_separation": {
+          "accounting_mode": "SEPARATE_QUALIFIED_AND_NON_PROGRESS",
+          "qualified_event_budget": 128,
+          "non_progress_state_budget": 128,
+          "state_activity_consumes_qualified_budget": false,
+          "state_overflow_policy": "COALESCE_OR_DROP_STATE_ONLY",
+          "late_qualified_event_policy": "REMAINS_ELIGIBLE_AFTER_STATE_BUDGET_EXHAUSTION"
+        },
+        "flush_policy": "TIME0_TRIGGER_STAGE_TRANSITION_EXIT_FINAL_ONLY"
+      },
+      "no_progress": {
+        "qualified_progress_only": true,
+        "qualified_measured_rate_required": true,
+        "auto_terminate": false,
+        "on_trigger": "SNAPSHOT_AND_CONTINUE_EXISTING_TIMEOUT"
+      },
+      "boundaries": [
+        {
+          "boundary_id": "qadd.runtime.simulator_started",
+          "role": "infrastructure",
+          "stage_gate": "runtime",
+          "owner_clock_binding": "HOST_MONOTONIC",
+          "qualification": "actual simulator invocation receipt",
+          "direct_consumer_binding": "RUNNER_EXACT_CONSUMER_REQUIRED",
+          "records": [
+            "count",
+            "first_time",
+            "last_time"
+          ]
+        },
+        {
+          "boundary_id": "qadd.operand_a.byte_supply",
+          "role": "source_produce",
+          "stage_gate": "dequant_a",
+          "owner_clock_binding": "EXACT_FINAL_SOURCE_REQUIRED",
+          "qualification": "qualified operand-A accepted write",
+          "direct_consumer_binding": "EXACT_FINAL_SOURCE_REQUIRED",
+          "records": [
+            "count",
+            "first_time",
+            "last_time",
+            "byte_mask",
+            "slice"
+          ]
+        },
+        {
+          "boundary_id": "qadd.operand_b.byte_supply",
+          "role": "source_produce",
+          "stage_gate": "dequant_b",
+          "owner_clock_binding": "EXACT_FINAL_SOURCE_REQUIRED",
+          "qualification": "qualified operand-B accepted write",
+          "direct_consumer_binding": "EXACT_FINAL_SOURCE_REQUIRED",
+          "records": [
+            "count",
+            "first_time",
+            "last_time",
+            "byte_mask",
+            "slice"
+          ]
+        },
+        {
+          "boundary_id": "qadd.buffer_row_ready",
+          "role": "queue_enqueue",
+          "stage_gate": "fp32_add",
+          "owner_clock_binding": "EXACT_FINAL_SOURCE_REQUIRED",
+          "qualification": "qualified complete Buffer0/2 row ready",
+          "direct_consumer_binding": "EXACT_FINAL_SOURCE_REQUIRED",
+          "records": [
+            "count",
+            "first_time",
+            "last_time",
+            "byte_mask",
+            "outstanding"
+          ]
+        },
+        {
+          "boundary_id": "qadd.arm.accept",
+          "role": "consumer_accept",
+          "stage_gate": "fp32_add",
+          "owner_clock_binding": "EXACT_FINAL_SOURCE_REQUIRED",
+          "qualification": "qualified ARM read acceptance",
+          "direct_consumer_binding": "EXACT_FINAL_SOURCE_REQUIRED",
+          "records": [
+            "count",
+            "first_time",
+            "last_time",
+            "last_tag"
+          ]
+        },
+        {
+          "boundary_id": "qadd.ga.output",
+          "role": "internal_match_compute",
+          "stage_gate": "fp32_add",
+          "owner_clock_binding": "EXACT_FINAL_SOURCE_REQUIRED",
+          "qualification": "qualified GA lane output",
+          "direct_consumer_binding": "EXACT_FINAL_SOURCE_REQUIRED",
+          "records": [
+            "count",
+            "first_time",
+            "last_time",
+            "last_tag"
+          ]
+        },
+        {
+          "boundary_id": "qadd.mse.accept",
+          "role": "consumer_accept",
+          "stage_gate": "fp32_add",
+          "owner_clock_binding": "EXACT_FINAL_SOURCE_REQUIRED",
+          "qualification": "qualified MSE write-data acceptance",
+          "direct_consumer_binding": "EXACT_FINAL_SOURCE_REQUIRED",
+          "records": [
+            "count",
+            "first_time",
+            "last_time",
+            "last_tag"
+          ]
+        },
+        {
+          "boundary_id": "qadd.fp32.output",
+          "role": "output_accept",
+          "stage_gate": "fp32_add",
+          "owner_clock_binding": "EXACT_FINAL_SOURCE_REQUIRED",
+          "qualification": "qualified FP32 add output acceptance",
+          "direct_consumer_binding": "EXACT_FINAL_SOURCE_REQUIRED",
+          "records": [
+            "count",
+            "first_time",
+            "last_time",
+            "ordered_digest"
+          ]
+        },
+        {
+          "boundary_id": "qadd.terminal",
+          "role": "terminal_propagation",
+          "stage_gate": "tail_round",
+          "owner_clock_binding": "EXACT_FINAL_SOURCE_REQUIRED",
+          "qualification": "qualified exact-tail terminal and natural completion",
+          "direct_consumer_binding": "EXACT_FINAL_SOURCE_REQUIRED",
+          "records": [
+            "count",
+            "first_time",
+            "last_time",
+            "last_terminal",
+            "stage"
+          ]
+        },
+        {
+          "boundary_id": "qadd.formal_d",
+          "role": "formal_d_collection",
+          "stage_gate": "result",
+          "owner_clock_binding": "NOT_APPLICABLE",
+          "qualification": "28-item exact formal-D collector",
+          "direct_consumer_binding": "FORMAL_D_COLLECTOR_REQUIRED",
+          "records": [
+            "count",
+            "first_time",
+            "last_time",
+            "ordered_digest"
+          ]
+        }
+      ],
+      "hypotheses": [
+        {
+          "hypothesis_id": "qadd_incomplete_32b_supply",
+          "classification": "TARGET_STAGE_NOT_REACHED",
+          "distinguished_by": [
+            "qadd.operand_a.byte_supply",
+            "qadd.operand_b.byte_supply",
+            "qadd.buffer_row_ready"
+          ],
+          "decision": "accepted byte masks do not form each required complete 32-byte row"
+        },
+        {
+          "hypothesis_id": "qadd_arm_non_accept",
+          "classification": "DYNAMIC_FLOW_CONTROL_STALL",
+          "distinguished_by": [
+            "qadd.buffer_row_ready",
+            "qadd.arm.accept"
+          ],
+          "decision": "complete rows become ready but ARM does not accept"
+        },
+        {
+          "hypothesis_id": "qadd_ga_non_output",
+          "classification": "DYNAMIC_FLOW_CONTROL_STALL",
+          "distinguished_by": [
+            "qadd.arm.accept",
+            "qadd.ga.output"
+          ],
+          "decision": "ARM accepts but GA lane output does not advance"
+        },
+        {
+          "hypothesis_id": "qadd_mse_non_accept",
+          "classification": "DYNAMIC_FLOW_CONTROL_STALL",
+          "distinguished_by": [
+            "qadd.ga.output",
+            "qadd.mse.accept"
+          ],
+          "decision": "GA produces but MSE write-data acceptance stops"
+        },
+        {
+          "hypothesis_id": "qadd_fp32_or_terminal_failure",
+          "classification": "TERMINAL_PROPAGATION_FAILURE",
+          "distinguished_by": [
+            "qadd.mse.accept",
+            "qadd.fp32.output",
+            "qadd.terminal"
+          ],
+          "decision": "MSE accepts but FP32 output or exact-tail terminal does not complete"
+        },
+        {
+          "hypothesis_id": "qadd_result_collection_missing",
+          "classification": "RESULT_COLLECTION_FAILURE",
+          "distinguished_by": [
+            "qadd.terminal",
+            "qadd.formal_d"
+          ],
+          "decision": "natural terminal is present but the 28-item exact formal-D set is incomplete"
+        }
+      ],
+      "triggers": [
+        {
+          "trigger_id": "FIRST_QUEUE_FULL",
+          "condition": "first Buffer row outstanding/full transition",
+          "snapshot_boundaries": [
+            "qadd.operand_a.byte_supply",
+            "qadd.operand_b.byte_supply",
+            "qadd.buffer_row_ready",
+            "qadd.arm.accept"
+          ],
+          "one_shot": true
+        },
+        {
+          "trigger_id": "FIRST_BRANCH_DIVERGENCE",
+          "condition": "operand A/B or GA/MSE qualified counts first diverge",
+          "snapshot_boundaries": [
+            "qadd.operand_a.byte_supply",
+            "qadd.operand_b.byte_supply",
+            "qadd.ga.output",
+            "qadd.mse.accept"
+          ],
+          "one_shot": true
+        },
+        {
+          "trigger_id": "NO_PROGRESS_WINDOW",
+          "condition": "qualified measured-rate window expires without accepted/completion progress",
+          "snapshot_boundaries": [
+            "qadd.buffer_row_ready",
+            "qadd.arm.accept",
+            "qadd.ga.output",
+            "qadd.mse.accept",
+            "qadd.fp32.output"
+          ],
+          "one_shot": false
+        },
+        {
+          "trigger_id": "TERMINAL_GAP",
+          "condition": "FP32 output completes without exact-tail terminal",
+          "snapshot_boundaries": [
+            "qadd.fp32.output",
+            "qadd.terminal",
+            "qadd.formal_d"
+          ],
+          "one_shot": true
+        },
+        {
+          "trigger_id": "STAGE_TRANSITION",
+          "condition": "qualified dequant/add/tail stage transition",
+          "snapshot_boundaries": [
+            "qadd.buffer_row_ready",
+            "qadd.fp32.output",
+            "qadd.terminal"
+          ],
+          "one_shot": false
+        },
+        {
+          "trigger_id": "EXIT_OR_SIGNAL",
+          "condition": "EXIT HUP INT TERM or natural finalizer",
+          "snapshot_boundaries": [
+            "qadd.runtime.simulator_started",
+            "qadd.operand_a.byte_supply",
+            "qadd.operand_b.byte_supply",
+            "qadd.buffer_row_ready",
+            "qadd.arm.accept",
+            "qadd.ga.output",
+            "qadd.mse.accept",
+            "qadd.fp32.output",
+            "qadd.terminal",
+            "qadd.formal_d"
+          ],
+          "one_shot": true
+        }
+      ],
+      "canonical_classifications": [
+        "TEST_INFRASTRUCTURE_FAILURE",
+        "SIM_NOT_STARTED",
+        "TARGET_STAGE_NOT_REACHED",
+        "DYNAMIC_FLOW_CONTROL_STALL",
+        "TERMINAL_PROPAGATION_FAILURE",
+        "RESULT_COLLECTION_FAILURE",
+        "NUMERIC_MISMATCH",
+        "NATURAL_SUCCESS",
+        "EVIDENCE_INCOMPLETE"
+      ],
+      "claim_boundary": "Design-only QLinearAdd multi-stage causal observation matrix. It does not assert that a current package contains the 32-byte fix and requires exact fresh-successor binding and calibration."
+    },
+    {
+      "profile_id": "native_conv_node0004_c0_triggered_causal_v1",
+      "family": "conv_int32_accumulate_native",
+      "maturity": "DESIGN_READY_BINDING_AND_CALIBRATION_PENDING",
+      "release_eligible": false,
+      "current_package": {
+        "path": "artifacts/operator_config_validation/r5-server-test-packages/r5_n4_0cc_p7.zip",
+        "sha256": "4ff473247a7356af3e6b960430b559e90113b774e27478dbcd41151d8507f8a4",
+        "disposition": "READ_ONLY_NOT_MODIFIED"
+      },
+      "runtime_behavior": {
+        "read_only": true,
+        "drives_dut": false,
+        "changes_input": false,
+        "changes_ready_backpressure": false,
+        "changes_timing": false,
+        "changes_timeout": false,
+        "host_internal_tensor_replay": false,
+        "stage_gating": true
+      },
+      "performance_budget": {
+        "decision_priority": "ONE_ROUND_HYPOTHESIS_DISCRIMINATION_FIRST",
+        "preferred_max_slowdown_percent": 50,
+        "slowdown_limit_hard": false,
+        "calibration_status": "PENDING_FRESH_BOUND_PROFILE",
+        "calibration_method": "SAME_EVENT_TRACE_AB_WALLCLOCK",
+        "baseline_wall_seconds": null,
+        "instrumented_wall_seconds": null
+      },
+      "storage": {
+        "per_event_text_io": false,
+        "full_wave_dump": false,
+        "max_log_bytes": 16777216,
+        "ring_events": 64,
+        "diagnostic_budget_separation": {
+          "accounting_mode": "SEPARATE_QUALIFIED_AND_NON_PROGRESS",
+          "qualified_event_budget": 64,
+          "non_progress_state_budget": 64,
+          "state_activity_consumes_qualified_budget": false,
+          "state_overflow_policy": "COALESCE_OR_DROP_STATE_ONLY",
+          "late_qualified_event_policy": "REMAINS_ELIGIBLE_AFTER_STATE_BUDGET_EXHAUSTION"
+        },
+        "flush_policy": "TIME0_TRIGGER_STAGE_TRANSITION_EXIT_FINAL_ONLY"
+      },
+      "no_progress": {
+        "qualified_progress_only": true,
+        "qualified_measured_rate_required": true,
+        "auto_terminate": false,
+        "on_trigger": "SNAPSHOT_AND_CONTINUE_EXISTING_TIMEOUT"
+      },
+      "boundaries": [
+        {
+          "boundary_id": "nconv.runtime.simulator_started",
+          "role": "infrastructure",
+          "stage_gate": "runtime",
+          "owner_clock_binding": "HOST_MONOTONIC",
+          "qualification": "actual simulator invocation after nonblocking identity receipt",
+          "direct_consumer_binding": "RUNNER_EXACT_CONSUMER_REQUIRED",
+          "records": [
+            "count",
+            "first_time",
+            "last_time"
+          ]
+        },
+        {
+          "boundary_id": "nconv.exec_start",
+          "role": "source_produce",
+          "stage_gate": "c0",
+          "owner_clock_binding": "EXACT_FINAL_SOURCE_REQUIRED",
+          "qualification": "qualified c0 exec_start",
+          "direct_consumer_binding": "EXACT_FINAL_SOURCE_REQUIRED",
+          "records": [
+            "count",
+            "first_time",
+            "last_time",
+            "stage"
+          ]
+        },
+        {
+          "boundary_id": "nconv.config_accept",
+          "role": "queue_enqueue",
+          "stage_gate": "c0",
+          "owner_clock_binding": "EXACT_FINAL_SOURCE_REQUIRED",
+          "qualification": "qualified CONFIG acceptance",
+          "direct_consumer_binding": "EXACT_FINAL_SOURCE_REQUIRED",
+          "records": [
+            "count",
+            "first_time",
+            "last_time",
+            "last_tag"
+          ]
+        },
+        {
+          "boundary_id": "nconv.request",
+          "role": "consumer_request",
+          "stage_gate": "c0",
+          "owner_clock_binding": "EXACT_FINAL_SOURCE_REQUIRED",
+          "qualification": "qualified c0 data request",
+          "direct_consumer_binding": "EXACT_FINAL_SOURCE_REQUIRED",
+          "records": [
+            "count",
+            "first_time",
+            "last_time",
+            "outstanding"
+          ]
+        },
+        {
+          "boundary_id": "nconv.buffer_arm_accept",
+          "role": "consumer_accept",
+          "stage_gate": "c0",
+          "owner_clock_binding": "EXACT_FINAL_SOURCE_REQUIRED",
+          "qualification": "qualified Buffer_AG to ARM acceptance",
+          "direct_consumer_binding": "EXACT_FINAL_SOURCE_REQUIRED",
+          "records": [
+            "count",
+            "first_time",
+            "last_time",
+            "outstanding",
+            "max_occupancy"
+          ]
+        },
+        {
+          "boundary_id": "nconv.sa.accept_compute",
+          "role": "internal_match_compute",
+          "stage_gate": "c0",
+          "owner_clock_binding": "EXACT_FINAL_SOURCE_REQUIRED",
+          "qualification": "qualified SA input acceptance and compute progress",
+          "direct_consumer_binding": "EXACT_FINAL_SOURCE_REQUIRED",
+          "records": [
+            "count",
+            "first_time",
+            "last_time",
+            "last_tag"
+          ]
+        },
+        {
+          "boundary_id": "nconv.mse4.output",
+          "role": "output_accept",
+          "stage_gate": "c0",
+          "owner_clock_binding": "EXACT_FINAL_SOURCE_REQUIRED",
+          "qualification": "qualified MSE4 output acceptance",
+          "direct_consumer_binding": "EXACT_FINAL_SOURCE_REQUIRED",
+          "records": [
+            "count",
+            "first_time",
+            "last_time",
+            "ordered_digest"
+          ]
+        },
+        {
+          "boundary_id": "nconv.slice_finish",
+          "role": "terminal_propagation",
+          "stage_gate": "c0",
+          "owner_clock_binding": "EXACT_FINAL_SOURCE_REQUIRED",
+          "qualification": "qualified c0 slice_finish and natural diagnostic terminal",
+          "direct_consumer_binding": "EXACT_FINAL_SOURCE_REQUIRED",
+          "records": [
+            "count",
+            "first_time",
+            "last_time",
+            "last_terminal",
+            "slice"
+          ]
+        },
+        {
+          "boundary_id": "nconv.formal_d",
+          "role": "formal_d_collection",
+          "stage_gate": "result",
+          "owner_clock_binding": "NOT_APPLICABLE",
+          "qualification": "formal-D collector; zero expected only for explicitly c0-diagnostic profile",
+          "direct_consumer_binding": "FORMAL_D_COLLECTOR_REQUIRED",
+          "records": [
+            "count",
+            "first_time",
+            "last_time",
+            "ordered_digest"
+          ]
+        }
+      ],
+      "hypotheses": [
+        {
+          "hypothesis_id": "nconv_simulator_not_started",
+          "classification": "SIM_NOT_STARTED",
+          "distinguished_by": [
+            "nconv.runtime.simulator_started",
+            "nconv.exec_start"
+          ],
+          "decision": "runner does not invoke the simulator or c0 exec_start is absent"
+        },
+        {
+          "hypothesis_id": "nconv_config_or_request_not_reached",
+          "classification": "TARGET_STAGE_NOT_REACHED",
+          "distinguished_by": [
+            "nconv.exec_start",
+            "nconv.config_accept",
+            "nconv.request"
+          ],
+          "decision": "c0 starts but CONFIG acceptance or first request is absent"
+        },
+        {
+          "hypothesis_id": "nconv_buffer_arm_non_accept",
+          "classification": "DYNAMIC_FLOW_CONTROL_STALL",
+          "distinguished_by": [
+            "nconv.request",
+            "nconv.buffer_arm_accept"
+          ],
+          "decision": "requests advance but Buffer_AG-to-ARM acceptance stops"
+        },
+        {
+          "hypothesis_id": "nconv_sa_non_compute",
+          "classification": "DYNAMIC_FLOW_CONTROL_STALL",
+          "distinguished_by": [
+            "nconv.buffer_arm_accept",
+            "nconv.sa.accept_compute"
+          ],
+          "decision": "ARM accepts but SA input/compute does not advance"
+        },
+        {
+          "hypothesis_id": "nconv_mse4_non_output",
+          "classification": "DYNAMIC_FLOW_CONTROL_STALL",
+          "distinguished_by": [
+            "nconv.sa.accept_compute",
+            "nconv.mse4.output"
+          ],
+          "decision": "SA compute advances but MSE4 output acceptance is absent"
+        },
+        {
+          "hypothesis_id": "nconv_slice_terminal_missing",
+          "classification": "TERMINAL_PROPAGATION_FAILURE",
+          "distinguished_by": [
+            "nconv.mse4.output",
+            "nconv.slice_finish"
+          ],
+          "decision": "MSE4 output advances but c0 slice_finish is absent"
+        }
+      ],
+      "triggers": [
+        {
+          "trigger_id": "FIRST_QUEUE_FULL",
+          "condition": "first c0 Buffer/ARM pending-full transition",
+          "snapshot_boundaries": [
+            "nconv.request",
+            "nconv.buffer_arm_accept"
+          ],
+          "one_shot": true
+        },
+        {
+          "trigger_id": "FIRST_BRANCH_DIVERGENCE",
+          "condition": "request/ARM/SA/MSE4 qualified counts first diverge",
+          "snapshot_boundaries": [
+            "nconv.request",
+            "nconv.buffer_arm_accept",
+            "nconv.sa.accept_compute",
+            "nconv.mse4.output"
+          ],
+          "one_shot": true
+        },
+        {
+          "trigger_id": "NO_PROGRESS_WINDOW",
+          "condition": "qualified measured-rate window expires without c0 accepted/completion progress",
+          "snapshot_boundaries": [
+            "nconv.exec_start",
+            "nconv.config_accept",
+            "nconv.request",
+            "nconv.buffer_arm_accept",
+            "nconv.sa.accept_compute",
+            "nconv.mse4.output"
+          ],
+          "one_shot": false
+        },
+        {
+          "trigger_id": "TERMINAL_GAP",
+          "condition": "MSE4 output completes without c0 slice_finish",
+          "snapshot_boundaries": [
+            "nconv.mse4.output",
+            "nconv.slice_finish",
+            "nconv.formal_d"
+          ],
+          "one_shot": true
+        },
+        {
+          "trigger_id": "STAGE_TRANSITION",
+          "condition": "qualified c0 stage transition",
+          "snapshot_boundaries": [
+            "nconv.exec_start",
+            "nconv.slice_finish"
+          ],
+          "one_shot": false
+        },
+        {
+          "trigger_id": "EXIT_OR_SIGNAL",
+          "condition": "EXIT HUP INT TERM or natural finalizer",
+          "snapshot_boundaries": [
+            "nconv.runtime.simulator_started",
+            "nconv.exec_start",
+            "nconv.config_accept",
+            "nconv.request",
+            "nconv.buffer_arm_accept",
+            "nconv.sa.accept_compute",
+            "nconv.mse4.output",
+            "nconv.slice_finish",
+            "nconv.formal_d"
+          ],
+          "one_shot": true
+        }
+      ],
+      "canonical_classifications": [
+        "TEST_INFRASTRUCTURE_FAILURE",
+        "SIM_NOT_STARTED",
+        "TARGET_STAGE_NOT_REACHED",
+        "DYNAMIC_FLOW_CONTROL_STALL",
+        "TERMINAL_PROPAGATION_FAILURE",
+        "RESULT_COLLECTION_FAILURE",
+        "NUMERIC_MISMATCH",
+        "NATURAL_SUCCESS",
+        "EVIDENCE_INCOMPLETE"
+      ],
+      "claim_boundary": "Design-only native Conv c0 causal observation matrix. It records identity without blocking simulation after compile success and does not claim full 320D, E4 or E5."
+    },
+    {
+      "profile_id": "node0071_node0075_triggered_causal_v1",
+      "family": "global_average_pool_to_qlinear_matmul",
+      "maturity": "DESIGN_READY_BINDING_AND_CALIBRATION_PENDING",
+      "release_eligible": false,
+      "current_package": {
+        "path": "artifacts/operator_config_validation/r5-server-test-packages/r5_n71_n75_0cc_bankrow_v9.zip",
+        "sha256": "f0034876998f636ea0cdd473f830daed896cc7b315fdb73ab617e59d6f3c8165",
+        "disposition": "READ_ONLY_NOT_MODIFIED"
+      },
+      "runtime_behavior": {
+        "read_only": true,
+        "drives_dut": false,
+        "changes_input": false,
+        "changes_ready_backpressure": false,
+        "changes_timing": false,
+        "changes_timeout": false,
+        "host_internal_tensor_replay": false,
+        "stage_gating": true
+      },
+      "performance_budget": {
+        "decision_priority": "ONE_ROUND_HYPOTHESIS_DISCRIMINATION_FIRST",
+        "preferred_max_slowdown_percent": 50,
+        "slowdown_limit_hard": false,
+        "calibration_status": "PENDING_FRESH_BOUND_PROFILE",
+        "calibration_method": "SAME_EVENT_TRACE_AB_WALLCLOCK",
+        "baseline_wall_seconds": null,
+        "instrumented_wall_seconds": null
+      },
+      "storage": {
+        "per_event_text_io": false,
+        "full_wave_dump": false,
+        "max_log_bytes": 16777216,
+        "ring_events": 128,
+        "diagnostic_budget_separation": {
+          "accounting_mode": "SEPARATE_QUALIFIED_AND_NON_PROGRESS",
+          "qualified_event_budget": 128,
+          "non_progress_state_budget": 128,
+          "state_activity_consumes_qualified_budget": false,
+          "state_overflow_policy": "COALESCE_OR_DROP_STATE_ONLY",
+          "late_qualified_event_policy": "REMAINS_ELIGIBLE_AFTER_STATE_BUDGET_EXHAUSTION"
+        },
+        "flush_policy": "TIME0_TRIGGER_STAGE_TRANSITION_EXIT_FINAL_ONLY"
+      },
+      "no_progress": {
+        "qualified_progress_only": true,
+        "qualified_measured_rate_required": true,
+        "auto_terminate": false,
+        "on_trigger": "SNAPSHOT_AND_CONTINUE_EXISTING_TIMEOUT"
+      },
+      "boundaries": [
+        {
+          "boundary_id": "n71n75.runtime.simulator_started",
+          "role": "infrastructure",
+          "stage_gate": "runtime",
+          "owner_clock_binding": "HOST_MONOTONIC",
+          "qualification": "actual simulator invocation receipt",
+          "direct_consumer_binding": "RUNNER_EXACT_CONSUMER_REQUIRED",
+          "records": [
+            "count",
+            "first_time",
+            "last_time"
+          ]
+        },
+        {
+          "boundary_id": "n71n75.node71.final_write_accept",
+          "role": "output_accept",
+          "stage_gate": "node0071_tail_round",
+          "owner_clock_binding": "EXACT_FINAL_SOURCE_REQUIRED",
+          "qualification": "qualified node0071 downstream request/write-data/final-slice acceptance",
+          "direct_consumer_binding": "EXACT_FINAL_SOURCE_REQUIRED",
+          "records": [
+            "count",
+            "first_time",
+            "last_time",
+            "slice",
+            "ordered_digest"
+          ]
+        },
+        {
+          "boundary_id": "n71n75.node75.first_a_read",
+          "role": "consumer_request",
+          "stage_gate": "node0075_pass00",
+          "owner_clock_binding": "EXACT_FINAL_SOURCE_REQUIRED",
+          "qualification": "first qualified node0075 pass00 A read request",
+          "direct_consumer_binding": "EXACT_FINAL_SOURCE_REQUIRED",
+          "records": [
+            "count",
+            "first_time",
+            "last_time",
+            "pass",
+            "slice"
+          ]
+        },
+        {
+          "boundary_id": "n71n75.node75.a_request",
+          "role": "source_produce",
+          "stage_gate": "node0075_accum",
+          "owner_clock_binding": "EXACT_FINAL_SOURCE_REQUIRED",
+          "qualification": "qualified node0075 A request",
+          "direct_consumer_binding": "EXACT_FINAL_SOURCE_REQUIRED",
+          "records": [
+            "count",
+            "first_time",
+            "last_time",
+            "pass",
+            "slice",
+            "outstanding"
+          ]
+        },
+        {
+          "boundary_id": "n71n75.node75.a_data_accept",
+          "role": "consumer_accept",
+          "stage_gate": "node0075_accum",
+          "owner_clock_binding": "EXACT_FINAL_SOURCE_REQUIRED",
+          "qualification": "qualified node0075 A data acceptance",
+          "direct_consumer_binding": "EXACT_FINAL_SOURCE_REQUIRED",
+          "records": [
+            "count",
+            "first_time",
+            "last_time",
+            "pass",
+            "slice",
+            "ordered_digest"
+          ]
+        },
+        {
+          "boundary_id": "n71n75.accum.finish",
+          "role": "internal_match_compute",
+          "stage_gate": "node0075_accum",
+          "owner_clock_binding": "EXACT_FINAL_SOURCE_REQUIRED",
+          "qualification": "qualified accumulate-stage finish",
+          "direct_consumer_binding": "EXACT_FINAL_SOURCE_REQUIRED",
+          "records": [
+            "count",
+            "first_time",
+            "last_time",
+            "pass",
+            "slice"
+          ]
+        },
+        {
+          "boundary_id": "n71n75.scale.finish",
+          "role": "internal_match_compute",
+          "stage_gate": "node0075_scale",
+          "owner_clock_binding": "EXACT_FINAL_SOURCE_REQUIRED",
+          "qualification": "qualified scale-stage finish",
+          "direct_consumer_binding": "EXACT_FINAL_SOURCE_REQUIRED",
+          "records": [
+            "count",
+            "first_time",
+            "last_time",
+            "pass",
+            "slice"
+          ]
+        },
+        {
+          "boundary_id": "n71n75.round.finish",
+          "role": "output_accept",
+          "stage_gate": "node0075_round",
+          "owner_clock_binding": "EXACT_FINAL_SOURCE_REQUIRED",
+          "qualification": "qualified round-stage output acceptance",
+          "direct_consumer_binding": "EXACT_FINAL_SOURCE_REQUIRED",
+          "records": [
+            "count",
+            "first_time",
+            "last_time",
+            "pass",
+            "slice",
+            "ordered_digest"
+          ]
+        },
+        {
+          "boundary_id": "n71n75.terminal",
+          "role": "terminal_propagation",
+          "stage_gate": "full_chain",
+          "owner_clock_binding": "EXACT_FINAL_SOURCE_REQUIRED",
+          "qualification": "32-stage 512-slice-finish natural terminal",
+          "direct_consumer_binding": "EXACT_FINAL_SOURCE_REQUIRED",
+          "records": [
+            "count",
+            "first_time",
+            "last_time",
+            "last_terminal",
+            "stage"
+          ]
+        },
+        {
+          "boundary_id": "n71n75.formal_d",
+          "role": "formal_d_collection",
+          "stage_gate": "result",
+          "owner_clock_binding": "NOT_APPLICABLE",
+          "qualification": "144-item exact formal-D collector",
+          "direct_consumer_binding": "FORMAL_D_COLLECTOR_REQUIRED",
+          "records": [
+            "count",
+            "first_time",
+            "last_time",
+            "ordered_digest"
+          ]
+        }
+      ],
+      "hypotheses": [
+        {
+          "hypothesis_id": "n71n75_producer_visibility_ordering",
+          "classification": "DYNAMIC_FLOW_CONTROL_STALL",
+          "distinguished_by": [
+            "n71n75.node71.final_write_accept",
+            "n71n75.node75.first_a_read"
+          ],
+          "decision": "node0075 first A read occurs before node0071 final accepted write or producer completion is absent"
+        },
+        {
+          "hypothesis_id": "n71n75_a_request_data_nonconservation",
+          "classification": "DYNAMIC_FLOW_CONTROL_STALL",
+          "distinguished_by": [
+            "n71n75.node75.a_request",
+            "n71n75.node75.a_data_accept"
+          ],
+          "decision": "per-pass/per-slice A request and accepted-data counts or ordered digests diverge from 8192 total"
+        },
+        {
+          "hypothesis_id": "n71n75_accum_nonfinish",
+          "classification": "DYNAMIC_FLOW_CONTROL_STALL",
+          "distinguished_by": [
+            "n71n75.node75.a_data_accept",
+            "n71n75.accum.finish"
+          ],
+          "decision": "A data is accepted but accumulate-stage finish does not advance"
+        },
+        {
+          "hypothesis_id": "n71n75_scale_or_round_nonfinish",
+          "classification": "DYNAMIC_FLOW_CONTROL_STALL",
+          "distinguished_by": [
+            "n71n75.accum.finish",
+            "n71n75.scale.finish",
+            "n71n75.round.finish"
+          ],
+          "decision": "accumulate completes but scale or round stage does not finish"
+        },
+        {
+          "hypothesis_id": "n71n75_terminal_missing",
+          "classification": "TERMINAL_PROPAGATION_FAILURE",
+          "distinguished_by": [
+            "n71n75.round.finish",
+            "n71n75.terminal"
+          ],
+          "decision": "round outputs complete but 32-stage/512-slice natural terminal is absent"
+        },
+        {
+          "hypothesis_id": "n71n75_result_collection_missing",
+          "classification": "RESULT_COLLECTION_FAILURE",
+          "distinguished_by": [
+            "n71n75.terminal",
+            "n71n75.formal_d"
+          ],
+          "decision": "natural terminal is present but the 144-item exact formal-D set is incomplete"
+        }
+      ],
+      "triggers": [
+        {
+          "trigger_id": "FIRST_QUEUE_FULL",
+          "condition": "first node0075 A request/data outstanding-full transition",
+          "snapshot_boundaries": [
+            "n71n75.node75.a_request",
+            "n71n75.node75.a_data_accept"
+          ],
+          "one_shot": true
+        },
+        {
+          "trigger_id": "FIRST_BRANCH_DIVERGENCE",
+          "condition": "producer visibility, A request/data or accum/scale/round counts first diverge",
+          "snapshot_boundaries": [
+            "n71n75.node71.final_write_accept",
+            "n71n75.node75.first_a_read",
+            "n71n75.node75.a_request",
+            "n71n75.node75.a_data_accept",
+            "n71n75.accum.finish",
+            "n71n75.scale.finish",
+            "n71n75.round.finish"
+          ],
+          "one_shot": true
+        },
+        {
+          "trigger_id": "NO_PROGRESS_WINDOW",
+          "condition": "qualified measured-rate window expires without accepted data or stage completion",
+          "snapshot_boundaries": [
+            "n71n75.node71.final_write_accept",
+            "n71n75.node75.a_request",
+            "n71n75.node75.a_data_accept",
+            "n71n75.accum.finish",
+            "n71n75.scale.finish",
+            "n71n75.round.finish"
+          ],
+          "one_shot": false
+        },
+        {
+          "trigger_id": "TERMINAL_GAP",
+          "condition": "round-stage outputs complete without full-chain natural terminal",
+          "snapshot_boundaries": [
+            "n71n75.round.finish",
+            "n71n75.terminal",
+            "n71n75.formal_d"
+          ],
+          "one_shot": true
+        },
+        {
+          "trigger_id": "STAGE_TRANSITION",
+          "condition": "qualified node0071/node0075 stage transition",
+          "snapshot_boundaries": [
+            "n71n75.node71.final_write_accept",
+            "n71n75.accum.finish",
+            "n71n75.scale.finish",
+            "n71n75.round.finish"
+          ],
+          "one_shot": false
+        },
+        {
+          "trigger_id": "EXIT_OR_SIGNAL",
+          "condition": "EXIT HUP INT TERM or natural finalizer",
+          "snapshot_boundaries": [
+            "n71n75.runtime.simulator_started",
+            "n71n75.node71.final_write_accept",
+            "n71n75.node75.first_a_read",
+            "n71n75.node75.a_request",
+            "n71n75.node75.a_data_accept",
+            "n71n75.accum.finish",
+            "n71n75.scale.finish",
+            "n71n75.round.finish",
+            "n71n75.terminal",
+            "n71n75.formal_d"
+          ],
+          "one_shot": true
+        }
+      ],
+      "canonical_classifications": [
+        "TEST_INFRASTRUCTURE_FAILURE",
+        "SIM_NOT_STARTED",
+        "TARGET_STAGE_NOT_REACHED",
+        "DYNAMIC_FLOW_CONTROL_STALL",
+        "TERMINAL_PROPAGATION_FAILURE",
+        "RESULT_COLLECTION_FAILURE",
+        "NUMERIC_MISMATCH",
+        "NATURAL_SUCCESS",
+        "EVIDENCE_INCOMPLETE"
+      ],
+      "claim_boundary": "Design-only node0071-to-node0075 full-prefix observation matrix. It preserves the real producer prefix, forbids host replay and does not claim a live barrier, natural terminal, 144D, E4 or E5."
+    }
+  ],
+  "claim_boundary": "Design-ready profiles for the five current test lines, applied only to later fresh successors. Exact final-source binding and same-event-trace A/B calibration remain pending; no current package, config, runner, observer, RTL or server state is changed."
+}

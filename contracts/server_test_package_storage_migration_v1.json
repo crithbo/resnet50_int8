@@ -1,0 +1,416 @@
+{
+  "schema": "server_test_package_storage_migration_v1",
+  "policy": {
+    "pending_max_per_family": 1,
+    "tested_requires_consumed_return": true,
+    "superseded_is_not_tested": true
+  },
+  "packages": [
+    {
+      "family": "decode_silu_support",
+      "package_base": "decode_silu_fp16N_fp32N_control_stock_v1",
+      "disposition": "tested",
+      "reason": "formal_return_consumed_in_project_records"
+    },
+    {
+      "family": "dequantize_linear",
+      "package_base": "dequant_node0077_stockrtl_e4_onecmd_v2",
+      "disposition": "tested",
+      "reason": "formal_e4_return_consumed"
+    },
+    {
+      "family": "dequantize_linear",
+      "package_base": "dequant_node0077_stockrtl_e5_onecmd_v1",
+      "disposition": "tested",
+      "reason": "formal_e5_return_consumed"
+    },
+    {
+      "family": "maxpool_node0002",
+      "package_base": "maxpool_node0002_original_json_fresh_v3",
+      "disposition": "tested",
+      "reason": "formal_return_consumed_in_project_records"
+    },
+    {
+      "family": "maxpool_node0002",
+      "package_base": "maxpool_node0002_original_json_retest_v1",
+      "disposition": "tested",
+      "reason": "formal_return_consumed_in_project_records"
+    },
+    {
+      "family": "maxpool_node0002",
+      "package_base": "maxpool_node0002_original_json_retest_v2",
+      "disposition": "tested",
+      "reason": "formal_return_consumed_in_project_records"
+    },
+    {
+      "family": "maxpool_node0002",
+      "package_base": "r5_n2_maxpool_ndpsim_native_v5",
+      "disposition": "tested",
+      "reason": "formal_return_consumed_then_user_deferred_family"
+    },
+    {
+      "family": "conv_native_four_lane",
+      "package_base": "r5_conv_native_four_lane_df23e4d_perf_v1",
+      "disposition": "tested",
+      "reason": "formal_historical_return_consumed"
+    },
+    {
+      "family": "conv_native_four_lane",
+      "package_base": "r5_n4_df23e4d_p4",
+      "disposition": "superseded",
+      "reason": "delivery_successor_not_selected_for_run"
+    },
+    {
+      "family": "conv_native_four_lane",
+      "package_base": "r5_n4_e1f_p5_c0diag",
+      "disposition": "tested",
+      "reason": "formal_return_consumed"
+    },
+    {
+      "family": "conv_native_four_lane",
+      "package_base": "r5_n4_e1f_p6_armif",
+      "disposition": "tested",
+      "reason": "formal_return_consumed"
+    },
+    {
+      "family": "conv_native_four_lane",
+      "package_base": "r5_n4_0cc_p7",
+      "disposition": "tested",
+      "reason": "formal_return_consumed"
+    },
+    {
+      "family": "conv_native_four_lane",
+      "package_base": "r5_n4_0cc_p8f",
+      "disposition": "tested",
+      "reason": "formal_return_consumed"
+    },
+    {
+      "family": "conv_native_four_lane",
+      "package_base": "r5_n4_0cc_p9_tx5",
+      "disposition": "superseded",
+      "reason": "preflight_failed_build_not_released"
+    },
+    {
+      "family": "conv_native_four_lane",
+      "package_base": "r5_n4_0cc_p9b_tx5",
+      "disposition": "pending",
+      "reason": "current_mainline_package_ready_not_run",
+      "evidence": ".agents/plan.md"
+    },
+    {
+      "family": "conv_serialized_node0004",
+      "package_base": "r5_n4_hw_v35_rowlc4_bufag_diag",
+      "disposition": "tested",
+      "reason": "formal_return_consumed"
+    },
+    {
+      "family": "conv_serialized_node0004",
+      "package_base": "r5_n4_hw_v36_b5rd_diag",
+      "disposition": "tested",
+      "reason": "formal_return_consumed"
+    },
+    {
+      "family": "conv_serialized_node0004",
+      "package_base": "r5_n4_hw_v37_wrdrain_diag",
+      "disposition": "tested",
+      "reason": "formal_return_consumed"
+    },
+    {
+      "family": "conv_serialized_node0004",
+      "package_base": "r5_n4_hw_v38_wrterm_diag",
+      "disposition": "superseded",
+      "reason": "intermediate_identity_not_released"
+    },
+    {
+      "family": "conv_serialized_node0004",
+      "package_base": "r5_n4_hw_v39_wrterm_diag",
+      "disposition": "superseded",
+      "reason": "intermediate_identity_not_released"
+    },
+    {
+      "family": "conv_serialized_node0004",
+      "package_base": "r5_n4_hw_v40_wrterm_diag",
+      "disposition": "tested",
+      "reason": "formal_return_consumed"
+    },
+    {
+      "family": "conv_serialized_node0004",
+      "package_base": "r5_n4_hw_v41_wrterm2_diag",
+      "disposition": "tested",
+      "reason": "formal_return_consumed"
+    },
+    {
+      "family": "conv_serialized_node0004",
+      "package_base": "r5_n4_hw_v42_wrterm2_compilefix",
+      "disposition": "superseded",
+      "reason": "quarantined_rule_drift_not_released"
+    },
+    {
+      "family": "conv_serialized_node0004",
+      "package_base": "r5_n4_hw_v43_wrterm2_compilefix",
+      "disposition": "tested",
+      "reason": "formal_return_consumed"
+    },
+    {
+      "family": "conv_serialized_node0004",
+      "package_base": "r5_n4_hw_v44_lc9_split_diag",
+      "disposition": "superseded",
+      "reason": "intermediate_identity_not_released"
+    },
+    {
+      "family": "conv_serialized_node0004",
+      "package_base": "r5_n4_hw_v45_lc9_split_cloudrtl",
+      "disposition": "superseded",
+      "reason": "intermediate_identity_not_released"
+    },
+    {
+      "family": "conv_serialized_node0004",
+      "package_base": "r5_n4_hw_v46_lc9_split_cloudrtl",
+      "disposition": "superseded",
+      "reason": "intermediate_identity_not_released"
+    },
+    {
+      "family": "conv_serialized_node0004",
+      "package_base": "r5_n4_hw_v47_lc9_split_cloudrtl",
+      "disposition": "tested",
+      "reason": "formal_return_consumed"
+    },
+    {
+      "family": "conv_serialized_node0004",
+      "package_base": "r5_n4_hw_v48_lc9_actual",
+      "disposition": "tested",
+      "reason": "formal_return_consumed"
+    },
+    {
+      "family": "conv_serialized_node0004",
+      "package_base": "r5_n4_hw_v49_lc9_actual_compilefix",
+      "disposition": "pending",
+      "reason": "current_mainline_package_ready_not_run",
+      "evidence": ".agents/plan.md"
+    },
+    {
+      "family": "gap_node0071",
+      "package_base": "r5_n71_gap_v33_buffer_ag_idx_pair_diag",
+      "disposition": "tested",
+      "reason": "formal_return_consumed"
+    },
+    {
+      "family": "gap_node0071",
+      "package_base": "r5_n71_gap_v35_dbclk_rdready_diag",
+      "disposition": "superseded",
+      "reason": "isolated_intermediate_not_released"
+    },
+    {
+      "family": "gap_node0071",
+      "package_base": "r5_n71_gap_v36_dbclk_rdready_diag",
+      "disposition": "tested",
+      "reason": "formal_return_consumed"
+    },
+    {
+      "family": "gap_node0071",
+      "package_base": "r5_n71_gap_v37_dbclk_rdready_compilefix",
+      "disposition": "tested",
+      "reason": "formal_return_consumed"
+    },
+    {
+      "family": "gap_node0071",
+      "package_base": "r5_n71_gap_v39_lc_supply_conservation_diag",
+      "disposition": "superseded",
+      "reason": "intermediate_identity_not_released"
+    },
+    {
+      "family": "gap_node0071",
+      "package_base": "r5_n71_gap_v40_lc_supply_conservation_diag",
+      "disposition": "pending",
+      "reason": "current_mainline_package_ready_not_run",
+      "evidence": ".agents/plan.md"
+    },
+    {
+      "family": "qlinear_matmul_node0075",
+      "package_base": "r5_n71_n75_e1f_native_v1",
+      "disposition": "superseded",
+      "reason": "held_missing_manifest_allowlist"
+    },
+    {
+      "family": "qlinear_matmul_node0075",
+      "package_base": "r5_n71_n75_e1f_native_v2",
+      "disposition": "superseded",
+      "reason": "held_canonical_summary_contract"
+    },
+    {
+      "family": "qlinear_matmul_node0075",
+      "package_base": "r5_n71_n75_e1f_native_v3",
+      "disposition": "tested",
+      "reason": "formal_return_consumed"
+    },
+    {
+      "family": "qlinear_matmul_node0075",
+      "package_base": "r5_n71_n75_e1f_native_v4",
+      "disposition": "superseded",
+      "reason": "held_rule_drift_before_release"
+    },
+    {
+      "family": "qlinear_matmul_node0075",
+      "package_base": "r5_n71_n75_e1f_native_v5",
+      "disposition": "tested",
+      "reason": "formal_return_consumed"
+    },
+    {
+      "family": "qlinear_matmul_node0075",
+      "package_base": "r5_n71_n75_0cc_bankrow_v6",
+      "disposition": "superseded",
+      "reason": "held_stale_exec_base"
+    },
+    {
+      "family": "qlinear_matmul_node0075",
+      "package_base": "r5_n71_n75_0cc_bankrow_v7",
+      "disposition": "superseded",
+      "reason": "held_return_allowlist_error"
+    },
+    {
+      "family": "qlinear_matmul_node0075",
+      "package_base": "r5_n71_n75_0cc_bankrow_v8",
+      "disposition": "superseded",
+      "reason": "held_runtime_preflight_consumer"
+    },
+    {
+      "family": "qlinear_matmul_node0075",
+      "package_base": "r5_n71_n75_0cc_bankrow_v9",
+      "disposition": "tested",
+      "reason": "formal_return_consumed_waiting_gap_v40"
+    },
+    {
+      "family": "qlinearadd_node0007",
+      "package_base": "r5_qadd_n7_split_d_full_v26",
+      "disposition": "tested",
+      "reason": "formal_return_consumed_in_project_records"
+    },
+    {
+      "family": "qlinearadd_node0007",
+      "package_base": "r5_qadd_n7_split_c_pairmatrix_v29",
+      "disposition": "tested",
+      "reason": "formal_return_consumed"
+    },
+    {
+      "family": "qlinearadd_node0007",
+      "package_base": "r5_qadd_n7_split_c_rowpairfix_v30",
+      "disposition": "superseded",
+      "reason": "intermediate_identity_not_released"
+    },
+    {
+      "family": "qlinearadd_node0007",
+      "package_base": "r5_qadd_n7_split_c_rowpairfix_rule_v31",
+      "disposition": "superseded",
+      "reason": "intermediate_identity_not_released"
+    },
+    {
+      "family": "qlinearadd_node0007",
+      "package_base": "r5_qadd_n7_crow32_v32",
+      "disposition": "superseded",
+      "reason": "intermediate_identity_not_released"
+    },
+    {
+      "family": "qlinearadd_node0007",
+      "package_base": "r5_qadd_n7_crow32_v33",
+      "disposition": "superseded",
+      "reason": "intermediate_identity_not_released"
+    },
+    {
+      "family": "qlinearadd_node0007",
+      "package_base": "r5_qadd_n7_crow32_v34",
+      "disposition": "superseded",
+      "reason": "intermediate_identity_not_released"
+    },
+    {
+      "family": "qlinearadd_node0007",
+      "package_base": "r5_qadd_n7_crow32_v35",
+      "disposition": "tested",
+      "reason": "formal_return_consumed"
+    },
+    {
+      "family": "qlinearadd_node0007",
+      "package_base": "r5_qadd_n7_cout32_v36",
+      "disposition": "pending",
+      "reason": "current_mainline_package_ready_not_run",
+      "evidence": ".agents/plan.md"
+    },
+    {
+      "family": "requantize_node0001",
+      "package_base": "requant_node0001_e4_stockrtl_v1",
+      "disposition": "tested",
+      "reason": "formal_return_consumed_in_project_records"
+    },
+    {
+      "family": "requantize_node0001",
+      "package_base": "requant_node0001_e4_stockrtl_v2",
+      "disposition": "tested",
+      "reason": "formal_return_consumed_in_project_records"
+    },
+    {
+      "family": "requantize_node0001",
+      "package_base": "rq_node0001_atomic2_stock_v1",
+      "disposition": "tested",
+      "reason": "formal_return_consumed_in_project_records"
+    },
+    {
+      "family": "requantize_node0001",
+      "package_base": "rq_node0001_atomic2_stock_v2",
+      "disposition": "tested",
+      "reason": "formal_return_consumed_in_project_records"
+    },
+    {
+      "family": "requantize_node0001",
+      "package_base": "rq_node0001_guardonly_stock_v1",
+      "disposition": "tested",
+      "reason": "formal_return_consumed_in_project_records"
+    },
+    {
+      "family": "requantize_node0001",
+      "package_base": "rq_node0001_guardonly_stock_v2",
+      "disposition": "superseded",
+      "reason": "intermediate_identity_not_selected_for_run"
+    },
+    {
+      "family": "requantize_node0001",
+      "package_base": "rq_node0001_guardonly_stock_v3",
+      "disposition": "tested",
+      "reason": "formal_return_consumed_in_project_records"
+    },
+    {
+      "family": "requantize_node0001",
+      "package_base": "rq_node0001_guardonly_stock_v4",
+      "disposition": "superseded",
+      "reason": "intermediate_identity_not_selected_for_run"
+    },
+    {
+      "family": "requantize_node0001",
+      "package_base": "rq_node0001_guardonly_directsig_stock_v1",
+      "disposition": "tested",
+      "reason": "formal_return_consumed_in_project_records"
+    },
+    {
+      "family": "requantize_node0001",
+      "package_base": "rq_node0001_guardonly_sfu_ready_stock_v1",
+      "disposition": "tested",
+      "reason": "formal_return_consumed_in_project_records"
+    },
+    {
+      "family": "requantize_node0001",
+      "package_base": "rq_node0001_guardonly_sfu_numeric_stock_v1",
+      "disposition": "tested",
+      "reason": "formal_return_consumed_in_project_records"
+    },
+    {
+      "family": "requantize_node0001",
+      "package_base": "rq_node0001_guardonly_sfu_eventedge_stock_v1",
+      "disposition": "tested",
+      "reason": "formal_return_consumed_in_project_records"
+    },
+    {
+      "family": "requantize_node0001",
+      "package_base": "rq_node0001_guardonly_sfu_eventedge_runtime_root_v2",
+      "disposition": "tested",
+      "reason": "formal_return_consumed_in_project_records"
+    }
+  ]
+}

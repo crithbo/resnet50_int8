@@ -1,0 +1,118 @@
+{
+  "schema": "server-source-bound-observer-next-fresh-dispatch-v1",
+  "version": 2,
+  "rule_id": "CDA-SERVER-SOURCE-BOUND-GENERATED-OBSERVER-001",
+  "enforcement": "required_next_fresh",
+  "applies_to": "Every package whose design begins after this rule publication and whose runner will enter DUT simulation",
+  "does_not_apply_to": [
+    "already building package",
+    "current pending package",
+    "tested or consumed package",
+    "compile-only package with a machine not_applicable disposition"
+  ],
+  "ordered_commands": [
+    {
+      "step": 1,
+      "tool": "tools/generate_server_source_bound_observer.py",
+      "command": "catalog",
+      "required_inputs": [
+        "pinned functional RTL tree SHA",
+        "exact direct RTL source paths"
+      ],
+      "required_output": "server-source-bound-probe-catalog-v1"
+    },
+    {
+      "step": 2,
+      "tool": "family owner",
+      "command": "author machine probe plan using catalog symbol_id values only",
+      "required_inputs": [
+        "known candidate set",
+        "causal boundary roles",
+        "qualified predicates",
+        "owner clock/reset symbol IDs"
+      ],
+      "required_output": "server-source-bound-probe-plan-v2 with exact canonical target, near-miss instance and payload knownness/width contracts"
+    },
+    {
+      "step": 3,
+      "tool": "tools/generate_server_source_bound_observer.py",
+      "command": "materialize",
+      "required_inputs": [
+        "catalog",
+        "plan"
+      ],
+      "required_outputs": [
+        "source_bound_causal_observer.svh",
+        "source_bound_causal_parser.py",
+        "source_bound_probe_binding.json",
+        "source_bound_observer_focus.sv",
+        "server-source-bound-observer-generation-report-v2",
+        "source_bound_observer_generation cheap-check"
+      ]
+    },
+    {
+      "step": 4,
+      "tool": "tools/server_package_pipeline.py",
+      "command": "prepare",
+      "required_inputs": [
+        "require_all_cheap_checks=true",
+        "catalog receipt with surface=probe_catalog",
+        "plan receipt with surface=probe_plan",
+        "generated observer receipt with surface=package_local_hdl",
+        "generated parser receipt with surface=parser",
+        "source_bound_observer_generation PASS cheap-check"
+      ],
+      "required_output": "source_bound_observer_generation disposition=blocking_applicable and enforcement=required_next_fresh"
+    },
+    {
+      "step": 5,
+      "tool": "family final-ZIP validator",
+      "command": "recompute exact final ZIP identities and all applicable shared diagnostic gates once",
+      "required_inputs": [
+        "exact final observer/logger/parser/binding bytes",
+        "runner compile/runtime enable and return allowlist",
+        "family candidate matrix"
+      ],
+      "required_output": "one typed server-source-bound-final-zip-validation-v2 report with candidate positives and wrong-instance/X/Z/knownness/width negatives; no per-error rebuild"
+    }
+  ],
+  "final_zip_validator": {
+    "tool": "tools/generate_server_source_bound_observer.py",
+    "command": "validate-final-zip",
+    "gate_id": "source_bound_final_zip",
+    "enforcement": "required_next_fresh",
+    "required_report_schema": "server-source-bound-final-zip-validation-v2",
+    "fingerprint_field": "diagnostic_semantics_sha256",
+    "semantic_fingerprint_policy": "changed fingerprint requires FIRST_USE_AUDITED; byte-equal typed receipt only may be reused"
+  },
+  "additional_rule_ids": [
+    "CDA-SERVER-DIAGNOSTIC-EXACT-INSTANCE-IDENTITY-AND-GROUPING-001",
+    "CDA-SERVER-DIAGNOSTIC-PAYLOAD-KNOWNNESS-WIDTH-FAIL-CLOSED-001",
+    "CDA-SERVER-DIAGNOSTIC-SEMANTIC-FINGERPRINT-FIRST-USE-AUDIT-001"
+  ],
+  "blocking_mapping": [
+    "server_start",
+    "return"
+  ],
+  "runtime_defaults": {
+    "profile": "HIGH_INFORMATION_CAUSAL_V1",
+    "qualified_and_state_rings_separate": true,
+    "multiclass_encoding": "BITMAP_ALL_TRUE_CLASSES",
+    "payload": "first samples plus rolling digest plus bounded final ring",
+    "per_cycle_text": false,
+    "full_waveform": false,
+    "slowdown_limit_hard": false,
+    "same_workload_ab_calibration_required": true
+  },
+  "unchanged_gates": [
+    "functional RTL authorization",
+    "workload provenance",
+    "natural terminal",
+    "formal D conjunction",
+    "runtime-D absent",
+    "E4",
+    "E5",
+    "host internal tensor replay prohibition"
+  ],
+  "claim_boundary": "Dispatch contract for the next fresh package build only. It does not itself build a package, modify RTL/config/numeric assets, or run a server."
+}

@@ -1,0 +1,92 @@
+{
+  "schema": "server_logger_parser_format_trace_v1",
+  "rule_id": "CDA-SERVER-DIAGNOSTIC-LOGGER-PARSER-EXACT-FORMAT-TRACE-001",
+  "fixture_id": "GAP_V53_LEGACY_UNPADDED_ONLY_PARSER_NEGATIVE",
+  "historical_binding": {
+    "family": "global_average_pool",
+    "source_package_sha256": "5a50594bae06c56040d48637f46709a32dea292d6af925c36b4a235d7a887d8a",
+    "return_sha256": "36c04e4e93fd2f608239c634186c895d71a0edbbd697a8294a9678650d712ff4",
+    "analysis_sha256": "8725caca7993485cc38dcf4daa8fcfe5f96cddba284fa1d78a7a81196bde56be"
+  },
+  "source_bindings": {
+    "logger": {
+      "member_path": "tb_probe/native_return_observer.svh",
+      "sha256": "aac881fc3d2fee63d5a496e575af7c85e4fa05b70ec622a341a8eece6ad98721",
+      "source_span": "6550-6552"
+    },
+    "parser": {
+      "member_path": "package_tools/gap_node0071_mse4_route_factor_decision.py",
+      "sha256": "dac84ee1341694b49c47f0148b9f5d1b0942b6da4796d0506aee3df2e374b94c",
+      "source_span": "5-12"
+    }
+  },
+  "logger_contract": {
+    "source_language": "SYSTEMVERILOG_FDISPLAY",
+    "record_marker": "MSE4_ROUTE_FACTOR_V1",
+    "event_format_string": "%s",
+    "event_render_mode": "RIGHT_JUSTIFIED_FIXED_WIDTH",
+    "event_container_width": 14,
+    "padding_char": " ",
+    "event_tokens": ["QUALIFIED_EDGE", "FACTOR_EDGE", "HEARTBEAT"],
+    "field_names": [
+      "ob_rd",
+      "pre_req_hs0",
+      "pre_req_hs1",
+      "pre_wdata_hs0",
+      "pre_wdata_hs1",
+      "local_req_hs0",
+      "local_req_hs1",
+      "local_wdata_hs0",
+      "local_wdata_hs1",
+      "global_req_in_hs0",
+      "global_req_in_hs1",
+      "global_wdata_in_hs0",
+      "global_wdata_in_hs1",
+      "global_req_out_hs0",
+      "global_req_out_hs1",
+      "global_wdata_out_hs0",
+      "global_wdata_out_hs1",
+      "finish",
+      "remote",
+      "pre_req_v0",
+      "pre_req_v1",
+      "pre_req_r0",
+      "pre_req_r1",
+      "pre_wdata_v0",
+      "pre_wdata_v1",
+      "pre_wdata_r0",
+      "pre_wdata_r1",
+      "local_req_v0",
+      "local_req_v1",
+      "local_req_r0",
+      "local_req_r1",
+      "local_wdata_v0",
+      "local_wdata_v1",
+      "local_wdata_r0",
+      "local_wdata_r1",
+      "global_req_in_v0",
+      "global_req_in_v1",
+      "global_req_in_r0",
+      "global_req_in_r1",
+      "global_wdata_in_v0",
+      "global_wdata_in_v1",
+      "global_wdata_in_r0",
+      "global_wdata_in_r1",
+      "global_req_out_v0",
+      "global_req_out_v1",
+      "global_req_out_r0",
+      "global_req_out_r1",
+      "global_wdata_out_v0",
+      "global_wdata_out_v1",
+      "global_wdata_out_r0",
+      "global_wdata_out_r1"
+    ]
+  },
+  "parser_contract": {
+    "event_prefix_regex": "MSE4_ROUTE_FACTOR_V1\\s+\\|\\s+event=",
+    "event_capture_regex": "(QUALIFIED_EDGE|FACTOR_EDGE|HEARTBEAT)",
+    "normalization_mode": "NONE",
+    "normalization_padding_char": " ",
+    "normalization_max_padding_chars": 0
+  }
+}

@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "server_waveform_return_retention_v1.schema.json",
+  "title": "Post-adjudication waveform return retention v1",
+  "type": "object",
+  "required": ["schema", "kind", "rule_id"],
+  "properties": {
+    "schema": {"const": "server-waveform-return-retention-v1"},
+    "kind": {"enum": ["retention_index", "retention_plan", "raw_waveform_retirement_manifest", "retirement_receipt"]},
+    "rule_id": {"const": "CDA-SERVER-RETURN-WAVEFORM-INCREMENTAL-REVIEW-RETENTION-001"},
+    "family": {"type": "string", "minLength": 1},
+    "track": {"type": "string", "minLength": 1},
+    "max_raw_returns": {"const": 3},
+    "entries": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["return_id", "return_zip", "waveforms", "review_dir", "role", "protected_reasons", "raw_present", "registered_order", "status"],
+        "properties": {
+          "return_id": {"type": "string", "minLength": 1},
+          "return_zip": {"$ref": "#/$defs/file"},
+          "waveforms": {"type": "array", "items": {"$ref": "#/$defs/file"}},
+          "role": {"enum": ["CURRENT", "BASELINE", "CAUSAL", "OTHER"]},
+          "protected_reasons": {"type": "array", "items": {"type": "string"}},
+          "raw_present": {"type": "boolean"},
+          "registered_order": {"type": "integer", "minimum": 1},
+          "status": {"enum": ["ACTIVE_RAW", "CONSUMED_PROTECTED", "ELIGIBLE_RETIRE", "RAW_EVIDENCE_RETIRED"]}
+        },
+        "additionalProperties": true
+      }
+    },
+    "raw_count": {"type": "integer", "minimum": 0},
+    "excess": {"type": "integer", "minimum": 0},
+    "selected_return_ids": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "pass": {"type": "boolean"},
+    "errors": {"type": "array", "items": {"type": "string"}},
+    "deleted": {"type": "boolean"},
+    "recoverability": {"type": "string"},
+    "claim_boundary": {"type": "string", "minLength": 1}
+  },
+  "$defs": {
+    "file": {
+      "type": "object",
+      "required": ["path", "bytes", "sha256"],
+      "properties": {
+        "path": {"type": "string", "minLength": 1},
+        "bytes": {"type": "integer", "minimum": 0},
+        "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": true
+}

@@ -1,0 +1,24 @@
+$date
+  2026-08-12
+$end
+$version portable-query-fixture $end
+$timescale 1 ns $end
+$scope module tb_NDP_Top_new_phy $end
+$scope module dut $end
+$var wire 1 ! bp_pre $end
+$var wire 2 " mask $end
+$upscope $end
+$upscope $end
+$enddefinitions $end
+#0
+0!
+b00 "
+#5
+x!
+b0z "
+#10
+1!
+b1x "
+#15
+z!
+b11 "

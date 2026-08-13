@@ -1,0 +1,315 @@
+{
+  "activation_epoch": "observer-only-wide-causal-v1",
+  "all_coobservable_candidates_aggregated": true,
+  "boundary_observations": [
+    {
+      "layer": "FIRST_DIVERGENCE_UPSTREAM_ONE",
+      "observation_id": "obs_upstream",
+      "predicate": "actual producer valid before the boundary",
+      "signal_ids": ["sig_producer"]
+    },
+    {
+      "layer": "FIRST_DIVERGENCE_CURRENT",
+      "observation_id": "obs_current",
+      "predicate": "actual queue and handshake state at the boundary",
+      "signal_ids": ["sig_queue", "sig_flow"]
+    },
+    {
+      "layer": "FIRST_DIVERGENCE_DOWNSTREAM_ONE",
+      "observation_id": "obs_downstream",
+      "predicate": "actual output and terminal state after the boundary",
+      "signal_ids": ["sig_output"]
+    },
+    {
+      "layer": "STATE_HOLD_CLEAR",
+      "observation_id": "obs_hold_clear",
+      "predicate": "actual route selection and clear state",
+      "signal_ids": ["sig_route"]
+    }
+  ],
+  "budget": {
+    "byte_cap": null,
+    "event_count_cap": null,
+    "formal_return_hard_limit_bytes": null,
+    "observer_evidence_hard_limit_bytes": null,
+    "observer_evidence_soft_limit_bytes": 100000000,
+    "sampling": false,
+    "size_based_deletion": false,
+    "truncation": false
+  },
+  "candidates": [
+    {
+      "candidate_id": "candidate_source",
+      "signature": {
+        "obs_current": false,
+        "obs_downstream": false,
+        "obs_hold_clear": false,
+        "obs_upstream": true
+      }
+    },
+    {
+      "candidate_id": "candidate_queue",
+      "signature": {
+        "obs_current": true,
+        "obs_downstream": false,
+        "obs_hold_clear": true,
+        "obs_upstream": true
+      }
+    },
+    {
+      "candidate_id": "candidate_terminal",
+      "signature": {
+        "obs_current": true,
+        "obs_downstream": true,
+        "obs_hold_clear": false,
+        "obs_upstream": true
+      }
+    }
+  ],
+  "claim_boundary": "Shared observer evidence integrity only; family owner retains signal interpretation and DUT verdict authority.",
+  "event_recording": {
+    "byte_cap": null,
+    "end_state_required": true,
+    "event_cap": null,
+    "fields": [
+      "record_type",
+      "package_id",
+      "execution_id",
+      "attempt_id",
+      "seq",
+      "sim_time",
+      "timescale",
+      "signal_id",
+      "width_bits",
+      "value_4state"
+    ],
+    "format": "JSONL",
+    "ordered_transitions": true,
+    "partial_exit_live_records": true,
+    "periodic_sim_time_heartbeat": true,
+    "sampling": false,
+    "truncation": false
+  },
+  "execution": {
+    "atomic_unique_return": true,
+    "compile_argv": [
+      "make",
+      "compile",
+      "DUMP_VCD=0",
+      "DUMP_FSDB=0",
+      "TB_DUMP_FSDB=0"
+    ],
+    "repeat_safe_exact_owned_reset": true,
+    "runtime_supervision": "PROCESS_TREE_REAP_AND_SIM_TIME_HEARTBEAT",
+    "sim_argv": [
+      "make",
+      "sim",
+      "DUMP_VCD=0",
+      "DUMP_FSDB=0",
+      "TB_DUMP_FSDB=0"
+    ],
+    "waveform_writer": null
+  },
+  "family": "synthetic",
+  "package_id": "observer_only_positive_pkg",
+  "package_members": {
+    "contract": "pkg/OBSERVER_ONLY_CONTRACT.json",
+    "manifest": "pkg/TEST_PACKAGE_MANIFEST.json",
+    "observer": "pkg/obs/source_bound_causal_observer.svh",
+    "parser": "pkg/obs/source_bound_causal_parser.py",
+    "post_sim_helper": "pkg/package_tools/server_post_sim_return.py",
+    "post_sim_request": "pkg/contracts/server_post_sim_return_request.json",
+    "return_allowlist": "pkg/RETURN_ALLOWLIST.json",
+    "runner": "pkg/PREPARE_AND_RUN.sh",
+    "runtime_supervisor": "pkg/tools/server_observer_runtime_supervision.py"
+  },
+  "profile": "OBSERVER_ONLY_WIDE_CAUSAL_V1",
+  "post_sim_historical_compatibility_exemption": {
+    "canonical_helper_bytes": 68148,
+    "canonical_helper_sha256": "91111090ec15dd0226175d4d7a4fc32f304d7f4a87047e51b665565d1ace6939",
+    "canonical_source_path": "tools/server_post_sim_return.py",
+    "inert_literal_tokens": [".fsdb", ".vpd"],
+    "member_path": "pkg/package_tools/server_post_sim_return.py",
+    "request_member": "pkg/contracts/server_post_sim_return_request.json",
+    "schema": "observer-only-post-sim-helper-exemption-v1",
+    "waveform_discovery_disposition": "OMITTED_OR_NULL_ONLY"
+  },
+  "return_members": {
+    "actual_argv": "ACTUAL_COMPILE_SIM_ARGV.json",
+    "chunk_index": "OBSERVER_EVENT_INDEX.json",
+    "chunk_prefix": "observer/chunks/",
+    "compile_core_when_not_started": [
+      "COMPILE_CORE.json",
+      "compile_first_error.txt"
+    ],
+    "decision": "OBSERVER_DECISION.json",
+    "process_tree": "PROCESS_TREE_RECEIPT.json",
+    "return_manifest": "RETURN_MANIFEST.json",
+    "signal_catalog": "OBSERVER_SIGNAL_CATALOG.json",
+    "sim_exit": "SIM_EXIT_RECEIPT.json",
+    "sim_time_heartbeat": "SIM_TIME_HEARTBEAT.json"
+  },
+  "role_coverage": [
+    {"disposition": "covered", "role": "clock", "signal_ids": ["sig_clk"]},
+    {"disposition": "covered", "role": "reset", "signal_ids": ["sig_reset"]},
+    {"disposition": "covered", "role": "stage", "signal_ids": ["sig_stage"]},
+    {"disposition": "covered", "role": "source", "signal_ids": ["sig_producer"]},
+    {"disposition": "covered", "role": "producer", "signal_ids": ["sig_producer"]},
+    {"disposition": "covered", "role": "queue_enqueue", "signal_ids": ["sig_queue"]},
+    {"disposition": "covered", "role": "queue_dequeue", "signal_ids": ["sig_queue"]},
+    {"disposition": "covered", "role": "queue_count", "signal_ids": ["sig_queue"]},
+    {"disposition": "covered", "role": "queue_full", "signal_ids": ["sig_queue"]},
+    {"disposition": "covered", "role": "queue_empty", "signal_ids": ["sig_queue"]},
+    {"disposition": "covered", "role": "request", "signal_ids": ["sig_flow"]},
+    {"disposition": "covered", "role": "valid", "signal_ids": ["sig_producer"]},
+    {"disposition": "covered", "role": "ready", "signal_ids": ["sig_flow"]},
+    {"disposition": "covered", "role": "accept", "signal_ids": ["sig_flow"]},
+    {"disposition": "covered", "role": "backpressure", "signal_ids": ["sig_flow"]},
+    {"disposition": "covered", "role": "selected_port", "signal_ids": ["sig_route"]},
+    {"disposition": "covered", "role": "selected_bank", "signal_ids": ["sig_route"]},
+    {"disposition": "covered", "role": "selected_lane", "signal_ids": ["sig_route"]},
+    {"disposition": "covered", "role": "internal_match", "signal_ids": ["sig_route"]},
+    {"disposition": "covered", "role": "internal_state", "signal_ids": ["sig_queue"]},
+    {"disposition": "covered", "role": "internal_clear", "signal_ids": ["sig_route"]},
+    {"disposition": "covered", "role": "output", "signal_ids": ["sig_output"]},
+    {"disposition": "covered", "role": "wdata", "signal_ids": ["sig_output"]},
+    {"disposition": "covered", "role": "terminal", "signal_ids": ["sig_output"]},
+    {"disposition": "covered", "role": "finish", "signal_ids": ["sig_output"]},
+    {"disposition": "covered", "role": "formal_d", "signal_ids": ["sig_output"]}
+  ],
+  "rule_ids": [
+    "CDA-SERVER-SOURCE-BOUND-GENERATED-OBSERVER-001",
+    "CDA-SERVER-ALWAYS-ON-TRIGGERED-CAUSAL-OBSERVABILITY-001"
+  ],
+  "schema": "server-observer-only-wide-causal-contract-v1",
+  "signals": [
+    {
+      "declaration_span_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "derived_expected_equation": false,
+      "exact_hierarchy": "tb_NDP_Top_new_phy.clk",
+      "observer_drives_dut": false,
+      "owner_clock_signal_id": "sig_clk",
+      "owner_reset_signal_id": "sig_reset",
+      "roles": ["clock"],
+      "signal_id": "sig_clk",
+      "source_binding": "ACTUAL_SOURCE_NET",
+      "source_path": "rtl/tb_NDP_Top_new_phy.sv",
+      "source_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "symbol_id": "sym_000000000000000000000001",
+      "target_module": "tb_NDP_Top_new_phy",
+      "width_bits": 1
+    },
+    {
+      "declaration_span_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "derived_expected_equation": false,
+      "exact_hierarchy": "tb_NDP_Top_new_phy.rst_n",
+      "observer_drives_dut": false,
+      "owner_clock_signal_id": "sig_clk",
+      "owner_reset_signal_id": "sig_reset",
+      "roles": ["reset"],
+      "signal_id": "sig_reset",
+      "source_binding": "ACTUAL_SOURCE_NET",
+      "source_path": "rtl/tb_NDP_Top_new_phy.sv",
+      "source_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "symbol_id": "sym_000000000000000000000002",
+      "target_module": "tb_NDP_Top_new_phy",
+      "width_bits": 1
+    },
+    {
+      "declaration_span_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "derived_expected_equation": false,
+      "exact_hierarchy": "tb_NDP_Top_new_phy.dut.stage_state",
+      "observer_drives_dut": false,
+      "owner_clock_signal_id": "sig_clk",
+      "owner_reset_signal_id": "sig_reset",
+      "roles": ["stage"],
+      "signal_id": "sig_stage",
+      "source_binding": "ACTUAL_SOURCE_NET",
+      "source_path": "rtl/stage.sv",
+      "source_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "symbol_id": "sym_000000000000000000000003",
+      "target_module": "stage",
+      "width_bits": 4
+    },
+    {
+      "declaration_span_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "derived_expected_equation": false,
+      "exact_hierarchy": "tb_NDP_Top_new_phy.dut.producer_valid",
+      "observer_drives_dut": false,
+      "owner_clock_signal_id": "sig_clk",
+      "owner_reset_signal_id": "sig_reset",
+      "roles": ["source", "producer", "valid"],
+      "signal_id": "sig_producer",
+      "source_binding": "ACTUAL_SOURCE_NET",
+      "source_path": "rtl/producer.sv",
+      "source_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "symbol_id": "sym_000000000000000000000004",
+      "target_module": "producer",
+      "width_bits": 1
+    },
+    {
+      "declaration_span_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "derived_expected_equation": false,
+      "exact_hierarchy": "tb_NDP_Top_new_phy.dut.queue_state",
+      "observer_drives_dut": false,
+      "owner_clock_signal_id": "sig_clk",
+      "owner_reset_signal_id": "sig_reset",
+      "roles": ["queue_enqueue", "queue_dequeue", "queue_count", "queue_full", "queue_empty", "internal_state"],
+      "signal_id": "sig_queue",
+      "source_binding": "ACTUAL_SOURCE_NET",
+      "source_path": "rtl/queue.sv",
+      "source_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "symbol_id": "sym_000000000000000000000005",
+      "target_module": "queue",
+      "width_bits": 4
+    },
+    {
+      "declaration_span_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "derived_expected_equation": false,
+      "exact_hierarchy": "tb_NDP_Top_new_phy.dut.flow_state",
+      "observer_drives_dut": false,
+      "owner_clock_signal_id": "sig_clk",
+      "owner_reset_signal_id": "sig_reset",
+      "roles": ["request", "ready", "accept", "backpressure"],
+      "signal_id": "sig_flow",
+      "source_binding": "ACTUAL_SOURCE_NET",
+      "source_path": "rtl/flow.sv",
+      "source_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "symbol_id": "sym_000000000000000000000006",
+      "target_module": "flow",
+      "width_bits": 4
+    },
+    {
+      "declaration_span_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "derived_expected_equation": false,
+      "exact_hierarchy": "tb_NDP_Top_new_phy.dut.route_state",
+      "observer_drives_dut": false,
+      "owner_clock_signal_id": "sig_clk",
+      "owner_reset_signal_id": "sig_reset",
+      "roles": ["selected_port", "selected_bank", "selected_lane", "internal_match", "internal_clear"],
+      "signal_id": "sig_route",
+      "source_binding": "ACTUAL_SOURCE_NET",
+      "source_path": "rtl/route.sv",
+      "source_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "symbol_id": "sym_000000000000000000000007",
+      "target_module": "route",
+      "width_bits": 8
+    },
+    {
+      "declaration_span_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "derived_expected_equation": false,
+      "exact_hierarchy": "tb_NDP_Top_new_phy.dut.output_state",
+      "observer_drives_dut": false,
+      "owner_clock_signal_id": "sig_clk",
+      "owner_reset_signal_id": "sig_reset",
+      "roles": ["output", "wdata", "terminal", "finish", "formal_d"],
+      "signal_id": "sig_output",
+      "source_binding": "ACTUAL_SOURCE_NET",
+      "source_path": "rtl/output.sv",
+      "source_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "symbol_id": "sym_000000000000000000000008",
+      "target_module": "output",
+      "width_bits": 8
+    }
+  ]
+}

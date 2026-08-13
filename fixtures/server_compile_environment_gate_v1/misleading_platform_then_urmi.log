@@ -1,0 +1,7 @@
+Note: This Linux platform is not an officially supported Ubuntu LTS release.
+Warning-[LCA_FEATURES_ENABLED] Some optional feature information follows.
+Library directory '/tools/Synopsys/dc2023/syn/V-2023.12-SP3/dw/sim_ver' cannot be opened because it does not exist.
+Parsing design file 'rtl/DDR_Model/MC_IP/rtl/ecc/ecc_decode.v'
+Error-[URMI] Unresolved modules
+rtl/DDR_Model/MC_IP/rtl/ecc/ecc_decode.v, 98
+  Module definition of above instance is not found in the design.

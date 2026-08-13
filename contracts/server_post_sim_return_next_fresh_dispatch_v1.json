@@ -1,0 +1,79 @@
+{
+  "schema": "server-post-sim-return-next-fresh-dispatch-v1",
+  "version": 1,
+  "rule_id": "CDA-SERVER-POST-SIM-CORE-RETURN-INDEPENDENT-PUBLISH-001",
+  "enforcement": "required_next_fresh",
+  "applies_to": "Every next-fresh package that can start simulation",
+  "does_not_modify": [
+    "current or pending packages",
+    "functional RTL",
+    "operator config or numeric assets",
+    "workload",
+    "timeout",
+    "server state"
+  ],
+  "runtime_contract": {
+    "helper": "tools/server_post_sim_return.py",
+    "invocation": "python3 package_tools/server_post_sim_return.py finalize --request contracts/server_post_sim_return_request.json",
+    "api": "JSON_REQUEST_ONLY_NO_POSITIONAL_COLLECTOR",
+    "sim_exit_persisted_before_plugins": true,
+    "plugins_isolated": true,
+    "plugin_failure_blocks_core_return": false,
+    "partial_exit_live_causal_record": {
+      "rule_id": "CDA-SERVER-DIAGNOSTIC-PARTIAL-EXIT-LIVE-CAUSAL-RECORD-001",
+      "required_signals": ["INT", "TERM"],
+      "required_plugin_disposition_coverage": "EXACT",
+      "final_block_ring_sole_input_forbidden": true,
+      "local_fixture_execution_required": true,
+      "fixture_timeout_seconds_max": 30
+    },
+    "waveform_dynamic_discovery": {
+      "request_field": "waveform_discovery",
+      "runtime_receipt_source": "evidence/waveform/WAVEFORM_RUNTIME_RECEIPT.json",
+      "simulation_started_missing_waveform": "PUBLISH_EVIDENCE_INCOMPLETE_FAIL_CLOSED",
+      "simulation_not_started_missing_waveform": "ALLOWED_WITH_COMPILE_CORE",
+      "copy_mode": "STREAM_ALL_MATCHING_NO_SIZE_LIMIT",
+      "wave_zip_compression": "STORED"
+    },
+    "return_publish": "ATOMIC_NO_OVERWRITE_FIXED_SIMRESULT",
+    "failed_publish_recovery": "RERUN_SAME_FINALIZER_REQUEST_WITHOUT_RERUNNING_SIMULATION"
+  },
+  "required_final_zip_members": [
+    "package_tools/server_post_sim_return.py",
+    "contracts/server_post_sim_return_request.json",
+    "contracts/server_post_sim_return_contract.json"
+  ],
+  "required_scenarios": [
+    "natural_success",
+    "natural_success_plugin_failure",
+    "simulation_nonzero",
+    "idempotent_reentry"
+  ],
+  "historical_regressions": [
+    {
+      "mechanism": "POSITIONAL_COLLECTOR_ABI_DRIFT",
+      "evidence": "serialized Conv v64 six-argument caller versus five-argument wrapper"
+    },
+    {
+      "mechanism": "FINALIZER_UNBOUND_VARIABLE",
+      "evidence": "GAP v20 finalizer-local variable escape"
+    },
+    {
+      "mechanism": "GENERATED_FALLBACK_SYNTAX",
+      "evidence": "GAP v48 heredoc escaping failure"
+    },
+    {
+      "mechanism": "PARSER_PATH_OR_CWD_DRIFT",
+      "evidence": "GAP v50 canonical package-root parser rebinding failure"
+    },
+    {
+      "mechanism": "POST_SIM_COLLECTION_LOSS",
+      "evidence": "native Conv p4 and recovered QAdd/Conv returns"
+    },
+    {
+      "mechanism": "FINAL_BLOCK_ONLY_CAUSAL_INPUT_ON_PARTIAL_EXIT",
+      "evidence": "native Conv p33b INT preserved qualified live EVENT rows while final-only RING_POST rows were absent"
+    }
+  ],
+  "claim_boundary": "Return-core infrastructure only. A published core return may still be EVIDENCE_INCOMPLETE and does not prove natural terminal, formal D, E4 or E5."
+}

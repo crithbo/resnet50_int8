@@ -1,6 +1,6 @@
 # NDP_copy01 硬件仿真入口
 
-最后更新：2026-07-24（只保留活动接口事实）
+最后更新：2026-08-13（observer-only 宽因果回传与原生 production flow）
 
 本文件只说明活动 Make/TB/filelist 的实际消费接口。包结构、runner、回传和预算看
 `.agents/rules/服务器测试包生成规则.md`；算子语义看专项规则；版本状态看
@@ -15,11 +15,20 @@
 | `rtl/filelists/NDP_Top_phy_filelist.f` | 顶层 PHY 编译源集合 |
 
 `NDP_copy01/rtl/**` 默认只读。普通服务器包不得携带、覆盖、patch、安装、恢复或间接
-替换任何功能 RTL。服务器实际源码可以与本地/GitHub 不同；本轮必须记录实际 Make、TB、
-filelist、RTL tree 和 focused RTL 的 pre/post/post-run 身份稳定性。
+替换任何功能 RTL。当前本地 `rtl/` 与
+`Trassic2.0_RTL/code/NDP_rtl` commit
+`0ccae916ef61904a64d6cf8ec1d1931b45e428d8` 精确一致：2262 files，
+tree receipt `c6902de6fabfce81ee10af02cec238e5b11d2fdece9454041415c455556e1093`。
+旧 `rtl_pre_*` 备份目录已删除，不再采用保留副本作为活动源。
 
-真实 VCS/Verdi 只在具备 Synopsys 依赖和 license 的 Linux 服务器运行。Windows 本机
-只负责 package/manifest、返回分析和回归验证。
+云端 GitHub `xlsjdjdk/Trassic2.0_RTL/master` 是功能 RTL 权威；本地和服务器实际源码差异
+本身不阻止 compile 成功后的 simulation。正式包回传仍须记录 actual compile identity，
+对照云端 commit 做算子 causal-cone 影响裁决；不能把本地同步冒充 production compile
+receipt。旧包名或旧构建 provenance（例如 `df23e4d`）不表示服务器仍在使用旧 RTL。
+
+真实 VCS 只在具备 Synopsys compile/simulation 依赖和 license 的 Linux 服务器运行；Verdi只用于
+历史波形，不是 current observer-only 路径依赖。Windows 本机负责 package/manifest、event return
+解析、返回分析和回归验证。
 
 ## 2. 工作目录和 Make 语义
 
@@ -33,12 +42,33 @@ make -f Makefile.tb_NDP_Top_new_phy compile sim \
 
 正式测试应由包内唯一 runner 调用当前 Make 或隔离 simv；用户不直接拼接复杂参数。
 
+runner 在 arm partial-return finalizer 后，应直接执行 production `cd`、package-owned install、compile
+与 sim。在唯一 `# CODEX_PRODUCTION_LAUNCH` 之前，禁止以 `test/stat/find/readlink/realpath`、hash/tree、
+Git identity、`command -v/which`、Make dry-run 或 module/provider 短探针证明服务器已有文件、目录、
+RTL、TB、filelist、library 或工具存在；环境完整性只由真实命令的 cwd/argv/log/exit 裁决。
+
+真实命令失败后，先与 `ndp-sim/README_SERVER_PACKAGE_LOCAL.md`、generate_python_golden/model_execplan
+README 与 `main.py`、活动 Make/TB/filelist 做差分，核对 cwd、`../model_execplan/main.py`、明确的
+regenerated-op 日志、真实 bitstream、同包 `SCA_CFG/SCA_CFG_D`、TB path echo、`Repeat_Num` 和 actual
+consumer path。仓库未保存的 server loader/start/wait/readback 命令固定标为 `SERVER_RUNTIME_UNKNOWN`，
+不得猜测，也不得据此新增 preflight。
+
 - `compile`：VCS compile/elaboration，产生临时 simv/csrc；
 - `sim`：运行 simv，历史 target 可能归档完整结果树；
 - 正式 runner 默认使用 no-archive 路径，避免复制 build tree；
 - `SCA_CFG`/`+SCA_CFG`：主 SCA；
 - `+SCA_CFG_D`：D readback SCA；
-- `DUMP_VCD/DUMP_FSDB/TB_DUMP_FSDB`：普通测试必须显式为 0。
+- `DUMP_VCD/DUMP_FSDB/TB_DUMP_FSDB`：current next-fresh 固定为 `0/0/0`。VPD、FSDB、VCD、FST、
+  dump Tcl、PLI waveform writer、Verdi/WaveUtils query 及其 shard/lock 都不是新包输入或回传成员；
+  NDP 根目录已有 `inter.fsdb`/`novas.fsdb` 也永远不是本轮证据。
+- 动态证据由 package-local、source-bound、只读 observer 产生，并写入本次 attempt 的
+  signal-id catalog、分块 4-state event、end-state、sim-time heartbeat 与 canonical decision。
+  actual compile/sim argv、observer plan/source、parser 和 formal return allowlist 必须绑定同一
+  package/execution/attempt 与实际 source identity。
+- 共享实现入口为 `contracts/server_observer_only_wide_causal_dispatch_v1.json`，由
+  `tools/validate_server_observer_only_wide_causal.py` 和
+  `tools/server_observer_runtime_supervision.py` 分别验证 exact package/return 与监督 simulator tree；
+  package 不得自行恢复已退休的 waveform gate。
 
 ## 3. SCA loader 和 payload ABI
 
@@ -112,24 +142,34 @@ observer 证明所有目标完成，不能把 slice1 单事件外推为全局完
 5. preload、内部 MSE write、文件存在、Make 返回 0、单 slice 完成或成功文本均不能替代
    正式 readback。
 
-## 7. Optional 只读 observer
+## 7. Mandatory source-bound 只读 observer
 
-observer 不是默认依赖。只有专项规则声明时才启用，并且必须：
+所有可能进入 DUT simulation 的 next-fresh 包都必须启用 observer，并且必须：
 
 - 位于 `rtl/` 外，不驱动 DUT；
 - 使用全新 compile 身份；
-- 由 plusarg 显式开启并限流；
-- 记录目标 CONFIG/exec/finish、MSE/buffer/array handshake 或 stall；
-- 外部终止时 `fflush` 最远 checkpoint；
+- 由 plusarg 显式开启，记录真实 DUT net，不用 observer 重算的 expected equation 代替 actual net；
+- 以足够宽的因果 catalog 覆盖 clock/reset/stage、producer、queue、request/accept/backpressure、
+  selected port/bank/lane、internal match/state/clear、output/wdata、terminal/finish/formal-D；
+- 用本机可读 signal-id catalog 与分块 JSONL/TSV 记录每个选中信号的有序 0/1/X/Z transition、
+  exact time/sequence/width 与 end state；timeout/HUP/INT/TERM 时 `fflush` 已有 chunk；
 - 不改变 ready/valid、数据、时序、完成或 timeout。
 
-缺 observer 时，部分回传只能裁决到最后一个公开日志事件。波形不能替代文本 observer
-或正式 readback。
+100,000,000 bytes 是 observer evidence aggregate 的软偏好，不是 hard cap。超出只记录 warning，
+不得截断、采样、按大小删除或阻止 formal return。simulation_started=true 时缺 required catalog/
+chunk/index/parser/decision receipt 必须标记 `DIAGNOSTIC_EVIDENCE_INCOMPLETE`。
 
 ## 8. 环境和成功边界
 
-需要 Linux x86_64、bash/GNU make/coreutils、VCS/license，以及 filelist 所需
-DesignWare、VIP、DDR/PHY 库。波形诊断另需 Verdi/PLI，但普通完成包默认不启用。
+需要 Linux x86_64、bash/GNU make/coreutils、VCS/license，以及 filelist 所需 DesignWare、VIP、
+DDR/PHY 库；observer-only 回传不要求 Verdi、DVE、WaveUtils 或本机 Synopsys decoder。
+
+normal/timeout/HUP/INT/TERM 都须回收已 close/flush 的 observer chunks 与 core。compile 未成功或
+simulation 未启动时允许无 event，但 compile-core return 仍是必需。同一 bash/package 顺序重复
+运行时，只清除 exact package-owned cfg/attempt leaf（包括 stale observer chunks），
+不得触碰 foreign sibling 或根目录直接项；每轮使用新 execution identity 和唯一 return 名，历史
+return 必须保留且不得覆盖。process-tree supervisor 仍须完成 child-subreaper、PGID、内部 timeout、
+TERM→wait→KILL/reap 与 sim-time heartbeat；无需等待不存在的 waveform writer。
 
 一次结果只有在 package/argv/入口身份、compile、preload、目标完成、各层退出状态、
 readback exact-set/格式、独立 golden 和算子专项动态门全部通过后，才能进入相应 E4。

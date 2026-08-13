@@ -1,0 +1,338 @@
+{
+  "active_rule_receipts": [
+    {
+        "bytes": 11650,
+      "path": ".agents/rules/生成前必读索引.md",
+        "sha256": "53d03da4cb0d9bcdc7d3537afa466ebdab8a61a658030562f180779802ed2c10"
+    },
+    {
+      "bytes": 37680,
+      "path": ".agents/rules/算子配置规则.md",
+      "sha256": "dc5243226bacde799b368d37fb9eb656e6b7e3d33a0a2932ae72ab35415ae3e1"
+    },
+    {
+      "bytes": 14974,
+      "path": ".agents/rules/NDP硬件字段语义.md",
+      "sha256": "603d57805bc5a5bdfca7406c402bc94db60c06ea6682493d672abb91671b1055"
+    },
+    {
+        "bytes": 177437,
+      "path": ".agents/rules/服务器测试包生成规则.md",
+        "sha256": "f6cd29d5e1cc99efb70dc316f80400f72d9c735552dcb5696e817cc8cd66eae7"
+    },
+    {
+      "bytes": 8677,
+      "path": ".agents/rules/会话转接与所有权规则.md",
+      "sha256": "9e3859dff32de42f0964ff3038ab7b78c84d142a24016ee552c706ef01e529b9"
+    },
+    {
+      "bytes": 10387,
+      "path": ".agents/rules/INT8_SA点积专项规则.md",
+      "sha256": "41c284d27a6f2176567e1d6495147ca625ea9023a93a7a8832c37999c78df927"
+    },
+    {
+      "bytes": 6934,
+      "path": ".agents/rules/精确UINT8量化尾专项规则.md",
+      "sha256": "fef9ebcb1621e74ddd9aef0f936c5c8ce1fcf34c2be9000b1deeb4b11045ea4f"
+    },
+    {
+      "bytes": 3298,
+      "path": ".agents/rules/最小双Stage生命周期规则.md",
+      "sha256": "821b8b04b0e33d0a93e06a3a1bca8307b417bcb63f109cf12414891e9a0bc171"
+    },
+    {
+      "bytes": 9223,
+      "path": ".agents/rules/DequantizeLinear算子配置规则.md",
+      "sha256": "0b237164e712f6f83004affd45678ee301363c72a21968a4d45ce6fe31b3781b"
+    },
+    {
+      "bytes": 3891,
+      "path": ".agents/rules/Flatten_View算子配置规则.md",
+      "sha256": "c9fe676a9fe79315371da4715f4a67698f8038dfb925f8dab68223b4f805e1ac"
+    },
+    {
+      "bytes": 16337,
+      "path": ".agents/rules/QLinearAdd算子配置规则.md",
+      "sha256": "54de9e9c7354bc461a8c3411481687f56f11f7be8d81a6e712dd6cdc63352f2b"
+    },
+    {
+      "bytes": 7879,
+      "path": ".agents/rules/RequantizeUint8算子配置规则.md",
+      "sha256": "0275425ecee387361ebb3358bb6283e3c28ad8311171ce302f7551738d37f88a"
+    },
+    {
+      "bytes": 8116,
+      "path": ".agents/rules/GAP_int32_mac_bypass_rules.md",
+      "sha256": "4c3a88b8c6967812b0b64a550bb92a45117106f34996102335dc26fa1a211f8b"
+    },
+    {
+      "bytes": 20659,
+      "path": ".agents/rules/整网测试收敛优化专项规则.md",
+      "sha256": "e9842d80048ca0bbd75ffcde7bdc53e522219b9516ebe0e4c8614dfd9f026b29"
+    }
+  ],
+  "claim_boundary": "Exclusive local session ownership and task routing only; no server lease/run/upload, RTL/config/numeric change, or E4/E5 claim.",
+  "mainline_role_id": "mainline.control",
+  "registry_epoch": 6,
+  "roles": [
+    {
+      "current_task": {
+        "next_action": "native-flow non-interference gate is activated for later next-fresh packages; do not rebuild current packages and perform no server action",
+        "objective": "enforce direct native production launch without server file/provider preflight and require post-failure native-flow differential",
+        "pointer": {
+          "bytes": 1476,
+          "path": ".agents/task_records/20260813_server_runtime_preflight_native_flow_mainline_activation.md",
+          "sha256": "f941fd8d3dede1b35293ed8a2dafb531d0d248d0cc45c4c1a82843cb21962332"
+        },
+        "status": "ACTIVE"
+      },
+      "forbidden_scope": [
+        "rtl/",
+        "artifacts/operator_config_validation/r5-server-test-packages/pending/"
+      ],
+      "in_flight": {
+        "lease_id": null,
+        "package": null,
+        "return_zip": null,
+        "server_root": null,
+        "state": "NONE"
+      },
+      "latest_task_record": {
+      "bytes": 1476,
+      "path": ".agents/task_records/20260813_server_runtime_preflight_native_flow_mainline_activation.md",
+      "sha256": "f941fd8d3dede1b35293ed8a2dafb531d0d248d0cc45c4c1a82843cb21962332"
+      },
+      "owner_epoch": 2,
+      "role_id": "mainline.control",
+      "role_kind": "MAINLINE",
+      "scope": "project control plane, plan/rule adjudication and dispatch",
+      "status": "ACTIVE",
+      "thread_id": "019ff027-e7db-72a3-b282-cfad8708da05",
+      "write_scope": [
+        ".agents/plan.md",
+        ".agents/rules/",
+        "contracts/current_session_owner_registry_v1.json",
+        ".agents/task_records/"
+      ]
+    },
+    {
+      "current_task": {
+        "next_action": "build and locally validate a fresh native-flow GAP successor, then proactively return PACKAGE_READY_NOT_RUN or an explicit terminal state; no server action",
+        "objective": "preserve the v60 slice-local and sum_s2 observer target while rebuilding under direct native production-flow and corrected first-true-error evidence",
+        "pointer": {
+          "bytes": 2340,
+          "path": ".agents/task_records/20260813_four_family_native_flow_fresh_build_dispatch.md",
+          "sha256": "577f676b0972cc1e66e6010263135a042772d78e312eb629825b1b084aca1302"
+        },
+        "status": "ACTIVE"
+      },
+      "forbidden_scope": [
+        ".agents/plan.md",
+        ".agents/rules/",
+        "rtl/"
+      ],
+      "in_flight": {
+        "lease_id": null,
+      "package": null,
+      "return_zip": null,
+      "server_root": null,
+      "state": "PACKAGE_BUILDING"
+      },
+      "latest_task_record": {
+        "bytes": 7822,
+        "path": "outputs/gap_node0071_v60_return_r1786594664161300855_1821926/return_analysis.json",
+        "sha256": "1a17b4fda3dde4a1267942d7aa871e386f47fbe8d8aaf1aa6c377c4e614c8859"
+      },
+      "owner_epoch": 2,
+      "role_id": "family.gap",
+      "role_kind": "FAMILY_OWNER",
+      "scope": "GlobalAveragePool node0071 family",
+      "status": "ACTIVE",
+      "thread_id": "019ff02d-8225-7d21-9779-e46ce4130572",
+      "write_scope": [
+        "artifacts/operator_config_validation/",
+        "outputs/"
+      ]
+    },
+    {
+      "current_task": {
+        "next_action": "await explicit user authorization before running exact v90b; do not upload, lease or perform server action",
+        "objective": "use v90b direct native production-flow and corrected actual-source observer evidence to adjudicate the v88/v89 compile difference and retained MSE4 causal target",
+        "pointer": {
+          "bytes": 4242,
+          "path": ".agents/task_records/20260813_conv_node0004_v90b_nativeflow_package_ready_not_run.md",
+          "sha256": "1ae1d8db901e046e248dad51bd1d088abe45f5fe6a6e37e2a672fe66b5580059"
+        },
+        "status": "PACKAGE_READY_NOT_RUN"
+      },
+      "forbidden_scope": [
+        ".agents/plan.md",
+        ".agents/rules/",
+        "rtl/"
+      ],
+      "in_flight": {
+        "lease_id": null,
+        "package": {
+          "bytes": 5852687,
+          "path": "artifacts/operator_config_validation/r5-server-test-packages/pending/r5_n4_hw_v90b_nativeflow.zip",
+          "sha256": "c0b2871aed019494c0526534a1aec56bc18304281cedbdd034ee14e55afbfc1e"
+        },
+        "return_zip": null,
+        "server_root": null,
+        "state": "PACKAGE_READY_NOT_RUN"
+      },
+      "latest_task_record": {
+        "bytes": 4242,
+        "path": ".agents/task_records/20260813_conv_node0004_v90b_nativeflow_package_ready_not_run.md",
+        "sha256": "1ae1d8db901e046e248dad51bd1d088abe45f5fe6a6e37e2a672fe66b5580059"
+      },
+      "owner_epoch": 2,
+      "role_id": "family.conv.serialized",
+      "role_kind": "FAMILY_OWNER",
+      "scope": "serialized Conv node0004 family",
+      "status": "ACTIVE",
+      "thread_id": "019ff02d-901b-7f70-a9da-f54e268b5bbe",
+      "write_scope": [
+        "artifacts/operator_config_validation/",
+        "outputs/conv_node0004_",
+        "tools/",
+        "tests/"
+      ]
+    },
+    {
+      "current_task": {
+        "next_action": "await explicit user authorization before running exact p46; do not upload, lease or perform server action",
+        "objective": "use p46 direct native production-flow and corrected compile-fail core evidence to execute the p42-equivalent MSE4 wdata and slice-finish causal target",
+        "pointer": {
+          "bytes": 7451,
+          "path": ".agents/task_records/20260813_conv_native_p46_nativeflow_package_ready_not_run.md",
+          "sha256": "c9b440034545facfd96dfa188b41875e8ac4b3e7a0f6d43c4eb68f5995d2c7d0"
+        },
+        "status": "PACKAGE_READY_NOT_RUN"
+      },
+      "forbidden_scope": [
+        ".agents/plan.md",
+        ".agents/rules/",
+        "rtl/"
+      ],
+      "in_flight": {
+        "lease_id": null,
+        "package": {
+          "bytes": 5979948,
+          "path": "artifacts/operator_config_validation/r5-server-test-packages/pending/r5_n4_0cc_p46_nativeflow.zip",
+          "sha256": "6a648613492d66b244564a0acc8f7d59709a971cf2c84d47c4922fe040f61478"
+        },
+        "return_zip": null,
+        "server_root": null,
+        "state": "PACKAGE_READY_NOT_RUN"
+      },
+      "latest_task_record": {
+        "bytes": 7451,
+        "path": ".agents/task_records/20260813_conv_native_p46_nativeflow_package_ready_not_run.md",
+        "sha256": "c9b440034545facfd96dfa188b41875e8ac4b3e7a0f6d43c4eb68f5995d2c7d0"
+      },
+      "owner_epoch": 2,
+      "role_id": "family.conv.native",
+      "role_kind": "FAMILY_OWNER",
+      "scope": "native four-lane Conv node0004 family",
+      "status": "ACTIVE",
+      "thread_id": "019ff02d-974d-7c72-a4d5-de8dbf4ae60c",
+      "write_scope": [
+        "artifacts/operator_config_validation/",
+        "outputs/conv_native_",
+        "tools/",
+        "tests/"
+      ]
+    },
+    {
+      "current_task": {
+        "next_action": "await explicit user authorization before running exact v62; do not upload, lease or perform server action",
+        "objective": "use v62 direct native production-flow while preserving the v61 identity repair, wide two-ping-pong causal target and frozen QAdd semantics",
+        "pointer": {
+          "bytes": 2604,
+          "path": ".agents/task_records/20260813_qlinearadd_node0007_v62_nativeflow_package_ready_not_run.md",
+          "sha256": "1c59e11519b9c24e56695d4ceef5da4d32b914143142f4dc20007e5c38656edd"
+        },
+        "status": "PACKAGE_READY_NOT_RUN"
+      },
+      "forbidden_scope": [
+        ".agents/plan.md",
+        ".agents/rules/",
+        "rtl/"
+      ],
+      "in_flight": {
+        "lease_id": null,
+        "package": {
+          "bytes": 108679567,
+          "path": "artifacts/operator_config_validation/r5-server-test-packages/pending/r5_qadd_n7_tailround_lanephase_v62_nfobs.zip",
+          "sha256": "4133a6e1aabb4fb9e60d95a83ea1a804eb7ae2f6d0689f877452a73e934d2708"
+        },
+        "return_zip": null,
+        "server_root": null,
+        "state": "PACKAGE_READY_NOT_RUN"
+      },
+      "latest_task_record": {
+        "bytes": 2604,
+        "path": ".agents/task_records/20260813_qlinearadd_node0007_v62_nativeflow_package_ready_not_run.md",
+        "sha256": "1c59e11519b9c24e56695d4ceef5da4d32b914143142f4dc20007e5c38656edd"
+      },
+      "owner_epoch": 2,
+      "role_id": "family.qlinearadd",
+      "role_kind": "FAMILY_OWNER",
+      "scope": "QLinearAdd node0007 family",
+      "status": "ACTIVE",
+      "thread_id": "019ff02d-9e93-7d61-8c98-c928fdea157c",
+      "write_scope": [
+        "artifacts/operator_config_validation/",
+        "outputs/qlinearadd_",
+        "tools/",
+        "tests/"
+      ]
+    },
+    {
+      "current_task": {
+        "next_action": "observer-only post-sim conjunction fix is current-disk activated and frozen; await only a new shared-method defect without building family packages or performing server action",
+        "objective": "maintain the observer-only validator/runtime supervisor, exact inert canonical post-sim helper exception and package-local HDL gates while family owners retain diagnosis and package ownership",
+        "pointer": {
+          "bytes": 3421,
+          "path": ".agents/task_records/20260813_observer_only_post_sim_conjunction_fix_v1.md",
+          "sha256": "d557aeb00e26b85783a5c12f48f93d459c2453daf975665519d455881db498a7"
+        },
+        "status": "ACTIVE"
+      },
+      "forbidden_scope": [
+        ".agents/plan.md",
+        "rtl/",
+        "artifacts/operator_config_validation/r5-server-test-packages/pending/"
+      ],
+      "in_flight": {
+        "lease_id": null,
+        "package": null,
+        "return_zip": null,
+        "server_root": null,
+        "state": "NONE"
+      },
+      "latest_task_record": {
+        "bytes": 2521,
+        "path": ".agents/task_records/20260813_fsdb_process_tree_quiescence_gate_v1.md",
+        "sha256": "2b22a5283875d3e15501252c3d79671885b642e8cf12a2a83b02ff6b852289c0"
+      },
+      "owner_epoch": 1,
+      "role_id": "optimizer.whole-network",
+      "role_kind": "SPECIALIST_OWNER",
+      "scope": "whole-network convergence and shared shadow validator",
+      "status": "ACTIVE",
+      "thread_id": "019fd276-14c5-7800-94db-87ebfb9ce632",
+      "write_scope": [
+        "artifacts/operator_config_validation/r5-whole-network-",
+        "outputs/",
+        "tools/",
+        "schemas/",
+        "contracts/",
+        "tests/",
+        "fixtures/"
+      ]
+    }
+  ],
+  "schema": "session-owner-registry-v1"
+}

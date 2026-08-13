@@ -1,0 +1,28 @@
+{
+  "schema": "server-waveform-review-chunk-v1",
+  "expected_review_revision": 0,
+  "return_zip_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "waveform_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+  "analysis_tool": {
+    "name": "registered-fsdb-query",
+    "version": "fixture-v1",
+    "argv": ["query", "--sample", "10"],
+    "exit_code": 0
+  },
+  "query": {
+    "scope": ["tb.dut.queue"],
+    "time_window": {"start": 100, "end": 120, "timescale": "1ns"},
+    "signals": ["tb.dut.queue.full"],
+    "no_sampling": false,
+    "no_truncation": true
+  },
+  "candidate_updates": {"open": ["queue", "consumer"], "closed": []},
+  "status": "EVIDENCE_ADDED",
+  "finding": "Sampled trace is insufficient.",
+  "last_proven_good": null,
+  "first_divergence": null,
+  "root_cause": null,
+  "next_query": "Repeat without sampling.",
+  "unreviewed_scope": ["unsampled transitions"],
+  "claim_boundary": "Negative fixture only."
+}

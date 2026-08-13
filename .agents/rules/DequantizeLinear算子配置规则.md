@@ -92,15 +92,14 @@ GA `inport0` 的 A buffer；第二层 `inport0` 只能来自对应第一层 PE�
 - 禁止无效槽作为 ALU 输入
 - 禁止依赖 GA transout compaction
 
-因此 GAP v7 中的 transout occupancy/stale-C 缺陷不属于本算子的数值
-数据流；任何派生 JSON 若引入 transout，则必须重新进入 RTL_CONTROL 审核。
+因此 transout occupancy/stale-C 缺陷不属于本算子的已授权数值数据流；任何派生 JSON
+若引入 transout，必须重新进入 RTL_CONTROL 审核。
 
 ## 3. 物理布局
 
 ### CDA-DEQUANT-LAYOUT-HIGH4-001
 
-网络布局沿用
-`w4_group4x7_batch_channel28_candidate_v1`：
+对本规则覆盖的 `[16,1000]` 实例，网络布局固定为：
 
 - 7 个 HIGH4 group
 - group 样本数为 `(3,3,2,2,2,2,2)`
@@ -216,32 +215,6 @@ static→materialized 逐 leaf diff 中声明 owner、输入 bits、变换公式
 负值、signed zero 可观察或 NaN/Inf 的实例。node0072 的 uint8、zp=0 非负域和
 32,768 元素全域 bit-exact 证明满足此窄门。
 
-### CDA-DEQUANT-NODE0072-CONFIG-ONLY-E2-001
-
-node0072 `uint8[16,2048,1,1]→fp32[16,2048,1,1]`、scale bits
-`0x3cbf57ec`、zero-point 0 已完成本地
-`CONFIG_ONLY_CORRECTNESS_BASELINE`：
-
-- 28 slice，hardware CWH `[16,74,1]`，每片 74 occurrence；
-- two-stage 4 ADD(`-0.0`)→4 MUL(scale)，只复用 node0077 的结构；
-- final address-bound JSON、mapping、bitstream、execplan/SCA、address/lifetime、
-  physical D、logical inverse 与 W3 逐 bit 闭合；
-- 每片最终 D coverage 为 `74×64=4736` bytes，28 片 physical 132,608 bytes，
-  其中 logical valid 131,072 bytes、padding 1,536 bytes；
-- static→materialized 10 个变化全部有 owner，unexpected=0；
-- 两份空 cache 隔离物化的语义产物逐 SHA 相同。
-
-该规则只批准 node0072 的 local materialized E2，不批准正式 target、production、
-performance、E4/E5 或 node0072→node0073 integrated binding。保持：
-
-- `B_DEQUANT_NODE0072_NATIVE_STANDALONE_PATH`
-- `B_DEQUANT_NODE0072_FORMAL_LAYOUT_APPROVAL`
-- `B_DEQUANT_NODE0072_HARDWARE_E4_E5`
-- `B_DEQUANT_NODE0072_TO_NODE0073_INTEGRATED_BINDING`
-
-权威机器合同：
-`contracts/operator_config/node0072_dequant_config_only_correctness_baseline_v1.json`。
-
 ## 5. 本地 E2 与服务器 E4/E5 门
 
 ### CDA-DEQUANT-E2-001
@@ -279,62 +252,6 @@ performance、E4/E5 或 node0072→node0073 integrated binding。保持：
 服务器 package 必须按 `生成前必读索引.md` 的 profile 选择文件；专项数值门保持不变，
 包内任何路径均不得修改服务器 `rtl/` 文件夹内的文件。
 
-### CDA-DEQUANT-NODE0077-E4-V6-DYNAMIC-PASS-001
-
-`dequant_node0077_stockrtl_e4_onecmd_v2` 是 node0077/v6 的第一份正式 E4 通过证据：
-
-- return ZIP 为 252,634 bytes，SHA256
-  `79b3ea77d7a1651ee77181cffe7264d86da59f47fffa17277d603d8a727272d4`；
-  来源 package SHA256 为
-  `2ac27a4856b36bb660c0293ff53f84794464283712f20fe0d84dabfa16b699e0`；
-- 内部 `RETURN_RECEIPT` 的 105 项 payload exact-set、size、SHA 和 allowlist 全部通过；
-  compile/sim/run 均为 0，28/28 slice 全部自然 start/finish，无 timeout、critical
-  marker 或越界；
-- 正式 D 为 28×188 个 128-bit 行，共 5,264 行；地址唯一、未 preload，28 片全部
-  逐 bit 对各自 golden。每片前 750 个 fp32 正确，末尾两个为 `+0.0f`；
-- layout inverse 完整且唯一地还原 `float32[16,1000]`，actual/expected SHA256 同为
-  `d5aa938813ec8ef7fe51cc2288df5f0e1782c19729a184cef248718ce83a311d`；
-- temporal observer 独立记录 5,264 request 与 5,264 write-data，每片各 188，
-  finish summary 一致；未做未经证明的 request/data 配对，也未丢弃 accepted data；
-- stock RTL、focused RTL、observer 和安装命名空间在声明的全部阶段保持稳定，
-  `functional_rtl_unchanged=true`。
-
-包内 `FIRST_DYNAMIC_RUN` 归一化为 `FIRST_DYNAMIC_PASS / NO_PRIOR_DYNAMIC_BASELINE`，
-不得称为 regression。该结果解除 `B_DEQUANT_SERVER_E4_E5` 中的 E4 部分，当前唯一
-动态 blocker 为 `B_DEQUANT_SERVER_E5`；`candidate_release=false` 仍保持。
-
-允许从完全相同的 v6 语义资产生成全新 package/install/run/return 身份的 E5。E5 必须
-复验相同的 28×188 正式 D、layout inverse、自然完成、temporal raw count、return
-exact-set 和四阶段身份；只有 E5 再次通过，node0077 才能升级为正式 target config
-和该节点的 stock-RTL 动态闭环。此放行仅覆盖 Dequant node0077，不外推到其他算子或
-整网。
-
-### CDA-DEQUANT-NODE0077-E5-V6-DYNAMIC-PASS-001
-
-`dequant_node0077_stockrtl_e5_onecmd_v1` 是与上述 E4 绑定、使用全新身份完成的正式
-E5 通过证据：
-
-- return ZIP 为 253,442 bytes，SHA256
-  `ae993cbf7cc51757a6be24f89e72a3e77ac98cba8953ef1510f93e736a71ca66`；
-  来源 package SHA256 为
-  `83cd2db78f99d27f02c2b65a46f9f5c43e94b9ff9a5c50ef0273a0409f1cab68`；
-- 内部 `RETURN_RECEIPT` 的 105 项 payload 与 ZIP 实际 payload 逐项 size/SHA
-  相同，allowlist 和必需文件齐全；返回的 package manifest 与来源 package
-  逐字节一致；
-- compile/sim/run 均为 0，28/28 slice 各自然 start/finish 一次，无 timeout、
-  critical marker 或越界；
-- 正式 D 为 28×188=5,264 行，128-bit 文本 ABI 全通过；28 份 readback 与来源包内
-  独立 golden 逐字节一致，地址唯一且未 preload；
-- layout inverse 完整且唯一还原 `float32[16,1000]`，actual/expected SHA256 均为
-  `d5aa938813ec8ef7fe51cc2288df5f0e1782c19729a184cef248718ce83a311d`；
-- temporal observer 独立记录 5,264 request 与 5,264 write-data，每片各 188；
-  stock RTL、focused RTL、observer 和安装命名空间身份门通过，
-  `functional_rtl_unchanged=true`；
-- E5 manifest 将 61 个 E4 workload 文件绑定为 60 个逐字节相同项和 1 个仅安装
-  namespace 归一化的 SCA 项；严格 JSON、mapping、bitstream、execplan、输入、
-  golden、inverse、地址与长度语义全部冻结。
-
-包内 `REPEAT_DYNAMIC_RUN` 归一化为 `REPEATED_DYNAMIC_PASS`。独立验收后
-`B_DEQUANT_SERVER_E5` 已关闭，node0077/v6 可计为正式 ResNet50 target config，并完成
-该节点的 stock-RTL E4/E5 动态闭环。该结论仍不自动补齐项目总账中独立
-config-bound simulator 一腿，也不外推到其他 Dequant shape、算子或整网。
+版本化 local E2、E4、E5 通过结果及其 ZIP/SHA 只保存在 `.agents/plan.md` 与对应
+`.agents/task_records/`。它们可以作为身份绑定证据被引用，但不得重新定义本文件的稳定
+数值、布局或发布门，也不得自动外推到其他 shape、实例或整网。

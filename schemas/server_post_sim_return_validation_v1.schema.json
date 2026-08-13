@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "server_post_sim_return_validation_v1.schema.json",
+  "title": "Exact final-ZIP post-simulation return-core validation v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "zip_path",
+    "zip_bytes",
+    "zip_sha256",
+    "pass",
+    "errors",
+    "details",
+    "claim_boundary"
+  ],
+  "properties": {
+    "schema": {"const": "server-post-sim-return-validation-v1"},
+    "zip_path": {"type": "string"},
+    "zip_bytes": {"type": "integer", "minimum": 0},
+    "zip_sha256": {"type": ["string", "null"], "pattern": "^[0-9a-f]{64}$"},
+    "pass": {"type": "boolean"},
+    "errors": {"type": "array", "items": {"type": "string"}},
+    "details": {"type": "object"},
+    "claim_boundary": {"type": "string", "minLength": 1}
+  }
+}

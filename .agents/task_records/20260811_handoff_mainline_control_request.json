@@ -1,0 +1,22 @@
+{
+  "schema": "session-handoff-request-v1",
+  "role_id": "mainline.control",
+  "new_thread_id": "019ff027-e7db-72a3-b282-cfad8708da05",
+  "reason": "planned full-project session refresh after active-rule orthogonalization",
+  "required_read_paths": [
+    ".agents/agent.md",
+    ".agents/plan.md",
+    ".agents/rules/生成前必读索引.md",
+    ".agents/rules/会话转接与所有权规则.md",
+    "contracts/current_session_owner_registry_v1.json",
+    "contracts/active_rule_registry_v1.json"
+  ],
+  "active_artifact_paths": [
+    ".agents/task_records/20260811_rule_orthogonalization_session_refresh_and_next_fresh_dispatch.md"
+  ],
+  "pending_messages": [
+    "activate mainline first, then four family roles; optimizer is campaign-excluded",
+    "no server/package/RTL action occurs during ownership activation"
+  ],
+  "first_action": "re-read activation publication and current registry, then acknowledge sole ACTIVE mainline ownership before any write"
+}

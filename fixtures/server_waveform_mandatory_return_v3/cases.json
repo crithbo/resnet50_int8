@@ -1,0 +1,20 @@
+{
+  "schema": "server-waveform-mandatory-return-cases-v3",
+  "positive": [
+    "compilefail_no_wave",
+    "natural_with_attempt_local_fsdb",
+    "timeout_hup_int_term_with_partial_fsdb",
+    "same_bash_twice_exact_attempt_reset",
+    "unique_return_name_preserves_prior_return"
+  ],
+  "negative": [
+    "legacy_vpd_arguments",
+    "tb_fsdb_second_writer",
+    "simulation_started_missing_fsdb",
+    "preexisting_root_inter_fsdb",
+    "fsdb_absent_from_return_allowlist",
+    "hard_size_cap_or_truncation_or_sampling",
+    "fsdb_path_escape_or_self_inclusion",
+    "stale_fsdb_reused_across_execution_identity"
+  ]
+}

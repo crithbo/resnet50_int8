@@ -1,0 +1,98 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "server-source-bound-probe-catalog-v1",
+  "title": "Source-bound RTL probe symbol catalog",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "rule_id",
+    "rtl_identity",
+    "module_count",
+    "modules",
+    "symbol_count",
+    "symbols",
+    "errors",
+    "valid",
+    "claim_boundary"
+  ],
+  "properties": {
+    "schema": {"const": "server-source-bound-probe-catalog-v1"},
+    "rule_id": {"const": "CDA-SERVER-SOURCE-BOUND-GENERATED-OBSERVER-001"},
+    "rtl_identity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["rtl_root_label", "rtl_tree_sha256", "sources"],
+      "properties": {
+        "rtl_root_label": {"type": "string", "minLength": 1},
+        "rtl_tree_sha256": {"$ref": "#/$defs/sha256"},
+        "sources": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/$defs/fileReceipt"}
+        }
+      }
+    },
+    "module_count": {"type": "integer", "minimum": 1},
+    "modules": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {"type": "string", "pattern": "^[A-Za-z_][A-Za-z0-9_$]*$"}
+    },
+    "symbol_count": {"type": "integer", "minimum": 1},
+    "symbols": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "symbol_id",
+          "module",
+          "name",
+          "declaration_kind",
+          "width_bits",
+          "width_expression",
+          "source"
+        ],
+        "properties": {
+          "symbol_id": {"type": "string", "pattern": "^sym_[0-9a-f]{24}$"},
+          "module": {"type": "string", "pattern": "^[A-Za-z_][A-Za-z0-9_$]*$"},
+          "name": {"type": "string", "pattern": "^[A-Za-z_][A-Za-z0-9_$]*$"},
+          "declaration_kind": {"enum": ["input", "output", "inout", "wire", "logic", "reg"]},
+          "width_bits": {"type": ["integer", "null"], "minimum": 1},
+          "width_expression": {"type": "string", "minLength": 1},
+          "source": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["path", "source_sha256", "line", "source_span", "declaration_sha256"],
+            "properties": {
+              "path": {"type": "string", "minLength": 1},
+              "source_sha256": {"$ref": "#/$defs/sha256"},
+              "line": {"type": "integer", "minimum": 1},
+              "source_span": {"type": "string", "minLength": 1},
+              "declaration_sha256": {"$ref": "#/$defs/sha256"}
+            }
+          }
+        }
+      }
+    },
+    "errors": {"type": "array", "items": {"type": "string"}},
+    "valid": {"type": "boolean"},
+    "claim_boundary": {"type": "string", "minLength": 1}
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "fileReceipt": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "bytes", "sha256"],
+      "properties": {
+        "path": {"type": "string", "minLength": 1},
+        "bytes": {"type": "integer", "minimum": 0},
+        "sha256": {"$ref": "#/$defs/sha256"}
+      }
+    }
+  }
+}

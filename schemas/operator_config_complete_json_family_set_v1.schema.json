@@ -1,0 +1,115 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "operator_config_complete_json_family_set_v1.schema.json",
+  "title": "Complete operator JSON family coverage set v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "family",
+    "target_hw_op_types",
+    "candidate_contracts",
+    "no_config_stages",
+    "claim_boundary"
+  ],
+  "properties": {
+    "schema": {
+      "const": "operator_config_complete_json_family_set_v1"
+    },
+    "family": {
+      "type": "string",
+      "minLength": 1
+    },
+    "target_hw_op_types": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "family_scope": {
+      "description": "Fresh manifests should pin the lowering document and enumerate the exact authoritative stage set. When omitted, the auditor retains the legacy target_hw_op_types selector and reports that compatibility mode explicitly.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "mode",
+        "lowering_sha256",
+        "expected_stage_ids"
+      ],
+      "properties": {
+        "mode": {
+          "const": "PINNED_EXACT_STAGE_IDS"
+        },
+        "lowering_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "expected_stage_ids": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "candidate_contracts": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/boundFile"
+      }
+    },
+    "no_config_stages": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "stage_id",
+          "reason_code",
+          "evidence"
+        ],
+        "properties": {
+          "stage_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "reason_code": {
+            "const": "METADATA_ONLY_ALIAS_NO_COMPUTE"
+          },
+          "evidence": {
+            "$ref": "#/$defs/boundFile"
+          }
+        }
+      }
+    },
+    "claim_boundary": {
+      "type": "string",
+      "minLength": 1
+    }
+  },
+  "$defs": {
+    "boundFile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "path",
+        "sha256"
+      ],
+      "properties": {
+        "path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,400 @@
+{
+  "schema": "server_triggered_causal_observability_profiles_v1",
+  "version": 1,
+  "bundle_scope": "FRESH_SUCCESSOR_BOUND_PROFILE",
+  "policy": {
+    "application_scope": "NEXT_FRESH_SUCCESSOR_ONLY",
+    "decision_priority": "ONE_ROUND_HYPOTHESIS_DISCRIMINATION_FIRST",
+    "preferred_max_slowdown_percent": 50,
+    "slowdown_limit_hard": false,
+    "over_preferred_action": "REPORT_JUSTIFY_AND_OPTIMIZE_WITHOUT_DROPPING_REQUIRED_BOUNDARIES",
+    "default_log_budget_bytes": 16777216,
+    "default_active_boundary_budget": 64,
+    "default_ring_event_budget": 128,
+    "no_per_event_text_io": true,
+    "full_wave_dump": false,
+    "first_version_auto_terminate": false
+  },
+  "profiles": [
+    {
+      "profile_id": "native_conv_node0004_p10_triggered_causal_v1",
+      "family": "conv_int32_accumulate_native",
+      "maturity": "BOUND_CALIBRATION_PENDING",
+      "release_eligible": false,
+      "current_package": {
+        "path": "artifacts/operator_config_validation/r5-server-test-packages/pending/r5_n4_0cc_p9b_tx5.zip",
+        "sha256": "d85429b61e8270d0c4108bfdcdf3a66bce44a437b8aab96b0412a5555dffb085",
+        "disposition": "READ_ONLY_NOT_MODIFIED"
+      },
+      "runtime_behavior": {
+        "read_only": true,
+        "drives_dut": false,
+        "changes_input": false,
+        "changes_ready_backpressure": false,
+        "changes_timing": false,
+        "changes_timeout": false,
+        "host_internal_tensor_replay": false,
+        "stage_gating": true
+      },
+      "performance_budget": {
+        "decision_priority": "ONE_ROUND_HYPOTHESIS_DISCRIMINATION_FIRST",
+        "preferred_max_slowdown_percent": 50,
+        "slowdown_limit_hard": false,
+        "calibration_status": "PENDING_FRESH_BOUND_PROFILE",
+        "calibration_method": "SAME_EVENT_TRACE_AB_WALLCLOCK",
+        "baseline_wall_seconds": null,
+        "instrumented_wall_seconds": null
+      },
+      "storage": {
+        "per_event_text_io": false,
+        "full_wave_dump": false,
+        "max_log_bytes": 16777216,
+        "ring_events": 128,
+        "flush_policy": "TIME0_TRIGGER_STAGE_TRANSITION_EXIT_FINAL_ONLY"
+      },
+      "no_progress": {
+        "qualified_progress_only": true,
+        "qualified_measured_rate_required": true,
+        "auto_terminate": false,
+        "on_trigger": "SNAPSHOT_AND_CONTINUE_EXISTING_TIMEOUT"
+      },
+      "boundaries": [
+        {
+          "boundary_id": "nconv.runtime.simulator_started",
+          "role": "infrastructure",
+          "stage_gate": "runtime",
+          "owner_clock_binding": "HOST_MONOTONIC",
+          "qualification": "actual simulator invocation plus exact N4T time-zero marker",
+          "direct_consumer_binding": "RUNNER_EXACT_CONSUMER_REQUIRED",
+          "records": [
+            "count",
+            "first_time",
+            "last_time",
+            "pass"
+          ]
+        },
+        {
+          "boundary_id": "nconv.c0.exec_start",
+          "role": "source_produce",
+          "stage_gate": "c0",
+          "owner_clock_binding": "EXACT_FINAL_SOURCE_REQUIRED",
+          "qualification": "n4d c0 stage gate rises on clk_sg after qualified exec start",
+          "direct_consumer_binding": "EXACT_FINAL_SOURCE_REQUIRED",
+          "records": [
+            "count",
+            "first_time",
+            "last_time",
+            "stage",
+            "slice"
+          ]
+        },
+        {
+          "boundary_id": "nconv.c0.memory_request",
+          "role": "queue_enqueue",
+          "stage_gate": "c0",
+          "owner_clock_binding": "EXACT_FINAL_SOURCE_REQUIRED",
+          "qualification": "per-MSE local request valid and ready handshake",
+          "direct_consumer_binding": "EXACT_FINAL_SOURCE_REQUIRED",
+          "records": [
+            "count",
+            "first_time",
+            "last_time",
+            "ordered_digest"
+          ]
+        },
+        {
+          "boundary_id": "nconv.c0.arm_request",
+          "role": "consumer_request",
+          "stage_gate": "c0",
+          "owner_clock_binding": "EXACT_FINAL_SOURCE_REQUIRED",
+          "qualification": "per-buffer ARM request valid and ready handshake",
+          "direct_consumer_binding": "EXACT_FINAL_SOURCE_REQUIRED",
+          "records": [
+            "count",
+            "first_time",
+            "last_time",
+            "outstanding"
+          ]
+        },
+        {
+          "boundary_id": "nconv.c0.arm_response",
+          "role": "consumer_accept",
+          "stage_gate": "c0",
+          "owner_clock_binding": "EXACT_FINAL_SOURCE_REQUIRED",
+          "qualification": "per-buffer ARM response accepted by the array-facing public interface",
+          "direct_consumer_binding": "EXACT_FINAL_SOURCE_REQUIRED",
+          "records": [
+            "count",
+            "first_time",
+            "last_time",
+            "outstanding",
+            "last_tag"
+          ]
+        },
+        {
+          "boundary_id": "nconv.c0.arm_finish",
+          "role": "terminal_propagation",
+          "stage_gate": "c0",
+          "owner_clock_binding": "EXACT_FINAL_SOURCE_REQUIRED",
+          "qualification": "per-buffer rising arm_buf_rd_finish exported by the existing p9b monitor",
+          "direct_consumer_binding": "EXACT_FINAL_SOURCE_REQUIRED",
+          "records": [
+            "count",
+            "first_time",
+            "last_time",
+            "last_terminal"
+          ]
+        },
+        {
+          "boundary_id": "nconv.c0.sa_input",
+          "role": "internal_match_compute",
+          "stage_gate": "c0",
+          "owner_clock_binding": "EXACT_FINAL_SOURCE_REQUIRED",
+          "qualification": "SA input valid-mask and backpressure acceptance with exact last/index tag",
+          "direct_consumer_binding": "EXACT_FINAL_SOURCE_REQUIRED",
+          "records": [
+            "count",
+            "first_time",
+            "last_time",
+            "last_tag",
+            "ordered_digest"
+          ]
+        },
+        {
+          "boundary_id": "nconv.c0.sa_output",
+          "role": "output_accept",
+          "stage_gate": "c0",
+          "owner_clock_binding": "EXACT_FINAL_SOURCE_REQUIRED",
+          "qualification": "SA output valid-mask accepted by Buffer with exact last/index tag",
+          "direct_consumer_binding": "EXACT_FINAL_SOURCE_REQUIRED",
+          "records": [
+            "count",
+            "first_time",
+            "last_time",
+            "last_tag",
+            "ordered_digest"
+          ]
+        },
+        {
+          "boundary_id": "nconv.c0.mse4_index",
+          "role": "consumer_accept",
+          "stage_gate": "c0",
+          "owner_clock_binding": "EXACT_FINAL_SOURCE_REQUIRED",
+          "qualification": "MSE4 memory-AG tag valid and acceptance predicate from the existing p9b monitor",
+          "direct_consumer_binding": "EXACT_FINAL_SOURCE_REQUIRED",
+          "records": [
+            "count",
+            "first_time",
+            "last_time",
+            "ordered_digest"
+          ]
+        },
+        {
+          "boundary_id": "nconv.c0.buffer5_write",
+          "role": "output_accept",
+          "stage_gate": "c0",
+          "owner_clock_binding": "EXACT_FINAL_SOURCE_REQUIRED",
+          "qualification": "Buffer5 write-enable active cycles and rising edges are recorded separately",
+          "direct_consumer_binding": "EXACT_FINAL_SOURCE_REQUIRED",
+          "records": [
+            "count",
+            "first_time",
+            "last_time",
+            "byte_mask",
+            "ordered_digest"
+          ]
+        },
+        {
+          "boundary_id": "nconv.c0.slice_finish",
+          "role": "terminal_propagation",
+          "stage_gate": "c0",
+          "owner_clock_binding": "EXACT_FINAL_SOURCE_REQUIRED",
+          "qualification": "qualified c0 stage gate falls only after slice completion",
+          "direct_consumer_binding": "EXACT_FINAL_SOURCE_REQUIRED",
+          "records": [
+            "count",
+            "first_time",
+            "last_time",
+            "last_terminal",
+            "stage",
+            "slice"
+          ]
+        },
+        {
+          "boundary_id": "nconv.c0.formal_d",
+          "role": "formal_d_collection",
+          "stage_gate": "result",
+          "owner_clock_binding": "NOT_APPLICABLE",
+          "qualification": "explicit c0-diagnostic not-applicable receipt; no formal D is claimed",
+          "direct_consumer_binding": "FORMAL_D_COLLECTOR_REQUIRED",
+          "records": [
+            "count",
+            "first_time",
+            "last_time",
+            "pass"
+          ]
+        }
+      ],
+      "hypotheses": [
+        {
+          "hypothesis_id": "nconv_sim_not_started",
+          "classification": "SIM_NOT_STARTED",
+          "distinguished_by": [
+            "nconv.runtime.simulator_started",
+            "nconv.c0.exec_start"
+          ],
+          "decision": "time-zero marker or c0 stage transition is absent"
+        },
+        {
+          "hypothesis_id": "nconv_arm_nonaccept",
+          "classification": "DYNAMIC_FLOW_CONTROL_STALL",
+          "distinguished_by": [
+            "nconv.c0.memory_request",
+            "nconv.c0.arm_request",
+            "nconv.c0.arm_response"
+          ],
+          "decision": "requests advance while ARM response acceptance stops"
+        },
+        {
+          "hypothesis_id": "nconv_arm_terminal_missing",
+          "classification": "TERMINAL_PROPAGATION_FAILURE",
+          "distinguished_by": [
+            "nconv.c0.arm_response",
+            "nconv.c0.arm_finish"
+          ],
+          "decision": "ARM accepts response traffic but every finish count remains zero"
+        },
+        {
+          "hypothesis_id": "nconv_sa_last_classifier_gap",
+          "classification": "TERMINAL_PROPAGATION_FAILURE",
+          "distinguished_by": [
+            "nconv.c0.sa_input",
+            "nconv.c0.sa_output",
+            "nconv.c0.slice_finish"
+          ],
+          "decision": "SA input last-index histogram is visible but corresponding output-last or slice finish is absent"
+        },
+        {
+          "hypothesis_id": "nconv_mse4_nonterminal",
+          "classification": "DYNAMIC_FLOW_CONTROL_STALL",
+          "distinguished_by": [
+            "nconv.c0.sa_output",
+            "nconv.c0.mse4_index",
+            "nconv.c0.buffer5_write"
+          ],
+          "decision": "SA output occurs but MSE4 accepted-index or Buffer5 write-edge progress stops"
+        },
+        {
+          "hypothesis_id": "nconv_buffer5_held_level",
+          "classification": "EVIDENCE_INCOMPLETE",
+          "distinguished_by": [
+            "nconv.c0.buffer5_write"
+          ],
+          "decision": "Buffer5 active-cycle count grows while write-enable rising-edge count remains fixed"
+        },
+        {
+          "hypothesis_id": "nconv_natural_c0",
+          "classification": "NATURAL_SUCCESS",
+          "distinguished_by": [
+            "nconv.c0.arm_finish",
+            "nconv.c0.sa_output",
+            "nconv.c0.mse4_index",
+            "nconv.c0.slice_finish"
+          ],
+          "decision": "qualified terminal boundaries and c0 slice finish all occur"
+        }
+      ],
+      "triggers": [
+        {
+          "trigger_id": "FIRST_QUEUE_FULL",
+          "condition": "first c0 RD queue-full assertion after exec start",
+          "snapshot_boundaries": [
+            "nconv.c0.memory_request",
+            "nconv.c0.arm_request",
+            "nconv.c0.arm_response"
+          ],
+          "one_shot": true
+        },
+        {
+          "trigger_id": "FIRST_BRANCH_DIVERGENCE",
+          "condition": "SA accepted-input count exceeds accepted-output count by at least four after eight inputs",
+          "snapshot_boundaries": [
+            "nconv.c0.arm_response",
+            "nconv.c0.sa_input",
+            "nconv.c0.sa_output",
+            "nconv.c0.mse4_index"
+          ],
+          "one_shot": true
+        },
+        {
+          "trigger_id": "NO_PROGRESS_WINDOW",
+          "condition": "qualified key-total is unchanged for the configured clk_sg window",
+          "snapshot_boundaries": [
+            "nconv.c0.memory_request",
+            "nconv.c0.arm_request",
+            "nconv.c0.arm_response",
+            "nconv.c0.arm_finish",
+            "nconv.c0.sa_input",
+            "nconv.c0.sa_output",
+            "nconv.c0.mse4_index",
+            "nconv.c0.buffer5_write"
+          ],
+          "one_shot": false
+        },
+        {
+          "trigger_id": "TERMINAL_GAP",
+          "condition": "SA input last-index was accepted but all ARM finish counts remain zero for one qualified window",
+          "snapshot_boundaries": [
+            "nconv.c0.arm_finish",
+            "nconv.c0.sa_input",
+            "nconv.c0.sa_output",
+            "nconv.c0.mse4_index",
+            "nconv.c0.slice_finish"
+          ],
+          "one_shot": true
+        },
+        {
+          "trigger_id": "STAGE_TRANSITION",
+          "condition": "qualified c0 exec-start or slice-finish stage transition",
+          "snapshot_boundaries": [
+            "nconv.c0.exec_start",
+            "nconv.c0.slice_finish"
+          ],
+          "one_shot": false
+        },
+        {
+          "trigger_id": "EXIT_OR_SIGNAL",
+          "condition": "simulator final block or runner EXIT/HUP/INT/TERM finalizer",
+          "snapshot_boundaries": [
+            "nconv.runtime.simulator_started",
+            "nconv.c0.exec_start",
+            "nconv.c0.memory_request",
+            "nconv.c0.arm_request",
+            "nconv.c0.arm_response",
+            "nconv.c0.arm_finish",
+            "nconv.c0.sa_input",
+            "nconv.c0.sa_output",
+            "nconv.c0.mse4_index",
+            "nconv.c0.buffer5_write",
+            "nconv.c0.slice_finish",
+            "nconv.c0.formal_d"
+          ],
+          "one_shot": true
+        }
+      ],
+      "canonical_classifications": [
+        "TEST_INFRASTRUCTURE_FAILURE",
+        "SIM_NOT_STARTED",
+        "TARGET_STAGE_NOT_REACHED",
+        "DYNAMIC_FLOW_CONTROL_STALL",
+        "TERMINAL_PROPAGATION_FAILURE",
+        "RESULT_COLLECTION_FAILURE",
+        "NUMERIC_MISMATCH",
+        "NATURAL_SUCCESS",
+        "EVIDENCE_INCOMPLETE"
+      ],
+      "claim_boundary": "Fresh p10 c0 diagnostic profile only. It binds existing p9b monitor surfaces to bounded triggered records and does not claim full 27-run execution, formal 320D, E3, E4, E5, production performance, or functional RTL correctness."
+    }
+  ],
+  "claim_boundary": "Exact family-bound design contract for the next native Conv c0 successor. Final merged observer bytes, runner, return collection, focused syntax/scope, predicate trace and production compile remain independent release/return gates."
+}

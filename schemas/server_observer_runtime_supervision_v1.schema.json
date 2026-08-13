@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "server-observer-runtime-supervision-v1",
+  "title": "Observer-only simulator process-tree supervision receipt",
+  "type": "object",
+  "required": [
+    "schema", "package_id", "execution_id", "attempt_id", "attempt_root", "cwd",
+    "actual_argv", "root_pid", "pgid", "child_subreaper", "root_exit", "received_signal",
+    "timed_out", "owned_pids_remaining", "process_tree_reaped", "heartbeat_source",
+    "heartbeat_output", "simulation_time_progress_observed", "errors", "diagnostic_status", "pass"
+  ],
+  "properties": {
+    "schema": {"const": "server-observer-runtime-supervision-v1"},
+    "package_id": {"type": "string", "minLength": 1},
+    "execution_id": {"type": "string", "minLength": 1},
+    "attempt_id": {"type": "string", "minLength": 1},
+    "attempt_root": {"type": "string", "minLength": 1},
+    "cwd": {"type": "string", "minLength": 1},
+    "actual_argv": {"type": "array", "items": {"type": "string"}},
+    "root_pid": {"type": "integer", "minimum": 1},
+    "pgid": {"type": "integer", "minimum": 1},
+    "child_subreaper": {
+      "type": "object",
+      "required": ["enabled", "primitive"],
+      "properties": {"enabled": {"const": true}, "primitive": {"const": "PR_SET_CHILD_SUBREAPER"}}
+    },
+    "root_exit": {"type": ["integer", "null"]},
+    "received_signal": {"type": ["integer", "null"]},
+    "timed_out": {"type": "boolean"},
+    "owned_pids_remaining": {"type": "array", "maxItems": 0},
+    "process_tree_reaped": {"const": true},
+    "heartbeat_source": {"type": ["object", "null"]},
+    "heartbeat_output": {"type": ["object", "null"]},
+    "simulation_time_progress_observed": {"type": "boolean"},
+    "errors": {"type": "array", "items": {"type": "string"}},
+    "diagnostic_status": {"enum": ["COMPLETE", "DIAGNOSTIC_EVIDENCE_INCOMPLETE"]},
+    "pass": {"type": "boolean"}
+  }
+}

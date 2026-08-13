@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "server_runtime_preflight_native_flow_v1.schema.json",
+  "title": "Server runtime prelaunch non-interference receipt",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "pass",
+    "runner_path",
+    "runner_sha256",
+    "production_launch_marker",
+    "production_launch_marker_count",
+    "prelaunch_line_count",
+    "server_environment_adjudicator",
+    "forbidden_prelaunch_findings",
+    "all_findings_collected",
+    "native_failure_differential",
+    "claim_boundary"
+  ],
+  "properties": {
+    "schema": {"const": "server-runtime-preflight-native-flow-validation-v1"},
+    "pass": {"type": "boolean"},
+    "runner_path": {"type": "string", "minLength": 1},
+    "runner_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "production_launch_marker": {"type": "string", "minLength": 1},
+    "production_launch_marker_count": {"type": "integer", "minimum": 0},
+    "prelaunch_line_count": {"type": "integer", "minimum": 0},
+    "server_environment_adjudicator": {"const": "ACTUAL_PRODUCTION_COMMAND_ONLY"},
+    "forbidden_prelaunch_findings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["line", "mechanism", "text"],
+        "properties": {
+          "line": {"type": "integer", "minimum": 1},
+          "mechanism": {"type": "string", "minLength": 1},
+          "text": {"type": "string"}
+        }
+      }
+    },
+    "all_findings_collected": {"const": true},
+    "native_failure_differential": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["timing", "unknown_semantics", "reference_paths", "required_attempt_fields"],
+      "properties": {
+        "timing": {"const": "AFTER_ACTUAL_FAILURE_BEFORE_SUCCESSOR_DESIGN"},
+        "unknown_semantics": {"const": "DO_NOT_GUESS_AND_DO_NOT_CREATE_PREFLIGHT"},
+        "reference_paths": {"type": "array", "minItems": 1, "items": {"type": "object"}},
+        "required_attempt_fields": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string"}}
+      }
+    },
+    "errors": {"type": "array", "items": {"type": "string"}},
+    "claim_boundary": {"type": "string", "minLength": 1}
+  }
+}

@@ -1,0 +1,111 @@
+{
+  "schema": "complete_operator_json_generation_policy_v1",
+  "status": "user_authorized_active",
+  "authority": {
+    "path": "contracts/operator_config/operator_config_authority_v1.json",
+    "native_reference_scope": "Only unchanged pinned-upstream ndp-sim/jsons blobs listed by the authority contract are native reference instances.",
+    "source_instance_truth": true,
+    "target_instance_truth_implied": false
+  },
+  "rules": [
+    {
+      "rule_id": "CDA-NATIVE-REFERENCE-FIELD-APPLICABILITY-001",
+      "purpose": "Bind every emitted target JSON leaf to an exact source instance, a target derivation, or an explicit inactive state."
+    },
+    {
+      "rule_id": "CDA-NATIVE-HANDLER-CAPABILITY-MATRIX-001",
+      "purpose": "Prevent registry or placeholder-handler presence from being treated as shape, dtype, qparam, layout, address, or schedule generalization authority."
+    },
+    {
+      "rule_id": "CDA-NATIVE-COMPOSITION-BOUNDARY-001",
+      "purpose": "Require an explicit typed and transactional boundary whenever multiple native primitives are composed into a target operator."
+    }
+  ],
+  "origins": [
+    "REFERENCE_EXACT",
+    "MODEL_DERIVED",
+    "RTL_DERIVED",
+    "ENCODER_DERIVED",
+    "ADDRESS_PLANNER_DERIVED",
+    "SCHEDULE_DERIVED",
+    "EXPLICIT_DISABLED",
+    "UNRESOLVED"
+  ],
+  "applicability_classes": [
+    "EXACT_SOURCE_INSTANCE",
+    "PROVEN_INVARIANT",
+    "DERIVED_FOR_TARGET",
+    "EXPLICITLY_INACTIVE",
+    "UNRESOLVED"
+  ],
+  "source_absence_states": [
+    "SOURCE_ABSENT_NOT_APPLICABLE",
+    "SOURCE_ABSENT_UNKNOWN_FOR_TARGET",
+    "EXPLICIT_NULL_INACTIVE",
+    "EXPLICIT_ZERO",
+    "TARGET_REQUIRED_DERIVED"
+  ],
+  "reference_classes": {
+    "A": "Exact op, dtype, shape, layout, qparams, topology, and current consumer.",
+    "B": "Same primitive but at least shape, layout, qparam, address, or schedule differs.",
+    "C": "Same hardware block but numeric type or operator semantics differs.",
+    "D": "Project-added, untracked, unauthorized, or no usable reference."
+  },
+  "handler_capability_axes": [
+    "exact_replay",
+    "shape",
+    "dtype",
+    "qparam",
+    "layout",
+    "address",
+    "cross_stage_schedule"
+  ],
+  "exactness_axes": [
+    "op",
+    "dtype",
+    "shape",
+    "layout",
+    "qparams",
+    "topology",
+    "address",
+    "schedule",
+    "consumer"
+  ],
+  "current_diff_classes": [
+    "SAME",
+    "INTENTIONAL_DERIVATION",
+    "SUSPECTED_CURRENT_DEFECT",
+    "NEW_CANDIDATE_DEFECT",
+    "DYNAMIC_ONLY",
+    "CURRENT_ABSENT"
+  ],
+  "target_completion": {
+    "complete_status": "COMPLETE",
+    "blocked_status": "BLOCKED",
+    "complete_forbids_unresolved": true,
+    "complete_requires_all_candidate_leaves_in_ledger": true,
+    "complete_requires_all_candidate_leaves_in_current_diff": true,
+    "missing_source_field_is_never_implicit_zero": true
+  },
+  "composition_boundary_required_fields": [
+    "producer_dtype",
+    "consumer_dtype",
+    "shape",
+    "layout",
+    "producer_byte_set",
+    "consumer_required_byte_set",
+    "transaction_bytes",
+    "tag_last",
+    "clock_handshake",
+    "lifetime_visibility",
+    "qparam_rounding"
+  ],
+  "forbidden_outputs": [
+    "*.zip",
+    "*.zip.sha256",
+    "PREPARE_AND_RUN.sh",
+    "TEST_PACKAGE_MANIFEST.json",
+    "SERVER_RESULT_GATE.json"
+  ],
+  "claim_boundary": "This policy validates complete target JSON provenance, native-reference applicability, handler capability, composition boundaries, and current-config comparison. It does not generate mapping, bitstream, execplan, SCA, a server package, server execution, natural-terminal evidence, formal D, E3, E4, or E5."
+}

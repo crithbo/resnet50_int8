@@ -1,22 +1,22 @@
 # Flatten / View 算子配置规则
 
-最后更新：2026-07-27
+最后更新：2026-08-11（剥离实例状态，保留 metadata alias 合同）
 
 本文件只覆盖不改变元素顺序和字节表示的 metadata-only Flatten/View。公共 provenance、
 物化字段所有权、配置绕行和证据等级由 `算子配置规则.md` 拥有。若目标实例需要 copy、
 transpose、relayout、dtype conversion 或硬件请求，本规则不授权继续生成，必须另建
 专项合同。
 
-当前代表实例：
+已批准的适用性示例：
 
 ```text
-node0072 D: fp32[16,2048,1,1]
+node0071 D: uint8[16,2048,1,1]
   -> node0073 Flatten(axis=1) / View
-node0074 A: fp32[16,2048]
+node0075 A: uint8[16,2048]
 ```
 
-当前状态：`ENDPOINT_BINDING_PENDING`；独立 local E2 不适用，integrated target local
-E2 仍为 false。
+该 route 只有在 current lowering 和 exact-stage identity 仍逐项匹配时才可消费；旧
+FP32 route 只作 off-path 历史证据。实例完成度、blocker 和动态结果只看 plan/task record。
 
 ## 1. metadata-only 物化
 
@@ -48,9 +48,9 @@ linear element order
 ```
 
 shape 和 stride metadata 可按 reshape 改变，但 validator 必须枚举完整冻结实例，证明
-每个 input index 与 output index 的最终 byte address 相同。node0073 的冻结实例要求
-32,768/32,768 元素全部相等，span 为 131,072 bytes；输入 strides
-`[8192,4,4,4]`，输出 strides `[8192,4]`。
+每个 input index 与 output index 的最终 byte address 相同。对上面的 UINT8 示例，要求
+32,768/32,768 元素全部相等，span 为 32,768 bytes；byte strides 为输入
+`[2048,1,1,1]`、输出 `[2048,1]`，两端 byte offset 都为 0。
 
 View 不拥有 allocation，不得分配或释放；allocation owner 保持 producer activation
 allocator。
@@ -87,12 +87,6 @@ metadata、完整元素地址映射和 lifetime 合同通过，只关闭 View �
 plan 时，只能声明 `ENDPOINT_BINDING_PENDING`，不得声明
 `CONFIG_ONLY_CORRECTNESS_BASELINE`、完整节点 local E2、E4 或 E5。
 
-当前开放 blocker：
-
-- `B_VIEW_PRODUCER_ALLOCATION`
-- `B_VIEW_CONSUMER_ALLOCATION`
-- `B_VIEW_BYTE_OFFSET_IDENTITY`
-- `B_VIEW_BUFFER_LIFETIME`
-
-权威机器合同：
-`contracts/operator_config/flatten_node0073_physical_view_v1.json`。
+accepted producer-before-consumer、actual consumer read coverage、buffer lifetime、natural
+terminal 和 formal D 都是 integrated 动态门；其当前开闭状态只记录在 plan/task record。
+任何机器合同都只能按自身绑定身份使用，不能把 off-path endpoint 外推到 current route。

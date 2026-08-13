@@ -1,0 +1,27 @@
+$date
+  synthetic
+$end
+$version
+  codex fixture
+$end
+$timescale 1ns $end
+$scope module tb_NDP_Top_new_phy $end
+$scope module dut $end
+$var wire 1 ! valid $end
+$var wire 1 " ready $end
+$var wire 8 # data [7:0] $end
+$upscope $end
+$upscope $end
+$enddefinitions $end
+#0
+0!
+0"
+b00000000 #
+#5
+1!
+b10100101 #
+#10
+1"
+#15
+0!
+0"

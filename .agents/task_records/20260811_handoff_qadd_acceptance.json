@@ -1,0 +1,23 @@
+{
+  "all_receipts_current": true,
+  "capsule": {
+    "bytes": 5096,
+    "path": ".agents/task_records/20260811_handoff_qadd_capsule.json",
+    "sha256": "eed2524d69887cdad3279a1d74743e1d56edabe3b3e84c73c2af54d76168b8f8"
+  },
+  "claim_boundary": "Read-only acceptance only. Authority remains with the old owner until activation.",
+  "conflicts": [],
+  "external_action_taken": false,
+  "first_action": "acknowledge activation, audit exact v57f under the new gate, and build a fresh runner-only successor only if required",
+  "handoff_id": "handoff-b4d177c6b3011e73eb794ca69b5bece1",
+  "new_thread_id": "019ff02d-9e93-7d61-8c98-c928fdea157c",
+  "registry_observed": {
+    "bytes": 11867,
+    "path": "contracts/current_session_owner_registry_v1.json",
+    "sha256": "12654fc38ae398c533c3f2fd202e4bebef6f67e9e84b7731ee9b3d08d9d1fdda"
+  },
+  "role_id": "family.qlinearadd",
+  "schema": "session-handoff-acceptance-v1",
+  "snapshot_understood": true,
+  "status": "ACCEPTED_READ_ONLY"
+}

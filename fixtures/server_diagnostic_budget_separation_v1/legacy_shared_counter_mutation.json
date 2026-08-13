@@ -1,0 +1,32 @@
+{
+  "schema": "server_diagnostic_budget_trace_v1",
+  "accounting_mode": "SHARED_LEGACY_COUNTER",
+  "qualified_event_budget": 4,
+  "non_progress_state_budget": 8,
+  "required_late_qualified_event_id": "slice15.ga_output_accept",
+  "event_runs": [
+    {
+      "kind": "state_transition",
+      "event_id": "slice00.ga_state_edge",
+      "repeat": 257
+    },
+    {
+      "kind": "heartbeat",
+      "event_id": "slice00.observer_heartbeat",
+      "repeat": 64
+    },
+    {
+      "kind": "qualified_event",
+      "event_id": "slice15.ga_output_accept",
+      "repeat": 1
+    }
+  ],
+  "historical_binding": {
+    "family": "global_average_pool",
+    "source_package_sha256": "96c23c3762b9fca323ff3d76250f8ca9482c74d536a93b843321c8be3f37252d",
+    "return_sha256": "af493115127b0040d8bec83815d0e00d2fc90a7a9c559b11758ddb42982adfc2",
+    "observed_v50_limit": 256,
+    "first_later_slice_output_after_budget_exhaustion": true
+  },
+  "claim_boundary": "Negative mutation of the shared-counter failure mechanism. Expected to fail closed and lose the later qualified event."
+}

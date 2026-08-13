@@ -1,0 +1,103 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "active-rule-registry-v1",
+  "title": "Active rule registry v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_id",
+    "version",
+    "entrypoints",
+    "active_rule_root",
+    "exact_active_rules",
+    "history",
+    "invariants"
+  ],
+  "properties": {
+    "schema_id": {"const": "active-rule-registry-v1"},
+    "version": {"const": 1},
+    "entrypoints": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["stable_entry", "current_state", "router", "history_entry"],
+      "properties": {
+        "stable_entry": {"type": "string"},
+        "current_state": {"type": "string"},
+        "router": {"type": "string"},
+        "history_entry": {"type": "string"}
+      }
+    },
+    "active_rule_root": {"const": ".agents/rules"},
+    "exact_active_rules": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "path", "layer", "owner_scope", "purpose", "read_profiles",
+          "semantic_owners", "excludes", "bytes", "sha256"
+        ],
+        "properties": {
+          "path": {"type": "string", "pattern": "^\\.agents/rules/.+\\.md$"},
+          "layer": {
+            "enum": ["router", "core", "primitive", "family", "specialist"]
+          },
+          "owner_scope": {"type": "string", "minLength": 1},
+          "purpose": {"type": "string", "minLength": 1},
+          "read_profiles": {
+            "type": "array",
+            "minItems": 1,
+            "items": {"type": "string", "minLength": 1},
+            "uniqueItems": true
+          },
+          "semantic_owners": {
+            "type": "array",
+            "minItems": 1,
+            "items": {"type": "string", "minLength": 1},
+            "uniqueItems": true
+          },
+          "excludes": {
+            "type": "array",
+            "items": {"type": "string", "minLength": 1},
+            "uniqueItems": true
+          },
+          "bytes": {"type": "integer", "minimum": 1},
+          "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+        }
+      }
+    },
+    "history": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["root", "default_read", "archived_active_basenames"],
+      "properties": {
+        "root": {"const": ".agents/history/rules"},
+        "default_read": {"const": false},
+        "archived_active_basenames": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1},
+          "uniqueItems": true
+        }
+      }
+    },
+    "invariants": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "exact_active_rule_count", "single_stable_entry", "single_current_state",
+        "router_defines_no_semantic_rules", "unique_rule_definition_owner",
+        "active_rules_exclude_version_results"
+      ],
+      "properties": {
+        "exact_active_rule_count": {"type": "integer", "minimum": 1},
+        "single_stable_entry": {"const": true},
+        "single_current_state": {"const": true},
+        "router_defines_no_semantic_rules": {"const": true},
+        "unique_rule_definition_owner": {"const": true},
+        "active_rules_exclude_version_results": {"const": true}
+      }
+    }
+  }
+}
+

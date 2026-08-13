@@ -1,28 +1,13 @@
 # QLinearAdd 算子配置规则
 
-最后更新：2026-08-02（修正 D-buffer 事务供给守恒）
+最后更新：2026-08-11（剥离版本状态，保留 QAdd 稳定合同）
 
 本文件保存 ResNet50 17 个 QLinearAdd 的专项数值、复合 DAG、typed qparam 和
 address/lifetime 增量。公共 provenance、物化回环、证据等级和共享 output quant
 由公共规则及 `精确UINT8量化尾专项规则.md` 拥有。
 
-当前裁决：
-
-```text
-predesign = COMPLETE_17_OF_17
-stage0_config_bound_candidate = COMPLETE_17_OF_17
-complete_operator_materialization_allowed = NODE0007_LOCAL_E2_ONLY
-candidate_release = false
-formal_target_instance_allowed = false
-dynamic_baseline = NODE0007_V16_RETURN2_PROVEN_STAGE3_WRITE_BACKEND_HANG
-local_candidate = NODE0007_COLUMN_PAIR_V18_LOCAL_VALIDATED_NOT_PACKAGED
-server_package_ready = NONE_PENDING_CURRENT_RULE_REVALIDATION
-```
-
-权威预设计合同为
-`contracts/operator_config/qlinearadd_composite_backend_predesign_v1.json`。
-权威 stage0 合同为
-`contracts/operator_config/qlinearadd_stage0_config_only_contract_v1.json`。
+当前完成度、blocker、候选身份和服务器结果只看 `.agents/plan.md` 与对应 task record；
+本文件不授予 package release。
 
 ## 1. W3 数值顺序
 
@@ -194,20 +179,10 @@ node0007 的冻结反例与批准修正为：
 
 规则 ID：`CDA-QADD-EXACT-QUANT-TAIL-DEPENDENCY-001`
 
-QLinearAdd output 必须消费 `精确UINT8量化尾专项规则.md`。当前 P0-A 决策为
-`NO_UNCONDITIONAL_PURE_CONFIG_PROVEN`；FMA rounding boundary、magic finite-domain、
-exact division、three-PE topology、typed binding 和 mapper registration 尚未闭合。
-
-stage0 子范围的 W3 DAG、paired readiness、node0076 replay/tail、scratch
-non-overlap/barrier/lifetime 与 config-bound negative control 已局部闭合。
-
-node0007 已在冻结六 qparam、W3 顺序和共享 exact UINT8 tail 下完成 fresh nested-LC
-本地 E2：六个串行 stage、最终 JSON、6/6 mapping/bitstream、execplan/SCA、
-37,352,448 requests、地址/coverage/lifetime 与 config-bound golden 已闭合。该本地
-结论不能单独签发服务器运行包：v6 正式动态回传已经证明同一冻结 workload 在首个
-`op_a_dequant Start_Comp` 后、首个 MSE request 前进入长期零进度卡死；任何复用该
-workload 的 v8 或其他派生包必须隔离。该结论不外推到其余 16 个 QLinearAdd，也不关闭
-最终服务器 RTL identity、E4 正式 readback、E5 独立重跑或 performance qualification。
+QLinearAdd output 必须消费 `精确UINT8量化尾专项规则.md`。只有 six-qparam typed
+transport、A/B dequant、FP32 add、exact UINT8 tail、broadcast replay、地址、transaction
+supply、scratch barrier/lifetime 与最终物化回环在同一冻结实例上全部闭合，才能通过
+本族 complete-JSON 门；任一共享能力未闭合均 fail closed。
 
 ## 9. Start_Comp 到首请求卡死的内部 ready 可观测门
 
@@ -235,14 +210,8 @@ queue 按 RTL 可以接收初始工作，则不得仅凭 shared-LC 扇出、AND-
 - 只允许生成不改变 workload/config 数值语义的窄定位包，并仍须通过最终 ZIP
   current-rule 自检。
 
-node0007 v6 的冻结动态反例为：88.78 分钟、23,330,816 连续 active cycles、
-22 个完整 stall window，qualified `req/rdata/wdata=0/0/0`、`COMP_FINISH=0`；
-最后正证据是 `op_a_dequant EXEC_START`，第一坏边界是首个 DRAM LC address
-enqueue/MSE request 始终未出现。后续 v13 通过窄定位证明该区间的确定根因是六个
-`Load_Config` payload 虽已打包但没有对应 SCA config preload，导致所有物理 LC
-enable 保持0；v14 增加六条一一绑定的 config preload 后，A/B dequant 与首请求链
-均已动态前进。因此该旧区间 blocker 已关闭，但上述内部-ready观测门继续适用于其他
-Start_Comp→first-request 卡死。
+版本化动态反例和已关闭 blocker 只保存在 task record。本观测门对所有
+`Start_Comp→first-request` 卡死继续有效。
 
 ## 10. D-buffer 事务供给守恒
 
@@ -299,36 +268,67 @@ buffer_row_bytes = 8 banks * 4 bytes = 32 bytes
 mse_read_bytes   = 16 lanes * 1 byte = 16 bytes
 ```
 
-node0007 v14、v15、v16 保留为冻结动态反例：
-
-- v14 的三个目标 stage 只供应一个 16-byte窗口，无法完成32-byte transaction；
-- v15/v16 把 `buf_spatial_size=16` 错当物理 row 宽度，配置两个32-byte physical row，
-  且 `COL_LC stride=2` 形成错误/重叠窗口；旧标量式 `2*16=32` 掩盖了
-  `2*32=64` 的物理 overcoverage；
-- v16 return(2) 已证明 A/B dequant 自然完成，真实首坏 stage 是
-  `op_relocation_pad` 的 Buffer5→Buffer_AG→RD_Buffer_AG→WR_Data_Channel 写回链。
-
-因此撤销 v15 的旧批准方案；不得再使用：
-
-```text
-GROUP2.ROW_LC.end:        1 -> 2
-buffer5.buf_end_row_addr: 0 -> 1
-```
-
-node0007 本地 v18 的批准候选仅用于按本规则重新验收，不能因本节文字直接升级：
-
-```text
-GROUP2.ROW_LC.end:        2 -> 1
-GROUP2.COL_LC.end:        4 -> 32
-GROUP2.COL_LC.stride:     2 -> 16
-buffer5.buf_end_row_addr: 1 -> 0
-```
-
-它应形成同一32-byte row内的两个不重叠窗口 `[0,16)`、`[16,32)`，并与
-`ndp-sim/jsons/decode_add_fp32N_fp32N_fp32N.json` 的原生写回结构交叉核对。最终是否
-满足本规则，必须由QLinearAdd owner直接读取本地 v18 最终 JSON/bitstream/RTL合同重新
-验证，并在服务器包生成后执行 current-rule final-ZIP 自检；本规则本身不授权封包或
-服务器运行。
+历史错误参数、修复候选和版本化动态反例只在 task record 追溯。fresh 配置必须从最终
+RTL 常量和目标 transaction 重新计算窗口，不能把任何历史版本字段值当作授权模板。
 
 不得以延长 timeout、减小正式 transaction、预置 D、丢弃第二拍或只修改 observer
 掩盖该守恒错误。
+
+## 11. A/B input-buffer 事务供给守恒
+
+规则 ID：`CDA-QADD-A-BUFFER-TRANSACTION-SUPPLY-CONSERVATION-001`
+
+QLinearAdd 的双输入计算 stage 在启动 Buffer0/Buffer2→Array Request Manager 读之前，
+每个 operand buffer 都必须由上游 MSE→Buffer accepted write 窗口独立覆盖下游
+ARM masked row 所要求的全部物理 bank/byte。第10节约束 D/writeback 方向；本节约束
+A/B read-side ingress，二者不得互相替代。
+
+对每个 operand `i ∈ {0,1}`：
+
+```text
+buffer_row_bytes
+  = BUFFER_BANK_NUM * BUFFER_BANK_DATA_NUM
+
+producer_window_i(row, col)
+  = [row * buffer_row_bytes + col_byte_offset,
+     row * buffer_row_bytes + col_byte_offset + producer_write_bytes_i)
+
+required_arm_bytes_i
+  = exact byte set selected by ARM bank mask, row address and operand layout
+
+accepted_supply_i
+  = disjoint_union(all qualified accepted producer_window_i(row, col))
+```
+
+必须满足：
+
+```text
+accepted_supply_i == required_arm_bytes_i
+```
+
+validator 必须直接绑定最终 JSON、mapping/bitstream 解码、活动 RTL 的 transaction/
+bank-mask 方程以及 qualified producer→Buffer/Buffer→ARM/ARM→GA 证据，并逐 operand
+检查：
+
+1. 每个 producer window 完全位于目标物理 row，起点来自实际接受的 ROW/COL tag；
+2. 同一 ARM row 所需窗口无 gap、无 overlap，窗口精确并集等于 masked bank/byte set；
+   总字节数相同但 bank/lane、row 或 column 分布不同不得放行；
+3. Buffer0 与 Buffer2 分别验收；一侧完整不能替代另一侧，单边 MSE/GA level 不能计作
+   paired ingress progress；
+4. 在 ARM request accept 前，所选地址的全部 required bank/byte valid 必须已由
+   qualified producer write 建立；`req_valid` 持续高、`ready=0` 或单次16B写不能冒充
+   32B masked row 已就绪；
+5. 动态证据至少绑定两侧 producer write accept、per-bank/per-byte valid-at-address、
+   ARM mask/request/ready/accept、Buffer delivery 和 GA 双输入 capture/pair/accept；
+6. 删除任一 column window、重复首窗口、制造 gap/overlap、错配 row/column 单位、
+   仅修改 `buf_spatial_size`、或把全8-bank mask缩窄来迁就不完整供给的负控必须
+   fail closed；
+7. 修正后从空 mapping state 重建 JSON→mapping→bitstream→execplan/SCA，并证明
+   workload、数值 DAG、地址、ready/backpressure、golden 与 formal D 合同没有非授权变化。
+
+若 producer 只有一笔 16B accepted write，而 consumer ARM 需要完整 32B row mask，必须
+判为供给不足；合法候选应在同一物理 row 内形成无重叠、无空洞的完整窗口并由 fresh
+最终物化和动态 return 验收，不能仅凭静态总字节数升级。
+
+不得以缩窄 ARM mask、预载内部 tensor、延长 timeout、跳过一侧 operand 或只改 observer
+掩盖供给不足。

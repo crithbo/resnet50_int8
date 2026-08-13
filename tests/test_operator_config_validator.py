@@ -398,7 +398,7 @@ class GaRtlSemanticsTests(unittest.TestCase):
         placement = OperatorConfigValidator().validate(config)
         self.assertIn("GA.SFU_PLACEMENT", _codes(placement))
 
-    def test_ga_known_numerical_contradictions_are_reported_as_facts(self) -> None:
+    def test_ga_known_semantic_results_are_reported_per_rule(self) -> None:
         int32 = OperatorConfigValidator().validate(
             _load("quant_from_buffer_int32MN_uint8MN.json")
         )
@@ -409,12 +409,36 @@ class GaRtlSemanticsTests(unittest.TestCase):
         maxpool = OperatorConfigValidator().validate(
             _load("maxpool_config_16_16_16_stride2_padding1.json")
         )
+        facts = maxpool.facts["ga_int8_max"]
         self.assertEqual(
-            maxpool.facts["ga_int8_max"]["numeric_equation"],
-            "unsigned bytewise min(A,C), not max(A,C)",
+            facts["rule_results"],
+            {
+                "CDA-GA-INT8-MAX-NUMERIC-001": "LOCAL_SOURCE_PASS",
+                "CDA-GA-INT8-MAX-PIPE-001": "CONTRADICTED",
+            },
         )
-        self.assertFalse(
-            maxpool.facts["ga_int8_max"]["pipeline0_accepts_second_item"]
+        self.assertEqual(facts["numeric_classification"], "LOCAL_SOURCE_PASS")
+        self.assertEqual(
+            facts["numeric_equation"], "unsigned bytewise max(A,C)"
+        )
+        self.assertEqual(facts["pipeline_classification"], "CONTRADICTED")
+        self.assertFalse(facts["pipeline0_accepts_second_item"])
+        self.assertNotIn("classification", facts)
+
+    def test_ga_int8_max_pipeline_failure_does_not_become_numeric_failure(
+        self,
+    ) -> None:
+        facts = OperatorConfigValidator().validate(
+            _load("maxpool_config_16_16_16_stride2_padding1.json")
+        ).facts["ga_int8_max"]
+        self.assertFalse(facts["pipeline0_accepts_second_item"])
+        self.assertEqual(
+            facts["rule_results"]["CDA-GA-INT8-MAX-PIPE-001"],
+            "CONTRADICTED",
+        )
+        self.assertEqual(
+            facts["rule_results"]["CDA-GA-INT8-MAX-NUMERIC-001"],
+            "LOCAL_SOURCE_PASS",
         )
 
 

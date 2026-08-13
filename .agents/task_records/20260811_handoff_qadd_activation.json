@@ -1,0 +1,29 @@
+{
+  "acceptance": {
+    "bytes": 981,
+    "path": ".agents/task_records/20260811_handoff_qadd_acceptance.json",
+    "sha256": "19d17d7cc65093d1b536f8112e764815184001c7a29ade42ef48b8c02da27766"
+  },
+  "activation_order": 5,
+  "claim_boundary": "Atomic ownership-pointer successor receipt only; UI archival is a separate post-activation action.",
+  "current_mainline_thread_id": "019ff027-e7db-72a3-b282-cfad8708da05",
+  "handoff_id": "handoff-b4d177c6b3011e73eb794ca69b5bece1",
+  "new_owner_status": "ACTIVE",
+  "new_thread_id": "019ff02d-9e93-7d61-8c98-c928fdea157c",
+  "old_owner_status": "RETIRED_READ_ONLY",
+  "old_thread_id": "019fa2c0-b647-7a91-93bf-d21a173487e3",
+  "registry_after": {
+    "bytes": 11867,
+    "path": "contracts/current_session_owner_registry_v1.qadd_next.json",
+    "sha256": "28d9137a040b6446db04f5280c7b660ff6b83170bad203dd2c95ca4634c776be"
+  },
+  "registry_before": {
+    "bytes": 11867,
+    "path": "contracts/current_session_owner_registry_v1.json",
+    "sha256": "12654fc38ae398c533c3f2fd202e4bebef6f67e9e84b7731ee9b3d08d9d1fdda"
+  },
+  "registry_epoch_after": 6,
+  "registry_epoch_before": 5,
+  "role_id": "family.qlinearadd",
+  "schema": "session-handoff-activation-v1"
+}

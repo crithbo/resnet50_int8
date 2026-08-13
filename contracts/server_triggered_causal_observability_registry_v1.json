@@ -1,0 +1,201 @@
+{
+  "schema": "server_triggered_causal_observability_registry_v1",
+  "version": 1,
+  "rule_id": "CDA-SERVER-ALWAYS-ON-TRIGGERED-CAUSAL-OBSERVABILITY-001",
+  "mechanisms": [
+    {
+      "mechanism_id": "INFRASTRUCTURE_START_AND_BINDING",
+      "required_roles": [
+        "infrastructure"
+      ],
+      "historical_sources": [
+        "QLinearAdd v19 and serialized Conv v23 undeclared observer identifiers",
+        "GAP v36 actual-consumer identifier typo",
+        "serialized Conv v41 and native Conv p5 private-XMR production failures",
+        "node0071-to-node0075 v3 bare clock/reset",
+        "native Conv p6 post-compile identity overblock"
+      ],
+      "claim_boundary": "Distinguishes package, compile, binding and simulator-start failures from DUT dynamic behavior."
+    },
+    {
+      "mechanism_id": "SOURCE_TO_QUEUE_CONSERVATION",
+      "required_roles": [
+        "source_produce",
+        "queue_enqueue"
+      ],
+      "historical_sources": [
+        "GAP v37 request/prepared-to-Buffer_AG progress",
+        "QLinearAdd v29 16-byte producer versus 32-byte consumer row"
+      ],
+      "claim_boundary": "Counts qualified producer and queue-accept events; it does not infer payload correctness from levels."
+    },
+    {
+      "mechanism_id": "QUEUE_TO_CONSUMER_DRAIN",
+      "required_roles": [
+        "queue_enqueue",
+        "queue_dequeue",
+        "consumer_accept"
+      ],
+      "historical_sources": [
+        "GAP v37 Buffer_AG queue full after 217 enqueue and 185 dequeue",
+        "serialized Conv v43 Buffer_AG source remained active while MSE4 carrier stopped"
+      ],
+      "claim_boundary": "Localizes pending occupancy and downstream non-consumption without assigning functional RTL responsibility."
+    },
+    {
+      "mechanism_id": "SHARED_BRANCH_ACCEPTANCE_SPLIT",
+      "required_roles": [
+        "consumer_accept"
+      ],
+      "historical_sources": [
+        "serialized Conv v43 unresolved shared-LC9 first non-acknowledging branch"
+      ],
+      "claim_boundary": "Requires at least two exact branch accept boundaries in the bound successor."
+    },
+    {
+      "mechanism_id": "INTERNAL_MATCH_OR_COMPUTE",
+      "required_roles": [
+        "internal_match_compute"
+      ],
+      "historical_sources": [
+        "serialized Conv LC9-to-PE1 accept/match/output candidate",
+        "native Conv c0 ARM-to-SA-to-MSE4 causal path"
+      ],
+      "claim_boundary": "Separates accepted input from internal match/compute progress; it does not prove numerical correctness."
+    },
+    {
+      "mechanism_id": "OUTPUT_ACCEPTANCE",
+      "required_roles": [
+        "output_accept"
+      ],
+      "historical_sources": [
+        "QLinearAdd ARM-to-GA-to-MSE-to-FP32 output path",
+        "node0071 producer final-write acceptance"
+      ],
+      "claim_boundary": "Records actual output acceptance, not merely output-valid state."
+    },
+    {
+      "mechanism_id": "TERMINAL_PROPAGATION",
+      "required_roles": [
+        "terminal_propagation"
+      ],
+      "historical_sources": [
+        "serialized Conv accepted terminal threshold and global-last propagation",
+        "GAP and QLinearAdd natural-terminal absence"
+      ],
+      "claim_boundary": "Localizes terminal metadata propagation; natural terminal remains independently required."
+    },
+    {
+      "mechanism_id": "FORMAL_D_COLLECTION",
+      "required_roles": [
+        "formal_d_collection"
+      ],
+      "historical_sources": [
+        "GAP v37 0 of 48 formal D",
+        "QLinearAdd v29 0 of 28 formal D",
+        "serialized Conv v43 0 of 320 formal D"
+      ],
+      "claim_boundary": "Separates result collection from earlier progress and never treats missing D with default mismatch zero as a pass."
+    },
+    {
+      "mechanism_id": "NO_PROGRESS_TRIGGER_SNAPSHOT",
+      "required_triggers": [
+        "NO_PROGRESS_WINDOW",
+        "EXIT_OR_SIGNAL"
+      ],
+      "historical_sources": [
+        "GAP and QLinearAdd long timeouts with incomplete last-boundary evidence"
+      ],
+      "claim_boundary": "V1 snapshots and continues the existing timeout; it does not auto-terminate or infer a deadlock from an unqualified short window."
+    },
+    {
+      "mechanism_id": "OBSERVER_OVERHEAD_BUDGET",
+      "required_policy": {
+        "decision_priority": "ONE_ROUND_HYPOTHESIS_DISCRIMINATION_FIRST",
+        "preferred_max_slowdown_percent": 50,
+        "slowdown_limit_hard": false,
+        "default_log_budget_bytes": 16777216,
+        "default_active_boundary_budget": 64,
+        "default_ring_event_budget": 128
+      },
+      "historical_sources": [
+        "QLinearAdd event-storm observer",
+        "Repeated single-signal successors that saved probe cost but multiplied server wall time"
+      ],
+      "claim_boundary": "Reports observer wall-clock and log cost; exact slowdown requires a same-event-trace A/B calibration. The preferred 50 percent line is advisory and cannot justify dropping a boundary required for one-round discrimination."
+    },
+    {
+      "mechanism_id": "QUALIFIED_BUDGET_STATE_ISOLATION",
+      "required_policy": {
+        "accounting_mode": "SEPARATE_QUALIFIED_AND_NON_PROGRESS",
+        "state_activity_consumes_qualified_budget": false,
+        "state_overflow_policy": "COALESCE_OR_DROP_STATE_ONLY",
+        "late_qualified_event_policy": "REMAINS_ELIGIBLE_AFTER_STATE_BUDGET_EXHAUSTION"
+      },
+      "historical_sources": [
+        "GAP v50 exhausted a 256-record diagnostic budget on slice0 state edges before the first later-slice qualified GA output"
+      ],
+      "claim_boundary": "Separates heartbeat/state-transition retention from finite qualified-event coverage so early state oscillation cannot erase a later qualified target event; it does not make an unqualified state edge a transaction or prove DUT correctness."
+    },
+    {
+      "mechanism_id": "SOURCE_BOUND_GENERATED_OBSERVER",
+      "required_policy": {
+        "family_plan_accepts_symbol_id_only": true,
+        "free_form_hdl_identifier_allowed": false,
+        "module_local_bind_preferred": true,
+        "catalog_bound_to_rtl_tree_and_source_sha": true,
+        "all_local_binding_errors_aggregated": true
+      },
+      "historical_sources": [
+        "QLinearAdd v19 and serialized Conv v23 undeclared identifiers",
+        "GAP v36 actual-consumer typo",
+        "serialized Conv v41 and native Conv p5 private XMR",
+        "node0071-to-node0075 v3 bare clock/reset"
+      ],
+      "claim_boundary": "Eliminates free-form family HDL names and binds generated monitor ports to source-declared module-local symbols; production compile remains the final elaboration authority."
+    },
+    {
+      "mechanism_id": "CAUSAL_DECISION_MATRIX_UNIQUE",
+      "required_policy": {
+        "all_known_candidates_have_complete_signatures": true,
+        "all_candidate_pairs_distinguishable": true,
+        "every_observation_maps_to_generated_boundary": true,
+        "ambiguous_or_missing_evidence_result": "EVIDENCE_INCOMPLETE"
+      },
+      "historical_sources": [
+        "Repeated one-signal successors that did not distinguish all remaining candidates"
+      ],
+      "claim_boundary": "Uniquely adjudicates the declared candidate set only; an unknown mechanism may still be localized to the first unproven boundary without an RTL-line claim."
+    },
+    {
+      "mechanism_id": "HIGH_INFORMATION_SEPARATE_EVENT_RINGS",
+      "required_policy": {
+        "always_on_fixed_width_summaries": true,
+        "qualified_ring_separate_from_state_ring": true,
+        "multiclass_encoding": "BITMAP_ALL_TRUE_CLASSES",
+        "payload_policy": "FIRST_SAMPLES_PLUS_ROLLING_DIGEST_PLUS_FINAL_RING",
+        "per_cycle_text_logging": false,
+        "full_waveform_default": false,
+        "slowdown_limit_hard": false
+      },
+      "historical_sources": [
+        "GAP v50 shared diagnostic budget exhaustion",
+        "GAP v53 exact logger/parser format drift",
+        "GAP v54 simultaneous multiclass edge loss"
+      ],
+      "claim_boundary": "Allows higher simulation cost for one-round localization while bounding text I/O; exact slowdown requires same-workload observer on/off calibration."
+    }
+  ],
+  "canonical_classifications": [
+    "TEST_INFRASTRUCTURE_FAILURE",
+    "SIM_NOT_STARTED",
+    "TARGET_STAGE_NOT_REACHED",
+    "DYNAMIC_FLOW_CONTROL_STALL",
+    "TERMINAL_PROPAGATION_FAILURE",
+    "RESULT_COLLECTION_FAILURE",
+    "NUMERIC_MISMATCH",
+    "NATURAL_SUCCESS",
+    "EVIDENCE_INCOMPLETE"
+  ],
+  "claim_boundary": "Shared mechanism and budget registry for future fresh successor observability profiles. It does not modify current packages, authorize functional RTL changes, generate a package, run a server, or replace natural-terminal/formal-D/E4/E5 gates."
+}

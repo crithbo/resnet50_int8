@@ -1,0 +1,127 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "operator_config_current_test_diff_v1.schema.json",
+  "title": "Operator configuration candidate to current-test diff v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "family",
+    "candidate_json_sha256",
+    "current_identity",
+    "entries",
+    "blocker_attribution",
+    "claim_boundary"
+  ],
+  "properties": {
+    "schema": {
+      "const": "operator_config_current_test_diff_v1"
+    },
+    "family": {
+      "type": "string",
+      "minLength": 1
+    },
+    "candidate_json_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "current_identity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "available",
+        "path",
+        "sha256",
+        "package_or_record",
+        "latest_result"
+      ],
+      "properties": {
+        "available": {"type": "boolean"},
+        "path": {"type": ["string", "null"]},
+        "sha256": {
+          "type": ["string", "null"],
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "package_or_record": {"type": ["string", "null"]},
+        "latest_result": {"type": "string", "minLength": 1}
+      }
+    },
+    "entries": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "json_pointer",
+          "candidate_value",
+          "current_value_present",
+          "current_value",
+          "classification",
+          "reason",
+          "evidence"
+        ],
+        "properties": {
+          "json_pointer": {"type": "string", "pattern": "^/"},
+          "candidate_value": true,
+          "current_value_present": {"type": "boolean"},
+          "current_value": true,
+          "classification": {
+            "enum": [
+              "SAME",
+              "INTENTIONAL_DERIVATION",
+              "SUSPECTED_CURRENT_DEFECT",
+              "NEW_CANDIDATE_DEFECT",
+              "DYNAMIC_ONLY",
+              "CURRENT_ABSENT"
+            ]
+          },
+          "reason": {"type": "string", "minLength": 1},
+          "evidence": {
+            "type": "array",
+            "items": {"type": "string", "minLength": 1}
+          }
+        }
+      }
+    },
+    "blocker_attribution": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "blocker_id",
+          "classification",
+          "candidate_json_pointers",
+          "reason",
+          "evidence"
+        ],
+        "properties": {
+          "blocker_id": {"type": "string", "minLength": 1},
+          "classification": {
+            "enum": [
+              "CONFIG_EXPLAINS",
+              "CONFIG_CONTRIBUTES",
+              "CONFIG_EXCLUDED",
+              "DYNAMIC_ONLY",
+              "INSUFFICIENT_EVIDENCE"
+            ]
+          },
+          "candidate_json_pointers": {
+            "type": "array",
+            "items": {"type": "string", "pattern": "^/"}
+          },
+          "reason": {"type": "string", "minLength": 1},
+          "evidence": {
+            "type": "array",
+            "items": {"type": "string", "minLength": 1}
+          }
+        }
+      }
+    },
+    "claim_boundary": {
+      "type": "string",
+      "minLength": 1
+    }
+  }
+}

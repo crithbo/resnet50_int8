@@ -1,0 +1,144 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "operator_config_handler_capability_v1.schema.json",
+  "title": "Operator configuration handler capability v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "family",
+    "handler",
+    "capabilities",
+    "dependent_leaves",
+    "claim_boundary"
+  ],
+  "properties": {
+    "schema": {
+      "const": "operator_config_handler_capability_v1"
+    },
+    "family": {
+      "type": "string",
+      "minLength": 1
+    },
+    "handler": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "path",
+        "sha256",
+        "source_span"
+      ],
+      "properties": {
+        "kind": {
+          "enum": [
+            "NATIVE_COMPLETE",
+            "NATIVE_CONSERVATIVE",
+            "PLACEHOLDER",
+            "AUTHORIZED_PATCH",
+            "NONE"
+          ]
+        },
+        "path": {
+          "type": ["string", "null"]
+        },
+        "sha256": {
+          "type": ["string", "null"],
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "source_span": {
+          "type": ["string", "null"]
+        }
+      }
+    },
+    "capabilities": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "exact_replay",
+        "shape",
+        "dtype",
+        "qparam",
+        "layout",
+        "address",
+        "cross_stage_schedule"
+      ],
+      "properties": {
+        "exact_replay": {"$ref": "#/$defs/capability"},
+        "shape": {"$ref": "#/$defs/capability"},
+        "dtype": {"$ref": "#/$defs/capability"},
+        "qparam": {"$ref": "#/$defs/capability"},
+        "layout": {"$ref": "#/$defs/capability"},
+        "address": {"$ref": "#/$defs/capability"},
+        "cross_stage_schedule": {"$ref": "#/$defs/capability"}
+      }
+    },
+    "dependent_leaves": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "json_pointer",
+          "axes",
+          "covered_by",
+          "status"
+        ],
+        "properties": {
+          "json_pointer": {
+            "type": "string",
+            "pattern": "^/"
+          },
+          "axes": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {
+              "enum": [
+                "shape",
+                "dtype",
+                "qparam",
+                "layout",
+                "address",
+                "cross_stage_schedule"
+              ]
+            }
+          },
+          "covered_by": {
+            "type": "string",
+            "minLength": 1
+          },
+          "status": {
+            "enum": [
+              "COVERED",
+              "UNCOVERED"
+            ]
+          }
+        }
+      }
+    },
+    "claim_boundary": {
+      "type": "string",
+      "minLength": 1
+    }
+  },
+  "$defs": {
+    "capability": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "supported",
+        "evidence"
+      ],
+      "properties": {
+        "supported": {
+          "type": "boolean"
+        },
+        "evidence": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    }
+  }
+}

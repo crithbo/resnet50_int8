@@ -1,0 +1,50 @@
+{
+  "schema": "server-waveform-portable-query-profile-v1",
+  "rule_id": "CDA-SERVER-WAVEFORM-PORTABLE-LOCAL-DECODABILITY-001",
+  "activation": "required_next_fresh",
+  "activation_epoch": "waveform-portable-local-decodability-v1-b0a94cf60d6e",
+  "raw_vpd": {
+    "authoritative": true,
+    "existing_dump_vcd_semantics": "VPD",
+    "make_arguments": {"DUMP_VCD": "1", "DUMP_FSDB": "0", "TB_DUMP_FSDB": "0"},
+    "hard_limit_bytes": null,
+    "truncation": false,
+    "sampling": false,
+    "size_based_deletion": false
+  },
+  "portable_vcd": {
+    "format": "VCD",
+    "ucli_type": "VCD",
+    "make_argument": {"DUMP_PORTABLE_VCD": "1"},
+    "first_fresh_required": true,
+    "source_bound_scope": {
+      "top": "tb_NDP_Top_new_phy",
+      "depth": 0,
+      "source_receipt_sha256": "051e72c637593677059f507e92bd22aa1cfae1a7dfde95aaabe372ab4f2a4dcd"
+    },
+    "hard_limit_bytes": null,
+    "truncation": false,
+    "sampling": false,
+    "size_based_deletion": false
+  },
+  "signal_query": {
+    "format": "REGISTERED_EVENT_ROWS",
+    "custom_free_form_text": false,
+    "hard_limit_bytes": null,
+    "hard_limit_events": null,
+    "sampling": false,
+    "truncation": false,
+    "ordered_every_transition": true
+  },
+  "probe_catalog": [
+    {"candidate_id": "bp_pre", "hierarchical_path": "tb_NDP_Top_new_phy.dut.bp_pre", "width": 1},
+    {"candidate_id": "mask", "hierarchical_path": "tb_NDP_Top_new_phy.dut.mask", "width": 2}
+  ],
+  "probe_catalog_sha256": "9c1359488b064a22762081a937a431675a8ad230997c9d48df7cc1d86daf4960",
+  "failure_semantics": {
+    "return_must_publish": true,
+    "diagnostic_status": "DIAGNOSTIC_EVIDENCE_INCOMPLETE",
+    "preserve": ["raw_vpd", "compile_core", "sim_core", "signal_core", "return_core"]
+  },
+  "claim_boundary": "Synthetic portable waveform/query fixture only."
+}

@@ -1,0 +1,31 @@
+{
+  "schema": "server-waveform-review-chunk-v1",
+  "expected_review_revision": 0,
+  "return_zip_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "waveform_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+  "analysis_tool": {
+    "name": "registered-fsdb-query",
+    "version": "fixture-v1",
+    "argv": ["query", "--window", "100:120"],
+    "exit_code": 0
+  },
+  "query": {
+    "scope": ["tb.dut.queue", "tb.dut.consumer"],
+    "time_window": {"start": 100, "end": 120, "timescale": "1ns"},
+    "signals": ["tb.dut.queue.full", "tb.dut.consumer.ready"],
+    "no_sampling": true,
+    "no_truncation": true
+  },
+  "candidate_updates": {
+    "open": [],
+    "closed": ["source_missing", "consumer_disabled", "parser_loss"]
+  },
+  "status": "ROOT_CAUSE_UNIQUE",
+  "finding": "Queue first asserts full while the exact consumer remains not-ready.",
+  "last_proven_good": {"time": 109, "predicate": "queue_full=0"},
+  "first_divergence": {"time": 110, "predicate": "queue_full=1 && consumer_ready=0"},
+  "root_cause": {"class": "BACKPRESSURE_NOT_DRAINED", "boundary": "queue_to_consumer"},
+  "next_query": null,
+  "unreviewed_scope": ["post-root downstream datapath"],
+  "claim_boundary": "Unique queue/consumer stall root for this attempt only; no natural terminal, formal D, E3, E4 or E5 claim."
+}

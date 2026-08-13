@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "server-source-bound-observer-generation-report-v2",
+  "title": "Exact-instance source-bound observer generation report",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema", "rule_id", "pass", "errors", "warnings",
+    "all_errors_collected", "catalog", "plan",
+    "diagnostic_semantics_sha256", "contract", "generated_artifacts",
+    "focused_syntax", "runtime_contract", "package_action",
+    "server_action", "claim_boundary"
+  ],
+  "properties": {
+    "schema": {"const": "server-source-bound-observer-generation-report-v2"},
+    "rule_id": {"const": "CDA-SERVER-SOURCE-BOUND-GENERATED-OBSERVER-001"},
+    "pass": {"type": "boolean"},
+    "errors": {"type": "array", "items": {"type": "string"}},
+    "warnings": {"type": "array", "items": {"type": "string"}},
+    "all_errors_collected": {"const": true},
+    "catalog": {"$ref": "#/$defs/fileReceipt"},
+    "plan": {"$ref": "#/$defs/fileReceipt"},
+    "diagnostic_semantics_sha256": {"$ref": "#/$defs/sha256"},
+    "contract": {"type": "object"},
+    "generated_artifacts": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/fileReceipt"}
+    },
+    "focused_syntax": {
+      "type": "object",
+      "required": ["tool", "available", "exit_code", "stdout", "stderr", "pass"],
+      "properties": {
+        "tool": {"const": "iverilog"},
+        "available": {"type": "boolean"},
+        "exit_code": {"type": ["integer", "null"]},
+        "stdout": {"type": "string"},
+        "stderr": {"type": "string"},
+        "pass": {"type": "boolean"}
+      },
+      "additionalProperties": false
+    },
+    "runtime_contract": {"type": "object"},
+    "package_action": {"const": "NONE"},
+    "server_action": {"const": "NONE"},
+    "claim_boundary": {"type": "string", "minLength": 1}
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "fileReceipt": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "bytes", "sha256"],
+      "properties": {
+        "path": {"type": "string", "minLength": 1},
+        "bytes": {"type": "integer", "minimum": 0},
+        "sha256": {"$ref": "#/$defs/sha256"}
+      }
+    }
+  }
+}

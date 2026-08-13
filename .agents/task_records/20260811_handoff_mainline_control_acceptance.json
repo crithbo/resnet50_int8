@@ -1,0 +1,23 @@
+{
+  "all_receipts_current": true,
+  "capsule": {
+    "bytes": 3262,
+    "path": ".agents/task_records/20260811_handoff_mainline_control_capsule.json",
+    "sha256": "ee6f35d57e2178b19e05cdf9a41cfd61e2a5020aeab27f4354bd848fc894f52b"
+  },
+  "claim_boundary": "Read-only acceptance only. Authority remains with the old owner until activation.",
+  "conflicts": [],
+  "external_action_taken": false,
+  "first_action": "re-read activation publication and current registry, then acknowledge sole ACTIVE mainline ownership before any write",
+  "handoff_id": "handoff-1e322f4feeae712d6e73cbb29fd7fa66",
+  "new_thread_id": "019ff027-e7db-72a3-b282-cfad8708da05",
+  "registry_observed": {
+    "bytes": 11867,
+    "path": "contracts/current_session_owner_registry_v1.json",
+    "sha256": "e5e431295c416b77829b434e38995c23edf65332acf3796b61b4b49612b38464"
+  },
+  "role_id": "mainline.control",
+  "schema": "session-handoff-acceptance-v1",
+  "snapshot_understood": true,
+  "status": "ACCEPTED_READ_ONLY"
+}

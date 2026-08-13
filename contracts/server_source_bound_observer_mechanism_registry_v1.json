@@ -1,0 +1,142 @@
+{
+  "schema": "server-source-bound-observer-mechanism-registry-v1",
+  "version": 1,
+  "rule_id": "CDA-SERVER-SOURCE-BOUND-GENERATED-OBSERVER-001",
+  "required_profile": "HIGH_INFORMATION_CAUSAL_V1",
+  "mechanisms": [
+    {
+      "mechanism_id": "SOURCE_BOUND_SYMBOL_ID_ONLY",
+      "blocking_class": "server_start",
+      "requirement": "The family plan references catalog symbol_id values only; the generator owns every emitted HDL identifier and bind connection.",
+      "historical_negatives": [
+        "QLinearAdd v19 undeclared return_obs_ga_operand_capture_mon",
+        "serialized Conv v23 undeclared return_obs_buf45_wr_edge_count",
+        "GAP v36 return_obs_rd_spatial_mon actual-consumer typo"
+      ]
+    },
+    {
+      "mechanism_id": "MODULE_LOCAL_BIND_NO_FREE_XMR",
+      "blocking_class": "server_start",
+      "requirement": "Generated monitors bind to a source-declared module and connect source-bound local symbols; free-form private hierarchy expressions are not accepted.",
+      "historical_negatives": [
+        "serialized Conv v41 mem_idx_gotten private XMR",
+        "native Conv p5 buf2arm_valid_hold private XMR",
+        "Requant guard-only v3 and Dequant atomic v2 XMRE failures"
+      ]
+    },
+    {
+      "mechanism_id": "SOURCE_BOUND_OWNER_CLOCK_RESET",
+      "blocking_class": "return",
+      "requirement": "Every boundary binds one-bit clock and reset symbol IDs in the same target module; no focused harness may invent bare clock or reset leaves.",
+      "historical_negatives": [
+        "node0071-to-node0075 v3 bare clk_sg/rst_n_sg",
+        "GAP v33 wrong owner-clock sampling",
+        "QLinearAdd v10 observer clock mismatch"
+      ]
+    },
+    {
+      "mechanism_id": "SINGLE_SOURCE_LOGGER_PARSER_GENERATION",
+      "blocking_class": "return",
+      "requirement": "Observer source, exact logger tokens, parser and canonical observation IDs are emitted from one plan and identity-bound together.",
+      "historical_negatives": [
+        "GAP v48 generated heredoc escape",
+        "GAP v53 right-justified logger token versus parser mismatch"
+      ]
+    },
+    {
+      "mechanism_id": "MULTICLASS_BITMAP_NO_LOSS",
+      "blocking_class": "return",
+      "requirement": "All true event classes in the same owner-clock sample are recorded as one bitmap and accumulated into sticky state.",
+      "historical_negatives": [
+        "GAP v54 pc>vc priority plus unconditional lower-class snapshot advance"
+      ]
+    },
+    {
+      "mechanism_id": "SEPARATE_QUALIFIED_AND_STATE_RINGS",
+      "blocking_class": "return",
+      "requirement": "Qualified progress and non-progress state records have independent counters and rings; state activity never consumes qualified coverage.",
+      "historical_negatives": [
+        "GAP v50 slice0 state oscillation exhausted the shared 256-record budget"
+      ]
+    },
+    {
+      "mechanism_id": "EXACT_CANDIDATE_SIGNATURE_UNIQUENESS",
+      "blocking_class": "return",
+      "requirement": "Every known candidate provides a complete boolean signature across the generated observations and every candidate pair differs.",
+      "historical_negatives": [
+        "Repeated one-signal successors that left multiple causal candidates indistinguishable"
+      ]
+    },
+    {
+      "mechanism_id": "BOUNDED_HIGH_INFORMATION_CAPTURE",
+      "blocking_class": "return",
+      "requirement": "Always-on counters, timestamps, sticky masks and payload digest are combined with first-sample and final ring emission; full per-cycle text and waveform dumps remain off by default.",
+      "historical_negatives": [
+        "QLinearAdd v20 level-as-event observer storm",
+        "Returns with a zero count but no last-proven-good or first-divergence context"
+      ]
+    },
+    {
+      "mechanism_id": "EXACT_CANONICAL_INSTANCE_AND_GROUPING",
+      "blocking_class": "return",
+      "requirement": "Every decision boundary pins a canonical elaborated instance and groups records by boundary_id, canonical_instance and seq; records from neighboring instances are never aggregated into the target decision.",
+      "historical_negatives": [
+        "serialized Conv v80 selected slice0/group0 while adjudicating the requested slice13/group1 target"
+      ]
+    },
+    {
+      "mechanism_id": "BINARY_KNOWN_PAYLOAD_FAIL_CLOSED",
+      "blocking_class": "return",
+      "requirement": "Every decision-bearing payload record carries generated width and binary-known status; X/Z, missing, malformed, negative-sentinel or width-mismatched payloads yield EVIDENCE_INCOMPLETE and cannot match a candidate.",
+      "historical_negatives": [
+        "native Conv p34b converted X/Z parse failure to -1 and masked it into a false all-one stable token"
+      ]
+    },
+    {
+      "mechanism_id": "SEMANTIC_FINGERPRINT_FIRST_USE",
+      "blocking_class": "server_start",
+      "requirement": "The plan, generated observer, exact parser, target scopes, payload contracts, observations and candidates form one diagnostic semantics fingerprint; changed fingerprints require a fresh exact-ZIP semantic audit and cannot reuse an older receipt.",
+      "historical_negatives": [
+        "serialized Conv v80 reused a v77 first-fresh receipt after changing the package-local target parser"
+      ]
+    },
+    {
+      "mechanism_id": "TYPED_EVIDENCE_NOT_SELF_ATTESTED",
+      "blocking_class": "server_start",
+      "requirement": "First-fresh acceptance reads the typed exact final-ZIP v2 report, verifies its ZIP SHA and semantic fingerprint, and consumes executable positive and historical negative controls instead of trusting pass/errors fields alone.",
+      "historical_negatives": [
+        "Opaque family report pass=true could not prove exact instance selection or X/Z fail-closed behavior"
+      ]
+    },
+    {
+      "mechanism_id": "PARTIAL_EXIT_LIVE_CAUSAL_RECORD",
+      "blocking_class": "return",
+      "requirement": "Every required INT/TERM diagnostic parser is exercised locally against a qualified live EVENT fixture or a signal-safe persisted equivalent; SystemVerilog final-block ring output may be supplemental but cannot be the parser's sole causal input.",
+      "historical_negatives": [
+        "native Conv p33b target_epoch_write_owner_parser required final-block RING_POST after external INT even though live exact-target EVENT rows survived"
+      ]
+    }
+  ],
+  "required_negative_controls": [
+    "multiple unresolved symbol IDs are aggregated in one report",
+    "symbol from a different target module fails closed",
+    "non-one-bit owner clock or reset fails closed",
+    "duplicate candidate signatures fail closed",
+    "incomplete role coverage fails closed",
+    "state activity consuming qualified budget fails closed",
+    "priority single-label multiclass encoding fails closed",
+    "catalog RTL SHA or semantic SHA drift fails closed",
+    "malformed exact logger record yields EVIDENCE_INCOMPLETE",
+    "complete near-miss-instance records cannot satisfy the pinned target",
+    "target and near-miss records with the same sequence cannot be combined",
+    "duplicate boundary-instance-sequence records fail closed",
+    "X and Z payloads at a decision boundary yield EVIDENCE_INCOMPLETE",
+    "payload-known false, missing payload and wrong payload width fail closed",
+    "changed diagnostic semantics cannot reuse a prior first-use receipt",
+    "typed final-ZIP report must bind the exact ZIP SHA and semantic fingerprint",
+    "first_payload_samples=0 fails closed because it removes qualified live partial-exit input",
+    "required parser that accepts only final-block RING_POST fails the live-only INT fixture",
+    "required plugin dispositions do not omit or duplicate any required plugin"
+  ],
+  "claim_boundary": "Shared local observer generation and adjudication-input closure only; it neither modifies functional RTL nor proves production compile, natural terminal, formal D, E4, or E5."
+}

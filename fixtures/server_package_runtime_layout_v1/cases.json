@@ -1,0 +1,96 @@
+{
+  "schema": "server_package_runtime_layout_fixture_cases_v1",
+  "cases": [
+    {
+      "case_id": "positive_install_subtree_all_scenarios",
+      "require_runner_visibility": true,
+      "expected_pass": true
+    },
+    {
+      "case_id": "negative_wrong_sca_prefix",
+      "expected_pass": false,
+      "mechanism": "v52 cfg_root versus TB cwd mismatch",
+      "expected_error": "SCA input path has wrong prefix"
+    },
+    {
+      "case_id": "negative_missing_matrix",
+      "expected_pass": false,
+      "mechanism": "SCA input has no materialized runtime payload",
+      "expected_error": "SCA input path has no projected payload"
+    },
+    {
+      "case_id": "negative_wrong_declared_longest_length",
+      "expected_pass": false,
+      "mechanism": "p12 declared 112 versus actual 115",
+      "expected_error": "longest_projected_relative_path_chars"
+    },
+    {
+      "case_id": "negative_external_workroot",
+      "expected_pass": false,
+      "mechanism": "package-owned work root outside NDP install subtree",
+      "expected_error": "runtime assignment escapes install subtree: work_root"
+    },
+    {
+      "case_id": "negative_new_root_entry",
+      "expected_pass": false,
+      "mechanism": "NDP root direct-child exact-set changed",
+      "expected_error": "root exact-set receipt diverged"
+    },
+    {
+      "case_id": "negative_finalizer_late_arm",
+      "expected_pass": false,
+      "mechanism": "fallible path-budget or install preflight precedes shared finalizer",
+      "expected_error": "shared finalizer is armed after a fallible preflight/action"
+    },
+    {
+      "case_id": "negative_generated_python_heredoc_syntax",
+      "expected_pass": false,
+      "mechanism": "GAP v48 outer generator consumed embedded Python backslash-newline escaping in the signal-finalizer fallback",
+      "expected_error": "generated heredoc syntax failed"
+    },
+    {
+      "case_id": "negative_fixed_result_root_drift",
+      "expected_pass": false,
+      "mechanism": "return publication moved away from fixed simresult",
+      "expected_error": "fixed result root mismatch"
+    },
+    {
+      "case_id": "negative_silent_return_collision",
+      "require_runner_visibility": true,
+      "expected_pass": false,
+      "mechanism": "v62 fixed return target collision used a bare nonzero exit",
+      "expected_error": "silent package-owned nonzero exit"
+    },
+    {
+      "case_id": "negative_silent_missing_tool",
+      "require_runner_visibility": true,
+      "expected_pass": false,
+      "mechanism": "missing required server tool exited without a package-bound stderr diagnostic",
+      "expected_error": "silent package-owned nonzero exit"
+    },
+    {
+      "case_id": "negative_silent_bad_root",
+      "require_runner_visibility": true,
+      "expected_pass": false,
+      "mechanism": "bad server root exited without a package-bound stderr diagnostic",
+      "expected_error": "silent package-owned nonzero exit"
+    }
+  ],
+  "helper_negative_controls": [
+    "install_missing",
+    "install_file",
+    "install_symlink",
+    "cfg_pkg_file",
+    "cfg_pkg_symlink",
+    "codex_runs_file",
+    "codex_runs_symlink"
+  ],
+  "blocking_policy": {
+    "scope": "ONLY_FAILURES_THAT_CAN_PREVENT_SERVER_RUN_READ_WRONG_INPUT_CORRUPT_STATE_OR_LOSE_RETURN",
+    "aggregate_all_cheap_findings_in_one_pass": true,
+    "shared_regression_not_repeated_package_materialization": true,
+    "secondary_parent_initial_absence": "RECORD_ONLY_AND_PACKAGE_CREATES",
+    "manual_server_mkdir_required": false
+  },
+  "claim_boundary": "Synthetic exact-final-ZIP and safe filesystem fixtures only; no server, compile, simulation, terminal, formal-D, E4 or E5 evidence."
+}

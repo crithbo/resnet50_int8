@@ -18,6 +18,14 @@ target = (
     / "artifacts/operator_config_validation/r5-server-test-packages"
     / f"{base.ROOT_NAME}.zip"
 )
+if not target.is_file():
+    target = (
+        ROOT
+        / "artifacts/operator_config_validation/r5-server-test-packages/tested"
+        / "gap_node0071"
+        / base.ROOT_NAME
+        / f"{base.ROOT_NAME}.zip"
+    )
 digest = hashlib.sha256(target.read_bytes()).hexdigest()
 base.ZIP_SHA256 = base.base.ZIP_SHA256 = base.base.base.ZIP_SHA256 = digest
 ORIGINAL_VALIDATE = base.validate

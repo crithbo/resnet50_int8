@@ -1,0 +1,28 @@
+{
+  "schema": "session-handoff-request-v1",
+  "role_id": "family.gap",
+  "new_thread_id": "019ff02d-8225-7d21-9779-e46ce4130572",
+  "reason": "planned full-project session refresh after active-rule orthogonalization",
+  "required_read_paths": [
+    ".agents/agent.md",
+    ".agents/plan.md",
+    ".agents/rules/生成前必读索引.md",
+    ".agents/rules/会话转接与所有权规则.md",
+    "contracts/current_session_owner_registry_v1.json",
+    "contracts/active_rule_registry_v1.json",
+    ".agents/rules/算子配置规则.md",
+    ".agents/rules/NDP硬件字段语义.md",
+    ".agents/rules/服务器测试包生成规则.md",
+    ".agents/rules/GAP_int32_mac_bypass_rules.md",
+    ".agents/rules/精确UINT8量化尾专项规则.md",
+    ".agents/rules/最小双Stage生命周期规则.md"
+  ],
+  "active_artifact_paths": [
+    ".agents/task_records/20260808_gap_node0071_v54_return_wait_rtl_fix.md"
+  ],
+  "pending_messages": [
+    "current mainline is 019ff027-e7db-72a3-b282-cfad8708da05",
+    "no server/RTL/config/numeric action during ownership activation"
+  ],
+  "first_action": "acknowledge activation and remain WAIT_RTL_FIX without building a package"
+}

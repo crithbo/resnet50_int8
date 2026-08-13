@@ -1,0 +1,66 @@
+{
+  "schema": "server-waveform-mandatory-return-dispatch-v2",
+  "version": 2,
+  "rule_id": "CDA-SERVER-WAVEFORM-DEFAULT-RETURN-UNBOUNDED-CAUSAL-COVERAGE-001",
+  "enforcement": "required_next_fresh",
+  "applies_to": "Every package whose exact runner can enter DUT simulation",
+  "default_capture": {
+    "format": "VPD",
+    "make_arguments": {
+      "DUMP_VCD": "1",
+      "DUMP_FSDB": "0",
+      "TB_DUMP_FSDB": "0"
+    },
+    "tb_top": "tb_NDP_Top_new_phy",
+    "hierarchy_depth": 0,
+    "scope_mode": "FULL_HIERARCHY"
+  },
+  "return_contract": {
+    "simulation_started_requires_waveform": true,
+    "compile_failure_without_waveform_allowed": true,
+    "collect_every_wave_vpd_and_shard": true,
+    "hard_size_limit": null,
+    "truncation": "FORBIDDEN",
+    "sampling": "FORBIDDEN",
+    "size_based_deletion": "FORBIDDEN",
+    "normal_timeout_hup_int_term_collection": "REQUIRED_IF_ON_DISK"
+  },
+  "exclusion_contract": {
+    "default": "KEEP",
+    "removal_requires": "Exact hierarchy plus a path/SHA-bound machine receipt proving causal irrelevance to the current stall",
+    "unknown_or_unproven": "KEEP"
+  },
+  "shared_assets": {
+    "tool": "tools/server_waveform_mandatory_return.py",
+    "plan_schema": "schemas/server_waveform_mandatory_plan_v2.schema.json",
+    "runtime_receipt_schema": "schemas/server_waveform_runtime_receipt_v2.schema.json",
+    "post_sim_helper": "tools/server_post_sim_return.py",
+    "post_sim_request_schema": "schemas/server_post_sim_return_request_v1.schema.json"
+  },
+  "runtime_receipt_source": "evidence/waveform/WAVEFORM_RUNTIME_RECEIPT.json",
+  "runtime_sequence": [
+    "python3 package_tools/server_waveform_mandatory_return.py collect-runtime --plan contracts/server_waveform_mandatory_plan.json --attempt-root ${CODEX_ATTEMPT_ROOT} --execution-id ${CODEX_EXECUTION_ID} --simulation-started ${CODEX_SIM_STARTED} --exit-kind <exact-kind> --output evidence/waveform/WAVEFORM_RUNTIME_RECEIPT.json",
+    "python3 package_tools/server_post_sim_return.py finalize --request contracts/server_post_sim_return_request.json"
+  ],
+  "final_zip_gate": {
+    "command": "python tools/server_waveform_mandatory_return.py validate-final-zip --zip <fresh.zip> --output <report.json>",
+    "mapping": ["server_start", "return"],
+    "blocking_only_if": "The exact runner cannot produce the mandatory VPD or the formal return can omit/mutate it"
+  },
+  "local_analysis": {
+    "identity_command": "python tools/server_waveform_mandatory_return.py inspect-vpd --wave <wave.vpd> --output <receipt.json>",
+    "extract_command": "python tools/server_waveform_mandatory_return.py extract-return --zip <return.zip> --output-dir <dir> --output <report.json>",
+    "viewer_preference": ["verdi -vpd", "dve -vpd"]
+  },
+  "unchanged_gates": [
+    "functional RTL authorization",
+    "workload provenance",
+    "natural terminal",
+    "formal D conjunction",
+    "runtime-D absent",
+    "E4",
+    "E5",
+    "host internal tensor replay prohibition"
+  ],
+  "claim_boundary": "Mandatory waveform capture is diagnostic evidence only and never replaces formal result adjudication."
+}

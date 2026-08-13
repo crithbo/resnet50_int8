@@ -1,6 +1,6 @@
 # ResNet50 INT8 项目稳定入口
 
-最后更新：2026-08-04（诊断后继改为 time-to-root-cause / 信息增益优先）
+最后更新：2026-08-13（observer-only 宽因果回传与全波形关闭）
 
 本文件只保存项目级稳定边界。当前任务、blocker 和下一步只看 `.agents/plan.md`；
 生成规则看 `.agents/rules/`；完成证据看 `.agents/task_records/`；旧版本、旧命令和
@@ -14,11 +14,52 @@
 | 算子 JSON、物化回环、mapping/execplan/provenance | `.agents/rules/算子配置规则.md` |
 | LC/MSE/Buffer/SA/GA/N2N 字段语义 | `.agents/rules/NDP硬件字段语义.md` |
 | 服务器包、单命令、身份、回传和预算 | `.agents/rules/服务器测试包生成规则.md` |
+| 会话角色、唯一活动 owner、转接胶囊和主线路由 | `.agents/rules/会话转接与所有权规则.md` |
 | 算子特有公式、布局、反例和发布门 | 对应算子专项规则 |
 | 当前任务和顺序 | `.agents/plan.md` |
 
 创建、修改、派生、重建或发布 JSON、mapping、bitstream、execplan、SCA/SCA_D 或测试包
 前，必须从“生成前必读索引”重新选择本轮相关资料并保存读取收据。本文件不复写这些规则。
+
+活动规则的 exact-set、分层、职责、读取 profile 与 SHA 收据由
+`contracts/active_rule_registry_v1.json` 机器登记；`.agents/rules/` 中不得出现登记集之外
+的 Markdown。`.agents/history/rules/README.md` 是旧规则统一入口，历史文件默认不读、
+不参与生成，也不能由旧 task record 的链接重新激活。
+
+### 1.1 会话角色与必读规则矩阵
+
+每个会话开始一次任务或收到 handoff capsule 后，先完整读取“共同必读”，再只读取本行的
+角色增量；派发单可以在本行基础上继续缩小，但不得省略本行文件。未列出的其它算子族规则
+默认禁止阅读，避免把历史 workaround 或其它族字段误带入当前生成。每次实际生成前仍须按
+`生成前必读索引.md` 对 changed surface 做一次增量选择并记录 current bytes/SHA。
+
+| `role_id` / 会话职责 | 共同必读 | 角色增量必读 |
+|---|---|---|
+| `mainline.control` 主线控制面 | `agent.md`、`plan.md`、`生成前必读索引.md`、`会话转接与所有权规则.md`、`contracts/current_session_owner_registry_v1.json` | `算子配置规则.md`、`NDP硬件字段语义.md`、`服务器测试包生成规则.md`、`整网测试收敛优化专项规则.md`；只有裁决某族时才加该族规则 |
+| `family.gap` | 同上共同必读 | `算子配置规则.md`、`NDP硬件字段语义.md`、`服务器测试包生成规则.md`、`GAP_int32_mac_bypass_rules.md`、`精确UINT8量化尾专项规则.md`、`最小双Stage生命周期规则.md` |
+| `family.conv.serialized` / `family.conv.native` | 同上共同必读 | `算子配置规则.md`、`NDP硬件字段语义.md`、`服务器测试包生成规则.md`、`INT8_SA点积专项规则.md`、`RequantizeUint8算子配置规则.md`、`精确UINT8量化尾专项规则.md`、`最小双Stage生命周期规则.md` |
+| `family.qlinearadd` | 同上共同必读 | `算子配置规则.md`、`NDP硬件字段语义.md`、`服务器测试包生成规则.md`、`QLinearAdd算子配置规则.md`、`精确UINT8量化尾专项规则.md`、`最小双Stage生命周期规则.md` |
+| `family.dequantize` / `family.view` / `family.requantize` | 同上共同必读 | 三份公共生成规则（配置、硬件字段、服务器包）以及且仅以及目标族规则；跨两 stage 时再读 `最小双Stage生命周期规则.md`，量化尾适用时再读 `精确UINT8量化尾专项规则.md` |
+| `infra.server-package` 公共构包/observer/return 基础设施 | 同上共同必读 | `服务器测试包生成规则.md`；只有实际修改 workload/config consumer 时才读 `算子配置规则.md` 与 `NDP硬件字段语义.md`，不得读无关族规则 |
+| `optimizer.whole-network` 本整网收敛优化专项 | 同上共同必读 | `整网测试收敛优化专项规则.md`、`服务器测试包生成规则.md`；只有做 config causal audit 时读 `算子配置规则.md`，会话换届期间读 `会话转接与所有权规则.md`，默认不读任何族规则 |
+| `consumer.human-json` 人工 JSON 消费 | 同上共同必读 | `算子配置规则.md`、`NDP硬件字段语义.md`、`服务器测试包生成规则.md` 与当前唯一目标族规则；不得读取或修改其它族资产 |
+
+`role_id` 不在表中时必须先由主线把它归入最近的稳定职责并写入 owner registry；不得自行
+扩张成“全规则会话”。`WAIT_RTL_FIX`、`HARDWARE_CAPABILITY_BLOCKED` 或 dormant 角色仍按
+所属 family 行读取，但只做只读状态核验，不因读取规则自动获得构包、服务器或 RTL 权限。
+
+稳定文档只能各拥有一类事实：
+
+- `agent.md`：唯一入口、权限边界、角色与协作纪律；
+- `plan.md`：当前状态、blocker、in-flight identity 和下一步，不保存完整历史；
+- 公共规则：跨族配置、硬件字段、服务器包或会话转接合同；
+- 原语/族规则：只保存该原语/算子的稳定语义和停止门；
+- `task_records/`：已完成动作及证据；`history/rules/`：停用或被取代规则原文。
+
+同一个 `CDA-*` 规则 ID 只能在一个活动规则中定义；其它文件只能引用。版本号、package
+SHA、某次 return 结果、当前 blocker 开闭和一次性用户授权不得写入活动规则。确需改变
+稳定语义时，先明确唯一 owner，再窄幅修改该 owner 文件并刷新 registry，禁止复制同义
+段落到多个专项规则。
 
 ## 2. 事实优先级
 
@@ -52,6 +93,27 @@
 - 默认禁止修改任何 `rtl/` 目录内的文件；功能 RTL repair 必须取得用户本轮明确授权。
 - `rtl/` 外的 TB、observer、runner 只能按服务器规则做可关闭、非驱动、身份绑定的
   测试修改，不能改变 DUT 激励、握手、时序或完成条件。
+- 所有可能进入 DUT simulation 的 next-fresh 服务器包统一采用 observer-only：actual compile/sim
+  profile 固定为 `DUMP_VCD=0 DUMP_FSDB=0 TB_DUMP_FSDB=0`，不得生成、收集或回传 VPD、FSDB、
+  VCD、FST 及其 shard、lock、dump Tcl 或 vendor-wave query。历史波形 return 保持只读，只用于旧证据
+  兼容，不得倒灌新包。
+- observer 必须由 current source-bound catalog 生成并记录足够宽的**真实 DUT 信号**因果域：至少覆盖
+  clock/reset/stage、producer、queue 入/出与占用、request/valid/ready/accept/backpressure、selected
+  port/bank/lane、internal state/match/clear、output/wdata、terminal/finish/formal-D；每个不适用角色须有
+  exact 机器证明。observer 自己重算的 expected equation 不能替代实际 net，也不能作为 RTL 错误的唯一
+  依据。
+- 运行证据使用本机无需 vendor 工具即可读取的 signal-id catalog 与分块 4-state 事件记录；保留 exact
+  time、sequence、width、0/1/X/Z transition、end state、仿真时间心跳和 partial-exit live record。
+  100,000,000 bytes 只是 observer evidence aggregate 的软偏好：超出只告警并继续完整回传，禁止
+  hard cap、截断、采样、head/tail 化或按大小删除。
+- runner 仍须以 child-subreaper、fresh session/process group、内部 timeout 和 TERM→wait→KILL/reap
+  监督完整 simulator tree，并区分 host liveness 与 simulation-time progress；归档前须关闭/flush
+  observer chunks。compile 未成功或 simulation 未启动时可无 observer event，但 compile-core return
+  必须发布；simulation_started=true 而 required catalog/chunk/index/parser/decision receipt 不完整时，
+  必须保留已有 core/observer 并标记 `DIAGNOSTIC_EVIDENCE_INCOMPLETE`。
+- observer-only 规则变更只授权受派发 family 本地构建 fresh 包；旧 pending 在 fresh publication
+  时由对应 storage manager 原子移入 superseded。具体受影响 family 与状态只看 current plan；规则
+  激活本身不授权 upload、lease 或服务器运行。
 - 冻结包、原始回传和已有 evidence 不覆盖；失败路线重启必须使用全新身份并完整重建。
 - 不从旧失败包、服务器残留或来源不明产物补齐新候选。
 - 只有用户明确要求时才提交、推送、上传、运行服务器或执行其他外部变更。
@@ -69,7 +131,8 @@
 - 本轮要确认的规则 ID、通过可关闭的 blocker 和是否计入 E4/E5；
 - CONFIG、RTL、observer、package infrastructure 等失败分流；
 - 语义冻结集、允许写入路径和服务器预算。
-- 当前唯一主线会话 ID，以及 package 生成或 return 闭环完成后主动通知该主线的义务。
+- 派发时的主线会话 ID（只作 provenance），以及 package 生成或 return 闭环完成时从
+  `contracts/current_session_owner_registry_v1.json`重新解析唯一 current mainline 并主动通知的义务。
 
 主线验收算子会话的机器报告与规则修改提案/规则确证；公共/专项规则最终是否修改只由
 主线裁决。
@@ -88,7 +151,8 @@
 失败也不得通过放宽合同来适配错误硬件行为。
 
 算子会话完成一个本地服务器包并达到 `PACKAGE_READY_NOT_RUN` 或明确终止状态时，必须
-立即主动通知派发单绑定的当前主线，回传 ZIP/sidecar 身份、唯一命令、预期 return、
+立即从活动 owner registry 解析并通知唯一 current mainline，回传派发主线与解析主线身份、
+registry epoch、ZIP/sidecar 身份、唯一命令、预期 return、
 final-ZIP 自检、blocker 和规则反馈；不能等主线轮询文件或等待用户提交 return 才报告。
 
 另设一条“人工 JSON 消费会话”：只消费用户明确提供的人写算子 JSON，按同一规则生成
@@ -102,6 +166,18 @@ mapping、码流和服务器包并分析回传，不擅自改写输入 JSON。�
 唯一负责共享框架修复和定向回归，不裁决算子数值语义、不修改 plan/规则，也不得把一族
 的 workaround 静默推广到其他族。普通算子专属 adapter 仍由对应算子会话维护。基础设施
 任务临时占用一个暂停的 AI 算子槽，不作为第七条常驻执行线。
+
+### 5.4 会话替换与所有权切换
+
+会话 ID 不是长期角色身份。主线、算子族、人工 JSON、公共基础设施和专项职责都必须绑定
+稳定 `role_id`，其唯一活动 owner 来自
+`contracts/current_session_owner_registry_v1.json`。替换任何会话前必须完整读取
+`.agents/rules/会话转接与所有权规则.md`，并依次完成旧 owner 准备 capsule、新会话只读验收、
+单 role registry activation、旧 owner 退为只读；任一时刻不得有两个会话同时写同一 scope。
+
+整批换代必须先切换主线，再切换其它 role。派发单、历史 task record 或工具中保存的旧主线
+ID只作 provenance；正式完成通知必须在发送时动态解析 current mainline。会话转接只转移已记录
+的状态与原权限，不改变 in-flight package、server lease、return、E级或 RTL/config 授权。
 
 ## 6. 六条执行线与三服务器双缓冲流水
 
@@ -166,10 +242,15 @@ successor 和执行本地 final-ZIP 自检属于既有算子任务的默认权�
 上传、服务器运行、功能 RTL 修改和会影响任务功能范围的新用户选择仍按各自授权门处理。
 
 服务器包实际运行期间，主线和算子 owner 不要求持续轮询、盯守或占用会话；用户提交正式
-return 后才进入上述分析闭环。主线每次分发本地服务器包生成任务或正式 return 时，都
-必须把当前唯一主线会话 ID 写入任务单，并明确要求 owner 完成后主动向该主线发送结构化
-完成通知。任务在分支会话内显示完成、文件已经落盘或主线能够自行发现产物，都不能替代
-这条通知。
+return 后才进入上述分析闭环。主线完成本地构包、return 分析或 successor 任务的有效分发后，
+若没有其他独立主线任务，应立即结束本轮，不得为等待 owner 完成而持续调用状态查询、周期
+轮询或向用户播报中间进度；只有 owner 主动返回完成/明确终止通知、用户提交新的正式 return，
+或用户明确询问状态后，主线才重新进入验收与用户汇报。主线每次分发本地服务器包生成任务
+或正式 return 时，都
+必须在任务单中写入稳定 mainline `role_id` 和派发时 owner receipt；完成通知发送前再由
+`contracts/current_session_owner_registry_v1.json` 动态解析 current mainline。旧 thread
+ID 只作 provenance，不能成为回传路由。任务在分支会话内显示完成、文件已经落盘或主线
+能够自行发现产物，都不能替代这条通知。
 
 只要当前测试目标尚未达到声明的 E4/E5/覆盖终点，算子 owner 就必须按以下顺序继续：
 
@@ -213,3 +294,6 @@ plan 必须记录正在执行的 successor，而不得用“若需下一包”�
 - `plan.md` 只记录活动状态；完成过程写 task record，过时状态迁入 history。
 - 公共规则不保存版本号、包 SHA、某次日志行号或已结束过程。
 - 新证据推翻旧结论时保留旧证据身份，活动文件只写新裁决及其来源。
+- 所有面向用户的项目汇报统一遵守
+  `CDA-SERVER-USER-FACING-REPORT-PREVIOUS-PROGRESS-CURRENT-PURPOSE-NO-DIGEST-001`：
+  不转抄内部bytes/SHA，必须说明上一正式回传版本的进展与当前版本要定位或解决的问题。

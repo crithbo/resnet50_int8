@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "session_handoff_publication_v1.schema.json",
+  "title": "Session handoff current-registry publication v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "handoff_id",
+    "role_id",
+    "old_thread_id",
+    "new_thread_id",
+    "activation",
+    "expected_registry_before",
+    "published_current_registry",
+    "atomic_replace",
+    "status",
+    "claim_boundary"
+  ],
+  "properties": {
+    "schema": {"const": "session-handoff-publication-v1"},
+    "handoff_id": {"type": "string", "minLength": 1},
+    "role_id": {"type": "string", "minLength": 1},
+    "old_thread_id": {"type": "string", "minLength": 1},
+    "new_thread_id": {"type": "string", "minLength": 1},
+    "activation": {"$ref": "#/$defs/fileReceipt"},
+    "expected_registry_before": {"$ref": "#/$defs/fileReceipt"},
+    "published_current_registry": {"$ref": "#/$defs/fileReceipt"},
+    "atomic_replace": {"const": true},
+    "status": {"const": "REGISTRY_ACTIVATED"},
+    "claim_boundary": {"type": "string", "minLength": 1}
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "fileReceipt": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "bytes", "sha256"],
+      "properties": {
+        "path": {"type": "string", "minLength": 1},
+        "bytes": {"type": "integer", "minimum": 0},
+        "sha256": {"$ref": "#/$defs/sha256"}
+      }
+    }
+  }
+}
+

@@ -26,7 +26,7 @@ py -3.12 -m venv .venv
 ```
 
 `bootstrap.py` 按 `repos.lock.json` 的完整提交恢复并验证 `CGRA_SIM`、`ndp-sim-ref`、
-`NDPFuncModel` 和 `ndp-sim`。只验证已有 checkout：
+`NDPFuncModel`、`ndp-sim` 和独立 Git checkout `Trassic2.0_RTL`。只验证已有 checkout：
 
 ```powershell
 .\.venv\Scripts\python.exe tools\sync_repositories.py verify
@@ -43,7 +43,9 @@ py -3.12 -m venv .venv
 - `tools/`：构建、审计、回传分析和仓库恢复入口
 - `tests/`：本地回归与定向 RTL/合同测试
 - `artifacts/`、`outputs/`、`server_returns/`：生成物与回传证据
-- `NDP_copy01/`、`Trassic2.0_RTL/`：本地硬件入口与活动 RTL 镜像
+- `Trassic2.0_RTL/`：直接跟踪 GitHub `master` 的独立 Git checkout
+- `NDP_copy01/`：本地硬件仿真入口；其中 `rtl/` 由 current Trassic checkout 精确同步，
+  不保留 `rtl_pre_*` 副本
 - `ndp-sim/`：活动原生工具链；`ndp-sim-ref/` 仅作规则授权下的冻结参考
 
 根目录的 `conv_full.json`、`conv_1x1_real.json` 和 `conv_full.txt` 是被代码、合同与测试

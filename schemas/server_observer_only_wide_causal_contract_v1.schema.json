@@ -1,0 +1,267 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "server-observer-only-wide-causal-contract-v1",
+  "title": "Observer-only wide-causal next-fresh package contract",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema", "profile", "activation_epoch", "rule_ids", "package_id", "family",
+    "execution", "budget", "signals", "role_coverage", "boundary_observations",
+    "candidates", "all_coobservable_candidates_aggregated", "event_recording",
+    "package_members", "return_members", "post_sim_historical_compatibility_exemption",
+    "claim_boundary"
+  ],
+  "properties": {
+    "schema": {"const": "server-observer-only-wide-causal-contract-v1"},
+    "profile": {"const": "OBSERVER_ONLY_WIDE_CAUSAL_V1"},
+    "activation_epoch": {"const": "observer-only-wide-causal-v1"},
+    "rule_ids": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"type": "string", "minLength": 1},
+      "allOf": [
+        {"contains": {"const": "CDA-SERVER-SOURCE-BOUND-GENERATED-OBSERVER-001"}},
+        {"contains": {"const": "CDA-SERVER-ALWAYS-ON-TRIGGERED-CAUSAL-OBSERVABILITY-001"}}
+      ]
+    },
+    "package_id": {"type": "string", "minLength": 1},
+    "family": {"type": "string", "minLength": 1},
+    "execution": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "compile_argv", "sim_argv", "runtime_supervision",
+        "repeat_safe_exact_owned_reset", "atomic_unique_return", "waveform_writer"
+      ],
+      "properties": {
+        "compile_argv": {"$ref": "#/$defs/argv"},
+        "sim_argv": {"$ref": "#/$defs/argv"},
+        "runtime_supervision": {"const": "PROCESS_TREE_REAP_AND_SIM_TIME_HEARTBEAT"},
+        "repeat_safe_exact_owned_reset": {"const": true},
+        "atomic_unique_return": {"const": true},
+        "waveform_writer": {"type": "null"}
+      }
+    },
+    "budget": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "observer_evidence_soft_limit_bytes", "observer_evidence_hard_limit_bytes",
+        "formal_return_hard_limit_bytes", "event_count_cap", "byte_cap",
+        "sampling", "truncation", "size_based_deletion"
+      ],
+      "properties": {
+        "observer_evidence_soft_limit_bytes": {"const": 100000000},
+        "observer_evidence_hard_limit_bytes": {"type": "null"},
+        "formal_return_hard_limit_bytes": {"type": "null"},
+        "event_count_cap": {"type": "null"},
+        "byte_cap": {"type": "null"},
+        "sampling": {"const": false},
+        "truncation": {"const": false},
+        "size_based_deletion": {"const": false}
+      }
+    },
+    "signals": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/signal"}
+    },
+    "role_coverage": {
+      "type": "array",
+      "minItems": 26,
+      "maxItems": 26,
+      "items": {"$ref": "#/$defs/roleCoverage"}
+    },
+    "boundary_observations": {
+      "type": "array",
+      "minItems": 4,
+      "items": {"$ref": "#/$defs/observation"}
+    },
+    "candidates": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/candidate"}
+    },
+    "all_coobservable_candidates_aggregated": {"const": true},
+    "event_recording": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "format", "fields", "ordered_transitions", "end_state_required",
+        "periodic_sim_time_heartbeat", "partial_exit_live_records",
+        "event_cap", "byte_cap", "sampling", "truncation"
+      ],
+      "properties": {
+        "format": {"enum": ["JSONL", "TSV"]},
+        "fields": {
+          "const": [
+            "record_type", "package_id", "execution_id", "attempt_id", "seq",
+            "sim_time", "timescale", "signal_id", "width_bits", "value_4state"
+          ]
+        },
+        "ordered_transitions": {"const": true},
+        "end_state_required": {"const": true},
+        "periodic_sim_time_heartbeat": {"const": true},
+        "partial_exit_live_records": {"const": true},
+        "event_cap": {"type": "null"},
+        "byte_cap": {"type": "null"},
+        "sampling": {"const": false},
+        "truncation": {"const": false}
+      }
+    },
+    "package_members": {"$ref": "#/$defs/packageMembers"},
+    "return_members": {"$ref": "#/$defs/returnMembers"},
+    "post_sim_historical_compatibility_exemption": {"$ref": "#/$defs/postSimExemption"},
+    "claim_boundary": {"type": "string", "minLength": 1}
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "argv": {
+      "type": "array", "minItems": 4,
+      "items": {"type": "string", "minLength": 1}
+    },
+    "role": {
+      "enum": [
+        "clock", "reset", "stage", "source", "producer",
+        "queue_enqueue", "queue_dequeue", "queue_count", "queue_full", "queue_empty",
+        "request", "valid", "ready", "accept", "backpressure",
+        "selected_port", "selected_bank", "selected_lane",
+        "internal_match", "internal_state", "internal_clear",
+        "output", "wdata", "terminal", "finish", "formal_d"
+      ]
+    },
+    "signal": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "signal_id", "symbol_id", "exact_hierarchy", "target_module", "source_path",
+        "source_sha256", "declaration_span_sha256", "width_bits", "owner_clock_signal_id",
+        "owner_reset_signal_id", "roles", "source_binding", "derived_expected_equation",
+        "observer_drives_dut"
+      ],
+      "properties": {
+        "signal_id": {"type": "string", "minLength": 1},
+        "symbol_id": {"type": "string", "pattern": "^sym_[0-9a-f]{24}$"},
+        "exact_hierarchy": {"type": "string", "minLength": 1},
+        "target_module": {"type": "string", "minLength": 1},
+        "source_path": {"type": "string", "minLength": 1},
+        "source_sha256": {"$ref": "#/$defs/sha256"},
+        "declaration_span_sha256": {"$ref": "#/$defs/sha256"},
+        "width_bits": {"type": "integer", "minimum": 1},
+        "owner_clock_signal_id": {"type": "string", "minLength": 1},
+        "owner_reset_signal_id": {"type": "string", "minLength": 1},
+        "roles": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/role"}},
+        "source_binding": {"const": "ACTUAL_SOURCE_NET"},
+        "derived_expected_equation": {"const": false},
+        "observer_drives_dut": {"const": false}
+      }
+    },
+    "roleCoverage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["role", "disposition", "signal_ids"],
+      "properties": {
+        "role": {"$ref": "#/$defs/role"},
+        "disposition": {"enum": ["covered", "not_applicable"]},
+        "signal_ids": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+        "proof": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["path", "sha256", "machine_check_exit", "reason"],
+          "properties": {
+            "path": {"type": "string", "minLength": 1},
+            "sha256": {"$ref": "#/$defs/sha256"},
+            "machine_check_exit": {"const": 0},
+            "reason": {"type": "string", "minLength": 1}
+          }
+        }
+      }
+    },
+    "observation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["observation_id", "layer", "signal_ids", "predicate"],
+      "properties": {
+        "observation_id": {"type": "string", "minLength": 1},
+        "layer": {
+          "enum": [
+            "FIRST_DIVERGENCE_UPSTREAM_ONE", "FIRST_DIVERGENCE_CURRENT",
+            "FIRST_DIVERGENCE_DOWNSTREAM_ONE", "STATE_HOLD_CLEAR"
+          ]
+        },
+        "signal_ids": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+        "predicate": {"type": "string", "minLength": 1}
+      }
+    },
+    "candidate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["candidate_id", "signature"],
+      "properties": {
+        "candidate_id": {"type": "string", "minLength": 1},
+        "signature": {"type": "object", "minProperties": 1}
+      }
+    },
+    "packageMembers": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "runner", "manifest", "return_allowlist", "contract", "observer", "parser",
+        "runtime_supervisor", "post_sim_helper", "post_sim_request"
+      ],
+      "properties": {
+        "runner": {"type": "string", "minLength": 1},
+        "manifest": {"type": "string", "minLength": 1},
+        "return_allowlist": {"type": "string", "minLength": 1},
+        "contract": {"type": "string", "minLength": 1},
+        "observer": {"type": "string", "minLength": 1},
+        "parser": {"type": "string", "minLength": 1},
+        "runtime_supervisor": {"type": "string", "minLength": 1}
+        ,"post_sim_helper": {"type": "string", "minLength": 1}
+        ,"post_sim_request": {"type": "string", "minLength": 1}
+      }
+    },
+    "postSimExemption": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema", "canonical_source_path", "canonical_helper_bytes",
+        "canonical_helper_sha256", "member_path", "request_member",
+        "inert_literal_tokens", "waveform_discovery_disposition"
+      ],
+      "properties": {
+        "schema": {"const": "observer-only-post-sim-helper-exemption-v1"},
+        "canonical_source_path": {"const": "tools/server_post_sim_return.py"},
+        "canonical_helper_bytes": {"type": "integer", "minimum": 1},
+        "canonical_helper_sha256": {"$ref": "#/$defs/sha256"},
+        "member_path": {"type": "string", "pattern": "(^|/)package_tools/server_post_sim_return\\.py$"},
+        "request_member": {"type": "string", "pattern": "(^|/)contracts/server_post_sim_return_request\\.json$"},
+        "inert_literal_tokens": {"const": [".fsdb", ".vpd"]},
+        "waveform_discovery_disposition": {"const": "OMITTED_OR_NULL_ONLY"}
+      }
+    },
+    "returnMembers": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "actual_argv", "sim_exit", "process_tree", "sim_time_heartbeat", "signal_catalog",
+        "chunk_index", "chunk_prefix", "decision", "return_manifest", "compile_core_when_not_started"
+      ],
+      "properties": {
+        "actual_argv": {"type": "string", "minLength": 1},
+        "sim_exit": {"type": "string", "minLength": 1},
+        "process_tree": {"type": "string", "minLength": 1},
+        "sim_time_heartbeat": {"type": "string", "minLength": 1},
+        "signal_catalog": {"type": "string", "minLength": 1},
+        "chunk_index": {"type": "string", "minLength": 1},
+        "chunk_prefix": {"type": "string", "minLength": 1},
+        "decision": {"type": "string", "minLength": 1},
+        "return_manifest": {"type": "string", "minLength": 1},
+        "compile_core_when_not_started": {
+          "type": "array", "minItems": 1, "uniqueItems": true,
+          "items": {"type": "string", "minLength": 1}
+        }
+      }
+    }
+  }
+}

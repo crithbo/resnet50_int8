@@ -1,0 +1,7 @@
+{
+  "schema": "server-package-cheap-check-result-v1",
+  "gate_id": "source_bound_observer_generation",
+  "pass": true,
+  "errors": [],
+  "warnings": []
+}

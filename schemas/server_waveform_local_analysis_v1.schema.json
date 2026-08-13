@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "server_waveform_local_analysis_v1.schema.json",
+  "title": "Portable waveform conversion and local analysis receipt v1",
+  "type": "object",
+  "required": ["schema", "kind", "pass", "errors", "claim_boundary"],
+  "properties": {
+    "schema": {"const": "server-waveform-local-analysis-v1"},
+    "kind": {
+      "enum": ["toolchain", "conversion_request", "conversion", "fst_conversion", "vcd_catalog", "vcd_extract"]
+    },
+    "pass": {"type": "boolean"},
+    "errors": {"type": "array", "items": {"type": "string"}},
+    "claim_boundary": {"type": "string", "minLength": 1}
+  },
+  "additionalProperties": true
+}

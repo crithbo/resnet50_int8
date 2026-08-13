@@ -1,0 +1,25 @@
+{
+  "activation": {
+    "bytes": 1219,
+    "path": ".agents/task_records/20260811_handoff_mainline_control_activation.json",
+    "sha256": "b22dfbbd6da9a9938b41fb2ce8eda2e6b77bf0d07a395842fdb4bba9cdec4112"
+  },
+  "atomic_replace": true,
+  "claim_boundary": "Current ownership pointer publication only; no UI, package, server, RTL, config or result action.",
+  "expected_registry_before": {
+    "bytes": 11867,
+    "path": "contracts/current_session_owner_registry_v1.json",
+    "sha256": "e5e431295c416b77829b434e38995c23edf65332acf3796b61b4b49612b38464"
+  },
+  "handoff_id": "handoff-1e322f4feeae712d6e73cbb29fd7fa66",
+  "new_thread_id": "019ff027-e7db-72a3-b282-cfad8708da05",
+  "old_thread_id": "019fbec2-fe93-7e03-9314-cff6f222f33d",
+  "published_current_registry": {
+    "bytes": 11867,
+    "path": "contracts/current_session_owner_registry_v1.json",
+    "sha256": "da14072292a23b9aa010d3f8c8e1277ed59480edeec1148982e72337a4fe9a2d"
+  },
+  "role_id": "mainline.control",
+  "schema": "session-handoff-publication-v1",
+  "status": "REGISTRY_ACTIVATED"
+}

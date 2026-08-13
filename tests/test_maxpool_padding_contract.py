@@ -7,7 +7,9 @@ import unittest
 from pathlib import Path
 
 from resnet50_pipeline.maxpool_padding_contract import (
+    CURRENT_PADDING_RTL_RECEIPT,
     MaxPoolPaddingContractError,
+    validate_maxpool_padding_rtl_current_receipt,
     validate_maxpool_zero_padding_contract,
 )
 from resnet50_pipeline.strict_config_materialization import (
@@ -20,6 +22,7 @@ CONTRACT = ROOT / "contracts/maxpool_uint8_zero_padding_contract.json"
 STRICT = ROOT / "configs/native_ndp_sim/maxpool_config_16_16_16_stride2_padding1_strict_v1"
 NODE0002_CONTRACT = ROOT / "contracts/maxpool_node0002_zero_padding_contract.json"
 NODE0002_STRICT = ROOT / "configs/native_ndp_sim/maxpool_config_16_112_112_stride2_padding1_strict_v1"
+CURRENT_RTL_RECEIPT = ROOT / CURRENT_PADDING_RTL_RECEIPT
 
 
 class MaxPoolPaddingContractTests(unittest.TestCase):
@@ -62,6 +65,53 @@ class MaxPoolPaddingContractTests(unittest.TestCase):
             manifest["operator_padding_contract"]["contract_sha256"],
             value["contract_sha256"],
         )
+
+    def test_current_padding_rtl_receipt_binds_cloud_checkout_and_mirror(
+        self,
+    ) -> None:
+        value = validate_maxpool_padding_rtl_current_receipt(
+            ROOT, CURRENT_RTL_RECEIPT
+        )
+        authority = value["cloud_authority_checkout"]
+        mirror = value["local_runtime_mirror"]
+        self.assertEqual(
+            authority["commit"],
+            "0ccae916ef61904a64d6cf8ec1d1931b45e428d8",
+        )
+        self.assertEqual(
+            authority["sha256"],
+            "08b35e80c234c6567099c4da5e18ff0a18955e259b7c12bedff72325f744038c",
+        )
+        self.assertEqual(mirror["sha256"], authority["sha256"])
+        self.assertTrue(mirror["byte_equal_to_cloud_authority_checkout"])
+        self.assertEqual(
+            value["padding_substitution"]["equation"],
+            "padding_mask ? padding_value : "
+            "branch_or_tail_mask ? zero : ddr_data",
+        )
+
+    def test_current_padding_rtl_receipt_hash_and_equation_tamper_fail_closed(
+        self,
+    ) -> None:
+        value = json.loads(CURRENT_RTL_RECEIPT.read_text(encoding="utf-8"))
+        mutations = []
+        wrong_hash = copy.deepcopy(value)
+        wrong_hash["cloud_authority_checkout"]["sha256"] = "0" * 64
+        mutations.append(wrong_hash)
+        wrong_equation = copy.deepcopy(value)
+        wrong_equation["padding_substitution"]["equation"] = (
+            "padding_mask ? ddr_data : padding_value"
+        )
+        mutations.append(wrong_equation)
+        for index, tampered in enumerate(mutations):
+            with self.subTest(index=index), tempfile.TemporaryDirectory() as temp_text:
+                path = Path(temp_text) / "receipt.json"
+                path.write_text(json.dumps(tampered), encoding="utf-8")
+                with self.assertRaisesRegex(
+                    MaxPoolPaddingContractError,
+                    "current padding RTL receipt differs",
+                ):
+                    validate_maxpool_padding_rtl_current_receipt(ROOT, path)
 
     def test_contract_tamper_fails_closed(self) -> None:
         value = json.loads(CONTRACT.read_text(encoding="utf-8"))

@@ -1,0 +1,41 @@
+{
+  "schema": "server_diagnostic_multiclass_edge_trace_v1",
+  "rule_id": "CDA-SERVER-DIAGNOSTIC-MULTICLASS-EDGE-NO-LOSS-001",
+  "fixture_id": "MONOTONIC_STICKY_ALL_CLASSES_PARSER_POSITIVE",
+  "historical_binding": {
+    "family": "global_average_pool",
+    "source_package_sha256": "131e9de37698c8e0470db0c42120c0b2d793c84ce0c2ee62a02eb24cefbd87c9",
+    "return_sha256": "5bbe79edd2a8cfcec03b63207920f8c73166dd78fd57066e30360230c9ba9e5b",
+    "analysis_sha256": "ce469ea17b409cae5f8e51eb18db2fd776c4077652ef0ca009fd42474d5640d9"
+  },
+  "source_bindings": {
+    "observer": {
+      "member_path": "tb_probe/native_return_observer.svh",
+      "sha256": "ddc50b15fecb7e2bc04fd51389284978f5d7cc83e6b33c450438aaaee5573f0d",
+      "source_span": "6886-6980"
+    },
+    "parser": {
+      "member_path": "package_tools/gap_node0071_remote_owner_false_accept_decision.py",
+      "sha256": "0434b84c1828a68be36d1734a3bf13b54a3a5e43ef9224113a49a66b313c27d9",
+      "source_span": "5-12"
+    }
+  },
+  "classes": [
+    {"id": "QUALIFIED_EDGE", "priority": 0, "required": true, "counts_as_progress": true, "sticky_monotonic": true},
+    {"id": "VIOLATION_EDGE", "priority": 1, "required": true, "counts_as_progress": false, "sticky_monotonic": true},
+    {"id": "FACTOR_EDGE", "priority": 2, "required": true, "counts_as_progress": false, "sticky_monotonic": true}
+  ],
+  "emitter_contract": {
+    "selection_mode": "HIGHEST_PRIORITY_SINGLE_RECORD",
+    "snapshot_advance_mode": "ALL_CLASSES_UNCONDITIONAL",
+    "class_emit_budgets": {"QUALIFIED_EDGE": 1, "VIOLATION_EDGE": 1, "FACTOR_EDGE": 1}
+  },
+  "parser_contract": {
+    "class_consumption_mode": "MONOTONIC_STICKY_ALL_REQUIRED_CLASSES_EVERY_RECORD",
+    "non_progress_classes_count_as_progress": false
+  },
+  "samples": [
+    {"sample_id": "simultaneous-q-v-f", "class_state": {"QUALIFIED_EDGE": 1, "VIOLATION_EDGE": 2, "FACTOR_EDGE": 4}},
+    {"sample_id": "stable-after-all-snapshots", "class_state": {"QUALIFIED_EDGE": 1, "VIOLATION_EDGE": 2, "FACTOR_EDGE": 4}}
+  ]
+}

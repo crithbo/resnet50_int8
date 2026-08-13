@@ -1,0 +1,40 @@
+{
+  "schema": "server-fsdb-process-tree-quiescence-dispatch-v1",
+  "version": 1,
+  "rule_id": "CDA-SERVER-FSDB-PROCESS-TREE-WRITER-QUIESCENCE-001",
+  "source_counterexample": {
+    "package": "r5_n4_hw_fsdbsmoke_s2",
+    "return_sha256": "cb66cf7fbffc2c09679c98d9a4a8497918c51264345bc9cc1d7ecc8daa91010b",
+    "analysis_report": "outputs/conv_node0004_fsdb_smoke_s2_return1_analysis/report.json",
+    "analysis_sha256": "89964a60c1c85ec6ab40bd39b26c7f7e1014124ff7fe2da49940c1fde7f181ae",
+    "failure": "INT finalizer archived a still-mutating wave.fsdb/chain/slist/xlist set and a transient wave.fsdb.slock while simulator/writer termination was unproven."
+  },
+  "required_next_fresh": {
+    "launch": "On Linux, enable PR_SET_CHILD_SUBREAPER, run the actual simulator as a child in a fresh POSIX session/process group and record root PID/PGID.",
+    "signal_or_timeout": "Apply an explicit internal runtime timeout as well as INT/HUP/TERM; enumerate descendants and subreaper-adopted escapees, TERM the owned group plus escaped descendants, wait, KILL only remaining owned processes, wait/reap root plus adopted children and prove every owned PID absent.",
+    "heartbeat": "Emit periodic identity-bound rows with contiguous sequence, host monotonic time, exact observed simulation time and timescale. Host liveness is separate from simulation-time advance.",
+    "snapshot": "Only after process-tree quiescence, hash wave.fsdb and every shard twice with a bounded settle interval; exact sets and bytes/SHA must match and no transient lock/temp/empty member may exist.",
+    "failure": "Publish partial raw/core return and mark DIAGNOSTIC_EVIDENCE_INCOMPLETE; never claim a stable/complete waveform or simulator termination from return publication alone."
+  },
+  "positive_controls": [
+    "natural root exit with all writer descendants gone and stable two-snapshot exact set",
+    "INT/TERM/timeout TERM then bounded KILL and complete owned-process disappearance",
+    "simulation-time heartbeat advances independently of host liveness"
+  ],
+  "negative_controls": [
+    "orphan simulator or writer PID remains",
+    "descendant escapes expected PGID and is not individually terminated",
+    "double-forked writer is not adopted and reaped by the supervisor",
+    "wave.fsdb or shard changes between snapshots",
+    "wave.fsdb.slock/lock/temp/empty transient member remains",
+    "host heartbeat continues while no same-attempt simulation-time advance is ever observed",
+    "simv exit or return ZIP publication is used as a substitute for process-tree quiescence"
+  ],
+  "shared_assets": {
+    "tool": "tools/server_fsdb_runtime_quiescence.py",
+    "schema": "schemas/server_fsdb_runtime_quiescence_v1.schema.json",
+    "tests": "tests/test_server_fsdb_runtime_quiescence.py"
+  },
+  "activation": "required_next_fresh after mainline current-disk sync; current returns remain read-only",
+  "claim_boundary": "Runtime lifecycle and snapshot consistency only; no DUT/RTL/config/numeric/workload, root-cause, natural-terminal, formal-D, E4 or E5 claim."
+}

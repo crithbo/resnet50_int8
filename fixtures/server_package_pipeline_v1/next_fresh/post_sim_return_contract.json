@@ -1,0 +1,6 @@
+{
+  "schema": "server-post-sim-return-contract-v1",
+  "invocation_mode": "JSON_REQUEST_ONLY_NO_POSITIONAL_COLLECTOR",
+  "sim_exit_persisted_before_plugins": true,
+  "plugin_failure_blocks_core_return": false
+}

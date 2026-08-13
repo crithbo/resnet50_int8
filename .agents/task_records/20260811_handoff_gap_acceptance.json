@@ -1,0 +1,23 @@
+{
+  "all_receipts_current": true,
+  "capsule": {
+    "bytes": 4192,
+    "path": ".agents/task_records/20260811_handoff_gap_capsule.json",
+    "sha256": "f1a48a4d2801c05c61334d876badc40408ab673208cf1bb087021a6f08777436"
+  },
+  "claim_boundary": "Read-only acceptance only. Authority remains with the old owner until activation.",
+  "conflicts": [],
+  "external_action_taken": false,
+  "first_action": "acknowledge activation and remain WAIT_RTL_FIX without building a package",
+  "handoff_id": "handoff-476c7d8501c53eda06710e600156dfa5",
+  "new_thread_id": "019ff02d-8225-7d21-9779-e46ce4130572",
+  "registry_observed": {
+    "bytes": 11867,
+    "path": "contracts/current_session_owner_registry_v1.json",
+    "sha256": "da14072292a23b9aa010d3f8c8e1277ed59480edeec1148982e72337a4fe9a2d"
+  },
+  "role_id": "family.gap",
+  "schema": "session-handoff-acceptance-v1",
+  "snapshot_understood": true,
+  "status": "ACCEPTED_READ_ONLY"
+}

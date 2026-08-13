@@ -1,0 +1,141 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "operator_config_complete_json_candidate_v1.schema.json",
+  "title": "Complete operator JSON candidate contract v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "family",
+    "candidate_status",
+    "reference_class",
+    "changed_axes",
+    "target_hw_op_types",
+    "stage_ids",
+    "candidate_json",
+    "field_provenance_ledger",
+    "handler_capability",
+    "current_test_diff",
+    "composition",
+    "artifact_root",
+    "claim_boundary"
+  ],
+  "properties": {
+    "schema": {
+      "const": "operator_config_complete_json_candidate_v1"
+    },
+    "family": {
+      "type": "string",
+      "minLength": 1
+    },
+    "candidate_status": {
+      "enum": [
+        "COMPLETE",
+        "BLOCKED"
+      ]
+    },
+    "reference_class": {
+      "enum": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ]
+    },
+    "changed_axes": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "shape",
+          "dtype",
+          "qparam",
+          "layout",
+          "address",
+          "cross_stage_schedule"
+        ]
+      }
+    },
+    "target_hw_op_types": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "stage_ids": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "candidate_json": {
+      "$ref": "#/$defs/boundFile"
+    },
+    "field_provenance_ledger": {
+      "$ref": "#/$defs/boundFile"
+    },
+    "handler_capability": {
+      "$ref": "#/$defs/boundFile"
+    },
+    "current_test_diff": {
+      "$ref": "#/$defs/boundFile"
+    },
+    "composition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "required",
+        "boundary"
+      ],
+      "properties": {
+        "required": {
+          "type": "boolean"
+        },
+        "boundary": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/$defs/boundFile"
+            }
+          ]
+        }
+      }
+    },
+    "artifact_root": {
+      "type": "string",
+      "minLength": 1
+    },
+    "claim_boundary": {
+      "type": "string",
+      "minLength": 1
+    }
+  },
+  "$defs": {
+    "boundFile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "path",
+        "sha256"
+      ],
+      "properties": {
+        "path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      }
+    }
+  }
+}

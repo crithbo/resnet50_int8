@@ -1,0 +1,443 @@
+{
+  "schema": "server-package-build-gate-registry-v1",
+  "mode": "SHADOW_ONLY_NEXT_FRESH",
+  "dispositions": [
+    "blocking_applicable",
+    "receipt_reuse",
+    "record_only",
+    "not_applicable"
+  ],
+  "causal_blocking_classes": [
+    "server_start",
+    "actual_input",
+    "state_safety",
+    "return"
+  ],
+  "surface_vocabulary": [
+    "package_identity",
+    "runner",
+    "package_local_hdl",
+    "config",
+    "mapping",
+    "bitstream",
+    "execplan",
+    "sca",
+    "address_binding",
+    "observer",
+    "probe_catalog",
+    "probe_plan",
+    "parser",
+    "progress",
+    "canonical_predicate",
+    "return_core_contract",
+    "return_collector",
+    "waveform",
+    "storage"
+  ],
+  "required_rule_paths": [
+    ".agents/rules/生成前必读索引.md",
+    ".agents/rules/服务器测试包生成规则.md"
+  ],
+  "gates": [
+    {
+      "gate_id": "core_identity_bootstrap",
+      "phase": "pre_materialization",
+      "activation": "always",
+      "surfaces": [
+        "package_identity",
+        "runner",
+        "return_collector"
+      ],
+      "receipt_reuse_allowed": true,
+      "validator_identity_required": true,
+      "causal_blocking_classes": [
+        "server_start",
+        "return"
+      ],
+      "blocking_effect": "Invalid identity/bootstrap can prevent the unique runner from starting or prevent a return from binding to this package.",
+      "execution_group": "prebuild_aggregate",
+      "cheap_prebuild_eligible": true,
+      "semantic_version": "1"
+    },
+    {
+      "gate_id": "source_bound_observer_generation",
+      "enforcement": "required_next_fresh",
+      "phase": "pre_materialization",
+      "activation": "always",
+      "surfaces": [
+        "package_local_hdl",
+        "observer",
+        "probe_catalog",
+        "probe_plan",
+        "parser",
+        "canonical_predicate"
+      ],
+      "receipt_reuse_allowed": false,
+      "validator_identity_required": true,
+      "causal_blocking_classes": [
+        "server_start",
+        "return"
+      ],
+      "blocking_effect": "A diagnostic package with free-form or unresolved HDL names can fail production compile; an incomplete source-bound candidate matrix can make its return ambiguous. Every next-fresh DUT-simulation package must materialize one fresh generated observer receipt before expensive staging.",
+      "execution_group": "prebuild_aggregate",
+      "cheap_prebuild_eligible": true,
+      "semantic_version": "2"
+    },
+    {
+      "gate_id": "runner_control_flow",
+      "phase": "staging_tree",
+      "activation": "always",
+      "surfaces": [
+        "runner",
+        "return_collector"
+      ],
+      "receipt_reuse_allowed": true,
+      "validator_identity_required": true,
+      "causal_blocking_classes": [
+        "server_start",
+        "return"
+      ],
+      "blocking_effect": "Broken runner control flow can skip compile/simulation or bypass the shared return finalizer.",
+      "execution_group": "staging_tree_aggregate",
+      "cheap_prebuild_eligible": false,
+      "semantic_version": "1"
+    },
+    {
+      "gate_id": "runner_return_resilience",
+      "enforcement": "required_next_fresh",
+      "phase": "staging_tree",
+      "activation": "always",
+      "surfaces": [
+        "runner",
+        "return_core_contract",
+        "return_collector"
+      ],
+      "receipt_reuse_allowed": false,
+      "validator_identity_required": true,
+      "causal_blocking_classes": [
+        "server_start",
+        "return"
+      ],
+      "blocking_effect": "The exact nounset runner must define package-owned variables before first reachable expansion and preserve bounded compile argv/source/log/first-error evidence in a bootstrap-safe core return; otherwise the package can stop before simulation or return only compile=2 without a root cause.",
+      "execution_group": "staging_tree_aggregate",
+      "cheap_prebuild_eligible": true,
+      "semantic_version": "1"
+    },
+    {
+      "gate_id": "runtime_preflight_noninterference_final_zip",
+      "enforcement": "required_next_fresh",
+      "phase": "final_zip",
+      "activation": "always",
+      "surfaces": [
+        "runner"
+      ],
+      "receipt_reuse_allowed": false,
+      "validator_identity_required": true,
+      "causal_blocking_classes": [
+        "server_start"
+      ],
+      "blocking_effect": "A package-owned prelaunch server file, directory, tool, library or module-provider existence probe can stop the runner before the real production command. The exact runner must contain one # CODEX_PRODUCTION_LAUNCH marker, arm its return finalizer, launch production directly, and let actual cwd/argv/log/exit adjudicate the environment.",
+      "execution_group": "final_zip_release_driver",
+      "cheap_prebuild_eligible": false,
+      "semantic_version": "1"
+    },
+    {
+      "gate_id": "package_local_hdl",
+      "phase": "staging_tree",
+      "activation": "changed_surface",
+      "surfaces": [
+        "package_local_hdl"
+      ],
+      "receipt_reuse_allowed": true,
+      "validator_identity_required": true,
+      "causal_blocking_classes": [
+        "server_start"
+      ],
+      "blocking_effect": "Invalid package-local HDL can fail production compile or elaboration before simulation starts.",
+      "execution_group": "staging_tree_aggregate",
+      "cheap_prebuild_eligible": true,
+      "semantic_version": "2"
+    },
+    {
+      "gate_id": "package_local_hdl_lexical_final_zip",
+      "enforcement": "required_next_fresh",
+      "phase": "final_zip",
+      "activation": "changed_surface",
+      "surfaces": [
+        "package_local_hdl"
+      ],
+      "receipt_reuse_allowed": false,
+      "validator_identity_required": true,
+      "causal_blocking_classes": [
+        "server_start"
+      ],
+      "blocking_effect": "The exact final ZIP must recompute an empty aggregate of reserved SystemVerilog declaration identifiers for every package-local HDL member; otherwise production compile can stop before simulation.",
+      "execution_group": "final_zip_release_driver",
+      "cheap_prebuild_eligible": false,
+      "semantic_version": "1"
+    },
+    {
+      "gate_id": "materialized_config",
+      "phase": "staging_tree",
+      "activation": "changed_surface",
+      "surfaces": [
+        "config",
+        "mapping",
+        "bitstream",
+        "execplan",
+        "sca",
+        "address_binding"
+      ],
+      "receipt_reuse_allowed": true,
+      "validator_identity_required": true,
+      "causal_blocking_classes": [
+        "actual_input",
+        "state_safety"
+      ],
+      "blocking_effect": "Materialized config paths or bytes can make the test open the wrong input or violate the declared runtime address/lifetime state.",
+      "execution_group": "staging_tree_aggregate",
+      "cheap_prebuild_eligible": false,
+      "semantic_version": "1"
+    },
+    {
+      "gate_id": "diagnostic_semantics",
+      "phase": "staging_tree",
+      "activation": "changed_surface",
+      "surfaces": [
+        "observer",
+        "parser",
+        "progress",
+        "canonical_predicate"
+      ],
+      "receipt_reuse_allowed": true,
+      "validator_identity_required": true,
+      "causal_blocking_classes": [
+        "return"
+      ],
+      "blocking_effect": "Only result-critical diagnostic semantics are blocking; their failure makes the returned classification ambiguous or false.",
+      "execution_group": "staging_tree_aggregate",
+      "cheap_prebuild_eligible": false,
+      "semantic_version": "2"
+    },
+    {
+      "gate_id": "post_sim_return_core",
+      "enforcement": "required_next_fresh",
+      "phase": "final_zip",
+      "activation": "always",
+      "surfaces": [
+        "runner",
+        "return_core_contract",
+        "return_collector",
+        "parser",
+        "canonical_predicate"
+      ],
+      "receipt_reuse_allowed": false,
+      "validator_identity_required": true,
+      "causal_blocking_classes": [
+        "return"
+      ],
+      "blocking_effect": "After simulation exits, the exact shared JSON-only return core must persist the simulator receipt before optional analysis and publish a minimal return even when a plugin fails; otherwise completed DUT evidence can be lost.",
+      "execution_group": "final_zip_release_driver",
+      "cheap_prebuild_eligible": false,
+      "semantic_version": "1"
+    },
+    {
+      "gate_id": "return_result_contract",
+      "phase": "final_zip",
+      "activation": "always",
+      "surfaces": [
+        "runner",
+        "return_collector",
+        "canonical_predicate"
+      ],
+      "receipt_reuse_allowed": true,
+      "validator_identity_required": true,
+      "causal_blocking_classes": [
+        "return"
+      ],
+      "blocking_effect": "A broken return/result contract can lose required evidence or publish a non-canonical result.",
+      "execution_group": "final_zip_release_driver",
+      "cheap_prebuild_eligible": false,
+      "semantic_version": "1"
+    },
+    {
+      "gate_id": "source_bound_final_zip",
+      "enforcement": "required_next_fresh",
+      "phase": "final_zip",
+      "activation": "always",
+      "surfaces": [
+        "runner",
+        "package_local_hdl",
+        "observer",
+        "probe_catalog",
+        "probe_plan",
+        "parser",
+        "canonical_predicate",
+        "return_collector"
+      ],
+      "receipt_reuse_allowed": false,
+      "validator_identity_required": true,
+      "causal_blocking_classes": [
+        "server_start",
+        "return"
+      ],
+      "blocking_effect": "The exact final ZIP must byte-match regenerated observer/parser/binding artifacts and expose the fixed compile, runtime-enable, log and decision-return tokens; otherwise a post-generation family edit can reintroduce compile failure or ambiguous return evidence.",
+      "execution_group": "final_zip_release_driver",
+      "cheap_prebuild_eligible": false,
+      "semantic_version": "2"
+    },
+    {
+      "gate_id": "observer_only_wide_causal_final_zip",
+      "enforcement": "required_next_fresh",
+      "phase": "final_zip",
+      "activation": "always",
+      "surfaces": [
+        "runner",
+        "package_local_hdl",
+        "observer",
+        "probe_catalog",
+        "probe_plan",
+        "parser",
+        "progress",
+        "canonical_predicate",
+        "return_collector"
+      ],
+      "receipt_reuse_allowed": false,
+      "validator_identity_required": true,
+      "causal_blocking_classes": [
+        "server_start",
+        "state_safety",
+        "return"
+      ],
+      "blocking_effect": "Every next-fresh DUT-simulation package must use DUMP_VCD=0/DUMP_FSDB=0/TB_DUMP_FSDB=0 and reject VPD/FSDB/VCD/FST or dump/query assets. The exact final ZIP must bind a source-derived 26-role actual-signal catalog, pairwise-distinguishing candidate-by-boundary matrix, ordered unbounded four-state event chunks, end states, simulation-time heartbeat, canonical parser/decision and exact return member set. Decimal 100000000 bytes is warning-only for observer evidence and never a hard cap. The exact package_tools/server_post_sim_return.py may retain only contract-bound inert historical suffix literals when its bytes equal the canonical helper and the exact request omits/nulls waveform_discovery; writer/control scans and all active surfaces remain fail-closed. The generic child-subreaper supervisor must terminate and reap the simulator tree and close/flush observer chunks before publication. Compile-not-started preserves the independent compile-core exemption; simulation-started incomplete observer evidence fails closed while retaining partial observer/core return.",
+      "execution_group": "final_zip_release_driver",
+      "cheap_prebuild_eligible": false,
+      "semantic_version": "2"
+    },
+    {
+      "gate_id": "first_fresh_extra_audit",
+      "enforcement": "required_next_fresh",
+      "phase": "final_zip",
+      "activation": "first_fresh_after_rule_change",
+      "surfaces": [
+        "runner",
+        "package_local_hdl",
+        "config",
+        "mapping",
+        "bitstream",
+        "execplan",
+        "sca",
+        "address_binding",
+        "observer",
+        "probe_catalog",
+        "probe_plan",
+        "parser",
+        "progress",
+        "canonical_predicate",
+        "return_core_contract",
+        "return_collector"
+      ],
+      "receipt_reuse_allowed": false,
+      "validator_identity_required": true,
+      "causal_blocking_classes": [
+        "server_start",
+        "actual_input",
+        "state_safety",
+        "return"
+      ],
+      "blocking_effect": "The first fresh package per affected family after a rule/shared-tool epoch is independently re-audited from a clean extraction of the exact final ZIP. It must aggregate actual runner/input, generated logger-to-collector-to-parser, post-sim return-core and candidate-matrix failures before upload; noncausal findings remain record-only.",
+      "execution_group": "final_zip_release_driver",
+      "cheap_prebuild_eligible": false,
+      "semantic_version": "2"
+    },
+    {
+      "gate_id": "final_zip_content",
+      "phase": "final_zip",
+      "activation": "always",
+      "surfaces": [
+        "package_identity",
+        "runner",
+        "package_local_hdl",
+        "config",
+        "mapping",
+        "bitstream",
+        "execplan",
+        "sca",
+        "address_binding",
+        "observer",
+        "probe_catalog",
+        "probe_plan",
+        "parser",
+        "progress",
+        "canonical_predicate",
+        "return_collector"
+      ],
+      "receipt_reuse_allowed": false,
+      "validator_identity_required": true,
+      "causal_blocking_classes": [
+        "server_start",
+        "actual_input",
+        "state_safety",
+        "return"
+      ],
+      "blocking_effect": "The exact final ZIP is the server-consumed object; unsafe or missing final members can affect start, input, state isolation, or return.",
+      "execution_group": "final_zip_release_driver",
+      "cheap_prebuild_eligible": false,
+      "semantic_version": "1"
+    },
+    {
+      "gate_id": "runtime_layout",
+      "phase": "final_zip",
+      "activation": "always",
+      "surfaces": [
+        "runner",
+        "sca",
+        "parser",
+        "return_collector",
+        "storage"
+      ],
+      "receipt_reuse_allowed": false,
+      "validator_identity_required": true,
+      "causal_blocking_classes": [
+        "server_start",
+        "actual_input",
+        "state_safety",
+        "return"
+      ],
+      "blocking_effect": "Runtime layout controls actual open paths, package-owned state isolation, exact-runner early failure stderr visibility for next-fresh runner changed-surfaces, exact generated-heredoc syntax, and fixed return publication; a silent nonzero exit or broken finalizer fallback can prevent server start or lose required return decisions.",
+      "execution_group": "final_zip_release_driver",
+      "cheap_prebuild_eligible": false,
+      "semantic_version": "4"
+    },
+    {
+      "gate_id": "storage_rotation",
+      "phase": "storage",
+      "activation": "always",
+      "surfaces": [
+        "storage"
+      ],
+      "receipt_reuse_allowed": false,
+      "validator_identity_required": true,
+      "causal_blocking_classes": [
+        "state_safety"
+      ],
+      "blocking_effect": "Storage rotation prevents ambiguous current pickup and accidental overwrite of pending/tested package state.",
+      "execution_group": "storage_rotation",
+      "cheap_prebuild_eligible": true,
+      "semantic_version": "1"
+    },
+    {
+      "gate_id": "intermediate_report_format",
+      "phase": "pre_materialization",
+      "activation": "record_only",
+      "surfaces": [],
+      "receipt_reuse_allowed": false,
+      "validator_identity_required": false,
+      "causal_blocking_classes": [],
+      "blocking_effect": "Formatting and intermediate summaries do not change server execution or return adjudication.",
+      "execution_group": "prebuild_aggregate",
+      "cheap_prebuild_eligible": true,
+      "semantic_version": "1"
+    }
+  ]
+}

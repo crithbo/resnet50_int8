@@ -1,0 +1,82 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "server_waveform_runtime_receipt_v2.schema.json",
+  "title": "Mandatory waveform runtime receipt v2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "package_id",
+    "execution_id",
+    "plan_sha256",
+    "simulation_started",
+    "exit_kind",
+    "waveforms",
+    "no_size_limit",
+    "all_matching_collected",
+    "pass",
+    "errors",
+    "claim_boundary"
+  ],
+  "properties": {
+    "schema": {"const": "server-waveform-runtime-receipt-v2"},
+    "package_id": {"$ref": "#/$defs/name"},
+    "execution_id": {"$ref": "#/$defs/name"},
+    "plan_sha256": {"$ref": "#/$defs/sha256"},
+    "simulation_started": {"type": "boolean"},
+    "exit_kind": {
+      "enum": [
+        "COMPILE_FAILURE",
+        "SIMULATION_NOT_STARTED",
+        "NATURAL",
+        "TIMEOUT",
+        "HUP",
+        "INT",
+        "TERM",
+        "SIMULATION_NONZERO"
+      ]
+    },
+    "waveforms": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/waveformReceipt"}
+    },
+    "no_size_limit": {"const": true},
+    "all_matching_collected": {"const": true},
+    "pass": {"type": "boolean"},
+    "errors": {"type": "array", "items": {"type": "string"}},
+    "claim_boundary": {"type": "string", "minLength": 1}
+  },
+  "$defs": {
+    "name": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+    },
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "safeRelativePath": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))(?!.*\\\\)(?!.*//).+$"
+    },
+    "waveformReceipt": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_path",
+        "archive_path",
+        "bytes",
+        "sha256",
+        "format",
+        "completeness"
+      ],
+      "properties": {
+        "source_path": {"$ref": "#/$defs/safeRelativePath"},
+        "archive_path": {"$ref": "#/$defs/safeRelativePath"},
+        "bytes": {"type": "integer", "minimum": 1},
+        "sha256": {"$ref": "#/$defs/sha256"},
+        "format": {"const": "VPD"},
+        "completeness": {"enum": ["COMPLETE", "PARTIAL"]}
+      }
+    }
+  }
+}

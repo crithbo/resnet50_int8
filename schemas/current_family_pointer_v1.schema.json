@@ -1,0 +1,161 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "current-family-pointer-v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "pass",
+    "pointer_id",
+    "sources",
+    "families",
+    "plan_coherence",
+    "errors",
+    "claim_boundary"
+  ],
+  "properties": {
+    "schema": {
+      "const": "current-family-pointer-v1"
+    },
+    "pass": {
+      "type": "boolean"
+    },
+    "pointer_id": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "sources": {
+      "type": "object",
+      "required": [
+        "storage_index",
+        "registry",
+        "plan"
+      ],
+      "additionalProperties": {
+        "$ref": "#/$defs/receipt"
+      }
+    },
+    "families": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "family",
+          "package_base",
+          "storage_reason",
+          "pickup_zip",
+          "zip_receipt",
+          "latest_package_record",
+          "record_selection",
+          "plan_mentions_current_package"
+        ],
+        "properties": {
+          "family": {
+            "type": "string",
+            "minLength": 1
+          },
+          "package_base": {
+            "type": "string",
+            "minLength": 1
+          },
+          "storage_reason": {
+            "type": "string"
+          },
+          "pickup_zip": {
+            "type": "string",
+            "minLength": 1
+          },
+          "zip_receipt": {
+            "$ref": "#/$defs/receipt"
+          },
+          "latest_package_record": {
+            "$ref": "#/$defs/receipt"
+          },
+          "record_selection": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "matching_family_records",
+              "matching_package_records",
+              "algorithm"
+            ],
+            "properties": {
+              "matching_family_records": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "matching_package_records": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "algorithm": {
+                "const": "EXACT_PACKAGE_BASE_THEN_DATE_FILENAME_MAX"
+              }
+            }
+          },
+          "plan_mentions_current_package": {
+            "type": "boolean"
+          }
+        }
+      }
+    },
+    "plan_coherence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "pass",
+        "missing_current_package_tokens",
+        "drift_is_report_only"
+      ],
+      "properties": {
+        "pass": {
+          "type": "boolean"
+        },
+        "missing_current_package_tokens": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "drift_is_report_only": {
+          "const": true
+        }
+      }
+    },
+    "errors": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "claim_boundary": {
+      "const": "Storage index plus exact package-linked task records are the current pending-package pointer. Plan drift is reported only; this tool does not edit plan, packages, release state, or server state."
+    }
+  },
+  "$defs": {
+    "receipt": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "path",
+        "bytes",
+        "sha256"
+      ],
+      "properties": {
+        "path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "bytes": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      }
+    }
+  }
+}

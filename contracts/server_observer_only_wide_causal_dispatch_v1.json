@@ -1,0 +1,67 @@
+{
+  "activation": {
+    "epoch": "observer-only-wide-causal-v1",
+    "mode": "required_next_fresh_after_mainline_activation",
+    "retrospective_hold": false
+  },
+  "assets": {
+    "contract_fixture": "fixtures/server_observer_only_wide_causal_v1/positive_contract.json",
+    "contract_schema": "schemas/server_observer_only_wide_causal_contract_v1.schema.json",
+    "runtime_schema": "schemas/server_observer_runtime_supervision_v1.schema.json",
+    "runtime_supervisor": "tools/server_observer_runtime_supervision.py",
+    "validator": "tools/validate_server_observer_only_wide_causal.py"
+  },
+  "budget_contract": {
+    "formal_return_total_bytes_reported": true,
+    "hard_limit_bytes": null,
+    "observer_evidence_aggregate_only": true,
+    "soft_limit_bytes": 100000000,
+    "soft_limit_semantics": "warning_only_complete_return_retained"
+  },
+  "family_boundary": "Shared gate proves observer evidence integrity and causal coverage only. Family owner retains signal interpretation and DUT verdict authority.",
+  "mainline_narrow_merge": {
+    "build_gate_registry": {
+      "add_gate_id": "observer_only_wide_causal_final_zip",
+      "causal_classes": ["server_start", "return", "state_safety"],
+      "retire_for_later_next_fresh": [
+        "waveform_observation_final_zip",
+        "waveform_portable_local_decodability",
+        "fsdb_process_tree_writer_quiescence"
+      ]
+    },
+    "generation_index": [
+      "Route next-fresh packages to the observer-only contract, validator and generic process-tree supervisor.",
+      "State decimal 100000000 observer-evidence soft warning and no hard cap/truncation/sampling/deletion.",
+      "Remove VPD/FSDB/VCD/FST generation and return requirements for the activated profile."
+    ],
+    "ndp_copy_readme": [
+      "Document DUMP_VCD=0 DUMP_FSDB=0 TB_DUMP_FSDB=0 for the observer-only profile.",
+      "Document JSONL/TSV chunk/catalog/index/decision return and repeat-safe rerun behavior."
+    ],
+    "public_rule": [
+      "Narrowly strengthen CDA-SERVER-SOURCE-BOUND-GENERATED-OBSERVER-001 with the 26-role source-bound catalog and candidate-by-boundary distinguishability matrix.",
+      "Narrowly strengthen CDA-SERVER-ALWAYS-ON-TRIGGERED-CAUSAL-OBSERVABILITY-001 with unbounded ordered four-state chunks, end-state, sim-time heartbeat and partial-exit live records.",
+      "Do not add a synonymous public rule ID."
+    ]
+  },
+  "profile": "OBSERVER_ONLY_WIDE_CAUSAL_V1",
+  "reused_rule_ids": [
+    "CDA-SERVER-SOURCE-BOUND-GENERATED-OBSERVER-001",
+    "CDA-SERVER-ALWAYS-ON-TRIGGERED-CAUSAL-OBSERVABILITY-001"
+  ],
+  "schema": "server-observer-only-wide-causal-dispatch-v1",
+  "scope": {
+    "current_packages_unchanged": true,
+    "functional_rtl_unchanged": true,
+    "server_action": false
+  },
+  "waveform_disposition": {
+    "actual_compile_and_sim_dump_values": {
+      "DUMP_FSDB": "0",
+      "DUMP_VCD": "0",
+      "TB_DUMP_FSDB": "0"
+    },
+    "forbidden_formats": ["VPD", "FSDB", "VCD", "FST"],
+    "writer_or_dump_control_forbidden": true
+  }
+}

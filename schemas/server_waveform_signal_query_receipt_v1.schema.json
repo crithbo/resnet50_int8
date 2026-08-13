@@ -1,0 +1,119 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "server_waveform_signal_query_receipt_v1.schema.json",
+  "title": "Registered source-bound waveform signal-query receipt v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "package_id",
+    "execution_id",
+    "attempt_id",
+    "profile_sha256",
+    "probe_catalog_sha256",
+    "timescale",
+    "completeness",
+    "catalog",
+    "capture",
+    "candidate_coverage",
+    "events",
+    "candidate_end_states",
+    "claim_boundary"
+  ],
+  "properties": {
+    "schema": {"const": "server-waveform-signal-query-receipt-v1"},
+    "package_id": {"$ref": "#/$defs/name"},
+    "execution_id": {"$ref": "#/$defs/name"},
+    "attempt_id": {"$ref": "#/$defs/name"},
+    "profile_sha256": {"$ref": "#/$defs/sha256"},
+    "probe_catalog_sha256": {"$ref": "#/$defs/sha256"},
+    "timescale": {"type": "string", "minLength": 1},
+    "completeness": {"enum": ["COMPLETE", "PARTIAL"]},
+    "catalog": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/candidate"}},
+    "capture": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "format",
+        "ordered",
+        "every_transition",
+        "no_byte_limit",
+        "no_event_limit",
+        "sampling",
+        "truncation",
+        "flush_complete",
+        "source_generation_report"
+      ],
+      "properties": {
+        "format": {"const": "REGISTERED_EVENT_ROWS"},
+        "ordered": {"const": true},
+        "every_transition": {"const": true},
+        "no_byte_limit": {"const": true},
+        "no_event_limit": {"const": true},
+        "sampling": {"const": false},
+        "truncation": {"const": false},
+        "flush_complete": {"const": true},
+        "source_generation_report": {"$ref": "#/$defs/fileIdentity"}
+      }
+    },
+    "candidate_coverage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["expected", "covered", "missing", "unexpected"],
+      "properties": {
+        "expected": {"type": "array", "items": {"$ref": "#/$defs/name"}},
+        "covered": {"type": "array", "items": {"$ref": "#/$defs/name"}},
+        "missing": {"type": "array", "items": {"$ref": "#/$defs/name"}},
+        "unexpected": {"type": "array", "items": {"$ref": "#/$defs/name"}}
+      }
+    },
+    "events": {"type": "array", "items": {"$ref": "#/$defs/event"}},
+    "candidate_end_states": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/endState"}},
+    "claim_boundary": {"type": "string", "minLength": 1}
+  },
+  "$defs": {
+    "name": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"},
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "fileIdentity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256"],
+      "properties": {"path": {"type": "string", "minLength": 1}, "sha256": {"$ref": "#/$defs/sha256"}}
+    },
+    "candidate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["candidate_id", "hierarchical_path", "width"],
+      "properties": {
+        "candidate_id": {"$ref": "#/$defs/name"},
+        "hierarchical_path": {"type": "string", "minLength": 1},
+        "width": {"type": "integer", "minimum": 1}
+      }
+    },
+    "event": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["sequence", "time_tick", "candidate_id", "hierarchical_path", "width", "value"],
+      "properties": {
+        "sequence": {"type": "integer", "minimum": 0},
+        "time_tick": {"type": "integer", "minimum": 0},
+        "candidate_id": {"$ref": "#/$defs/name"},
+        "hierarchical_path": {"type": "string", "minLength": 1},
+        "width": {"type": "integer", "minimum": 1},
+        "value": {"type": "string", "pattern": "^(?:[01xXzZ]|[bB][01xXzZ]+)$"}
+      }
+    },
+    "endState": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["candidate_id", "hierarchical_path", "width", "time_tick", "value"],
+      "properties": {
+        "candidate_id": {"$ref": "#/$defs/name"},
+        "hierarchical_path": {"type": "string", "minLength": 1},
+        "width": {"type": "integer", "minimum": 1},
+        "time_tick": {"type": "integer", "minimum": 0},
+        "value": {"type": "string", "pattern": "^(?:[01xXzZ]|[bB][01xXzZ]+)$"}
+      }
+    }
+  }
+}

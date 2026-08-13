@@ -1,0 +1,142 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "server_waveform_portable_profile_v1.schema.json",
+  "title": "Portable VCD and registered signal-query profile v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "rule_id",
+    "activation",
+    "activation_epoch",
+    "raw_vpd",
+    "portable_vcd",
+    "signal_query",
+    "probe_catalog",
+    "probe_catalog_sha256",
+    "failure_semantics",
+    "claim_boundary"
+  ],
+  "properties": {
+    "schema": {"const": "server-waveform-portable-query-profile-v1"},
+    "rule_id": {"const": "CDA-SERVER-WAVEFORM-PORTABLE-LOCAL-DECODABILITY-001"},
+    "activation": {"const": "required_next_fresh"},
+    "activation_epoch": {"type": "string", "minLength": 1},
+    "raw_vpd": {"$ref": "#/$defs/rawVpd"},
+    "portable_vcd": {"$ref": "#/$defs/portableVcd"},
+    "signal_query": {"$ref": "#/$defs/signalQuery"},
+    "probe_catalog": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/candidate"}
+    },
+    "probe_catalog_sha256": {"$ref": "#/$defs/sha256"},
+    "failure_semantics": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["return_must_publish", "diagnostic_status", "preserve"],
+      "properties": {
+        "return_must_publish": {"const": true},
+        "diagnostic_status": {"const": "DIAGNOSTIC_EVIDENCE_INCOMPLETE"},
+        "preserve": {
+          "const": ["raw_vpd", "compile_core", "sim_core", "signal_core", "return_core"]
+        }
+      }
+    },
+    "claim_boundary": {"type": "string", "minLength": 1}
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "candidate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["candidate_id", "hierarchical_path", "width"],
+      "properties": {
+        "candidate_id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"},
+        "hierarchical_path": {"type": "string", "minLength": 1},
+        "width": {"type": "integer", "minimum": 1}
+      }
+    },
+    "rawVpd": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "authoritative",
+        "existing_dump_vcd_semantics",
+        "make_arguments",
+        "hard_limit_bytes",
+        "truncation",
+        "sampling",
+        "size_based_deletion"
+      ],
+      "properties": {
+        "authoritative": {"const": true},
+        "existing_dump_vcd_semantics": {"const": "VPD"},
+        "make_arguments": {
+          "const": {"DUMP_VCD": "1", "DUMP_FSDB": "0", "TB_DUMP_FSDB": "0"}
+        },
+        "hard_limit_bytes": {"type": "null"},
+        "truncation": {"const": false},
+        "sampling": {"const": false},
+        "size_based_deletion": {"const": false}
+      }
+    },
+    "portableVcd": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "format",
+        "ucli_type",
+        "make_argument",
+        "first_fresh_required",
+        "source_bound_scope",
+        "hard_limit_bytes",
+        "truncation",
+        "sampling",
+        "size_based_deletion"
+      ],
+      "properties": {
+        "format": {"const": "VCD"},
+        "ucli_type": {"const": "VCD"},
+        "make_argument": {"const": {"DUMP_PORTABLE_VCD": "1"}},
+        "first_fresh_required": {"const": true},
+        "source_bound_scope": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["top", "depth", "source_receipt_sha256"],
+          "properties": {
+            "top": {"const": "tb_NDP_Top_new_phy"},
+            "depth": {"type": "integer", "minimum": 0},
+            "source_receipt_sha256": {"$ref": "#/$defs/sha256"}
+          }
+        },
+        "hard_limit_bytes": {"type": "null"},
+        "truncation": {"const": false},
+        "sampling": {"const": false},
+        "size_based_deletion": {"const": false}
+      }
+    },
+    "signalQuery": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "format",
+        "custom_free_form_text",
+        "hard_limit_bytes",
+        "hard_limit_events",
+        "sampling",
+        "truncation",
+        "ordered_every_transition"
+      ],
+      "properties": {
+        "format": {"const": "REGISTERED_EVENT_ROWS"},
+        "custom_free_form_text": {"const": false},
+        "hard_limit_bytes": {"type": "null"},
+        "hard_limit_events": {"type": "null"},
+        "sampling": {"const": false},
+        "truncation": {"const": false},
+        "ordered_every_transition": {"const": true}
+      }
+    }
+  }
+}

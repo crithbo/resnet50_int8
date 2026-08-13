@@ -1,0 +1,30 @@
+{
+  "schema": "session-handoff-request-v1",
+  "role_id": "family.qlinearadd",
+  "new_thread_id": "019ff02d-9e93-7d61-8c98-c928fdea157c",
+  "reason": "planned full-project session refresh after active-rule orthogonalization",
+  "required_read_paths": [
+    ".agents/agent.md",
+    ".agents/plan.md",
+    ".agents/rules/生成前必读索引.md",
+    ".agents/rules/会话转接与所有权规则.md",
+    "contracts/current_session_owner_registry_v1.json",
+    "contracts/active_rule_registry_v1.json",
+    ".agents/rules/算子配置规则.md",
+    ".agents/rules/NDP硬件字段语义.md",
+    ".agents/rules/服务器测试包生成规则.md",
+    ".agents/rules/QLinearAdd算子配置规则.md",
+    ".agents/rules/精确UINT8量化尾专项规则.md",
+    ".agents/rules/最小双Stage生命周期规则.md"
+  ],
+  "active_artifact_paths": [
+    ".agents/task_records/20260811_qlinearadd_node0007_v57d_runtime_failure_v57f_runnerfix.md",
+    ".agents/task_records/20260811_rule_orthogonalization_session_refresh_and_next_fresh_dispatch.md",
+    "artifacts/operator_config_validation/r5-server-test-packages/pending/r5_qadd_n7_tailround_lanephase_qual_v57f.zip"
+  ],
+  "pending_messages": [
+    "current mainline is 019ff027-e7db-72a3-b282-cfad8708da05",
+    "no server/RTL/config/numeric action during ownership activation"
+  ],
+  "first_action": "acknowledge activation, audit exact v57f under the new gate, and build a fresh runner-only successor only if required"
+}

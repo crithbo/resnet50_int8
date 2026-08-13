@@ -25,6 +25,19 @@ SOURCE_CONFIGS = {
 }
 MODEL_GRAPH = "artifacts/w3/model_graph.json"
 RTL_SEMANTICS_EVIDENCE = "contracts/maxpool_rtl_semantics_evidence.json"
+CURRENT_PADDING_RTL_RECEIPT = (
+    "contracts/operator_config/maxpool_padding_rtl_current_receipt_v1.json"
+)
+CURRENT_RTL_REPOSITORY = "https://github.com/xlsjdjdk/Trassic2.0_RTL.git"
+CURRENT_RTL_COMMIT = "0ccae916ef61904a64d6cf8ec1d1931b45e428d8"
+CURRENT_PADDING_AUTHORITY = (
+    "Trassic2.0_RTL/code/NDP_rtl/Slice/LSU/Stream_Engine/"
+    "Memory_Stream_Engine/Memory_RD_Stream_Engine/RD_Data_Channel.sv"
+)
+CURRENT_PADDING_MIRROR = (
+    "NDP_copy01/rtl/Slice/LSU/Stream_Engine/Memory_Stream_Engine/"
+    "Memory_RD_Stream_Engine/RD_Data_Channel.sv"
+)
 NODE_ID = "node-0002"
 INPUT_TENSOR_ID = "tensor-f6c1a8fb6fd529e8"
 
@@ -41,6 +54,145 @@ def _load(path: Path) -> dict[str, Any]:
     if not isinstance(value, dict):
         raise MaxPoolPaddingContractError(f"JSON root must be an object: {path}")
     return value
+
+
+def _checkout_head(repository: Path) -> str:
+    git_dir = repository / ".git"
+    head_path = git_dir / "HEAD"
+    try:
+        head = head_path.read_text(encoding="utf-8").strip()
+    except OSError as error:
+        raise MaxPoolPaddingContractError(
+            f"cannot read RTL checkout HEAD: {head_path}"
+        ) from error
+    if not head.startswith("ref: "):
+        return head
+    ref = head.removeprefix("ref: ").strip()
+    ref_path = git_dir / ref
+    if ref_path.is_file():
+        return ref_path.read_text(encoding="utf-8").strip()
+    packed_refs = git_dir / "packed-refs"
+    if packed_refs.is_file():
+        for line in packed_refs.read_text(encoding="utf-8").splitlines():
+            if line and not line.startswith(("#", "^")):
+                commit, name = line.split(" ", 1)
+                if name == ref:
+                    return commit
+    raise MaxPoolPaddingContractError(
+        f"cannot resolve RTL checkout ref {ref!r}"
+    )
+
+
+def build_maxpool_padding_rtl_current_receipt(
+    project_root: Path,
+) -> dict[str, Any]:
+    root = project_root.resolve()
+    authority_path = root / CURRENT_PADDING_AUTHORITY
+    mirror_path = root / CURRENT_PADDING_MIRROR
+    legacy_paths = (
+        root / "contracts/maxpool_uint8_zero_padding_contract.json",
+        root / "contracts/maxpool_node0002_zero_padding_contract.json",
+    )
+    for path in (authority_path, mirror_path, *legacy_paths):
+        if not path.is_file():
+            raise MaxPoolPaddingContractError(
+                f"required MaxPool padding receipt input is missing: {path}"
+            )
+    checkout_head = _checkout_head(root / "Trassic2.0_RTL")
+    if checkout_head != CURRENT_RTL_COMMIT:
+        raise MaxPoolPaddingContractError(
+            "current RTL checkout commit differs from the MaxPool padding receipt"
+        )
+    authority_sha = sha256_file(authority_path)
+    mirror_sha = sha256_file(mirror_path)
+    if authority_sha != mirror_sha or authority_path.read_bytes() != mirror_path.read_bytes():
+        raise MaxPoolPaddingContractError(
+            "current cloud-authority checkout and NDP_copy01 padding RTL differ"
+        )
+    lines = authority_path.read_text(encoding="utf-8").splitlines()
+    assignment_lines = [
+        index + 1
+        for index, line in enumerate(lines)
+        if "assign rd_data_chl_data[PADDING_INDEX]" in line
+    ]
+    if assignment_lines != [288]:
+        raise MaxPoolPaddingContractError(
+            "current padding substitution assignment is not unique at line 288"
+        )
+    source_fragment = " ".join(line.strip() for line in lines[287:290])
+    required_fragments = (
+        "rd_chl_queue_rd_padding_mask[PADDING_INDEX] ? mse_padding_reg_value",
+        "rd_chl_queue_rd_branch_mask[PADDING_INDEX] ? {`DDR_DATA_MIN_WIDTH{1'b0}}",
+        "rd_chl_ib_data[rd_chl_ib_sel][`DDR_DATA_MIN_WIDTH*PADDING_INDEX +: `DDR_DATA_MIN_WIDTH]",
+    )
+    if not all(fragment in source_fragment for fragment in required_fragments):
+        raise MaxPoolPaddingContractError(
+            "current RD_Data_Channel padding substitution equation differs"
+        )
+    legacy_contracts = []
+    for path in legacy_paths:
+        value = _load(path)
+        contract_sha = value.get("contract_sha256")
+        if not isinstance(contract_sha, str) or len(contract_sha) != 64:
+            raise MaxPoolPaddingContractError(
+                f"legacy MaxPool contract lacks its internal receipt: {path}"
+            )
+        legacy_contracts.append(
+            {
+                "path": path.relative_to(root).as_posix(),
+                "sha256": sha256_file(path),
+                "contract_sha256": contract_sha,
+            }
+        )
+    return {
+        "schema": "maxpool-padding-rtl-current-receipt-v1",
+        "status": "CURRENT_CLOUD_AUTHORITY_AND_LOCAL_MIRROR_MATCH",
+        "legacy_contract_bindings": legacy_contracts,
+        "cloud_authority_checkout": {
+            "repository": CURRENT_RTL_REPOSITORY,
+            "commit": checkout_head,
+            "path": CURRENT_PADDING_AUTHORITY,
+            "size_bytes": authority_path.stat().st_size,
+            "sha256": authority_sha,
+        },
+        "local_runtime_mirror": {
+            "path": CURRENT_PADDING_MIRROR,
+            "size_bytes": mirror_path.stat().st_size,
+            "sha256": mirror_sha,
+            "byte_equal_to_cloud_authority_checkout": True,
+        },
+        "padding_substitution": {
+            "source_line_span": [288, 290],
+            "priority": [
+                "padding_mask selects configured padding byte",
+                "branch_or_tail_mask selects zero",
+                "otherwise select DDR input byte",
+            ],
+            "equation": (
+                "padding_mask ? padding_value : "
+                "branch_or_tail_mask ? zero : ddr_data"
+            ),
+            "source_fragment": source_fragment,
+        },
+        "claim_boundary": (
+            "Read-only current RTL identity and padding substitution receipt. "
+            "No MaxPool numeric-rule, functional-RTL, mapping, bitstream, "
+            "execplan, SCA, server-package, or dynamic result claim."
+        ),
+    }
+
+
+def validate_maxpool_padding_rtl_current_receipt(
+    project_root: Path,
+    receipt_path: Path,
+) -> dict[str, Any]:
+    actual = _load(receipt_path.resolve())
+    expected = build_maxpool_padding_rtl_current_receipt(project_root)
+    if actual != expected:
+        raise MaxPoolPaddingContractError(
+            "MaxPool current padding RTL receipt differs from current evidence"
+        )
+    return actual
 
 
 def build_maxpool_zero_padding_contract(
@@ -137,18 +289,15 @@ def build_maxpool_zero_padding_contract(
     )
     if padding_replacement.get("assignment") != padding_assignment:
         raise MaxPoolPaddingContractError("tracked RTL padding assignment differs")
-    for source in (arithmetic_source, padding_source):
+    for source in (arithmetic_source,):
         local_source = root / str(source["path"])
         if local_source.is_file() and sha256_file(local_source) != source["sha256"]:
             raise MaxPoolPaddingContractError(
                 f"available local RTL differs from tracked evidence: {source['path']}"
             )
-    local_padding = root / str(padding_source["path"])
-    if (
-        local_padding.is_file()
-        and padding_assignment not in local_padding.read_text(encoding="utf-8")
-    ):
-        raise MaxPoolPaddingContractError("available local RTL padding assignment differs")
+    validate_maxpool_padding_rtl_current_receipt(
+        root, root / CURRENT_PADDING_RTL_RECEIPT
+    )
 
     source_sha = sha256_file(source_path)
     normalized_canonical_sha = sha256_bytes(canonical_json_bytes(normalized))
@@ -256,8 +405,11 @@ __all__ = [
     "SCHEMA",
     "DEFAULT_SOURCE_CONFIG",
     "SOURCE_CONFIGS",
+    "CURRENT_PADDING_RTL_RECEIPT",
     "MaxPoolPaddingContractError",
+    "build_maxpool_padding_rtl_current_receipt",
     "build_maxpool_zero_padding_contract",
+    "validate_maxpool_padding_rtl_current_receipt",
     "validate_maxpool_zero_padding_contract",
     "write_maxpool_zero_padding_contract",
 ]

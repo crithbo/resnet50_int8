@@ -1,0 +1,13 @@
+{
+  "schema": "server-runner-return-resilience-contract-v1",
+  "package_id": "synthetic_missing_evidence",
+  "runner_path": "PREPARE_AND_RUN.sh",
+  "runner_sha256": "5d14300e7d0eeff091134876e1e2343531c3649f4a82b8b5d659cacadce0fdf9",
+  "nounset_required": true,
+  "package_owned_variables": ["server_root", "package_id", "bootstrap_root", "compile_argv_json", "compile_source_identity_json", "compile_exit_txt", "compile_driver_log", "compile_first_error_txt", "compile_log_head_txt", "compile_log_tail_txt", "return_allowlist", "run_root", "compile_rc"],
+  "bootstrap_root_variable": "bootstrap_root",
+  "finalizer_arm_tokens": ["trap finalize"],
+  "first_fallible_tokens": ["mkdir -p", "make compile"],
+  "compile_evidence_tokens": {"argv": "compile_argv.json", "source_identity": "compile_source_identity.json", "exit_code": "compile_exit.txt", "driver_log": "compile_driver.log", "first_error": "compile_first_error.txt", "bounded_head": "compile_log_head.txt", "bounded_tail": "compile_log_tail.txt"},
+  "return_allowlist_tokens": ["compile_argv.json", "compile_source_identity.json", "compile_exit.txt", "compile_driver.log", "compile_first_error.txt", "compile_log_head.txt", "compile_log_tail.txt"]
+}

@@ -1,0 +1,73 @@
+{
+  "schema": "server-one-shot-tb-vcd-smoke-exception-v1",
+  "exception_request_id": "one-shot-curated-vcd-smoke-r5-n4-v1",
+  "activation_epoch": "one-shot-tb-vcd-smoke-r5-n4-v1-6bf4c7fe5596",
+  "status": "ACTIVATED_NOT_SERVER_AUTHORIZED",
+  "activated_at_utc": "2026-08-13T05:08:59.3957744Z",
+  "authority": {
+    "role_id": "mainline.control",
+    "thread_id": "019ff027-e7db-72a3-b282-cfad8708da05",
+    "owner_epoch": 2,
+    "registry_epoch": 6,
+    "user_authorization": "明确批准这个 exact one-shot VCD 例外，并且采用tb生成的vcd形式"
+  },
+  "package": {
+    "id": "r5_n4_hw_vcdsmoke_causal_v1",
+    "path": "artifacts/operator_config_validation/r5-whole-network-experimental-vcd-smoke-v1/activated/r5_n4_hw_vcdsmoke_causal_v1/r5_n4_hw_vcdsmoke_causal_v1.zip",
+    "bytes": 5847456,
+    "sha256": "6bf4c7fe5596b768c652172f07e9687017b3c8ca0df2bf338a22f23a8f952e46",
+    "formal_pending": false,
+    "package_ready_not_run": false
+  },
+  "one_shot": {
+    "allowed_production_invocations": 1,
+    "consumed": false,
+    "consumption_requires_execution_bound_formal_return": true,
+    "identity_drift_invalidates_exception": true
+  },
+  "dump_mechanism": {
+    "kind": "TB_STANDARD_SYSTEM_TASK_DUMPFILE_DUMPVARS",
+    "dump_vcd_arg": 0,
+    "dump_fsdb_arg": 0,
+    "tb_dump_fsdb_arg": 0,
+    "signal_count": 38,
+    "selected_instance_count": 1,
+    "scope": "slice13/group1/MSE4_WR",
+    "explicit_read_only_aliases": true,
+    "full_hierarchy": false,
+    "memory_arrays": false,
+    "sampling": false,
+    "truncation": false,
+    "hard_size_cap_bytes": null
+  },
+  "first_run_claim_allowlist": [
+    "STANDARD_TB_DUMPFILE_DUMPVARS_COMPILE_ELABORATION",
+    "VCD_TIME_ZERO_AND_TIME_GREATER_THAN_ZERO",
+    "EXACT_38_SIGNAL_CATALOG_PRESENT",
+    "VCD_CLOSED_OR_EXPLICIT_PARTIAL_RETURN",
+    "BYTES_PER_SIMULATED_MILLISECOND",
+    "RELATIVE_SIZE_AND_PERFORMANCE_VS_INTERRUPTED_PARTIAL_FSDB_BASELINE"
+  ],
+  "forbidden": [
+    "GENERAL_VCD_PERMISSION",
+    "FORMAL_PENDING_PROMOTION",
+    "PACKAGE_READY_NOT_RUN_STATUS",
+    "UCLI_TYPE_VCD",
+    "FULL_HIERARCHY_DUMP",
+    "MEMORY_ARRAY_DUMP",
+    "DUT_ROOT_CAUSE_CLAIM",
+    "E4",
+    "E5"
+  ],
+  "execution_precondition": {
+    "shared_designware_sim_ver_restored_or_exact_replacement_user_approved": true,
+    "current_known_blocker": "SHARED_PRODUCTION_COMPILE_TOOLCHAIN_DEPENDENCY_FAILURE",
+    "activation_itself_authorizes_server_action": false
+  },
+  "formal_packages_unchanged": [
+    "r5_n4_hw_v89b_obswide",
+    "r5_n71_gap_v60_sum_s2_observer_wide",
+    "r5_n4_0cc_p45_obswide",
+    "r5_qadd_n7_tailround_lanephase_v61_obswide"
+  ]
+}

@@ -1,0 +1,137 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "server_waveform_incremental_review_v1.schema.json",
+  "title": "Incremental waveform review records v1",
+  "oneOf": [
+    {"$ref": "#/$defs/identity"},
+    {"$ref": "#/$defs/index"},
+    {"$ref": "#/$defs/chunk"},
+    {"$ref": "#/$defs/final"}
+  ],
+  "$defs": {
+    "sha": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "file": {
+      "type": "object",
+      "required": ["path", "bytes", "sha256"],
+      "properties": {
+        "path": {"type": "string", "minLength": 1},
+        "bytes": {"type": "integer", "minimum": 0},
+        "sha256": {"$ref": "#/$defs/sha"}
+      },
+      "additionalProperties": true
+    },
+    "identity": {
+      "type": "object",
+      "required": ["schema", "kind", "rule_id", "family", "track", "return_id", "return_zip", "claim_boundary"],
+      "properties": {
+        "schema": {"const": "server-waveform-incremental-review-v1"},
+        "kind": {"const": "return_identity"},
+        "rule_id": {"const": "CDA-SERVER-RETURN-WAVEFORM-INCREMENTAL-REVIEW-RETENTION-001"},
+        "family": {"type": "string", "minLength": 1},
+        "track": {"type": "string", "minLength": 1},
+        "return_id": {"type": "string", "minLength": 1},
+        "return_zip": {
+          "allOf": [{"$ref": "#/$defs/file"}],
+          "required": ["zip_root", "waveforms", "non_waveform_member_count"],
+          "properties": {
+            "zip_root": {"type": "string", "minLength": 1},
+            "waveforms": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/file"}},
+            "non_waveform_member_count": {"type": "integer", "minimum": 0}
+          }
+        },
+        "claim_boundary": {"type": "string", "minLength": 1}
+      },
+      "additionalProperties": true
+    },
+    "index": {
+      "type": "object",
+      "required": ["schema", "kind", "rule_id", "return_zip_sha256", "review_revision", "next_chunk_sequence", "status", "open_candidates", "closed_candidates", "chunks", "root_cause_unique", "final_adjudication"],
+      "properties": {
+        "schema": {"const": "server-waveform-incremental-review-v1"},
+        "kind": {"const": "review_index"},
+        "rule_id": {"const": "CDA-SERVER-RETURN-WAVEFORM-INCREMENTAL-REVIEW-RETENTION-001"},
+        "return_zip_sha256": {"$ref": "#/$defs/sha"},
+        "review_revision": {"type": "integer", "minimum": 0},
+        "next_chunk_sequence": {"type": "integer", "minimum": 1},
+        "status": {"enum": ["IN_PROGRESS", "ROOT_CAUSE_UNIQUE_STOP", "INCONCLUSIVE_STOP"]},
+        "open_candidates": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+        "closed_candidates": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+        "chunks": {"type": "array", "items": {"$ref": "#/$defs/file"}},
+        "root_cause_unique": {"type": "boolean"},
+        "final_adjudication": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/file"}]}
+      },
+      "additionalProperties": true
+    },
+    "chunk": {
+      "type": "object",
+      "required": ["schema", "expected_review_revision", "return_zip_sha256", "waveform_sha256", "analysis_tool", "query", "candidate_updates", "status", "finding", "last_proven_good", "first_divergence", "root_cause", "next_query", "unreviewed_scope", "claim_boundary"],
+      "properties": {
+        "schema": {"const": "server-waveform-review-chunk-v1"},
+        "expected_review_revision": {"type": "integer", "minimum": 0},
+        "return_zip_sha256": {"$ref": "#/$defs/sha"},
+        "waveform_sha256": {"$ref": "#/$defs/sha"},
+        "analysis_tool": {
+          "type": "object",
+          "required": ["name", "version", "argv", "exit_code"],
+          "properties": {
+            "name": {"type": "string", "minLength": 1},
+            "version": {"type": "string", "minLength": 1},
+            "argv": {"type": "array", "items": {"type": "string"}},
+            "exit_code": {"type": "integer"}
+          },
+          "additionalProperties": true
+        },
+        "query": {
+          "type": "object",
+          "required": ["scope", "time_window", "signals", "no_sampling", "no_truncation"],
+          "properties": {
+            "scope": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+            "time_window": {
+              "type": "object",
+              "required": ["start", "end", "timescale"],
+              "properties": {
+                "start": {"type": "number"},
+                "end": {"type": "number"},
+                "timescale": {"type": "string", "minLength": 1}
+              },
+              "additionalProperties": false
+            },
+            "signals": {"type": "array", "minItems": 1, "items": {"type": "string"}, "uniqueItems": true},
+            "no_sampling": {"const": true},
+            "no_truncation": {"const": true}
+          },
+          "additionalProperties": true
+        },
+        "candidate_updates": {
+          "type": "object",
+          "required": ["open", "closed"],
+          "properties": {
+            "open": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+            "closed": {"type": "array", "items": {"type": "string"}, "uniqueItems": true}
+          },
+          "additionalProperties": false
+        },
+        "status": {"enum": ["EVIDENCE_ADDED", "QUERY_FAILED", "ROOT_CAUSE_UNIQUE"]},
+        "finding": {"type": "string", "minLength": 1},
+        "unreviewed_scope": {"type": "array", "items": {"type": "string"}},
+        "claim_boundary": {"type": "string", "minLength": 1}
+      },
+      "additionalProperties": true
+    },
+    "final": {
+      "type": "object",
+      "required": ["schema", "kind", "rule_id", "family", "track", "return_id", "return_zip_sha256", "status", "unreviewed_scope", "stop_reason", "claim_boundary"],
+      "properties": {
+        "schema": {"const": "server-waveform-incremental-review-v1"},
+        "kind": {"const": "final_adjudication"},
+        "rule_id": {"const": "CDA-SERVER-RETURN-WAVEFORM-INCREMENTAL-REVIEW-RETENTION-001"},
+        "return_zip_sha256": {"$ref": "#/$defs/sha"},
+        "status": {"enum": ["ROOT_CAUSE_UNIQUE_STOP", "INCONCLUSIVE_STOP"]},
+        "unreviewed_scope": {"type": "array", "items": {"type": "string"}},
+        "stop_reason": {"type": "string", "minLength": 1},
+        "claim_boundary": {"type": "string", "minLength": 1}
+      },
+      "additionalProperties": true
+    }
+  }
+}

@@ -1,0 +1,71 @@
+{
+  "schema": "server-waveform-mandatory-return-dispatch-v3",
+  "version": 3,
+  "rule_ids": [
+    "CDA-SERVER-WAVEFORM-DEFAULT-RETURN-UNBOUNDED-CAUSAL-COVERAGE-001",
+    "CDA-SERVER-WAVEFORM-PORTABLE-LOCAL-DECODABILITY-001",
+    "CDA-SERVER-PACKAGE-REPEAT-EXECUTION-EXACT-OWNED-RESET-001",
+    "CDA-SERVER-FSDB-PROCESS-TREE-WRITER-QUIESCENCE-001"
+  ],
+  "enforcement": "serialized_conv_smoke_then_next_fresh",
+  "default_capture": {
+    "format": "FSDB",
+    "make_arguments": {"DUMP_VCD": "0", "DUMP_FSDB": "1", "TB_DUMP_FSDB": "0"},
+    "attempt_local_primary": "wave.fsdb",
+    "tb_top": "tb_NDP_Top_new_phy",
+    "hierarchy_depth": 0,
+    "scope_mode": "FULL_HIERARCHY"
+  },
+  "repeat_execution": {
+    "reset_only": [
+      "install/cfg_pkg/<install_name>",
+      "install/codex_runs/<package>/<attempt>"
+    ],
+    "fresh_attempt_recreates": ["wave.fsdb", "wave.fsdb.*"],
+    "foreign_siblings": "PRESERVE",
+    "formal_return": "UNIQUE_NAME_PRESERVE_PRIOR_RETURNS"
+  },
+  "return_contract": {
+    "same_zip_as_formal_return": true,
+    "collect_every_wave_fsdb_and_shard": true,
+    "hard_size_limit": null,
+    "truncation": "FORBIDDEN",
+    "sampling": "FORBIDDEN",
+    "size_based_deletion": "FORBIDDEN",
+    "compile_failure_without_waveform_allowed": true,
+    "simulation_started_missing_waveform": "FAIL_CLOSED",
+    "root_or_preexisting_fsdb": "REJECT_AS_ATTEMPT_EVIDENCE"
+  },
+  "runtime_quiescence": {
+    "activation": "REQUIRED_NEXT_FRESH",
+    "fresh_linux_session_and_subreaper": true,
+    "internal_timeout_and_signal_tree_termination": true,
+    "root_and_adopted_children_reaped": true,
+    "same_attempt_simulation_time_advance_required": true,
+    "stable_pre_post_fsdb_exact_set_required": true,
+    "transient_lock_or_mutating_member": "FAIL_CLOSED_DIAGNOSTIC_EVIDENCE_INCOMPLETE",
+    "failure_isolation": "PRESERVE_PARTIAL_RAW_AND_CORE_RETURN"
+  },
+  "semantic_access": {
+    "raw_fsdb": "AUTHORITATIVE",
+    "accepted": ["VERDI_WAVEUTILS_IDENTITY_BOUND_QUERY", "REGISTERED_COMPLETE_EVENT_RECEIPT"],
+    "failure_status": "DIAGNOSTIC_EVIDENCE_INCOMPLETE",
+    "free_form_text": "NOT_SUFFICIENT"
+  },
+  "activation_sequence": [
+    "serialized Conv minimal FSDB smoke is built and user-run first",
+    "smoke return proves time advance, attempt-local FSDB, return ZIP inclusion and repeat execution",
+    "only then may the four formal next-fresh packages be rebuilt"
+  ],
+  "shared_assets": {
+    "tool": "tools/server_waveform_mandatory_return.py",
+    "plan_schema": "schemas/server_waveform_mandatory_plan_v3.schema.json",
+    "runtime_receipt_schema": "schemas/server_waveform_runtime_receipt_v3.schema.json",
+    "registered_query_schema": "schemas/server_waveform_signal_query_receipt_v1.schema.json",
+    "runtime_quiescence_tool": "tools/server_fsdb_runtime_quiescence.py",
+    "runtime_quiescence_schema": "schemas/server_fsdb_runtime_quiescence_v1.schema.json",
+    "runtime_quiescence_dispatch": "contracts/server_fsdb_process_tree_quiescence_dispatch_v1.json",
+    "post_sim_helper": "tools/server_post_sim_return.py"
+  },
+  "claim_boundary": "Diagnostic capture and repeatable package execution only; no DUT, RTL, numeric or formal-result claim."
+}

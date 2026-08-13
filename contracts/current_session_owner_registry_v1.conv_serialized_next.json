@@ -1,0 +1,330 @@
+{
+  "active_rule_receipts": [
+    {
+      "bytes": 7874,
+      "path": ".agents/rules/生成前必读索引.md",
+      "sha256": "a69fc20ca32891912fb85b6060c743b7e25dbfc1ff690591432ccf1c4516bc86"
+    },
+    {
+      "bytes": 37680,
+      "path": ".agents/rules/算子配置规则.md",
+      "sha256": "dc5243226bacde799b368d37fb9eb656e6b7e3d33a0a2932ae72ab35415ae3e1"
+    },
+    {
+      "bytes": 14974,
+      "path": ".agents/rules/NDP硬件字段语义.md",
+      "sha256": "603d57805bc5a5bdfca7406c402bc94db60c06ea6682493d672abb91671b1055"
+    },
+    {
+      "bytes": 144937,
+      "path": ".agents/rules/服务器测试包生成规则.md",
+      "sha256": "727f5dcb4a47fe054a13ed09b5a150f05de71148f820602a34b3ea38a4bbfe6a"
+    },
+    {
+      "bytes": 8677,
+      "path": ".agents/rules/会话转接与所有权规则.md",
+      "sha256": "9e3859dff32de42f0964ff3038ab7b78c84d142a24016ee552c706ef01e529b9"
+    },
+    {
+      "bytes": 10387,
+      "path": ".agents/rules/INT8_SA点积专项规则.md",
+      "sha256": "41c284d27a6f2176567e1d6495147ca625ea9023a93a7a8832c37999c78df927"
+    },
+    {
+      "bytes": 6934,
+      "path": ".agents/rules/精确UINT8量化尾专项规则.md",
+      "sha256": "fef9ebcb1621e74ddd9aef0f936c5c8ce1fcf34c2be9000b1deeb4b11045ea4f"
+    },
+    {
+      "bytes": 3298,
+      "path": ".agents/rules/最小双Stage生命周期规则.md",
+      "sha256": "821b8b04b0e33d0a93e06a3a1bca8307b417bcb63f109cf12414891e9a0bc171"
+    },
+    {
+      "bytes": 9223,
+      "path": ".agents/rules/DequantizeLinear算子配置规则.md",
+      "sha256": "0b237164e712f6f83004affd45678ee301363c72a21968a4d45ce6fe31b3781b"
+    },
+    {
+      "bytes": 3891,
+      "path": ".agents/rules/Flatten_View算子配置规则.md",
+      "sha256": "c9fe676a9fe79315371da4715f4a67698f8038dfb925f8dab68223b4f805e1ac"
+    },
+    {
+      "bytes": 16337,
+      "path": ".agents/rules/QLinearAdd算子配置规则.md",
+      "sha256": "54de9e9c7354bc461a8c3411481687f56f11f7be8d81a6e712dd6cdc63352f2b"
+    },
+    {
+      "bytes": 7879,
+      "path": ".agents/rules/RequantizeUint8算子配置规则.md",
+      "sha256": "0275425ecee387361ebb3358bb6283e3c28ad8311171ce302f7551738d37f88a"
+    },
+    {
+      "bytes": 8116,
+      "path": ".agents/rules/GAP_int32_mac_bypass_rules.md",
+      "sha256": "4c3a88b8c6967812b0b64a550bb92a45117106f34996102335dc26fa1a211f8b"
+    },
+    {
+      "bytes": 18282,
+      "path": ".agents/rules/整网测试收敛优化专项规则.md",
+      "sha256": "426876da2a299e4e2003f52cd254ff5f8f3fd5b3510a81b1e15fb0d47567ef23"
+    }
+  ],
+  "claim_boundary": "Exclusive local session ownership and task routing only; no server lease/run/upload, RTL/config/numeric change, or E4/E5 claim.",
+  "mainline_role_id": "mainline.control",
+  "registry_epoch": 4,
+  "roles": [
+    {
+      "current_task": {
+        "next_action": "activate replacement owners mainline-first, then consume family package receipts",
+        "objective": "accept the rule refresh and coordinate next-fresh package dispatch",
+        "pointer": {
+          "bytes": 3756,
+          "path": ".agents/task_records/20260811_rule_orthogonalization_session_refresh_and_next_fresh_dispatch.md",
+          "sha256": "ef2f3c738af91c8ff00749720f00fc28acb2f95296bc2a76bf1e75732fc75a90"
+        },
+        "status": "ACTIVE"
+      },
+      "forbidden_scope": [
+        "rtl/",
+        "artifacts/operator_config_validation/r5-server-test-packages/pending/"
+      ],
+      "in_flight": {
+        "lease_id": null,
+        "package": null,
+        "return_zip": null,
+        "server_root": null,
+        "state": "NONE"
+      },
+      "latest_task_record": {
+        "bytes": 3756,
+        "path": ".agents/task_records/20260811_rule_orthogonalization_session_refresh_and_next_fresh_dispatch.md",
+        "sha256": "ef2f3c738af91c8ff00749720f00fc28acb2f95296bc2a76bf1e75732fc75a90"
+      },
+      "owner_epoch": 2,
+      "role_id": "mainline.control",
+      "role_kind": "MAINLINE",
+      "scope": "project control plane, plan/rule adjudication and dispatch",
+      "status": "ACTIVE",
+      "thread_id": "019ff027-e7db-72a3-b282-cfad8708da05",
+      "write_scope": [
+        ".agents/plan.md",
+        ".agents/rules/",
+        "contracts/current_session_owner_registry_v1.json",
+        ".agents/task_records/"
+      ]
+    },
+    {
+      "current_task": {
+        "next_action": "remain read-only until explicit RTL authorization",
+        "objective": "preserve the proven GAP functional RTL root and frozen v54 evidence",
+        "pointer": {
+          "bytes": 5871,
+          "path": ".agents/task_records/20260808_gap_node0071_v54_return_wait_rtl_fix.md",
+          "sha256": "eb2bbe6a3ae04baa9b76825008e6091151dae81733cf191f6e876d0cf7b57c28"
+        },
+        "status": "WAIT_RTL_FIX"
+      },
+      "forbidden_scope": [
+        ".agents/plan.md",
+        ".agents/rules/",
+        "rtl/"
+      ],
+      "in_flight": {
+        "lease_id": null,
+        "package": null,
+        "return_zip": null,
+        "server_root": null,
+        "state": "NONE"
+      },
+      "latest_task_record": {
+        "bytes": 5871,
+        "path": ".agents/task_records/20260808_gap_node0071_v54_return_wait_rtl_fix.md",
+        "sha256": "eb2bbe6a3ae04baa9b76825008e6091151dae81733cf191f6e876d0cf7b57c28"
+      },
+      "owner_epoch": 2,
+      "role_id": "family.gap",
+      "role_kind": "FAMILY_OWNER",
+      "scope": "GlobalAveragePool node0071 family",
+      "status": "ACTIVE",
+      "thread_id": "019ff02d-8225-7d21-9779-e46ce4130572",
+      "write_scope": [
+        "artifacts/operator_config_validation/",
+        "outputs/"
+      ]
+    },
+    {
+      "current_task": {
+        "next_action": "add bootstrap-safe compile root-cause evidence and pass new first-fresh exact-ZIP gates",
+        "objective": "build the fresh serialized Conv successor after v84b compile-exit-2 return",
+        "pointer": {
+          "bytes": 3546,
+          "path": ".agents/task_records/20260811_conv_node0004_v84b_compilefail_return_analysis.md",
+          "sha256": "e5e0b146d5c673aad6a539abce018804c98a0796d0680b935a87146ceeda90c0"
+        },
+        "status": "ACTIVE"
+      },
+      "forbidden_scope": [
+        ".agents/plan.md",
+        ".agents/rules/",
+        "rtl/"
+      ],
+      "in_flight": {
+        "lease_id": null,
+        "package": null,
+        "return_zip": null,
+        "server_root": null,
+        "state": "NONE"
+      },
+      "latest_task_record": {
+        "bytes": 3546,
+        "path": ".agents/task_records/20260811_conv_node0004_v84b_compilefail_return_analysis.md",
+        "sha256": "e5e0b146d5c673aad6a539abce018804c98a0796d0680b935a87146ceeda90c0"
+      },
+      "owner_epoch": 2,
+      "role_id": "family.conv.serialized",
+      "role_kind": "FAMILY_OWNER",
+      "scope": "serialized Conv node0004 family",
+      "status": "ACTIVE",
+      "thread_id": "019ff02d-901b-7f70-a9da-f54e268b5bbe",
+      "write_scope": [
+        "artifacts/operator_config_validation/",
+        "outputs/conv_node0004_",
+        "tools/",
+        "tests/"
+      ]
+    },
+    {
+      "current_task": {
+        "next_action": "add bootstrap-safe compile root-cause evidence and pass new first-fresh exact-ZIP gates",
+        "objective": "build the fresh native Conv successor after p38 compile-exit-2 return",
+        "pointer": {
+          "bytes": 4328,
+          "path": ".agents/task_records/20260811_conv_native_four_lane_p38_return_analysis_only.md",
+          "sha256": "7d9c6d7c90dc048a27591f0b947c4f02b1f72f3ad07d8f604ca2bceceff837f4"
+        },
+        "status": "ACTIVE"
+      },
+      "forbidden_scope": [
+        ".agents/plan.md",
+        ".agents/rules/",
+        "rtl/"
+      ],
+      "in_flight": {
+        "lease_id": null,
+        "package": null,
+        "return_zip": null,
+        "server_root": null,
+        "state": "NONE"
+      },
+      "latest_task_record": {
+        "bytes": 4328,
+        "path": ".agents/task_records/20260811_conv_native_four_lane_p38_return_analysis_only.md",
+        "sha256": "7d9c6d7c90dc048a27591f0b947c4f02b1f72f3ad07d8f604ca2bceceff837f4"
+      },
+      "owner_epoch": 1,
+      "role_id": "family.conv.native",
+      "role_kind": "FAMILY_OWNER",
+      "scope": "native four-lane Conv node0004 family",
+      "status": "ACTIVE",
+      "thread_id": "019fc783-1146-7901-9e40-64d0ed8e052d",
+      "write_scope": [
+        "artifacts/operator_config_validation/",
+        "outputs/conv_native_",
+        "tools/",
+        "tests/"
+      ]
+    },
+    {
+      "current_task": {
+        "next_action": "run first-fresh exact-ZIP audit; build a fresh runner-only successor only if exact bytes fail",
+        "objective": "re-audit v57f under the new runner definition-before-use and compilefail-return epoch",
+        "pointer": {
+          "bytes": 1720,
+          "path": ".agents/task_records/20260811_qlinearadd_node0007_v57d_runtime_failure_v57f_runnerfix.md",
+          "sha256": "6cebd7fe58667209c138dfd7e6ca17a271e5e823a88227e88702d2ae774a43a5"
+        },
+        "status": "PACKAGE_READY_NOT_RUN"
+      },
+      "forbidden_scope": [
+        ".agents/plan.md",
+        ".agents/rules/",
+        "rtl/"
+      ],
+      "in_flight": {
+        "lease_id": null,
+        "package": {
+          "bytes": 70704126,
+          "path": "artifacts/operator_config_validation/r5-server-test-packages/pending/r5_qadd_n7_tailround_lanephase_qual_v57f.zip",
+          "sha256": "eeb922f3828b0e1dd6532bf0903e516351f0a4a0a9a0439b917e8e1b2532415e"
+        },
+        "return_zip": null,
+        "server_root": null,
+        "state": "PACKAGE_READY_NOT_RUN"
+      },
+      "latest_task_record": {
+        "bytes": 1720,
+        "path": ".agents/task_records/20260811_qlinearadd_node0007_v57d_runtime_failure_v57f_runnerfix.md",
+        "sha256": "6cebd7fe58667209c138dfd7e6ca17a271e5e823a88227e88702d2ae774a43a5"
+      },
+      "owner_epoch": 1,
+      "role_id": "family.qlinearadd",
+      "role_kind": "FAMILY_OWNER",
+      "scope": "QLinearAdd node0007 family",
+      "status": "ACTIVE",
+      "thread_id": "019fa2c0-b647-7a91-93bf-d21a173487e3",
+      "write_scope": [
+        "artifacts/operator_config_validation/",
+        "outputs/qlinearadd_",
+        "tools/",
+        "tests/"
+      ]
+    },
+    {
+      "current_task": {
+        "next_action": "verify handoff campaign and first-fresh shared-gate receipts without taking family ownership",
+        "objective": "maintain cross-family convergence rules and session-handoff audit",
+        "pointer": {
+          "bytes": 3756,
+          "path": ".agents/task_records/20260811_rule_orthogonalization_session_refresh_and_next_fresh_dispatch.md",
+          "sha256": "ef2f3c738af91c8ff00749720f00fc28acb2f95296bc2a76bf1e75732fc75a90"
+        },
+        "status": "ACTIVE"
+      },
+      "forbidden_scope": [
+        ".agents/plan.md",
+        "rtl/",
+        "artifacts/operator_config_validation/r5-server-test-packages/pending/"
+      ],
+      "in_flight": {
+        "lease_id": null,
+        "package": null,
+        "return_zip": null,
+        "server_root": null,
+        "state": "NONE"
+      },
+      "latest_task_record": {
+        "bytes": 3756,
+        "path": ".agents/task_records/20260811_rule_orthogonalization_session_refresh_and_next_fresh_dispatch.md",
+        "sha256": "ef2f3c738af91c8ff00749720f00fc28acb2f95296bc2a76bf1e75732fc75a90"
+      },
+      "owner_epoch": 1,
+      "role_id": "optimizer.whole-network",
+      "role_kind": "SPECIALIST_OWNER",
+      "scope": "whole-network convergence and shared shadow validator",
+      "status": "ACTIVE",
+      "thread_id": "019fd276-14c5-7800-94db-87ebfb9ce632",
+      "write_scope": [
+        "artifacts/operator_config_validation/r5-whole-network-",
+        "outputs/",
+        "tools/",
+        "schemas/",
+        "contracts/",
+        "tests/",
+        "fixtures/"
+      ]
+    }
+  ],
+  "schema": "session-owner-registry-v1"
+}

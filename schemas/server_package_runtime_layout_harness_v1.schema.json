@@ -1,0 +1,187 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "server_package_runtime_layout_harness_v1.schema.json",
+  "title": "Safe runner harness evidence for runtime-layout final-ZIP gate",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "derived_from_zip_sha256",
+    "runner_member_sha256",
+    "fixed_result_root",
+    "scenarios",
+    "claim_boundary"
+  ],
+  "properties": {
+    "schema": {
+      "const": "server_package_runtime_layout_harness_v1"
+    },
+    "derived_from_zip_sha256": {
+      "$ref": "#/$defs/sha256"
+    },
+    "runner_member_sha256": {
+      "$ref": "#/$defs/sha256"
+    },
+    "fixed_result_root": {
+      "const": "/home/panqs/ndp/simresult"
+    },
+    "scenarios": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "normal",
+        "preflight_fail",
+        "compile_fail",
+        "HUP",
+        "INT",
+        "TERM"
+      ],
+      "properties": {
+        "normal": {
+          "$ref": "#/$defs/scenario"
+        },
+        "preflight_fail": {
+          "$ref": "#/$defs/scenario"
+        },
+        "compile_fail": {
+          "$ref": "#/$defs/scenario"
+        },
+        "HUP": {
+          "$ref": "#/$defs/scenario"
+        },
+        "INT": {
+          "$ref": "#/$defs/scenario"
+        },
+        "TERM": {
+          "$ref": "#/$defs/scenario"
+        }
+      }
+    },
+    "claim_boundary": {
+      "type": "string",
+      "minLength": 1
+    }
+  },
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "rootEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "type"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "type": {
+          "enum": [
+            "directory",
+            "file",
+            "symlink",
+            "other"
+          ]
+        }
+      }
+    },
+    "scenario": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "command",
+        "cwd",
+        "runner_exit",
+        "compile_started",
+        "simulation_started",
+        "finalizer_reached",
+        "partial_return_published",
+        "fixed_result_return_published",
+        "return_zip",
+        "return_sidecar",
+        "preexisting_parents_verified",
+        "preexisting_install_verified",
+        "creatable_parents_initially_absent",
+        "creatable_parents_real_after",
+        "unknown_items_deleted_or_overwritten",
+        "writes_outside_install",
+        "root_exact_set_unchanged",
+        "root_direct_entries_before",
+        "root_direct_entries_after"
+      ],
+      "properties": {
+        "command": {
+          "type": "string",
+          "minLength": 1
+        },
+        "cwd": {
+          "type": "string",
+          "minLength": 1
+        },
+        "runner_exit": {
+          "type": "integer"
+        },
+        "compile_started": {
+          "type": "boolean"
+        },
+        "simulation_started": {
+          "type": "boolean"
+        },
+        "finalizer_reached": {
+          "type": "boolean"
+        },
+        "partial_return_published": {
+          "type": "boolean"
+        },
+        "fixed_result_return_published": {
+          "type": "boolean"
+        },
+        "return_zip": {
+          "type": "string",
+          "pattern": "^/home/panqs/ndp/simresult/[A-Za-z0-9._-]+_return\\.zip$"
+        },
+        "return_sidecar": {
+          "type": "string",
+          "pattern": "^/home/panqs/ndp/simresult/[A-Za-z0-9._-]+_return\\.zip\\.sha256$"
+        },
+        "preexisting_parents_verified": {
+          "type": "boolean"
+        },
+        "preexisting_install_verified": {
+          "type": "boolean"
+        },
+        "creatable_parents_initially_absent": {
+          "type": "boolean"
+        },
+        "creatable_parents_real_after": {
+          "type": "boolean"
+        },
+        "unknown_items_deleted_or_overwritten": {
+          "type": "boolean"
+        },
+        "writes_outside_install": {
+          "type": "boolean"
+        },
+        "root_exact_set_unchanged": {
+          "type": "boolean"
+        },
+        "root_direct_entries_before": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/rootEntry"
+          }
+        },
+        "root_direct_entries_after": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/rootEntry"
+          }
+        }
+      }
+    }
+  }
+}

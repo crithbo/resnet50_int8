@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "server_package_local_hdl_lexical_validation_v1.schema.json",
+  "title": "Exact-final-ZIP package-local HDL lexical validation v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "rule_id", "input", "applicable", "hdl_member_count", "hdl_members", "reserved_identifier_violations", "all_errors_collected", "pass", "errors", "claim_boundary"],
+  "properties": {
+    "schema": {"const": "server-package-local-hdl-lexical-validation-v1"},
+    "rule_id": {"const": "CDA-SERVER-PACKAGE-LOCAL-OBSERVER-HDL-SYNTAX-SCOPE-POSITIVE-001"},
+    "input": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "path", "sha256", "root"],
+      "properties": {
+        "kind": {"enum": ["tree", "zip"]},
+        "path": {"type": "string", "minLength": 1},
+        "sha256": {"type": ["string", "null"], "pattern": "^[0-9a-f]{64}$"},
+        "root": {"type": ["string", "null"]}
+      }
+    },
+    "applicable": {"type": "boolean"},
+    "hdl_member_count": {"type": "integer", "minimum": 0},
+    "hdl_members": {"type": "array", "items": {"$ref": "#/$defs/member"}},
+    "reserved_identifier_violations": {"type": "array", "items": {"$ref": "#/$defs/violation"}},
+    "all_errors_collected": {"const": true},
+    "pass": {"type": "boolean"},
+    "errors": {"type": "array", "items": {"type": "string"}},
+    "claim_boundary": {"type": "string", "minLength": 1}
+  },
+  "$defs": {
+    "member": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "bytes", "sha256"],
+      "properties": {
+        "path": {"type": "string", "minLength": 1},
+        "bytes": {"type": "integer", "minimum": 0},
+        "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      }
+    },
+    "violation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["member", "line", "identifier", "role", "source_excerpt"],
+      "properties": {
+        "member": {"type": "string", "minLength": 1},
+        "line": {"type": "integer", "minimum": 1},
+        "identifier": {"type": "string", "minLength": 1},
+        "role": {"enum": ["data_declaration", "port_declaration", "named_construct"]},
+        "source_excerpt": {"type": "string"}
+      }
+    }
+  }
+}

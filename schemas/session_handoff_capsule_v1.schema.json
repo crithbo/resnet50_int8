@@ -1,0 +1,91 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "session_handoff_capsule_v1.schema.json",
+  "title": "Session handoff capsule v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "handoff_id",
+    "role_id",
+    "role_kind",
+    "old_thread_id",
+    "new_thread_id",
+    "registry_epoch_before",
+    "owner_epoch_before",
+    "owner_epoch_after",
+    "current_mainline_thread_id",
+    "registry_before",
+    "reason",
+    "required_read_receipts",
+    "active_artifact_receipts",
+    "current_task_snapshot",
+    "in_flight_snapshot",
+    "pending_messages",
+    "authority",
+    "first_action",
+    "claim_boundary"
+  ],
+  "properties": {
+    "schema": {"const": "session-handoff-capsule-v1"},
+    "handoff_id": {"$ref": "#/$defs/name"},
+    "role_id": {"$ref": "#/$defs/name"},
+    "role_kind": {"type": "string", "minLength": 1},
+    "old_thread_id": {"$ref": "#/$defs/threadId"},
+    "new_thread_id": {"$ref": "#/$defs/threadId"},
+    "registry_epoch_before": {"type": "integer", "minimum": 1},
+    "owner_epoch_before": {"type": "integer", "minimum": 1},
+    "owner_epoch_after": {"type": "integer", "minimum": 2},
+    "current_mainline_thread_id": {"$ref": "#/$defs/threadId"},
+    "registry_before": {"$ref": "#/$defs/fileReceipt"},
+    "reason": {"type": "string", "minLength": 1},
+    "required_read_receipts": {
+      "type": "array",
+      "minItems": 3,
+      "items": {"$ref": "#/$defs/fileReceipt"}
+    },
+    "active_artifact_receipts": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/fileReceipt"}
+    },
+    "current_task_snapshot": {"type": "object"},
+    "in_flight_snapshot": {"type": "object"},
+    "pending_messages": {
+      "type": "array",
+      "items": {"type": "string", "minLength": 1}
+    },
+    "authority": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "new_owner_before_activation",
+        "old_owner_after_activation",
+        "overlap_writers_allowed"
+      ],
+      "properties": {
+        "new_owner_before_activation": {"const": "READ_ONLY_ACCEPTANCE"},
+        "old_owner_after_activation": {"const": "RETIRED_READ_ONLY"},
+        "overlap_writers_allowed": {"const": false}
+      }
+    },
+    "first_action": {"type": "string", "minLength": 1},
+    "claim_boundary": {"type": "string", "minLength": 1}
+  },
+  "$defs": {
+    "name": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"},
+    "threadId": {"type": "string", "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"},
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "safeRelativePath": {"type": "string", "minLength": 1, "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))(?!.*\\\\)(?!.*//).+$"},
+    "fileReceipt": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "bytes", "sha256"],
+      "properties": {
+        "path": {"$ref": "#/$defs/safeRelativePath"},
+        "bytes": {"type": "integer", "minimum": 0},
+        "sha256": {"$ref": "#/$defs/sha256"}
+      }
+    }
+  }
+}
+

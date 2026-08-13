@@ -1,0 +1,35 @@
+{
+  "schema": "server-waveform-mandatory-plan-v3",
+  "package_id": "synthetic_fsdb_v3",
+  "family": "synthetic",
+  "dump": {
+    "format": "FSDB",
+    "make_arguments": {"DUMP_VCD": "0", "DUMP_FSDB": "1", "TB_DUMP_FSDB": "0"},
+    "tb_top": "tb_NDP_Top_new_phy",
+    "hierarchy_depth": 0,
+    "scope_mode": "FULL_HIERARCHY",
+    "included_scopes": ["tb_NDP_Top_new_phy"],
+    "excluded_scopes": [],
+    "runtime_search_roots": ["run/sim_results", "compile/sim_results"],
+    "waveform_name_patterns": ["wave.fsdb", "wave.fsdb.*"]
+  },
+  "return_policy": {
+    "required_when_simulation_started": true,
+    "compile_not_started_omission_allowed": true,
+    "collect_all_matching": true,
+    "archive_prefix": "waveforms",
+    "manifest_archive_path": "waveforms/WAVEFORM_RUNTIME_RECEIPT.json",
+    "hard_limit_bytes": null,
+    "truncation_allowed": false,
+    "sampling_allowed": false,
+    "size_based_deletion_allowed": false
+  },
+  "integration": {
+    "plan_member": "contracts/server_waveform_mandatory_plan.json",
+    "runner_member": "PREPARE_AND_RUN.sh",
+    "return_request_member": "contracts/server_post_sim_return_request.json",
+    "dump_control_member": "package_tools/dump_waveform.tcl",
+    "tool_member": "package_tools/server_waveform_mandatory_return.py"
+  },
+  "claim_boundary": "Synthetic attempt-local FSDB fixture only."
+}

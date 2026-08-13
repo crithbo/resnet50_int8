@@ -1353,8 +1353,13 @@ class OperatorConfigValidator:
                 }
                 if opcode == "int8_max":
                     self._facts["ga_int8_max"] = {
-                        "classification": "CONTRADICTED",
-                        "numeric_equation": "unsigned bytewise min(A,C), not max(A,C)",
+                        "rule_results": {
+                            "CDA-GA-INT8-MAX-NUMERIC-001": "LOCAL_SOURCE_PASS",
+                            "CDA-GA-INT8-MAX-PIPE-001": "CONTRADICTED",
+                        },
+                        "numeric_classification": "LOCAL_SOURCE_PASS",
+                        "numeric_equation": "unsigned bytewise max(A,C)",
+                        "pipeline_classification": "CONTRADICTED",
                         "pipeline0_accepts_second_item": False,
                     }
             if pe_facts:

@@ -1,0 +1,20 @@
+{
+  "schema": "server-waveform-mandatory-return-cases-v2",
+  "positive": [
+    "compilefail_no_wave",
+    "natural_with_wave",
+    "timeout_with_partial_wave",
+    "hup_with_partial_wave",
+    "int_with_partial_wave",
+    "term_with_partial_wave"
+  ],
+  "negative": [
+    "dump_vcd_zero",
+    "simulation_started_missing_wave",
+    "wave_absent_from_return_allowlist",
+    "hard_size_cap",
+    "unproven_scope_exclusion",
+    "waveform_self_inclusion",
+    "waveform_path_escape"
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "activation": {
+    "bytes": 1231,
+    "path": ".agents/task_records/20260811_handoff_conv_serialized_activation.json",
+    "sha256": "36ba0031be9ab2249af355fc9010012816750b4b5bf640174f7f1c8b21af7ac8"
+  },
+  "atomic_replace": true,
+  "claim_boundary": "Current ownership pointer publication only; no UI, package, server, RTL, config or result action.",
+  "expected_registry_before": {
+    "bytes": 11867,
+    "path": "contracts/current_session_owner_registry_v1.json",
+    "sha256": "4cfa21da9fd122a093d0d85d91637ea76779c8036185e933c7f03b1956cbb1c4"
+  },
+  "handoff_id": "handoff-fca4fe898ba7d82a9da034e639a527ed",
+  "new_thread_id": "019ff02d-901b-7f70-a9da-f54e268b5bbe",
+  "old_thread_id": "019fa2c1-17df-7122-bcbd-a727aaf173f5",
+  "published_current_registry": {
+    "bytes": 11867,
+    "path": "contracts/current_session_owner_registry_v1.json",
+    "sha256": "3d943ed00d67e4e913ca97bd591f75c75b7d2914ed7c4b60f5f80a58d45a5fa1"
+  },
+  "role_id": "family.conv.serialized",
+  "schema": "session-handoff-publication-v1",
+  "status": "REGISTRY_ACTIVATED"
+}

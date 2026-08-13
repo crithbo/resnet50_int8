@@ -1,0 +1,130 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "server_diagnostic_multiclass_edge_trace_v1.schema.json",
+  "title": "Diagnostic multiclass edge no-loss trace",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "rule_id",
+    "fixture_id",
+    "historical_binding",
+    "source_bindings",
+    "classes",
+    "emitter_contract",
+    "parser_contract",
+    "samples"
+  ],
+  "properties": {
+    "schema": {"const": "server_diagnostic_multiclass_edge_trace_v1"},
+    "rule_id": {"const": "CDA-SERVER-DIAGNOSTIC-MULTICLASS-EDGE-NO-LOSS-001"},
+    "fixture_id": {"type": "string", "minLength": 1},
+    "historical_binding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["family", "source_package_sha256", "return_sha256", "analysis_sha256"],
+      "properties": {
+        "family": {"const": "global_average_pool"},
+        "source_package_sha256": {"$ref": "#/$defs/sha256"},
+        "return_sha256": {"$ref": "#/$defs/sha256"},
+        "analysis_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "source_bindings": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["observer", "parser"],
+      "properties": {
+        "observer": {"$ref": "#/$defs/sourceBinding"},
+        "parser": {"$ref": "#/$defs/sourceBinding"}
+      }
+    },
+    "classes": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 3,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "priority", "required", "counts_as_progress", "sticky_monotonic"],
+        "properties": {
+          "id": {"enum": ["QUALIFIED_EDGE", "VIOLATION_EDGE", "FACTOR_EDGE"]},
+          "priority": {"type": "integer", "minimum": 0},
+          "required": {"const": true},
+          "counts_as_progress": {"type": "boolean"},
+          "sticky_monotonic": {"type": "boolean"}
+        }
+      }
+    },
+    "emitter_contract": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["selection_mode", "snapshot_advance_mode", "class_emit_budgets"],
+      "properties": {
+        "selection_mode": {"const": "HIGHEST_PRIORITY_SINGLE_RECORD"},
+        "snapshot_advance_mode": {
+          "enum": ["EMITTED_CLASS_ONLY", "ALL_CLASSES_UNCONDITIONAL"]
+        },
+        "class_emit_budgets": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["QUALIFIED_EDGE", "VIOLATION_EDGE", "FACTOR_EDGE"],
+          "properties": {
+            "QUALIFIED_EDGE": {"type": "integer", "minimum": 1},
+            "VIOLATION_EDGE": {"type": "integer", "minimum": 1},
+            "FACTOR_EDGE": {"type": "integer", "minimum": 1}
+          }
+        }
+      }
+    },
+    "parser_contract": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["class_consumption_mode", "non_progress_classes_count_as_progress"],
+      "properties": {
+        "class_consumption_mode": {
+          "enum": [
+            "EVENT_CLASS_GATED",
+            "MONOTONIC_STICKY_ALL_REQUIRED_CLASSES_EVERY_RECORD"
+          ]
+        },
+        "non_progress_classes_count_as_progress": {"const": false}
+      }
+    },
+    "samples": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["sample_id", "class_state"],
+        "properties": {
+          "sample_id": {"type": "string", "minLength": 1},
+          "class_state": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["QUALIFIED_EDGE", "VIOLATION_EDGE", "FACTOR_EDGE"],
+            "properties": {
+              "QUALIFIED_EDGE": {"type": "integer", "minimum": 0},
+              "VIOLATION_EDGE": {"type": "integer", "minimum": 0},
+              "FACTOR_EDGE": {"type": "integer", "minimum": 0}
+            }
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "sourceBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["member_path", "sha256", "source_span"],
+      "properties": {
+        "member_path": {"type": "string", "minLength": 1},
+        "sha256": {"$ref": "#/$defs/sha256"},
+        "source_span": {"type": "string", "minLength": 1}
+      }
+    }
+  }
+}

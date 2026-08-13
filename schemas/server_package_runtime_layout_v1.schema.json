@@ -1,0 +1,340 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "server_package_runtime_layout_v1.schema.json",
+  "title": "Exact final-ZIP server package runtime layout contract v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "package_id",
+    "install_name",
+    "runner_member",
+    "manifest_member",
+    "shared_layout_helper",
+    "tb_cwd",
+    "fixed_result_root",
+    "required_preexisting_parents",
+    "package_creatable_parent_dirs",
+    "runtime_roots",
+    "payload_mounts",
+    "sca_consumers",
+    "runner_bindings",
+    "path_budget",
+    "repeat_execution",
+    "finalizer",
+    "claim_boundary"
+  ],
+  "properties": {
+    "schema": {
+      "const": "server_package_runtime_layout_v1"
+    },
+    "package_id": {
+      "$ref": "#/$defs/name"
+    },
+    "install_name": {
+      "$ref": "#/$defs/name"
+    },
+    "runner_member": {
+      "$ref": "#/$defs/safeRelativePath"
+    },
+    "manifest_member": {
+      "$ref": "#/$defs/safeRelativePath"
+    },
+    "shared_layout_helper": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "member",
+        "sha256"
+      ],
+      "properties": {
+        "member": {
+          "$ref": "#/$defs/safeRelativePath"
+        },
+        "sha256": {
+          "$ref": "#/$defs/sha256"
+        }
+      }
+    },
+    "tb_cwd": {
+      "const": "$server_root"
+    },
+    "fixed_result_root": {
+      "const": "/home/panqs/ndp/simresult"
+    },
+    "required_preexisting_parents": {
+      "type": "array",
+      "prefixItems": [
+        {
+          "const": "install"
+        }
+      ],
+      "items": false
+    },
+    "package_creatable_parent_dirs": {
+      "type": "array",
+      "prefixItems": [
+        {
+          "const": "install/cfg_pkg"
+        },
+        {
+          "const": "install/codex_runs"
+        }
+      ],
+      "items": false
+    },
+    "runtime_roots": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "cfg_root",
+        "run_root",
+        "evidence_root",
+        "compile_root"
+      ],
+      "properties": {
+        "cfg_root": {
+          "type": "string",
+          "pattern": "^install/cfg_pkg/[A-Za-z0-9._-]+$"
+        },
+        "run_root": {
+          "type": "string",
+          "pattern": "^install/codex_runs/[A-Za-z0-9._-]+/\\{attempt\\}$"
+        },
+        "evidence_root": {
+          "type": "string",
+          "pattern": "^install/codex_runs/[A-Za-z0-9._-]+/\\{attempt\\}/evidence$"
+        },
+        "compile_root": {
+          "type": "string",
+          "pattern": "^install/codex_runs/[A-Za-z0-9._-]+/\\{attempt\\}/compile$"
+        }
+      }
+    },
+    "payload_mounts": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "source_prefix",
+          "runtime_prefix"
+        ],
+        "properties": {
+          "source_prefix": {
+            "$ref": "#/$defs/safeRelativePrefix"
+          },
+          "runtime_prefix": {
+            "type": "string",
+            "pattern": "^install/cfg_pkg/[A-Za-z0-9._-]+/$"
+          }
+        }
+      }
+    },
+    "sca_consumers": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "plusarg",
+          "member",
+          "mode"
+        ],
+        "properties": {
+          "plusarg": {
+            "enum": [
+              "SCA_CFG",
+              "SCA_CFG_D"
+            ]
+          },
+          "member": {
+            "$ref": "#/$defs/safeRelativePath"
+          },
+          "mode": {
+            "enum": [
+              "read_inputs",
+              "write_outputs"
+            ]
+          }
+        }
+      }
+    },
+    "runner_bindings": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "layout_prepare_marker",
+        "tb_cwd_marker",
+        "compile_marker",
+        "simulation_marker"
+      ],
+      "properties": {
+        "layout_prepare_marker": {
+          "type": "string",
+          "minLength": 1
+        },
+        "tb_cwd_marker": {
+          "type": "string",
+          "minLength": 1
+        },
+        "compile_marker": {
+          "type": "string",
+          "minLength": 1
+        },
+        "simulation_marker": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "path_budget": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "attempt_max_chars",
+        "declared_target_root_max_chars",
+        "max_projected_absolute_path_chars",
+        "absolute_path_limit_chars",
+        "additional_projected_paths"
+      ],
+      "properties": {
+        "attempt_max_chars": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 48
+        },
+        "declared_target_root_max_chars": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "max_projected_absolute_path_chars": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "absolute_path_limit_chars": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "additional_projected_paths": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/safeTemplatePath"
+          }
+        }
+      }
+    },
+    "repeat_execution": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "mode",
+        "cfg_root_policy",
+        "run_root_policy",
+        "foreign_sibling_policy",
+        "symlink_or_special_entry_policy",
+        "ownership_marker",
+        "return_name_policy"
+      ],
+      "properties": {
+        "mode": {
+          "const": "RESET_EXACT_PACKAGE_OWNED_RUNTIME_ROOTS"
+        },
+        "cfg_root_policy": {
+          "const": "RESET_AND_RECREATE_EXACT_INSTALL_NAME"
+        },
+        "run_root_policy": {
+          "const": "RESET_AND_RECREATE_EXACT_PACKAGE_ATTEMPT"
+        },
+        "foreign_sibling_policy": {
+          "const": "PRESERVE"
+        },
+        "symlink_or_special_entry_policy": {
+          "const": "FAIL_CLOSED"
+        },
+        "ownership_marker": {
+          "const": ".codex_owner.{name}.json"
+        },
+        "return_name_policy": {
+          "const": "UNIQUE_PER_EXECUTION_PRESERVE_PRIOR_RETURNS"
+        }
+      }
+    },
+    "finalizer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "arm_marker",
+        "first_preflight_marker",
+        "required_scenarios"
+      ],
+      "properties": {
+        "arm_marker": {
+          "type": "string",
+          "minLength": 1
+        },
+        "first_preflight_marker": {
+          "type": "string",
+          "minLength": 1
+        },
+        "required_scenarios": {
+          "type": "array",
+          "prefixItems": [
+            {
+              "const": "normal"
+            },
+            {
+              "const": "preflight_fail"
+            },
+            {
+              "const": "compile_fail"
+            },
+            {
+              "const": "HUP"
+            },
+            {
+              "const": "INT"
+            },
+            {
+              "const": "TERM"
+            }
+          ],
+          "items": false
+        }
+      }
+    },
+    "claim_boundary": {
+      "type": "string",
+      "minLength": 1
+    }
+  },
+  "$defs": {
+    "name": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$",
+      "maxLength": 96
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "safeRelativePath": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))(?!.*\\\\).+$"
+    },
+    "safeRelativePrefix": {
+      "type": "string",
+      "minLength": 2,
+      "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))(?!.*\\\\).+/$"
+    },
+    "safeTemplatePath": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^install/(?:cfg_pkg|codex_runs)/[A-Za-z0-9._{}-]+(?:/[A-Za-z0-9._{}-]+)*$"
+    }
+  }
+}

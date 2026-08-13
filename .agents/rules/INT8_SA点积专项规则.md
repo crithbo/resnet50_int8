@@ -1,73 +1,13 @@
 # INT8 SA 点积专项规则
 
-最后更新：2026-07-29（node0004 硬件可用假设执行覆盖）
+最后更新：2026-08-11（剥离实例状态，仅保留稳定共性合同）
 
 本文件保存 ResNet50 `QLinearConv` 与 `QLinearMatMul` 共用的
 `UINT8 activation × INT8 weight → INT32 accumulate` 专项增量。公共 provenance、
 物化回环、地址、证据等级和服务器门仍由公共规则拥有。
 
-## 0. node0004 硬件可用假设执行覆盖
-
-规则 ID：`CDA-SA-NODE0004-ASSUMED-FIXED-HARDWARE-001`
-
-用户于 2026-07-29 明确要求：本地主线不等待硬件组后续维护或服务器源码身份核验，
-按服务器侧 INT8 SA 已可编译且具备正确 DataC/psum、carry handoff 与四乘积点积语义
-继续生成首个完整 Conv。该覆盖只作用于
-`node-0004 / r5:hwop-0004-00` 的 fresh 物化与测试包，不抹除本文件后文对旧本地 RTL
-身份建立的反例。
-
-在本覆盖下：
-
-```text
-standard_four_lane_assumed_hardware = AUTHORIZED_FOR_FRESH_NODE0004
-node0004_fresh_normal_generation = ALLOWED_THROUGH_PACKAGE_READY_NOT_RUN
-server_source_identity_preflight = DEFERRED_BY_USER
-candidate_release = false
-counts_as_E4 = false
-counts_as_E5 = false
-```
-
-生成前仍须满足：
-
-1. 不消费 node0004 任何历史 JSON、mapping、bitstream、execplan/SCA、simulator、
-   package 或测试收据；只从 typed request、正式 ONNX/W3、活动工具和本轮规则全新重建；
-2. 对最终 lane packing 完整枚举实际 W3 dot4 域。当前 node0004 已覆盖
-   3,211,264 个输出、51,380,224 个 dot4 group，在修复后的 carry 语义下 mismatch=0；
-3. 最终 SA 配置必须反解为 `DataA=s8 weight`、`DataB=u8 activation`、
-   `DataC=psum32`，并逐 occurrence 验证 bias、K-tail、multi-wave、x-zp correction、
-   psum recurrence、模 `2^32` wrap、terminal 与 coverage；
-4. 若最终 packing/domain 审计出现任一 mismatch，普通 four-lane 路线立即 fail closed。
-   仅可再评估 one-product-lane + 修复后 DataC psum 的低利用率绕行，不能回用旧
-   serialized 资产；
-5. 完整本地 E2、确定性重建和服务器包自检通过后，只能标记
-   `PACKAGE_READY_NOT_RUN`。服务器未运行、源码身份未绑定时不得称正式 target、
-   production、E4/E5 或硬件闭环。
-
-本节与 `.agents/task_records/20260729_hardware_available_assumption_replan.md` 共同构成
-窄授权；对其他 52 个 Conv 和 MatMul 仍须在 node0004 通过后按 schedule signature
-重新判定。
-
-当前裁决：
-
-```text
-standard_four_lane_stock_rtl = CONTRADICTED
-sa_serialized_internal_psum = CONTRADICTED
-sa_single_product_datac_zero = SOURCE_AND_COMPONENT_TB_PROVEN
-sa_product_plus_ga_tree = COMPOSITE_C1_AUTHORIZED_PROPOSAL
-config_only_production_path = UNAVAILABLE
-node0004_fresh_composite_generation = ALLOWED_WITH_PREPACKAGE_GATES
-candidate_release = false
-server_package_allowed = false
-```
-
-权威机器合同为
-`contracts/operator_config/int8_sa_dot_product_adjudication_v1.json`；详细证据见
-`.agents/task_records/20260727_int8_sa_dot_product_common_cause_adjudication.md`。
-未来兼容/修正 RTL 的本地验收 oracle 为
-`contracts/operator_config/int8_sa_rtl_repair_acceptance_v1.json`。
-用户已撤销 node0004 全部历史本地资产与测试结论的可信性。
-`contracts/operator_config/r5_conv_node0004_serialized_one_product_local_e2_v1.json`
-及其全部下游产物只作负面历史，不再构成 E2、baseline、物化来源或生成收据。
+实例授权、当前硬件身份、候选状态与服务器结论只记录在 `.agents/plan.md` 和对应
+`.agents/task_records/`。本文件不授予任何实例 release，也不保存版本化 package 结论。
 
 ## 1. 适用范围与目标方程
 

@@ -1,71 +1,15 @@
 # 精确 UINT8 量化尾专项规则
 
-最后更新：2026-07-29（node0004 signed ingress 硬件可用假设执行覆盖）
+最后更新：2026-08-11（剥离实例状态，仅保留共享精确尾合同）
 
 本文件保存多个 ResNet50 算子共享的“缩放/除法后精确舍入、加 UINT8 zero-point、
 饱和输出”专项增量。适用消费者包括 QuantizeLinear、RequantizeUint8、
 QLinearAdd 输出、GAP/AverageRequant 输出和 QLinearMatMul 输出。公共 provenance、
 物化回环、地址、证据等级和服务器门仍由公共规则拥有。
 
-## 0. node0004 signed ingress 执行覆盖
-
-规则 ID：`CDA-QUANT-TAIL-NODE0004-ASSUMED-SIGNED-INGRESS-001`
-
-用户于 2026-07-29 授权本地主线按服务器侧 signed INT32→FP32 已修复且可编译继续推进
-`r5:hwop-0004-01`。因此本实例不再把 raw `max(acc,0)` opcode 作为生成前置条件，
-也不复用旧 guard/SFU 资产。授权的精确顺序固定为：
-
-```text
-stage0:
-  signed INT32 accumulator
-  → corrected signed INT32-to-FP32
-  → explicit FP32 multiply by per-channel multiplier
-  → FP32 scratch write
-  → completion barrier
-
-stage1:
-  raw FP32 scratch ingress
-  → add fixed magic 12582912.0
-  → bitcast INT32
-  → subtract 0x4b400000
-  → UINT8 saturation
-```
-
-该两阶段顺序用于保留“FP32 multiply 后先舍入，再执行 RNE”的两个独立 FP32 舍入点；
-禁止重新融合为 multiply+magic 的单次 FMA。node0004 的 `y_zero_point=0`，故本授权不
-推广任意 zero-point，也不解除 QuantizeLinear 的 exact-division 门。
-
-生成前必须：
-
-1. 从正式 typed/ONNX qparam 运输 64 个 multiplier 的精确 FP32 bits，不得沿用模板
-   常数或只取首元素；
-2. 对 3,211,264 个冻结 W3 accumulator 执行完整顺序回放，逐元素匹配独立 UINT8
-   golden，并证明 stage0 FP32 scratch 位模式和 magic 有限域；
-3. 物化 stage0 producer、stage1 consumer 的同址、transaction、barrier、accepted
-   lifetime、terminal、mapping、bitstream、execplan/SCA 与最终 readback coverage；
-4. 最终 JSON 相对授权静态 oracle 的所有 non-base leaf change 逐项声明 owner、输入、
-   公式、旧值、新值和授权；typed handler/mapper 缺口可由本轮哈希绑定的显式
-   materializer 补齐，但不得 host 预计算 scaled、rounded、saturated 或 final tensor；
-5. 在完整本地 E2 与测试包双重确定性自检前禁止封包；封包后状态最多为
-   `PACKAGE_READY_NOT_RUN`，不计 E4/E5。
-
-本节是 node0004 的用户授权执行覆盖。后文
-`B_QUANT_TAIL_RAW_SIGNED_INT32_MAX0_OPCODE=OPEN_CONTRADICTED` 仍是旧 signed-converter
-身份下 max0 绕行的历史结论，不再阻塞本实例的上述 direct signed route；其他实例与
-共享能力矩阵不自动放行。
-
-当前裁决：
-
-```text
-pure_configuration_decision = NO_UNCONDITIONAL_PURE_CONFIG_PROVEN
-candidate_release = false
-formal_target_instance_allowed = false
-server_package_allowed = false
-```
-
-权威能力合同为
-`contracts/operator_config/exact_uint8_quant_tail_capability_v1.json`；Requant 的全族映射
-由 `contracts/operator_config/requant_quant_tail_evidence_input_v1.json` 约束。
+实例授权、物化完成度、candidate release 与 E4/E5 状态只记录在 `.agents/plan.md` 和
+对应 `.agents/task_records/`。本文件只拥有可跨 Quantize、Requantize、QLinearAdd、
+GAP 与 MatMul 复用的数值顺序、有限域和能力矩阵。
 
 ## 1. 复用边界
 

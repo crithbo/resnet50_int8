@@ -1,0 +1,7 @@
+{
+  "schema": "server-package-cheap-check-result-v1",
+  "gate_id": "core_identity_bootstrap",
+  "pass": true,
+  "errors": [],
+  "warnings": []
+}

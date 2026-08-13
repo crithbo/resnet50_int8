@@ -1,0 +1,481 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "server-package-build-profile-v1",
+  "title": "Server package next-fresh shadow build profile",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "mode",
+    "package_id",
+    "family",
+    "lifecycle",
+    "current_package_impact",
+    "rule_change_epoch",
+    "contract_valid",
+    "preflight",
+    "aggregate_prebuild",
+    "rule_receipts",
+    "registry_identity",
+    "validator_identities",
+    "changed_surfaces",
+    "surface_hashes",
+    "gate_dispositions",
+    "required_validator_gates",
+    "cache_plan",
+    "execution_contract",
+    "claim_boundary"
+  ],
+  "properties": {
+    "schema": {
+      "const": "server-package-build-profile-v1"
+    },
+    "mode": {
+      "const": "SHADOW_ONLY_NEXT_FRESH"
+    },
+    "package_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "family": {
+      "type": "string",
+      "minLength": 1
+    },
+    "lifecycle": {
+      "const": "NEXT_FRESH_SUCCESSOR"
+    },
+    "current_package_impact": {
+      "const": false
+    },
+    "rule_change_epoch": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "epoch_id",
+        "first_fresh_after_change",
+        "prior_audit_receipt"
+      ],
+      "properties": {
+        "epoch_id": {
+          "type": "string"
+        },
+        "first_fresh_after_change": {
+          "type": "boolean"
+        },
+        "prior_audit_receipt": {
+          "type": ["object", "null"],
+          "additionalProperties": false,
+          "required": ["path", "sha256", "package_id"],
+          "properties": {
+            "path": {
+              "type": "string"
+            },
+            "sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "package_id": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "contract_valid": {
+      "type": "boolean"
+    },
+    "preflight": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "pass",
+        "errors",
+        "warnings",
+        "all_errors_collected"
+      ],
+      "properties": {
+        "pass": {
+          "type": "boolean"
+        },
+        "errors": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "warnings": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "all_errors_collected": {
+          "const": true
+        }
+      }
+    },
+    "aggregate_prebuild": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "top_level_invocations",
+        "require_all_cheap_checks",
+        "eligible_gate_ids",
+        "supplied_results",
+        "missing_gate_ids",
+        "coverage_complete",
+        "all_errors_collected"
+      ],
+      "properties": {
+        "top_level_invocations": {
+          "const": 1
+        },
+        "require_all_cheap_checks": {
+          "type": "boolean"
+        },
+        "eligible_gate_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string"
+          }
+        },
+        "supplied_results": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "gate_id",
+              "path",
+              "sha256",
+              "pass",
+              "error_count",
+              "warning_count"
+            ],
+            "properties": {
+              "gate_id": {
+                "type": "string"
+              },
+              "path": {
+                "type": "string"
+              },
+              "sha256": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              },
+              "pass": {
+                "type": "boolean"
+              },
+              "error_count": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "warning_count": {
+                "type": "integer",
+                "minimum": 0
+              }
+            }
+          }
+        },
+        "missing_gate_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string"
+          }
+        },
+        "coverage_complete": {
+          "type": "boolean"
+        },
+        "all_errors_collected": {
+          "const": true
+        }
+      }
+    },
+    "rule_receipts": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/fileReceipt"
+      }
+    },
+    "registry_identity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema",
+        "semantic_sha256"
+      ],
+      "properties": {
+        "schema": {
+          "const": "server-package-build-gate-registry-v1"
+        },
+        "semantic_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      }
+    },
+    "validator_identities": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "validator_sha256",
+          "fixture_sha256"
+        ],
+        "properties": {
+          "validator_sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "fixture_sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          }
+        }
+      }
+    },
+    "changed_surfaces": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string"
+      }
+    },
+    "surface_hashes": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string",
+        "pattern": "^[0-9a-f]{64}$"
+      }
+    },
+    "gate_dispositions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "gate_id",
+          "phase",
+          "disposition",
+          "reason",
+          "causal_blocking_classes",
+          "blocking_effect",
+          "execution_group",
+          "enforcement",
+          "cache_key",
+          "receipt"
+        ],
+        "properties": {
+          "gate_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "phase": {
+            "enum": [
+              "pre_materialization",
+              "staging_tree",
+              "final_zip",
+              "storage"
+            ]
+          },
+          "disposition": {
+            "enum": [
+              "blocking_applicable",
+              "receipt_reuse",
+              "record_only",
+              "not_applicable"
+            ]
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 1
+          },
+          "causal_blocking_classes": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "enum": [
+                "server_start",
+                "actual_input",
+                "state_safety",
+                "return"
+              ]
+            }
+          },
+          "blocking_effect": {
+            "type": "string",
+            "minLength": 1
+          },
+          "execution_group": {
+            "enum": [
+              "prebuild_aggregate",
+              "staging_tree_aggregate",
+              "final_zip_release_driver",
+              "storage_rotation"
+            ]
+          },
+          "enforcement": {
+            "enum": [
+              "shadow_only",
+              "required_next_fresh"
+            ]
+          },
+          "cache_key": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "receipt": {
+            "type": [
+              "object",
+              "null"
+            ]
+          }
+        }
+      }
+    },
+    "required_validator_gates": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string"
+      }
+    },
+    "cache_plan": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "reused_gate_count",
+        "blocking_gate_count",
+        "record_only_gate_count",
+        "not_applicable_gate_count"
+      ],
+      "properties": {
+        "reused_gate_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "blocking_gate_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "record_only_gate_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "not_applicable_gate_count": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "execution_contract": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "prebuild_aggregate_top_level_invocations",
+        "staging_tree_aggregate_top_level_invocations",
+        "final_zip_release_driver_top_level_invocations",
+        "final_zip_subgates",
+        "rebuild_per_single_error_forbidden",
+        "final_zip_same_sha_reuses_exact_content_receipt",
+        "final_zip_changed_sha_requires_one_fresh_release_driver"
+      ],
+      "properties": {
+        "prebuild_aggregate_top_level_invocations": {
+          "const": 1
+        },
+        "staging_tree_aggregate_top_level_invocations": {
+          "const": 1
+        },
+        "final_zip_release_driver_top_level_invocations": {
+          "const": 1
+        },
+        "final_zip_subgates": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string"
+          }
+        },
+        "rebuild_per_single_error_forbidden": {
+          "const": true
+        },
+        "final_zip_same_sha_reuses_exact_content_receipt": {
+          "const": true
+        },
+        "final_zip_changed_sha_requires_one_fresh_release_driver": {
+          "const": true
+        }
+      }
+    },
+    "claim_boundary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "changes_current_package",
+        "builds_zip",
+        "runs_family_validator",
+        "changes_family_release",
+        "blocking_promotion_authorized",
+        "source_bound_gate_required_next_fresh",
+        "post_sim_return_gate_required_next_fresh",
+        "first_fresh_extra_audit_required"
+      ],
+      "properties": {
+        "changes_current_package": {
+          "const": false
+        },
+        "builds_zip": {
+          "const": false
+        },
+        "runs_family_validator": {
+          "const": false
+        },
+        "changes_family_release": {
+          "const": false
+        },
+        "blocking_promotion_authorized": {
+          "const": false
+        },
+        "source_bound_gate_required_next_fresh": {
+          "const": true
+        },
+        "post_sim_return_gate_required_next_fresh": {
+          "const": true
+        },
+        "first_fresh_extra_audit_required": {
+          "type": "boolean"
+        }
+      }
+    }
+  },
+  "$defs": {
+    "fileReceipt": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "path",
+        "bytes",
+        "sha256"
+      ],
+      "properties": {
+        "path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "bytes": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      }
+    }
+  }
+}

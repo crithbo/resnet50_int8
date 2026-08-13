@@ -1,0 +1,50 @@
+{
+  "negative_contract_mutations": [
+    "dump_enabled",
+    "hard_100mb_cap",
+    "sampling",
+    "truncation",
+    "derived_expected_signal",
+    "missing_causal_role",
+    "not_applicable_without_machine_proof",
+    "candidate_pair_not_distinguishable",
+    "missing_boundary_layer",
+    "observer_drives_dut"
+    ,"post_sim_wrong_helper_hash"
+    ,"post_sim_wrong_helper_path"
+    ,"post_sim_renamed_helper"
+  ],
+  "negative_final_zip_mutations": [
+    "waveform_member",
+    "waveform_allowlist",
+    "wave_dump_writer",
+    "chunk_allowlist_omission"
+    ,"post_sim_waveform_discovery_present"
+    ,"unknown_helper_with_waveform_literal"
+  ],
+  "negative_return_mutations": [
+    "sim_started_missing_observer",
+    "chunk_not_returned",
+    "identity_drift",
+    "sequence_loss",
+    "time_order_loss",
+    "width_loss",
+    "four_state_loss",
+    "end_state_loss",
+    "hard_cap",
+    "sampling",
+    "truncation",
+    "signal_exit_without_partial_live_record",
+    "waveform_member"
+  ],
+  "positive_scenarios": [
+    "normal",
+    "timeout",
+    "HUP",
+    "INT",
+    "TERM",
+    "compile_not_started",
+    "observer_aggregate_above_decimal_100mb_warning_only"
+  ],
+  "schema": "server-observer-only-wide-causal-fixture-cases-v1"
+}

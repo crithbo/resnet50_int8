@@ -1,0 +1,173 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "session_owner_registry_v1.schema.json",
+  "title": "Current session owner registry v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "registry_epoch",
+    "mainline_role_id",
+    "roles",
+    "active_rule_receipts",
+    "claim_boundary"
+  ],
+  "properties": {
+    "schema": {"const": "session-owner-registry-v1"},
+    "registry_epoch": {"type": "integer", "minimum": 1},
+    "mainline_role_id": {"$ref": "#/$defs/name"},
+    "roles": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/role"}
+    },
+    "active_rule_receipts": {
+      "type": "array",
+      "minItems": 3,
+      "items": {"$ref": "#/$defs/fileReceipt"}
+    },
+    "claim_boundary": {"type": "string", "minLength": 1}
+  },
+  "$defs": {
+    "name": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+    },
+    "threadId": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+    },
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "safeRelativePath": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))(?!.*\\\\)(?!.*//).+$"
+    },
+    "fileReceipt": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "bytes", "sha256"],
+      "properties": {
+        "path": {"$ref": "#/$defs/safeRelativePath"},
+        "bytes": {"type": "integer", "minimum": 0},
+        "sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "taskPointer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "objective", "next_action", "pointer"],
+      "properties": {
+        "status": {
+          "enum": [
+            "ACTIVE",
+            "WAIT_RETURN",
+            "PACKAGE_READY_NOT_RUN",
+            "WAIT_USER_DECISION",
+            "WAIT_RTL_FIX",
+            "HARDWARE_CAPABILITY_BLOCKED",
+            "CLOSED",
+            "IDLE"
+          ]
+        },
+        "objective": {"type": "string", "minLength": 1},
+        "next_action": {"type": "string", "minLength": 1},
+        "pointer": {
+          "oneOf": [
+            {"type": "null"},
+            {"$ref": "#/$defs/fileReceipt"}
+          ]
+        }
+      }
+    },
+    "inFlight": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "state",
+        "server_root",
+        "lease_id",
+        "package",
+        "return_zip"
+      ],
+      "properties": {
+        "state": {
+          "enum": [
+            "NONE",
+            "PACKAGE_BUILDING",
+            "PACKAGE_READY_NOT_RUN",
+            "SERVER_RUNNING",
+            "RETURN_COLLECTED",
+            "ANALYZING"
+          ]
+        },
+        "server_root": {"type": ["string", "null"]},
+        "lease_id": {"type": ["string", "null"]},
+        "package": {
+          "oneOf": [
+            {"type": "null"},
+            {"$ref": "#/$defs/fileReceipt"}
+          ]
+        },
+        "return_zip": {
+          "oneOf": [
+            {"type": "null"},
+            {"$ref": "#/$defs/fileReceipt"}
+          ]
+        }
+      }
+    },
+    "role": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "role_id",
+        "role_kind",
+        "scope",
+        "thread_id",
+        "owner_epoch",
+        "status",
+        "write_scope",
+        "forbidden_scope",
+        "current_task",
+        "latest_task_record",
+        "in_flight"
+      ],
+      "properties": {
+        "role_id": {"$ref": "#/$defs/name"},
+        "role_kind": {
+          "enum": [
+            "MAINLINE",
+            "FAMILY_OWNER",
+            "INFRASTRUCTURE_OWNER",
+            "SPECIALIST_OWNER",
+            "HUMAN_JSON_OWNER"
+          ]
+        },
+        "scope": {"type": "string", "minLength": 1},
+        "thread_id": {"$ref": "#/$defs/threadId"},
+        "owner_epoch": {"type": "integer", "minimum": 1},
+        "status": {"const": "ACTIVE"},
+        "write_scope": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"type": "string", "minLength": 1}
+        },
+        "forbidden_scope": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"type": "string", "minLength": 1}
+        },
+        "current_task": {"$ref": "#/$defs/taskPointer"},
+        "latest_task_record": {
+          "oneOf": [
+            {"type": "null"},
+            {"$ref": "#/$defs/fileReceipt"}
+          ]
+        },
+        "in_flight": {"$ref": "#/$defs/inFlight"}
+      }
+    }
+  }
+}
+

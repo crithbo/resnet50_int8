@@ -1,0 +1,85 @@
+{
+  "active_artifact_receipts": [
+    {
+      "bytes": 3756,
+      "path": ".agents/task_records/20260811_rule_orthogonalization_session_refresh_and_next_fresh_dispatch.md",
+      "sha256": "ef2f3c738af91c8ff00749720f00fc28acb2f95296bc2a76bf1e75732fc75a90"
+    }
+  ],
+  "authority": {
+    "new_owner_before_activation": "READ_ONLY_ACCEPTANCE",
+    "old_owner_after_activation": "RETIRED_READ_ONLY",
+    "overlap_writers_allowed": false
+  },
+  "claim_boundary": "Ownership continuity only; no package, server, RTL, config or result claim.",
+  "current_mainline_thread_id": "019fbec2-fe93-7e03-9314-cff6f222f33d",
+  "current_task_snapshot": {
+    "next_action": "activate replacement owners mainline-first, then consume family package receipts",
+    "objective": "accept the rule refresh and coordinate next-fresh package dispatch",
+    "pointer": {
+      "bytes": 3756,
+      "path": ".agents/task_records/20260811_rule_orthogonalization_session_refresh_and_next_fresh_dispatch.md",
+      "sha256": "ef2f3c738af91c8ff00749720f00fc28acb2f95296bc2a76bf1e75732fc75a90"
+    },
+    "status": "ACTIVE"
+  },
+  "first_action": "re-read activation publication and current registry, then acknowledge sole ACTIVE mainline ownership before any write",
+  "handoff_id": "handoff-1e322f4feeae712d6e73cbb29fd7fa66",
+  "in_flight_snapshot": {
+    "lease_id": null,
+    "package": null,
+    "return_zip": null,
+    "server_root": null,
+    "state": "NONE"
+  },
+  "new_thread_id": "019ff027-e7db-72a3-b282-cfad8708da05",
+  "old_thread_id": "019fbec2-fe93-7e03-9314-cff6f222f33d",
+  "owner_epoch_after": 2,
+  "owner_epoch_before": 1,
+  "pending_messages": [
+    "activate mainline first, then four family roles; optimizer is campaign-excluded",
+    "no server/package/RTL action occurs during ownership activation"
+  ],
+  "reason": "planned full-project session refresh after active-rule orthogonalization",
+  "registry_before": {
+    "bytes": 11867,
+    "path": "contracts/current_session_owner_registry_v1.json",
+    "sha256": "e5e431295c416b77829b434e38995c23edf65332acf3796b61b4b49612b38464"
+  },
+  "registry_epoch_before": 1,
+  "required_read_receipts": [
+    {
+      "bytes": 18926,
+      "path": ".agents/agent.md",
+      "sha256": "7a6fe116109b2c7953f3e1ff223160801e1d4df4ac6bfffc394c5ce4598294e4"
+    },
+    {
+      "bytes": 44636,
+      "path": ".agents/plan.md",
+      "sha256": "4f04b3e207a5fd200b6bbc6e66b6c0a312d1e4f24317cd9266d31d2018aecc13"
+    },
+    {
+      "bytes": 7874,
+      "path": ".agents/rules/生成前必读索引.md",
+      "sha256": "a69fc20ca32891912fb85b6060c743b7e25dbfc1ff690591432ccf1c4516bc86"
+    },
+    {
+      "bytes": 8677,
+      "path": ".agents/rules/会话转接与所有权规则.md",
+      "sha256": "9e3859dff32de42f0964ff3038ab7b78c84d142a24016ee552c706ef01e529b9"
+    },
+    {
+      "bytes": 11867,
+      "path": "contracts/current_session_owner_registry_v1.json",
+      "sha256": "e5e431295c416b77829b434e38995c23edf65332acf3796b61b4b49612b38464"
+    },
+    {
+      "bytes": 9894,
+      "path": "contracts/active_rule_registry_v1.json",
+      "sha256": "bf014463ea4532cb7ce4b95267ee35f8b47931a76df8eee92497aed31456de92"
+    }
+  ],
+  "role_id": "mainline.control",
+  "role_kind": "MAINLINE",
+  "schema": "session-handoff-capsule-v1"
+}

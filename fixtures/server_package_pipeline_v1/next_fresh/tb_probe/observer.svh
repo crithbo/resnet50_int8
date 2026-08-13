@@ -1,0 +1,5 @@
+`ifndef SERVER_PACKAGE_PIPELINE_SHADOW_FIXTURE
+`define SERVER_PACKAGE_PIPELINE_SHADOW_FIXTURE
+module server_package_pipeline_shadow_fixture;
+endmodule
+`endif

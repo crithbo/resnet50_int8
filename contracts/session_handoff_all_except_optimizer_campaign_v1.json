@@ -1,0 +1,44 @@
+{
+  "schema": "session-handoff-campaign-v1",
+  "campaign_id": "all-active-sessions-refresh-20260811",
+  "status": "RULE_AND_TOOL_READY_NO_SESSION_CREATED",
+  "scope": "ALL_ACTIVE_ROLES_EXCEPT_EXPLICIT_THREAD_IDS",
+  "registry_path": "contracts/current_session_owner_registry_v1.json",
+  "excluded_thread_ids": [
+    "019fd276-14c5-7800-94db-87ebfb9ce632"
+  ],
+  "ordered_transition": [
+    "freeze old mainline dispatch and plan/rule writes",
+    "bootstrap and audit the exact current owner registry",
+    "create and read-only accept the replacement mainline",
+    "activate mainline as campaign activation_order 1",
+    "atomically publish the accepted mainline successor registry with expected-old-SHA",
+    "resolve all completion routing through the new mainline",
+    "prepare, accept and activate every non-excluded owner role exactly once",
+    "audit campaign exact role set and contiguous epochs",
+    "archive retired sessions only after activation receipts exist",
+    "resume normal dispatch"
+  ],
+  "required_rule_id": "CDA-SESSION-MAINLINE-FIRST-CAMPAIGN-001",
+  "shared_tool": "tools/session_handoff.py",
+  "commands": [
+    "validate-registry",
+    "build-capsule",
+    "build-acceptance",
+    "activate",
+    "publish-activation",
+    "resolve-mainline",
+    "audit-campaign"
+  ],
+  "no_overlap_writers": true,
+  "mainline_activation_order": 1,
+  "does_not_authorize": [
+    "package rebuild or release",
+    "server upload, run, stop or lease mutation",
+    "functional RTL change",
+    "operator config or numeric change",
+    "plan or public rule edits by non-mainline owners"
+  ],
+  "claim_boundary": "Campaign procedure only. Actual thread IDs for replacement sessions and the bootstrapped current registry must be created at execution time from current disk and user-created Codex tasks."
+}
+

@@ -1,0 +1,100 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "server_diagnostic_budget_trace_v1.schema.json",
+  "title": "Server diagnostic budget separation trace v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "accounting_mode",
+    "qualified_event_budget",
+    "non_progress_state_budget",
+    "required_late_qualified_event_id",
+    "event_runs",
+    "historical_binding",
+    "claim_boundary"
+  ],
+  "properties": {
+    "schema": {
+      "const": "server_diagnostic_budget_trace_v1"
+    },
+    "accounting_mode": {
+      "const": "SEPARATE_QUALIFIED_AND_NON_PROGRESS"
+    },
+    "qualified_event_budget": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "non_progress_state_budget": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "required_late_qualified_event_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "event_runs": {
+      "type": "array",
+      "minItems": 2,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "kind",
+          "event_id",
+          "repeat"
+        ],
+        "properties": {
+          "kind": {
+            "enum": [
+              "qualified_event",
+              "state_transition",
+              "heartbeat",
+              "level_snapshot"
+            ]
+          },
+          "event_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "repeat": {
+            "type": "integer",
+            "minimum": 1
+          }
+        }
+      }
+    },
+    "historical_binding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "family",
+        "source_package_sha256",
+        "return_sha256",
+        "observed_v50_limit",
+        "first_later_slice_output_after_budget_exhaustion"
+      ],
+      "properties": {
+        "family": {
+          "const": "global_average_pool"
+        },
+        "source_package_sha256": {
+          "const": "96c23c3762b9fca323ff3d76250f8ca9482c74d536a93b843321c8be3f37252d"
+        },
+        "return_sha256": {
+          "const": "af493115127b0040d8bec83815d0e00d2fc90a7a9c559b11758ddb42982adfc2"
+        },
+        "observed_v50_limit": {
+          "const": 256
+        },
+        "first_later_slice_output_after_budget_exhaustion": {
+          "const": true
+        }
+      }
+    },
+    "claim_boundary": {
+      "type": "string",
+      "minLength": 1
+    }
+  }
+}

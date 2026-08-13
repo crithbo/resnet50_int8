@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "server_waveform_runtime_receipt_v3.schema.json",
+  "title": "Mandatory attempt-local FSDB runtime receipt v3",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "package_id", "execution_id", "plan_sha256", "simulation_started", "exit_kind", "waveforms", "no_size_limit", "all_matching_collected", "pass", "errors", "claim_boundary"],
+  "properties": {
+    "schema": {"const": "server-waveform-runtime-receipt-v3"},
+    "package_id": {"$ref": "#/$defs/name"},
+    "execution_id": {"$ref": "#/$defs/name"},
+    "plan_sha256": {"$ref": "#/$defs/sha256"},
+    "simulation_started": {"type": "boolean"},
+    "exit_kind": {"enum": ["COMPILE_FAILURE", "SIMULATION_NOT_STARTED", "NATURAL", "TIMEOUT", "HUP", "INT", "TERM", "SIMULATION_NONZERO"]},
+    "waveforms": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/waveform"}},
+    "no_size_limit": {"const": true},
+    "all_matching_collected": {"const": true},
+    "pass": {"type": "boolean"},
+    "errors": {"type": "array", "items": {"type": "string"}},
+    "claim_boundary": {"type": "string", "minLength": 1}
+  },
+  "$defs": {
+    "name": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"},
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "path": {"type": "string", "minLength": 1, "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))(?!.*\\\\)(?!.*//).+$"},
+    "waveform": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_path", "archive_path", "bytes", "sha256", "format", "completeness"],
+      "properties": {
+        "source_path": {"$ref": "#/$defs/path"},
+        "archive_path": {"$ref": "#/$defs/path"},
+        "bytes": {"type": "integer", "minimum": 1},
+        "sha256": {"$ref": "#/$defs/sha256"},
+        "format": {"const": "FSDB"},
+        "completeness": {"enum": ["COMPLETE", "PARTIAL"]}
+      }
+    }
+  }
+}

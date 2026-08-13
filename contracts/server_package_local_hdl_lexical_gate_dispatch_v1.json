@@ -1,0 +1,31 @@
+{
+  "schema": "server-package-local-hdl-lexical-gate-dispatch-v1",
+  "version": 1,
+  "rule_id": "CDA-SERVER-PACKAGE-LOCAL-OBSERVER-HDL-SYNTAX-SCOPE-POSITIVE-001",
+  "classification": "IMPLEMENTATION_HARDENING_EXISTING_RULE_SEMANTICS",
+  "activation": "required_next_fresh_before_remaining_three_family_builds",
+  "blocking_mapping": ["server_start"],
+  "commands": {
+    "cheap_staging_aggregate": "python tools/validate_server_package_local_hdl_lexical.py --tree <staging-package-root> --output <staging-report.json>",
+    "exact_final_zip_recheck": "python tools/validate_server_package_local_hdl_lexical.py --zip <exact-final.zip> --output <final-report.json>"
+  },
+  "scope": "Every .sv/.svh/.v/.vh member in the exact final ZIP; comments, strings and legal escaped identifiers are excluded lexically.",
+  "required_conjunction": [
+    "staging reserved_identifier_violations=[] before expensive packaging",
+    "exact final ZIP reserved_identifier_violations=[] after fresh archive read",
+    "existing focused or production-compatible frontend pass on exact changed/required package-local HDL",
+    "existing scope/name-resolution and state-ownership closure",
+    "existing declaration/use/update negative controls"
+  ],
+  "permanent_negative": {
+    "source_return": "serialized Conv FSDB smoke s1",
+    "mutation": "integer event_seq_id; -> integer sequence;",
+    "expected": "fail closed before PACKAGE_READY_NOT_RUN"
+  },
+  "release_sequence": [
+    "shared lexical gate current-disk sync and regression pass",
+    "GAP, native Conv and QAdd may build their fresh FSDB successors in parallel",
+    "each exact final ZIP must pass this gate and the current first-fresh aggregate before pending publication"
+  ],
+  "claim_boundary": "This cheap lexical guard prevents a known compile-before-simulation escape; it does not replace production VCS or the broader package-local HDL gate."
+}

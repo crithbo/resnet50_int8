@@ -1,0 +1,91 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "server_waveform_mandatory_plan_v3.schema.json",
+  "title": "Mandatory unbounded attempt-local FSDB waveform plan v3",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "package_id", "family", "dump", "return_policy", "integration", "claim_boundary"],
+  "properties": {
+    "schema": {"const": "server-waveform-mandatory-plan-v3"},
+    "package_id": {"$ref": "#/$defs/name"},
+    "family": {"$ref": "#/$defs/name"},
+    "dump": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["format", "make_arguments", "tb_top", "hierarchy_depth", "scope_mode", "included_scopes", "excluded_scopes", "runtime_search_roots", "waveform_name_patterns"],
+      "properties": {
+        "format": {"const": "FSDB"},
+        "make_arguments": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["DUMP_VCD", "DUMP_FSDB", "TB_DUMP_FSDB"],
+          "properties": {
+            "DUMP_VCD": {"const": "0"},
+            "DUMP_FSDB": {"const": "1"},
+            "TB_DUMP_FSDB": {"const": "0"}
+          }
+        },
+        "tb_top": {"const": "tb_NDP_Top_new_phy"},
+        "hierarchy_depth": {"const": 0},
+        "scope_mode": {"enum": ["FULL_HIERARCHY", "PROVEN_IRRELEVANT_PRUNED"]},
+        "included_scopes": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/hierarchy"}},
+        "excluded_scopes": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["hierarchical_path", "evidence", "reason"],
+            "properties": {
+              "hierarchical_path": {"$ref": "#/$defs/hierarchy"},
+              "evidence": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["path", "sha256"],
+                "properties": {"path": {"$ref": "#/$defs/path"}, "sha256": {"$ref": "#/$defs/sha256"}}
+              },
+              "reason": {"type": "string", "minLength": 1}
+            }
+          }
+        },
+        "runtime_search_roots": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/path"}},
+        "waveform_name_patterns": {"const": ["wave.fsdb", "wave.fsdb.*"]}
+      }
+    },
+    "return_policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["required_when_simulation_started", "compile_not_started_omission_allowed", "collect_all_matching", "archive_prefix", "manifest_archive_path", "hard_limit_bytes", "truncation_allowed", "sampling_allowed", "size_based_deletion_allowed"],
+      "properties": {
+        "required_when_simulation_started": {"const": true},
+        "compile_not_started_omission_allowed": {"const": true},
+        "collect_all_matching": {"const": true},
+        "archive_prefix": {"$ref": "#/$defs/path"},
+        "manifest_archive_path": {"$ref": "#/$defs/path"},
+        "hard_limit_bytes": {"type": "null"},
+        "truncation_allowed": {"const": false},
+        "sampling_allowed": {"const": false},
+        "size_based_deletion_allowed": {"const": false}
+      }
+    },
+    "integration": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["plan_member", "runner_member", "return_request_member", "dump_control_member", "tool_member"],
+      "properties": {
+        "plan_member": {"const": "contracts/server_waveform_mandatory_plan.json"},
+        "runner_member": {"$ref": "#/$defs/path"},
+        "return_request_member": {"$ref": "#/$defs/path"},
+        "dump_control_member": {"$ref": "#/$defs/path"},
+        "tool_member": {"$ref": "#/$defs/path"}
+      }
+    },
+    "claim_boundary": {"type": "string", "minLength": 1}
+  },
+  "$defs": {
+    "name": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"},
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "path": {"type": "string", "minLength": 1, "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))(?!.*\\\\)(?!.*//).+$"},
+    "hierarchy": {"type": "string", "minLength": 1, "pattern": "^[A-Za-z_$][A-Za-z0-9_$]*(?:[./][A-Za-z_$][A-Za-z0-9_$]*(?:\\[[0-9]+\\])?)*$"}
+  }
+}

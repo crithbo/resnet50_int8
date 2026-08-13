@@ -1,0 +1,25 @@
+{
+  "activation": {
+    "bytes": 1195,
+    "path": ".agents/task_records/20260811_handoff_gap_activation.json",
+    "sha256": "e5c2a3a37f9742c6d6e55f312d6fd8676da76ee8852a9c7f79a8bef7f5afc4ea"
+  },
+  "atomic_replace": true,
+  "claim_boundary": "Current ownership pointer publication only; no UI, package, server, RTL, config or result action.",
+  "expected_registry_before": {
+    "bytes": 11867,
+    "path": "contracts/current_session_owner_registry_v1.json",
+    "sha256": "da14072292a23b9aa010d3f8c8e1277ed59480edeec1148982e72337a4fe9a2d"
+  },
+  "handoff_id": "handoff-476c7d8501c53eda06710e600156dfa5",
+  "new_thread_id": "019ff02d-8225-7d21-9779-e46ce4130572",
+  "old_thread_id": "019fa366-cb1f-7ae2-880c-f527be0680cd",
+  "published_current_registry": {
+    "bytes": 11867,
+    "path": "contracts/current_session_owner_registry_v1.json",
+    "sha256": "4cfa21da9fd122a093d0d85d91637ea76779c8036185e933c7f03b1956cbb1c4"
+  },
+  "role_id": "family.gap",
+  "schema": "session-handoff-publication-v1",
+  "status": "REGISTRY_ACTIVATED"
+}

@@ -1,0 +1,5 @@
+{
+  "schema": "server-source-bound-probe-plan-v1",
+  "profile": "HIGH_INFORMATION_CAUSAL_V1",
+  "fixture": "pipeline-presence-only"
+}

@@ -1,0 +1,99 @@
+{
+  "schema": "server-runtime-preflight-native-flow-dispatch-v1",
+  "rule_id": "CDA-SERVER-STRICT-LOCAL-AUDIT-MINIMAL-RUNTIME-PREFLIGHT-001",
+  "activation": "required_next_fresh_final_zip",
+  "production_launch_marker": "# CODEX_PRODUCTION_LAUNCH",
+  "policy": {
+    "server_environment_adjudicator": "ACTUAL_PRODUCTION_COMMAND_ONLY",
+    "local_package_owned_audit": "AGGREGATE_ONCE_THEN_EXACT_FINAL_ZIP_ONCE",
+    "server_prelaunch_file_or_provider_attestation": "FORBIDDEN",
+    "natural_failure_return": "REQUIRED"
+  },
+  "allowed_prelaunch_actions": [
+    "argument_and_path_syntax_validation_without_server_reads",
+    "arm_exactly_once_partial_return_finalizer",
+    "cd_by_actual_operation",
+    "repeat_safe_exact_package_owned_namespace_reset",
+    "package_owned_install_by_actual_operation"
+  ],
+  "forbidden_prelaunch_mechanisms": [
+    "shell_file_type_or_readability_test",
+    "stat_find_readlink_realpath_inventory",
+    "hash_or_tree_identity_of_server_owned_content",
+    "git_server_source_identity",
+    "command_v_or_which_tool_availability",
+    "make_dry_run_or_just_print",
+    "module_or_provider_lookup_probe",
+    "separate_runtime_preflight_or_attestation_subcommand"
+  ],
+  "retired_from_current_blocking": [
+    "CDA-SERVER-COMPILE-MODULE-PROVIDER-CLOSURE-001",
+    "compile_environment_attestation"
+  ],
+  "retired_asset_disposition": "POST_FAILURE_READ_ONLY_DIAGNOSTIC_OR_HISTORICAL_ONLY",
+  "native_failure_differential": {
+    "timing": "AFTER_ACTUAL_FAILURE_BEFORE_SUCCESSOR_DESIGN",
+    "classifications": [
+      "SAME",
+      "PACKAGE_DERIVATION",
+      "NATIVE_DOCUMENT_IMPLEMENTATION_DRIFT",
+      "SERVER_RUNTIME_UNKNOWN"
+    ],
+    "unknown_semantics": "DO_NOT_GUESS_AND_DO_NOT_CREATE_PREFLIGHT",
+    "required_reference_paths": [
+      {
+        "path": "ndp-sim/README_SERVER_PACKAGE_LOCAL.md",
+        "sha256": "ec41ebc7e554f53c8cedbb11b7c53487c89d593fa793f7206e30200f8173ed90",
+        "purpose": "verified native package generation and known README/implementation drift"
+      },
+      {
+        "path": "ndp-sim/generate_python_golden/README.md",
+        "sha256": "4d6cc73fa99b283d557e5fe11cba40d1044e09ade3740e73efaad1ddef1f2d60",
+        "purpose": "native golden relayout graph execplan package flow"
+      },
+      {
+        "path": "ndp-sim/model_execplan/README.md",
+        "sha256": "992360e8cfc1a15d03abbbb70047de86548e07518e329248d17c61c130b9b11f",
+        "purpose": "current model_execplan implementation semantics"
+      },
+      {
+        "path": "ndp-sim/model_execplan/main.py",
+        "sha256": "661623ebf37f0c2fe31a530fc53c756e58408000a371d7cc528301314a4dac7e",
+        "purpose": "native graph to bitstream address execplan and SCA entrypoint"
+      },
+      {
+        "path": "NDP_copy01/README_HARDWARE_SIM_ENTRY.md",
+        "sha256": "f0365b7beb7c0e07b36564c01daf803357bfc96a0632f98c8993e6e56470edbf",
+        "purpose": "hardware simulation cwd argv SCA and return semantics"
+      },
+      {
+        "path": "NDP_copy01/Makefile.tb_NDP_Top_new_phy",
+        "sha256": "528d93f3c7f458d256bdbaf1d9ec39edfbfe5bd8a924e2bf0786914a634f4aba",
+        "purpose": "actual compile and simulation entrypoint"
+      }
+    ],
+    "required_attempt_fields": [
+      "package_id",
+      "attempt_id",
+      "actual_cwd",
+      "actual_compile_argv",
+      "actual_sim_argv",
+      "sca_cfg",
+      "sca_cfg_d",
+      "repeat_num",
+      "compile_exit",
+      "simulation_started",
+      "first_true_error",
+      "complete_log_receipts"
+    ],
+    "known_native_checks": [
+      "cwd_and_relative_model_execplan_entrypoint",
+      "explicit_regenerated_operator_count_and_real_bitstream",
+      "same_package_sca_cfg_and_sca_cfg_d",
+      "testbench_echoes_actual_sca_paths",
+      "repeat_num_matches_start_comp_count",
+      "execplan_bitstream_sca_actual_consumer_paths"
+    ]
+  },
+  "claim_boundary": "Prelaunch non-interference and post-failure native-flow comparison only; no server environment readiness, compile, simulation, natural terminal, D, E4 or E5 claim."
+}

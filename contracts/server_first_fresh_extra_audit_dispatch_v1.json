@@ -1,0 +1,37 @@
+{
+  "schema": "server-first-fresh-extra-audit-dispatch-v1",
+  "status": "ACTION_REQUIRED_BEFORE_UPLOAD",
+  "rule_change_epoch_id": "20260811-exact-instance-payload-semantic-fingerprint-v2",
+  "applies_to": "FIRST_FRESH_PER_AFFECTED_FAMILY",
+  "current_packages_frozen": true,
+  "owner_ack_required": true,
+  "upload_hold_until": "EXTRA_AUDIT_PASS",
+  "required_owner_actions": [
+    "acknowledge the exact rule-change epoch and bind the first fresh package identity",
+    "run the normal cheap checks once and collect all errors before materialization",
+    "build one final ZIP and independently extract that exact ZIP into a clean audit tree",
+    "run the exact runner/input, source-bound logger-to-collector-to-parser, post-sim return-core and candidate-matrix reports from final ZIP bytes",
+    "bind diagnostic_semantics_sha256 and consume typed server-source-bound-final-zip-validation-v2 from the same exact ZIP",
+    "when the fingerprint changed, use FIRST_USE_AUDITED; allow BYTE_EQUAL_RECEIPT_REUSE only with a typed prior PASS receipt carrying the identical fingerprint",
+    "run the shared extra-audit validator once and do not upload until it reports PASS"
+  ],
+  "required_return_fields": [
+    "family",
+    "package_id",
+    "final_zip_path_bytes_sha256",
+    "rule_change_epoch_id",
+    "extra_audit_report_path_bytes_sha256",
+    "candidate_coverage",
+    "blocking_and_record_only_findings",
+    "diagnostic_semantics_fingerprint_and_disposition",
+    "upload_authorization_state"
+  ],
+  "blocking_classes": [
+    "server_start",
+    "actual_input",
+    "state_safety",
+    "return"
+  ],
+  "record_only_boundary": "A finding without a direct consumer in server_start, actual_input, state_safety or return is recorded but cannot block release.",
+  "validator_command": "python tools/validate_server_first_fresh_extra_audit.py --contract <contract.json> --workspace-root <repo-root> --output <validation.json>"
+}

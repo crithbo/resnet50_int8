@@ -1,0 +1,57 @@
+{
+  "schema": "server-waveform-portable-query-dispatch-v1",
+  "version": 1,
+  "rule_id": "CDA-SERVER-WAVEFORM-PORTABLE-LOCAL-DECODABILITY-001",
+  "activation": "required_next_fresh",
+  "activation_epoch": "waveform-portable-local-decodability-v1-b0a94cf60d6e",
+  "first_fresh": {
+    "capture_mode": "DIRECT_VCD_AND_QUERY",
+    "preserve_raw_vpd": true,
+    "portable_vcd_required": true,
+    "query_receipt_required_for_declared_candidates": true
+  },
+  "later_fresh": {
+    "direct_vcd_required_when_query_coverage_unproven": true,
+    "query_only_requires_exact_catalog_instance_width_transition_coverage": true
+  },
+  "make_argument_semantics": {
+    "DUMP_VCD=1": "existing authoritative full unbounded VPD; semantics unchanged",
+    "DUMP_PORTABLE_VCD=1": "distinct direct standard VCD from the same original simulation attempt",
+    "DUMP_FSDB=0": "unchanged",
+    "TB_DUMP_FSDB=0": "unchanged"
+  },
+  "direct_vcd_ucli": [
+    "dump -file <attempt>/run/sim_results/wave.vcd -type VCD",
+    "dump -add <exact-source-bound-scope> -depth <exact-depth> -aggregates"
+  ],
+  "registered_query": {
+    "schema": "schemas/server_waveform_signal_query_receipt_v1.schema.json",
+    "free_form_text": "FORBIDDEN",
+    "required": [
+      "exact hierarchy and width catalog",
+      "exact timescale",
+      "ordered every 0/1/X/Z transition",
+      "contiguous sequence",
+      "candidate end-state coverage",
+      "source generation report identity",
+      "no byte/event cap, sampling or truncation"
+    ]
+  },
+  "failure_isolation": {
+    "return_must_publish": true,
+    "diagnostic_status": "DIAGNOSTIC_EVIDENCE_INCOMPLETE",
+    "preserve": ["raw_vpd", "compile_core", "sim_core", "signal_core", "return_core"]
+  },
+  "shared_assets": {
+    "tool": "tools/server_waveform_portable_query.py",
+    "profile_schema": "schemas/server_waveform_portable_profile_v1.schema.json",
+    "runtime_schema": "schemas/server_waveform_portable_runtime_receipt_v1.schema.json",
+    "query_schema": "schemas/server_waveform_signal_query_receipt_v1.schema.json",
+    "post_return_converter": "tools/server_waveform_local_analysis.py",
+    "tests": "tests/test_server_waveform_portable_query.py",
+    "fixtures": "fixtures/server_waveform_portable_query_v1"
+  },
+  "current_package_disposition": "NOT_RETROACTIVE_NO_HOLD_NO_REBUILD_NO_ROTATE",
+  "current_v87b": "Still requires vpd2vcd or a same-workload future run producing VCD/query evidence",
+  "claim_boundary": "Portable waveform/query plumbing only; family diagnosis remains family-owned."
+}

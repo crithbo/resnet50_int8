@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "server_fsdb_runtime_quiescence_v1.schema.json",
+  "title": "FSDB process-tree and stable-snapshot quiescence receipt v1",
+  "type": "object",
+  "required": ["schema", "kind", "rule_id", "pass", "errors", "claim_boundary"],
+  "properties": {
+    "schema": {"const": "server-fsdb-runtime-quiescence-v1"},
+    "kind": {"enum": ["process_tree_receipt", "quiescence_receipt"]},
+    "rule_id": {"const": "CDA-SERVER-FSDB-PROCESS-TREE-WRITER-QUIESCENCE-001"},
+    "start_new_session": {"type": "boolean"},
+    "child_subreaper": {
+      "type": "object",
+      "required": ["enabled", "prctl", "value"],
+      "properties": {
+        "enabled": {"const": true},
+        "prctl": {"const": "PR_SET_CHILD_SUBREAPER"},
+        "value": {"const": 1}
+      },
+      "additionalProperties": false
+    },
+    "root_pid": {"type": "integer", "minimum": 2},
+    "pgid": {"type": "integer", "minimum": 2},
+    "root_reaped": {"type": "boolean"},
+    "remaining_owned_pids": {"type": "array", "items": {"type": "integer", "minimum": 2}, "uniqueItems": true},
+    "process_tree_quiescent": {"type": "boolean"},
+    "stable_exact_set": {"type": "boolean"},
+    "diagnostic_status": {"enum": ["COMPLETE", "DIAGNOSTIC_EVIDENCE_INCOMPLETE"]},
+    "pass": {"type": "boolean"},
+    "errors": {"type": "array", "items": {"type": "string"}},
+    "claim_boundary": {"type": "string", "minLength": 1}
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"kind": {"const": "process_tree_receipt"}}},
+      "then": {
+        "required": [
+          "package_id", "execution_id", "attempt_id", "attempt_root", "cwd",
+          "start_new_session", "child_subreaper", "root_pid", "pgid",
+          "root_reaped", "remaining_owned_pids", "process_tree_quiescent",
+          "heartbeat_source", "heartbeat_output"
+        ],
+        "properties": {
+          "start_new_session": {"const": true}
+        }
+      }
+    }
+  ],
+  "additionalProperties": true
+}

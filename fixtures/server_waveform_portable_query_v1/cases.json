@@ -1,0 +1,22 @@
+{
+  "positive": [
+    "misleading_DUMP_VCD_explicitly_bound_to_VPD",
+    "first_fresh_direct_portable_VCD",
+    "later_query_only_exact_complete_catalog",
+    "X_and_Z_transitions_preserved",
+    "conversion_failure_preserves_raw_and_core_return"
+  ],
+  "negative": [
+    "DUMP_VCD_reinterpreted_as_VCD",
+    "first_fresh_missing_direct_VCD",
+    "attempt_identity_drift",
+    "incomplete_query_catalog",
+    "wrong_instance_or_width",
+    "transition_sequence_gap",
+    "hard_byte_or_event_cap",
+    "sampling_or_truncation",
+    "portable_or_query_allowlist_omission",
+    "asset_identity_drift",
+    "free_form_query_text"
+  ]
+}

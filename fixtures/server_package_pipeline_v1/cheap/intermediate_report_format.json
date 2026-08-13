@@ -1,0 +1,9 @@
+{
+  "schema": "server-package-cheap-check-result-v1",
+  "gate_id": "intermediate_report_format",
+  "pass": false,
+  "errors": [
+    "synthetic optional summary title is absent"
+  ],
+  "warnings": []
+}

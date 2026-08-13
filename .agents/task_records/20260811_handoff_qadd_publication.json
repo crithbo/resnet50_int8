@@ -1,0 +1,25 @@
+{
+  "activation": {
+    "bytes": 1204,
+    "path": ".agents/task_records/20260811_handoff_qadd_activation.json",
+    "sha256": "dd6704f8586bc60aa15f16724af13a93da73b2bd6d5bce255b52bdfecc4b9202"
+  },
+  "atomic_replace": true,
+  "claim_boundary": "Current ownership pointer publication only; no UI, package, server, RTL, config or result action.",
+  "expected_registry_before": {
+    "bytes": 11867,
+    "path": "contracts/current_session_owner_registry_v1.json",
+    "sha256": "12654fc38ae398c533c3f2fd202e4bebef6f67e9e84b7731ee9b3d08d9d1fdda"
+  },
+  "handoff_id": "handoff-b4d177c6b3011e73eb794ca69b5bece1",
+  "new_thread_id": "019ff02d-9e93-7d61-8c98-c928fdea157c",
+  "old_thread_id": "019fa2c0-b647-7a91-93bf-d21a173487e3",
+  "published_current_registry": {
+    "bytes": 11867,
+    "path": "contracts/current_session_owner_registry_v1.json",
+    "sha256": "28d9137a040b6446db04f5280c7b660ff6b83170bad203dd2c95ca4634c776be"
+  },
+  "role_id": "family.qlinearadd",
+  "schema": "session-handoff-publication-v1",
+  "status": "REGISTRY_ACTIVATED"
+}

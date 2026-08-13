@@ -1,0 +1,54 @@
+{
+  "activation_epoch": "observer-only-post-sim-conjunction-fix-v1",
+  "classification": "IMPLEMENTATION_CONJUNCTION_ESCAPE_NOT_PUBLIC_RULE_GAP",
+  "conflict_receipt": {
+    "path": "outputs/qlinearadd_node0007_v61_observer_only_release/gates/canonical_gate_conjunction_conflict.json",
+    "sha256": "21970c8b19f2db56bb9881fa3acfc37225b3dc9b294857117d48e1635366676b"
+  },
+  "exemption": {
+    "canonical_helper_bytes": 68148,
+    "canonical_helper_sha256": "91111090ec15dd0226175d4d7a4fc32f304d7f4a87047e51b665565d1ace6939",
+    "canonical_source_path": "tools/server_post_sim_return.py",
+    "inert_literal_tokens": [".fsdb", ".vpd"],
+    "member_path_contract": "<single-package-root>/package_tools/server_post_sim_return.py",
+    "request_member_contract": "<single-package-root>/contracts/server_post_sim_return_request.json",
+    "schema": "observer-only-post-sim-helper-exemption-v1",
+    "waveform_discovery_disposition": "OMITTED_OR_NULL_ONLY"
+  },
+  "fail_closed_boundary": [
+    "Only the exact declared package member with byte identity equal to the current canonical tools/server_post_sim_return.py is eligible.",
+    "The package-relative helper and request paths are fixed; renamed or unknown helpers are never eligible.",
+    "The exact request must omit or null waveform_discovery and all active core/plugin paths must be no-wave.",
+    "Only inert .vpd/.fsdb literals inside the exact helper are exempt from literal scanning; all writer/control patterns remain scanned.",
+    "All other Python, HDL, runner, manifest and allowlist surfaces retain full waveform literal/writer/control rejection."
+  ],
+  "mainline_narrow_merge": {
+    "build_gate_registry": "Keep observer_only_wide_causal_final_zip and post_sim_return_core conjunctive; bump only the observer gate implementation epoch/receipt.",
+    "public_rule_ids": [
+      "CDA-SERVER-SOURCE-BOUND-GENERATED-OBSERVER-001",
+      "CDA-SERVER-ALWAYS-ON-TRIGGERED-CAUSAL-OBSERVABILITY-001",
+      "CDA-SERVER-POST-SIM-CORE-RETURN-INDEPENDENT-PUBLISH-001"
+    ],
+    "rule_delta": "Clarify that exact canonical post-sim helper compatibility branches are inert source text when the identity-bound request disables waveform discovery; this is not permission for any active waveform path or arbitrary scan exemption.",
+    "synonymous_new_rule_id": null
+  },
+  "negative_controls": [
+    "wrong helper SHA",
+    "wrong helper path",
+    "renamed helper",
+    "waveform_discovery object present",
+    "active wave argv",
+    "wave member",
+    "wave allowlist entry",
+    "active writer/control",
+    "unknown Python helper containing wave literals"
+  ],
+  "profile": "OBSERVER_ONLY_WIDE_CAUSAL_V1",
+  "schema": "server-observer-only-post-sim-conjunction-fix-v1",
+  "scope": {
+    "family_package_changed": false,
+    "functional_rtl_changed": false,
+    "plan_or_owner_registry_changed": false,
+    "server_action": false
+  }
+}

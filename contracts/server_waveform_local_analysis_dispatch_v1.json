@@ -1,0 +1,35 @@
+{
+  "schema": "server-waveform-local-analysis-dispatch-v1",
+  "version": 1,
+  "rule_delta_proposal": "CDA-SERVER-WAVEFORM-PORTABLE-LOCAL-DECODABILITY-001",
+  "enforcement": "required_next_fresh_after_mainline_adjudication",
+  "raw_waveform": "VPD remains authoritative and must always be retained",
+  "portable_derivative": {
+    "required_format": "VCD",
+    "server_converter": "vpd2vcd",
+    "converter_identity": ["resolved_path", "bytes", "sha256", "version_probe", "argv", "exit_code"],
+    "input_binding": ["vpd_path", "vpd_bytes", "vpd_sha256"],
+    "output_binding": ["vcd_path", "vcd_bytes", "vcd_sha256", "header_valid", "signal_count"],
+    "size_limit": null,
+    "truncation": "FORBIDDEN",
+    "sampling": "FORBIDDEN"
+  },
+  "failure_semantics": {
+    "raw_vpd_return": "MUST_STILL_PUBLISH",
+    "conversion_missing_or_failed": "DIAGNOSTIC_EVIDENCE_INCOMPLETE",
+    "simulation_result_claim": "UNCHANGED"
+  },
+  "local_flow": [
+    "prepare-request from formal return",
+    "server-side vpd2vcd without rerunning simulation when necessary",
+    "validate VCD identity and header",
+    "optionally convert VCD to FST with local vcd2fst",
+    "open VCD/FST in GTKWave or use streaming catalog/extract"
+  ],
+  "shared_assets": {
+    "tool": "tools/server_waveform_local_analysis.py",
+    "schema": "schemas/server_waveform_local_analysis_v1.schema.json",
+    "tests": "tests/test_server_waveform_local_analysis.py"
+  },
+  "claim_boundary": "Portable waveform decoding only; no family root-cause, RTL, config, natural-terminal, formal-D, E4 or E5 claim."
+}

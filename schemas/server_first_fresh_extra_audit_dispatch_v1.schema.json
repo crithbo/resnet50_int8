@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "server_first_fresh_extra_audit_dispatch_v1.schema.json",
+  "title": "Server first-fresh package extra-audit dispatch",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "status",
+    "rule_change_epoch_id",
+    "applies_to",
+    "current_packages_frozen",
+    "owner_ack_required",
+    "upload_hold_until",
+    "required_owner_actions",
+    "required_return_fields",
+    "blocking_classes",
+    "record_only_boundary",
+    "validator_command"
+  ],
+  "properties": {
+    "schema": {"const": "server-first-fresh-extra-audit-dispatch-v1"},
+    "status": {"const": "ACTION_REQUIRED_BEFORE_UPLOAD"},
+    "rule_change_epoch_id": {"type": "string", "minLength": 1},
+    "applies_to": {"const": "FIRST_FRESH_PER_AFFECTED_FAMILY"},
+    "current_packages_frozen": {"const": true},
+    "owner_ack_required": {"const": true},
+    "upload_hold_until": {"const": "EXTRA_AUDIT_PASS"},
+    "required_owner_actions": {
+      "type": "array",
+      "minItems": 5,
+      "items": {"type": "string", "minLength": 1}
+    },
+    "required_return_fields": {
+      "type": "array",
+      "minItems": 7,
+      "uniqueItems": true,
+      "items": {"type": "string", "minLength": 1}
+    },
+    "blocking_classes": {
+      "const": ["server_start", "actual_input", "state_safety", "return"]
+    },
+    "record_only_boundary": {"type": "string", "minLength": 1},
+    "validator_command": {"type": "string", "minLength": 1}
+  }
+}

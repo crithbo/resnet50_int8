@@ -1,0 +1,47 @@
+{
+  "schema": "server_package_runtime_layout_p14_preflight_regression_v1",
+  "package_id": "r5_n4_0cc_p14_install",
+  "install_name": "r5_n4_0cc_p14_install",
+  "actual_command": "bash PREPARE_AND_RUN.sh /home/panqs/ndp/NDP_copy02",
+  "actual_preflight_error": "required pre-existing parent is absent: install/codex_runs",
+  "legacy_helper": {
+    "sha256": "82723ecc427c3e42cfc327eff87cae7d5d935b9f6dccb220e78bfa573d11a9ae",
+    "expected_result_on_same_initial_tree": "FAIL"
+  },
+  "legacy_required_preexisting_parents": [
+    "install",
+    "install/cfg_pkg",
+    "install/codex_runs"
+  ],
+  "same_initial_tree": {
+    "install": "pre-existing real directory",
+    "install/cfg_pkg": "pre-existing real directory",
+    "install/codex_runs": "absent",
+    "ndp_root_direct_entry_set_contains_install": true
+  },
+  "corrected_contract": {
+    "required_preexisting_parents": [
+      "install"
+    ],
+    "package_creatable_parent_dirs": [
+      "install/cfg_pkg",
+      "install/codex_runs"
+    ],
+    "expected_result_on_same_initial_tree": "PASS",
+    "manual_server_mkdir_required": false
+  },
+  "actual_return": {
+    "path": "/home/panqs/ndp/simresult/r5_n4_0cc_p14_install_return.zip",
+    "bytes": 2264,
+    "sha256": "c08005d0a3daa9a8417488738ae3b67c77ab7b7a055d9f207ac722987060fd6d",
+    "duplicate_absent": true
+  },
+  "early_finalizer": {
+    "status": "PASS",
+    "partial_return_atomic_publish": true,
+    "compile_started": false,
+    "simulation_started": false,
+    "claim": "The early finalizer worked; the pre-existing-secondary-parent contract was the only demonstrated failure."
+  },
+  "claim_boundary": "Read-only permanent regression receipt. It does not prove compile, simulation, natural terminal, formal D, E4, or E5."
+}
