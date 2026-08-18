@@ -1,0 +1,25 @@
+{
+  "schema": "project-takeover-readiness-v1",
+  "pass": true,
+  "workspace_root": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8",
+  "state_root": "C:\\Users\\15383\\Desktop\\Codex\\project\\resnet50_int8",
+  "registry_epoch": 7,
+  "mainline_role_id": "mainline.control",
+  "role_ids": [
+    "mainline.control",
+    "family.gap",
+    "family.conv.serialized",
+    "family.conv.native",
+    "family.qlinearadd",
+    "optimizer.whole-network"
+  ],
+  "pending_package_ids": [
+    "r5_n4_hw_v106b_lcdup_return2pflight",
+    "r5_qadd_n7_tr_v80_w15kqf"
+  ],
+  "errors": [],
+  "warnings": [
+    "plan omits registry epoch label; role/package coherence remains authoritative"
+  ],
+  "claim_boundary": "Current-disk takeover coherence only; no package, storage or server action."
+}
