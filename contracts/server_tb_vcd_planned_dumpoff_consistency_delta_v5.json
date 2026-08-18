@@ -1,0 +1,51 @@
+{
+  "schema": "server-tb-vcd-planned-dumpoff-consistency-delta-v1",
+  "rule_id": "CDA-SERVER-TB-VCD-BOUNDED-FULL-CAUSAL-CONE-OPTIONAL-001",
+  "delta_kind": "NON_SYNONYMOUS_NARROW_IMPLEMENTATION_AND_PHASE_SEMANTICS_FIX",
+  "trigger": "p51 planned TB dumpoff stopped appended VCD timestamps while execution time continued; the shared evaluator cleared dump_off_cycle and falsely selected SIM_TIME_FREEZE, and a level STOP marker repeated 678453 times",
+  "phase_contract": {
+    "before_planned_dumpoff": {
+      "freeze_witness": "APPENDED_VCD_TIMESTAMP",
+      "display_time_authoritative": false
+    },
+    "planned_dumpoff_transition": {
+      "state_source": "EXECUTION_BOUND_TB_STICKY_EVENT",
+      "must_bind": [
+        "same_attempt",
+        "owner_clock_cycle",
+        "execution_sim_time_ticks",
+        "last_appended_vcd_timestamp_ticks",
+        "complete_plateau_intersection"
+      ]
+    },
+    "after_planned_dumpoff": {
+      "progress_witness": "EXECUTION_BOUND_OWNER_CLOCK_AND_TB_TIME",
+      "vcd_timestamp_stall_is_expected": true,
+      "dump_off_plus_grace_precedes_freeze": true,
+      "grace_cycles": 262144
+    }
+  },
+  "stop_marker_contract": {
+    "policy": "ONE_SHOT_LATCHED",
+    "causal_plateau_count": 1,
+    "other_decision_maximum_count": 0,
+    "repeated_marker": "FAIL_CLOSED"
+  },
+  "preserved": [
+    "quiescent full-file VCD SHA/bytes/last-timestamp binding",
+    "dumpoff plus dumpflush plus close",
+    "TERM-WAIT-KILL-REAP and process-tree all_reaped",
+    "all non-natural outcomes remain PARTIAL and cannot prove natural terminal/formal-D/E4/E5",
+    "independent wall/size/disk/write/quota/signal protections"
+  ],
+  "required_replays": {
+    "PLANNED_DUMPOFF_FROZEN_VCD_GRACE_CONTINUE": "CONTINUE",
+    "PLANNED_DUMPOFF_PLUS_GRACE_CAUSAL_PLATEAU": "CAUSAL_PLATEAU",
+    "NO_DUMPOFF_THREE_INTERVAL_TRUE_FREEZE": "SIM_TIME_FREEZE",
+    "REPEATED_STOP_MARKER": "FAIL_CLOSED",
+    "DUMPOFF_STATE_CLEAR_OR_IDENTITY_DRIFT": "FAIL_CLOSED"
+  },
+  "activation_boundary": "required_next_fresh TB_VCD_BOUNDED_CAUSAL_CONE packages only; current packages are not held, rebuilt or mutated",
+  "new_public_rule_id": null,
+  "claim_boundary": "Shared TB-VCD runtime/return consistency only; no family signal diagnosis, functional RTL, config, natural terminal, formal D, E4 or E5 claim."
+}

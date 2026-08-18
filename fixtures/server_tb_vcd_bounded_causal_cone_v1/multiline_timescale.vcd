@@ -1,0 +1,17 @@
+$date
+  synthetic multiline timescale
+$end
+$version
+  codex test
+$end
+$timescale
+  1 ns
+$end
+$scope module causal $end
+$var wire 1 ! ready $end
+$upscope $end
+$enddefinitions $end
+#0
+0!
+#10
+1!

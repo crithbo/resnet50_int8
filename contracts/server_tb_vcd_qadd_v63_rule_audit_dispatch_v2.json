@@ -1,0 +1,87 @@
+{
+  "schema": "server-tb-vcd-qadd-v63-rule-audit-dispatch-v2",
+  "source_audit": {
+    "path": "outputs/qlinearadd_node0007_v63_return_r1786698111383862725_2250595/PACKAGE_BUILD_FAILURE_RULE_AUDIT.json",
+    "bytes": 3626,
+    "sha256": "bbb5dd16c6e1ad3633ac5de568786cfa05be0bbdbeb997172378136736b8a9c4"
+  },
+  "rule_id": "CDA-SERVER-TB-VCD-BOUNDED-FULL-CAUSAL-CONE-OPTIONAL-001",
+  "new_public_rule_id": null,
+  "activation": "required_next_fresh_after_mainline_sync",
+  "classifications": [
+    {
+      "finding": "signed_or_32bit_sparse_display_heartbeat",
+      "classification": "NON_SYNONYMOUS_SEMANTIC_GAP_UNDER_EXISTING_RULE_ID",
+      "shared_fix": "APPENDED_VCD_TIMESTAMP, unsigned width>=64, cadence=16384; display integer is non-authoritative"
+    },
+    {
+      "finding": "freeze_watchdog_ignored_appended_vcd_timestamps",
+      "classification": "NON_SYNONYMOUS_SEMANTIC_GAP_UNDER_EXISTING_RULE_ID",
+      "shared_fix": "freeze and monotonicity consume appended VCD timestamps; regression fails closed"
+    },
+    {
+      "finding": "target_claim_without_target_entry",
+      "classification": "EXISTING_RULE_IMPLEMENTATION_ESCAPE",
+      "shared_fix": "target diagnostic claim requires live same-attempt target-entry receipt"
+    },
+    {
+      "finding": "module_scope_over_dump_despite_exact_catalog",
+      "classification": "NON_SYNONYMOUS_SEMANTIC_GAP_UNDER_EXISTING_RULE_ID",
+      "shared_fix": "$dumpvars target union must equal the exact source-bound signal catalog; module/aggregate scope dump is forbidden"
+    },
+    {
+      "finding": "legal_multiline_timescale_rejected",
+      "classification": "EXISTING_RULE_IMPLEMENTATION_ESCAPE",
+      "shared_fix": "streaming parser preserves and resumes multiline $timescale through $end"
+    },
+    {
+      "finding": "partial_unflushed_unreaped_runtime_passed_finalization",
+      "classification": "EXISTING_RULE_IMPLEMENTATION_ESCAPE",
+      "shared_fix": "formal runtime receipt can be complete only after natural terminal, dump-off/flush/close, complete evidence and full process-tree reap"
+    },
+    {
+      "finding": "exact_set_no_limit_receipt_not_conjoined",
+      "classification": "EXISTING_RULE_IMPLEMENTATION_ESCAPE",
+      "shared_fix": "raw VCD identity must appear exactly once in the published allowlist exact set with null hard limit and no truncation/sampling"
+    },
+    {
+      "finding": "stale_or_benign_downstream_and_first_error",
+      "classification": "EXISTING_RULE_IMPLEMENTATION_ESCAPE",
+      "shared_fix": "downstream and first-error receipts must be live same-attempt and prove stale evidence absent"
+    },
+    {
+      "finding": "missing_realistic_negative_controls",
+      "classification": "EXISTING_RULE_TEST_COVERAGE_ESCAPE",
+      "shared_fix": "permanent negatives cover display-vs-VCD freeze, timestamp regression, module over-dump, multiline timescale, incomplete exact set and partial finalization"
+    }
+  ],
+  "exact_signal_dump_shared_semantics": {
+    "accepted": true,
+    "scope": "TB_VCD_BOUNDED_CAUSAL_CONE only",
+    "observer_default_unchanged": true,
+    "catalog_equality": "EXACT_SET",
+    "module_scope_dump": false
+  },
+  "shared_assets": {
+    "contract_schema": "schemas/server_tb_vcd_bounded_causal_cone_v1.schema.json",
+    "contract_validator": "tools/validate_server_tb_vcd_bounded_causal_cone.py",
+    "runtime_schema": "schemas/server_tb_vcd_runtime_receipt_v1.schema.json",
+    "runtime_supervisor": "tools/server_tb_vcd_runtime_supervision.py",
+    "streaming_parser": "tools/server_tb_vcd_retention_analysis.py",
+    "dispatch": "contracts/server_tb_vcd_bounded_causal_cone_dispatch_v1.json",
+    "mainline_merge": "contracts/server_tb_vcd_bounded_causal_cone_mainline_merge_v1.json",
+    "fixture_root": "fixtures/server_tb_vcd_bounded_causal_cone_v1",
+    "tests": [
+      "tests/test_server_tb_vcd_bounded_causal_cone.py",
+      "tests/test_server_tb_vcd_runtime_supervision.py",
+      "tests/test_server_tb_vcd_retention_analysis.py"
+    ]
+  },
+  "family_boundary": {
+    "qadd_v64_frozen": true,
+    "package_build_or_mutation": false,
+    "server_action": false,
+    "family_diagnosis_authority": "family.qlinearadd"
+  },
+  "claim_boundary": "Shared local optional-VCD contract/runtime/parser hardening only; no package, production execution, target execution, natural terminal, formal D, E3, E4 or E5 claim."
+}

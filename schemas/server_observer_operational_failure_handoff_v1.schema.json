@@ -1,0 +1,62 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "server-observer-operational-failure-handoff-v1",
+  "title": "Durable operational failure return and cleanup handoff",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "package_id",
+    "execution_id",
+    "attempt_id",
+    "finalization_guard_receipt_valid",
+    "published_returns",
+    "selected_formal_return",
+    "same_basename_overwrite",
+    "prior_published_returns_preserved",
+    "durable_return_receipt_valid",
+    "cleanup_executed",
+    "claim_boundary"
+  ],
+  "properties": {
+    "schema": {"const": "server-observer-operational-failure-handoff-v1"},
+    "package_id": {"type": "string", "minLength": 1},
+    "execution_id": {"type": "string", "minLength": 1},
+    "attempt_id": {"type": "string", "minLength": 1},
+    "finalization_guard_receipt_valid": {"type": "boolean"},
+    "published_returns": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/file"}
+    },
+    "selected_formal_return": {"$ref": "#/$defs/file"},
+    "same_basename_overwrite": {"const": false},
+    "prior_published_returns_preserved": {"const": true},
+    "durable_return_receipt_valid": {"type": "boolean"},
+    "cleanup_executed": {"type": "boolean"},
+    "claim_boundary": {"type": "string", "minLength": 1}
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"cleanup_executed": {"const": true}}, "required": ["cleanup_executed"]},
+      "then": {
+        "properties": {
+          "finalization_guard_receipt_valid": {"const": true},
+          "durable_return_receipt_valid": {"const": true}
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "file": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "bytes", "sha256"],
+      "properties": {
+        "path": {"type": "string", "minLength": 1},
+        "bytes": {"type": "integer", "minimum": 1},
+        "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      }
+    }
+  }
+}

@@ -1,0 +1,137 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "server-observer-operational-guard-receipt-v2",
+  "title": "Observer operational guard live-tree and emergency receipt",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "schema",
+    "package_id",
+    "execution_id",
+    "attempt_id",
+    "phase",
+    "command_started",
+    "stop_count",
+    "one_shot_stop",
+    "failure_classification",
+    "production_compile_error_claim_allowed",
+    "diagnostic_status",
+    "claim_boundary"
+  ],
+  "properties": {
+    "schema": {"const": "server-observer-operational-guard-receipt-v2"},
+    "package_id": {"type": "string", "minLength": 1},
+    "execution_id": {"type": "string", "minLength": 1},
+    "attempt_id": {"type": "string", "minLength": 1},
+    "phase": {"enum": ["compile", "simulation", "finalization"]},
+    "command_started": {"type": "boolean"},
+    "stop_count": {"type": "integer", "minimum": 0, "maximum": 1},
+    "one_shot_stop": {"const": true},
+    "monitor_exception": {
+      "type": ["object", "null"],
+      "properties": {
+        "type": {"type": "string", "minLength": 1},
+        "message": {"type": "string"}
+      },
+      "required": ["type", "message"]
+    },
+    "termination": {
+      "type": "object",
+      "required": ["owned_pids_remaining", "process_tree_reaped"],
+      "properties": {
+        "owned_pids_remaining": {"type": "array", "items": {"type": ["integer", "null"]}},
+        "owned_process_identities_remaining": {
+          "type": "array",
+          "items": {
+            "type": ["object", "null"],
+            "properties": {
+              "pid": {"type": "integer", "minimum": 1},
+              "start_time_ticks": {"type": "integer", "minimum": 0}
+            },
+            "required": ["pid", "start_time_ticks"]
+          }
+        },
+        "process_tree_reaped": {"type": "boolean"}
+      }
+    },
+    "child_process_identity": {
+      "type": ["object", "null"],
+      "properties": {
+        "pid": {"type": "integer", "minimum": 1},
+        "start_time_ticks": {"type": "integer", "minimum": 0}
+      },
+      "required": ["pid", "start_time_ticks"]
+    },
+    "process_identity_model": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "snapshot_backend",
+        "identity_fields",
+        "pid_reuse_protection",
+        "self_enumerator_child_process"
+      ],
+      "properties": {
+        "snapshot_backend": {"const": "PROCFS_NO_CHILD_ENUMERATOR"},
+        "identity_fields": {"const": ["pid", "start_time_ticks"]},
+        "pid_reuse_protection": {"const": true},
+        "self_enumerator_child_process": {"const": false}
+      }
+    },
+    "process_fully_reaped": {"type": "boolean"},
+    "stderr_receipt": {
+      "type": ["object", "null"],
+      "properties": {
+        "path": {"type": "string", "minLength": 1},
+        "bytes": {"type": "integer", "minimum": 0},
+        "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "status": {"type": "string"}
+      }
+    },
+    "failure_classification": {
+      "enum": [
+        "GUARDED_COMMAND_EXIT",
+        "OPERATIONAL_BOUNDARY_STOP",
+        "PRESTART_OPERATIONAL_BOUNDARY",
+        "SHARED_MONITOR_EXCEPTION",
+        "FINAL_SNAPSHOT_INCOMPLETE"
+      ]
+    },
+    "production_compile_error_claim_allowed": {"type": "boolean"},
+    "diagnostic_status": {"enum": ["COMPLETE", "DIAGNOSTIC_EVIDENCE_INCOMPLETE"]},
+    "pass": {"type": "boolean"},
+    "claim_boundary": {"type": "string", "minLength": 1}
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"command_started": {"const": true}}, "required": ["command_started"]},
+      "then": {
+        "required": [
+          "termination",
+          "process_fully_reaped",
+          "stderr_receipt",
+          "process_identity_model"
+        ],
+        "properties": {
+          "process_fully_reaped": {"const": true},
+          "termination": {
+            "properties": {
+              "owned_pids_remaining": {"maxItems": 0},
+              "process_tree_reaped": {"const": true}
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {"properties": {"failure_classification": {"const": "SHARED_MONITOR_EXCEPTION"}}, "required": ["failure_classification"]},
+      "then": {
+        "properties": {
+          "stop_count": {"const": 1},
+          "production_compile_error_claim_allowed": {"const": false},
+          "diagnostic_status": {"const": "DIAGNOSTIC_EVIDENCE_INCOMPLETE"}
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,49 @@
+{
+  "schema": "server-observer-operational-guard-receipt-v2",
+  "package_id": "fixture-package",
+  "execution_id": "fixture-execution",
+  "attempt_id": "fixture-attempt",
+  "phase": "compile",
+  "command_started": true,
+  "command": ["fixture-compiler"],
+  "cwd": "/fixture/attempt",
+  "child_pid": 1001,
+  "child_process_identity": {
+    "pid": 1001,
+    "start_time_ticks": 123456
+  },
+  "process_identity_model": {
+    "snapshot_backend": "PROCFS_NO_CHILD_ENUMERATOR",
+    "identity_fields": ["pid", "start_time_ticks"],
+    "pid_reuse_protection": true,
+    "self_enumerator_child_process": false
+  },
+  "child_exit": 143,
+  "guard_triggered": true,
+  "stop_reason": "MONITOR_EXCEPTION",
+  "stop_count": 1,
+  "one_shot_stop": true,
+  "monitor_exception": {
+    "type": "GuardError",
+    "message": "injected live-tree race exhaustion"
+  },
+  "termination": {
+    "actions": [{"signal": "SIGTERM", "escaped_pids_signaled": [], "errors": []}],
+    "root_exit": 143,
+    "reaped_pids": [1002],
+    "owned_pids_remaining": [],
+    "owned_process_identities_remaining": [],
+    "process_tree_reaped": true
+  },
+  "process_fully_reaped": true,
+  "stderr_receipt": {
+    "path": "/fixture/attempt/guard.stderr.log",
+    "bytes": 64,
+    "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+  },
+  "failure_classification": "SHARED_MONITOR_EXCEPTION",
+  "production_compile_error_claim_allowed": false,
+  "diagnostic_status": "DIAGNOSTIC_EVIDENCE_INCOMPLETE",
+  "pass": false,
+  "claim_boundary": "Fixture emergency operational receipt only."
+}

@@ -1,0 +1,40 @@
+{
+  "schema": "server-package-release-admission-dispatch-v1",
+  "classification": "EXISTING_RULE_IMPLEMENTATION_ESCAPE",
+  "public_rule_disposition": "RULE_CONFIRMATION_NO_NEW_SYNONYMOUS_RULE",
+  "confirmed_rule_ids": [
+    "CDA-SERVER-FINAL-ZIP-RULE-SELF-AUDIT-001",
+    "CDA-SERVER-RUNNER-PREFLIGHT-TO-COMPILE-POSITIVE-CONTROL-001",
+    "CDA-SERVER-COMPILEFAIL-CORE-RETURN-ROOT-CAUSE-001"
+  ],
+  "shared_gate_id": "package_release_admission_runtime_preflight",
+  "activation": "required_next_fresh_after_mainline_sync",
+  "phases": ["final_staging_after_manifest_promotion", "clean_exact_final_zip_extraction", "first_fresh_extra_audit"],
+  "causal_blocking_classes": ["server_start", "return"],
+  "requirements": [
+    "manifest status is PACKAGE_READY_NOT_RUN before release claim",
+    "package-specific runtime preflight passes on the final staging tree",
+    "the same package-specific runtime preflight passes on a clean extraction of the exact final ZIP",
+    "a clean-extraction status mutation to PACKAGE_READY_NOT_RUN_LOCAL_BUILD_PENDING_GATES fails with package claim boundary differs",
+    "release receipt identity/status/pass/claim boundary bind the exact final ZIP",
+    "every package-local .py source discovered from final staging and clean exact-final-ZIP extraction is in one byte-equal exact set and py_compile succeeds without writing bytecode into either package tree",
+    "the release-admission contract is validated by jsonschema in the executing runtime; missing jsonschema, a skipped schema check or schema failure is blocking and cannot be reported as pass",
+    "positive assertions and observed-negative facts use separate typed polarity",
+    "precompile preflight failure retains exact stdout, stderr and exit code in a compile-not-started core receipt"
+  ],
+  "implementation_assets": {
+    "schema": "schemas/server_package_release_admission_v1.schema.json",
+    "validator": "tools/validate_server_package_release_admission.py",
+    "tests": "tests/test_server_package_release_admission.py",
+    "fixture": "fixtures/server_package_release_admission_v1",
+    "historical_negative": "fixtures/server_package_release_admission_v1/gap_v62_pending_manifest_escape.json",
+    "python_schema_historical_negative": "fixtures/server_package_release_admission_v1/gap_v67_v68_python_schema_escapes.json"
+  },
+  "mainline_narrow_merge": {
+    "public_rules": "clarify implementation entry points only; do not add a new public rule ID",
+    "server_package_build_gate_registry_v1.json": "bump package_release_admission_runtime_preflight to semantic v2 under the existing public rule ID; do not add a synonymous public rule",
+    "server_first_fresh_extra_audit": "require this companion report from the exact final ZIP after manifest promotion",
+    "generation_index": "route final staging and clean exact-ZIP preflight through this shared validator"
+  },
+  "claim_boundary": "Shared local release-admission implementation only; no package build, server action, production compile/simulation, natural terminal, formal D, E3, E4 or E5 claim."
+}

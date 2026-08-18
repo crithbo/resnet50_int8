@@ -1,0 +1,6 @@
+interface:
+  display_name: "ResNet50 Server Package Flow"
+  short_description: "Route family work and enforce package-mode gates"
+  default_prompt: "Use $resnet50-server-package-flow to route this task to the registered family owner and enforce the selected package diagnostic mode."
+policy:
+  allow_implicit_invocation: true

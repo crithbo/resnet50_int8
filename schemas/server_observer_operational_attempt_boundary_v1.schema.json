@@ -1,0 +1,114 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "server-observer-operational-attempt-boundary-v1",
+  "title": "Observer whole-attempt operational boundary contract",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema", "activation_epoch", "package_id", "family", "threshold_source",
+    "pre_run_peak_projection", "phase_watches", "operational_stop",
+    "durable_partial_return", "live_tree_policy", "post_durable_cleanup", "claim_boundary"
+  ],
+  "properties": {
+    "schema": {"const": "server-observer-operational-attempt-boundary-v1"},
+    "activation_epoch": {"const": "observer-operational-attempt-boundary-v1"},
+    "package_id": {"type": "string", "minLength": 1},
+    "family": {"type": "string", "minLength": 1},
+    "threshold_source": {"$ref": "#/$defs/identity"},
+    "live_tree_policy": {
+      "allOf": [{"$ref": "#/$defs/identity"}],
+      "properties": {"schema": {"const": "server-observer-operational-live-tree-policy-v2"}},
+      "required": ["schema"]
+    },
+    "pre_run_peak_projection": {
+      "type": "object", "additionalProperties": false,
+      "required": ["components", "peak_transient_bytes", "minimum_free_reserve_bytes", "start_required_free_bytes", "unknown_or_unbounded_amplification"],
+      "properties": {
+        "components": {
+          "type": "array", "minItems": 6, "maxItems": 6,
+          "items": {"$ref": "#/$defs/component"}
+        },
+        "peak_transient_bytes": {"type": "integer", "minimum": 1},
+        "minimum_free_reserve_bytes": {"type": "integer", "minimum": 1},
+        "start_required_free_bytes": {"type": "integer", "minimum": 2},
+        "unknown_or_unbounded_amplification": {"const": false}
+      }
+    },
+    "phase_watches": {
+      "type": "array", "minItems": 3, "maxItems": 3,
+      "items": {"$ref": "#/$defs/phaseWatch"}
+    },
+    "operational_stop": {
+      "type": "object", "additionalProperties": false,
+      "required": ["one_shot", "attempt_wide", "preserve_completed_rows", "flush_all_flushable_rows", "partial_exit_marker", "term_wait_kill_reap", "event_cap", "byte_cap", "sampling", "truncation", "rolling_overwrite", "size_based_evidence_deletion", "diagnostic_status", "forbidden_claims"],
+      "properties": {
+        "one_shot": {"const": true}, "attempt_wide": {"const": true},
+        "preserve_completed_rows": {"const": true}, "flush_all_flushable_rows": {"const": true},
+        "partial_exit_marker": {"const": true}, "term_wait_kill_reap": {"const": true},
+        "event_cap": {"type": "null"}, "byte_cap": {"type": "null"},
+        "sampling": {"const": false}, "truncation": {"const": false},
+        "rolling_overwrite": {"const": false}, "size_based_evidence_deletion": {"const": false},
+        "diagnostic_status": {"const": "DIAGNOSTIC_EVIDENCE_INCOMPLETE"},
+        "forbidden_claims": {"const": ["NATURAL_TERMINAL", "FORMAL_D", "E4", "E5"]}
+      }
+    },
+    "durable_partial_return": {
+      "type": "object", "additionalProperties": false,
+      "required": ["atomic_unique_publication", "zip_crc_verified", "exact_member_set_verified", "sidecar_bytes_sha256_verified", "streaming_or_bounded_staging", "recursive_self_staging_forbidden"],
+      "properties": {
+        "atomic_unique_publication": {"const": true}, "zip_crc_verified": {"const": true},
+        "exact_member_set_verified": {"const": true}, "sidecar_bytes_sha256_verified": {"const": true},
+        "streaming_or_bounded_staging": {"const": true}, "recursive_self_staging_forbidden": {"const": true}
+      }
+    },
+    "post_durable_cleanup": {
+      "type": "object", "additionalProperties": false,
+      "required": ["after_durable_return_only", "exact_owned_attempt_and_bootstrap_leaves_only", "root_and_ancestor_symlinks_forbidden", "internal_owned_symlink_entries_no_follow", "internal_symlink_target_traversal_forbidden", "lexical_target_escape_forbidden", "special_entries_forbidden", "bounded_live_tree_resampling", "post_durable_unlink_internal_links_no_follow", "preserve_foreign_siblings", "failed_publication_uncleaned"],
+      "properties": {
+        "after_durable_return_only": {"const": true},
+        "exact_owned_attempt_and_bootstrap_leaves_only": {"const": true},
+        "root_and_ancestor_symlinks_forbidden": {"const": true},
+        "internal_owned_symlink_entries_no_follow": {"const": true},
+        "internal_symlink_target_traversal_forbidden": {"const": true},
+        "lexical_target_escape_forbidden": {"const": true},
+        "special_entries_forbidden": {"const": true},
+        "bounded_live_tree_resampling": {"const": true},
+        "post_durable_unlink_internal_links_no_follow": {"const": true},
+        "preserve_foreign_siblings": {"const": true},
+        "failed_publication_uncleaned": {"const": true}
+      }
+    },
+    "claim_boundary": {"type": "string", "minLength": 1}
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "identity": {
+      "type": "object", "additionalProperties": false,
+      "required": ["path", "sha256", "units", "method"],
+      "properties": {
+        "path": {"type": "string", "minLength": 1}, "sha256": {"$ref": "#/$defs/sha256"},
+        "units": {"const": "bytes"}, "method": {"type": "string", "minLength": 1},
+        "schema": {"type": "string", "minLength": 1}
+      }
+    },
+    "component": {
+      "type": "object", "additionalProperties": false,
+      "required": ["component_id", "max_bytes", "basis"],
+      "properties": {
+        "component_id": {"enum": ["compile_outputs", "observer_chunks", "simulator_log_duplication", "parser_rewrite_scratch", "return_zip_staging", "publication_sidecar"]},
+        "max_bytes": {"type": "integer", "minimum": 1}, "basis": {"type": "string", "minLength": 1}
+      }
+    },
+    "phaseWatch": {
+      "type": "object", "additionalProperties": false,
+      "required": ["phase", "watched_paths", "growth_limit_bytes", "remaining_projection_bytes", "monitor_interval_seconds"],
+      "properties": {
+        "phase": {"enum": ["compile", "simulation", "finalization"]},
+        "watched_paths": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+        "growth_limit_bytes": {"type": "integer", "minimum": 1},
+        "remaining_projection_bytes": {"type": "integer", "minimum": 1},
+        "monitor_interval_seconds": {"type": "number", "exclusiveMinimum": 0}
+      }
+    }
+  }
+}

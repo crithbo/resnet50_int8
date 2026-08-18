@@ -1,0 +1,240 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "server-release-consistency-v1",
+  "title": "Final-ZIP cross-member and temporal release consistency",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema", "package", "manifest", "cross_member_identities",
+    "return_phase", "progress_qualification", "claim_boundary"
+  ],
+  "properties": {
+    "schema": {"const": "server-release-consistency-v1"},
+    "package": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["package_id", "final_zip", "zip_root_member"],
+      "properties": {
+        "package_id": {"$ref": "#/$defs/name"},
+        "final_zip": {"$ref": "#/$defs/fileIdentity"},
+        "zip_root_member": {"$ref": "#/$defs/name"}
+      }
+    },
+    "manifest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "member", "top_status_pointer", "top_ready_status",
+        "release_critical_statuses"
+      ],
+      "properties": {
+        "member": {"$ref": "#/$defs/member"},
+        "top_status_pointer": {"$ref": "#/$defs/pointer"},
+        "top_ready_status": {"const": "PACKAGE_READY_NOT_RUN"},
+        "release_critical_statuses": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "contains": {
+            "type": "object",
+            "required": ["pointer"],
+            "properties": {
+              "pointer": {"const": "/final_zip_rule_self_audit/status"}
+            }
+          },
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["pointer", "expected_terminal_status"],
+            "properties": {
+              "pointer": {"$ref": "#/$defs/pointer"},
+              "expected_terminal_status": {
+                "type": "string",
+                "minLength": 1,
+                "not": {"pattern": "(?i)(PENDING|LOCAL_BUILD)"}
+              }
+            }
+          }
+        }
+      }
+    },
+    "cross_member_identities": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "allOf": [
+        {"contains": {"properties": {"identity_id": {"const": "selected_wall_seconds"}}, "required": ["identity_id"]}},
+        {"contains": {"properties": {"identity_id": {"const": "absolute_maximum_wall_seconds"}, "expected_value": {"const": 86400}}, "required": ["identity_id", "expected_value"]}}
+      ],
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["identity_id", "endpoints", "expected_value"],
+        "properties": {
+          "identity_id": {"enum": ["selected_wall_seconds", "absolute_maximum_wall_seconds"]},
+          "endpoints": {
+            "type": "array",
+            "minItems": 2,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["member", "pointer"],
+              "properties": {
+                "member": {"$ref": "#/$defs/member"},
+                "pointer": {"$ref": "#/$defs/pointer"}
+              }
+            }
+          },
+          "expected_value": {"type": ["integer", "null"]}
+        }
+      }
+    },
+    "return_phase": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "request_member", "allowlist_member", "allowlist_required_pointer",
+        "prepublication_producers", "finalization_guard_archive",
+        "postpublication_receipts", "runner_member", "runner_sha256",
+        "ordered_runner_markers"
+      ],
+      "properties": {
+        "request_member": {"$ref": "#/$defs/member"},
+        "allowlist_member": {"$ref": "#/$defs/member"},
+        "allowlist_required_pointer": {"$ref": "#/$defs/pointer"},
+        "prepublication_producers": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "source_root", "source", "archive", "producer_member",
+              "producer_sha256", "producer_output_literal"
+            ],
+            "properties": {
+              "source_root": {"enum": ["attempt", "package"]},
+              "source": {"$ref": "#/$defs/member"},
+              "archive": {"$ref": "#/$defs/member"},
+              "producer_member": {"$ref": "#/$defs/member"},
+              "producer_sha256": {"$ref": "#/$defs/sha"},
+              "producer_output_literal": {"type": "string", "minLength": 1}
+            }
+          }
+        },
+        "finalization_guard_archive": {"$ref": "#/$defs/member"},
+        "postpublication_receipts": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["path", "location"],
+            "properties": {
+              "path": {"$ref": "#/$defs/member"},
+              "location": {"const": "EXTERNAL_IMMUTABLE_SIDECAR"}
+            }
+          }
+        },
+        "runner_member": {"$ref": "#/$defs/member"},
+        "runner_sha256": {"$ref": "#/$defs/sha"},
+        "ordered_runner_markers": {
+          "type": "array",
+          "prefixItems": [
+            {"$ref": "#/$defs/guardMarker"},
+            {"$ref": "#/$defs/publishMarker"},
+            {"$ref": "#/$defs/durableMarker"},
+            {"$ref": "#/$defs/cleanupMarker"}
+          ],
+          "items": false
+        }
+      }
+    },
+    "progress_qualification": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_member", "source_sha256", "events",
+        "held_level_replay_required", "held_level_replays"
+      ],
+      "properties": {
+        "source_member": {"$ref": "#/$defs/member"},
+        "source_sha256": {"$ref": "#/$defs/sha"},
+        "events": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/$defs/progressEvent"}
+        },
+        "held_level_replay_required": {"const": true},
+        "held_level_replays": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/$defs/replay"}
+        }
+      }
+    },
+    "claim_boundary": {"type": "string", "minLength": 1}
+  },
+  "$defs": {
+    "name": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"},
+    "sha": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "member": {"type": "string", "minLength": 1, "pattern": "^(?!/)(?!.*(?:^/)\\.\\.(?:/|$))(?!.*\\\\)(?!.*//).+$"},
+    "pointer": {"type": "string", "pattern": "^/(?:[^~/]|~[01])+(?:/(?:[^~/]|~[01])*)*$"},
+    "fileIdentity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "bytes", "sha256"],
+      "properties": {
+        "path": {"type": "string", "minLength": 1},
+        "bytes": {"type": "integer", "minimum": 1},
+        "sha256": {"$ref": "#/$defs/sha"}
+      }
+    },
+    "markerBase": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["phase", "literal"],
+      "properties": {
+        "phase": {"type": "string"},
+        "literal": {"type": "string", "minLength": 1}
+      }
+    },
+    "guardMarker": {"allOf": [{"$ref": "#/$defs/markerBase"}, {"properties": {"phase": {"const": "FINALIZATION_GUARD_COMPLETE"}}}]},
+    "publishMarker": {"allOf": [{"$ref": "#/$defs/markerBase"}, {"properties": {"phase": {"const": "RETURN_PUBLISH"}}}]},
+    "durableMarker": {"allOf": [{"$ref": "#/$defs/markerBase"}, {"properties": {"phase": {"const": "DURABLE_RETURN_RECEIPT"}}}]},
+    "cleanupMarker": {"allOf": [{"$ref": "#/$defs/markerBase"}, {"properties": {"phase": {"const": "POST_DURABLE_CLEANUP_RECEIPT"}}}]},
+    "tokenArray": {"type": "array", "items": {"type": "string", "minLength": 1}, "uniqueItems": true},
+    "progressEvent": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "event_id", "counter_symbol", "event_kind", "source_span_start_byte",
+        "source_span_end_byte", "source_span_sha256", "source_signal_tokens",
+        "qualifier_signal_tokens", "state_memory_tokens"
+      ],
+      "properties": {
+        "event_id": {"$ref": "#/$defs/name"},
+        "counter_symbol": {"type": "string", "minLength": 1},
+        "event_kind": {"enum": ["QUALIFIED_HANDSHAKE", "RISING_EDGE_TRANSITION", "MONOTONIC_VALUE_DELTA", "TERMINAL_TRANSITION"]},
+        "source_span_start_byte": {"type": "integer", "minimum": 0},
+        "source_span_end_byte": {"type": "integer", "minimum": 1},
+        "source_span_sha256": {"$ref": "#/$defs/sha"},
+        "source_signal_tokens": {"$ref": "#/$defs/tokenArray"},
+        "qualifier_signal_tokens": {"$ref": "#/$defs/tokenArray"},
+        "state_memory_tokens": {"$ref": "#/$defs/tokenArray"}
+      }
+    },
+    "sampleArray": {"type": "array", "minItems": 5, "items": {"type": "integer"}},
+    "replay": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["event_id", "source_samples", "qualifier_samples", "expected_counter_deltas"],
+      "properties": {
+        "event_id": {"$ref": "#/$defs/name"},
+        "source_samples": {"$ref": "#/$defs/sampleArray"},
+        "qualifier_samples": {"$ref": "#/$defs/sampleArray"},
+        "expected_counter_deltas": {"$ref": "#/$defs/sampleArray"}
+      }
+    }
+  }
+}

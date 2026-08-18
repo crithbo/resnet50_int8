@@ -59,6 +59,12 @@ class ObserverRuntimeSupervisionTest(unittest.TestCase):
             "schema": RUNTIME.SCHEMA,
             "child_subreaper": {"enabled": True},
             "process_tree_reaped": True,
+            "post_kill_reap": {
+                "deadline_origin": "NOT_APPLICABLE",
+                "last_kill_host_monotonic_ns": None,
+                "deadline_host_monotonic_ns": None,
+                "completed": True,
+            },
             "owned_pids_remaining": [],
             "simulation_time_progress_observed": True,
             "errors": [],
@@ -68,6 +74,29 @@ class ObserverRuntimeSupervisionTest(unittest.TestCase):
         receipt["owned_pids_remaining"] = [123]
         path.write_text(json.dumps(receipt), encoding="utf-8")
         self.assertFalse(RUNTIME.validate_receipt(path)["pass"])
+
+    def test_stubborn_descendant_requires_fresh_post_kill_deadline(self) -> None:
+        path = self.root / "receipt.json"
+        receipt = {
+            "schema": RUNTIME.SCHEMA,
+            "child_subreaper": {"enabled": True},
+            "process_tree_reaped": True,
+            "owned_pids_remaining": [],
+            "simulation_time_progress_observed": True,
+            "termination": [{"signal": RUNTIME.SIGKILL_NUMBER}],
+            "post_kill_reap": {
+                "deadline_origin": "FRESH_AFTER_LAST_KILL",
+                "last_kill_host_monotonic_ns": 200,
+                "deadline_host_monotonic_ns": 199,
+                "completed": True,
+            },
+            "errors": [],
+        }
+        path.write_text(json.dumps(receipt), encoding="utf-8")
+        self.assertFalse(RUNTIME.validate_receipt(path)["pass"])
+        receipt["post_kill_reap"]["deadline_host_monotonic_ns"] = 300
+        path.write_text(json.dumps(receipt), encoding="utf-8")
+        self.assertTrue(RUNTIME.validate_receipt(path)["pass"])
 
 
 if __name__ == "__main__":

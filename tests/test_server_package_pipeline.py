@@ -520,6 +520,47 @@ class ServerPackagePipelineTests(unittest.TestCase):
             profile["preflight"]["errors"],
         )
 
+    def test_diagnostic_mode_selects_exactly_one_bulk_evidence_gate(self) -> None:
+        observer_profile = compile_profile(self.spec(), self.registry, self.root)
+        observer_gates = {
+            item["gate_id"]: item["disposition"]
+            for item in observer_profile["gate_dispositions"]
+        }
+        self.assertEqual(
+            observer_gates["observer_only_wide_causal_final_zip"],
+            "blocking_applicable",
+        )
+        self.assertEqual(
+            observer_gates["tb_vcd_bounded_causal_cone_final_zip"],
+            "not_applicable",
+        )
+
+        vcd_spec = self.spec()
+        vcd_spec["diagnostic_mode"] = "TB_VCD_BOUNDED_CAUSAL_CONE"
+        vcd_profile = compile_profile(vcd_spec, self.registry, self.root)
+        vcd_gates = {
+            item["gate_id"]: item["disposition"]
+            for item in vcd_profile["gate_dispositions"]
+        }
+        self.assertEqual(
+            vcd_gates["observer_only_wide_causal_final_zip"],
+            "not_applicable",
+        )
+        self.assertEqual(
+            vcd_gates["tb_vcd_bounded_causal_cone_final_zip"],
+            "blocking_applicable",
+        )
+
+    def test_registry_rejects_unknown_diagnostic_mode_applicability(self) -> None:
+        registry = copy.deepcopy(self.registry)
+        registry["gates"][0]["selected_modes"] = ["UNKNOWN_MODE"]
+        profile = compile_profile(self.spec(), registry, self.root)
+        self.assertFalse(profile["contract_valid"])
+        self.assertIn(
+            "core_identity_bootstrap: invalid selected_modes",
+            profile["preflight"]["errors"],
+        )
+
 
 if __name__ == "__main__":
     unittest.main()

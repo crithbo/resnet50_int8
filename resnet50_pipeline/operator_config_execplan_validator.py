@@ -491,16 +491,43 @@ class OperatorConfigExecPlanValidator:
                 stage_path,
                 "Load_Config compressed DDR address differs from sca_cfg base_addr",
             )
+        artifact_64 = artifact_dir / "modules_dump_64b.bin"
         try:
-            config_length = _bitstream_word_length(config_path)
+            identity_64 = _read_binary_lines(artifact_64, width=64)
+        except (OSError, UnicodeError, ValueError) as error:
+            self._error(
+                "EXECPLAN.CONFIG_64BIT_IDENTITY",
+                f"{stage_path}.artifact.modules_dump_64b.bin",
+                str(error),
+            )
+            return {"config_path": str(config_path)}
+        try:
+            transport_128 = _read_binary_lines(config_path, width=128)
         except (OSError, UnicodeError, ValueError) as error:
             self._error("EXECPLAN.CONFIG_FILE", f"{stage_path}.sca.path", str(error))
             return {"config_path": str(config_path)}
+
+        config_length = len(identity_64)
+        expected_transport_128 = _pack_64bit_identity_as_128bit_transport(identity_64)
+        odd_padding = bool(config_length & 1)
+        if odd_padding and transport_128 and transport_128[-1][:64] != "0" * 64:
+            self._error(
+                "EXECPLAN.CONFIG_PADDING",
+                f"{stage_path}.sca.path",
+                "odd meaningful 64-bit length requires an all-zero final 128-bit high half",
+            )
+        if transport_128 != expected_transport_128:
+            self._error(
+                "EXECPLAN.CONFIG_64BIT_IDENTITY",
+                f"{stage_path}.sca.path",
+                "128-bit transport does not exactly pack the bound meaningful 64-bit identity",
+            )
         if load.config_length != config_length:
             self._error(
                 "EXECPLAN.CONFIG_LENGTH",
                 stage_path,
-                f"Load_Config length {load.config_length} differs from bitstream length {config_length}",
+                "Load_Config length "
+                f"{load.config_length} differs from meaningful 64-bit identity length {config_length}",
             )
         artifact_128 = artifact_dir / "modules_dump_128b.bin"
         if not artifact_128.is_file() or not config_path.is_file() or _sha256_file(artifact_128) != _sha256_file(config_path):
@@ -512,6 +539,9 @@ class OperatorConfigExecPlanValidator:
         return {
             "config_base_addr": f"0x{base_addr:08X}",
             "config_length_64bit_words": config_length,
+            "config_length_source": str(artifact_64),
+            "transport_rows_128bit": len(transport_128),
+            "last_row_high_half_is_transport_padding": odd_padding,
             "config_path": str(config_path),
             "config_sha256": _sha256_file(config_path) if config_path.is_file() else None,
         }
@@ -600,7 +630,34 @@ def _safe_child(root: Path, relative: str) -> Path:
     return resolved
 
 
+def _read_binary_lines(path: Path, *, width: int) -> list[str]:
+    lines = [line.strip() for line in path.read_text(encoding="utf-8").splitlines() if line.strip()]
+    if not lines:
+        raise ValueError(f"{path.name} is empty")
+    if any(len(line) != width for line in lines):
+        raise ValueError(f"{path.name} lines must contain exactly {width} bits")
+    if any(set(line) - {"0", "1"} for line in lines):
+        raise ValueError(f"{path.name} contains non-binary data")
+    return lines
+
+
+def _pack_64bit_identity_as_128bit_transport(lines_64: Sequence[str]) -> list[str]:
+    rows: list[str] = []
+    for index in range(0, len(lines_64), 2):
+        low = lines_64[index]
+        high = lines_64[index + 1] if index + 1 < len(lines_64) else "0" * 64
+        rows.append(high + low)
+    return rows
+
+
 def _bitstream_word_length(path: Path) -> int:
+    """Return transport capacity for legacy callers.
+
+    Execplan validation no longer uses this helper for programmed length: an
+    odd 128-bit transport cannot reveal whether its zero high half is padding
+    without the separately bound 64-bit identity.  Keep the helper only so
+    older package builders that temporarily monkeypatch it remain import-safe.
+    """
     lines = [line.strip() for line in path.read_text(encoding="utf-8").splitlines() if line.strip()]
     if not lines:
         raise ValueError("config bitstream is empty")

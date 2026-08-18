@@ -1,0 +1,38 @@
+{
+  "absolute_maximum_wall_seconds": 8400,
+  "claim_boundary": "Wall-budget admission only; disk/growth/write/quota guards remain independent and no DUT result is claimed.",
+  "errors": [],
+  "execution_id": "qadd-next-execution",
+  "independent_operational_guards": {
+    "disk_space_guard_enabled": true,
+    "growth_projection_enabled": true,
+    "quota_guard_enabled": true,
+    "return_budget_bytes": 10000000000,
+    "vcd_operational_budget_bytes": 8000000000,
+    "write_failure_guard_enabled": true
+  },
+  "mode": "MEASURED_PRETARGET_AWARE",
+  "package_id": "r5_qadd_next",
+  "pass": true,
+  "projection": {
+    "formula": "CEIL(elapsed/completed*total*safety_factor+target_margin)",
+    "projected_pretarget_seconds": 5697.3,
+    "recommended_wall_ceiling_seconds": 8022,
+    "safety_factor": 1.25,
+    "seconds_per_unit": 189.91,
+    "target_diagnostic_margin_seconds": 900
+  },
+  "schema": "server-runtime-budget-admission-v1",
+  "selected_wall_ceiling_seconds": 8400,
+  "source_measurement": {
+    "elapsed_seconds": 3608.29,
+    "progress_was_advancing": true,
+    "qualified_progress_source": "PRETARGET_MATRIX_TRANSFER_COMPLETE",
+    "qualified_units_completed": 19,
+    "source_package_id": "r5_qadd_n7_tailround_lanephase_v70_pmapfix",
+    "source_return_path": "C:/Users/15383/Downloads/r5_qadd_n7_tailround_lanephase_v70_pmapfix_r1786935559104408108_3677225_return.zip",
+    "source_return_sha256": "ae317f36edd28ecf0b9c3bf7d5c7734612d18755932f9fedb371a1203addb369",
+    "target_entry_observed": false,
+    "total_pretarget_units": 30
+  }
+}

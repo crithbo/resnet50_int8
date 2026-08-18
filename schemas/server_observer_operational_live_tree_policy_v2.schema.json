@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "server-observer-operational-live-tree-policy-v2",
+  "title": "Observer operational guard live-tree policy",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "entry_metadata",
+    "symlink_target_traversal",
+    "exact_owned_internal_symlink_entries",
+    "link_target_escape",
+    "root_or_ancestor_symlink",
+    "special_entries",
+    "create_delete_race",
+    "monitor_exception_after_child_start",
+    "missing_receipt_exit_2_classification"
+  ],
+  "properties": {
+    "schema": {"const": "server-observer-operational-live-tree-policy-v2"},
+    "entry_metadata": {"const": "NOFOLLOW_LSTAT"},
+    "symlink_target_traversal": {"const": false},
+    "exact_owned_internal_symlink_entries": {"const": "ALLOW_RECORD_AND_UNLINK_NOFOLLOW"},
+    "link_target_escape": {"const": "FAIL_CLOSED"},
+    "root_or_ancestor_symlink": {"const": "FAIL_CLOSED"},
+    "special_entries": {"const": "FAIL_CLOSED"},
+    "create_delete_race": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["bounded_resample", "max_resamples", "exhaustion"],
+      "properties": {
+        "bounded_resample": {"const": true},
+        "max_resamples": {"type": "integer", "minimum": 1, "maximum": 10},
+        "exhaustion": {"const": "MONITOR_EXCEPTION_FAIL_CLOSED"}
+      }
+    },
+    "monitor_exception_after_child_start": {"const": "ONE_SHOT_TERM_WAIT_KILL_REAP_EMERGENCY_RECEIPT_STDERR"},
+    "missing_receipt_exit_2_classification": {"const": "GUARD_RECEIPT_MISSING_INFRASTRUCTURE_FAILURE"}
+  }
+}

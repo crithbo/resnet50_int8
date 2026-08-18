@@ -1,0 +1,70 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "server-tb-vcd-retention-analysis-v1",
+  "title": "Streaming VCD analysis and three-slot raw-group retention",
+  "oneOf": [
+    {"$ref": "#/$defs/analysisState"},
+    {"$ref": "#/$defs/checkpoint"},
+    {"$ref": "#/$defs/retentionIndex"},
+    {"$ref": "#/$defs/retentionPlan"}
+  ],
+  "$defs": {
+    "sha": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "file": {
+      "type": "object", "required": ["path", "bytes", "sha256"],
+      "properties": {"path": {"type": "string", "minLength": 1}, "bytes": {"type": "integer", "minimum": 0}, "sha256": {"$ref": "#/$defs/sha"}}
+    },
+    "analysisState": {
+      "type": "object", "required": ["schema", "kind", "source", "byte_offset", "line_number", "last_sim_time", "timescale", "signal_catalog", "signal_summaries", "status", "checkpoint_count", "claim_boundary"],
+      "properties": {
+        "schema": {"const": "server-tb-vcd-retention-analysis-v1"}, "kind": {"const": "analysis_state"},
+        "source": {"$ref": "#/$defs/file"}, "byte_offset": {"type": "integer", "minimum": 0}, "line_number": {"type": "integer", "minimum": 0},
+        "last_sim_time": {"type": "integer", "minimum": 0}, "timescale": {"type": ["string", "null"]},
+        "signal_catalog": {"type": "object"}, "signal_summaries": {"type": "object"},
+        "status": {"enum": ["IN_PROGRESS", "EOF_REACHED", "ROOT_CAUSE_UNIQUE_STOP"]}, "checkpoint_count": {"type": "integer", "minimum": 0},
+        "claim_boundary": {"type": "string", "minLength": 1}
+      }, "additionalProperties": true
+    },
+    "checkpoint": {
+      "type": "object", "required": ["schema", "kind", "sequence", "source_sha256", "start_offset", "end_offset", "lines_read", "events_read", "last_sim_time", "status"],
+      "properties": {
+        "schema": {"const": "server-tb-vcd-retention-analysis-v1"}, "kind": {"const": "analysis_checkpoint"},
+        "sequence": {"type": "integer", "minimum": 1}, "source_sha256": {"$ref": "#/$defs/sha"},
+        "start_offset": {"type": "integer", "minimum": 0}, "end_offset": {"type": "integer", "minimum": 0},
+        "lines_read": {"type": "integer", "minimum": 0}, "events_read": {"type": "integer", "minimum": 0},
+        "last_sim_time": {"type": "integer", "minimum": 0}, "status": {"enum": ["IN_PROGRESS", "EOF_REACHED", "ROOT_CAUSE_UNIQUE_STOP"]}
+      }, "additionalProperties": true
+    },
+    "retentionIndex": {
+      "type": "object", "required": ["schema", "kind", "family", "track", "storage_root", "max_raw_groups", "groups"],
+      "properties": {
+        "schema": {"const": "server-tb-vcd-retention-analysis-v1"}, "kind": {"const": "retention_index"},
+        "family": {"type": "string", "minLength": 1}, "track": {"type": "string", "minLength": 1}, "storage_root": {"type": "string", "minLength": 1},
+        "max_raw_groups": {"const": 3}, "groups": {"type": "array", "items": {"$ref": "#/$defs/group"}}
+      }, "additionalProperties": false
+    },
+    "group": {
+      "type": "object", "required": ["group_id", "sequence", "progress_metric", "source_package", "return_zip", "sidecar", "raw_evidence", "analysis_complete", "family_consumed", "mainline_consumed", "deterministic_core_evidence", "protected_set_audit_pass"],
+      "properties": {
+        "group_id": {"type": "string", "minLength": 1}, "sequence": {"type": "integer", "minimum": 1},
+        "progress_metric": {"type": "array", "minItems": 1, "items": {"type": "integer"}},
+        "source_package": {"$ref": "#/$defs/file"}, "return_zip": {"$ref": "#/$defs/file"}, "sidecar": {"$ref": "#/$defs/file"},
+        "raw_evidence": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/file"}},
+        "analysis_complete": {"type": "boolean"}, "family_consumed": {"type": "boolean"}, "mainline_consumed": {"type": "boolean"},
+        "deterministic_core_evidence": {"type": "boolean"}, "protected_set_audit_pass": {"type": "boolean"}
+      }, "additionalProperties": true
+    },
+    "retentionPlan": {
+      "type": "object", "required": ["schema", "kind", "pass", "slots", "deduplicated_groups", "delete_group_ids", "errors", "claim_boundary"],
+      "properties": {
+        "schema": {"const": "server-tb-vcd-retention-analysis-v1"}, "kind": {"const": "retention_plan"}, "pass": {"type": "boolean"},
+        "slots": {
+          "type": "object", "required": ["MAX_PROGRESS", "LATEST_1", "LATEST_2"],
+          "properties": {"MAX_PROGRESS": {"type": ["string", "null"]}, "LATEST_1": {"type": ["string", "null"]}, "LATEST_2": {"type": ["string", "null"]}}
+        },
+        "deduplicated_groups": {"type": "array", "items": {"type": "string"}}, "delete_group_ids": {"type": "array", "items": {"type": "string"}},
+        "errors": {"type": "array", "items": {"type": "string"}}, "claim_boundary": {"type": "string", "minLength": 1}
+      }, "additionalProperties": true
+    }
+  }
+}

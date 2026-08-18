@@ -1,0 +1,79 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "server-family-dispatch-mode-binding-v1",
+  "title": "Registry-bound family dispatch and diagnostic-mode binding",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema", "activation_epoch", "effective_scope", "package_id",
+    "family_role_id", "owner_binding", "issued_by", "diagnostic_mode",
+    "mode_authority", "package_contract", "current_package_disposition",
+    "server_action_authorized", "claim_boundary"
+  ],
+  "properties": {
+    "schema": {"const": "server-family-dispatch-mode-binding-v1"},
+    "activation_epoch": {"type": "string", "minLength": 1},
+    "effective_scope": {"const": "NEXT_FRESH_AFTER_ACTIVATION"},
+    "package_id": {"type": "string", "minLength": 1},
+    "family_role_id": {"type": "string", "pattern": "^family\\.[a-z0-9._-]+$"},
+    "owner_binding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "owner_thread_id", "owner_epoch", "registry_epoch", "registry_path",
+        "registry_sha256", "dispatch_mechanism", "temporary_subagent_role_substitution"
+      ],
+      "properties": {
+        "owner_thread_id": {"type": "string", "minLength": 1},
+        "owner_epoch": {"type": "integer", "minimum": 1},
+        "registry_epoch": {"type": "integer", "minimum": 1},
+        "registry_path": {"const": "contracts/current_session_owner_registry_v1.json"},
+        "registry_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "dispatch_mechanism": {"const": "PERSISTENT_REGISTERED_THREAD"},
+        "temporary_subagent_role_substitution": {"const": false}
+      }
+    },
+    "issued_by": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["role_id", "thread_id"],
+      "properties": {
+        "role_id": {"const": "mainline.control"},
+        "thread_id": {"type": "string", "minLength": 1}
+      }
+    },
+    "diagnostic_mode": {
+      "enum": ["OBSERVER_ONLY_WIDE_CAUSAL", "TB_VCD_BOUNDED_CAUSAL_CONE"]
+    },
+    "mode_authority": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind", "path", "sha256", "source_path", "source_sha256",
+        "selector_dispatch_path", "selector_dispatch_sha256"
+      ],
+      "properties": {
+        "kind": {"enum": ["USER_EXPLICIT", "MAINLINE_PLAN", "MAINLINE_TASK_RECORD"]},
+        "path": {"type": "string", "minLength": 1},
+        "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "source_path": {"type": "string", "minLength": 1},
+        "source_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "selector_dispatch_path": {"const": "contracts/server_diagnostic_mode_selector_dispatch_v1.json"},
+        "selector_dispatch_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      }
+    },
+    "package_contract": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["binding_member", "selector_member", "manifest_member"],
+      "properties": {
+        "binding_member": {"const": "contracts/server_family_dispatch_mode_binding.json"},
+        "selector_member": {"const": "contracts/server_diagnostic_mode_selector.json"},
+        "manifest_member": {"enum": ["TEST_PACKAGE_MANIFEST.json", "package_manifest.json"]}
+      }
+    },
+    "current_package_disposition": {"const": "NOT_RETROACTIVE_NO_REBUILD"},
+    "server_action_authorized": {"const": false},
+    "claim_boundary": {"type": "string", "minLength": 1}
+  }
+}

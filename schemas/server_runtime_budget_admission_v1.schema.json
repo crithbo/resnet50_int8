@@ -1,0 +1,147 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "server-runtime-budget-admission-v1",
+  "title": "Bounded measured-progress runtime budget admission",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema", "package_id", "execution_id", "mode", "source_measurement",
+    "projection", "selected_wall_ceiling_seconds", "absolute_maximum_wall_seconds",
+    "independent_operational_guards", "pass", "claim_boundary"
+  ],
+  "properties": {
+    "schema": {"const": "server-runtime-budget-admission-v1"},
+    "authorization_profile_id": {"enum": ["qadd-v73-target-progress-15000"]},
+    "user_authorization": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_thread_id", "exact_text", "utf8_sha256", "family",
+        "source_package_id", "source_return_sha256",
+        "selected_wall_ceiling_seconds", "authorization_scope"
+      ],
+      "properties": {
+        "source_thread_id": {"const": "019ff027-e7db-72a3-b282-cfad8708da05"},
+        "exact_text": {"const": "qadd预算允许到15000秒确定跑完"},
+        "utf8_sha256": {"const": "60602079640071373a013309304df0d0e9099a2481a93dfe7953298ac3eb8d58"},
+        "family": {"const": "qlinearadd_node0007"},
+        "source_package_id": {"const": "r5_qadd_n7_tailround_lanephase_v73_w8400v7"},
+        "source_return_sha256": {"const": "a65425c43962ee172bf4583b4a114b0a5123d0a19eb20a80860c19ac52e2f23c"},
+        "selected_wall_ceiling_seconds": {"const": 15000},
+        "authorization_scope": {"const": "EXACT_V73_MEASURED_RETURN_TO_ONE_NEXT_FRESH_QADD_SUCCESSOR"}
+      }
+    },
+    "package_id": {"type": "string", "minLength": 1},
+    "execution_id": {"type": "string", "minLength": 1},
+    "mode": {"const": "MEASURED_PRETARGET_AWARE"},
+    "source_measurement": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_package_id", "source_return_path", "source_return_sha256",
+        "qualified_progress_source", "qualified_units_completed", "total_pretarget_units",
+        "elapsed_seconds", "target_entry_observed", "progress_was_advancing"
+      ],
+      "properties": {
+        "authorization_profile_id": {"enum": ["qadd-v70-pretarget-8400", "qadd-v73-target-progress-15000"]},
+        "source_package_id": {"enum": ["r5_qadd_n7_tailround_lanephase_v70_pmapfix", "r5_qadd_n7_tailround_lanephase_v73_w8400v7"]},
+        "source_return_path": {"type": "string", "minLength": 1},
+        "source_return_sha256": {"$ref": "#/$defs/sha"},
+        "source_formal_analysis_path": {"type": "string", "minLength": 1},
+        "source_formal_analysis_sha256": {"$ref": "#/$defs/sha"},
+        "qualified_progress_source": {"type": "string", "minLength": 1},
+        "measurement_phase": {"enum": ["PRETARGET", "TARGET"]},
+        "qualified_units_completed": {"type": "integer", "minimum": 3},
+        "total_pretarget_units": {"type": "integer", "minimum": 1},
+        "elapsed_seconds": {"type": "number", "exclusiveMinimum": 0},
+        "fixed_overhead_seconds": {"type": "number", "minimum": 0},
+        "target_entry_observed": {"type": "boolean"},
+        "progress_was_advancing": {"const": true}
+      }
+    },
+    "projection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["seconds_per_unit", "projected_pretarget_seconds", "safety_factor", "target_diagnostic_margin_seconds", "recommended_wall_ceiling_seconds", "formula"],
+      "properties": {
+        "seconds_per_unit": {"type": "number", "exclusiveMinimum": 0},
+        "projected_pretarget_seconds": {"type": "number", "exclusiveMinimum": 0},
+        "fixed_overhead_seconds": {"type": "number", "minimum": 0},
+        "unmargined_projected_total_seconds": {"type": "number", "exclusiveMinimum": 0},
+        "projection_basis": {"const": "FIXED_PRETARGET_PLUS_MEASURED_TARGET_RATE"},
+        "safety_factor": {"type": "number", "minimum": 1.1, "maximum": 4.0},
+        "target_diagnostic_margin_seconds": {"type": "integer", "minimum": 300, "maximum": 21600},
+        "recommended_wall_ceiling_seconds": {"type": "integer", "minimum": 3600, "maximum": 15000},
+        "formula": {"enum": ["CEIL(elapsed/completed*total*safety_factor+target_margin)", "CEIL(fixed_overhead+elapsed/completed*total*safety_factor+target_margin)"]}
+      }
+    },
+    "selected_wall_ceiling_seconds": {"enum": [8400, 15000]},
+    "absolute_maximum_wall_seconds": {"enum": [8400, 86400]},
+    "independent_operational_guards": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["vcd_operational_budget_bytes", "return_budget_bytes", "disk_space_guard_enabled", "growth_projection_enabled", "write_failure_guard_enabled", "quota_guard_enabled"],
+      "properties": {
+        "vcd_operational_budget_bytes": {"const": 8000000000},
+        "return_budget_bytes": {"const": 10000000000},
+        "disk_space_guard_enabled": {"const": true},
+        "growth_projection_enabled": {"const": true},
+        "write_failure_guard_enabled": {"const": true},
+        "quota_guard_enabled": {"const": true},
+        "signal_guard_enabled": {"const": true},
+        "plateau_protection_unchanged": {"const": true},
+        "return_integrity_fail_closed": {"const": true}
+      }
+    },
+    "errors": {"type": "array", "maxItems": 0, "items": {"type": "string"}},
+    "pass": {"const": true},
+    "claim_boundary": {"type": "string", "minLength": 1}
+  },
+  "oneOf": [
+    {
+      "properties": {
+        "source_measurement": {"properties": {
+          "source_package_id": {"const": "r5_qadd_n7_tailround_lanephase_v70_pmapfix"},
+          "source_return_sha256": {"const": "ae317f36edd28ecf0b9c3bf7d5c7734612d18755932f9fedb371a1203addb369"},
+          "qualified_progress_source": {"const": "PRETARGET_MATRIX_TRANSFER_COMPLETE"},
+          "qualified_units_completed": {"const": 19},
+          "total_pretarget_units": {"const": 30},
+          "elapsed_seconds": {"const": 3608.29},
+          "target_entry_observed": {"const": false}
+        }},
+        "projection": {"properties": {"formula": {"const": "CEIL(elapsed/completed*total*safety_factor+target_margin)"}}},
+        "selected_wall_ceiling_seconds": {"const": 8400},
+        "absolute_maximum_wall_seconds": {"const": 8400}
+      }
+    },
+    {
+      "required": ["authorization_profile_id", "user_authorization"],
+      "properties": {
+        "authorization_profile_id": {"const": "qadd-v73-target-progress-15000"},
+        "source_measurement": {
+          "required": ["source_formal_analysis_path", "source_formal_analysis_sha256", "measurement_phase", "fixed_overhead_seconds"],
+          "properties": {
+            "source_package_id": {"const": "r5_qadd_n7_tailround_lanephase_v73_w8400v7"},
+            "source_return_sha256": {"const": "a65425c43962ee172bf4583b4a114b0a5123d0a19eb20a80860c19ac52e2f23c"},
+            "source_formal_analysis_sha256": {"const": "f0e7d0298d80c233041be6dd26fda8c6aaaabcca6353586f31cd94cc063bc432"},
+            "qualified_progress_source": {"const": "TARGET_COMPLEMENTARY_PAIR_ACCEPT_CLEAR_OUTPUT"},
+            "measurement_phase": {"const": "TARGET"},
+            "qualified_units_completed": {"const": 12440},
+            "total_pretarget_units": {"const": 18816},
+            "elapsed_seconds": {"const": 2855.939969378058},
+            "fixed_overhead_seconds": {"const": 5562.327059702948},
+            "target_entry_observed": {"const": true}
+          }
+        },
+        "projection": {
+          "required": ["fixed_overhead_seconds", "unmargined_projected_total_seconds", "projection_basis"],
+          "properties": {"formula": {"const": "CEIL(fixed_overhead+elapsed/completed*total*safety_factor+target_margin)"}}
+        },
+        "selected_wall_ceiling_seconds": {"const": 15000},
+        "absolute_maximum_wall_seconds": {"const": 86400},
+        "independent_operational_guards": {"required": ["signal_guard_enabled", "plateau_protection_unchanged", "return_integrity_fail_closed"]}
+      }
+    }
+  ],
+  "$defs": {"sha": {"type": "string", "pattern": "^[0-9a-f]{64}$"}}
+}

@@ -64,6 +64,9 @@
       "enforcement": "required_next_fresh",
       "phase": "pre_materialization",
       "activation": "always",
+      "selected_modes": [
+        "OBSERVER_ONLY_WIDE_CAUSAL"
+      ],
       "surfaces": [
         "package_local_hdl",
         "observer",
@@ -203,6 +206,9 @@
       "gate_id": "diagnostic_semantics",
       "phase": "staging_tree",
       "activation": "changed_surface",
+      "selected_modes": [
+        "OBSERVER_ONLY_WIDE_CAUSAL"
+      ],
       "surfaces": [
         "observer",
         "parser",
@@ -265,6 +271,9 @@
       "enforcement": "required_next_fresh",
       "phase": "final_zip",
       "activation": "always",
+      "selected_modes": [
+        "OBSERVER_ONLY_WIDE_CAUSAL"
+      ],
       "surfaces": [
         "runner",
         "package_local_hdl",
@@ -291,6 +300,9 @@
       "enforcement": "required_next_fresh",
       "phase": "final_zip",
       "activation": "always",
+      "selected_modes": [
+        "OBSERVER_ONLY_WIDE_CAUSAL"
+      ],
       "surfaces": [
         "runner",
         "package_local_hdl",
@@ -309,10 +321,111 @@
         "state_safety",
         "return"
       ],
-      "blocking_effect": "Every next-fresh DUT-simulation package must use DUMP_VCD=0/DUMP_FSDB=0/TB_DUMP_FSDB=0 and reject VPD/FSDB/VCD/FST or dump/query assets. The exact final ZIP must bind a source-derived 26-role actual-signal catalog, pairwise-distinguishing candidate-by-boundary matrix, ordered unbounded four-state event chunks, end states, simulation-time heartbeat, canonical parser/decision and exact return member set. Decimal 100000000 bytes is warning-only for observer evidence and never a hard cap. The exact package_tools/server_post_sim_return.py may retain only contract-bound inert historical suffix literals when its bytes equal the canonical helper and the exact request omits/nulls waveform_discovery; writer/control scans and all active surfaces remain fail-closed. The generic child-subreaper supervisor must terminate and reap the simulator tree and close/flush observer chunks before publication. Compile-not-started preserves the independent compile-core exemption; simulation-started incomplete observer evidence fails closed while retaining partial observer/core return.",
+      "blocking_effect": "Every next-fresh DUT-simulation package must use DUMP_VCD=0/DUMP_FSDB=0/TB_DUMP_FSDB=0 and reject VPD/FSDB/VCD/FST or dump/query assets. The exact final ZIP must bind a source-derived 26-role actual-signal catalog, pairwise-distinguishing candidate-by-boundary matrix, ordered unbounded four-state event chunks, end states, simulation-time heartbeat, canonical parser/decision and exact return member set. Decimal 100000000 bytes is warning-only for observer evidence and never a hard cap or operational stop. Separately, every next-fresh observer package must bind a family-derived conservative peak projection for compile outputs, observer chunks, duplicated simulator logs, parser/rewrite scratch, return staging and publication sidecar; monitor exact compile/simulation/finalization growth and filesystem reserve; and use a one-shot whole-attempt operational stop that preserves all completed/flushable rows, reaps the owned process tree and publishes DIAGNOSTIC_EVIDENCE_INCOMPLETE before exact-owned post-durable cleanup. Live VCS trees use content-bound guard-v2 no-follow lstat/scandir: exact-owned internal links may be recorded but never traversed and must remain lexically inside declared owned roots; root/ancestor/escaping links and special entries fail closed, and bounded create/delete races resample. Process ownership snapshots must use childless procfs enumeration and bind each process to PID plus start_time_ticks, so the guard cannot count its own enumerator or hide real descendants through PID reuse. Every post-child monitor exception must reap and atomically return emergency receipt plus stderr. A failed finalization must preserve the first atomic return without same-basename replacement, and exact-owned cleanup is admitted only after valid fully-reaped finalization and durable-return receipts. Exit 2 without a valid guard receipt is infrastructure failure, never production compile error. Returned evidence remains strictly no-symlink and quiescent. Event/byte caps, sampling, truncation, rolling overwrite and size-based evidence deletion remain forbidden. The exact package_tools/server_post_sim_return.py may retain only contract-bound inert historical suffix literals when its bytes equal the canonical helper and the exact request omits/nulls waveform_discovery; writer/control scans and all active surfaces remain fail-closed. Compile-not-started preserves the independent compile-core exemption; simulation-started incomplete observer evidence fails closed while retaining partial observer/core return.",
+      "execution_group": "final_zip_release_driver",
+      "cheap_prebuild_eligible": false,
+      "semantic_version": "5"
+    },
+    {
+      "gate_id": "package_release_admission_runtime_preflight",
+      "enforcement": "required_next_fresh",
+      "phase": "final_zip",
+      "activation": "always",
+      "surfaces": [
+        "package_identity",
+        "runner",
+        "return_core_contract",
+        "return_collector"
+      ],
+      "receipt_reuse_allowed": false,
+      "validator_identity_required": true,
+      "causal_blocking_classes": [
+        "server_start",
+        "return"
+      ],
+      "blocking_effect": "After embedded manifest promotion to PACKAGE_READY_NOT_RUN, the package-specific runtime preflight must pass on final staging and on a clean extraction of the exact final ZIP. Every package-local Python source must be discovered as a byte-equal staging/ZIP exact set and py_compile successfully without package-tree bytecode. The schema-enabled admission runtime must import jsonschema and validate the contract; missing dependency, skip or schema failure is blocking. A real PACKAGE_READY_NOT_RUN_LOCAL_BUILD_PENDING_GATES mutation must fail with package claim boundary differs; positive assertions and observed-negative facts use separate typed polarity, and precompile failure preserves stdout, stderr and exit in the compile-not-started core.",
       "execution_group": "final_zip_release_driver",
       "cheap_prebuild_eligible": false,
       "semantic_version": "2"
+    },
+    {
+      "gate_id": "release_cross_member_temporal_consistency_final_zip",
+      "enforcement": "required_next_fresh",
+      "phase": "final_zip",
+      "activation": "always",
+      "surfaces": [
+        "package_identity",
+        "runner",
+        "progress",
+        "return_core_contract",
+        "return_collector"
+      ],
+      "receipt_reuse_allowed": false,
+      "validator_identity_required": true,
+      "causal_blocking_classes": [
+        "state_safety",
+        "return"
+      ],
+      "blocking_effect": "The clean exact final ZIP must prove release-critical nested statuses are terminal, selected and absolute wall identities agree across every declared member while preserving their distinct roles, every required in-ZIP return member has one exact prepublication producer, guard completion precedes immutable publication, postpublication durable/cleanup receipts remain external, and progress counters bind qualified actual-source events with a held-level non-progress replay.",
+      "execution_group": "final_zip_release_driver",
+      "cheap_prebuild_eligible": false,
+      "semantic_version": "1"
+    },
+    {
+      "gate_id": "tb_vcd_bounded_causal_cone_final_zip",
+      "enforcement": "required_next_fresh",
+      "phase": "final_zip",
+      "activation": "always",
+      "selected_modes": [
+        "TB_VCD_BOUNDED_CAUSAL_CONE"
+      ],
+      "surfaces": [
+        "runner",
+        "package_local_hdl",
+        "probe_catalog",
+        "probe_plan",
+        "progress",
+        "canonical_predicate",
+        "return_collector",
+        "waveform",
+        "storage"
+      ],
+      "receipt_reuse_allowed": false,
+      "validator_identity_required": true,
+      "causal_blocking_classes": [
+        "server_start",
+        "state_safety",
+        "return"
+      ],
+      "blocking_effect": "Only when selected_mode is TB_VCD_BOUNDED_CAUSAL_CONE, the exact final ZIP must select exactly one bulk-evidence mode, use package-local TB standard dump tasks with all Make dump variables zero, bind the complete source-derived causal cone and pairwise candidate matrix, and require the expanded $dumpvars target union to equal the exact source-bound catalog with module/aggregate over-dump forbidden. The first diagnostic round binds an exact current-family round-three-or-later breadth receipt and a reasonable signal-count range as a soft reference; being below or above the range is not a standalone blocker when relation, explanation and acknowledgement are recorded. A source-bound zero-hop driver for every HIGH candidate is a strong coverage target; a missing driver is a record-only gap while the candidate matrix remains distinguishable. A refined successor is validated under the current gate while each byte-exact predecessor is validated under its declared published semantic version or exact published PASS receipt; predecessor contract/receipt SHA, immediate round, pinned RTL/source identity, exact add/remove/unchanged signal diff and candidate preservation/closure remain blocking. Family-adaptive signal pruning records reason, HIGH or MEDIUM confidence and affected candidates; LOW confidence retains the signal, without requiring per-signal proof over every preserved candidate. Before planned dumpoff, freeze consumes appended VCD timestamps; planned dumpoff is a same-attempt execution-bound sticky event that binds owner-clock cycle, TB execution time, last VCD timestamp and the complete plateau intersection. After planned dumpoff, VCD timestamp stasis is expected and owner-clock plus execution time governs the 262144-cycle grace; completed dumpoff plus grace is evaluated before freeze. STOP is one-shot latched, and repetition, state clear or identity drift fails closed. Heartbeat is unsigned width>=64 at 16384 owner cycles, inline/multiline timescale is accepted, and target claims require live entry/downstream/first-error evidence. The shared evaluator receipt is the sole outer-runner decision authority; exact phase-aware replay must prove advancing timestamp, suspected-only plateau and planned-dumpoff pre-grace continue, completed dumpoff plus grace yields CAUSAL_PLATEAU, and only no-dumpoff three-interval stasis yields SIM_TIME_FREEZE. Quiescent archived VCD full-file SHA/bytes/last timestamp must bind final runtime. Partial, unflushed, unreaped or non-exact-set evidence cannot pass finalization; strict plateau and independent wall/size/disk safeguards remain fail-closed. The default wall remains 3600 seconds. The exact historical QAdd v70 return remains authorized at 8400 seconds. One next-fresh QAdd successor bound to exact v73 return SHA a65425c43962ee172bf4583b4a114b0a5123d0a19eb20a80860c19ac52e2f23c, exact formal-analysis SHA f0e7d0298d80c233041be6dd26fda8c6aaaabcca6353586f31cd94cc063bc432, 12440/18816 advancing qualified target pairs, unmargined projection 9882.051051971239 seconds and exact user-authorization UTF-8 SHA 60602079640071373a013309304df0d0e9099a2481a93dfe7953298ac3eb8d58 may select MEASURED_PRETARGET_AWARE at exactly 15000 seconds. Other families, returns, authorization identities or wall values fail closed. The 8GB VCD, 10GB return, disk, growth, write, quota, signal, plateau and return-integrity guards remain unchanged. Every KILL starts a fresh bounded post-KILL reap deadline; reusing an expired TERM deadline or leaving a stubborn adopted descendant fails closed. Observer-only packages do not run this gate.",
+      "execution_group": "final_zip_release_driver",
+      "cheap_prebuild_eligible": false,
+      "semantic_version": "8"
+    },
+    {
+      "gate_id": "family_dispatch_mode_binding_final_zip",
+      "enforcement": "required_next_fresh",
+      "phase": "final_zip",
+      "activation": "required_next_fresh_after_activation",
+      "selected_modes": [
+        "OBSERVER_ONLY_WIDE_CAUSAL",
+        "TB_VCD_BOUNDED_CAUSAL_CONE"
+      ],
+      "surfaces": [
+        "package_identity",
+        "runner",
+        "return_collector"
+      ],
+      "receipt_reuse_allowed": false,
+      "validator_identity_required": true,
+      "causal_blocking_classes": [
+        "server_start",
+        "return"
+      ],
+      "blocking_effect": "For every next-fresh package created after family-dispatch-mode-binding-v1 activation, the exact final ZIP must contain a byte-equal server-family-dispatch-mode-binding-v1 receipt and diagnostic-mode selector. The binding must resolve the unique ACTIVE persistent family owner and current mainline issuer from the bound registry, require PERSISTENT_REGISTERED_THREAD with no temporary subagent role substitution, bind the upstream user/plan/task-record mode authority and selector-dispatch identities, and make the binding, selector and manifest agree on package, family and diagnostic mode. Current or in-progress packages at activation are not retroactively held, rebuilt, mutated or rotated.",
+      "execution_group": "final_zip_release_driver",
+      "cheap_prebuild_eligible": false,
+      "semantic_version": "1"
     },
     {
       "gate_id": "first_fresh_extra_audit",
@@ -320,6 +433,7 @@
       "phase": "final_zip",
       "activation": "first_fresh_after_rule_change",
       "surfaces": [
+        "package_identity",
         "runner",
         "package_local_hdl",
         "config",
@@ -345,10 +459,10 @@
         "state_safety",
         "return"
       ],
-      "blocking_effect": "The first fresh package per affected family after a rule/shared-tool epoch is independently re-audited from a clean extraction of the exact final ZIP. It must aggregate actual runner/input, generated logger-to-collector-to-parser, post-sim return-core and candidate-matrix failures before upload; noncausal findings remain record-only.",
+      "blocking_effect": "The first fresh package per affected family after a rule/shared-tool epoch is independently re-audited from a clean extraction of the exact final ZIP. It must rerun package release admission after manifest promotion, including the real pending-status negative, then aggregate actual runner/input, generated logger-to-collector-to-parser, post-sim return-core and candidate-matrix failures before upload. A runtime-budget epoch additionally requires exact source-return binding, deterministic projection, authorized wall equality, unchanged size/disk/growth/write/quota guards, a fresh post-KILL reap deadline and stubborn-descendant fail-closed controls; noncausal findings remain record-only.",
       "execution_group": "final_zip_release_driver",
       "cheap_prebuild_eligible": false,
-      "semantic_version": "2"
+      "semantic_version": "6"
     },
     {
       "gate_id": "final_zip_content",
@@ -383,7 +497,7 @@
       "blocking_effect": "The exact final ZIP is the server-consumed object; unsafe or missing final members can affect start, input, state isolation, or return.",
       "execution_group": "final_zip_release_driver",
       "cheap_prebuild_eligible": false,
-      "semantic_version": "1"
+      "semantic_version": "2"
     },
     {
       "gate_id": "runtime_layout",
@@ -404,10 +518,10 @@
         "state_safety",
         "return"
       ],
-      "blocking_effect": "Runtime layout controls actual open paths, package-owned state isolation, exact-runner early failure stderr visibility for next-fresh runner changed-surfaces, exact generated-heredoc syntax, and fixed return publication; a silent nonzero exit or broken finalizer fallback can prevent server start or lose required return decisions.",
+      "blocking_effect": "Runtime layout controls actual open paths, package-owned state isolation, exact-runner early failure stderr visibility for next-fresh runner changed-surfaces, exact generated-heredoc syntax, fixed return publication, and process-tree cleanup. Every KILL must start a fresh bounded post-KILL reap deadline later than the KILL; an expired TERM deadline cannot be reused and a stubborn adopted descendant must fail closed. A silent nonzero exit or broken finalizer fallback can prevent server start or lose required return decisions.",
       "execution_group": "final_zip_release_driver",
       "cheap_prebuild_eligible": false,
-      "semantic_version": "4"
+      "semantic_version": "5"
     },
     {
       "gate_id": "storage_rotation",

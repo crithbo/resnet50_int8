@@ -1,0 +1,43 @@
+{
+  "schema": "server-package-python-schema-runtime-mainline-merge-v1",
+  "classification": "EXISTING_RULE_IMPLEMENTATION_ESCAPE",
+  "public_rule_disposition": "NARROW_CLARIFICATION_UNDER_EXISTING_RULE_IDS",
+  "new_public_rule_id": null,
+  "confirmed_rule_ids": [
+    "CDA-SERVER-FINAL-ZIP-RULE-SELF-AUDIT-001",
+    "CDA-SERVER-RULE-CHANGE-FIRST-FRESH-INDEPENDENT-REAUDIT-001"
+  ],
+  "canonical_preimage": {
+    ".agents/rules/服务器测试包生成规则.md": "7c28b333ffaa8838b4e8bdbed843e87cf84c0d544363927fd0d6a4379c91fd32",
+    ".agents/rules/生成前必读索引.md": "dee3c06e9edc832e17812e03877dbca954d202642eeb4eae93bbef72b22a9725",
+    "contracts/server_package_build_gate_registry_v1.json": "4476bc856bf342bebe10019bd8f4e10c0c4be67cc8d425d0665a0eac4f1751e1",
+    "contracts/server_package_release_admission_dispatch_v1.json": "473e7ad1d418ccd1c1bf8862a6d09c2ff04b7711ea16f6ce5676ac19fe2283c9",
+    "schemas/server_package_release_admission_v1.schema.json": "cdcd01e1999c79d372d54b42e53667b474e04597954d14a986b4642d456e532f",
+    "tools/validate_server_package_release_admission.py": "122168f300e4c25497da2b7b98681955713e861ff02a2b8a10cd89bb7663239f",
+    "tests/test_server_package_release_admission.py": "07871a468e012081bbc77974072da0f87cc419e6f7b2faa52579e490407bf4aa"
+  },
+  "narrow_rule_merge": [
+    "Under CDA-SERVER-FINAL-ZIP-RULE-SELF-AUDIT-001, discover every package-local Python source directly from final staging and a clean exact-final-ZIP extraction; require byte-equal exact sets and aggregate py_compile of every member with bytecode outside both package trees.",
+    "Under the same rule, every blocking gate that declares JSON-schema validation must execute it in the gate runtime. Missing jsonschema, import/version incompatibility, skip, unexecuted validation or schema failure is fail-closed and cannot contribute PASS.",
+    "Under CDA-SERVER-RULE-CHANGE-FIRST-FRESH-INDEPENDENT-REAUDIT-001, the first fresh report must include the package-Python exact-set compile and schema-runtime receipt from the exact ZIP; one aggregate report is retained and per-error rebuild remains forbidden."
+  ],
+  "registry_merge": {
+    "gate_id": "package_release_admission_runtime_preflight",
+    "semantic_version": "2",
+    "activation": "required_next_fresh",
+    "causal_blocking_classes": ["server_start", "return"]
+  },
+  "generation_index_merge": "Route every later next-fresh final ZIP through the v2 release-admission schema/tool using the repository schema-enabled Python runtime; do not accept environment skips for blocking gates.",
+  "retroactivity": {
+    "current_gap_v69_rebuild_or_hold": false,
+    "current_family_package_mutation": false,
+    "first_fresh_retrigger": true
+  },
+  "forbidden_actions": [
+    "family package build or mutation",
+    "package storage rotation",
+    "server upload, run or lease",
+    "functional RTL/config/numeric/workload mutation"
+  ],
+  "claim_boundary": "Shared local final-ZIP admission hardening only; no package or server execution claim."
+}

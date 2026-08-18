@@ -1,0 +1,36 @@
+{
+  "schema": "server-diagnostic-mode-selector-dispatch-v1",
+  "activation": "optional_next_fresh_after_mainline_activation",
+  "default_mode": "OBSERVER_ONLY_WIDE_CAUSAL",
+  "optional_mode": "TB_VCD_BOUNDED_CAUSAL_CONE",
+  "mode_exclusivity": "EXACTLY_ONE_BULK_EVIDENCE_MODE",
+  "observer_frozen_assets": [
+    {"path": "contracts/server_observer_only_wide_causal_dispatch_v1.json", "sha256": "1add8cce9f61d5b37f2b68cf96e94e8627071d6476ad14ae47cac64f0a423d44"},
+    {"path": "schemas/server_observer_only_wide_causal_contract_v1.schema.json", "sha256": "2811ea3a0a9d643e9c0de43aeb36e8177eb6001d50462e6d7f1dfddf6e550e00"},
+    {"path": "schemas/server_observer_runtime_supervision_v1.schema.json", "sha256": "29e79efeafd51eb8e59c74e9cd42562b8c61be109e3a8d928fd7fbdd10ebfbbb"},
+    {"path": "tools/validate_server_observer_only_wide_causal.py", "sha256": "e8d877230ea4254dbc9a4d5e14fad242b7cb5a683eaa9a097c58ffa34417ded3"},
+    {"path": "tools/server_observer_runtime_supervision.py", "sha256": "09ade31f498672489afdcd018d989f9241faf23e0be00e75bf644825c1806f8e"},
+    {"path": "tests/test_server_observer_only_wide_causal.py", "sha256": "05dac1f38ea4d9fe21d82be8bf0e333458a99765a19e7aa567273698db9c9f53"},
+    {"path": "tests/test_server_observer_runtime_supervision.py", "sha256": "34a16635efdd9cdd5f7f530b2dacb2b80ed33b497ce6716062c1da1afb32062c"}
+  ],
+  "common_dump_argv": {
+    "DUMP_VCD": "0",
+    "DUMP_FSDB": "0",
+    "TB_DUMP_FSDB": "0"
+  },
+  "forbidden_for_all_modes": [
+    "VPD",
+    "FSDB",
+    "UCLI_DIRECT_VCD",
+    "VENDOR_SIGNAL_QUERY",
+    "FULL_HIERARCHY_UNBOUNDED_DUMP"
+  ],
+  "vcd_generation": {
+    "producer": "PACKAGE_LOCAL_TB_STANDARD_SYSTEM_TASKS_ONLY",
+    "required_tasks": ["$dumpfile", "$dumpvars", "$dumpon", "$dumpoff", "$dumpflush"],
+    "forbidden_producers": ["Makefile_DUMP_VCD", "VCS_UCLI_DUMP", "PLI_WRITER", "VERDI", "DVE"]
+  },
+  "validator": "tools/validate_server_diagnostic_mode_selector.py",
+  "schema_path": "schemas/server_diagnostic_mode_selector_v1.schema.json",
+  "claim_boundary": "Mode selection and bulk-evidence exclusivity only; no package production compile, simulation, diagnosis, natural terminal, formal D, E4 or E5 claim."
+}

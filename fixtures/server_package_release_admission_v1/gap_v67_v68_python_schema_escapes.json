@@ -1,0 +1,30 @@
+{
+  "schema": "server-package-python-schema-runtime-historical-negative-v1",
+  "family": "gap_node0071",
+  "target": "sum_s2 input-supply/read causal cone",
+  "attempts": [
+    {
+      "package_id": "r5_n71_gap_v67_sum_s2_tbvcd_runtimev3ready",
+      "audit_sha256": "1624d37f10f202a1a508676d16176691a270266d7c36e0068122e8f74c49ba27",
+      "failure_class": "PACKAGE_LOCAL_PYTHON_TEMPLATE_ESCAPE",
+      "escaped_surface": "package_tools/gap_node0071_tb_vcd_guarded_supervisor_v67.py",
+      "required_result": "FAIL_CLOSED_BY_CLEAN_EXACT_ZIP_PY_COMPILE"
+    },
+    {
+      "package_id": "r5_n71_gap_v68_sum_s2_tbvcd_runtimev3fixed",
+      "audit_sha256": "c632579905f59093e05a7e51166a540cee70841a2f6064b62cef0c8f9a3e61c0",
+      "failure_class": "CURRENT_RUNNER_CONTRACT_SCHEMA_DRIFT",
+      "escaped_surface": "schema-enabled runner tree and exact-ZIP validators",
+      "required_result": "FAIL_CLOSED_IF_JSONSCHEMA_UNAVAILABLE_OR_SKIPPED"
+    }
+  ],
+  "positive_successor": {
+    "package_id": "r5_n71_gap_v69_sum_s2_tbvcd_runtimev3clean",
+    "python_member_count": 19,
+    "compiled_count": 19,
+    "python_compile_receipt_sha256": "0d298ea3b1aeb00f840b97789ffc61889aecfba817db2f77a87d7fd2dcf4990b",
+    "schema_enabled_gates_pass": true
+  },
+  "server_action": false,
+  "claim_boundary": "Historical local package-gate controls only; no production or DUT claim."
+}

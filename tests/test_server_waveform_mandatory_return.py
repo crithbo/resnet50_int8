@@ -68,8 +68,10 @@ class MandatoryWaveformTests(unittest.TestCase):
         )
         self.assertEqual(gate["activation"], "always")
         # This suite remains a frozen compatibility control for historical
-        # waveform returns. Current next-fresh packages use observer-only v1.
-        self.assertEqual(gate["semantic_version"], "2")
+        # waveform returns. Current next-fresh packages use observer-only plus
+        # the whole-attempt operational-boundary plus childless-procfs
+        # process-identity/failure-handoff semantic v5 conjunction.
+        self.assertEqual(gate["semantic_version"], "5")
         retired = {
             "waveform_observation_final_zip",
             "waveform_portable_local_decodability",

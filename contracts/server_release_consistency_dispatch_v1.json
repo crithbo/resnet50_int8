@@ -1,0 +1,71 @@
+{
+  "schema": "server-release-consistency-dispatch-v1",
+  "classification": "MIXED_RULE_SEMANTIC_OMISSION_AND_EXISTING_GATE_IMPLEMENTATION_ESCAPE",
+  "public_rule_disposition": "NARROW_EXISTING_RULE_IDS_ONLY_NO_SYNONYMOUS_RULE",
+  "confirmed_rule_ids": [
+    "CDA-SERVER-FINAL-ZIP-RULE-SELF-AUDIT-001",
+    "CDA-SERVER-DIAGNOSTIC-PREDICATE-TRACE-UNIT-001",
+    "CDA-SERVER-OBSERVER-EVENT-QUALIFICATION-001",
+    "CDA-SERVER-POST-SIM-CORE-RETURN-INDEPENDENT-PUBLISH-001",
+    "CDA-SERVER-RETURN-FIXED-SIMRESULT-ATOMIC-PUBLISH-001"
+  ],
+  "shared_gate_id": "release_cross_member_temporal_consistency_final_zip",
+  "activation": "REQUIRED_NEXT_FRESH_AFTER_MAINLINE_SYNC",
+  "requirements": [
+    "release-critical nested manifest statuses are terminal before the ready claim",
+    "selected wall and absolute maximum wall identities are equal across every declared package/runtime/finalizer member and remain semantically distinct",
+    "every required in-ZIP return entry has one exact prepublication producer and basename closure",
+    "finalization guard completion precedes immutable return publication",
+    "durable-return and cleanup receipts generated after publication are external immutable sidecars and cannot be required inside the first return ZIP",
+    "progress counters bind exact source spans and count only qualified handshakes or state transitions; held raw levels cannot reset plateau detection"
+  ],
+  "implementation_assets": {
+    "schema": "schemas/server_release_consistency_v1.schema.json",
+    "validator": "tools/validate_server_release_consistency.py",
+    "tests": "tests/test_server_release_consistency.py",
+    "historical_fixture": "fixtures/server_release_consistency_v1/recent_independent_audit_failures.json"
+  },
+  "mainline_narrow_merge": {
+    "server_rule": "clarify existing final-ZIP self-audit and post-sim return phase semantics; do not add a public rule ID",
+    "build_gate_registry": "add release_cross_member_temporal_consistency_final_zip to the existing final_zip_release_driver execution group",
+    "first_fresh": "require the exact contract and validator report once for the first fresh after activation"
+  },
+  "local_unpublished_candidate_patch_policy": {
+    "classification": "LOCAL_UNPUBLISHED_CANDIDATE_PATCH",
+    "same_package_identity_allowed_only_when": {
+      "local_only": true,
+      "ever_managed_or_published": false,
+      "ever_server_run": false,
+      "ever_authoritative_release_handoff": false,
+      "formal_return_bound": false
+    },
+    "required_prepatch_evidence": [
+      "prepatch tree bytes and SHA-256",
+      "prepatch ZIP bytes and SHA-256 when a ZIP already exists",
+      "exact added/removed/modified/unchanged member delta",
+      "byte-frozen config, functional RTL, workload, numeric, golden and causal cone identities"
+    ],
+    "receipt_semantics": {
+      "invalidate": [
+        "all prepatch final-ZIP receipts",
+        "all prepatch final conjunction receipts",
+        "all prepatch ready or authoritative release claims"
+      ],
+      "rerun_when": [
+        "receipt_reuse_allowed is false",
+        "any exact dependency input changed",
+        "validator, schema, authority or dependency receipt identity changed"
+      ],
+      "reuse_only_when": "receipt_reuse_allowed is true and every exact input, validator, schema, authority and dependency receipt remains byte-identical"
+    },
+    "immutable_exclusions": [
+      "managed or published packages",
+      "server-run packages or attempts",
+      "packages handed off as authoritative release",
+      "packages bound to a formal return",
+      "tested or superseded managed packages"
+    ],
+    "final_driver": "run exactly one final_zip_release_driver after the patch; release_cross_member_temporal_consistency_final_zip remains receipt_reuse_allowed=false"
+  },
+  "claim_boundary": "Shared local final-ZIP consistency only; no current package mutation, server action, DUT diagnosis or dynamic correctness claim."
+}

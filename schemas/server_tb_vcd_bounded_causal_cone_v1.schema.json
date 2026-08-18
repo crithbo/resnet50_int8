@@ -1,0 +1,389 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "server-tb-vcd-bounded-causal-cone-v1",
+  "title": "Package-local TB VCD bounded full causal-cone contract",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema", "profile", "rule_id", "package_id", "family", "execution",
+    "scope", "budget", "diagnostic_round", "signals", "role_coverage", "boundaries", "candidates",
+    "candidate_boundary_matrix", "runtime_policy", "return_receipts", "first_fresh_controls", "claim_boundary"
+  ],
+  "properties": {
+    "schema": {"const": "server-tb-vcd-bounded-causal-cone-v1"},
+    "profile": {"const": "TB_VCD_BOUNDED_CAUSAL_CONE"},
+    "rule_id": {"const": "CDA-SERVER-TB-VCD-BOUNDED-FULL-CAUSAL-CONE-OPTIONAL-001"},
+    "package_id": {"type": "string", "minLength": 1},
+    "family": {"type": "string", "minLength": 1},
+    "execution": {"$ref": "#/$defs/execution"},
+    "scope": {"$ref": "#/$defs/scope"},
+    "budget": {"$ref": "#/$defs/budget"},
+    "diagnostic_round": {"$ref": "#/$defs/diagnosticRound"},
+    "signals": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/signal"}},
+    "role_coverage": {"type": "array", "minItems": 41, "maxItems": 41, "items": {"$ref": "#/$defs/roleCoverage"}},
+    "boundaries": {"type": "array", "minItems": 4, "items": {"$ref": "#/$defs/boundary"}},
+    "candidates": {"type": "array", "minItems": 2, "items": {"$ref": "#/$defs/candidate"}},
+    "candidate_boundary_matrix": {"type": "array", "minItems": 8, "items": {"$ref": "#/$defs/matrixRow"}},
+    "runtime_policy": {"$ref": "#/$defs/runtime"},
+    "return_receipts": {"$ref": "#/$defs/returnReceipts"},
+    "first_fresh_controls": {"$ref": "#/$defs/firstFreshControls"},
+    "claim_boundary": {"type": "string", "minLength": 1}
+  },
+  "$defs": {
+    "sha": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "role": {
+      "enum": [
+        "clock", "reset", "stage", "source", "producer", "request", "valid", "ready", "accept", "backpressure",
+        "fifo_enqueue", "fifo_dequeue", "fifo_occupancy", "fifo_full", "fifo_empty", "outstanding",
+        "tag", "address", "mask", "last", "count", "ping_pong_branch0", "ping_pong_branch1",
+        "per_bank_ready", "per_bank_full", "per_bank_valid", "per_bank_owner",
+        "barrier", "lifetime", "clear", "completion", "drain", "finish", "global_terminal",
+        "selected_port", "selected_bank", "selected_lane", "internal_match", "internal_state", "output", "wdata"
+      ]
+    },
+    "execution": {
+      "type": "object", "additionalProperties": false,
+      "required": ["compile_argv", "sim_argv", "dump_argv", "tb_source_path", "tb_source_sha256", "standard_tasks", "producer", "lightweight_observer_jsonl", "dump_targeting"],
+      "properties": {
+        "compile_argv": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+        "sim_argv": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+        "dump_argv": {
+          "type": "object", "additionalProperties": false,
+          "required": ["DUMP_VCD", "DUMP_FSDB", "TB_DUMP_FSDB"],
+          "properties": {"DUMP_VCD": {"const": "0"}, "DUMP_FSDB": {"const": "0"}, "TB_DUMP_FSDB": {"const": "0"}}
+        },
+        "tb_source_path": {"type": "string", "minLength": 1},
+        "tb_source_sha256": {"$ref": "#/$defs/sha"},
+        "standard_tasks": {"const": ["$dumpfile", "$dumpvars", "$dumpon", "$dumpoff", "$dumpflush"]},
+        "producer": {"const": "PACKAGE_LOCAL_TB_STANDARD_SYSTEM_TASKS_ONLY"},
+        "lightweight_observer_jsonl": {"const": false},
+        "dump_targeting": {
+          "type": "object", "additionalProperties": false,
+          "required": ["mode", "module_scope_dump", "dumpvars_depth", "signal_ids"],
+          "properties": {
+            "mode": {"const": "EXACT_CATALOG_SIGNALS"},
+            "module_scope_dump": {"const": false},
+            "dumpvars_depth": {"const": 0},
+            "signal_ids": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}}
+          }
+        }
+      }
+    },
+    "scope": {
+      "type": "object", "additionalProperties": false,
+      "required": ["simulation_top", "full_hierarchy_dump", "dump_scopes"],
+      "properties": {
+        "simulation_top": {"type": "string", "minLength": 1},
+        "full_hierarchy_dump": {"const": false},
+        "dump_scopes": {
+          "type": "array", "minItems": 1,
+          "items": {
+            "type": "object", "additionalProperties": false,
+            "required": ["scope_id", "exact_hierarchy", "depth", "boundary_ids", "source_bound_signal_ids"],
+            "properties": {
+              "scope_id": {"type": "string", "minLength": 1},
+              "exact_hierarchy": {"type": "string", "minLength": 1},
+              "depth": {"type": "integer", "minimum": 0},
+              "boundary_ids": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string"}},
+              "source_bound_signal_ids": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string"}}
+            }
+          }
+        }
+      }
+    },
+    "budget": {
+      "type": "object", "additionalProperties": false,
+      "required": ["soft_warning_bytes", "operational_vcd_budget_bytes", "return_budget_bytes", "wall_ceiling_seconds", "runtime_budget_mode", "runtime_budget_admission_path", "runtime_budget_admission_sha256", "absolute_maximum_wall_seconds", "hard_truncation", "sampling", "size_based_deletion"],
+      "properties": {
+        "soft_warning_bytes": {"const": 100000000},
+        "operational_vcd_budget_bytes": {"const": 8000000000},
+        "return_budget_bytes": {"const": 10000000000},
+        "wall_ceiling_seconds": {"type": "integer", "minimum": 3600, "maximum": 86400},
+        "runtime_budget_mode": {"enum": ["DEFAULT_BOUNDED", "MEASURED_PRETARGET_AWARE"]},
+        "runtime_budget_admission_path": {"type": ["string", "null"]},
+        "runtime_budget_admission_sha256": {
+          "oneOf": [{"type": "null"}, {"$ref": "#/$defs/sha"}]
+        },
+        "absolute_maximum_wall_seconds": {"const": 86400},
+        "hard_truncation": {"const": false},
+        "sampling": {"const": false},
+        "size_based_deletion": {"const": false}
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"runtime_budget_mode": {"const": "DEFAULT_BOUNDED"}}, "required": ["runtime_budget_mode"]},
+          "then": {
+            "properties": {
+              "wall_ceiling_seconds": {"const": 3600},
+              "runtime_budget_admission_path": {"type": "null"},
+              "runtime_budget_admission_sha256": {"type": "null"}
+            }
+          },
+          "else": {
+            "properties": {
+              "runtime_budget_admission_path": {"type": "string", "minLength": 1},
+              "runtime_budget_admission_sha256": {"$ref": "#/$defs/sha"}
+            }
+          }
+        }
+      ]
+    },
+    "diagnosticRound": {
+      "type": "object", "additionalProperties": false,
+      "required": ["round_index", "round_kind", "breadth_baseline", "source_identity", "coverage_gaps", "evolution"],
+      "properties": {
+        "round_index": {"type": "integer", "minimum": 1},
+        "round_kind": {"enum": ["FIRST_DIAGNOSTIC_ROUND", "EVIDENCE_REFINED_SUCCESSOR"]},
+        "breadth_baseline": {
+          "type": "object", "additionalProperties": false,
+          "required": [
+            "mode", "reference_round_index", "reference_package_id", "receipt_path", "receipt_sha256",
+            "reference_signal_count", "reference_direct_driver_leaf_count", "reference_candidate_count",
+            "reference_boundary_count", "reasonable_signal_count_range", "deviation"
+          ],
+          "properties": {
+            "mode": {"const": "FAMILY_CURRENT_ROUND_AT_LEAST_THREE_SOFT_REFERENCE"},
+            "reference_round_index": {"type": "integer", "minimum": 3},
+            "reference_package_id": {"type": "string", "minLength": 1},
+            "receipt_path": {"type": "string", "minLength": 1},
+            "receipt_sha256": {"$ref": "#/$defs/sha"},
+            "reference_signal_count": {"type": "integer", "minimum": 1},
+            "reference_direct_driver_leaf_count": {"type": "integer", "minimum": 0},
+            "reference_candidate_count": {"type": "integer", "minimum": 1},
+            "reference_boundary_count": {"type": "integer", "minimum": 4},
+            "reasonable_signal_count_range": {
+              "type": "object", "additionalProperties": false,
+              "required": ["minimum", "maximum"],
+              "properties": {
+                "minimum": {"type": "integer", "minimum": 1},
+                "maximum": {"type": "integer", "minimum": 1}
+              }
+            },
+            "deviation": {
+              "type": "object", "additionalProperties": false,
+              "required": ["relation", "explanation", "acknowledged"],
+              "properties": {
+                "relation": {"enum": ["WITHIN_REFERENCE_RANGE", "BELOW_REFERENCE_RANGE", "ABOVE_REFERENCE_RANGE"]},
+                "explanation": {"oneOf": [{"type": "null"}, {"type": "string", "minLength": 1}]},
+                "acknowledged": {"type": "boolean"}
+              }
+            }
+          }
+        },
+        "source_identity": {
+          "type": "object", "additionalProperties": false,
+          "required": ["pinned_rtl_tree_sha256", "catalog_source_identity_sha256"],
+          "properties": {
+            "pinned_rtl_tree_sha256": {"$ref": "#/$defs/sha"},
+            "catalog_source_identity_sha256": {"$ref": "#/$defs/sha"}
+          }
+        },
+        "coverage_gaps": {
+          "type": "array", "uniqueItems": true,
+          "items": {
+            "type": "object", "additionalProperties": false,
+            "required": ["candidate_id", "gap_code", "reason", "matrix_still_distinguishable"],
+            "properties": {
+              "candidate_id": {"type": "string", "minLength": 1},
+              "gap_code": {"const": "HIGH_CANDIDATE_ZERO_HOP_DRIVER_ABSENT"},
+              "reason": {"type": "string", "minLength": 1},
+              "matrix_still_distinguishable": {"const": true}
+            }
+          }
+        },
+        "evolution": {
+          "type": "object", "additionalProperties": false,
+          "required": [
+            "predecessor", "added_signal_ids", "removed_signal_ids", "unchanged_signal_ids",
+            "removal_evidence", "candidate_preservation"
+          ],
+          "properties": {
+            "predecessor": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/predecessor"}]},
+            "added_signal_ids": {"$ref": "#/$defs/uniqueIds"},
+            "removed_signal_ids": {"$ref": "#/$defs/uniqueIds"},
+            "unchanged_signal_ids": {"$ref": "#/$defs/uniqueIds"},
+            "removal_evidence": {"type": "array", "items": {"$ref": "#/$defs/removalEvidence"}},
+            "candidate_preservation": {"$ref": "#/$defs/candidatePreservation"}
+          }
+        }
+      }
+    },
+    "predecessor": {
+      "type": "object", "additionalProperties": false,
+      "required": ["package_id", "round_index", "contract_path", "contract_sha256", "pinned_rtl_tree_sha256", "published_gate_semantic_version", "published_pass_receipt_path", "published_pass_receipt_sha256"],
+      "properties": {
+        "package_id": {"type": "string", "minLength": 1},
+        "round_index": {"type": "integer", "minimum": 1},
+        "contract_path": {"type": "string", "minLength": 1},
+        "contract_sha256": {"$ref": "#/$defs/sha"},
+        "pinned_rtl_tree_sha256": {"$ref": "#/$defs/sha"},
+        "published_gate_semantic_version": {"enum": ["5", "6", "7", "8"]},
+        "published_pass_receipt_path": {"type": "string", "minLength": 1},
+        "published_pass_receipt_sha256": {"$ref": "#/$defs/sha"}
+      }
+    },
+    "removalEvidence": {
+      "type": "object", "additionalProperties": false,
+      "required": ["signal_id", "reason", "confidence", "affected_candidate_ids", "disposition"],
+      "properties": {
+        "signal_id": {"type": "string", "minLength": 1},
+        "reason": {"type": "string", "minLength": 1},
+        "confidence": {"enum": ["HIGH", "MEDIUM", "LOW"]},
+        "affected_candidate_ids": {"$ref": "#/$defs/uniqueIds"},
+        "disposition": {"const": "FAMILY_ADAPTIVE_PRUNING"}
+      }
+    },
+    "candidatePreservation": {
+      "type": "object", "additionalProperties": false,
+      "required": ["preserved_candidate_ids", "closed_candidate_ids", "new_candidate_ids", "closure_evidence"],
+      "properties": {
+        "preserved_candidate_ids": {"$ref": "#/$defs/uniqueIds"},
+        "closed_candidate_ids": {"$ref": "#/$defs/uniqueIds"},
+        "new_candidate_ids": {"$ref": "#/$defs/uniqueIds"},
+        "closure_evidence": {"type": "array", "items": {"$ref": "#/$defs/closureEvidence"}}
+      }
+    },
+    "closureEvidence": {
+      "type": "object", "additionalProperties": false,
+      "required": ["candidate_id", "path", "sha256", "machine_check_exit", "result"],
+      "properties": {
+        "candidate_id": {"type": "string", "minLength": 1},
+        "path": {"type": "string", "minLength": 1},
+        "sha256": {"$ref": "#/$defs/sha"},
+        "machine_check_exit": {"const": 0},
+        "result": {"const": "CLOSED_BY_PRIOR_EVIDENCE"}
+      }
+    },
+    "uniqueIds": {
+      "type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}
+    },
+    "signal": {
+      "type": "object", "additionalProperties": false,
+      "required": ["signal_id", "exact_hierarchy", "width_bits", "roles", "source_path", "source_sha256", "declaration_span_sha256", "source_binding", "derived_expected_equation", "drives_dut", "driver_leaf_for_candidate_ids", "driver_depth_edges"],
+      "properties": {
+        "signal_id": {"type": "string", "minLength": 1},
+        "exact_hierarchy": {"type": "string", "minLength": 1},
+        "width_bits": {"type": "integer", "minimum": 1},
+        "roles": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/role"}},
+        "source_path": {"type": "string", "minLength": 1},
+        "source_sha256": {"$ref": "#/$defs/sha"},
+        "declaration_span_sha256": {"$ref": "#/$defs/sha"},
+        "source_binding": {"const": "ACTUAL_SOURCE_NET"},
+        "derived_expected_equation": {"const": false},
+        "drives_dut": {"const": false},
+        "driver_leaf_for_candidate_ids": {"$ref": "#/$defs/uniqueIds"},
+        "driver_depth_edges": {"oneOf": [{"type": "null"}, {"const": 0}]}
+      }
+    },
+    "roleCoverage": {
+      "type": "object", "additionalProperties": false,
+      "required": ["role", "disposition", "signal_ids"],
+      "properties": {
+        "role": {"$ref": "#/$defs/role"},
+        "disposition": {"enum": ["covered", "not_applicable"]},
+        "signal_ids": {"type": "array", "uniqueItems": true, "items": {"type": "string"}},
+        "not_applicable_proof": {
+          "type": "object", "additionalProperties": false,
+          "required": ["path", "sha256", "machine_check_exit", "reason"],
+          "properties": {
+            "path": {"type": "string", "minLength": 1}, "sha256": {"$ref": "#/$defs/sha"},
+            "machine_check_exit": {"const": 0}, "reason": {"type": "string", "minLength": 1}
+          }
+        }
+      }
+    },
+    "boundary": {
+      "type": "object", "additionalProperties": false,
+      "required": ["boundary_id", "layer", "signal_ids"],
+      "properties": {
+        "boundary_id": {"type": "string", "minLength": 1},
+        "layer": {"enum": ["FIRST_DIVERGENCE_UPSTREAM_ONE", "FIRST_DIVERGENCE_CURRENT", "FIRST_DIVERGENCE_DOWNSTREAM_ONE", "STATE_HOLD_CLEAR"]},
+        "signal_ids": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string"}}
+      }
+    },
+    "candidate": {
+      "type": "object", "additionalProperties": false,
+      "required": ["candidate_id", "description", "priority"],
+      "properties": {
+        "candidate_id": {"type": "string", "minLength": 1},
+        "description": {"type": "string", "minLength": 1},
+        "priority": {"enum": ["HIGH", "MEDIUM", "LOW"]}
+      }
+    },
+    "matrixRow": {
+      "type": "object", "additionalProperties": false,
+      "required": ["candidate_id", "boundary_id", "expected_signature"],
+      "properties": {
+        "candidate_id": {"type": "string", "minLength": 1},
+        "boundary_id": {"type": "string", "minLength": 1},
+        "expected_signature": {"type": "object", "minProperties": 1}
+      }
+    },
+    "runtime": {
+      "type": "object", "additionalProperties": false,
+      "required": ["plateau_suspected_cycles", "plateau_dump_off_cycles", "post_dump_grace_cycles", "plateau_qualification", "sim_time_freeze_intervals", "sim_time_freeze_interval_seconds", "heartbeat_source", "heartbeat_width_bits", "heartbeat_signed", "heartbeat_cadence_cycles", "decision_authority", "outer_runner_independent_exit_logic", "required_replay_cases", "planned_dumpoff_state_source", "post_dumpoff_progress_source", "dump_off_grace_precedes_freeze", "stop_marker_policy", "required_dumpoff_consistency_replays", "archive_timestamp_binding", "termination_sequence", "disk_write_quota_fail_safe", "rolling_growth_projection"],
+      "properties": {
+        "plateau_suspected_cycles": {"const": 1048576},
+        "plateau_dump_off_cycles": {"const": 4194304},
+        "post_dump_grace_cycles": {"const": 262144},
+        "plateau_qualification": {"const": ["owner_clock_advancing", "sim_time_advancing", "all_qualified_progress_counters_stable", "complete_source_bound_causal_state_bitwise_stable", "global_progress_witness_stable", "candidate_catalog_coverage_complete", "no_unresolved_xz"]},
+        "sim_time_freeze_intervals": {"const": 3},
+        "sim_time_freeze_interval_seconds": {"const": 30},
+        "heartbeat_source": {"const": "APPENDED_VCD_TIMESTAMP"},
+        "heartbeat_width_bits": {"type": "integer", "minimum": 64},
+        "heartbeat_signed": {"const": false},
+        "heartbeat_cadence_cycles": {"const": 16384},
+        "decision_authority": {"const": "SHARED_RUNTIME_EVALUATOR_ONLY"},
+        "outer_runner_independent_exit_logic": {"const": false},
+        "required_replay_cases": {"const": ["ADVANCING_VCD_TIMESTAMP", "PLATEAU_SUSPECTED_ONLY", "PLATEAU_DUMP_OFF_PLUS_GRACE", "THREE_INTERVAL_TRUE_FREEZE"]},
+        "planned_dumpoff_state_source": {"const": "EXECUTION_BOUND_TB_STICKY_EVENT"},
+        "post_dumpoff_progress_source": {"const": "EXECUTION_BOUND_OWNER_CLOCK_AND_TB_TIME"},
+        "dump_off_grace_precedes_freeze": {"const": true},
+        "stop_marker_policy": {"const": "ONE_SHOT_LATCHED"},
+        "required_dumpoff_consistency_replays": {"const": ["PLANNED_DUMPOFF_FROZEN_VCD_GRACE_CONTINUE", "PLANNED_DUMPOFF_PLUS_GRACE_CAUSAL_PLATEAU", "REPEATED_STOP_MARKER_FAIL_CLOSED"]},
+        "archive_timestamp_binding": {"const": "FULL_FILE_SHA_BYTES_PLUS_LAST_TIMESTAMP_EXACT"},
+        "termination_sequence": {"const": ["TERM", "WAIT", "KILL", "REAP"]},
+        "disk_write_quota_fail_safe": {"const": true},
+        "rolling_growth_projection": {"const": true}
+      }
+    },
+    "returnReceipts": {
+      "type": "object", "additionalProperties": false,
+      "required": ["catalog", "candidate_matrix", "breadth_evolution", "actual_argv", "tb_source", "elaboration", "runtime", "dump_control", "vcd", "process_tree", "return_manifest"],
+      "properties": {
+        "catalog": {"type": "string", "minLength": 1}, "candidate_matrix": {"type": "string", "minLength": 1},
+        "breadth_evolution": {"type": "string", "minLength": 1},
+        "actual_argv": {"type": "string", "minLength": 1}, "tb_source": {"type": "string", "minLength": 1},
+        "elaboration": {"type": "string", "minLength": 1}, "runtime": {"type": "string", "minLength": 1},
+        "dump_control": {"type": "string", "minLength": 1},
+        "vcd": {"type": "string", "pattern": "\\.vcd$"}, "process_tree": {"type": "string", "minLength": 1},
+        "return_manifest": {"type": "string", "minLength": 1}
+      }
+    },
+    "firstFreshControls": {
+      "type": "object", "additionalProperties": false,
+      "required": ["required_for_family_epoch", "clean_exact_zip_revalidation", "negative_controls"],
+      "properties": {
+        "required_for_family_epoch": {"const": true},
+        "clean_exact_zip_revalidation": {"const": true},
+        "negative_controls": {
+          "type": "object", "additionalProperties": false,
+          "required": [
+            "missing_soft_reference_receipt", "deviation_without_explanation",
+            "low_confidence_removal", "add_remove_diff_mismatch", "candidate_loss",
+            "source_identity_drift", "size_or_stop_protection_weakened"
+          ],
+          "properties": {
+            "missing_soft_reference_receipt": {"const": true},
+            "deviation_without_explanation": {"const": true},
+            "low_confidence_removal": {"const": true},
+            "add_remove_diff_mismatch": {"const": true},
+            "candidate_loss": {"const": true},
+            "source_identity_drift": {"const": true},
+            "size_or_stop_protection_weakened": {"const": true}
+          }
+        }
+      }
+    }
+  }
+}

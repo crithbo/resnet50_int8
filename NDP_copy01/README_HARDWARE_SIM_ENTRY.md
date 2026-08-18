@@ -1,6 +1,6 @@
 # NDP_copy01 硬件仿真入口
 
-最后更新：2026-08-13（observer-only 宽因果回传与原生 production flow）
+最后更新：2026-08-15（GitHub master e7cef1b + observer 默认 + 可选 TB VCD 全因果锥）
 
 本文件只说明活动 Make/TB/filelist 的实际消费接口。包结构、runner、回传和预算看
 `.agents/rules/服务器测试包生成规则.md`；算子语义看专项规则；版本状态看
@@ -16,19 +16,23 @@
 
 `NDP_copy01/rtl/**` 默认只读。普通服务器包不得携带、覆盖、patch、安装、恢复或间接
 替换任何功能 RTL。当前本地 `rtl/` 与
-`Trassic2.0_RTL/code/NDP_rtl` commit
-`0ccae916ef61904a64d6cf8ec1d1931b45e428d8` 精确一致：2262 files，
-tree receipt `c6902de6fabfce81ee10af02cec238e5b11d2fdece9454041415c455556e1093`。
+`Trassic2.0_RTL/code/NDP_rtl` 的 GitHub master commit
+`e7cef1b0417b98f059b921edc090acf33479f890` 快照精确一致：2270 files，
+tree receipt `932988e38713a6e9a08639bbec589cd9b0213c5857d1ff11fc9f57bc99c2f138`。
+该私有仓库通过已登录 GitHub 的精确 commit archive 同步；独立 checkout 用本地记录提交
+`2d352318b9ac27851f6d64e045f9cad423c4d80b` 固化同一工作树，不能把这个本地 SHA 冒充上游 SHA。
 旧 `rtl_pre_*` 备份目录已删除，不再采用保留副本作为活动源。
+历史入口仍会读取的 `Slice.zip` 也已用同一 current RTL 中原有 116 个成员重建，逐成员
+byte-equal，旧 archive 未并存保留；不得再把旧 ZIP 当作另一套 RTL 来源。
 
 云端 GitHub `xlsjdjdk/Trassic2.0_RTL/master` 是功能 RTL 权威；本地和服务器实际源码差异
 本身不阻止 compile 成功后的 simulation。正式包回传仍须记录 actual compile identity，
 对照云端 commit 做算子 causal-cone 影响裁决；不能把本地同步冒充 production compile
 receipt。旧包名或旧构建 provenance（例如 `df23e4d`）不表示服务器仍在使用旧 RTL。
 
-真实 VCS 只在具备 Synopsys compile/simulation 依赖和 license 的 Linux 服务器运行；Verdi只用于
-历史波形，不是 current observer-only 路径依赖。Windows 本机负责 package/manifest、event return
-解析、返回分析和回归验证。
+真实VCS只在具备Synopsys compile/simulation依赖和license的Linux服务器运行。Windows本机负责
+package/manifest、observer event或标准文本VCD的流式解析、返回分析和回归验证；两种current模式都不
+依赖Verdi/DVE/WaveUtils/vpd2vcd等vendor decoder。
 
 ## 2. 工作目录和 Make 语义
 
@@ -58,17 +62,33 @@ consumer path。仓库未保存的 server loader/start/wait/readback 命令固�
 - 正式 runner 默认使用 no-archive 路径，避免复制 build tree；
 - `SCA_CFG`/`+SCA_CFG`：主 SCA；
 - `+SCA_CFG_D`：D readback SCA；
-- `DUMP_VCD/DUMP_FSDB/TB_DUMP_FSDB`：current next-fresh 固定为 `0/0/0`。VPD、FSDB、VCD、FST、
-  dump Tcl、PLI waveform writer、Verdi/WaveUtils query 及其 shard/lock 都不是新包输入或回传成员；
-  NDP 根目录已有 `inter.fsdb`/`novas.fsdb` 也永远不是本轮证据。
-- 动态证据由 package-local、source-bound、只读 observer 产生，并写入本次 attempt 的
-  signal-id catalog、分块 4-state event、end-state、sim-time heartbeat 与 canonical decision。
-  actual compile/sim argv、observer plan/source、parser 和 formal return allowlist 必须绑定同一
-  package/execution/attempt 与实际 source identity。
-- 共享实现入口为 `contracts/server_observer_only_wide_causal_dispatch_v1.json`，由
-  `tools/validate_server_observer_only_wide_causal.py` 和
-  `tools/server_observer_runtime_supervision.py` 分别验证 exact package/return 与监督 simulator tree；
-  package 不得自行恢复已退休的 waveform gate。
+- `DUMP_VCD/DUMP_FSDB/TB_DUMP_FSDB`：两种current模式都固定为`0/0/0`。VPD、FSDB、FST、dump Tcl、
+  UCLI direct-VCD、PLI/vendor query及其shard/lock都不是新包输入或回传成员；NDP根已有
+  `inter.fsdb`/`novas.fsdb`也永远不是本轮证据。
+- 每个fresh包通过`contracts/server_diagnostic_mode_selector_dispatch_v1.json`显式选择恰好一个bulk
+  evidence：默认`OBSERVER_ONLY_WIDE_CAUSAL`，或主线按包选择的`TB_VCD_BOUNDED_CAUSAL_CONE`。
+
+可选VCD模式的退出只能由`tools/server_tb_vcd_runtime_supervision.py`的共享判定回执驱动；runner不得复制
+plateau/freeze阈值。append timestamp仍增长或仅为`PLATEAU_SUSPECTED`时继续运行，只有完整dump-off加
+grace平台或真实3区间freeze才停止。final return必须把quiescent archive的VCD SHA/bytes/最后timestamp
+绑定到同次runtime；未flush、未close、未reap或runtime不完整时finalization必须失败并保留PARTIAL/core。
+- observer模式仍写attempt-local signal-id catalog、分块4-state event、end-state、sim-time heartbeat和
+  canonical decision，入口保持`contracts/server_observer_only_wide_causal_dispatch_v1.json`。
+- VCD模式只允许package-local TB标准`$dumpfile/$dumpvars/$dumpon/$dumpoff/$dumpflush`，只dump
+  source-bound完整因果锥，展开后的`$dumpvars` target union必须与exact catalog一致，不允许module/
+  aggregate/full hierarchy/memory array；freeze只读取append VCD timestamps，heartbeat为unsigned
+  width>=64且每16384 owner cycles输出；multiline timescale必须可解析，partial/unflushed/unreaped不得
+  finalization pass；入口为
+  `contracts/server_tb_vcd_bounded_causal_cone_dispatch_v1.json`。它与full observer JSONL互斥。
+- 本族首个VCD诊断round绑定当前`round>=3`参考和合理signal-count range；计数是软参照，偏离可在记录
+  relation/reason/acknowledgement后告警通过。HIGH候选zero-hop driver是强目标，缺失只记录gap且matrix仍
+  须可区分。后续round绑定exact predecessor和signals/candidates增删差异；删signal记录reason、
+  HIGH/MEDIUM/LOW confidence和affected candidates，LOW默认保留，HIGH/MEDIUM可工程删减。
+- actual argv、所选mode、catalog/plan/source、candidate matrix、runtime receipt和formal return allowlist
+  必须绑定同一package/execution/attempt与实际source identity。
+- final release必须读取`contracts/server_package_release_admission_dispatch_v1.json`：manifest晋升为
+  `PACKAGE_READY_NOT_RUN`后，对final staging与clean exact-ZIP分别运行package-specific preflight，并以
+  pending中间状态负控证明`package claim boundary differs`；precompile失败保留stdout/stderr/exit core。
 
 ## 3. SCA loader 和 payload ABI
 
@@ -142,34 +162,35 @@ observer 证明所有目标完成，不能把 slice1 单事件外推为全局完
 5. preload、内部 MSE write、文件存在、Make 返回 0、单 slice 完成或成功文本均不能替代
    正式 readback。
 
-## 7. Mandatory source-bound 只读 observer
+## 7. Mandatory source-bound 动态证据（二选一）
 
-所有可能进入 DUT simulation 的 next-fresh 包都必须启用 observer，并且必须：
+所有可能进入DUT simulation的next-fresh包都必须显式选择observer或TB VCD模式，并且共同满足：
 
 - 位于 `rtl/` 外，不驱动 DUT；
 - 使用全新 compile 身份；
-- 由 plusarg 显式开启，记录真实 DUT net，不用 observer 重算的 expected equation 代替 actual net；
+- 记录真实DUT net，不用observer重算的expected equation代替actual net；
 - 以足够宽的因果 catalog 覆盖 clock/reset/stage、producer、queue、request/accept/backpressure、
   selected port/bank/lane、internal match/state/clear、output/wdata、terminal/finish/formal-D；
-- 用本机可读 signal-id catalog 与分块 JSONL/TSV 记录每个选中信号的有序 0/1/X/Z transition、
-  exact time/sequence/width 与 end state；timeout/HUP/INT/TERM 时 `fflush` 已有 chunk；
+- observer模式用本机可读catalog与分块JSONL/TSV记录有序0/1/X/Z transition/end state；VCD模式用
+  标准文本VCD记录同一source-bound因果锥，并绑定四层边界与完整candidate矩阵；
 - 不改变 ready/valid、数据、时序、完成或 timeout。
 
-100,000,000 bytes 是 observer evidence aggregate 的软偏好，不是 hard cap。超出只记录 warning，
-不得截断、采样、按大小删除或阻止 formal return。simulation_started=true 时缺 required catalog/
-chunk/index/parser/decision receipt 必须标记 `DIAGNOSTIC_EVIDENCE_INCOMPLETE`。
+100,000,000 bytes是两种模式的软告警，不是hard cap。超出不得截断、采样、按大小删除或阻止return。
+VCD另有60分钟、8GB VCD增长投影、10GB return投影、3×30秒sim-time冻结及I/O错误独立PARTIAL兜底；
+严格因果平台交集满足后才能早停。simulation_started=true而缺所选模式required evidence时必须标记
+`DIAGNOSTIC_EVIDENCE_INCOMPLETE`。
 
 ## 8. 环境和成功边界
 
-需要 Linux x86_64、bash/GNU make/coreutils、VCS/license，以及 filelist 所需 DesignWare、VIP、
-DDR/PHY 库；observer-only 回传不要求 Verdi、DVE、WaveUtils 或本机 Synopsys decoder。
+需要Linux x86_64、bash/GNU make/coreutils、VCS/license，以及filelist所需DesignWare、VIP、DDR/PHY
+库；observer与标准TB VCD回传都不要求本机Synopsys decoder。
 
-normal/timeout/HUP/INT/TERM 都须回收已 close/flush 的 observer chunks 与 core。compile 未成功或
-simulation 未启动时允许无 event，但 compile-core return 仍是必需。同一 bash/package 顺序重复
-运行时，只清除 exact package-owned cfg/attempt leaf（包括 stale observer chunks），
+normal/timeout/HUP/INT/TERM都须回收已close/flush的所选dynamic evidence与core。compile未成功或
+simulation未启动时允许无event/VCD，但compile-core return仍是必需。同一bash/package顺序重复
+运行时，只清除 exact package-owned cfg/attempt leaf（包括 stale observer chunks/VCD），
 不得触碰 foreign sibling 或根目录直接项；每轮使用新 execution identity 和唯一 return 名，历史
-return 必须保留且不得覆盖。process-tree supervisor 仍须完成 child-subreaper、PGID、内部 timeout、
-TERM→wait→KILL/reap 与 sim-time heartbeat；无需等待不存在的 waveform writer。
+return必须保留且不得覆盖。process-tree supervisor仍须完成child-subreaper、PGID、内部timeout、
+TERM→wait→KILL/reap与sim-time heartbeat；VCD模式还须等待`$dumpoff/$dumpflush`与VCD exact-set稳定。
 
 一次结果只有在 package/argv/入口身份、compile、preload、目标完成、各层退出状态、
 readback exact-set/格式、独立 golden 和算子专项动态门全部通过后，才能进入相应 E4。

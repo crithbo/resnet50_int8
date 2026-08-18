@@ -1,6 +1,6 @@
 # ResNet50 INT8 当前状态与短期计划
 
-最后更新：2026-08-13（原生 production flow non-interference gate activated）
+最后更新：2026-08-18（serialized v106与QAdd v80是当前两份唯一pending；QAdd v80绑定source-bound 15000秒墙钟预算、86400秒绝对上限和TB-VCD semantic-v8门；两包均经独立审查PASS；GAP/native根因已闭合且无successor；全局存储审计2/61/24通过）
 
 ## 0. 文件职责
 
@@ -22,39 +22,46 @@
 
 | 算子/范围 | 当前状态 | 最新裁决 |
 |---|---|---|
-| GAP node0071 | `PACKAGE_BUILDING / NATIVE_FLOW_FRESH` | v60 formal return已消费并归tested；fresh successor正在冻结v60 slice-local绕行与sum_s2宽因果目标重建，修正first-true-error并直接执行原生production flow |
-| QLinearAdd node0007 | `PACKAGE_BUILDING / NATIVE_FLOW_FRESH` | v61保持byte-exact pending直到fresh successor全门通过；新包保留identity修复、48个actual signals、双ping-pong端口与tail-round目标，并加入native-flow non-interference合同 |
+| GAP node0071 | `VALIDATED_ROOT_CAUSE / WAIT_EQUIVALENT_C_PATH_CONFIG_EXTENSION_AUTHORIZATION` | v73保持v72 A侧MSE1/Buffer2绕行并证明C侧MSE3/Buffer4的Buffer_AG列FIFO同样跨slice_rst保留旧索引，重放base 1造成[0,16)与[1,17)原子重叠；当前v72/v73端到端映射不可用，无观察型successor，等待另一个等价C路径配置扩展授权 |
+| QLinearAdd node0007 | `PACKAGE_READY_NOT_RUN / V80_W15KQF` | v73动态验证exact 4/2请求严格交替、accept/clear/read-output持续推进至12440/18816 pair，8400秒墙钟先于目标完成。v80冻结4/2、64信号/7候选/28矩阵行和独立资源保护，选择15000秒wall、86400秒绝对上限，补齐qualified progress、procfs/reap与return producer闭合；全部当前门和独立复审PASS，成为唯一QAdd pending |
 | MaxPool node0002 | `DEFERRED_BY_USER / COMPLETE_JSON_COMPLETE / TOOL_RULE_COHERENCE_PASS` | pinned exact-stage scope已闭合1/1；461叶闭合，numeric=`LOCAL_SOURCE_PASS`、pipeline=`CONTRADICTED`，current/cloud padding RTL receipt已刷新；padding `null→0`动态归因仍不足 |
-| Conv node0004 serialized | `PACKAGE_READY_NOT_RUN / V90B_NATIVEFLOW` | v89b formal return已消费并归tested；v90b保留v88 actual-source基线和纠正后的38-net宽因果目标，不恢复旧ACK comparator，以原生production flow直接裁决v88/v89差异 |
-| Conv native four-lane | `PACKAGE_READY_NOT_RUN / P46_NATIVEFLOW` | p45 formal return已消费并归tested；p46保留p42 vector修复与MSE4目标，采用原生production flow，并已补齐stale dump metadata、actual argv、SIM_EXIT、COMPILE_CORE和exact core manifest |
+| Conv node0004 serialized | `PACKAGE_READY_NOT_RUN / V106_RETURN2PFLIGHT` | v102已compile并进入LC3→PE8→Memory_AG目标，但32位时间回绕、非accept-qualified计数、双墙钟权威和未reap PID使tuple10不可裁决。v106冻结LC9→LC3、配置/RTL/workload/numeric/golden与52信号锥，只修64位时间、accept-qualified计数、完整plateau、单一3660秒权威及guard→publish→durable→cleanup两阶段return；全部当前门和独立审查PASS，成为serialized唯一pending |
+| Conv native four-lane | `VALIDATED_ROOT_CAUSE / WAIT_FUNCTIONAL_FIX_AUTHORIZATION` | p52独立验证`MSE4_MEMORY_AG_INPUT1_BUFFER_TAG_STREAM_UNDERSUPPLIES_ONE_TUPLE`；9 tuple→18 metadata descriptor=288 units，prepared=20x16=320，缺一笔32-unit transaction，无successor |
 | QuantizeLinear node0074 | `APPROVED_EQUIVALENT / FROZEN_HARDWARE_SLOW_COMPOSITE_HARD_BLOCKED` | hwop-0000-00在real-affine上界下仍最少需82 coefficient segments，超过current SFU容量66；single reciprocal有159个可见transition mismatch，故冻结硬件下全族B路径不可行；node0074消除路径不变 |
 | DequantizeLinear | node0077 `E4/E5_PASS_FROZEN / COMPLETE_JSON_COMPLETE` | pinned exact-stage scope已闭合node0072/node0077共2/2，两candidate共832叶完整；node0072同qdomain alias保留，但生产/集成/formal门仍开放 |
 | RequantizeUint8 node0001 | `COMPLETE_LOCAL_STRICT_JSON_54_OF_54 / LOCAL_W3_DYNAMIC_EXACT_PASS / NATIVE_BACKEND_OPEN` | 54/54 stages、169,410,176个真实W3 elements本地动态双跑mismatch=0；scalar input transaction占主导，native mapper/encoder、RTL cycle、natural terminal及E3/E4/E5仍开放 |
 | View node0073 | `APPROVED_EQUIVALENT_UINT8_ALIAS / COMPLETE_JSON_COMPLETE` | pinned exact-stage scope已闭合1/1，`METADATA_ONLY_ALIAS_NO_COMPUTE`硬件JSON数为0且161叶无UNRESOLVED；运行时accepted lifetime仍待联合return |
 | QLinearMatMul node0075 | `V9_RETURN_ANALYZED / WAIT_GAP_PRODUCER_CLOSURE / COMPLETE_JSON_COMPLETE` | v9低bank-row修正有效，但只到node0071 stage01 EXEC_START；node0075未到达，不重复跑同一长前缀 |
-| 整网测试收敛优化 | `OBSERVER_ONLY_WIDE_CAUSAL + NATIVE_FLOW_NONINTERFERENCE_ACTIVATED` | observer-only与post-sim合取修复保持；provider closure/短探针 gate 维持撤销。next-fresh exact runner 在 production launch 前只做非干预扫描，真实 cwd/argv/log/exit 自然裁决环境；失败后才做原生 ndp-sim differential |
+| 整网测试收敛优化 | `DUAL_MODE_ACTIVE / TBVCD_SEMANTIC_V8 / GUARD_PROCFS / MEASURED_RUNTIME_BUDGET` | 首轮VCD宽度仍是软参照，后续可按理由/置信度自适应删增。planned-dumpoff两阶段freeze/grace、STOP one-shot、childless-procfs PID+start-time guard、release cross-member consistency与quiescent archive继续生效；默认wall仍为3600秒，只有source-bound测量+硬上限门允许精确覆盖（当前QAdd v80=15000秒，absolute=86400秒）；observer默认不变 |
 
 ### 1.1 当前 owner、任务与回传路由（registry epoch 6）
 
 | role | current ACTIVE owner | owner epoch | current task / next action |
 |---|---|---:|---|
-| `mainline.control` | `019ff027-e7db-72a3-b282-cfad8708da05` | 2 | native-flow non-interference gate 已激活；不派发或重建 current 包，不持续轮询、不执行服务器动作 |
-| `family.gap` | `019ff02d-8225-7d21-9779-e46ce4130572` | 2 | `PACKAGE_BUILDING`：重建GAP native-flow fresh successor；只做本地构包，无服务器动作 |
-| `family.conv.serialized` | `019ff02d-901b-7f70-a9da-f54e268b5bbe` | 2 | `PACKAGE_READY_NOT_RUN`：v90b已成为唯一serialized pending；等待用户后续运行授权，不执行服务器动作 |
-| `family.conv.native` | `019ff02d-974d-7c72-a4d5-de8dbf4ae60c` | 2 | `PACKAGE_READY_NOT_RUN`：p46已成为唯一native Conv pending；等待用户后续运行授权，不执行服务器动作 |
-| `family.qlinearadd` | `019ff02d-9e93-7d61-8c98-c928fdea157c` | 2 | `PACKAGE_BUILDING`：从未运行v61重建native-flow fresh successor；v61在fresh全门通过前保持pending |
-| `optimizer.whole-network` | `019fd276-14c5-7800-94db-87ebfb9ce632` | 1 | `SHARED_GATE_READY_FROZEN`：observer-only profile/validator和generic process supervisor已验收；只维护共享缺陷，不替family构包或运行服务器 |
+| `mainline.control` | `019ff027-e7db-72a3-b282-cfad8708da05` | 2 | serialized v106与QAdd v80独立审查、串行storage轮换和current pointer均已验收；当前唯一pending为v106/v80，等待用户另行授权上传和服务器运行 |
+| `family.gap` | `019ff02d-8225-7d21-9779-e46ce4130572` | 2 | `VALIDATED_ROOT_CAUSE / WAIT_EQUIVALENT_C_PATH_CONFIG_EXTENSION_AUTHORIZATION`：v73证明C侧MSE3/Buffer4同类stale FIFO根因，当前绕行不端到端可用；已tested且无pending successor |
+| `family.conv.serialized` | `019ff02d-901b-7f70-a9da-f54e268b5bbe` | 2 | `PACKAGE_READY_NOT_RUN`：v106冻结LC9→LC3/tuple10功能面与52信号锥，绑定accept-qualified observer、单一3660秒权威和两阶段return；独立审查PASS并成为serialized唯一pending |
+| `family.conv.native` | `019ff02d-974d-7c72-a4d5-de8dbf4ae60c` | 2 | `VALIDATED_ROOT_CAUSE_WAIT_FUNCTIONAL_FIX_AUTHORIZATION`：p52已闭合input1 buffer-tag stream少一tuple；无pending successor |
+| `family.qlinearadd` | `019ff02d-9e93-7d61-8c98-c928fdea157c` | 2 | `PACKAGE_READY_NOT_RUN`：v80冻结已动态推进的4/2目标，使用selected wall=15000秒、absolute=86400秒、semantic-v8、qualified progress、fresh post-KILL reap及content-bound return producer；独立复审PASS并成为QAdd唯一pending |
+| `optimizer.whole-network` | `019fd276-14c5-7800-94db-87ebfb9ce632` | 1 | `SHARED_METHOD_ACTIVATED`：childless-procfs process identity、TB-VCD semantic-v8 predecessor兼容、source-bound 15000/86400 runtime admission、release cross-member consistency、planned-dumpoff/freeze/STOP与package Python/schema门均已同步；维护共享门，不替family运行服务器 |
 
 完成通知发送前必须从current registry重新解析mainline；旧owner与旧派发thread ID只作provenance。
 
-## 2. 当前 observer-only 构包快照与前代波形裁决
+## 2. 当前双模式构包裁决与四族VCD选择
 
-用户已裁决取消 next-fresh 的 VPD、FSDB、VCD、FST，统一改为本机直接读取的 source-bound
-observer。actual profile 固定 `DUMP_VCD=0/DUMP_FSDB=0/TB_DUMP_FSDB=0`；宽因果 catalog覆盖
-FIRST_DIVERGENCE 上游/当前/下游及状态持有/清除路径，记录全部选中 actual signal 的4-state
-transition和end-state。100,000,000 bytes只作软告警，不能截断、采样或按大小删除。GAP、serialized
-Conv、native Conv、QAdd均已进入fresh本地构包；旧四个FSDB pending在fresh publication前保持只读，
-随后由各family storage manager原子移入superseded。没有upload/run/lease授权，主线派发后不持续轮询。
+用户已裁决保留`OBSERVER_ONLY_WIDE_CAUSAL`为默认且完全可选，同时新增按包显式选择的
+`TB_VCD_BOUNDED_CAUSAL_CONE`。四个当前目标族的**下一轮**统一选择VCD模式；这不是覆盖observer规则。
+两种模式actual profile均固定`DUMP_VCD=0/DUMP_FSDB=0/TB_DUMP_FSDB=0`，VCD只由package-local TB标准
+tasks产生，禁止VPD/FSDB/UCLI/vendor/full-top dump。VCD必须覆盖41类source-bound role、四层
+FIRST_DIVERGENCE边界和完整candidate×boundary矩阵。100,000,000 bytes只告警；默认3600秒wall、8GB VCD/
+10GB return投影、3×30秒sim-time冻结、严格plateau交集和I/O失败是PARTIAL兜底，不截断已写VCD。
+只有完整source-bound测量、确定性推荐与硬上限门闭合时才允许按包覆盖wall；当前唯一覆盖是QAdd v80的15000秒，absolute maximum为86400秒。
+首轮VCD诊断包引用同族当前第三轮和合理信号量范围；计数只作软参照，偏离有说明/确认即可告警通过。
+HIGH候选的zero-hop driver是强覆盖目标，但不因计数单独阻断。后续轮次可删减判断为无关的signal并加入
+新暴露候选：记录理由、置信度和受影响候选，LOW置信度默认保留，HIGH/MEDIUM允许工程删减。该v4只
+约束后续next-fresh，不追溯hold或重建当前v94b/p49/v69/v64。
+旧pending在fresh通过前保持只读，随后由family manager原子supersede。无upload/run/lease授权，主线派发
+后不持续轮询。
 
 2026-08-13 用户另行明确批准 `one-shot-curated-vcd-smoke-r5-n4-v1` 精确例外。它只绑定
 `r5_n4_hw_vcdsmoke_causal_v1` 的已冻结 ZIP，通过 package-local TB 标准 `$dumpfile+$dumpvars`
@@ -347,29 +354,65 @@ return  r5_n71_n75_0cc_bankrow_v9_return.zip
 
 ## 4. 最新短期计划
 
-1. observer-only宽因果profile已在epoch `observer-only-wide-causal-v1`激活：next-fresh固定`DUMP_VCD=0/DUMP_FSDB=0/TB_DUMP_FSDB=0`，
-   禁止VPD/FSDB/VCD/FST和vendor query；保留source-bound actual-signal catalog、4-state event chunks、
-   end-state、sim-time heartbeat、canonical decision、repeat reset与execution-bound no-overwrite return。
-2. 100,000,000 bytes仅为observer evidence软偏好，超限只warning；hard cap、截断、采样、head/tail或
-   size-based deletion固定fail closed。每个known candidate必须在宽因果矩阵中两两可区分。
-3. serialized Conv v89b、native p45与QAdd v61已完成，旧s4/p44/QAdd v60已原子supersede；GAP
-   fresh artifact已进入pending，但仍等待family主动完成回执后才由主线正式验收。
-4. GAP保留slice-local绕行与sum_s2目标；native保留p42 vector修复与MSE4目标；QAdd保留v60身份修复及
-   selected-port lane-readiness目标；serialized以v88 actual-source为基线并禁止回引已证误报的旧ACK comparator。
-   四族均冻结功能RTL/config/numeric/workload/golden。
-5. 通用进程树终止/reap与周期sim-time heartbeat继续适用；归档前改为observer chunk close/flush和稳定
-   exact-set，不再等待FSDB writer。compilefail和所有partial exit仍须发布core/已有observer。
-6. 历史raw waveform return继续按CURRENT/BASELINE/CAUSAL三槽与双消费规则保护；新observer-only裁决
-   不追溯删除旧证据，也不再产生新的raw waveform。
-7. `observer-only-post-sim-conjunction-fix-v1` 已激活并通过联合回归；四族以该 exact helper
-   inert-compatibility contract 重新构包，主线继续不轮询，只等待主动完成回执。
-7. family完成package或命中明确终止点后，必须向动态解析的current mainline提交
+1. 双模式共享epoch `tb-vcd-bounded-causal-cone-optional-v1-0820e1733437`已激活。observer-only仍是默认、
+   字节冻结且原门禁不变；VCD是显式按包选择的并列模式。两种模式不可同时作为bulk evidence。
+2. 四个current family的next fresh本轮统一选择`TB_VCD_BOUNDED_CAUSAL_CONE`：GAP、serialized Conv、
+   native Conv、QAdd分别在冻结workload/config/numeric/golden/functional RTL下扩展各自已知首分歧整锥。
+3. VCD必须由package-local TB标准tasks生成，actual Make dump固定0/0/0；禁止VPD/FSDB/UCLI/vendor/
+   full-top dump。catalog覆盖41 roles、四层首分歧边界和完整两两可区分candidate矩阵。
+4. 100,000,000 bytes只warning；默认3600秒wall、8GB VCD/10GB return增长投影、3×30秒sim-time冻结、
+   disk/write/quota与signal是独立PARTIAL兜底。QAdd v80基于v73的12440/18816 pair@8418.267秒source-bound测量，
+   确定性推荐11862秒并由用户精确选择15000秒、absolute maximum=86400秒；该覆盖不改变其它包的默认值或独立保护。平台早停还必须满足完整严格交集；global witness推进时
+   禁止局部早停，任何触发都不得截断已写VCD。
+5. 通用child-subreaper/PGID/TERM→wait→KILL/reap与sim-time heartbeat继续适用；归档前须关闭/flush
+   VCD并证明process tree与exact-set稳定。compilefail和所有partial exit仍须发布core/已有VCD。
+6. 每族重型结果只保留`MAX_PROGRESS + LATEST_1 + LATEST_2`三组。分析必须流式更新
+   `analysis_state.json`、append-only `checkpoints.jsonl`与`report.md`；只有分析完成、family/mainline
+   双消费、确定性core和保护集审计通过后才及时淘汰旧组。
+7. 当前物理/索引pending仅为serialized `r5_n4_hw_v106b_lcdup_return2pflight`与QAdd
+   `r5_qadd_n7_tr_v80_w15kqf`。serialized v102与QAdd v73已消费正式return并归tested；GAP/native
+   不发布successor。corrected全局审计通过，存储计数为pending/tested/superseded=`2/61/24`。
+8. family完成package或命中明确终止点后，必须向动态解析的current mainline提交
    `PACKAGE_READY_NOT_RUN`/终止回执、package/sidecar身份、唯一命令、预期return、final-ZIP
    自检、blocker与规则反馈；主线只验收和更新current pointer，不替family构包。
-8. 主线收到回执后核对registry owner/epoch、latest task record、package storage index与
+9. 主线收到回执后核对registry owner/epoch、latest task record、package storage index与
    exact bytes/SHA；只有结构化回执通过才更新本文件的pending exact-set和下一步。
-9. 主线派发后不持续轮询，只在family主动回传时验收。当前无`SERVER_RUNNING` lease；上传、服务器
+10. 主线派发后不持续轮询，只在family主动回传时验收。当前无`SERVER_RUNNING` lease；上传、服务器
    运行、取lease、functional RTL动作继续需要用户明确授权，本地构包授权不能解释为服务器授权。
+11. p50/v70/v95 VCD formal return已由原family完成流式分析：GAP闭合唯一机制根因；native/serialized
+    分别发布p51/v96以补metadata/index与三输入tuple直接叶子。默认闭环仍为“流式分析→直接配置/actual
+    RTL/dynamic证据裁决→必要时修包或构建successor→主动回传”，且不自动授权服务器动作。
+12. 若本轮有效执行目标却仍不能唯一定位，family必须先提交`RULE_GAP_AUDIT`并让下一包消费裁决；若
+    同一目标连续两次构包/final gate或package-local服务器尝试失败，第三次前必须提交
+    `PACKAGE_BUILD_FAILURE_RULE_AUDIT`。审计若确认current规则/门充分且仅为孤立偶发失误，可
+    `RULE_CONFIRMATION_NO_CHANGE`，只修包并重跑原门；不得强制制造规则修改。公共语义delta未激活前
+    不得发布依赖它的successor。
+13. GAP/QAdd共享审计已激活`package-release-admission-and-tbvcd-runtime-v2`：后续next-fresh必须在
+    manifest晋升后完成final-staging与clean-ZIP package preflight；VCD模式必须使用append timestamp
+    freeze、unsigned>=64位/16384-cycle heartbeat和exact catalog dump，并对partial/flush/reap fail closed。
+    GAP v63、QAdd v64、serialized v93d、native p48均不追溯HOLD或重建。
+14. 跨族退出审计的共享evaluator唯一裁决、quiescent archive绑定与四态重放继续有效；p51进一步触发
+    `tb-vcd-planned-dumpoff-consistency-v5-b175c14254f3`。planned dumpoff前以appended VCD timestamp
+    监督freeze；dumpoff后VCD静止属于预期，改由owner clock与TB execution time完成262144-cycle grace，
+    且dumpoff+grace优先于freeze。STOP必须one-shot，重复/清除/identity drift均fail closed；
+    incomplete/unflushed/unreaped不得PASS。该门不改变observer默认路径，也不追溯篡改已消费return。
+15. GAP v67/v68证明final-ZIP自审计存在实现覆盖逃逸，而非新规则主题。已在现有rule ID下激活
+    `package-python-schema-runtime-v2-5f7e882949ad`：later next-fresh的final staging与clean exact-ZIP
+    必须枚举相同`.py` path/bytes/SHA集合并逐一compile；blocking schema gate必须由当前runtime实际导入
+    `jsonschema`并执行校验，缺依赖、skip、未执行或schema failure均阻断。该门不追溯HOLD/重建当前v69或其它包。
+16. serialized mapper A/B触发的`EXECPLAN.CONFIG_LENGTH`属于共享validator实现逃逸：`Load_Config`
+    长度以hash-bound 64-bit identity的meaningful word计数；128-bit transport在奇数末词只允许全零高半
+    padding。共享门现已同时绑定64/128 identity，非零padding、少报、多报、缺64-bit identity及漂移均
+    fail closed。实物A=70 words/35 rows、B=71 words/36 rows均PASS。v98服务器尝试因包内无界逐时钟
+    observer与归档放大耗尽空间且无return；v99保留相同配置语义并以完整attempt终止取代静默截断，
+    统一约束compile/simulation/finalization增长与磁盘余量后进入serialized pending。该发布不构成
+    服务器运行授权，也不证明tuple10/natural/Formal-D。
+17. v98进一步触发共享`RULE_SEMANTIC_OMISSION`：100MB observer软告警继续禁止截断/采样/删除，但
+    不能承担运行空间保护。现已在既有`CDA-SERVER-WAVEFORM-DEFAULT-RETURN-UNBOUNDED-CAUSAL-COVERAGE-001`
+    下激活`observer-operational-attempt-boundary-v1`，要求后续next-fresh绑定六项峰值+reserve、三阶段
+    exact growth/free监控、one-shot whole-attempt stop、partial-before-cleanup与foreign sibling保护。
+    v99冻结且不追溯HOLD/重建，其20GB/3600s/10.8GB仅为族包原型值，不是共享常数。后续v102已绑定
+    canonical childless-procfs/PID+start-time guard及durable failure-handoff，现为serialized唯一pending。
 
 ### 4A. 历史演进记录（不作为current包或当前运行顺序）
 
@@ -635,14 +678,22 @@ return  r5_n71_n75_0cc_bankrow_v9_return.zip
 
 ## 5. 当前开放 blocker
 
-- GAP：v58在0 ps命中shared UCLI portable escape，sum_s2未执行；等待shared fix。natural terminal、
-  formal D 48及E3/E4/E5仍开放。
-- QAdd：v59在compile前命中manifest install_name/SCA namespace身份错误；修正后继等待shared fix。
-  历史selected-port lanes-not-ready边界、full-chain natural、28D及E3/E4/E5继续开放。
-- serialized Conv：旧ACK RTL矛盾已确认为observer/source-identity误报；v88b同时在0 ps命中shared
-  portable escape。等待shared fix；natural terminal、formal D 320及E3/E4/E5继续开放。
-- native Conv：p43 compile通过但在0 ps命中shared portable escape；MSE4可信wdata/slice-finish、
-  c0 natural、formal D 320及E3/E4/E5仍开放。
+- GAP：v63 production compile/sim启动且preload/VCD继续推进，但旧supervisor信任稀疏display heartbeat，
+  在sum_s2 target entry前false-freeze；因此不形成新的DUT收窄。v69保持1,910 actual signals/41 roles整锥，
+  消费runtime-v3并通过19/19 package Python compile和schema-enabled gates，状态为`PACKAGE_READY_NOT_RUN`；
+  exact-set Python/schema runtime v2共享门已激活且不追溯重建v69，48D与E3/E4/E5仍开放。
+- QAdd：v63已compile并启动simulation，但32-bit heartbeat wrap加稀疏采样使freeze guard在仍推进的
+  slice16 preload误停，Buffer5目标未执行；因此不触发`RULE_GAP_AUDIT`。v59与v63已构成同目标两次
+  package-local阻断，第三次前完成`PACKAGE_BUILD_FAILURE_RULE_AUDIT`；v64保持64 actual signals/41 roles
+  与两条ping-pong分支，改用append VCD timestamp、非溢出heartbeat、exact-signal dump、multiline timescale及
+  partial/flush/reap fail-closed，状态为`PACKAGE_READY_NOT_RUN`；DUT root、28D与E3/E4/E5继续开放。
+- serialized Conv：v93d有效执行，actual public ACK方程6,151,454/6,151,454零矛盾；首分歧进一步收敛为
+  `WR_Data_Channel prepared_data_count=32 -> prepared backpressure/wr_data_chl_ready拉低 -> RD_Buffer_AG dequeue停止`。
+  尚需区分prepared write/read accounting、metadata queue、output-buffer selection/backpressure和memory-ready drain。
+  v94b加入19个WR_Data leaf并消费runtime-v3，状态为`PACKAGE_READY_NOT_RUN`；natural、320D与E3/E4/E5仍开放。
+- native Conv：p48 compile/sim/VCD推进到303,783,125 ps，但陈旧heartbeat在MSE4 target entry前false-freeze；
+  没有比p46更深的DUT收窄。审计确认现行v3规则充分，`RULE_CONFIRMATION_NO_CHANGE`；p49按同一冻结因果锥
+  重建并通过四态退出回放、归档绑定和flush/close/reap fail-closed，状态为`PACKAGE_READY_NOT_RUN`。
 - node0075：等待GAP生产者动态闭合后，再裁决producer acceptance→pass00 first read、
   8192 actual reads/hash、natural terminal与144D。
 - 最终整网：shared allocator/execplan/coverage/lifetime与133-stage integration assembly。

@@ -1,0 +1,53 @@
+{
+  "schema": "server-observer-operational-attempt-boundary-dispatch-v1",
+  "activation": {
+    "epoch": "observer-operational-guard-live-tree-v2",
+    "mode": "required_next_fresh_after_mainline_activation",
+    "retrospective_hold": false,
+    "current_v99_disposition": "FORMAL_RETURN_CONSUMED_NO_REBUILD",
+    "serialized_v100_disposition": "REQUIRED_NEXT_FRESH_AFTER_ACTIVATION"
+  },
+  "public_rule": {
+    "unique_semantic_owner": "CDA-SERVER-WAVEFORM-DEFAULT-RETURN-UNBOUNDED-CAUSAL-COVERAGE-001",
+    "supporting_existing_rule_ids": [
+      "CDA-SERVER-ALWAYS-ON-TRIGGERED-CAUSAL-OBSERVABILITY-001",
+      "CDA-SERVER-FSDB-PROCESS-TREE-WRITER-QUIESCENCE-001",
+      "CDA-SERVER-POST-SIM-CORE-RETURN-INDEPENDENT-PUBLISH-001",
+      "CDA-SERVER-PACKAGE-REPEAT-EXECUTION-EXACT-OWNED-RESET-001"
+    ],
+    "new_public_rule_id": null
+  },
+  "assets": {
+    "contract_schema": "schemas/server_observer_operational_attempt_boundary_v1.schema.json",
+    "receipt_schema": "schemas/server_observer_operational_attempt_receipt_v1.schema.json",
+    "positive_fixture": "fixtures/server_observer_operational_attempt_boundary_v1/positive_contract.json",
+    "runtime": "tools/server_observer_operational_attempt_boundary.py",
+    "validator": "tools/validate_server_observer_operational_attempt_boundary.py",
+    "tests": "tests/test_server_observer_operational_attempt_boundary.py",
+    "guard_v2_runtime": "tools/server_observer_operational_guard_v2.py",
+    "guard_v2_validator": "tools/validate_server_observer_operational_guard_v2.py",
+    "guard_v2_receipt_schema": "schemas/server_observer_operational_guard_receipt_v2.schema.json",
+    "live_tree_policy_schema": "schemas/server_observer_operational_live_tree_policy_v2.schema.json",
+    "live_tree_policy_fixture": "fixtures/server_observer_operational_guard_live_tree_v2/positive_live_tree_policy.json",
+    "monitor_exception_fixture": "fixtures/server_observer_operational_guard_live_tree_v2/positive_monitor_exception_receipt.json",
+    "guard_v2_tests": "tests/test_server_observer_operational_guard_v2.py"
+  },
+  "semantics": {
+    "observer_soft_warning_bytes": 100000000,
+    "observer_soft_warning_is_operational_stop": false,
+    "shared_hardcoded_operational_thresholds": false,
+    "whole_attempt_stop_only": true,
+    "evidence_truncation_sampling_or_deletion": false,
+    "phases": ["compile", "simulation", "finalization"],
+    "durable_partial_before_cleanup": true,
+    "operational_stop_claim": "DIAGNOSTIC_EVIDENCE_INCOMPLETE",
+    "live_tree_entry_metadata": "NOFOLLOW_LSTAT",
+    "exact_owned_internal_symlink_entry": "ALLOW_RECORD_AND_UNLINK_NOFOLLOW",
+    "symlink_target_traversal": false,
+    "escaping_or_root_ancestor_symlink": "FAIL_CLOSED",
+    "bounded_create_delete_resamples": 3,
+    "monitor_exception_after_child_start": "TERM_WAIT_KILL_REAP_ATOMIC_EMERGENCY_RECEIPT_STDERR",
+    "missing_guard_receipt_exit_2": "GUARD_RECEIPT_MISSING_INFRASTRUCTURE_FAILURE"
+  },
+  "claim_boundary": "Shared observer attempt-space/runtime/return safety only; no package rebuild, server action, DUT root, natural terminal, formal-D, E4 or E5 claim."
+}

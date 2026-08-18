@@ -1,0 +1,16 @@
+{
+  "schema": "server-observer-operational-live-tree-policy-v2",
+  "entry_metadata": "NOFOLLOW_LSTAT",
+  "symlink_target_traversal": false,
+  "exact_owned_internal_symlink_entries": "ALLOW_RECORD_AND_UNLINK_NOFOLLOW",
+  "link_target_escape": "FAIL_CLOSED",
+  "root_or_ancestor_symlink": "FAIL_CLOSED",
+  "special_entries": "FAIL_CLOSED",
+  "create_delete_race": {
+    "bounded_resample": true,
+    "max_resamples": 3,
+    "exhaustion": "MONITOR_EXCEPTION_FAIL_CLOSED"
+  },
+  "monitor_exception_after_child_start": "ONE_SHOT_TERM_WAIT_KILL_REAP_EMERGENCY_RECEIPT_STDERR",
+  "missing_receipt_exit_2_classification": "GUARD_RECEIPT_MISSING_INFRASTRUCTURE_FAILURE"
+}

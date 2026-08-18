@@ -1,0 +1,26 @@
+{
+  "schema": "server-release-consistency-historical-negatives-v1",
+  "source_report": "outputs/independent_dual_package_audit_v1/machine_report.json",
+  "source_report_sha256": "f8f056e3d13565013b97297eb6005f0eebb20382a353b91aa767a4a21370679d",
+  "cases": [
+    {
+      "package_id": "r5_n4_hw_v103b_lcdup_obsfix",
+      "defects": [
+        "FINALIZATION_GUARD_RECEIPT_PUBLISHED_AFTER_RETURN",
+        "REQUIRED_RETURN_MEMBER_WITHOUT_PRODUCER",
+        "POSTPUBLICATION_RECEIPT_REQUIRED_INSIDE_FIRST_RETURN"
+      ],
+      "required_result": "FAIL_CLOSED"
+    },
+    {
+      "package_id": "r5_qadd_n7_tr_v78_w15kpfs",
+      "defects": [
+        "SELECTED_ABSOLUTE_WALL_CONFLATION",
+        "NESTED_FINAL_ZIP_AUDIT_PENDING",
+        "HELD_LEVEL_FALSE_PROGRESS"
+      ],
+      "required_result": "FAIL_CLOSED"
+    }
+  ],
+  "claim_boundary": "Historical mechanism registry only; package identities remain read-only."
+}

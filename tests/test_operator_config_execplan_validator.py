@@ -19,6 +19,13 @@ BUNDLE = (
     / "r3-mapping-evidence"
     / "decode_summac-seed42-v1"
 )
+ODD_BUNDLE = (
+    ROOT
+    / "artifacts"
+    / "operator_config_validation"
+    / "r3-mapping-evidence"
+    / "decode_max-seed42-v1"
+)
 MASK = (1 << 28) - 1
 
 
@@ -58,9 +65,18 @@ def _codes(report: object) -> set[str]:
 
 
 class OperatorConfigExecPlanValidatorTests(unittest.TestCase):
-    def _fixture(self, root: Path, *, load_address: int = 1, load_op: str = "op0") -> tuple[Path, Path]:
+    def _fixture(
+        self,
+        root: Path,
+        *,
+        load_address: int = 1,
+        load_length: int = 36,
+        load_op: str = "op0",
+        bundle: Path = BUNDLE,
+        op_type: str = "decode_summac_fp32N_fp32N",
+    ) -> tuple[Path, Path]:
         artifact_dir = root / "validated" / "op0"
-        shutil.copytree(BUNDLE, artifact_dir)
+        shutil.copytree(bundle, artifact_dir)
         local_config = root / "config" / "op0"
         local_config.mkdir(parents=True, exist_ok=True)
         for name in (
@@ -70,10 +86,10 @@ class OperatorConfigExecPlanValidatorTests(unittest.TestCase):
             "modules_dump_128b.bin",
         ):
             shutil.copy2(artifact_dir / name, local_config / name)
-        generated_json = root / "jsons" / "op0_decode_summac_fp32N_fp32N.json"
+        generated_json = root / "jsons" / f"op0_{op_type}.json"
         generated_json.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(artifact_dir / "source_config.json", generated_json)
-        cfg = root / "install" / "cfg_pkg" / "op0_decode_summac_fp32N_fp32N_bitstream_128b.bin"
+        cfg = root / "install" / "cfg_pkg" / f"op0_{op_type}_bitstream_128b.bin"
         cfg.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(artifact_dir / "modules_dump_128b.bin", cfg)
         graph = root / "graph_withbaseaddr.json"
@@ -83,7 +99,7 @@ class OperatorConfigExecPlanValidatorTests(unittest.TestCase):
                     "operators": [
                         {
                             "id": "op0",
-                            "type": "decode_summac_fp32N_fp32N",
+                            "type": op_type,
                             "used_slices": f"0b{MASK:028b}",
                         }
                     ]
@@ -98,11 +114,11 @@ class OperatorConfigExecPlanValidatorTests(unittest.TestCase):
             "Exec_Length": 2,
             "op0_config": {
                 "base_addr": "0x00000400",
-                "path": "install/cfg_pkg/op0_decode_summac_fp32N_fp32N_bitstream_128b.bin",
+                "path": f"install/cfg_pkg/op0_{op_type}_bitstream_128b.bin",
             },
         }
         (root / "sca_cfg.json").write_text(json.dumps(sca, indent=2) + "\n", encoding="utf-8")
-        words = [_clock(), _load(address=load_address), _start()]
+        words = [_clock(), _load(length=load_length, address=load_address), _start()]
         _write_execplan(root / "install" / "execplan.txt", words)
         _write_explanations(root / "instructions_explained.txt", words, load_op=load_op)
         return graph, artifact_dir
@@ -130,6 +146,81 @@ class OperatorConfigExecPlanValidatorTests(unittest.TestCase):
         self.assertIsNotNone(stage["next_config_state"]["LSU"])
         self.assertIsNone(stage["next_config_state"]["SA"])
         self.assertIsNotNone(stage["next_config_state"]["GA"])
+
+    def test_odd_meaningful_length_accepts_zero_high_half_padding(self) -> None:
+        with tempfile.TemporaryDirectory(prefix="operator-config-execplan-") as temp_text:
+            root = Path(temp_text)
+            graph, artifact_dir = self._fixture(
+                root,
+                load_length=33,
+                bundle=ODD_BUNDLE,
+                op_type="decode_max_fp32N_fp32N",
+            )
+            report = self._validate(root, graph, artifact_dir)
+        self.assertTrue(report.valid, report.to_dict())
+        stage = report.facts["stages"][0]
+        self.assertEqual(stage["config_length_64bit_words"], 33)
+        self.assertEqual(stage["transport_rows_128bit"], 17)
+        self.assertTrue(stage["last_row_high_half_is_transport_padding"])
+
+    def test_odd_length_nonzero_high_half_padding_is_rejected(self) -> None:
+        with tempfile.TemporaryDirectory(prefix="operator-config-execplan-") as temp_text:
+            root = Path(temp_text)
+            graph, artifact_dir = self._fixture(
+                root,
+                load_length=33,
+                bundle=ODD_BUNDLE,
+                op_type="decode_max_fp32N_fp32N",
+            )
+            cfg = root / "install" / "cfg_pkg" / "op0_decode_max_fp32N_fp32N_bitstream_128b.bin"
+            lines = cfg.read_text(encoding="utf-8").splitlines()
+            lines[-1] = "1" + lines[-1][1:]
+            cfg.write_text("\n".join(lines) + "\n", encoding="utf-8")
+            report = self._validate(root, graph, artifact_dir)
+        self.assertIn("EXECPLAN.CONFIG_PADDING", _codes(report))
+
+    def test_odd_length_undercount_is_rejected(self) -> None:
+        with tempfile.TemporaryDirectory(prefix="operator-config-execplan-") as temp_text:
+            root = Path(temp_text)
+            graph, artifact_dir = self._fixture(
+                root,
+                load_length=32,
+                bundle=ODD_BUNDLE,
+                op_type="decode_max_fp32N_fp32N",
+            )
+            report = self._validate(root, graph, artifact_dir)
+        self.assertIn("EXECPLAN.CONFIG_LENGTH", _codes(report))
+
+    def test_odd_length_overcount_is_rejected(self) -> None:
+        with tempfile.TemporaryDirectory(prefix="operator-config-execplan-") as temp_text:
+            root = Path(temp_text)
+            graph, artifact_dir = self._fixture(
+                root,
+                load_length=34,
+                bundle=ODD_BUNDLE,
+                op_type="decode_max_fp32N_fp32N",
+            )
+            report = self._validate(root, graph, artifact_dir)
+        self.assertIn("EXECPLAN.CONFIG_LENGTH", _codes(report))
+
+    def test_missing_64bit_identity_is_rejected(self) -> None:
+        with tempfile.TemporaryDirectory(prefix="operator-config-execplan-") as temp_text:
+            root = Path(temp_text)
+            graph, artifact_dir = self._fixture(root)
+            (artifact_dir / "modules_dump_64b.bin").unlink()
+            report = self._validate(root, graph, artifact_dir)
+        self.assertIn("EXECPLAN.CONFIG_64BIT_IDENTITY", _codes(report))
+
+    def test_64bit_identity_drift_is_rejected(self) -> None:
+        with tempfile.TemporaryDirectory(prefix="operator-config-execplan-") as temp_text:
+            root = Path(temp_text)
+            graph, artifact_dir = self._fixture(root)
+            identity = artifact_dir / "modules_dump_64b.bin"
+            lines = identity.read_text(encoding="utf-8").splitlines()
+            lines[0] = ("1" if lines[0][0] == "0" else "0") + lines[0][1:]
+            identity.write_text("\n".join(lines) + "\n", encoding="utf-8")
+            report = self._validate(root, graph, artifact_dir)
+        self.assertIn("EXECPLAN.CONFIG_64BIT_IDENTITY", _codes(report))
 
     def test_load_config_address_mismatch_is_rejected(self) -> None:
         with tempfile.TemporaryDirectory(prefix="operator-config-execplan-") as temp_text:

@@ -1,0 +1,259 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "server-tb-vcd-runtime-receipt-v1",
+  "title": "Bounded causal-cone VCD runtime and formal-return receipt",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema", "package_id", "execution_id", "attempt_id", "profile",
+    "actual_argv_sha256", "catalog_sha256", "candidate_matrix_sha256",
+    "tb_source_sha256", "elaboration_sha256", "started", "stop_reason",
+    "completeness", "diagnostic_status", "natural_terminal", "start",
+    "stop", "flush", "time_event_counts", "growth", "thresholds",
+    "final_counters", "plateau_qualification", "dump_control", "process_tree", "heartbeat_contract", "decision_authority", "dumpoff_consistency_authority", "archive_timestamp_receipt",
+    "target_entry", "vcd_identity", "return_exact_set", "live_diagnostics", "runtime_budget_admission", "warnings", "errors", "claim_boundary"
+  ],
+  "properties": {
+    "schema": {"const": "server-tb-vcd-runtime-receipt-v1"},
+    "package_id": {"type": "string", "minLength": 1},
+    "execution_id": {"type": "string", "minLength": 1},
+    "attempt_id": {"type": "string", "minLength": 1},
+    "profile": {"const": "TB_VCD_BOUNDED_CAUSAL_CONE"},
+    "actual_argv_sha256": {"$ref": "#/$defs/sha"},
+    "catalog_sha256": {"$ref": "#/$defs/sha"},
+    "candidate_matrix_sha256": {"$ref": "#/$defs/sha"},
+    "tb_source_sha256": {"$ref": "#/$defs/sha"},
+    "elaboration_sha256": {"$ref": "#/$defs/sha"},
+    "started": {"type": "boolean"},
+    "stop_reason": {"enum": ["NATURAL_TERMINAL", "CAUSAL_PLATEAU", "SIM_TIME_FREEZE", "VCD_TIMESTAMP_REGRESSION", "WALL_CEILING", "VCD_OPERATIONAL_BUDGET", "RETURN_BUDGET_PROJECTION", "DISK_SPACE_FAILURE", "WRITE_FAILURE", "QUOTA_FAILURE", "HUP", "INT", "TERM", "NONZERO_EXIT", "COMPILE_NOT_STARTED"]},
+    "completeness": {"enum": ["COMPLETE", "PARTIAL", "ABSENT_COMPILE_NOT_STARTED"]},
+    "diagnostic_status": {"enum": ["DIAGNOSTIC_EVIDENCE_COMPLETE", "DIAGNOSTIC_EVIDENCE_INCOMPLETE"]},
+    "natural_terminal": {"type": "boolean"},
+    "start": {"type": "object"},
+    "stop": {"type": "object"},
+    "flush": {
+      "type": "object", "required": ["dumpoff", "dumpflush", "closed"],
+      "properties": {"dumpoff": {"type": "boolean"}, "dumpflush": {"type": "boolean"}, "closed": {"type": "boolean"}}
+    },
+    "time_event_counts": {
+      "type": "object", "required": ["final_sim_time_ticks", "final_execution_sim_time_ticks", "final_sim_cycles", "non_clock_events", "causal_progress_events"],
+      "properties": {
+        "final_sim_time_ticks": {"type": "integer", "minimum": 0},
+        "final_execution_sim_time_ticks": {"type": "integer", "minimum": 0},
+        "final_sim_cycles": {"type": "integer", "minimum": 0},
+        "non_clock_events": {"type": "integer", "minimum": 0},
+        "causal_progress_events": {"type": "integer", "minimum": 0}
+      }
+    },
+    "growth": {
+      "type": "object", "required": ["final_vcd_bytes", "soft_warning_exceeded", "rolling_bytes_per_second", "projected_bytes_at_wall_ceiling", "operational_budget_bytes", "return_budget_bytes"],
+      "properties": {
+        "final_vcd_bytes": {"type": "integer", "minimum": 0},
+        "soft_warning_exceeded": {"type": "boolean"},
+        "rolling_bytes_per_second": {"type": "number", "minimum": 0},
+        "projected_bytes_at_wall_ceiling": {"type": "integer", "minimum": 0},
+        "operational_budget_bytes": {"const": 8000000000},
+        "return_budget_bytes": {"const": 10000000000}
+      }
+    },
+    "thresholds": {"type": "object"},
+    "final_counters": {"type": "object"},
+    "plateau_qualification": {
+      "type": "object",
+      "required": ["eligible", "owner_clock_advancing", "sim_time_advancing", "qualified_progress_stable", "causal_state_stable", "global_progress_stable", "candidate_catalog_complete", "unresolved_xz_absent"],
+      "properties": {
+        "eligible": {"type": "boolean"}, "owner_clock_advancing": {"type": "boolean"}, "sim_time_advancing": {"type": "boolean"},
+        "qualified_progress_stable": {"type": "boolean"}, "causal_state_stable": {"type": "boolean"}, "global_progress_stable": {"type": "boolean"},
+        "candidate_catalog_complete": {"type": "boolean"}, "unresolved_xz_absent": {"type": "boolean"}
+      }
+    },
+    "dump_control": {
+      "type": "object", "additionalProperties": false,
+      "required": [
+        "state_source", "planned_dumpoff_observed", "state_monotonic",
+        "dump_off_cycle", "dump_off_vcd_timestamp_ticks", "dump_off_execution_sim_time_ticks",
+        "post_dump_grace_elapsed_cycles", "post_dump_progress_source",
+        "dump_off_grace_precedes_freeze", "stop_marker_count", "stop_marker_one_shot"
+      ],
+      "properties": {
+        "state_source": {"const": "EXECUTION_BOUND_TB_STICKY_EVENT"},
+        "planned_dumpoff_observed": {"type": "boolean"},
+        "state_monotonic": {"type": "boolean"},
+        "dump_off_cycle": {"type": ["integer", "null"], "minimum": 0},
+        "dump_off_vcd_timestamp_ticks": {"type": ["integer", "null"], "minimum": 0},
+        "dump_off_execution_sim_time_ticks": {"type": ["integer", "null"], "minimum": 0},
+        "post_dump_grace_elapsed_cycles": {"type": "integer", "minimum": 0},
+        "post_dump_progress_source": {"const": "EXECUTION_BOUND_OWNER_CLOCK_AND_TB_TIME"},
+        "dump_off_grace_precedes_freeze": {"const": true},
+        "stop_marker_count": {"type": "integer", "minimum": 0, "maximum": 1},
+        "stop_marker_one_shot": {"const": true}
+      }
+    },
+    "process_tree": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "term_sent", "wait_completed", "kill_sent_if_needed", "all_reaped",
+        "post_kill_reap_deadline_origin", "last_kill_host_monotonic_ns",
+        "post_kill_reap_deadline_host_monotonic_ns", "post_kill_reap_completed"
+      ],
+      "properties": {
+        "term_sent": {"type": "boolean"},
+        "wait_completed": {"type": "boolean"},
+        "kill_sent_if_needed": {"type": "boolean"},
+        "all_reaped": {"type": "boolean"},
+        "post_kill_reap_deadline_origin": {"enum": ["NOT_APPLICABLE", "FRESH_AFTER_LAST_KILL"]},
+        "last_kill_host_monotonic_ns": {"type": ["integer", "null"], "minimum": 0},
+        "post_kill_reap_deadline_host_monotonic_ns": {"type": ["integer", "null"], "minimum": 0},
+        "post_kill_reap_completed": {"type": "boolean"}
+      }
+    },
+    "runtime_budget_admission": {
+      "oneOf": [
+        {"type": "null"},
+        {
+          "type": "object",
+          "required": ["schema", "selected_wall_ceiling_seconds", "independent_operational_guards", "pass"],
+          "properties": {
+            "schema": {"const": "server-runtime-budget-admission-v1"},
+            "selected_wall_ceiling_seconds": {"type": "integer", "minimum": 3600, "maximum": 86400},
+            "pass": {"const": true}
+          }
+        }
+      ]
+    },
+    "heartbeat_contract": {
+      "type": "object", "additionalProperties": false,
+      "required": ["source", "width_bits", "signed", "cadence_cycles"],
+      "properties": {
+        "source": {"const": "APPENDED_VCD_TIMESTAMP"},
+        "width_bits": {"type": "integer", "minimum": 64},
+        "signed": {"const": false},
+        "cadence_cycles": {"const": 16384}
+      }
+    },
+    "decision_authority": {
+      "oneOf": [
+        {"type": "null"},
+        {
+          "type": "object", "additionalProperties": false,
+          "required": ["mode", "helper_path", "helper_sha256", "outer_runner_consumes_only_receipt", "independent_exit_logic_absent", "replay_cases"],
+          "properties": {
+            "mode": {"const": "SHARED_RUNTIME_EVALUATOR_ONLY"},
+            "helper_path": {"type": "string", "minLength": 1}, "helper_sha256": {"$ref": "#/$defs/sha"},
+            "outer_runner_consumes_only_receipt": {"const": true}, "independent_exit_logic_absent": {"const": true},
+            "replay_cases": {
+              "type": "array", "minItems": 4, "maxItems": 4,
+              "items": {
+                "type": "object", "additionalProperties": false,
+                "required": ["case_id", "observed_decision"],
+                "properties": {
+                  "case_id": {"enum": ["ADVANCING_VCD_TIMESTAMP", "PLATEAU_SUSPECTED_ONLY", "PLATEAU_DUMP_OFF_PLUS_GRACE", "THREE_INTERVAL_TRUE_FREEZE"]},
+                  "observed_decision": {"enum": ["CONTINUE", "CAUSAL_PLATEAU", "SIM_TIME_FREEZE"]}
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "dumpoff_consistency_authority": {
+      "oneOf": [
+        {"type": "null"},
+        {
+          "type": "object", "additionalProperties": false,
+          "required": ["mode", "helper_path", "helper_sha256", "replay_cases"],
+          "properties": {
+            "mode": {"const": "SHARED_RUNTIME_EVALUATOR_PHASE_AWARE_DUMPOFF"},
+            "helper_path": {"type": "string", "minLength": 1},
+            "helper_sha256": {"$ref": "#/$defs/sha"},
+            "replay_cases": {
+              "type": "array", "minItems": 3, "maxItems": 3,
+              "items": {
+                "type": "object", "additionalProperties": false,
+                "required": ["case_id", "observed_decision"],
+                "properties": {
+                  "case_id": {"enum": ["PLANNED_DUMPOFF_FROZEN_VCD_GRACE_CONTINUE", "PLANNED_DUMPOFF_PLUS_GRACE_CAUSAL_PLATEAU", "REPEATED_STOP_MARKER"]},
+                  "observed_decision": {"enum": ["CONTINUE", "CAUSAL_PLATEAU", "FAIL_CLOSED"]}
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "archive_timestamp_receipt": {
+      "oneOf": [
+        {"type": "null"},
+        {
+          "type": "object", "additionalProperties": false,
+          "required": ["binding", "parse_status", "path", "bytes", "sha256", "last_timestamp_ticks"],
+          "properties": {
+            "binding": {"const": "FULL_FILE_SHA_BYTES_PLUS_LAST_TIMESTAMP_EXACT"}, "parse_status": {"const": "COMPLETE"},
+            "path": {"type": "string", "pattern": "\\.vcd$"}, "bytes": {"type": "integer", "minimum": 0},
+            "sha256": {"$ref": "#/$defs/sha"}, "last_timestamp_ticks": {"type": "integer", "minimum": 0}
+          }
+        }
+      ]
+    },
+    "target_entry": {
+      "type": "object", "additionalProperties": false,
+      "required": ["observed", "diagnostic_claim"],
+      "properties": {"observed": {"type": "boolean"}, "diagnostic_claim": {"type": "boolean"}}
+    },
+    "vcd_identity": {
+      "oneOf": [
+        {"type": "null"},
+        {
+          "type": "object", "required": ["path", "bytes", "sha256", "header_valid", "timescale", "catalog_complete", "transitions_complete", "xz_preserved", "return_allowlist_member"],
+          "properties": {
+            "path": {"type": "string", "pattern": "\\.vcd$"}, "bytes": {"type": "integer", "minimum": 0}, "sha256": {"$ref": "#/$defs/sha"},
+            "header_valid": {"type": "boolean"}, "timescale": {"type": "string"}, "catalog_complete": {"type": "boolean"},
+            "transitions_complete": {"type": "boolean"}, "xz_preserved": {"type": "boolean"}, "return_allowlist_member": {"type": "boolean"}
+          }
+        }
+      ]
+    },
+    "return_exact_set": {
+      "oneOf": [
+        {"type": "null"},
+        {
+          "type": "object", "additionalProperties": false,
+          "required": ["members", "hard_limit_bytes", "truncated", "sampled", "allowlist_complete", "published"],
+          "properties": {
+            "members": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/file"}},
+            "hard_limit_bytes": {"type": "null"}, "truncated": {"const": false}, "sampled": {"const": false},
+            "allowlist_complete": {"type": "boolean"}, "published": {"type": "boolean"}
+          }
+        }
+      ]
+    },
+    "live_diagnostics": {
+      "oneOf": [
+        {"type": "null"},
+        {
+          "type": "object", "additionalProperties": false,
+          "required": ["downstream_state_source", "first_error_source", "stale_evidence_absent"],
+          "properties": {
+            "downstream_state_source": {"const": "LIVE_SAME_ATTEMPT"},
+            "first_error_source": {"const": "LIVE_SAME_ATTEMPT"},
+            "stale_evidence_absent": {"const": true}
+          }
+        }
+      ]
+    },
+    "warnings": {"type": "array", "items": {"type": "string"}},
+    "errors": {"type": "array", "items": {"type": "string"}},
+    "claim_boundary": {"type": "string", "minLength": 1}
+  },
+  "$defs": {
+    "sha": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "file": {
+      "type": "object", "additionalProperties": false,
+      "required": ["path", "bytes", "sha256"],
+      "properties": {
+        "path": {"type": "string", "minLength": 1}, "bytes": {"type": "integer", "minimum": 0}, "sha256": {"$ref": "#/$defs/sha"}
+      }
+    }
+  }
+}

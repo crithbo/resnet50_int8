@@ -1,0 +1,36 @@
+{
+  "schema": "server-family-dispatch-mode-binding-dispatch-v1",
+  "activation_epoch": "family-dispatch-mode-binding-v1",
+  "activation_boundary": "REQUIRED_NEXT_FRESH_AFTER_ACTIVATION_ONLY",
+  "current_packages": "NOT_RETROACTIVE_NO_HOLD_NO_REBUILD",
+  "public_rule_ids": [
+    "CDA-SERVER-TB-VCD-BOUNDED-FULL-CAUSAL-CONE-OPTIONAL-001"
+  ],
+  "implementation_classification": "EXISTING_RULE_IMPLEMENTATION_ESCAPE_PLUS_SESSION_EXECUTION_NONCOMPLIANCE",
+  "required_package_members": [
+    "contracts/server_family_dispatch_mode_binding.json",
+    "contracts/server_diagnostic_mode_selector.json"
+  ],
+  "required_checks": [
+    "family role resolves to exactly one ACTIVE persistent owner in the bound registry",
+    "dispatch mechanism is PERSISTENT_REGISTERED_THREAD and temporary subagent role substitution is false",
+    "issuing mainline thread matches the bound registry",
+    "machine-readable mode authority, its upstream user/plan/task-record source, and selector-dispatch bytes match their bound SHA256",
+    "mode authority receipt binds the same package, family, next-fresh scope and diagnostic mode as the dispatch binding",
+    "packaged binding is byte-equal to the dispatched binding",
+    "selector and manifest diagnostic mode equal the dispatched mode",
+    "clean exact-ZIP extraction preserves the same binding"
+  ],
+  "validator": "tools/validate_server_family_dispatch_mode_binding.py",
+  "schema_path": "schemas/server_family_dispatch_mode_binding_v1.schema.json",
+  "build_gate_registry_delta": {
+    "gate_id": "family_dispatch_mode_binding_final_zip",
+    "phase": "final_zip",
+    "activation": "required_next_fresh_after_activation",
+    "receipt_reuse_allowed": false,
+    "validator_identity_required": true,
+    "causal_blocking_classes": ["server_start", "return"],
+    "selected_modes": ["OBSERVER_ONLY_WIDE_CAUSAL", "TB_VCD_BOUNDED_CAUSAL_CONE"]
+  },
+  "claim_boundary": "Dispatch ownership and selected-mode identity only; no package production, storage, server, RTL/config/numeric, natural terminal, formal-D, E4 or E5 claim."
+}

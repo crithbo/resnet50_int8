@@ -25,6 +25,7 @@ from typing import Any
 
 
 SCHEMA = "server-observer-runtime-supervision-v1"
+SIGKILL_NUMBER = int(getattr(signal, "SIGKILL", 9))
 PR_SET_CHILD_SUBREAPER = 36
 
 
@@ -269,6 +270,8 @@ def supervise(args: argparse.Namespace) -> dict[str, Any]:
     heartbeat_seq = 0
     deadline = time.monotonic() + args.timeout
     terminate_receipts: list[dict[str, Any]] = []
+    last_kill_host_monotonic_ns: int | None = None
+    post_kill_reap_deadline_host_monotonic_ns: int | None = None
     try:
         while process.poll() is None:
             now = time.monotonic()
@@ -307,12 +310,16 @@ def supervise(args: argparse.Namespace) -> dict[str, Any]:
                 time.sleep(0.05)
             remaining = owned_processes(process.pid, pgid, known)
             if remaining:
-                terminate_receipts.append(signal_owned(process.pid, pgid, known, signal.SIGKILL))
+                terminate_receipts.append(signal_owned(process.pid, pgid, known, SIGKILL_NUMBER))
+                last_kill_host_monotonic_ns = time.monotonic_ns()
         try:
             root_exit = process.wait(timeout=max(args.grace, 0.1))
         except subprocess.TimeoutExpired:
             root_exit = None
-        reaped = reap_adopted(known, time.monotonic() + max(args.grace, 0.1))
+        reap_deadline = time.monotonic() + max(args.grace, 0.1)
+        if last_kill_host_monotonic_ns is not None:
+            post_kill_reap_deadline_host_monotonic_ns = int(reap_deadline * 1_000_000_000)
+        reaped = reap_adopted(known, reap_deadline)
         remaining_rows = owned_processes(process.pid, pgid, known)
         # Capture a final same-attempt simulation-time receipt after the tree is
         # quiescent.  Short successful simulations may finish before the first
@@ -356,6 +363,12 @@ def supervise(args: argparse.Namespace) -> dict[str, Any]:
         "received_signal": received_signal,
         "timed_out": timed_out,
         "termination": terminate_receipts,
+        "post_kill_reap": {
+            "deadline_origin": "FRESH_AFTER_LAST_KILL" if last_kill_host_monotonic_ns is not None else "NOT_APPLICABLE",
+            "last_kill_host_monotonic_ns": last_kill_host_monotonic_ns,
+            "deadline_host_monotonic_ns": post_kill_reap_deadline_host_monotonic_ns,
+            "completed": not remaining_rows,
+        },
         "reaped_pids": reaped,
         "owned_pids_remaining": [row["pid"] for row in remaining_rows],
         "process_tree_reaped": not remaining_rows,
@@ -384,6 +397,20 @@ def validate_receipt(path: Path) -> dict[str, Any]:
         errors.append("process tree was not reaped")
     if receipt.get("owned_pids_remaining") not in ([], None):
         errors.append("owned PIDs remain")
+    post_kill = receipt.get("post_kill_reap")
+    kill_sent = any(
+        isinstance(item, dict) and item.get("signal") in {SIGKILL_NUMBER, "SIGKILL"}
+        for item in receipt.get("termination", [])
+    )
+    if kill_sent and not (
+        isinstance(post_kill, dict)
+        and post_kill.get("deadline_origin") == "FRESH_AFTER_LAST_KILL"
+        and isinstance(post_kill.get("last_kill_host_monotonic_ns"), int)
+        and isinstance(post_kill.get("deadline_host_monotonic_ns"), int)
+        and post_kill["deadline_host_monotonic_ns"] > post_kill["last_kill_host_monotonic_ns"]
+        and post_kill.get("completed") is True
+    ):
+        errors.append("KILL lacks a fresh completed post-KILL reap deadline")
     if receipt.get("simulation_time_progress_observed") is not True:
         errors.append("same-attempt simulation-time progress is absent")
     if receipt.get("errors"):

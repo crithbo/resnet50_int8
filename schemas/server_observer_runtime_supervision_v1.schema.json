@@ -6,7 +6,7 @@
   "required": [
     "schema", "package_id", "execution_id", "attempt_id", "attempt_root", "cwd",
     "actual_argv", "root_pid", "pgid", "child_subreaper", "root_exit", "received_signal",
-    "timed_out", "owned_pids_remaining", "process_tree_reaped", "heartbeat_source",
+    "timed_out", "owned_pids_remaining", "process_tree_reaped", "post_kill_reap", "heartbeat_source",
     "heartbeat_output", "simulation_time_progress_observed", "errors", "diagnostic_status", "pass"
   ],
   "properties": {
@@ -29,6 +29,17 @@
     "timed_out": {"type": "boolean"},
     "owned_pids_remaining": {"type": "array", "maxItems": 0},
     "process_tree_reaped": {"const": true},
+    "post_kill_reap": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["deadline_origin", "last_kill_host_monotonic_ns", "deadline_host_monotonic_ns", "completed"],
+      "properties": {
+        "deadline_origin": {"enum": ["NOT_APPLICABLE", "FRESH_AFTER_LAST_KILL"]},
+        "last_kill_host_monotonic_ns": {"type": ["integer", "null"], "minimum": 0},
+        "deadline_host_monotonic_ns": {"type": ["integer", "null"], "minimum": 0},
+        "completed": {"type": "boolean"}
+      }
+    },
     "heartbeat_source": {"type": ["object", "null"]},
     "heartbeat_output": {"type": ["object", "null"]},
     "simulation_time_progress_observed": {"type": "boolean"},

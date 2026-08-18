@@ -1,0 +1,130 @@
+{
+  "package_id": "synthetic-vcd-next-fresh",
+  "execution_id": "execution-1",
+  "attempt_id": "attempt-1",
+  "started": true,
+  "actual_argv_sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+  "catalog_sha256": "2222222222222222222222222222222222222222222222222222222222222222",
+  "candidate_matrix_sha256": "3333333333333333333333333333333333333333333333333333333333333333",
+  "tb_source_sha256": "4444444444444444444444444444444444444444444444444444444444444444",
+  "elaboration_sha256": "5555555555555555555555555555555555555555555555555555555555555555",
+  "candidate_catalog_complete": true,
+  "unresolved_xz": false,
+  "heartbeat_contract": {
+    "source": "APPENDED_VCD_TIMESTAMP",
+    "width_bits": 64,
+    "signed": false,
+    "cadence_cycles": 16384
+  },
+  "decision_authority": {
+    "mode": "SHARED_RUNTIME_EVALUATOR_ONLY",
+    "helper_path": "package_tools/server_tb_vcd_runtime_supervision.py",
+    "helper_sha256": "7777777777777777777777777777777777777777777777777777777777777777",
+    "outer_runner_consumes_only_receipt": true,
+    "independent_exit_logic_absent": true,
+    "replay_cases": [
+      {"case_id": "ADVANCING_VCD_TIMESTAMP", "observed_decision": "CONTINUE"},
+      {"case_id": "PLATEAU_SUSPECTED_ONLY", "observed_decision": "CONTINUE"},
+      {"case_id": "PLATEAU_DUMP_OFF_PLUS_GRACE", "observed_decision": "CAUSAL_PLATEAU"},
+      {"case_id": "THREE_INTERVAL_TRUE_FREEZE", "observed_decision": "SIM_TIME_FREEZE"}
+    ]
+  },
+  "dumpoff_consistency_authority": {
+    "mode": "SHARED_RUNTIME_EVALUATOR_PHASE_AWARE_DUMPOFF",
+    "helper_path": "package_tools/server_tb_vcd_runtime_supervision.py",
+    "helper_sha256": "7777777777777777777777777777777777777777777777777777777777777777",
+    "replay_cases": [
+      {"case_id": "PLANNED_DUMPOFF_FROZEN_VCD_GRACE_CONTINUE", "observed_decision": "CONTINUE"},
+      {"case_id": "PLANNED_DUMPOFF_PLUS_GRACE_CAUSAL_PLATEAU", "observed_decision": "CAUSAL_PLATEAU"},
+      {"case_id": "REPEATED_STOP_MARKER", "observed_decision": "FAIL_CLOSED"}
+    ]
+  },
+  "target_entry_observed": true,
+  "target_diagnostic_claim": true,
+  "samples": [
+    {
+      "seq": 0,
+      "owner_clock_cycles": 0,
+      "sim_cycles": 0,
+      "sim_time_ticks": 0,
+      "appended_vcd_timestamp_ticks": 0,
+      "wall_seconds": 0,
+      "vcd_bytes": 1000,
+      "non_clock_events": 0,
+      "causal_progress_events": 1,
+      "qualified_progress_counters": {"accept": 1},
+      "causal_state_digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "global_progress_witness": {"accept": 1},
+      "write_ok": true,
+      "disk_space_ok": true,
+      "quota_ok": true
+    },
+    {
+      "seq": 1,
+      "owner_clock_cycles": 16384,
+      "sim_cycles": 16384,
+      "sim_time_ticks": 16384,
+      "appended_vcd_timestamp_ticks": 16384,
+      "wall_seconds": 1,
+      "vcd_bytes": 4096,
+      "non_clock_events": 12,
+      "causal_progress_events": 2,
+      "qualified_progress_counters": {"accept": 2},
+      "causal_state_digest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "global_progress_witness": {"accept": 2},
+      "write_ok": true,
+      "disk_space_ok": true,
+      "quota_ok": true,
+      "natural_terminal": true
+    }
+  ],
+  "flush": {"dumpoff": true, "dumpflush": true, "closed": true},
+  "process_tree": {
+    "term_sent": false,
+    "wait_completed": true,
+    "kill_sent_if_needed": false,
+    "all_reaped": true,
+    "post_kill_reap_deadline_origin": "NOT_APPLICABLE",
+    "last_kill_host_monotonic_ns": null,
+    "post_kill_reap_deadline_host_monotonic_ns": null,
+    "post_kill_reap_completed": true
+  },
+  "vcd_identity": {
+    "path": "evidence/vcd/wave.vcd",
+    "bytes": 4096,
+    "sha256": "6666666666666666666666666666666666666666666666666666666666666666",
+    "header_valid": true,
+    "timescale": "1 ns",
+    "catalog_complete": true,
+    "transitions_complete": true,
+    "xz_preserved": true,
+    "return_allowlist_member": true
+  },
+  "archive_timestamp_receipt": {
+    "binding": "FULL_FILE_SHA_BYTES_PLUS_LAST_TIMESTAMP_EXACT",
+    "parse_status": "COMPLETE",
+    "path": "evidence/vcd/wave.vcd",
+    "bytes": 4096,
+    "sha256": "6666666666666666666666666666666666666666666666666666666666666666",
+    "last_timestamp_ticks": 16384
+  },
+  "return_exact_set": {
+    "members": [
+      {
+        "path": "evidence/vcd/wave.vcd",
+        "bytes": 4096,
+        "sha256": "6666666666666666666666666666666666666666666666666666666666666666"
+      }
+    ],
+    "hard_limit_bytes": null,
+    "truncated": false,
+    "sampled": false,
+    "allowlist_complete": true,
+    "published": true
+  },
+  "live_diagnostics": {
+    "downstream_state_source": "LIVE_SAME_ATTEMPT",
+    "first_error_source": "LIVE_SAME_ATTEMPT",
+    "stale_evidence_absent": true
+  }
+}

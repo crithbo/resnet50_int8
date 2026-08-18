@@ -1,0 +1,27 @@
+{
+  "schema": "server-package-release-admission-historical-negative-v1",
+  "family": "gap_node0071",
+  "package_id": "r5_n71_gap_v62_sum_s2_tbvcd",
+  "final_zip": {
+    "bytes": 1949063,
+    "sha256": "9256c91dd13905ae8fe573e21d3676a353e92313a57c9d2715078e20df9232a9"
+  },
+  "embedded_manifest": {
+    "member": "r5_n71_gap_v62_sum_s2_tbvcd/TEST_PACKAGE_MANIFEST.json",
+    "bytes": 171731,
+    "sha256": "3bb458e99517e6f03d2954926abd4d0f78471459246fccc2c10ce328cfba4b3d",
+    "status": "PACKAGE_READY_NOT_RUN_LOCAL_BUILD_PENDING_GATES"
+  },
+  "contradictory_release_receipt": {
+    "bytes": 2662,
+    "sha256": "486cfdcc45565cd98ed1744376d936903f7da6787c56163b84c7a9a387cabca3",
+    "status": "PACKAGE_READY_NOT_RUN",
+    "pass": true
+  },
+  "expected_shared_gate_result": {
+    "pass": false,
+    "required_error_substring": "package claim boundary differs"
+  },
+  "classification": "PACKAGE_RELEASE_CLAIM_OUTRAN_EMBEDDED_MANIFEST_AND_RUNTIME_PREFLIGHT",
+  "claim_boundary": "Historical package-delivery escape only; it proves no DUT, config, RTL, numeric, natural-terminal, formal-D, E3, E4 or E5 fact."
+}

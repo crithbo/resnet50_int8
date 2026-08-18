@@ -1,0 +1,132 @@
+{
+  "schema": "server-tb-vcd-bounded-causal-cone-dispatch-v1",
+  "rule_id": "CDA-SERVER-TB-VCD-BOUNDED-FULL-CAUSAL-CONE-OPTIONAL-001",
+  "mode": "TB_VCD_BOUNDED_CAUSAL_CONE",
+  "default": false,
+  "coexists_with_default": "OBSERVER_ONLY_WIDE_CAUSAL",
+  "bulk_mode_exclusive": true,
+  "producer": "PACKAGE_LOCAL_TB_STANDARD_SYSTEM_TASKS_ONLY",
+  "standard_tasks": ["$dumpfile", "$dumpvars", "$dumpon", "$dumpoff", "$dumpflush"],
+  "dump_targeting": {
+    "mode": "EXACT_CATALOG_SIGNALS",
+    "module_scope_dump": false,
+    "exact_signal_set_equals_source_bound_catalog": true
+  },
+  "diagnostic_round_breadth": {
+    "first_round": {
+      "baseline_mode": "FAMILY_CURRENT_ROUND_AT_LEAST_THREE_SOFT_REFERENCE",
+      "minimum_reference_round_index": 3,
+      "reasonable_signal_count_range_required": true,
+      "count_shortfall_is_standalone_blocker": false,
+      "out_of_range_requires_explanation_and_acknowledgement": true,
+      "all_high_probability_candidate_direct_driver_leaves_recommended": true,
+      "missing_high_candidate_driver_is_record_only_when_matrix_remains_distinguishable": true,
+      "direct_driver_depth_edges": 0,
+      "pinned_rtl_tree_and_catalog_source_identity_required": true
+    },
+    "refined_successor": {
+      "exact_predecessor_contract_required": true,
+      "predecessor_validation_semantics": "CURRENT_SUCCESSOR_UNDER_CURRENT_GATE__EXACT_PREDECESSOR_UNDER_PUBLISHED_GATE_OR_EXACT_PUBLISHED_PASS_RECEIPT",
+      "current_gate_semantic_version": "8",
+      "supported_exact_legacy_predecessor_semantic_versions": ["5", "6", "7"],
+      "published_predecessor_semantic_version_and_pass_receipt_required": true,
+      "exact_added_removed_unchanged_diff_required": true,
+      "removed_signal_requires_reason_confidence_and_affected_candidates": true,
+      "per_signal_all_preserved_candidate_proof_required": false,
+      "low_confidence_signal_default": "RETAIN",
+      "candidate_loss_requires_exact_closure_receipt": true,
+      "newly_exposed_boundary_signals_must_be_added": true,
+      "unchanged_signal_source_identity_must_remain_exact": true
+    },
+    "first_fresh_clean_exact_zip_negative_controls": [
+      "MISSING_SOFT_REFERENCE_RECEIPT",
+      "OUT_OF_RANGE_WITHOUT_EXPLANATION",
+      "LOW_CONFIDENCE_SIGNAL_REMOVED",
+      "ADD_REMOVE_DIFF_MISMATCH",
+      "CANDIDATE_LOSS_WITHOUT_CLOSURE",
+      "SOURCE_IDENTITY_DRIFT",
+      "SIZE_OR_STOP_PROTECTION_WEAKENED"
+    ]
+  },
+  "forbidden": ["VPD", "FSDB", "UCLI_DIRECT_VCD", "VENDOR_QUERY", "FULL_TOP_UNBOUNDED_SCOPE", "FULL_OBSERVER_JSONL", "HARD_TRUNCATION", "SAMPLING"],
+  "budgets": {
+    "soft_warning_bytes": 100000000,
+    "operational_vcd_budget_bytes": 8000000000,
+    "return_budget_bytes": 10000000000,
+    "wall_ceiling_seconds": 3600,
+    "wall_ceiling_semantics": "DEFAULT_3600_OR_SOURCE_BOUND_MEASURED_BOUNDED_OVERRIDE",
+    "absolute_maximum_wall_seconds": 86400,
+    "runtime_budget_admission": "contracts/server_runtime_budget_admission_dispatch_v1.json",
+    "independent_size_disk_growth_guards_preserved": true
+  },
+  "plateau": {
+    "suspected_cycles": 1048576,
+    "dump_off_cycles": 4194304,
+    "post_dump_grace_cycles": 262144,
+    "qualification": [
+      "owner_clock_advancing",
+      "sim_time_advancing",
+      "all_qualified_progress_counters_stable",
+      "complete_source_bound_causal_state_bitwise_stable",
+      "global_progress_witness_stable",
+      "candidate_catalog_coverage_complete",
+      "no_unresolved_xz"
+    ],
+    "global_progress_advancing": "FORBID_LOCAL_CONE_PLATEAU_STOP",
+    "planned_dumpoff_state_source": "EXECUTION_BOUND_TB_STICKY_EVENT",
+    "post_dumpoff_progress_source": "EXECUTION_BOUND_OWNER_CLOCK_AND_TB_TIME",
+    "dump_off_grace_precedes_freeze": true,
+    "stop_marker_policy": "ONE_SHOT_LATCHED"
+  },
+  "sim_time_freeze": {
+    "intervals": 3,
+    "interval_seconds": 30,
+    "authoritative_source": "APPENDED_VCD_TIMESTAMP",
+    "heartbeat_width_bits_minimum": 64,
+    "heartbeat_signed": false,
+    "heartbeat_cadence_cycles": 16384,
+    "display_integer_is_non_authoritative_before_planned_dumpoff": true,
+    "phase_semantics": "APPENDED_VCD_TIMESTAMP_BEFORE_DUMPOFF_EXECUTION_TIME_AFTER"
+  },
+  "formal_return": {
+    "partial_unflushed_or_unreaped_cannot_pass": true,
+    "exact_set_no_hard_limit_receipt_required": true,
+    "target_claim_requires_live_target_entry": true,
+    "downstream_and_first_error_must_be_live_same_attempt": true,
+    "legal_inline_or_multiline_timescale_required": true,
+    "outer_runner_consumes_shared_evaluator_decision_only": true,
+    "required_exact_replays": [
+      "ADVANCING_VCD_TIMESTAMP=CONTINUE",
+      "PLATEAU_SUSPECTED_ONLY=CONTINUE",
+      "PLATEAU_DUMP_OFF_PLUS_GRACE=CAUSAL_PLATEAU",
+      "THREE_INTERVAL_TRUE_FREEZE=SIM_TIME_FREEZE",
+      "PLANNED_DUMPOFF_FROZEN_VCD_GRACE_CONTINUE=CONTINUE",
+      "PLANNED_DUMPOFF_PLUS_GRACE_CAUSAL_PLATEAU=CAUSAL_PLATEAU",
+      "REPEATED_STOP_MARKER=FAIL_CLOSED"
+    ],
+    "dump_control_receipt_required": true,
+    "archive_timestamp_binding": "FULL_FILE_SHA_BYTES_PLUS_LAST_TIMESTAMP_EXACT"
+  },
+  "shared_assets": {
+    "selector_schema": "schemas/server_diagnostic_mode_selector_v1.schema.json",
+    "selector_validator": "tools/validate_server_diagnostic_mode_selector.py",
+    "contract_schema": "schemas/server_tb_vcd_bounded_causal_cone_v1.schema.json",
+    "validator": "tools/validate_server_tb_vcd_bounded_causal_cone.py",
+    "runtime_schema": "schemas/server_tb_vcd_runtime_receipt_v1.schema.json",
+    "runtime_supervisor": "tools/server_tb_vcd_runtime_supervision.py",
+    "runtime_budget_schema": "schemas/server_runtime_budget_admission_v1.schema.json",
+    "runtime_budget_tool": "tools/server_runtime_budget_admission.py",
+    "retention_analysis_schema": "schemas/server_tb_vcd_retention_analysis_v1.schema.json",
+    "retention_analysis_tool": "tools/server_tb_vcd_retention_analysis.py",
+    "third_round_breadth_baseline_fixture": "fixtures/server_tb_vcd_bounded_causal_cone_v1/third_round_breadth_baseline.json"
+  },
+  "mainline_rule_merge": {
+    "existing_rule_id": "CDA-SERVER-TB-VCD-BOUNDED-FULL-CAUSAL-CONE-OPTIONAL-001",
+    "merge_kind": "SUPERSEDING_SOFT_REFERENCE_ADAPTIVE_PRUNING_V4",
+    "new_public_rule_id": null,
+    "preserve_rule_ids": ["CDA-SERVER-SOURCE-BOUND-GENERATED-OBSERVER-001", "CDA-SERVER-ALWAYS-ON-TRIGGERED-CAUSAL-OBSERVABILITY-001"],
+    "retention_extension": "CDA-SERVER-RETURN-WAVEFORM-INCREMENTAL-REVIEW-RETENTION-001",
+    "optimizer_extension": "CDA-WHOLE-NET-WAVEFORM-INCREMENTAL-REVIEW-COORDINATION-001"
+  },
+  "claim_boundary": "Optional local contract and runtime method only; no family package, production simulator proof, diagnosis, natural terminal, formal D, E4 or E5 claim."
+}

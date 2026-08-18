@@ -1,0 +1,56 @@
+{
+  "schema": "server-tb-vcd-cross-family-exit-delta-v3",
+  "rule_id": "CDA-SERVER-TB-VCD-BOUNDED-FULL-CAUSAL-CONE-OPTIONAL-001",
+  "new_public_rule_id": null,
+  "source_comparison": "outputs/tb_vcd_cross_family_exit_audit_v1/comparison.json",
+  "classification": {
+    "serialized_v93d": "B_DIFFERENT_SHARED_SUPERVISOR_DEFECT",
+    "native_p48": "A_QADD_V63_CLASS_FALSE_FREEZE",
+    "gap_v63": "A_QADD_V63_CLASS_FALSE_FREEZE"
+  },
+  "required_next_fresh_delta": {
+    "decision_authority": "SHARED_RUNTIME_EVALUATOR_ONLY",
+    "outer_runner_independent_exit_logic": false,
+    "exact_replay_cases": {
+      "ADVANCING_VCD_TIMESTAMP": "CONTINUE",
+      "PLATEAU_SUSPECTED_ONLY": "CONTINUE",
+      "PLATEAU_DUMP_OFF_PLUS_GRACE": "CAUSAL_PLATEAU",
+      "THREE_INTERVAL_TRUE_FREEZE": "SIM_TIME_FREEZE"
+    },
+    "archive_timestamp_binding": "FULL_FILE_SHA_BYTES_PLUS_LAST_TIMESTAMP_EXACT",
+    "finalization_conjunction": [
+      "runtime decision equals outer stop decision",
+      "quiescent archived VCD last timestamp equals final runtime timestamp",
+      "flush closed and process tree fully reaped",
+      "incomplete runtime forces finalization pass=false"
+    ]
+  },
+  "fix_options": [
+    {
+      "option": "shared evaluator is the sole outer-runner decision authority",
+      "cost": "LOW_TO_MEDIUM_IMPLEMENTATION",
+      "runtime_cost": "NEGLIGIBLE",
+      "benefit": "prevents suspected-threshold early exit and threshold drift across families"
+    },
+    {
+      "option": "combine VCD SHA/bytes computation with final last-timestamp extraction",
+      "cost": "LOW_IMPLEMENTATION",
+      "runtime_cost": "NO_EXTRA_FULL_FILE_PASS_WHEN_FUSED_WITH_EXISTING_HASH",
+      "benefit": "detects stale live heartbeat and false freeze before finalization"
+    },
+    {
+      "option": "retain exact four-case replay in first-fresh audit",
+      "cost": "LOW_LOCAL_BUILD_SECONDS",
+      "runtime_cost": "NONE_ON_DUT_SIMULATION",
+      "benefit": "catches both QAdd/GAP/native false-freeze class and serialized premature plateau before server use"
+    }
+  ],
+  "activation": {
+    "name": "tb-vcd-exit-mechanism-consistency-v3",
+    "applies_to": "next fresh optional-VCD package after canonical sync",
+    "current_returns_or_packages_held": false,
+    "observer_default_unchanged": true
+  },
+  "claim_boundary": "Shared TB-VCD exit mechanism only; family signal-level and functional root diagnosis remains out of scope."
+}
+

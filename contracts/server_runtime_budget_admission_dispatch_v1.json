@@ -1,0 +1,74 @@
+{
+  "schema": "server-runtime-budget-admission-dispatch-v1",
+  "existing_rule_id": "CDA-SERVER-TB-VCD-BOUNDED-FULL-CAUSAL-CONE-OPTIONAL-001",
+  "default_wall_ceiling_seconds": 3600,
+  "shared_hard_maximum_wall_seconds": 86400,
+  "highest_current_exact_authorization_seconds": 15000,
+  "authorization_scopes": [
+    {
+      "authorization_profile_id": "qadd-v70-pretarget-8400",
+      "family": "qlinearadd_node0007",
+      "source_package_id": "r5_qadd_n7_tailround_lanephase_v70_pmapfix",
+      "source_return_sha256": "ae317f36edd28ecf0b9c3bf7d5c7734612d18755932f9fedb371a1203addb369",
+      "qualified_progress_source": "PRETARGET_MATRIX_TRANSFER_COMPLETE",
+      "qualified_units_completed": 19,
+      "total_units": 30,
+      "target_entry_observed": false,
+      "selected_wall_ceiling_seconds": 8400,
+      "absolute_maximum_wall_seconds": 8400,
+      "historical_contract_remains_valid": true
+    },
+    {
+      "authorization_profile_id": "qadd-v73-target-progress-15000",
+      "family": "qlinearadd_node0007",
+      "source_package_id": "r5_qadd_n7_tailround_lanephase_v73_w8400v7",
+      "source_return_path": "C:/Users/15383/Downloads/r5_qadd_n7_tailround_lanephase_v73_w8400v7_r1786958027042931325_3775010_return.zip",
+      "source_return_sha256": "a65425c43962ee172bf4583b4a114b0a5123d0a19eb20a80860c19ac52e2f23c",
+      "source_formal_analysis_path": "outputs/qlinearadd_node0007_v73_return_r1786958027042931325_3775010/formal_return_analysis.json",
+      "source_formal_analysis_sha256": "f0e7d0298d80c233041be6dd26fda8c6aaaabcca6353586f31cd94cc063bc432",
+      "qualified_progress_source": "TARGET_COMPLEMENTARY_PAIR_ACCEPT_CLEAR_OUTPUT",
+      "qualified_units_completed": 12440,
+      "total_units": 18816,
+      "target_entry_observed": true,
+      "progress_was_advancing": true,
+      "target_entry_wall_seconds": 5562.327059702948,
+      "measured_target_elapsed_seconds": 2855.939969378058,
+      "unmargined_projected_total_wall_seconds": 9882.051051971239,
+      "selected_wall_ceiling_seconds": 15000,
+      "absolute_maximum_wall_seconds": 86400,
+      "user_authorization": {
+        "source_thread_id": "019ff027-e7db-72a3-b282-cfad8708da05",
+        "exact_text": "qadd预算允许到15000秒确定跑完",
+        "utf8_sha256": "60602079640071373a013309304df0d0e9099a2481a93dfe7953298ac3eb8d58",
+        "authorization_scope": "EXACT_V73_MEASURED_RETURN_TO_ONE_NEXT_FRESH_QADD_SUCCESSOR"
+      },
+      "other_families_returns_or_values_require_new_user_authorization": true
+    }
+  ],
+  "qualified_override_modes": ["MEASURED_PRETARGET_AWARE"],
+  "measurement_requirements": {
+    "source_bound_return_identity": true,
+    "formal_analysis_identity_for_target_phase": true,
+    "qualified_completed_units_minimum": 3,
+    "advancing_progress": true,
+    "formula_pretarget": "CEIL(elapsed/completed*total*safety_factor+target_margin)",
+    "formula_target": "CEIL(fixed_overhead+elapsed/completed*total*safety_factor+target_margin)"
+  },
+  "independent_guards_preserved": [
+    "VCD_OPERATIONAL_BUDGET_8000000000",
+    "RETURN_BUDGET_PROJECTION_10000000000",
+    "DISK_SPACE_FAILURE",
+    "GROWTH_PROJECTION",
+    "WRITE_FAILURE",
+    "QUOTA_FAILURE",
+    "SIGNAL_EXIT",
+    "PLATEAU_AND_FREEZE",
+    "RETURN_INTEGRITY"
+  ],
+  "post_kill_reap": {
+    "deadline_origin": "FRESH_AFTER_LAST_KILL",
+    "stubborn_adopted_descendant_must_fail_closed": true
+  },
+  "activation": "REQUIRED_NEXT_FRESH",
+  "claim_boundary": "Exact QAdd measured runtime admission only; default 3600, other families, independent guards, DUT/config/RTL and server authorization are unchanged."
+}

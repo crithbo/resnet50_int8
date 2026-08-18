@@ -7,6 +7,11 @@
   "assets": {
     "contract_fixture": "fixtures/server_observer_only_wide_causal_v1/positive_contract.json",
     "contract_schema": "schemas/server_observer_only_wide_causal_contract_v1.schema.json",
+    "operational_attempt_boundary_dispatch": "contracts/server_observer_operational_attempt_boundary_dispatch_v1.json",
+    "operational_attempt_boundary_schema": "schemas/server_observer_operational_attempt_boundary_v1.schema.json",
+    "operational_attempt_receipt_schema": "schemas/server_observer_operational_attempt_receipt_v1.schema.json",
+    "operational_attempt_runtime": "tools/server_observer_operational_attempt_boundary.py",
+    "operational_attempt_validator": "tools/validate_server_observer_operational_attempt_boundary.py",
     "runtime_schema": "schemas/server_observer_runtime_supervision_v1.schema.json",
     "runtime_supervisor": "tools/server_observer_runtime_supervision.py",
     "validator": "tools/validate_server_observer_only_wide_causal.py"
@@ -17,6 +22,23 @@
     "observer_evidence_aggregate_only": true,
     "soft_limit_bytes": 100000000,
     "soft_limit_semantics": "warning_only_complete_return_retained"
+  },
+  "operational_attempt_boundary": {
+    "activation_epoch": "observer-operational-attempt-boundary-v1",
+    "current_v99_frozen_no_rebuild": true,
+    "evidence_caps_sampling_truncation_or_deletion": false,
+    "family_specific_thresholds_required": true,
+    "pre_run_peak_components": [
+      "compile_outputs", "observer_chunks", "simulator_log_duplication",
+      "parser_rewrite_scratch", "return_zip_staging", "publication_sidecar"
+    ],
+    "live_phases": ["compile", "simulation", "finalization"],
+    "minimum_free_reserve_required": true,
+    "one_shot_whole_attempt_stop": true,
+    "operational_stop_status": "DIAGNOSTIC_EVIDENCE_INCOMPLETE",
+    "durable_partial_return_before_exact_cleanup": true,
+    "foreign_siblings_preserved": true,
+    "soft_limit_100000000_is_not_stop_threshold": true
   },
   "family_boundary": "Shared gate proves observer evidence integrity and causal coverage only. Family owner retains signal interpretation and DUT verdict authority.",
   "mainline_narrow_merge": {

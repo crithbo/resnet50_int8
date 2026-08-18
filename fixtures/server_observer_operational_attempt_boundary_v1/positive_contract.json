@@ -1,0 +1,76 @@
+{
+  "activation_epoch": "observer-operational-attempt-boundary-v1",
+  "claim_boundary": "Whole-attempt operational safety only; no DUT result, natural terminal, formal-D, E4 or E5 claim.",
+  "durable_partial_return": {
+    "atomic_unique_publication": true,
+    "exact_member_set_verified": true,
+    "recursive_self_staging_forbidden": true,
+    "sidecar_bytes_sha256_verified": true,
+    "streaming_or_bounded_staging": true,
+    "zip_crc_verified": true
+  },
+  "family": "synthetic",
+  "live_tree_policy": {
+    "method": "content-bound operational guard v2 live-tree policy",
+    "path": "contracts/observer_operational_live_tree_policy_v2.json",
+    "schema": "server-observer-operational-live-tree-policy-v2",
+    "sha256": "e7355774bd2331d976af740f4090000fb3e68877d7f04fb5c3967430c2a1db36",
+    "units": "bytes"
+  },
+  "operational_stop": {
+    "attempt_wide": true,
+    "byte_cap": null,
+    "diagnostic_status": "DIAGNOSTIC_EVIDENCE_INCOMPLETE",
+    "event_cap": null,
+    "flush_all_flushable_rows": true,
+    "forbidden_claims": ["NATURAL_TERMINAL", "FORMAL_D", "E4", "E5"],
+    "one_shot": true,
+    "partial_exit_marker": true,
+    "preserve_completed_rows": true,
+    "rolling_overwrite": false,
+    "sampling": false,
+    "size_based_evidence_deletion": false,
+    "term_wait_kill_reap": true,
+    "truncation": false
+  },
+  "package_id": "synthetic_observer_next_fresh",
+  "phase_watches": [
+    {"growth_limit_bytes": 1000, "monitor_interval_seconds": 1, "phase": "compile", "remaining_projection_bytes": 2500, "watched_paths": ["compile"]},
+    {"growth_limit_bytes": 2000, "monitor_interval_seconds": 1, "phase": "simulation", "remaining_projection_bytes": 1500, "watched_paths": ["observer", "sim.log"]},
+    {"growth_limit_bytes": 3000, "monitor_interval_seconds": 1, "phase": "finalization", "remaining_projection_bytes": 500, "watched_paths": ["return-staging"]}
+  ],
+  "post_durable_cleanup": {
+    "after_durable_return_only": true,
+    "bounded_live_tree_resampling": true,
+    "exact_owned_attempt_and_bootstrap_leaves_only": true,
+    "failed_publication_uncleaned": true,
+    "internal_owned_symlink_entries_no_follow": true,
+    "internal_symlink_target_traversal_forbidden": true,
+    "lexical_target_escape_forbidden": true,
+    "post_durable_unlink_internal_links_no_follow": true,
+    "preserve_foreign_siblings": true,
+    "root_and_ancestor_symlinks_forbidden": true,
+    "special_entries_forbidden": true
+  },
+  "pre_run_peak_projection": {
+    "components": [
+      {"basis": "synthetic measured compile projection", "component_id": "compile_outputs", "max_bytes": 1000},
+      {"basis": "synthetic transition-complete observer projection", "component_id": "observer_chunks", "max_bytes": 2000},
+      {"basis": "synthetic duplicated log projection", "component_id": "simulator_log_duplication", "max_bytes": 500},
+      {"basis": "synthetic bounded parser scratch", "component_id": "parser_rewrite_scratch", "max_bytes": 500},
+      {"basis": "synthetic return staging projection", "component_id": "return_zip_staging", "max_bytes": 1000},
+      {"basis": "synthetic sidecar projection", "component_id": "publication_sidecar", "max_bytes": 100}
+    ],
+    "minimum_free_reserve_bytes": 1000,
+    "peak_transient_bytes": 5100,
+    "start_required_free_bytes": 6100,
+    "unknown_or_unbounded_amplification": false
+  },
+  "schema": "server-observer-operational-attempt-boundary-v1",
+  "threshold_source": {
+    "method": "family-measured or conservatively derived peak projection",
+    "path": "receipts/operational_budget_source.json",
+    "sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+    "units": "bytes"
+  }
+}

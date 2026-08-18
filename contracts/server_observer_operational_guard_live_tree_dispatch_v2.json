@@ -1,0 +1,58 @@
+{
+  "schema": "server-observer-operational-guard-live-tree-dispatch-v2",
+  "activation": {
+    "recommended_epoch": "observer-operational-guard-process-identity-v3",
+    "mode": "required_next_fresh_after_mainline_activation",
+    "retrospective_hold": false,
+    "current_v99_disposition": "FORMAL_RETURN_CONSUMED_NO_REBUILD",
+    "current_v100_disposition": "FORMAL_RETURN_CONSUMED_NO_REBUILD",
+    "family_next_fresh_disposition": "HOLD_UNTIL_SHARED_ACTIVATION"
+  },
+  "public_rule": {
+    "new_public_rule_id": null,
+    "replace_or_narrow_existing_id": "CDA-SERVER-WAVEFORM-DEFAULT-RETURN-UNBOUNDED-CAUSAL-COVERAGE-001",
+    "supporting_existing_rule_ids": [
+      "CDA-SERVER-FSDB-PROCESS-TREE-WRITER-QUIESCENCE-001",
+      "CDA-SERVER-POST-SIM-CORE-RETURN-INDEPENDENT-PUBLISH-001",
+      "CDA-SERVER-PACKAGE-REPEAT-EXECUTION-EXACT-OWNED-RESET-001"
+    ]
+  },
+  "assets": {
+    "runtime": "tools/server_observer_operational_guard_v2.py",
+    "validator": "tools/validate_server_observer_operational_guard_v2.py",
+    "receipt_schema": "schemas/server_observer_operational_guard_receipt_v2.schema.json",
+    "failure_handoff_schema": "schemas/server_observer_operational_failure_handoff_v1.schema.json",
+    "live_tree_policy_schema": "schemas/server_observer_operational_live_tree_policy_v2.schema.json",
+    "positive_fixture": "fixtures/server_observer_operational_guard_live_tree_v2/positive_monitor_exception_receipt.json",
+    "positive_policy_fixture": "fixtures/server_observer_operational_guard_live_tree_v2/positive_live_tree_policy.json",
+    "positive_failure_handoff_fixture": "fixtures/server_observer_operational_guard_live_tree_v2/positive_failure_handoff.json",
+    "tests": "tests/test_server_observer_operational_guard_v2.py"
+  },
+  "live_tree_contract": {
+    "entry_metadata": "NOFOLLOW_LSTAT",
+    "symlink_target_traversal": false,
+    "exact_owned_internal_symlink_allowed": true,
+    "lexical_target_escape_allowed": false,
+    "special_entry_allowed": false,
+    "bounded_create_delete_resamples": 3,
+    "unknown_monitor_exception_after_child_start": "TERM_WAIT_KILL_REAP_AND_ATOMIC_EMERGENCY_RECEIPT",
+    "process_snapshot_backend": "PROCFS_NO_CHILD_ENUMERATOR",
+    "process_identity": ["pid", "start_time_ticks"],
+    "pid_reuse_protection": true,
+    "real_descendant_must_remain_visible": true
+  },
+  "failure_handoff_contract": {
+    "same_basename_return_overwrite_forbidden": true,
+    "prior_published_return_preserved": true,
+    "cleanup_requires_valid_finalization_and_durable_return_receipts": true
+  },
+  "classification_contract": {
+    "exit_2_without_guard_receipt": "GUARD_RECEIPT_MISSING_INFRASTRUCTURE_FAILURE",
+    "production_compile_error_requires": [
+      "valid_guard_receipt",
+      "failure_classification=GUARDED_COMMAND_EXIT",
+      "production_compile_error_claim_allowed=true"
+    ]
+  },
+  "claim_boundary": "Shared package-local operational monitoring, process-tree cleanup and failure classification only; no family package, server, RTL, config, numeric, natural-terminal, Formal-D, E4 or E5 claim."
+}

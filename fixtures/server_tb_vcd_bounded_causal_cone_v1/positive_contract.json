@@ -1,0 +1,791 @@
+{
+  "schema": "server-tb-vcd-bounded-causal-cone-v1",
+  "profile": "TB_VCD_BOUNDED_CAUSAL_CONE",
+  "rule_id": "CDA-SERVER-TB-VCD-BOUNDED-FULL-CAUSAL-CONE-OPTIONAL-001",
+  "package_id": "synthetic-vcd-next-fresh",
+  "family": "synthetic",
+  "execution": {
+    "compile_argv": [
+      "make",
+      "-f",
+      "Makefile.tb_NDP_Top_new_phy",
+      "compile",
+      "DUMP_VCD=0",
+      "DUMP_FSDB=0",
+      "TB_DUMP_FSDB=0"
+    ],
+    "sim_argv": [
+      "make",
+      "-f",
+      "Makefile.tb_NDP_Top_new_phy",
+      "sim",
+      "DUMP_VCD=0",
+      "DUMP_FSDB=0",
+      "TB_DUMP_FSDB=0"
+    ],
+    "dump_argv": {
+      "DUMP_VCD": "0",
+      "DUMP_FSDB": "0",
+      "TB_DUMP_FSDB": "0"
+    },
+    "tb_source_path": "fixtures/server_tb_vcd_bounded_causal_cone_v1/tb_bounded_causal_vcd.sv",
+    "tb_source_sha256": "07badee00ca55d3cff2e874352dc1ba95d9baa2a4e37e9230ef8bd69a13ddf79",
+    "standard_tasks": [
+      "$dumpfile",
+      "$dumpvars",
+      "$dumpon",
+      "$dumpoff",
+      "$dumpflush"
+    ],
+    "producer": "PACKAGE_LOCAL_TB_STANDARD_SYSTEM_TASKS_ONLY",
+    "lightweight_observer_jsonl": false,
+    "dump_targeting": {
+      "mode": "EXACT_CATALOG_SIGNALS",
+      "module_scope_dump": false,
+      "dumpvars_depth": 0,
+      "signal_ids": [
+        "sig_clk",
+        "sig_rst",
+        "sig_upstream",
+        "sig_fifo",
+        "sig_payload",
+        "sig_bank",
+        "sig_state",
+        "sig_output"
+      ]
+    }
+  },
+  "scope": {
+    "simulation_top": "tb_NDP_Top_new_phy",
+    "full_hierarchy_dump": false,
+    "dump_scopes": [
+      {
+        "scope_id": "slice13_cone",
+        "exact_hierarchy": "tb_NDP_Top_new_phy.NDP_Top_phy_INST.slice_with_datahub_mc_group_gen[13]",
+        "depth": 0,
+        "boundary_ids": [
+          "b_up",
+          "b_cur",
+          "b_down",
+          "b_state"
+        ],
+        "source_bound_signal_ids": [
+          "sig_clk",
+          "sig_rst",
+          "sig_upstream",
+          "sig_fifo",
+          "sig_payload",
+          "sig_bank",
+          "sig_state",
+          "sig_output"
+        ]
+      }
+    ]
+  },
+  "budget": {
+    "soft_warning_bytes": 100000000,
+    "operational_vcd_budget_bytes": 8000000000,
+    "return_budget_bytes": 10000000000,
+    "wall_ceiling_seconds": 3600,
+    "runtime_budget_mode": "DEFAULT_BOUNDED",
+    "runtime_budget_admission_path": null,
+    "runtime_budget_admission_sha256": null,
+    "absolute_maximum_wall_seconds": 86400,
+    "hard_truncation": false,
+    "sampling": false,
+    "size_based_deletion": false
+  },
+  "diagnostic_round": {
+    "round_index": 1,
+    "round_kind": "FIRST_DIAGNOSTIC_ROUND",
+    "breadth_baseline": {
+      "mode": "FAMILY_CURRENT_ROUND_AT_LEAST_THREE_SOFT_REFERENCE",
+      "reference_round_index": 3,
+      "reference_package_id": "synthetic-vcd-third-round-reference",
+      "receipt_path": "fixtures/server_tb_vcd_bounded_causal_cone_v1/third_round_breadth_baseline.json",
+      "receipt_sha256": "2a0f194fa34d185f55be1ba01eeb8e32b4b566bbc3809bfaa347d4a235be6117",
+      "reference_signal_count": 8,
+      "reference_direct_driver_leaf_count": 4,
+      "reference_candidate_count": 2,
+      "reference_boundary_count": 4,
+      "reasonable_signal_count_range": {
+        "minimum": 6,
+        "maximum": 12
+      },
+      "deviation": {
+        "relation": "WITHIN_REFERENCE_RANGE",
+        "explanation": null,
+        "acknowledged": false
+      }
+    },
+    "source_identity": {
+      "pinned_rtl_tree_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "catalog_source_identity_sha256": "b56ab2cf1fa93f8b42dac35cfc57649972e9cfea6bca0bf816b60aad4cc56d6e"
+    },
+    "coverage_gaps": [],
+    "evolution": {
+      "predecessor": null,
+      "added_signal_ids": [
+        "sig_clk",
+        "sig_rst",
+        "sig_upstream",
+        "sig_fifo",
+        "sig_payload",
+        "sig_bank",
+        "sig_state",
+        "sig_output"
+      ],
+      "removed_signal_ids": [],
+      "unchanged_signal_ids": [],
+      "removal_evidence": [],
+      "candidate_preservation": {
+        "preserved_candidate_ids": [],
+        "closed_candidate_ids": [],
+        "new_candidate_ids": [
+          "c_ready_blocked",
+          "c_owner_mismatch"
+        ],
+        "closure_evidence": []
+      }
+    }
+  },
+  "signals": [
+    {
+      "signal_id": "sig_clk",
+      "exact_hierarchy": "tb_NDP_Top_new_phy.clk",
+      "width_bits": 1,
+      "roles": [
+        "clock"
+      ],
+      "source_path": "tb_NDP_Top_new_phy.sv",
+      "source_sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+      "declaration_span_sha256": "2222222222222222222222222222222222222222222222222222222222222222",
+      "source_binding": "ACTUAL_SOURCE_NET",
+      "derived_expected_equation": false,
+      "driver_leaf_for_candidate_ids": [],
+      "driver_depth_edges": null,
+      "drives_dut": false
+    },
+    {
+      "signal_id": "sig_rst",
+      "exact_hierarchy": "tb_NDP_Top_new_phy.rst_n",
+      "width_bits": 1,
+      "roles": [
+        "reset"
+      ],
+      "source_path": "tb_NDP_Top_new_phy.sv",
+      "source_sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+      "declaration_span_sha256": "2222222222222222222222222222222222222222222222222222222222222222",
+      "source_binding": "ACTUAL_SOURCE_NET",
+      "derived_expected_equation": false,
+      "driver_leaf_for_candidate_ids": [],
+      "driver_depth_edges": null,
+      "drives_dut": false
+    },
+    {
+      "signal_id": "sig_upstream",
+      "exact_hierarchy": "tb_NDP_Top_new_phy.NDP_Top_phy_INST.slice13.req_valid_ready",
+      "width_bits": 8,
+      "roles": [
+        "stage",
+        "source",
+        "producer",
+        "request",
+        "valid",
+        "ready",
+        "accept",
+        "backpressure"
+      ],
+      "source_path": "rtl/source.sv",
+      "source_sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+      "declaration_span_sha256": "2222222222222222222222222222222222222222222222222222222222222222",
+      "source_binding": "ACTUAL_SOURCE_NET",
+      "derived_expected_equation": false,
+      "driver_leaf_for_candidate_ids": [
+        "c_ready_blocked"
+      ],
+      "driver_depth_edges": 0,
+      "drives_dut": false
+    },
+    {
+      "signal_id": "sig_fifo",
+      "exact_hierarchy": "tb_NDP_Top_new_phy.NDP_Top_phy_INST.slice13.fifo_state",
+      "width_bits": 16,
+      "roles": [
+        "fifo_enqueue",
+        "fifo_dequeue",
+        "fifo_occupancy",
+        "fifo_full",
+        "fifo_empty",
+        "outstanding"
+      ],
+      "source_path": "rtl/fifo.sv",
+      "source_sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+      "declaration_span_sha256": "2222222222222222222222222222222222222222222222222222222222222222",
+      "source_binding": "ACTUAL_SOURCE_NET",
+      "derived_expected_equation": false,
+      "driver_leaf_for_candidate_ids": [
+        "c_ready_blocked"
+      ],
+      "driver_depth_edges": 0,
+      "drives_dut": false
+    },
+    {
+      "signal_id": "sig_payload",
+      "exact_hierarchy": "tb_NDP_Top_new_phy.NDP_Top_phy_INST.slice13.payload_state",
+      "width_bits": 64,
+      "roles": [
+        "tag",
+        "address",
+        "mask",
+        "last",
+        "count",
+        "selected_port",
+        "selected_bank",
+        "selected_lane"
+      ],
+      "source_path": "rtl/payload.sv",
+      "source_sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+      "declaration_span_sha256": "2222222222222222222222222222222222222222222222222222222222222222",
+      "source_binding": "ACTUAL_SOURCE_NET",
+      "derived_expected_equation": false,
+      "driver_leaf_for_candidate_ids": [
+        "c_owner_mismatch"
+      ],
+      "driver_depth_edges": 0,
+      "drives_dut": false
+    },
+    {
+      "signal_id": "sig_bank",
+      "exact_hierarchy": "tb_NDP_Top_new_phy.NDP_Top_phy_INST.slice13.bank_state",
+      "width_bits": 32,
+      "roles": [
+        "ping_pong_branch0",
+        "ping_pong_branch1",
+        "per_bank_ready",
+        "per_bank_full",
+        "per_bank_valid",
+        "per_bank_owner"
+      ],
+      "source_path": "rtl/bank.sv",
+      "source_sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+      "declaration_span_sha256": "2222222222222222222222222222222222222222222222222222222222222222",
+      "source_binding": "ACTUAL_SOURCE_NET",
+      "derived_expected_equation": false,
+      "driver_leaf_for_candidate_ids": [
+        "c_owner_mismatch"
+      ],
+      "driver_depth_edges": 0,
+      "drives_dut": false
+    },
+    {
+      "signal_id": "sig_state",
+      "exact_hierarchy": "tb_NDP_Top_new_phy.NDP_Top_phy_INST.slice13.control_state",
+      "width_bits": 32,
+      "roles": [
+        "barrier",
+        "lifetime",
+        "clear",
+        "completion",
+        "drain",
+        "finish",
+        "global_terminal",
+        "internal_match",
+        "internal_state"
+      ],
+      "source_path": "rtl/state.sv",
+      "source_sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+      "declaration_span_sha256": "2222222222222222222222222222222222222222222222222222222222222222",
+      "source_binding": "ACTUAL_SOURCE_NET",
+      "derived_expected_equation": false,
+      "driver_leaf_for_candidate_ids": [],
+      "driver_depth_edges": null,
+      "drives_dut": false
+    },
+    {
+      "signal_id": "sig_output",
+      "exact_hierarchy": "tb_NDP_Top_new_phy.NDP_Top_phy_INST.slice13.output_wdata",
+      "width_bits": 128,
+      "roles": [
+        "output",
+        "wdata"
+      ],
+      "source_path": "rtl/output.sv",
+      "source_sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+      "declaration_span_sha256": "2222222222222222222222222222222222222222222222222222222222222222",
+      "source_binding": "ACTUAL_SOURCE_NET",
+      "derived_expected_equation": false,
+      "driver_leaf_for_candidate_ids": [],
+      "driver_depth_edges": null,
+      "drives_dut": false
+    }
+  ],
+  "role_coverage": [
+    {
+      "role": "clock",
+      "disposition": "covered",
+      "signal_ids": [
+        "sig_clk"
+      ]
+    },
+    {
+      "role": "reset",
+      "disposition": "covered",
+      "signal_ids": [
+        "sig_rst"
+      ]
+    },
+    {
+      "role": "stage",
+      "disposition": "covered",
+      "signal_ids": [
+        "sig_upstream"
+      ]
+    },
+    {
+      "role": "source",
+      "disposition": "covered",
+      "signal_ids": [
+        "sig_upstream"
+      ]
+    },
+    {
+      "role": "producer",
+      "disposition": "covered",
+      "signal_ids": [
+        "sig_upstream"
+      ]
+    },
+    {
+      "role": "request",
+      "disposition": "covered",
+      "signal_ids": [
+        "sig_upstream"
+      ]
+    },
+    {
+      "role": "valid",
+      "disposition": "covered",
+      "signal_ids": [
+        "sig_upstream"
+      ]
+    },
+    {
+      "role": "ready",
+      "disposition": "covered",
+      "signal_ids": [
+        "sig_upstream"
+      ]
+    },
+    {
+      "role": "accept",
+      "disposition": "covered",
+      "signal_ids": [
+        "sig_upstream"
+      ]
+    },
+    {
+      "role": "backpressure",
+      "disposition": "covered",
+      "signal_ids": [
+        "sig_upstream"
+      ]
+    },
+    {
+      "role": "fifo_enqueue",
+      "disposition": "covered",
+      "signal_ids": [
+        "sig_fifo"
+      ]
+    },
+    {
+      "role": "fifo_dequeue",
+      "disposition": "covered",
+      "signal_ids": [
+        "sig_fifo"
+      ]
+    },
+    {
+      "role": "fifo_occupancy",
+      "disposition": "covered",
+      "signal_ids": [
+        "sig_fifo"
+      ]
+    },
+    {
+      "role": "fifo_full",
+      "disposition": "covered",
+      "signal_ids": [
+        "sig_fifo"
+      ]
+    },
+    {
+      "role": "fifo_empty",
+      "disposition": "covered",
+      "signal_ids": [
+        "sig_fifo"
+      ]
+    },
+    {
+      "role": "outstanding",
+      "disposition": "covered",
+      "signal_ids": [
+        "sig_fifo"
+      ]
+    },
+    {
+      "role": "tag",
+      "disposition": "covered",
+      "signal_ids": [
+        "sig_payload"
+      ]
+    },
+    {
+      "role": "address",
+      "disposition": "covered",
+      "signal_ids": [
+        "sig_payload"
+      ]
+    },
+    {
+      "role": "mask",
+      "disposition": "covered",
+      "signal_ids": [
+        "sig_payload"
+      ]
+    },
+    {
+      "role": "last",
+      "disposition": "covered",
+      "signal_ids": [
+        "sig_payload"
+      ]
+    },
+    {
+      "role": "count",
+      "disposition": "covered",
+      "signal_ids": [
+        "sig_payload"
+      ]
+    },
+    {
+      "role": "ping_pong_branch0",
+      "disposition": "covered",
+      "signal_ids": [
+        "sig_bank"
+      ]
+    },
+    {
+      "role": "ping_pong_branch1",
+      "disposition": "covered",
+      "signal_ids": [
+        "sig_bank"
+      ]
+    },
+    {
+      "role": "per_bank_ready",
+      "disposition": "covered",
+      "signal_ids": [
+        "sig_bank"
+      ]
+    },
+    {
+      "role": "per_bank_full",
+      "disposition": "covered",
+      "signal_ids": [
+        "sig_bank"
+      ]
+    },
+    {
+      "role": "per_bank_valid",
+      "disposition": "covered",
+      "signal_ids": [
+        "sig_bank"
+      ]
+    },
+    {
+      "role": "per_bank_owner",
+      "disposition": "covered",
+      "signal_ids": [
+        "sig_bank"
+      ]
+    },
+    {
+      "role": "barrier",
+      "disposition": "covered",
+      "signal_ids": [
+        "sig_state"
+      ]
+    },
+    {
+      "role": "lifetime",
+      "disposition": "covered",
+      "signal_ids": [
+        "sig_state"
+      ]
+    },
+    {
+      "role": "clear",
+      "disposition": "covered",
+      "signal_ids": [
+        "sig_state"
+      ]
+    },
+    {
+      "role": "completion",
+      "disposition": "covered",
+      "signal_ids": [
+        "sig_state"
+      ]
+    },
+    {
+      "role": "drain",
+      "disposition": "covered",
+      "signal_ids": [
+        "sig_state"
+      ]
+    },
+    {
+      "role": "finish",
+      "disposition": "covered",
+      "signal_ids": [
+        "sig_state"
+      ]
+    },
+    {
+      "role": "global_terminal",
+      "disposition": "covered",
+      "signal_ids": [
+        "sig_state"
+      ]
+    },
+    {
+      "role": "selected_port",
+      "disposition": "covered",
+      "signal_ids": [
+        "sig_payload"
+      ]
+    },
+    {
+      "role": "selected_bank",
+      "disposition": "covered",
+      "signal_ids": [
+        "sig_payload"
+      ]
+    },
+    {
+      "role": "selected_lane",
+      "disposition": "covered",
+      "signal_ids": [
+        "sig_payload"
+      ]
+    },
+    {
+      "role": "internal_match",
+      "disposition": "covered",
+      "signal_ids": [
+        "sig_state"
+      ]
+    },
+    {
+      "role": "internal_state",
+      "disposition": "covered",
+      "signal_ids": [
+        "sig_state"
+      ]
+    },
+    {
+      "role": "output",
+      "disposition": "covered",
+      "signal_ids": [
+        "sig_output"
+      ]
+    },
+    {
+      "role": "wdata",
+      "disposition": "covered",
+      "signal_ids": [
+        "sig_output"
+      ]
+    }
+  ],
+  "boundaries": [
+    {
+      "boundary_id": "b_up",
+      "layer": "FIRST_DIVERGENCE_UPSTREAM_ONE",
+      "signal_ids": [
+        "sig_upstream",
+        "sig_fifo"
+      ]
+    },
+    {
+      "boundary_id": "b_cur",
+      "layer": "FIRST_DIVERGENCE_CURRENT",
+      "signal_ids": [
+        "sig_fifo",
+        "sig_payload",
+        "sig_bank"
+      ]
+    },
+    {
+      "boundary_id": "b_down",
+      "layer": "FIRST_DIVERGENCE_DOWNSTREAM_ONE",
+      "signal_ids": [
+        "sig_output"
+      ]
+    },
+    {
+      "boundary_id": "b_state",
+      "layer": "STATE_HOLD_CLEAR",
+      "signal_ids": [
+        "sig_state",
+        "sig_bank"
+      ]
+    }
+  ],
+  "candidates": [
+    {
+      "candidate_id": "c_ready_blocked",
+      "priority": "HIGH",
+      "description": "consumer ready remains low"
+    },
+    {
+      "candidate_id": "c_owner_mismatch",
+      "priority": "HIGH",
+      "description": "bank owner selection mismatches request"
+    }
+  ],
+  "candidate_boundary_matrix": [
+    {
+      "candidate_id": "c_ready_blocked",
+      "boundary_id": "b_up",
+      "expected_signature": {
+        "valid": 1
+      }
+    },
+    {
+      "candidate_id": "c_ready_blocked",
+      "boundary_id": "b_cur",
+      "expected_signature": {
+        "ready": 0,
+        "owner_match": 1
+      }
+    },
+    {
+      "candidate_id": "c_ready_blocked",
+      "boundary_id": "b_down",
+      "expected_signature": {
+        "accept": 0
+      }
+    },
+    {
+      "candidate_id": "c_ready_blocked",
+      "boundary_id": "b_state",
+      "expected_signature": {
+        "clear": 0
+      }
+    },
+    {
+      "candidate_id": "c_owner_mismatch",
+      "boundary_id": "b_up",
+      "expected_signature": {
+        "valid": 1
+      }
+    },
+    {
+      "candidate_id": "c_owner_mismatch",
+      "boundary_id": "b_cur",
+      "expected_signature": {
+        "ready": 1,
+        "owner_match": 0
+      }
+    },
+    {
+      "candidate_id": "c_owner_mismatch",
+      "boundary_id": "b_down",
+      "expected_signature": {
+        "accept": 0
+      }
+    },
+    {
+      "candidate_id": "c_owner_mismatch",
+      "boundary_id": "b_state",
+      "expected_signature": {
+        "clear": 0
+      }
+    }
+  ],
+  "runtime_policy": {
+    "plateau_suspected_cycles": 1048576,
+    "plateau_dump_off_cycles": 4194304,
+    "post_dump_grace_cycles": 262144,
+    "plateau_qualification": [
+      "owner_clock_advancing",
+      "sim_time_advancing",
+      "all_qualified_progress_counters_stable",
+      "complete_source_bound_causal_state_bitwise_stable",
+      "global_progress_witness_stable",
+      "candidate_catalog_coverage_complete",
+      "no_unresolved_xz"
+    ],
+    "sim_time_freeze_intervals": 3,
+    "sim_time_freeze_interval_seconds": 30,
+    "heartbeat_source": "APPENDED_VCD_TIMESTAMP",
+    "heartbeat_width_bits": 64,
+    "heartbeat_signed": false,
+    "heartbeat_cadence_cycles": 16384,
+    "decision_authority": "SHARED_RUNTIME_EVALUATOR_ONLY",
+    "outer_runner_independent_exit_logic": false,
+    "required_replay_cases": [
+      "ADVANCING_VCD_TIMESTAMP",
+      "PLATEAU_SUSPECTED_ONLY",
+      "PLATEAU_DUMP_OFF_PLUS_GRACE",
+      "THREE_INTERVAL_TRUE_FREEZE"
+    ],
+    "planned_dumpoff_state_source": "EXECUTION_BOUND_TB_STICKY_EVENT",
+    "post_dumpoff_progress_source": "EXECUTION_BOUND_OWNER_CLOCK_AND_TB_TIME",
+    "dump_off_grace_precedes_freeze": true,
+    "stop_marker_policy": "ONE_SHOT_LATCHED",
+    "required_dumpoff_consistency_replays": [
+      "PLANNED_DUMPOFF_FROZEN_VCD_GRACE_CONTINUE",
+      "PLANNED_DUMPOFF_PLUS_GRACE_CAUSAL_PLATEAU",
+      "REPEATED_STOP_MARKER_FAIL_CLOSED"
+    ],
+    "archive_timestamp_binding": "FULL_FILE_SHA_BYTES_PLUS_LAST_TIMESTAMP_EXACT",
+    "termination_sequence": [
+      "TERM",
+      "WAIT",
+      "KILL",
+      "REAP"
+    ],
+    "disk_write_quota_fail_safe": true,
+    "rolling_growth_projection": true
+  },
+  "return_receipts": {
+    "catalog": "evidence/vcd/catalog.json",
+    "candidate_matrix": "evidence/vcd/candidate_matrix.json",
+    "actual_argv": "evidence/actual_argv.json",
+    "tb_source": "evidence/vcd/tb_source.json",
+    "elaboration": "evidence/vcd/elaboration.json",
+    "runtime": "evidence/vcd/runtime.json",
+    "dump_control": "evidence/vcd/dump_control.json",
+    "vcd": "evidence/vcd/wave.vcd",
+    "process_tree": "evidence/process_tree.json",
+    "return_manifest": "evidence/return_manifest.json",
+    "breadth_evolution": "evidence/vcd/breadth_evolution.json"
+  },
+  "first_fresh_controls": {
+    "required_for_family_epoch": true,
+    "clean_exact_zip_revalidation": true,
+    "negative_controls": {
+      "missing_soft_reference_receipt": true,
+      "deviation_without_explanation": true,
+      "low_confidence_removal": true,
+      "add_remove_diff_mismatch": true,
+      "candidate_loss": true,
+      "source_identity_drift": true,
+      "size_or_stop_protection_weakened": true
+    }
+  },
+  "claim_boundary": "Synthetic local positive contract only."
+}

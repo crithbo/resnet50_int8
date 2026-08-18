@@ -154,6 +154,15 @@ def compile_profile(
 
     errors: list[str] = []
     warnings: list[str] = []
+    supported_diagnostic_modes = {
+        "OBSERVER_ONLY_WIDE_CAUSAL",
+        "TB_VCD_BOUNDED_CAUSAL_CONE",
+    }
+    diagnostic_mode = spec.get(
+        "diagnostic_mode", "OBSERVER_ONLY_WIDE_CAUSAL"
+    )
+    if diagnostic_mode not in supported_diagnostic_modes:
+        errors.append(f"unsupported diagnostic_mode: {diagnostic_mode}")
     vocabulary = set(registry.get("surface_vocabulary", []))
     causal_vocabulary = set(registry.get("causal_blocking_classes", []))
     gates = registry.get("gates", [])
@@ -194,8 +203,21 @@ def compile_profile(
             "changed_surface",
             "record_only",
             "first_fresh_after_rule_change",
+            "required_next_fresh_after_activation",
         }:
             errors.append(f"{gate_id}: invalid activation")
+        selected_modes = gate.get("selected_modes")
+        if selected_modes is not None:
+            if (
+                not isinstance(selected_modes, list)
+                or not selected_modes
+                or any(
+                    mode not in supported_diagnostic_modes
+                    for mode in selected_modes
+                )
+                or len(selected_modes) != len(set(selected_modes))
+            ):
+                errors.append(f"{gate_id}: invalid selected_modes")
         if activation == "record_only":
             if classes:
                 errors.append(f"{gate_id}: record-only gate cannot have causal classes")
@@ -403,24 +425,34 @@ def compile_profile(
     if not isinstance(require_all_cheap, bool):
         errors.append("require_all_cheap_checks must be boolean")
         require_all_cheap = False
-    if require_all_cheap and "source_bound_observer_generation" in gate_ids:
+    if require_all_cheap:
         supplied_surfaces = {
             item.get("surface")
             for item in normalized_inputs
             if isinstance(item, dict)
         }
-        required_source_bound_surfaces = {
-            "probe_catalog",
-            "probe_plan",
-            "package_local_hdl",
-            "parser",
-        }
+        if diagnostic_mode == "OBSERVER_ONLY_WIDE_CAUSAL":
+            required_source_bound_surfaces = {
+                "probe_catalog",
+                "probe_plan",
+                "package_local_hdl",
+                "parser",
+            }
+            incomplete_label = "source-bound observer generation inputs"
+        else:
+            required_source_bound_surfaces = {
+                "probe_catalog",
+                "probe_plan",
+                "package_local_hdl",
+                "waveform",
+            }
+            incomplete_label = "source-bound TB VCD causal-cone inputs"
         missing_source_bound_surfaces = sorted(
             required_source_bound_surfaces - supplied_surfaces
         )
         if missing_source_bound_surfaces:
             errors.append(
-                "source-bound observer generation inputs are incomplete: "
+                f"{incomplete_label} are incomplete: "
                 f"{missing_source_bound_surfaces}"
             )
     cheap_reports = spec.get("cheap_check_reports", [])
@@ -503,6 +535,9 @@ def compile_profile(
         gate["gate_id"]
         for gate in gates
         if gate.get("cheap_prebuild_eligible") is True
+        and diagnostic_mode in gate.get(
+            "selected_modes", sorted(supported_diagnostic_modes)
+        )
     )
     missing_cheap = sorted(set(eligible_cheap) - set(cheap_by_gate))
     if require_all_cheap and missing_cheap:
@@ -514,6 +549,9 @@ def compile_profile(
     for gate in gates:
         gate_id = gate["gate_id"]
         activation = gate["activation"]
+        selected_modes = gate.get(
+            "selected_modes", sorted(supported_diagnostic_modes)
+        )
         relevant_changed = changed_set & set(gate["surfaces"])
         validator = _validator_identity(validators, gate_id)
         surface_sha = _combined_surface_hash(gate, surface_hashes)
@@ -531,7 +569,13 @@ def compile_profile(
             }
         )
         receipt = None
-        if activation == "record_only":
+        if diagnostic_mode not in selected_modes:
+            disposition = "not_applicable"
+            reason = (
+                f"gate applies only to diagnostic modes {selected_modes}; "
+                f"selected mode is {diagnostic_mode}"
+            )
+        elif activation == "record_only":
             disposition = "record_only"
             reason = "registry classifies this check as nonblocking metadata"
         elif (

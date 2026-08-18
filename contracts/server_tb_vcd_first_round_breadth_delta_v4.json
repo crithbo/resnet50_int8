@@ -1,0 +1,79 @@
+{
+  "schema": "server-tb-vcd-soft-reference-adaptive-pruning-delta-v4",
+  "activation_name": "tb-vcd-soft-reference-adaptive-pruning-v4",
+  "existing_rule_id": "CDA-SERVER-TB-VCD-BOUNDED-FULL-CAUSAL-CONE-OPTIONAL-001",
+  "classification": "USER_SUPERSEDING_SOFT_REFERENCE_ADAPTIVE_PRUNING",
+  "supersedes_unactivated_policy": "HARD_THIRD_ROUND_COUNT_AND_ALL_CANDIDATE_REMOVAL_PROOF_V4",
+  "new_public_rule_id": null,
+  "observer_default_disposition": "UNCHANGED",
+  "activation_boundary": "REQUIRED_NEXT_FRESH_WHEN_TB_VCD_BOUNDED_CAUSAL_CONE_IS_SELECTED",
+  "current_four_packages": "NO_RETROACTIVE_HOLD_REBUILD_OR_REVALIDATION",
+  "canonical_hard_v4_preimages": {
+    "schema_sha256": "778454dde85846dfde5d7ffb8c9e67e56bc83455e97ad0050394f3f51e3c7865",
+    "validator_sha256": "8a40e8ffdaf9688b3791c4cc592dda2258bb052a97c61d404ee2c2cd542fc115",
+    "tests_sha256": "14d5a37848a501fb86035851231e5e0ef923bc600fbcd6358d34af23c780c3fb",
+    "positive_fixture_sha256": "72d1123ace99239c4051f9abaf9c0c264cf01d5b0caf47a0f16e6d0898200aa5",
+    "dispatch_sha256": "bb7f11356e97cc2d5460b8531da6a637c6d4744bb1635d8bb9ada1c5303f2388",
+    "mainline_merge_sha256": "3ffcc71c20e24ec7e890baeee4e8406f355cd41f9e469cc6c17a40ce2b3c86b5",
+    "build_gate_registry_sha256": "b4ef9752eaed8ddeb1a3e2024c095e23702f09a2952064fec1f13e0cc315eec4",
+    "delta_contract_sha256": "3ddf1eb761eca6a6abf79f3750d8b0ecee6ae4f5a5294eea3d0de0e23eaacbce"
+  },
+  "machine_contract": {
+    "first_diagnostic_round": {
+      "breadth_reference": "EXACT_CURRENT_FAMILY_ROUND_AT_LEAST_THREE_RECEIPT",
+      "reasonable_signal_count_range": "REQUIRED",
+      "count_relation": "SOFT_REFERENCE_ONLY",
+      "out_of_range": "RECORD_RELATION_EXPLANATION_AND_ACKNOWLEDGEMENT",
+      "count_shortfall_standalone_blocker": false,
+      "high_candidate_zero_hop_driver": "STRONG_RECOMMENDATION_AND_COVERAGE_TARGET",
+      "missing_high_driver": "RECORD_ONLY_GAP_WHILE_MATRIX_REMAINS_DISTINGUISHABLE",
+      "source_identity": "PINNED_RTL_TREE_PLUS_EXACT_CATALOG_SEMANTIC_SHA"
+    },
+    "refined_successor": {
+      "predecessor": "EXACT_PATH_SHA_PACKAGE_ROUND_AND_PINNED_RTL",
+      "signal_evolution": "EXACT_ADDED_REMOVED_UNCHANGED_SET",
+      "adaptive_removal": "REASON_PLUS_HIGH_OR_MEDIUM_CONFIDENCE_PLUS_AFFECTED_CANDIDATES",
+      "per_signal_all_preserved_candidate_proof_required": false,
+      "low_confidence_default": "RETAIN",
+      "candidate_evolution": "EXACT_PRESERVED_CLOSED_NEW_SET_WITH_CLOSURE_RECEIPT_FOR_CLOSED_CANDIDATE",
+      "unchanged_signal_identity": "BYTE_SEMANTIC_EXACT"
+    },
+    "protections_preserved": [
+      "CANDIDATE_MATRIX_COMPLETE_AND_PAIRWISE_DISTINGUISHABLE",
+      "100000000_BYTE_SOFT_WARNING_ONLY",
+      "8000000000_BYTE_OPERATIONAL_PROJECTION",
+      "10000000000_BYTE_RETURN_PROJECTION",
+      "NO_HARD_TRUNCATION_SAMPLING_OR_SIZE_DELETION",
+      "PLATEAU_AND_SIM_TIME_FREEZE_EVALUATOR",
+      "FLUSH_PROCESS_TREE_REAP_AND_EXACT_RETURN_BINDING"
+    ]
+  },
+  "first_fresh_negative_controls": [
+    "MISSING_SOFT_REFERENCE_RECEIPT",
+    "OUT_OF_RANGE_WITHOUT_EXPLANATION_OR_ACKNOWLEDGEMENT",
+    "LOW_CONFIDENCE_SIGNAL_REMOVED",
+    "ADD_REMOVE_UNCHANGED_DIFF_MISMATCH",
+    "CANDIDATE_MATRIX_INCOMPLETE_OR_INDISTINGUISHABLE",
+    "SOURCE_IDENTITY_DRIFT",
+    "SIZE_OR_STOP_PROTECTION_WEAKENED"
+  ],
+  "shared_changed_paths": [
+    "schemas/server_tb_vcd_bounded_causal_cone_v1.schema.json",
+    "tools/validate_server_tb_vcd_bounded_causal_cone.py",
+    "tests/test_server_tb_vcd_bounded_causal_cone.py",
+    "fixtures/server_tb_vcd_bounded_causal_cone_v1/positive_contract.json",
+    "contracts/server_tb_vcd_bounded_causal_cone_dispatch_v1.json",
+    "contracts/server_tb_vcd_bounded_causal_cone_mainline_merge_v1.json",
+    "contracts/server_package_build_gate_registry_v1.json",
+    "contracts/server_tb_vcd_first_round_breadth_delta_v4.json"
+  ],
+  "unchanged_reference_fixture": "fixtures/server_tb_vcd_bounded_causal_cone_v1/third_round_breadth_baseline.json",
+  "mainline_narrow_merge_targets": [
+    ".agents/rules/服务器测试包生成规则.md",
+    ".agents/rules/生成前必读索引.md",
+    ".agents/rules/整网测试收敛优化专项规则.md",
+    ".agents/agent.md",
+    "NDP_copy01/README_HARDWARE_SIM_ENTRY.md"
+  ],
+  "claim_boundary": "Shared local soft-reference/adaptive-pruning contract only. No family package, server execution, RTL, config, numeric, workload, diagnosis, natural terminal, formal D, E4 or E5 claim."
+}

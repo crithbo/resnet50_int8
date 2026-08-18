@@ -690,7 +690,7 @@ class SourceBoundObserverTests(unittest.TestCase):
         ):
             self.assertIn(token, text)
 
-    def test_next_fresh_dispatch_requires_v2_and_gate_epoch(self) -> None:
+    def test_next_fresh_dispatch_requires_v2_and_current_gate_epoch(self) -> None:
         dispatch = json.loads(DISPATCH.read_text(encoding="utf-8"))
         self.assertEqual(dispatch["version"], 2)
         text = json.dumps(dispatch, ensure_ascii=False)
@@ -706,9 +706,9 @@ class SourceBoundObserverTests(unittest.TestCase):
             "source_bound_observer_generation",
             "diagnostic_semantics",
             "source_bound_final_zip",
-            "first_fresh_extra_audit",
         ):
             self.assertEqual(versions[gate_id], "2")
+        self.assertEqual(versions["first_fresh_extra_audit"], "6")
 
     def test_exact_final_zip_regenerates_all_generated_bytes(self) -> None:
         report = validate_final_zip(self.build_final_zip())

@@ -1,0 +1,67 @@
+{
+  "schema": "server-tb-vcd-bounded-causal-cone-mainline-merge-v1",
+  "activation_name": "tb-vcd-soft-reference-adaptive-pruning-v4",
+  "default_mode": "OBSERVER_ONLY_WIDE_CAUSAL",
+  "optional_mode": "TB_VCD_BOUNDED_CAUSAL_CONE",
+  "public_rule_merge": {
+    "files": [
+      ".agents/rules/服务器测试包生成规则.md",
+      ".agents/rules/生成前必读索引.md",
+      ".agents/rules/整网测试收敛优化专项规则.md"
+    ],
+    "existing_rule_id": "CDA-SERVER-TB-VCD-BOUNDED-FULL-CAUSAL-CONE-OPTIONAL-001",
+    "merge_kind": "SUPERSEDING_SOFT_REFERENCE_ADAPTIVE_PRUNING_V4",
+    "new_public_rule_id": null,
+    "preserve_unchanged_rule_ids": [
+      "CDA-SERVER-SOURCE-BOUND-GENERATED-OBSERVER-001",
+      "CDA-SERVER-ALWAYS-ON-TRIGGERED-CAUSAL-OBSERVABILITY-001"
+    ],
+    "extend_without_duplicate_definition": [
+      "CDA-SERVER-RETURN-WAVEFORM-INCREMENTAL-REVIEW-RETENTION-001",
+      "CDA-WHOLE-NET-WAVEFORM-INCREMENTAL-REVIEW-COORDINATION-001"
+    ]
+  },
+  "router_and_readme_merge": {
+    "files": [
+      ".agents/agent.md",
+      "NDP_copy01/README_HARDWARE_SIM_ENTRY.md"
+    ],
+    "semantics": [
+      "observer-only remains the default and is byte-frozen",
+      "VCD is an explicit per-package opt-in using only package-local TB standard dump tasks",
+      "VPD, FSDB, UCLI direct-VCD and vendor signal-query paths remain forbidden",
+      "one package selects exactly one bulk evidence mode",
+      "family diagnosis authority remains with the family owner",
+      "VCD dump targets are the exact source-bound signal catalog; module-scope over-dump is forbidden",
+      "freeze supervision consumes appended VCD timestamps from an unsigned non-overflowing 64-bit-or-wider 16384-cycle heartbeat, never a display-only integer",
+      "inline and legal multiline VCD timescale declarations are accepted",
+      "partial, unflushed, unreaped or non-exact-set evidence cannot pass finalization",
+      "target claims require live same-attempt target-entry, downstream-state and first-error receipts",
+      "the outer runner consumes only the shared evaluator decision and may not duplicate plateau/freeze thresholds",
+      "first-fresh replay must prove advancing timestamps and suspected-only plateau continue, while full plateau and true freeze stop",
+      "the quiescent archived VCD SHA/bytes/last timestamp must exactly bind the final runtime timestamp",
+      "a family's first diagnostic VCD round binds an exact current-family round-three-or-later breadth receipt and a reasonable signal-count range as a soft reference, never a standalone count blocker",
+      "an out-of-range first round records relation, explanation and acknowledgement",
+      "every HIGH-probability candidate should bind a source-bound zero-hop direct driver leaf; a missing leaf is a visible record-only gap while the candidate matrix remains distinguishable",
+      "later rounds may adaptively remove signals with family-recorded reason, HIGH or MEDIUM confidence and affected candidates; LOW confidence retains the signal by default",
+      "per-signal proof covering every preserved candidate is not required for adaptive pruning",
+      "later rounds must bind exact predecessor add/remove/unchanged diffs, candidate preservation or closure, and unchanged source identity",
+      "breadth refinement never weakens the existing VCD size, plateau, freeze, flush, reap or return protections"
+    ]
+  },
+  "build_gate_registry_merge": {
+    "file": "contracts/server_package_build_gate_registry_v1.json",
+    "conditional_gate": "tb_vcd_bounded_causal_cone_final_zip",
+    "activation_condition": "selected_mode == TB_VCD_BOUNDED_CAUSAL_CONE",
+    "observer_gate_disposition": "UNCHANGED_WHEN_OBSERVER_MODE_SELECTED",
+    "first_fresh_extra_audit": true,
+    "conditional_gate_semantic_version": "4"
+  },
+  "family_dispatch_boundary": {
+    "next_fresh_only": true,
+    "package_building_by_optimizer": false,
+    "storage_rotation_by_optimizer": false,
+    "server_action_by_optimizer": false
+  },
+  "claim_boundary": "Semantic merge recommendation only; this file does not activate a public rule, mutate a package or authorize server execution."
+}

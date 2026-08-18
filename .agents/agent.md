@@ -26,6 +26,15 @@
 的 Markdown。`.agents/history/rules/README.md` 是旧规则统一入口，历史文件默认不读、
 不参与生成，也不能由旧 task record 的链接重新激活。
 
+涉及服务器包生成、共享构包基础设施或正式 return 闭环的会话，在完成本节角色必读后使用
+项目 Skill `.codex/skills/resnet50-server-package-flow/SKILL.md` 编排步骤。Skill 只负责让会话
+按顺序读取 current registry、聚合廉价检查、调用硬门和形成回执；活动规则与机器 validator
+仍是权威，Skill 不复制或覆盖其语义。主线向已登记 family 派发这类工作时，必须先从 current
+owner registry 解析唯一 ACTIVE persistent owner，以 thread-message 发送给该 owner，并生成
+`server-family-dispatch-mode-binding-v1`；不得用临时 subagent/child 替代已登记 family role。
+该绑定和已选诊断模式只约束激活后的 later fresh 包，不追溯 HOLD、重建、修改或旋转激活时
+已经 current/in-progress 的包。
+
 ### 1.1 会话角色与必读规则矩阵
 
 每个会话开始一次任务或收到 handoff capsule 后，先完整读取“共同必读”，再只读取本行的
@@ -93,25 +102,48 @@ SHA、某次 return 结果、当前 blocker 开闭和一次性用户授权不得
 - 默认禁止修改任何 `rtl/` 目录内的文件；功能 RTL repair 必须取得用户本轮明确授权。
 - `rtl/` 外的 TB、observer、runner 只能按服务器规则做可关闭、非驱动、身份绑定的
   测试修改，不能改变 DUT 激励、握手、时序或完成条件。
-- 所有可能进入 DUT simulation 的 next-fresh 服务器包统一采用 observer-only：actual compile/sim
-  profile 固定为 `DUMP_VCD=0 DUMP_FSDB=0 TB_DUMP_FSDB=0`，不得生成、收集或回传 VPD、FSDB、
-  VCD、FST 及其 shard、lock、dump Tcl 或 vendor-wave query。历史波形 return 保持只读，只用于旧证据
-  兼容，不得倒灌新包。
-- observer 必须由 current source-bound catalog 生成并记录足够宽的**真实 DUT 信号**因果域：至少覆盖
+- 所有可能进入 DUT simulation 的 next-fresh 服务器包必须显式二选一：默认
+  `OBSERVER_ONLY_WIDE_CAUSAL`，或用户/主线按包选择的
+  `TB_VCD_BOUNDED_CAUSAL_CONE`。两者不得同时作为 bulk evidence；原 observer-only 生成、门禁、
+  回传和分析路径保持不变。
+- 两种模式的 actual compile/sim profile 都固定为
+  `DUMP_VCD=0 DUMP_FSDB=0 TB_DUMP_FSDB=0`。VPD、FSDB、UCLI direct-VCD、vendor query、
+  full-top 无界 dump 永久禁止。可选 VCD 只能由 package-local TB 标准
+  `$dumpfile/$dumpvars/$dumpon/$dumpoff/$dumpflush` 产生并回传本机可直接读取的普通 VCD。
+- 两种模式都必须由 current source-bound catalog 覆盖足够宽的**真实 DUT 信号**因果域：至少覆盖
   clock/reset/stage、producer、queue 入/出与占用、request/valid/ready/accept/backpressure、selected
   port/bank/lane、internal state/match/clear、output/wdata、terminal/finish/formal-D；每个不适用角色须有
   exact 机器证明。observer 自己重算的 expected equation 不能替代实际 net，也不能作为 RTL 错误的唯一
   依据。
-- 运行证据使用本机无需 vendor 工具即可读取的 signal-id catalog 与分块 4-state 事件记录；保留 exact
+- observer 模式使用本机无需 vendor 工具即可读取的 signal-id catalog 与分块 4-state 事件记录；保留 exact
   time、sequence、width、0/1/X/Z transition、end state、仿真时间心跳和 partial-exit live record。
   100,000,000 bytes 只是 observer evidence aggregate 的软偏好：超出只告警并继续完整回传，禁止
   hard cap、截断、采样、head/tail 化或按大小删除。
+- VCD 模式必须覆盖 FIRST_DIVERGENCE 上游一层、当前边界、下游一层、状态持有/清除和全部已知候选，
+  绑定完整 candidate×boundary 矩阵；不得用 full hierarchy 或 memory array 冒充因果锥。100,000,000
+  bytes同样只是软告警。默认独立安全线为60分钟墙钟、8GB VCD增长投影、10GB return投影、3×30秒
+  sim-time冻结和磁盘/写入/配额失败；这些只触发close/flush后的PARTIAL，不截断已写VCD。
+- 本族首个VCD诊断round必须绑定当前第三轮参考和合理信号量范围，但数量只是软下限/上限；偏离范围
+  写明理由并确认后可告警通过。HIGH候选zero-hop direct-driver是强目标而非计数硬阻断。后续包精确绑定
+  predecessor、signals added/removed/unchanged及candidates preserved/closed/new；删signal记录理由、
+  `HIGH/MEDIUM/LOW`置信度和受影响候选，LOW默认保留，HIGH/MEDIUM可按工程判断删减。
+- VCD 因果平台早停只有在owner-clock与sim-time仍推进、全部qualified counters、完整因果状态和global
+  progress witness均稳定、catalog/matrix完整且无未决X/Z时才可成立。global witness仍推进时禁止局部
+  早停；达到1048576 cycles只标suspected，4194304 cycles后dumpoff，另给262144 cycles轻量grace，
+  随后TERM→wait→KILL/reap。非自然退出不得提升natural terminal、正式D、E4或E5。
+- VCD模式的outer runner只能消费共享runtime evaluator的机器决定，不得复制plateau/freeze阈值；
+  append timestamp推进和suspected-only都必须继续。finalization前须把quiescent archive的VCD
+  SHA/bytes/最后timestamp与final runtime完全绑定，并通过advance/suspected/full-plateau/true-freeze
+  四态exact packaged-helper回放；未flush、未close、未reap或runtime不完整固定fail closed。
 - runner 仍须以 child-subreaper、fresh session/process group、内部 timeout 和 TERM→wait→KILL/reap
   监督完整 simulator tree，并区分 host liveness 与 simulation-time progress；归档前须关闭/flush
-  observer chunks。compile 未成功或 simulation 未启动时可无 observer event，但 compile-core return
-  必须发布；simulation_started=true 而 required catalog/chunk/index/parser/decision receipt 不完整时，
-  必须保留已有 core/observer 并标记 `DIAGNOSTIC_EVIDENCE_INCOMPLETE`。
-- observer-only 规则变更只授权受派发 family 本地构建 fresh 包；旧 pending 在 fresh publication
+  当前模式的evidence writer。compile 未成功或simulation未启动时可无动态证据，但compile-core return
+  必须发布；simulation_started=true而required observer/VCD receipt不完整时，必须保留已有core/partial
+  evidence并标记`DIAGNOSTIC_EVIDENCE_INCOMPLETE`。
+- 大结果分析必须流式推进并同步落盘`analysis_state.json`、append-only `checkpoints.jsonl`和持续编辑的
+  `report.md`，只把有界摘要送入会话上下文。每族只保留`MAX_PROGRESS + LATEST_1 + LATEST_2`三组
+  重型原始结果；分析完成、family与mainline双消费、确定性core证据及保护集审计全部通过后才可淘汰旧组。
+- 诊断模式规则变更只授权受派发 family 本地构建 fresh 包；旧 pending 在 fresh publication
   时由对应 storage manager 原子移入 superseded。具体受影响 family 与状态只看 current plan；规则
   激活本身不授权 upload、lease 或服务器运行。
 - 冻结包、原始回传和已有 evidence 不覆盖；失败路线重启必须使用全新身份并完整重建。
@@ -270,6 +302,28 @@ ID 只作 provenance，不能成为回传路由。任务在分支会话内显示
    `WAIT_USER_DECISION` 和唯一问题后停止；
 6. 若本轮目标已正式闭合，则转为 `CLOSED`；若声明目标还要求 E5，E4 首次通过后默认生成
    fresh identity 的独立重复包，而不是提前结束。
+
+以下两类结果不得直接按旧模板继续构包，必须先完成规则/硬门审计，并把裁决实际绑定到
+下一份 fresh 包：
+
+1. production compile 成功、simulation 与目标因果区间实际执行、return 可完整消费，但
+   本轮仍不能在已声明候选中唯一定位根因时，标记 `RULE_GAP_AUDIT_REQUIRED`。审计必须逐项
+   检查 causal-cone/catalog、候选×边界矩阵、actual-source identity、触发/停止条件、global
+   progress witness、return exact-set、parser/streaming analysis 和正负控，解释为何“单轮可区分”
+   的本地门仍允许 production 结果不充分。若是公共语义缺口，先提交并激活非同义
+   `RULE_DELTA_PROPOSAL`；若是已有规则的实现逃逸，提交有证据的 `RULE_CONFIRMATION`。审计若证明
+   current规则语义与现有门已充分覆盖、失败只是孤立的package实现/人工操作失误、没有共享覆盖缺口，
+   允许裁决为`RULE_CONFIRMATION_NO_CHANGE`，不修改公共规则/schema/tool/test；successor仍须修正该包并
+   重跑原门。只有审计发现现有门无法捕获同机制时，才补validator/负控并在successor first-fresh中绑定。
+2. 同一目标连续两次 fresh 构包/final gate 尝试失败，或连续两次 production 尝试因
+   package-local runner/TB/observer/parser/return 缺陷没有执行目标时，标记
+   `PACKAGE_BUILD_FAILURE_RULE_AUDIT_REQUIRED`。第三次尝试前必须聚合两次失败机制，审计生成器、
+   shared validator、负控与 definition-before-use/identity/return 合同；禁止仅换 package 名重试。
+
+上述审计不扩大服务器、RTL或外部系统权限。family owner 可立即修复已有规则已明确覆盖的
+implementation escape；涉及公共规则语义变化时必须等待主线/共享 owner 激活后再发布 successor。
+不得为了“审计已触发”而强制制造规则delta；`RULE_CONFIRMATION_NO_CHANGE`是完整终态，不视为审计遗漏。
+唯一根因已闭合且 package-only successor 无意义，或命中下述权限/能力终止点时，不要求盲目构包。
 
 除上述 `CLOSED`、`WAIT_RTL_FIX`、`HARDWARE_CAPABILITY_BLOCKED` 或
 `WAIT_USER_DECISION` 外，`ADJUDICATED / PACKAGE_RELEASE=NONE` 不是允许的终态。

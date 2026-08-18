@@ -1,9 +1,9 @@
 {
   "active_rule_receipts": [
     {
-        "bytes": 11650,
+      "bytes": 15503,
       "path": ".agents/rules/生成前必读索引.md",
-        "sha256": "53d03da4cb0d9bcdc7d3537afa466ebdab8a61a658030562f180779802ed2c10"
+      "sha256": "f17b6ef7e4762ee1bd7b209c4f3a4a0d7b285fafdf1fb2fa5bbca2c6c37bef04"
     },
     {
       "bytes": 37680,
@@ -16,9 +16,9 @@
       "sha256": "603d57805bc5a5bdfca7406c402bc94db60c06ea6682493d672abb91671b1055"
     },
     {
-        "bytes": 177437,
+      "bytes": 203949,
       "path": ".agents/rules/服务器测试包生成规则.md",
-        "sha256": "f6cd29d5e1cc99efb70dc316f80400f72d9c735552dcb5696e817cc8cd66eae7"
+      "sha256": "7d7dbe6e92f60893d461c615622598740ca09f9a3fca10b01e18d950d0f64ec7"
     },
     {
       "bytes": 8677,
@@ -66,9 +66,9 @@
       "sha256": "4c3a88b8c6967812b0b64a550bb92a45117106f34996102335dc26fa1a211f8b"
     },
     {
-      "bytes": 20659,
+      "bytes": 25507,
       "path": ".agents/rules/整网测试收敛优化专项规则.md",
-      "sha256": "e9842d80048ca0bbd75ffcde7bdc53e522219b9516ebe0e4c8614dfd9f026b29"
+      "sha256": "cda10e17da922f2bdd3e809dc8ffdfe54efccf71734cf84995bda81494ae4381"
     }
   ],
   "claim_boundary": "Exclusive local session ownership and task routing only; no server lease/run/upload, RTL/config/numeric change, or E4/E5 claim.",
@@ -77,12 +77,12 @@
   "roles": [
     {
       "current_task": {
-        "next_action": "native-flow non-interference gate is activated for later next-fresh packages; do not rebuild current packages and perform no server action",
-        "objective": "enforce direct native production launch without server file/provider preflight and require post-failure native-flow differential",
+        "next_action": "hold exact serialized v106 and QAdd v80 pending; await separate user upload/server-run authorization, GAP equivalent-C-path authorization, or functional-fix authorization",
+        "objective": "preserve the independently audited serialized v106 and QAdd v80 packages, childless-procfs and two-phase return, QAdd source-bound 15000-second selected wall with 86400-second absolute maximum and semantic-v8 compatibility, and validated GAP/native root dispositions",
         "pointer": {
-          "bytes": 1476,
-          "path": ".agents/task_records/20260813_server_runtime_preflight_native_flow_mainline_activation.md",
-          "sha256": "f941fd8d3dede1b35293ed8a2dafb531d0d248d0cc45c4c1a82843cb21962332"
+          "bytes": 2789,
+          "path": ".agents/task_records/20260818_v106_v80_storage_and_control_plane_sync.md",
+          "sha256": "a95915f242e14629f2d7c4a2b6b538778750c7ad504f72de04695543eb7abbb6"
         },
         "status": "ACTIVE"
       },
@@ -98,9 +98,9 @@
         "state": "NONE"
       },
       "latest_task_record": {
-      "bytes": 1476,
-      "path": ".agents/task_records/20260813_server_runtime_preflight_native_flow_mainline_activation.md",
-      "sha256": "f941fd8d3dede1b35293ed8a2dafb531d0d248d0cc45c4c1a82843cb21962332"
+        "bytes": 2789,
+        "path": ".agents/task_records/20260818_v106_v80_storage_and_control_plane_sync.md",
+        "sha256": "a95915f242e14629f2d7c4a2b6b538778750c7ad504f72de04695543eb7abbb6"
       },
       "owner_epoch": 2,
       "role_id": "mainline.control",
@@ -117,12 +117,12 @@
     },
     {
       "current_task": {
-        "next_action": "build and locally validate a fresh native-flow GAP successor, then proactively return PACKAGE_READY_NOT_RUN or an explicit terminal state; no server action",
-        "objective": "preserve the v60 slice-local and sum_s2 observer target while rebuilding under direct native production-flow and corrected first-true-error evidence",
+        "next_action": "await explicit equivalent C-path configuration-extension authorization; do not return to the original MSE0 path or initiate RTL repair without new authorization",
+        "objective": "preserve the validated MSE3/Buffer4 stale-index FIFO root and the finding that the current v72/v73 end-to-end bypass is not functional",
         "pointer": {
-          "bytes": 2340,
-          "path": ".agents/task_records/20260813_four_family_native_flow_fresh_build_dispatch.md",
-          "sha256": "577f676b0972cc1e66e6010263135a042772d78e312eb629825b1b084aca1302"
+          "bytes": 3055,
+          "path": ".agents/task_records/20260817_v99_gapv73_qaddv69_returns_guardv2_and_successor_storage_acceptance.md",
+          "sha256": "90b089721da3219102eab7f15da6e60ecf187dbb93401b700b359b7dfb6969c3"
         },
         "status": "ACTIVE"
       },
@@ -133,15 +133,15 @@
       ],
       "in_flight": {
         "lease_id": null,
-      "package": null,
-      "return_zip": null,
-      "server_root": null,
-      "state": "PACKAGE_BUILDING"
+        "package": null,
+        "return_zip": null,
+        "server_root": "/home/panqs/ndp/NDP_copy02",
+        "state": "WAIT_EQUIVALENT_C_PATH_CONFIG_EXTENSION_AUTHORIZATION"
       },
       "latest_task_record": {
-        "bytes": 7822,
-        "path": "outputs/gap_node0071_v60_return_r1786594664161300855_1821926/return_analysis.json",
-        "sha256": "1a17b4fda3dde4a1267942d7aa871e386f47fbe8d8aaf1aa6c377c4e614c8859"
+        "bytes": 3055,
+        "path": ".agents/task_records/20260817_v99_gapv73_qaddv69_returns_guardv2_and_successor_storage_acceptance.md",
+        "sha256": "90b089721da3219102eab7f15da6e60ecf187dbb93401b700b359b7dfb6969c3"
       },
       "owner_epoch": 2,
       "role_id": "family.gap",
@@ -156,14 +156,14 @@
     },
     {
       "current_task": {
-        "next_action": "await explicit user authorization before running exact v90b; do not upload, lease or perform server action",
-        "objective": "use v90b direct native production-flow and corrected actual-source observer evidence to adjudicate the v88/v89 compile difference and retained MSE4 causal target",
+        "next_action": "hold exact v106 pending and await separate user upload/server-run authorization; consume only its exact formal return",
+        "objective": "dynamically adjudicate the frozen LC9 to LC3 tuple10 and downstream completion target under accept-qualified counters, a single 3660-second authority, canonical childless-procfs PID-plus-start-time guard and two-phase durable return",
         "pointer": {
-          "bytes": 4242,
-          "path": ".agents/task_records/20260813_conv_node0004_v90b_nativeflow_package_ready_not_run.md",
-          "sha256": "1ae1d8db901e046e248dad51bd1d088abe45f5fe6a6e37e2a672fe66b5580059"
+          "bytes": 2789,
+          "path": ".agents/task_records/20260818_v106_v80_storage_and_control_plane_sync.md",
+          "sha256": "a95915f242e14629f2d7c4a2b6b538778750c7ad504f72de04695543eb7abbb6"
         },
-        "status": "PACKAGE_READY_NOT_RUN"
+        "status": "ACTIVE"
       },
       "forbidden_scope": [
         ".agents/plan.md",
@@ -173,18 +173,18 @@
       "in_flight": {
         "lease_id": null,
         "package": {
-          "bytes": 5852687,
-          "path": "artifacts/operator_config_validation/r5-server-test-packages/pending/r5_n4_hw_v90b_nativeflow.zip",
-          "sha256": "c0b2871aed019494c0526534a1aec56bc18304281cedbdd034ee14e55afbfc1e"
+          "bytes": 5991155,
+          "path": "artifacts/operator_config_validation/r5-server-test-packages/pending/r5_n4_hw_v106b_lcdup_return2pflight.zip",
+          "sha256": "200382857c0310fd4599363564f7e08f0f268c88468e09620deaf85ed81eb116"
         },
         "return_zip": null,
-        "server_root": null,
+        "server_root": "/home/panqs/ndp/NDP_copy01",
         "state": "PACKAGE_READY_NOT_RUN"
       },
       "latest_task_record": {
-        "bytes": 4242,
-        "path": ".agents/task_records/20260813_conv_node0004_v90b_nativeflow_package_ready_not_run.md",
-        "sha256": "1ae1d8db901e046e248dad51bd1d088abe45f5fe6a6e37e2a672fe66b5580059"
+        "bytes": 2789,
+        "path": ".agents/task_records/20260818_v106_v80_storage_and_control_plane_sync.md",
+        "sha256": "a95915f242e14629f2d7c4a2b6b538778750c7ad504f72de04695543eb7abbb6"
       },
       "owner_epoch": 2,
       "role_id": "family.conv.serialized",
@@ -201,14 +201,14 @@
     },
     {
       "current_task": {
-        "next_action": "await explicit user authorization before running exact p46; do not upload, lease or perform server action",
-        "objective": "use p46 direct native production-flow and corrected compile-fail core evidence to execute the p42-equivalent MSE4 wdata and slice-finish causal target",
+        "next_action": "hold the validated input1 upstream tag/epoch undersupply root with no pending diagnostic package; await functional fix authorization",
+        "objective": "preserve the exact one-tuple input1 buffer-tag undersupply root and its excluded internal Memory_AG alternatives",
         "pointer": {
-          "bytes": 7451,
-          "path": ".agents/task_records/20260813_conv_native_p46_nativeflow_package_ready_not_run.md",
-          "sha256": "c9b440034545facfd96dfa188b41875e8ac4b3e7a0f6d43c4eb68f5995d2c7d0"
+          "bytes": 4427,
+          "path": ".agents/task_records/20260815_p52_v97_gapv71_validated_roots_and_storage_acceptance.md",
+          "sha256": "b55ce71f608fe488365401fdf7f2a1aeb72bc4a9b0c3d0e5ff574f8ea1c64c1b"
         },
-        "status": "PACKAGE_READY_NOT_RUN"
+        "status": "ACTIVE"
       },
       "forbidden_scope": [
         ".agents/plan.md",
@@ -217,19 +217,15 @@
       ],
       "in_flight": {
         "lease_id": null,
-        "package": {
-          "bytes": 5979948,
-          "path": "artifacts/operator_config_validation/r5-server-test-packages/pending/r5_n4_0cc_p46_nativeflow.zip",
-          "sha256": "6a648613492d66b244564a0acc8f7d59709a971cf2c84d47c4922fe040f61478"
-        },
+        "package": null,
         "return_zip": null,
-        "server_root": null,
-        "state": "PACKAGE_READY_NOT_RUN"
+        "server_root": "/home/panqs/ndp/NDP_copy01",
+        "state": "VALIDATED_ROOT_CAUSE_WAIT_FUNCTIONAL_FIX_AUTHORIZATION"
       },
       "latest_task_record": {
-        "bytes": 7451,
-        "path": ".agents/task_records/20260813_conv_native_p46_nativeflow_package_ready_not_run.md",
-        "sha256": "c9b440034545facfd96dfa188b41875e8ac4b3e7a0f6d43c4eb68f5995d2c7d0"
+        "bytes": 4427,
+        "path": ".agents/task_records/20260815_p52_v97_gapv71_validated_roots_and_storage_acceptance.md",
+        "sha256": "b55ce71f608fe488365401fdf7f2a1aeb72bc4a9b0c3d0e5ff574f8ea1c64c1b"
       },
       "owner_epoch": 2,
       "role_id": "family.conv.native",
@@ -246,14 +242,14 @@
     },
     {
       "current_task": {
-        "next_action": "await explicit user authorization before running exact v62; do not upload, lease or perform server action",
-        "objective": "use v62 direct native production-flow while preserving the v61 identity repair, wide two-ping-pong causal target and frozen QAdd semantics",
+        "next_action": "hold exact v80 pending and await separate user upload/server-run authorization; then use the source-bound 15000-second selected wall to complete ordered complementary 4/2 requests, output, terminal and formal-D",
+        "objective": "execute the exact 4/2 target under semantic-v8 predecessor compatibility, selected wall 15000 seconds, absolute maximum 86400 seconds, qualified progress and fresh post-KILL reap deadlines",
         "pointer": {
-          "bytes": 2604,
-          "path": ".agents/task_records/20260813_qlinearadd_node0007_v62_nativeflow_package_ready_not_run.md",
-          "sha256": "1c59e11519b9c24e56695d4ceef5da4d32b914143142f4dc20007e5c38656edd"
+          "bytes": 2789,
+          "path": ".agents/task_records/20260818_v106_v80_storage_and_control_plane_sync.md",
+          "sha256": "a95915f242e14629f2d7c4a2b6b538778750c7ad504f72de04695543eb7abbb6"
         },
-        "status": "PACKAGE_READY_NOT_RUN"
+        "status": "ACTIVE"
       },
       "forbidden_scope": [
         ".agents/plan.md",
@@ -263,18 +259,18 @@
       "in_flight": {
         "lease_id": null,
         "package": {
-          "bytes": 108679567,
-          "path": "artifacts/operator_config_validation/r5-server-test-packages/pending/r5_qadd_n7_tailround_lanephase_v62_nfobs.zip",
-          "sha256": "4133a6e1aabb4fb9e60d95a83ea1a804eb7ae2f6d0689f877452a73e934d2708"
+          "bytes": 108884698,
+          "path": "artifacts/operator_config_validation/r5-server-test-packages/pending/r5_qadd_n7_tr_v80_w15kqf.zip",
+          "sha256": "2353572204ef16ccf9142e73bcbc3822c62a28d4c8115fcbae2db195a1f029d9"
         },
         "return_zip": null,
-        "server_root": null,
+        "server_root": "/home/panqs/ndp/NDP_copy04",
         "state": "PACKAGE_READY_NOT_RUN"
       },
       "latest_task_record": {
-        "bytes": 2604,
-        "path": ".agents/task_records/20260813_qlinearadd_node0007_v62_nativeflow_package_ready_not_run.md",
-        "sha256": "1c59e11519b9c24e56695d4ceef5da4d32b914143142f4dc20007e5c38656edd"
+        "bytes": 2789,
+        "path": ".agents/task_records/20260818_v106_v80_storage_and_control_plane_sync.md",
+        "sha256": "a95915f242e14629f2d7c4a2b6b538778750c7ad504f72de04695543eb7abbb6"
       },
       "owner_epoch": 2,
       "role_id": "family.qlinearadd",
@@ -291,12 +287,12 @@
     },
     {
       "current_task": {
-        "next_action": "observer-only post-sim conjunction fix is current-disk activated and frozen; await only a new shared-method defect without building family packages or performing server action",
-        "objective": "maintain the observer-only validator/runtime supervisor, exact inert canonical post-sim helper exception and package-local HDL gates while family owners retain diagnosis and package ownership",
+        "next_action": "maintain childless-procfs process identity, TB-VCD semantic-v8 predecessor compatibility, source-bound selected/absolute runtime admission, release cross-member consistency and package Python/schema runtime for later next-fresh packages; do not build family packages or perform server action",
+        "objective": "keep PID-plus-start-time ownership, durable two-phase return, strict predecessor identity/evolution, qualified progress, shared exit authority and bounded measured runtime admission active while observer remains default",
         "pointer": {
-          "bytes": 3421,
-          "path": ".agents/task_records/20260813_observer_only_post_sim_conjunction_fix_v1.md",
-          "sha256": "d557aeb00e26b85783a5c12f48f93d459c2453daf975665519d455881db498a7"
+          "bytes": 2584,
+          "path": ".agents/task_records/20260818_mainline_package_build_slowness_rule_skill_audit_v1.md",
+          "sha256": "bf86b3fc9c048333b7ec081d351c2f056f546173fb47657f5e221ca9d399e5f1"
         },
         "status": "ACTIVE"
       },
@@ -313,9 +309,9 @@
         "state": "NONE"
       },
       "latest_task_record": {
-        "bytes": 2521,
-        "path": ".agents/task_records/20260813_fsdb_process_tree_quiescence_gate_v1.md",
-        "sha256": "2b22a5283875d3e15501252c3d79671885b642e8cf12a2a83b02ff6b852289c0"
+        "bytes": 2584,
+        "path": ".agents/task_records/20260818_mainline_package_build_slowness_rule_skill_audit_v1.md",
+        "sha256": "bf86b3fc9c048333b7ec081d351c2f056f546173fb47657f5e221ca9d399e5f1"
       },
       "owner_epoch": 1,
       "role_id": "optimizer.whole-network",

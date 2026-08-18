@@ -43,7 +43,9 @@ py -3.12 -m venv .venv
 - `tools/`：构建、审计、回传分析和仓库恢复入口
 - `tests/`：本地回归与定向 RTL/合同测试
 - `artifacts/`、`outputs/`、`server_returns/`：生成物与回传证据
-- `Trassic2.0_RTL/`：直接跟踪 GitHub `master` 的独立 Git checkout
+- `Trassic2.0_RTL/`：独立 Git checkout；当前工作树由已登录 GitHub 的精确
+  `e7cef1b0417b98f059b921edc090acf33479f890` commit archive 物化，本地记录提交为
+  `2d352318b9ac27851f6d64e045f9cad423c4d80b`（不是对上游 SHA 的冒充）
 - `NDP_copy01/`：本地硬件仿真入口；其中 `rtl/` 由 current Trassic checkout 精确同步，
   不保留 `rtl_pre_*` 副本
 - `ndp-sim/`：活动原生工具链；`ndp-sim-ref/` 仅作规则授权下的冻结参考

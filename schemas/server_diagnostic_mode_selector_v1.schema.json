@@ -1,0 +1,78 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "server-diagnostic-mode-selector-v1",
+  "title": "Mutually exclusive server diagnostic bulk-evidence mode",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema", "package_id", "family", "selected_mode", "bulk_evidence",
+    "actual_dump_argv", "lightweight_progress_supervisor", "package_members",
+    "return_members", "claim_boundary"
+  ],
+  "properties": {
+    "schema": {"const": "server-diagnostic-mode-selector-v1"},
+    "package_id": {"type": "string", "minLength": 1},
+    "family": {"type": "string", "minLength": 1},
+    "selected_mode": {
+      "enum": ["OBSERVER_ONLY_WIDE_CAUSAL", "TB_VCD_BOUNDED_CAUSAL_CONE"]
+    },
+    "bulk_evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "observer_jsonl", "tb_standard_vcd", "vpd", "fsdb",
+        "ucli_direct_vcd", "vendor_signal_query"
+      ],
+      "properties": {
+        "observer_jsonl": {"type": "boolean"},
+        "tb_standard_vcd": {"type": "boolean"},
+        "vpd": {"const": false},
+        "fsdb": {"const": false},
+        "ucli_direct_vcd": {"const": false},
+        "vendor_signal_query": {"const": false}
+      }
+    },
+    "actual_dump_argv": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["DUMP_VCD", "DUMP_FSDB", "TB_DUMP_FSDB"],
+      "properties": {
+        "DUMP_VCD": {"const": "0"},
+        "DUMP_FSDB": {"const": "0"},
+        "TB_DUMP_FSDB": {"const": "0"}
+      }
+    },
+    "lightweight_progress_supervisor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["enabled", "bulk_signal_events", "sim_time_heartbeat", "process_tree_reap"],
+      "properties": {
+        "enabled": {"const": true},
+        "bulk_signal_events": {"const": false},
+        "sim_time_heartbeat": {"const": true},
+        "process_tree_reap": {"const": true}
+      }
+    },
+    "package_members": {
+      "type": "array", "uniqueItems": true,
+      "items": {"type": "string", "minLength": 1}
+    },
+    "return_members": {
+      "type": "array", "uniqueItems": true,
+      "items": {"type": "string", "minLength": 1}
+    },
+    "observer_contract_sha256": {
+      "oneOf": [
+        {"type": "null"},
+        {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      ]
+    },
+    "vcd_contract_sha256": {
+      "oneOf": [
+        {"type": "null"},
+        {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      ]
+    },
+    "claim_boundary": {"type": "string", "minLength": 1}
+  }
+}

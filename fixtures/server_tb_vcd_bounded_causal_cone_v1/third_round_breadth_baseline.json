@@ -1,0 +1,13 @@
+{
+  "schema": "server-tb-vcd-family-round-breadth-baseline-v1",
+  "family": "synthetic",
+  "package_id": "synthetic-vcd-third-round-reference",
+  "round_index": 3,
+  "signal_count": 8,
+  "direct_driver_leaf_count": 4,
+  "candidate_count": 2,
+  "boundary_count": 4,
+  "pinned_rtl_tree_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+  "machine_check_exit": 0,
+  "claim_boundary": "Synthetic third-round breadth baseline only."
+}

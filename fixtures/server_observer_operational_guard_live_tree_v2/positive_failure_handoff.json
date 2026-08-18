@@ -1,0 +1,29 @@
+{
+  "schema": "server-observer-operational-failure-handoff-v1",
+  "package_id": "fixture-package",
+  "execution_id": "fixture-execution",
+  "attempt_id": "fixture-attempt",
+  "finalization_guard_receipt_valid": true,
+  "published_returns": [
+    {
+      "path": "r_fixture_attempt_1_return.zip",
+      "bytes": 100,
+      "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    },
+    {
+      "path": "r_fixture_attempt_2_return.zip",
+      "bytes": 200,
+      "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+    }
+  ],
+  "selected_formal_return": {
+    "path": "r_fixture_attempt_2_return.zip",
+    "bytes": 200,
+    "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+  },
+  "same_basename_overwrite": false,
+  "prior_published_returns_preserved": true,
+  "durable_return_receipt_valid": true,
+  "cleanup_executed": true,
+  "claim_boundary": "Durable failure handoff and cleanup ordering only."
+}

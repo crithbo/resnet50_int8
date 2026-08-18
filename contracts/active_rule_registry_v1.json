@@ -27,8 +27,8 @@
         "服务器实现清单",
         "版本结果"
       ],
-      "bytes": 11650,
-      "sha256": "53d03da4cb0d9bcdc7d3537afa466ebdab8a61a658030562f180779802ed2c10"
+      "bytes": 15503,
+      "sha256": "f17b6ef7e4762ee1bd7b209c4f3a4a0d7b285fafdf1fb2fa5bbca2c6c37bef04"
     },
     {
       "path": ".agents/rules/算子配置规则.md",
@@ -79,7 +79,7 @@
       "path": ".agents/rules/服务器测试包生成规则.md",
       "layer": "core",
       "owner_scope": "server-package-runtime-return",
-      "purpose": "服务器包、runner、observer-only动态证据、return、successor与用户汇报合同",
+      "purpose": "服务器包、runner、observer默认与可选TB VCD全因果锥动态证据、return、successor与用户汇报合同",
       "read_profiles": [
         "server-package",
         "return-analysis",
@@ -97,8 +97,8 @@
         "当前算子状态",
         "会话activation"
       ],
-      "bytes": 177437,
-      "sha256": "f6cd29d5e1cc99efb70dc316f80400f72d9c735552dcb5696e817cc8cd66eae7"
+      "bytes": 203949,
+      "sha256": "7d7dbe6e92f60893d461c615622598740ca09f9a3fca10b01e18d950d0f64ec7"
     },
     {
       "path": ".agents/rules/会话转接与所有权规则.md",
@@ -316,8 +316,8 @@
         "current package修改",
         "plan裁决"
       ],
-      "bytes": 20659,
-      "sha256": "e9842d80048ca0bbd75ffcde7bdc53e522219b9516ebe0e4c8614dfd9f026b29"
+      "bytes": 25507,
+      "sha256": "cda10e17da922f2bdd3e809dc8ffdfe54efccf71734cf84995bda81494ae4381"
     }
   ],
   "history": {

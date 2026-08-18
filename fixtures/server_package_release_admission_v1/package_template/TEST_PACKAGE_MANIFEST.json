@@ -1,0 +1,7 @@
+{
+  "schema": "synthetic-test-package-manifest-v1",
+  "test_id": "synthetic_release_admission_pkg",
+  "status": "PACKAGE_READY_NOT_RUN",
+  "functional_rtl_modified": false,
+  "server_run_performed": false
+}
