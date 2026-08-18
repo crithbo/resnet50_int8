@@ -1,0 +1,101 @@
+{
+  "schema": "resnet50-rule-fast-closure-transfer-v3",
+  "status": "IMPLEMENTED_AND_LOCALLY_VALIDATED",
+  "incident": {
+    "classification": "RULE_SEMANTIC_ERROR",
+    "contract": "contracts/rule_maintenance_incident_fast_closure_transfer_v3.json",
+    "validation": "outputs/rule_fast_closure_transfer_v3/incident_validation.json",
+    "finding": "Patch/reuse semantics were contradicted by later all-SHA/all-first-fresh prose; the compiled gate remained shadow-only; takeover tests did not consume current disk."
+  },
+  "outcomes": {
+    "formal_build_entry": "tools/server_package_pipeline.py prepare/admit",
+    "build_registry_mode": "ACTIVE_PATCH_FIRST_CHANGED_SURFACE",
+    "release_admission_required": true,
+    "blocking_classes": ["server_start", "actual_input", "state_safety", "return"],
+    "transport_sha_blocking": false,
+    "patch_unrun_candidate_first": true,
+    "reuse_unchanged_pass": true,
+    "aggregate_cheap_check_count": 1,
+    "final_zip_admission_count": 1,
+    "future_dynamic_default_mode": "TB_VCD_BOUNDED_CAUSAL_CONE",
+    "current_ready_package_mode_unchanged": true
+  },
+  "compaction": {
+    "active_rule_count": 14,
+    "active_rule_bytes_before": 192192,
+    "active_rule_bytes_after": 139443,
+    "active_rule_definition_count_after": 103,
+    "duplicate_rule_definition_count": 0,
+    "common_rule_bytes_before": 77376,
+    "common_rule_bytes_after": 24627,
+    "agent_lines_after": 107,
+    "router_lines_after": 84,
+    "server_rule_lines_after": 170,
+    "session_rule_lines_after": 80,
+    "optimizer_rule_lines_after": 84,
+    "skill_lines_after": 97
+  },
+  "takeover": {
+    "tool": "tools/validate_project_takeover_readiness.py",
+    "report": "outputs/rule_fast_closure_transfer_v3/current_takeover_readiness.json",
+    "pass": true,
+    "mainline_role": "mainline.control",
+    "pending_package_ids": [
+      "r5_n4_hw_v106b_lcdup_return2pflight",
+      "r5_qadd_n7_tr_v80_w15kqf"
+    ],
+    "record_only_warnings": [
+      "canonical plan omits registry epoch label; role and pending-package coherence passed"
+    ]
+  },
+  "changed_assets": {
+    "stable_entry_and_rules": [
+      ".agents/agent.md",
+      ".agents/rules/生成前必读索引.md",
+      ".agents/rules/服务器测试包生成规则.md",
+      ".agents/rules/会话转接与所有权规则.md",
+      ".agents/rules/整网测试收敛优化专项规则.md",
+      ".agents/history/rules/README.md",
+      "NDP_copy01/README_HARDWARE_SIM_ENTRY.md"
+    ],
+    "control_and_skill": [
+      "contracts/active_rule_registry_v1.json",
+      "contracts/current_session_owner_registry_v1.json",
+      "contracts/server_package_build_gate_registry_v1.json",
+      ".codex/skills/resnet50-server-package-flow/SKILL.md"
+    ],
+    "tools_and_schemas": [
+      "tools/server_package_pipeline.py",
+      "tools/session_handoff.py",
+      "tools/validate_project_takeover_readiness.py",
+      "schemas/session_owner_registry_v1.schema.json",
+      "schemas/project_takeover_readiness_v1.schema.json",
+      "schemas/server_package_build_profile_v1.schema.json",
+      "schemas/server_package_gate_results_v1.schema.json",
+      "schemas/server_package_release_admission_v1.schema.json"
+    ],
+    "archives": [
+      ".agents/history/rules/生成前必读索引_20260818精简前.md",
+      ".agents/history/rules/会话转接与所有权规则_20260818精简前.md",
+      ".agents/history/rules/整网测试收敛优化专项规则_20260818精简前.md",
+      ".agents/history/agent_pre_transfer_compaction_20260818.md"
+    ]
+  },
+  "validation": {
+    "focused_related_tests": "123/123 PASS",
+    "active_rule_audit": "PASS; 14 active; 103 unique definitions; 0 duplicates",
+    "current_disk_takeover": "PASS against canonical current state",
+    "python_compile": "PASS",
+    "json_parse": "PASS",
+    "targeted_diff_check": "PASS"
+  },
+  "not_changed": [
+    ".agents/plan.md",
+    "current/pending/tested family packages",
+    "storage state",
+    "functional RTL",
+    "config/numeric/workload/golden",
+    "server state"
+  ],
+  "claim_boundary": "Shared rules, Skill, local admission, handoff schema and takeover validation only. No family package was built, patched, held, rotated, uploaded or run; no server/RTL/config/numeric/workload action occurred."
+}

@@ -89,13 +89,15 @@ def receipt(project_root: Path, relative: str) -> dict[str, Any]:
 
 
 def verify_receipt(project_root: Path, item: Any) -> str | None:
-    if not isinstance(item, dict) or set(item) != {"path", "bytes", "sha256"}:
+    if not isinstance(item, dict) or set(item) not in ({"path"}, {"path", "bytes", "sha256"}):
         return "receipt fields mismatch"
     try:
-        actual = receipt(project_root, item["path"])
+        path_from_root(project_root, item["path"])
     except HandoffError as error:
         return str(error)
-    if actual != item:
+    if set(item) == {"path"}:
+        return None
+    if receipt(project_root, item["path"]) != item:
         return f"receipt drift: {item.get('path')}"
     return None
 
@@ -117,10 +119,10 @@ def validate_registry(registry: Any, project_root: Path | None = None) -> list[s
         "registry_epoch",
         "mainline_role_id",
         "roles",
-        "active_rule_receipts",
         "claim_boundary",
     }
-    if set(registry) != required:
+    allowed = required | {"active_rule_receipts"}
+    if not required.issubset(registry) or not set(registry).issubset(allowed):
         errors.append("registry fields mismatch")
     if registry.get("schema") != REGISTRY_SCHEMA:
         errors.append("registry schema mismatch")
@@ -197,9 +199,9 @@ def validate_registry(registry: Any, project_root: Path | None = None) -> list[s
     elif registry.get("mainline_role_id") != mainlines[0].get("role_id"):
         errors.append("mainline_role_id does not bind the sole MAINLINE role")
     rule_receipts = registry.get("active_rule_receipts")
-    if not isinstance(rule_receipts, list) or len(rule_receipts) < 3:
-        errors.append("at least three active rule receipts are required")
-    elif project_root is not None:
+    if rule_receipts is not None and (not isinstance(rule_receipts, list) or not rule_receipts):
+        errors.append("active_rule_receipts must be a non-empty array when present")
+    elif rule_receipts is not None and project_root is not None:
         for index, item in enumerate(rule_receipts):
             drift = verify_receipt(project_root, item)
             if drift:
@@ -651,4 +653,3 @@ def main(argv: Iterable[str] | None = None) -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-

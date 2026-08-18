@@ -2,6 +2,7 @@
   "schema": "server-package-build-spec-v1",
   "package_id": "synthetic_next_fresh_shadow_v1",
   "family": "synthetic",
+  "diagnostic_mode": "OBSERVER_ONLY_WIDE_CAUSAL",
   "lifecycle": "NEXT_FRESH_SUCCESSOR",
   "shadow_only": true,
   "current_package_impact": false,
@@ -139,6 +140,11 @@
       "gate_id": "intermediate_report_format",
       "path": "fixtures/server_package_pipeline_v1/cheap/intermediate_report_format.json",
       "sha256": "0a39442345977f049a20f6ecada1a2c71222e619b6421972caa492600fdd2202"
+    },
+    {
+      "gate_id": "package_local_hdl",
+      "path": "fixtures/server_package_pipeline_v1/cheap/package_local_hdl.json",
+      "sha256": "0000000000000000000000000000000000000000000000000000000000000000"
     }
   ]
 }

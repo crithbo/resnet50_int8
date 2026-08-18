@@ -1,0 +1,8 @@
+{
+  "schema_id": "rule-maintenance-incident-adjudication-validation-v1",
+  "input": "contracts\\rule_maintenance_incident_fast_closure_transfer_v3.json",
+  "schema": "C:\\Users\\15383\\.codex\\worktrees\\532a\\resnet50_int8\\schemas\\rule_maintenance_incident_adjudication_v1.schema.json",
+  "pass": true,
+  "classification": "RULE_SEMANTIC_ERROR",
+  "errors": []
+}

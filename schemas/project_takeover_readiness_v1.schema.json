@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "project_takeover_readiness_v1.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "pass", "workspace_root", "state_root", "registry_epoch", "mainline_role_id", "role_ids", "pending_package_ids", "errors", "warnings", "claim_boundary"],
+  "properties": {
+    "schema": {"const": "project-takeover-readiness-v1"},
+    "pass": {"type": "boolean"},
+    "workspace_root": {"type": "string", "minLength": 1},
+    "state_root": {"type": "string", "minLength": 1},
+    "registry_epoch": {"type": ["integer", "null"], "minimum": 1},
+    "mainline_role_id": {"type": ["string", "null"]},
+    "role_ids": {"type": "array", "items": {"type": ["string", "null"]}, "uniqueItems": true},
+    "pending_package_ids": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "errors": {"type": "array", "items": {"type": "string"}},
+    "warnings": {"type": "array", "items": {"type": "string"}},
+    "claim_boundary": {"type": "string", "minLength": 1}
+  }
+}

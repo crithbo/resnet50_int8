@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "server-package-build-profile-v1",
-  "title": "Server package next-fresh shadow build profile",
+  "title": "Server package active patch-first build profile",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -31,7 +31,7 @@
       "const": "server-package-build-profile-v1"
     },
     "mode": {
-      "const": "SHADOW_ONLY_NEXT_FRESH"
+      "const": "ACTIVE_PATCH_FIRST_CHANGED_SURFACE_V3"
     },
     "package_id": {
       "type": "string",
@@ -42,10 +42,10 @@
       "minLength": 1
     },
     "lifecycle": {
-      "const": "NEXT_FRESH_SUCCESSOR"
+      "enum": ["NEXT_FRESH_SUCCESSOR", "PATCH_UNRUN_REVISION"]
     },
     "current_package_impact": {
-      "const": false
+      "type": "boolean"
     },
     "rule_change_epoch": {
       "type": "object",
@@ -161,7 +161,7 @@
                 "type": "string"
               },
               "sha256": {
-                "type": "string",
+                "type": ["string", "null"],
                 "pattern": "^[0-9a-f]{64}$"
               },
               "pass": {
@@ -380,8 +380,8 @@
         "final_zip_release_driver_top_level_invocations",
         "final_zip_subgates",
         "rebuild_per_single_error_forbidden",
-        "final_zip_same_sha_reuses_exact_content_receipt",
-        "final_zip_changed_sha_requires_one_fresh_release_driver"
+        "unchanged_surfaces_reuse_pass",
+        "changed_surfaces_require_one_fresh_release_driver"
       ],
       "properties": {
         "prebuild_aggregate_top_level_invocations": {
@@ -404,10 +404,10 @@
         "rebuild_per_single_error_forbidden": {
           "const": true
         },
-        "final_zip_same_sha_reuses_exact_content_receipt": {
+        "unchanged_surfaces_reuse_pass": {
           "const": true
         },
-        "final_zip_changed_sha_requires_one_fresh_release_driver": {
+        "changed_surfaces_require_one_fresh_release_driver": {
           "const": true
         }
       }
@@ -427,7 +427,7 @@
       ],
       "properties": {
         "changes_current_package": {
-          "const": false
+          "type": "boolean"
         },
         "builds_zip": {
           "const": false
@@ -439,10 +439,10 @@
           "const": false
         },
         "blocking_promotion_authorized": {
-          "const": false
+          "const": true
         },
         "source_bound_gate_required_next_fresh": {
-          "const": true
+          "type": "boolean"
         },
         "post_sim_return_gate_required_next_fresh": {
           "const": true
@@ -472,7 +472,7 @@
           "minimum": 0
         },
         "sha256": {
-          "type": "string",
+          "type": ["string", "null"],
           "pattern": "^[0-9a-f]{64}$"
         }
       }

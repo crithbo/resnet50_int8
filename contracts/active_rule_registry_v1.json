@@ -14,64 +14,31 @@
       "layer": "router",
       "owner_scope": "mandatory-read-routing",
       "purpose": "动作/算子读取路由、公共停止门、E0-E5唯一口径",
-      "read_profiles": [
-        "all"
-      ],
-      "semantic_owners": [
-        "routing",
-        "evidence-levels",
-        "regression-classification"
-      ],
-      "excludes": [
-        "字段公式",
-        "服务器实现清单",
-        "版本结果"
-      ],
-      "bytes": 15503,
-      "sha256": "f17b6ef7e4762ee1bd7b209c4f3a4a0d7b285fafdf1fb2fa5bbca2c6c37bef04"
+      "read_profiles": ["all"],
+      "semantic_owners": ["routing", "evidence-levels", "regression-classification"],
+      "excludes": ["字段公式", "服务器实现清单", "版本结果"],
+      "bytes": 5026,
+      "sha256": "67afbf5eb8d0cc5c9ff855ce2ee4f1e9532605c4b31c554cc38f8146283b7e9d"
     },
     {
       "path": ".agents/rules/算子配置规则.md",
       "layer": "core",
       "owner_scope": "operator-config-generation",
       "purpose": "complete JSON、provenance、物化回环与跨族配置门",
-      "read_profiles": [
-        "config",
-        "family-owner",
-        "human-json"
-      ],
-      "semantic_owners": [
-        "config-provenance",
-        "materialization",
-        "family-scope"
-      ],
-      "excludes": [
-        "硬件字段定义",
-        "服务器包实现",
-        "族数值公式"
-      ],
-      "bytes": 37680,
-      "sha256": "dc5243226bacde799b368d37fb9eb656e6b7e3d33a0a2932ae72ab35415ae3e1"
+      "read_profiles": ["config", "family-owner", "human-json"],
+      "semantic_owners": ["config-provenance", "materialization", "family-scope"],
+      "excludes": ["硬件字段定义", "服务器包实现", "族数值公式"],
+      "bytes": 35238,
+      "sha256": "d9a1dfff44f4b2f9c20ca912e9aa1bc3ff77b29cfe55db86b430cec4dd287819"
     },
     {
       "path": ".agents/rules/NDP硬件字段语义.md",
       "layer": "core",
       "owner_scope": "ndp-hardware-field-semantics",
       "purpose": "LC/MSE/Buffer/SA/GA/N2N实际消费者字段含义",
-      "read_profiles": [
-        "config",
-        "family-owner",
-        "hardware-audit"
-      ],
-      "semantic_owners": [
-        "hardware-fields",
-        "consumer-equations"
-      ],
-      "excludes": [
-        "算子完成度",
-        "服务器包",
-        "会话所有权"
-      ],
+      "read_profiles": ["config", "family-owner", "hardware-audit"],
+      "semantic_owners": ["hardware-fields", "consumer-equations"],
+      "excludes": ["算子完成度", "服务器包", "会话所有权"],
       "bytes": 14974,
       "sha256": "603d57805bc5a5bdfca7406c402bc94db60c06ea6682493d672abb91671b1055"
     },
@@ -79,67 +46,32 @@
       "path": ".agents/rules/服务器测试包生成规则.md",
       "layer": "core",
       "owner_scope": "server-package-runtime-return",
-      "purpose": "服务器包、runner、observer默认与可选TB VCD全因果锥动态证据、return、successor与用户汇报合同",
-      "read_profiles": [
-        "server-package",
-        "return-analysis",
-        "infrastructure"
-      ],
-      "semantic_owners": [
-        "package-layout",
-        "runtime-safety",
-        "diagnostics",
-        "return",
-        "user-facing-reporting"
-      ],
-      "excludes": [
-        "算子数值公式",
-        "当前算子状态",
-        "会话activation"
-      ],
-      "bytes": 203949,
-      "sha256": "7d7dbe6e92f60893d461c615622598740ca09f9a3fca10b01e18d950d0f64ec7"
+      "purpose": "服务器包、runner、observer、波形、return与successor合同",
+      "read_profiles": ["server-package", "return-analysis", "infrastructure"],
+      "semantic_owners": ["package-layout", "runtime-safety", "diagnostics", "return"],
+      "excludes": ["算子数值公式", "当前算子状态", "会话activation"],
+      "bytes": 10506,
+      "sha256": "cff48fa3e32bfcf4202a5ab3bfdc22737e63831c1914d0b2e32d373bee7e215c"
     },
     {
       "path": ".agents/rules/会话转接与所有权规则.md",
       "layer": "core",
       "owner_scope": "session-handoff-ownership",
       "purpose": "稳定role、唯一ACTIVE owner、capsule与动态主线路由",
-      "read_profiles": [
-        "session-handoff",
-        "mainline"
-      ],
-      "semantic_owners": [
-        "session-ownership",
-        "handoff",
-        "mainline-resolution"
-      ],
-      "excludes": [
-        "业务权限扩张",
-        "plan裁决",
-        "包或RTL修改"
-      ],
-      "bytes": 8677,
-      "sha256": "9e3859dff32de42f0964ff3038ab7b78c84d142a24016ee552c706ef01e529b9"
+      "read_profiles": ["session-handoff", "mainline"],
+      "semantic_owners": ["session-ownership", "handoff", "mainline-resolution"],
+      "excludes": ["业务权限扩张", "plan裁决", "包或RTL修改"],
+      "bytes": 4489,
+      "sha256": "29f2784c38c34d919999705d2559744fb28d861714647aafaf456291a1b9125c"
     },
     {
       "path": ".agents/rules/INT8_SA点积专项规则.md",
       "layer": "primitive",
       "owner_scope": "int8-sa-dot-product",
       "purpose": "Conv/MatMul共享UINT8×INT8→INT32点积语义与停止门",
-      "read_profiles": [
-        "conv",
-        "matmul"
-      ],
-      "semantic_owners": [
-        "int8-dot",
-        "sa-accumulate"
-      ],
-      "excludes": [
-        "output quant",
-        "实例状态",
-        "服务器包"
-      ],
+      "read_profiles": ["conv", "matmul"],
+      "semantic_owners": ["int8-dot", "sa-accumulate"],
+      "excludes": ["output quant", "实例状态", "服务器包"],
       "bytes": 10387,
       "sha256": "41c284d27a6f2176567e1d6495147ca625ea9023a93a7a8832c37999c78df927"
     },
@@ -148,23 +80,9 @@
       "layer": "primitive",
       "owner_scope": "exact-uint8-quant-tail",
       "purpose": "共享binary32缩放、RNE、zero-point与UINT8饱和合同",
-      "read_profiles": [
-        "quantize",
-        "requantize",
-        "qadd",
-        "gap",
-        "matmul"
-      ],
-      "semantic_owners": [
-        "exact-rounding",
-        "zero-point",
-        "saturation"
-      ],
-      "excludes": [
-        "族地址",
-        "实例状态",
-        "服务器包"
-      ],
+      "read_profiles": ["quantize", "requantize", "qadd", "gap", "matmul"],
+      "semantic_owners": ["exact-rounding", "zero-point", "saturation"],
+      "excludes": ["族地址", "实例状态", "服务器包"],
       "bytes": 6934,
       "sha256": "fef9ebcb1621e74ddd9aef0f936c5c8ce1fcf34c2be9000b1deeb4b11045ea4f"
     },
@@ -173,22 +91,9 @@
       "layer": "primitive",
       "owner_scope": "two-stage-lifetime",
       "purpose": "producer→scratch→consumer最小生命周期与barrier合同",
-      "read_profiles": [
-        "dequant",
-        "requantize",
-        "qadd",
-        "gap",
-        "composite"
-      ],
-      "semantic_owners": [
-        "two-stage-lifetime",
-        "scratch-barrier"
-      ],
-      "excludes": [
-        "算子公式",
-        "实例状态",
-        "服务器包"
-      ],
+      "read_profiles": ["dequant", "requantize", "qadd", "gap", "composite"],
+      "semantic_owners": ["two-stage-lifetime", "scratch-barrier"],
+      "excludes": ["算子公式", "实例状态", "服务器包"],
       "bytes": 3298,
       "sha256": "821b8b04b0e33d0a93e06a3a1bca8307b417bcb63f109cf12414891e9a0bc171"
     },
@@ -197,19 +102,9 @@
       "layer": "family",
       "owner_scope": "dequantize-linear",
       "purpose": "Dequant数值、布局、typed constants与发布门",
-      "read_profiles": [
-        "dequant"
-      ],
-      "semantic_owners": [
-        "dequant-formula",
-        "dequant-layout",
-        "dequant-release"
-      ],
-      "excludes": [
-        "版本E4/E5结果",
-        "服务器包实现",
-        "其它族"
-      ],
+      "read_profiles": ["dequant"],
+      "semantic_owners": ["dequant-formula", "dequant-layout", "dequant-release"],
+      "excludes": ["版本E4/E5结果", "服务器包实现", "其它族"],
       "bytes": 9223,
       "sha256": "0b237164e712f6f83004affd45678ee301363c72a21968a4d45ce6fe31b3781b"
     },
@@ -218,19 +113,9 @@
       "layer": "family",
       "owner_scope": "flatten-view",
       "purpose": "metadata-only alias、地址身份、endpoint与lifetime合同",
-      "read_profiles": [
-        "view"
-      ],
-      "semantic_owners": [
-        "view-alias",
-        "view-endpoints",
-        "view-lifetime"
-      ],
-      "excludes": [
-        "copy/relayout实现",
-        "实例状态",
-        "服务器包"
-      ],
+      "read_profiles": ["view"],
+      "semantic_owners": ["view-alias", "view-endpoints", "view-lifetime"],
+      "excludes": ["copy/relayout实现", "实例状态", "服务器包"],
       "bytes": 3891,
       "sha256": "c9fe676a9fe79315371da4715f4a67698f8038dfb925f8dab68223b4f805e1ac"
     },
@@ -239,19 +124,9 @@
       "layer": "family",
       "owner_scope": "qlinearadd",
       "purpose": "six-qparam、broadcast DAG、事务供给与QAdd边界",
-      "read_profiles": [
-        "qadd"
-      ],
-      "semantic_owners": [
-        "qadd-formula",
-        "qadd-transport",
-        "qadd-supply"
-      ],
-      "excludes": [
-        "共享quant-tail定义",
-        "版本动态结果",
-        "服务器包"
-      ],
+      "read_profiles": ["qadd"],
+      "semantic_owners": ["qadd-formula", "qadd-transport", "qadd-supply"],
+      "excludes": ["共享quant-tail定义", "版本动态结果", "服务器包"],
       "bytes": 16337,
       "sha256": "54de9e9c7354bc461a8c3411481687f56f11f7be8d81a6e712dd6cdc63352f2b"
     },
@@ -260,21 +135,9 @@
       "layer": "family",
       "owner_scope": "requantize-uint8",
       "purpose": "Requant qparam、scalar-phase supply、两阶段与动态门",
-      "read_profiles": [
-        "requantize",
-        "conv",
-        "matmul"
-      ],
-      "semantic_owners": [
-        "requant-qparam",
-        "scalar-phase",
-        "requant-release"
-      ],
-      "excludes": [
-        "共享quant-tail定义",
-        "版本动态结果",
-        "服务器包"
-      ],
+      "read_profiles": ["requantize", "conv", "matmul"],
+      "semantic_owners": ["requant-qparam", "scalar-phase", "requant-release"],
+      "excludes": ["共享quant-tail定义", "版本动态结果", "服务器包"],
       "bytes": 7879,
       "sha256": "0275425ecee387361ebb3358bb6283e3c28ad8311171ce302f7551738d37f88a"
     },
@@ -283,41 +146,22 @@
       "layer": "family",
       "owner_scope": "global-average-pool",
       "purpose": "GAP int32_mac bypass、归约树、8B supply与动态门",
-      "read_profiles": [
-        "gap"
-      ],
-      "semantic_owners": [
-        "gap-sum-tree",
-        "gap-dual-input",
-        "gap-byte-lanes"
-      ],
-      "excludes": [
-        "版本probe/repair",
-        "共享quant-tail定义",
-        "服务器包"
-      ],
-      "bytes": 8116,
-      "sha256": "4c3a88b8c6967812b0b64a550bb92a45117106f34996102335dc26fa1a211f8b"
+      "read_profiles": ["gap"],
+      "semantic_owners": ["gap-sum-tree", "gap-dual-input", "gap-byte-lanes"],
+      "excludes": ["版本probe/repair", "共享quant-tail定义", "服务器包"],
+      "bytes": 6655,
+      "sha256": "d1371706d8e54e16ccf4ffc805eacb23ed23f4ccba81b39442dcbd962178e68b"
     },
     {
       "path": ".agents/rules/整网测试收敛优化专项规则.md",
       "layer": "specialist",
       "owner_scope": "whole-network-test-convergence",
       "purpose": "跨族失败机制、shadow validator、轮次/墙钟优化边界",
-      "read_profiles": [
-        "optimizer"
-      ],
-      "semantic_owners": [
-        "test-convergence-method",
-        "shadow-adjudication"
-      ],
-      "excludes": [
-        "算子所有权",
-        "current package修改",
-        "plan裁决"
-      ],
-      "bytes": 25507,
-      "sha256": "cda10e17da922f2bdd3e809dc8ffdfe54efccf71734cf84995bda81494ae4381"
+      "read_profiles": ["optimizer"],
+      "semantic_owners": ["test-convergence-method", "shadow-adjudication"],
+      "excludes": ["算子所有权", "current package修改", "plan裁决"],
+      "bytes": 4606,
+      "sha256": "ab87c1e34c0f8fc5c4e13486e49675214ae3919533d1b9a272f245ab0c78dbb8"
     }
   ],
   "history": {
@@ -332,7 +176,11 @@
       "DeepSeek_码流生命周期增量规则.md",
       "DequantizeLinear原子动态合同规则.md",
       "GAP_probe_v7_validator_rules.md",
-      "GAP_repair_candidate_rules.md"
+      "GAP_repair_candidate_rules.md",
+      "服务器测试包生成规则_20260815压缩前.md",
+      "生成前必读索引_20260818精简前.md",
+      "会话转接与所有权规则_20260818精简前.md",
+      "整网测试收敛优化专项规则_20260818精简前.md"
     ]
   },
   "invariants": {

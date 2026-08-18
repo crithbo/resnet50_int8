@@ -539,15 +539,12 @@ class TriggeredCausalObservabilityTest(unittest.TestCase):
         index = (
             root / ".agents/rules/生成前必读索引.md"
         ).read_text(encoding="utf-8")
-        rule_id = (
-            "CDA-SERVER-ALWAYS-ON-TRIGGERED-CAUSAL-OBSERVABILITY-001"
-        )
+        rule_id = "CDA-SERVER-DIAGNOSTIC-MODE-001"
         self.assertIn(rule_id, server_rule)
-        self.assertIn(rule_id, optimizer_rule)
-        self.assertIn(rule_id, index)
-        self.assertIn("不是阻断上限", server_rule)
-        self.assertIn("不是硬阻断门", optimizer_rule)
-        self.assertIn("不得删除单轮定位仍需的边界", server_rule)
+        self.assertIn("candidate×boundary", optimizer_rule)
+        self.assertIn("candidate matrix", index)
+        self.assertIn("100,000,000 bytes", server_rule)
+        self.assertIn("不是 hard cap", server_rule)
 
     def test_rules_publish_exact_logger_to_parser_format_gate(self) -> None:
         root = DEFAULT_REGISTRY.parents[1]
@@ -557,10 +554,9 @@ class TriggeredCausalObservabilityTest(unittest.TestCase):
         index = (
             root / ".agents/rules/生成前必读索引.md"
         ).read_text(encoding="utf-8")
-        self.assertIn(LOGGER_PARSER_RULE_ID, server_rule)
-        self.assertIn(LOGGER_PARSER_RULE_ID, index)
-        self.assertIn("exact logger", server_rule)
-        self.assertIn("手写无填充", server_rule)
+        self.assertIn("CDA-SERVER-SIGNAL-SAFE-PARTIAL-COLLECTION-001", server_rule)
+        self.assertIn("exact logger 格式", server_rule)
+        self.assertNotIn(LOGGER_PARSER_RULE_ID, index)
 
     def test_rules_publish_multiclass_edge_no_loss_gate(self) -> None:
         root = DEFAULT_REGISTRY.parents[1]
@@ -570,10 +566,9 @@ class TriggeredCausalObservabilityTest(unittest.TestCase):
         index = (
             root / ".agents/rules/生成前必读索引.md"
         ).read_text(encoding="utf-8")
-        self.assertIn(MULTICLASS_EDGE_RULE_ID, server_rule)
-        self.assertIn(MULTICLASS_EDGE_RULE_ID, index)
-        self.assertIn("per-class pending/snapshot", server_rule)
-        self.assertIn("monotonic sticky all-class parse", server_rule)
+        self.assertIn("CDA-SERVER-SIGNAL-SAFE-PARTIAL-COLLECTION-001", server_rule)
+        self.assertIn("多类 edge 同时发生", server_rule)
+        self.assertNotIn(MULTICLASS_EDGE_RULE_ID, index)
 
     def test_registry_and_rules_publish_source_bound_generation_gate(self) -> None:
         registry = load(DEFAULT_REGISTRY)
@@ -589,11 +584,10 @@ class TriggeredCausalObservabilityTest(unittest.TestCase):
         index = (
             ROOT / ".agents/rules/生成前必读索引.md"
         ).read_text(encoding="utf-8")
-        rule_id = "CDA-SERVER-SOURCE-BOUND-GENERATED-OBSERVER-001"
+        rule_id = "CDA-SERVER-DIAGNOSTIC-MODE-001"
         self.assertIn(rule_id, server_rule)
-        self.assertIn(rule_id, index)
-        self.assertIn("BITMAP_ALL_TRUE_CLASSES", server_rule)
-        self.assertIn("source_bound_observer_generation", server_rule)
+        self.assertIn("source-bound", server_rule)
+        self.assertIn("actual signal 非 source-bound", index)
 
 
 if __name__ == "__main__":

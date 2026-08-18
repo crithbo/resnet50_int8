@@ -1,0 +1,130 @@
+{
+  "schema_id": "active-rule-registry-audit-v1",
+  "pass": true,
+  "registry": "contracts/active_rule_registry_v1.json",
+  "registry_sha256": "a688820529f64c4133936c7fa6b7fa4519851e8274a0e2a0e550f9d79b613f08",
+  "active_rule_count": 14,
+  "registered_rule_count": 14,
+  "rule_definition_count": 103,
+  "duplicate_definition_count": 0,
+  "layer_counts": {
+    "router": 1,
+    "core": 4,
+    "primitive": 3,
+    "family": 5,
+    "specialist": 1
+  },
+  "archived_active_rule_count": 13,
+  "history_markdown_count": 21,
+  "entrypoint_receipts": {
+    "stable_entry": {
+      "path": ".agents/agent.md",
+      "bytes": 6100,
+      "sha256": "e86aa57db0aedd41e970b7d0f03fa79f728d74ac916025db1b207907526c4912"
+    },
+    "current_state": {
+      "path": ".agents/plan.md",
+      "bytes": 12227,
+      "sha256": "fdf61ede9b62219efd389d1df0242dfbebb0cdd37dc1ccee5318cb07e833306a"
+    },
+    "router": {
+      "path": ".agents/rules/生成前必读索引.md",
+      "bytes": 5026,
+      "sha256": "67afbf5eb8d0cc5c9ff855ce2ee4f1e9532605c4b31c554cc38f8146283b7e9d"
+    },
+    "history_entry": {
+      "path": ".agents/history/rules/README.md",
+      "bytes": 3928,
+      "sha256": "bf939912ea5ff98ac45e16d591004fe9188e9f18e2098112d6e85fe667c2083c"
+    }
+  },
+  "receipts": [
+    {
+      "path": ".agents/rules/生成前必读索引.md",
+      "bytes": 5026,
+      "sha256": "67afbf5eb8d0cc5c9ff855ce2ee4f1e9532605c4b31c554cc38f8146283b7e9d",
+      "layer": "router"
+    },
+    {
+      "path": ".agents/rules/算子配置规则.md",
+      "bytes": 35238,
+      "sha256": "d9a1dfff44f4b2f9c20ca912e9aa1bc3ff77b29cfe55db86b430cec4dd287819",
+      "layer": "core"
+    },
+    {
+      "path": ".agents/rules/NDP硬件字段语义.md",
+      "bytes": 14974,
+      "sha256": "603d57805bc5a5bdfca7406c402bc94db60c06ea6682493d672abb91671b1055",
+      "layer": "core"
+    },
+    {
+      "path": ".agents/rules/服务器测试包生成规则.md",
+      "bytes": 10506,
+      "sha256": "cff48fa3e32bfcf4202a5ab3bfdc22737e63831c1914d0b2e32d373bee7e215c",
+      "layer": "core"
+    },
+    {
+      "path": ".agents/rules/会话转接与所有权规则.md",
+      "bytes": 4489,
+      "sha256": "29f2784c38c34d919999705d2559744fb28d861714647aafaf456291a1b9125c",
+      "layer": "core"
+    },
+    {
+      "path": ".agents/rules/INT8_SA点积专项规则.md",
+      "bytes": 10387,
+      "sha256": "41c284d27a6f2176567e1d6495147ca625ea9023a93a7a8832c37999c78df927",
+      "layer": "primitive"
+    },
+    {
+      "path": ".agents/rules/精确UINT8量化尾专项规则.md",
+      "bytes": 6934,
+      "sha256": "fef9ebcb1621e74ddd9aef0f936c5c8ce1fcf34c2be9000b1deeb4b11045ea4f",
+      "layer": "primitive"
+    },
+    {
+      "path": ".agents/rules/最小双Stage生命周期规则.md",
+      "bytes": 3298,
+      "sha256": "821b8b04b0e33d0a93e06a3a1bca8307b417bcb63f109cf12414891e9a0bc171",
+      "layer": "primitive"
+    },
+    {
+      "path": ".agents/rules/DequantizeLinear算子配置规则.md",
+      "bytes": 9223,
+      "sha256": "0b237164e712f6f83004affd45678ee301363c72a21968a4d45ce6fe31b3781b",
+      "layer": "family"
+    },
+    {
+      "path": ".agents/rules/Flatten_View算子配置规则.md",
+      "bytes": 3891,
+      "sha256": "c9fe676a9fe79315371da4715f4a67698f8038dfb925f8dab68223b4f805e1ac",
+      "layer": "family"
+    },
+    {
+      "path": ".agents/rules/QLinearAdd算子配置规则.md",
+      "bytes": 16337,
+      "sha256": "54de9e9c7354bc461a8c3411481687f56f11f7be8d81a6e712dd6cdc63352f2b",
+      "layer": "family"
+    },
+    {
+      "path": ".agents/rules/RequantizeUint8算子配置规则.md",
+      "bytes": 7879,
+      "sha256": "0275425ecee387361ebb3358bb6283e3c28ad8311171ce302f7551738d37f88a",
+      "layer": "family"
+    },
+    {
+      "path": ".agents/rules/GAP_int32_mac_bypass_rules.md",
+      "bytes": 6655,
+      "sha256": "d1371706d8e54e16ccf4ffc805eacb23ed23f4ccba81b39442dcbd962178e68b",
+      "layer": "family"
+    },
+    {
+      "path": ".agents/rules/整网测试收敛优化专项规则.md",
+      "bytes": 4606,
+      "sha256": "ab87c1e34c0f8fc5c4e13486e49675214ae3919533d1b9a272f245ab0c78dbb8",
+      "layer": "specialist"
+    }
+  ],
+  "errors": [],
+  "warnings": [],
+  "claim_boundary": "active rule inventory/identity/definition ownership/history exclusion only; does not validate operator math, package runtime, RTL, E4 or E5"
+}

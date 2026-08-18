@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Compile next-fresh server-package rules into a shadow build profile.
+"""Compile server-package changed surfaces into a patch-first build profile.
 
 This v1 tool is intentionally non-mutating: it does not invoke a family
 builder, create a ZIP, rotate storage, run a validator, or change release
@@ -14,6 +14,7 @@ import argparse
 import hashlib
 import json
 import sys
+import zipfile
 from collections import Counter
 from pathlib import Path
 from typing import Any
@@ -118,6 +119,7 @@ def _matching_receipt(
     gate: dict[str, Any],
     surface_sha256: str,
     validator: dict[str, Any] | None,
+    validator_identity_blocking: bool,
 ) -> dict[str, Any] | None:
     for candidate in candidates:
         if candidate.get("gate_id") != gate["gate_id"]:
@@ -132,7 +134,7 @@ def _matching_receipt(
             continue
         if candidate.get("semantic_version") != gate["semantic_version"]:
             continue
-        if gate["validator_identity_required"]:
+        if gate["validator_identity_required"] and validator_identity_blocking:
             if validator is None:
                 continue
             if candidate.get("validator_sha256") != validator.get(
@@ -158,19 +160,42 @@ def compile_profile(
         "OBSERVER_ONLY_WIDE_CAUSAL",
         "TB_VCD_BOUNDED_CAUSAL_CONE",
     }
-    diagnostic_mode = spec.get(
-        "diagnostic_mode", "OBSERVER_ONLY_WIDE_CAUSAL"
-    )
+    diagnostic_mode = spec.get("diagnostic_mode")
+    if diagnostic_mode is None:
+        errors.append(
+            "diagnostic_mode must be explicitly bound; future dynamic dispatch defaults to TB_VCD_BOUNDED_CAUSAL_CONE"
+        )
+        diagnostic_mode = "TB_VCD_BOUNDED_CAUSAL_CONE"
     if diagnostic_mode not in supported_diagnostic_modes:
         errors.append(f"unsupported diagnostic_mode: {diagnostic_mode}")
     vocabulary = set(registry.get("surface_vocabulary", []))
     causal_vocabulary = set(registry.get("causal_blocking_classes", []))
     gates = registry.get("gates", [])
     gate_ids = [gate.get("gate_id") for gate in gates if isinstance(gate, dict)]
+    blocking_allowlist = set(registry.get("blocking_gate_allowlist", gate_ids))
+    unknown_allowlisted = sorted(blocking_allowlist - set(gate_ids))
+    if unknown_allowlisted:
+        errors.append(f"unknown blocking gate ids: {unknown_allowlisted}")
+    transport_sha_blocking = bool(
+        registry.get("input_sha256_is_transport_blocker", True)
+    )
+    validator_identity_blocking = bool(
+        registry.get("validator_identity_is_transport_blocker", True)
+    )
+    if registry.get("non_allowlisted_gate_policy") != "record_only":
+        errors.append("non_allowlisted_gate_policy must be record_only")
+    if registry.get("patch_first") is not True:
+        errors.append("patch_first must be true")
+    if registry.get("full_rebuild_default") is not False:
+        errors.append("full_rebuild_default must be false")
+    if registry.get("unchanged_surface_pass_reuse") is not True:
+        errors.append("unchanged_surface_pass_reuse must be true")
     if registry.get("schema") != "server-package-build-gate-registry-v1":
         errors.append("registry schema mismatch")
-    if registry.get("mode") != "SHADOW_ONLY_NEXT_FRESH":
-        errors.append("registry mode must be SHADOW_ONLY_NEXT_FRESH")
+    if registry.get("mode") != "ACTIVE_PATCH_FIRST_CHANGED_SURFACE":
+        errors.append("registry mode must be ACTIVE_PATCH_FIRST_CHANGED_SURFACE")
+    if registry.get("release_admission_required") is not True:
+        errors.append("release_admission_required must be true")
     if causal_vocabulary != {
         "server_start",
         "actual_input",
@@ -203,7 +228,6 @@ def compile_profile(
             "changed_surface",
             "record_only",
             "first_fresh_after_rule_change",
-            "required_next_fresh_after_activation",
         }:
             errors.append(f"{gate_id}: invalid activation")
         selected_modes = gate.get("selected_modes")
@@ -240,31 +264,29 @@ def compile_profile(
         if enforcement not in {"shadow_only", "required_next_fresh"}:
             errors.append(f"{gate_id}: invalid enforcement")
         if (
-            gate_id == "source_bound_observer_generation"
-            and enforcement != "required_next_fresh"
-        ):
-            errors.append(
-                "source_bound_observer_generation must be required_next_fresh"
-            )
-        if (
             gate_id == "post_sim_return_core"
+            and gate_id in blocking_allowlist
             and enforcement != "required_next_fresh"
         ):
             errors.append("post_sim_return_core must be required_next_fresh")
-        if (
-            gate_id == "first_fresh_extra_audit"
-            and enforcement != "required_next_fresh"
-        ):
-            errors.append("first_fresh_extra_audit must be required_next_fresh")
 
     if spec.get("schema") != "server-package-build-spec-v1":
         errors.append("spec schema mismatch")
-    if spec.get("lifecycle") != "NEXT_FRESH_SUCCESSOR":
-        errors.append("only NEXT_FRESH_SUCCESSOR is accepted")
-    if spec.get("shadow_only") is not True:
-        errors.append("v1 is shadow-only")
-    if spec.get("current_package_impact") is not False:
-        errors.append("current package impact must be false")
+    lifecycle = spec.get("lifecycle")
+    if lifecycle not in {"NEXT_FRESH_SUCCESSOR", "PATCH_UNRUN_REVISION"}:
+        errors.append("lifecycle must be NEXT_FRESH_SUCCESSOR or PATCH_UNRUN_REVISION")
+    if spec.get("shadow_only") is True:
+        warnings.append("shadow_only is deprecated; this profile is active release input")
+    current_package_impact = spec.get("current_package_impact")
+    if not isinstance(current_package_impact, bool):
+        errors.append("current_package_impact must be boolean")
+    if lifecycle == "NEXT_FRESH_SUCCESSOR" and current_package_impact is not False:
+        errors.append("a fresh successor cannot mutate the current package")
+    if lifecycle == "PATCH_UNRUN_REVISION":
+        if current_package_impact is not True:
+            errors.append("an unrun revision patch must declare current_package_impact=true")
+        if spec.get("prior_server_execution") is not False:
+            errors.append("only a package with prior_server_execution=false may be patched")
     for field in ("package_id", "family"):
         if not isinstance(spec.get(field), str) or not spec[field]:
             errors.append(f"{field} must be a non-empty string")
@@ -287,7 +309,13 @@ def compile_profile(
         first_fresh_after_change = False
     prior_audit_receipt = rule_change_epoch.get("prior_audit_receipt")
     normalized_prior_audit: dict[str, Any] | None = None
-    if first_fresh_after_change:
+    first_fresh_gate_blocking = "first_fresh_extra_audit" in blocking_allowlist
+    if not first_fresh_gate_blocking:
+        if prior_audit_receipt is not None:
+            warnings.append(
+                "prior first-fresh audit receipt is provenance-only under the current policy"
+            )
+    elif first_fresh_after_change:
         if prior_audit_receipt is not None:
             errors.append(
                 "first fresh package cannot declare a prior audit receipt"
@@ -373,11 +401,18 @@ def compile_profile(
         if not path.is_file():
             errors.append(f"input file missing: {relative}")
             continue
-        actual = _file_receipt(path, workspace_root)
-        if item.get("bytes") != actual["bytes"]:
-            errors.append(f"input bytes mismatch: {relative}")
-        if item.get("sha256") != actual["sha256"]:
-            errors.append(f"input sha256 mismatch: {relative}")
+        actual = {
+            "path": path.resolve().relative_to(workspace_root.resolve()).as_posix(),
+            "bytes": path.stat().st_size,
+            "sha256": (
+                sha256_file(path) if transport_sha_blocking else None
+            ),
+        }
+        if item.get("bytes") is not None and item.get("bytes") != actual["bytes"]:
+            warnings.append(f"input bytes receipt drift (record-only): {relative}")
+        if transport_sha_blocking and item.get("sha256") != actual["sha256"]:
+            message = f"input sha256 mismatch: {relative}"
+            errors.append(message)
         normalized_inputs.append(
             {
                 **actual,
@@ -406,7 +441,8 @@ def compile_profile(
             continue
         for field in ("validator_sha256", "fixture_sha256"):
             if not is_sha256(identity.get(field)):
-                errors.append(f"{gate_id}.{field} is not sha256")
+                message = f"{gate_id}.{field} is not sha256"
+                (errors if validator_identity_blocking else warnings).append(message)
 
     candidates = spec.get("receipt_reuse_candidates", [])
     if not isinstance(candidates, list):
@@ -425,7 +461,10 @@ def compile_profile(
     if not isinstance(require_all_cheap, bool):
         errors.append("require_all_cheap_checks must be boolean")
         require_all_cheap = False
-    if require_all_cheap:
+    if require_all_cheap and (
+        "source_bound_observer_generation" in blocking_allowlist
+        or "tb_vcd_bounded_causal_cone_final_zip" in blocking_allowlist
+    ):
         supplied_surfaces = {
             item.get("surface")
             for item in normalized_inputs
@@ -488,9 +527,10 @@ def compile_profile(
         if not path.is_file():
             errors.append(f"cheap check report missing: {relative}")
             continue
-        actual_sha = sha256_file(path)
-        if item.get("sha256") != actual_sha:
-            errors.append(f"cheap check report sha256 mismatch: {relative}")
+        actual_sha = sha256_file(path) if transport_sha_blocking else None
+        if transport_sha_blocking and item.get("sha256") != actual_sha:
+            message = f"cheap check report sha256 mismatch: {relative}"
+            errors.append(message)
             continue
         try:
             report = load_json(path)
@@ -512,7 +552,10 @@ def compile_profile(
             continue
         cheap_by_gate[gate_id] = report
         if report["pass"] is not True:
-            if gate.get("activation") == "record_only":
+            if (
+                gate.get("activation") == "record_only"
+                or gate_id not in blocking_allowlist
+            ):
                 warnings.extend(
                     f"{gate_id}: {message}" for message in report_errors
                 )
@@ -535,6 +578,7 @@ def compile_profile(
         gate["gate_id"]
         for gate in gates
         if gate.get("cheap_prebuild_eligible") is True
+        and gate["gate_id"] in blocking_allowlist
         and diagnostic_mode in gate.get(
             "selected_modes", sorted(supported_diagnostic_modes)
         )
@@ -569,7 +613,13 @@ def compile_profile(
             }
         )
         receipt = None
-        if diagnostic_mode not in selected_modes:
+        if gate_id not in blocking_allowlist:
+            disposition = "record_only"
+            reason = (
+                "current fast-closure policy keeps this historical fine-grained "
+                "gate for diagnostics but excludes it from the blocking allowlist"
+            )
+        elif diagnostic_mode not in selected_modes:
             disposition = "not_applicable"
             reason = (
                 f"gate applies only to diagnostic modes {selected_modes}; "
@@ -597,7 +647,11 @@ def compile_profile(
                 and normalized_inputs
             ):
                 receipt = _matching_receipt(
-                    candidates, gate, surface_sha, validator
+                    candidates,
+                    gate,
+                    surface_sha,
+                    validator,
+                    validator_identity_blocking,
                 )
             if receipt is not None:
                 disposition = "receipt_reuse"
@@ -611,7 +665,10 @@ def compile_profile(
                     "affected or always-on gate requires fresh evidence before "
                     "release"
                 )
-                if gate["validator_identity_required"]:
+                if (
+                    gate["validator_identity_required"]
+                    and validator_identity_blocking
+                ):
                     required_validator_gates.append(gate_id)
                     if validator is None:
                         errors.append(
@@ -639,9 +696,11 @@ def compile_profile(
                 "phase": gate["phase"],
                 "disposition": disposition,
                 "reason": reason,
-                "causal_blocking_classes": gate[
-                    "causal_blocking_classes"
-                ],
+                "causal_blocking_classes": (
+                    gate["causal_blocking_classes"]
+                    if disposition in {"blocking_applicable", "receipt_reuse"}
+                    else []
+                ),
                 "blocking_effect": gate["blocking_effect"],
                 "execution_group": gate["execution_group"],
                 "enforcement": gate.get("enforcement", "shadow_only"),
@@ -659,7 +718,7 @@ def compile_profile(
     }
     return {
         "schema": "server-package-build-profile-v1",
-        "mode": "SHADOW_ONLY_NEXT_FRESH",
+        "mode": "ACTIVE_PATCH_FIRST_CHANGED_SURFACE_V3",
         "package_id": spec.get("package_id", ""),
         "family": spec.get("family", ""),
         "lifecycle": spec.get("lifecycle", ""),
@@ -711,57 +770,199 @@ def compile_profile(
                 gate["gate_id"]
                 for gate in gates
                 if gate.get("execution_group") == "final_zip_release_driver"
+                and gate["gate_id"] in blocking_allowlist
             ),
             "rebuild_per_single_error_forbidden": True,
-            "final_zip_same_sha_reuses_exact_content_receipt": True,
-            "final_zip_changed_sha_requires_one_fresh_release_driver": True,
+            "unchanged_surfaces_reuse_pass": True,
+            "changed_surfaces_require_one_fresh_release_driver": True,
         },
         "claim_boundary": {
-            "changes_current_package": False,
+            "changes_current_package": bool(current_package_impact),
             "builds_zip": False,
             "runs_family_validator": False,
             "changes_family_release": False,
-            "blocking_promotion_authorized": False,
-            "source_bound_gate_required_next_fresh": True,
-            "post_sim_return_gate_required_next_fresh": True,
-            "first_fresh_extra_audit_required": first_fresh_after_change,
+            "blocking_promotion_authorized": True,
+            "source_bound_gate_required_next_fresh": (
+                "source_bound_observer_generation" in blocking_allowlist
+            ),
+            "post_sim_return_gate_required_next_fresh": (
+                "post_sim_return_core" in blocking_allowlist
+            ),
+            "first_fresh_extra_audit_required": (
+                first_fresh_after_change and first_fresh_gate_blocking
+            ),
         },
     }
 
 
-def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(
-        description=(
-            "Compile a next-fresh shadow build profile; no package is built."
+def admit_release(
+    profile: dict[str, Any],
+    gate_results: dict[str, Any],
+    zip_path: Path,
+    workspace_root: Path,
+) -> dict[str, Any]:
+    """Run the single formal release admission over aggregate gate results."""
+
+    errors: list[str] = []
+    warnings: list[str] = []
+    if profile.get("schema") != "server-package-build-profile-v1":
+        errors.append("profile schema mismatch")
+    if profile.get("mode") != "ACTIVE_PATCH_FIRST_CHANGED_SURFACE_V3":
+        errors.append("profile is not active patch-first mode")
+    if profile.get("contract_valid") is not True:
+        errors.append("build profile contract is not valid")
+    if gate_results.get("schema") != "server-package-gate-results-v1":
+        errors.append("gate-results schema mismatch")
+    if gate_results.get("package_id") != profile.get("package_id"):
+        errors.append("gate-results package identity mismatch")
+
+    results = gate_results.get("results")
+    if not isinstance(results, list):
+        errors.append("gate-results results must be an array")
+        results = []
+    by_gate: dict[str, dict[str, Any]] = {}
+    for index, item in enumerate(results):
+        if not isinstance(item, dict):
+            errors.append(f"results[{index}] must be an object")
+            continue
+        gate_id = item.get("gate_id")
+        if not isinstance(gate_id, str) or not gate_id:
+            errors.append(f"results[{index}].gate_id is invalid")
+            continue
+        if gate_id in by_gate:
+            errors.append(f"duplicate gate result: {gate_id}")
+            continue
+        if not isinstance(item.get("pass"), bool):
+            errors.append(f"gate result pass is not boolean: {gate_id}")
+            continue
+        for field in ("errors", "warnings"):
+            value = item.get(field, [])
+            if not isinstance(value, list) or not all(isinstance(entry, str) for entry in value):
+                errors.append(f"gate result {field} is invalid: {gate_id}")
+        by_gate[gate_id] = item
+
+    dispositions = profile.get("gate_dispositions", [])
+    known = {
+        item.get("gate_id")
+        for item in dispositions
+        if isinstance(item, dict) and isinstance(item.get("gate_id"), str)
+    }
+    for gate_id in sorted(set(by_gate) - known):
+        errors.append(f"unknown gate result: {gate_id}")
+    checked: list[dict[str, Any]] = []
+    for item in dispositions:
+        if not isinstance(item, dict):
+            errors.append("profile gate disposition is invalid")
+            continue
+        gate_id = item.get("gate_id")
+        disposition = item.get("disposition")
+        result = by_gate.get(gate_id)
+        if disposition == "blocking_applicable":
+            if result is None:
+                errors.append(f"missing blocking gate result: {gate_id}")
+            elif result.get("pass") is not True:
+                messages = result.get("errors", []) or ["gate returned pass=false"]
+                errors.extend(f"{gate_id}: {message}" for message in messages)
+        elif disposition == "record_only" and result is not None:
+            if result.get("pass") is not True:
+                messages = result.get("errors", []) or ["record-only gate returned pass=false"]
+                warnings.extend(f"{gate_id}: {message}" for message in messages)
+        if result is not None:
+            warnings.extend(
+                f"{gate_id}: {message}" for message in result.get("warnings", [])
+            )
+        checked.append(
+            {
+                "gate_id": gate_id,
+                "disposition": disposition,
+                "fresh_result_supplied": result is not None,
+                "pass": result.get("pass") if result is not None else None,
+            }
         )
-    )
-    parser.add_argument("command", choices=["prepare"])
-    parser.add_argument("--spec", required=True, type=Path)
+
+    try:
+        resolved_zip = zip_path.resolve()
+        resolved_zip.relative_to(workspace_root.resolve())
+        if not resolved_zip.is_file() or resolved_zip.stat().st_size == 0:
+            errors.append("final ZIP is absent or empty")
+        else:
+            with zipfile.ZipFile(resolved_zip) as archive:
+                corrupt = archive.testzip()
+                if corrupt is not None:
+                    errors.append(f"final ZIP CRC failure: {corrupt}")
+                if not archive.namelist():
+                    errors.append("final ZIP has no members")
+    except (ValueError, OSError, zipfile.BadZipFile) as exc:
+        errors.append(f"final ZIP is invalid: {exc}")
+
+    passed = not errors
+    return {
+        "schema": "server-package-release-admission-v1",
+        "pass": passed,
+        "status": "PACKAGE_READY_NOT_RUN" if passed else "PACKAGE_BUILD_FAILED",
+        "package_id": profile.get("package_id", ""),
+        "family": profile.get("family", ""),
+        "lifecycle": profile.get("lifecycle", ""),
+        "zip_path": str(zip_path),
+        "checked_gates": checked,
+        "errors": errors,
+        "warnings": warnings,
+        "claim_boundary": "Local release admission only; it does not upload, run, lease or modify server state.",
+    }
+
+
+def main(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(description="Prepare or admit a patch-first server package.")
+    parser.add_argument("command", choices=["prepare", "admit"])
+    parser.add_argument("--spec", type=Path)
+    parser.add_argument("--profile", type=Path)
+    parser.add_argument("--gate-results", type=Path)
+    parser.add_argument("--zip", type=Path)
     parser.add_argument("--registry", type=Path, default=DEFAULT_REGISTRY)
     parser.add_argument("--workspace-root", type=Path, default=ROOT)
     parser.add_argument("--output", required=True, type=Path)
     args = parser.parse_args(argv)
     workspace = args.workspace_root.resolve()
-    spec = load_json(args.spec.resolve())
-    registry = load_json(args.registry.resolve())
-    profile = compile_profile(spec, registry, workspace)
-    write_json(args.output.resolve(), profile)
-    print(
-        json.dumps(
-            {
-                "schema": profile["schema"],
-                "mode": profile["mode"],
-                "contract_valid": profile["contract_valid"],
-                "error_count": len(profile["preflight"]["errors"]),
-                "warning_count": len(profile["preflight"]["warnings"]),
-                "cache_plan": profile["cache_plan"],
-                "output": str(args.output.resolve()),
-            },
-            ensure_ascii=False,
-            sort_keys=True,
+    if args.command == "prepare":
+        if args.spec is None:
+            parser.error("prepare requires --spec")
+        spec = load_json(args.spec.resolve())
+        registry = load_json(args.registry.resolve())
+        profile = compile_profile(spec, registry, workspace)
+        write_json(args.output.resolve(), profile)
+        summary = {
+            "schema": profile["schema"],
+            "mode": profile["mode"],
+            "contract_valid": profile["contract_valid"],
+            "error_count": len(profile["preflight"]["errors"]),
+            "warning_count": len(profile["preflight"]["warnings"]),
+            "cache_plan": profile["cache_plan"],
+            "output": str(args.output.resolve()),
+        }
+        exit_code = 0 if profile["contract_valid"] else 1
+    else:
+        if args.profile is None or args.gate_results is None or args.zip is None:
+            parser.error("admit requires --profile, --gate-results and --zip")
+        admission = admit_release(
+            load_json(args.profile.resolve()),
+            load_json(args.gate_results.resolve()),
+            args.zip,
+            workspace,
         )
+        write_json(args.output.resolve(), admission)
+        summary = {
+            "schema": admission["schema"],
+            "pass": admission["pass"],
+            "status": admission["status"],
+            "error_count": len(admission["errors"]),
+            "warning_count": len(admission["warnings"]),
+            "output": str(args.output.resolve()),
+        }
+        exit_code = 0 if admission["pass"] else 1
+    print(
+        json.dumps(summary, ensure_ascii=False, sort_keys=True)
     )
-    return 0 if profile["contract_valid"] else 1
+    return exit_code
 
 
 if __name__ == "__main__":

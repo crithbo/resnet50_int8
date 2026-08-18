@@ -9,7 +9,6 @@
     "registry_epoch",
     "mainline_role_id",
     "roles",
-    "active_rule_receipts",
     "claim_boundary"
   ],
   "properties": {
@@ -23,7 +22,7 @@
     },
     "active_rule_receipts": {
       "type": "array",
-      "minItems": 3,
+      "minItems": 1,
       "items": {"$ref": "#/$defs/fileReceipt"}
     },
     "claim_boundary": {"type": "string", "minLength": 1}
@@ -46,12 +45,16 @@
     "fileReceipt": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["path", "bytes", "sha256"],
+      "required": ["path"],
       "properties": {
         "path": {"$ref": "#/$defs/safeRelativePath"},
         "bytes": {"type": "integer", "minimum": 0},
         "sha256": {"$ref": "#/$defs/sha256"}
-      }
+      },
+      "oneOf": [
+        {"required": ["path"], "not": {"anyOf": [{"required": ["bytes"]}, {"required": ["sha256"]}]}},
+        {"required": ["path", "bytes", "sha256"]}
+      ]
     },
     "taskPointer": {
       "type": "object",
@@ -170,4 +173,3 @@
     }
   }
 }
-

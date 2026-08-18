@@ -1,6 +1,6 @@
 ---
 name: resnet50-server-package-flow
-description: Orchestrate ResNet50 INT8 family-task routing, server-package generation, final-ZIP auditing, formal-return analysis, and incident maintenance using current owner/build registries and fail-closed hard gates. Use whenever Codex dispatches work to a registered family owner, creates or changes a package/runner/observer/optional TB VCD/return/successor, analyzes a formal return, or reviews a package incident. Do not use it to authorize server runs, functional RTL changes, or numeric/config changes.
+description: Orchestrate ResNet50 INT8 family routing, patch-first server-package generation, changed-surface gate reuse, formal-return analysis, and incident maintenance. Use whenever Codex dispatches a registered family, builds or patches a package/runner/observer/optional TB VCD/return, analyzes a return, or designs a successor. Do not use it to authorize server runs, functional RTL changes, or numeric/config changes.
 ---
 
 # ResNet50 Server Package Flow
@@ -9,15 +9,15 @@ Use this Skill as a thin workflow over current project rules and machine gates. 
 
 ## Establish the current control plane
 
-1. Read completely and record path, bytes, SHA-256, reason, and read time for:
+1. Read completely once per task and record path plus reason for:
    - `.agents/agent.md`
    - `.agents/plan.md`
    - `.agents/rules/生成前必读索引.md`
    - `contracts/active_rule_registry_v1.json`
    - `contracts/server_package_build_gate_registry_v1.json`
-2. Resolve the current role and owner from `contracts/current_session_owner_registry_v1.json` when present.
+2. Resolve the current role and owner from `contracts/current_session_owner_registry_v1.json`; a missing current registry is a takeover blocker. A fresh session/model also runs `tools/validate_project_takeover_readiness.py` before writing.
 3. Read only the role row and changed-surface rules selected by the index. For package work this always includes `.agents/rules/服务器测试包生成规则.md` and the actual server-entry README.
-4. Do not read `.agents/history/rules/` unless the task explicitly needs provenance. Historical text never authorizes generation or release.
+4. Do not read `.agents/history/rules/` unless the task explicitly needs provenance. Historical text never authorizes generation or release. File digests are optional provenance unless an actual input consumer explicitly requires them.
 
 ## Route registered family work
 
@@ -32,7 +32,7 @@ Use this Skill as a thin workflow over current project rules and machine gates. 
 ### Build or modify a package
 
 1. Freeze target family, package identity, input/config/workload/RTL identities, selected diagnostic mode, changed surface, authorization boundary, and exact family-dispatch binding. Missing dispatch binding or mode authority is blocking; do not fall back to a default.
-2. Compile a build profile from the current gate registry. Every disposition must be exactly one of:
+2. Compile the active build profile once with `python tools/server_package_pipeline.py prepare --spec <spec.json> --output <profile.json>`. Every disposition must be exactly one of:
    - `blocking_applicable`
    - `receipt_reuse`
    - `record_only`
@@ -43,12 +43,13 @@ Use this Skill as a thin workflow over current project rules and machine gates. 
    - `state_safety`
    - `return`
    If it cannot, downgrade it to `record_only`.
-4. Run one aggregate cheap-check pass before expensive materialization. Report all findings together; do not rebuild after each error.
-5. Materialize once, freeze the staging tree, then run the staging aggregate gate once.
-6. Create the final ZIP once. Run the registry-selected top-level final-ZIP gate once against a clean exact extraction.
-7. If the rule epoch requires first-fresh audit, run it against that same exact ZIP. Do not substitute builder or staging receipts.
+4. If the current package has not run, prefer a patched revision of its staging/package source. Preserve unchanged config/mapping/bitstream/execplan/SCA/workload; use a fresh successor after execution or return binding.
+5. Run one aggregate cheap-check pass. Fix all findings together, then rerun only gates whose direct consumed surfaces changed; reuse unaffected PASS receipts.
+6. Create or repack the final ZIP once after fixes. Run the registry-selected top-level final-ZIP gate once; do not rebuild once per finding.
+7. If a first-use audit applies, test the new or changed gate against that same final ZIP; do not rerun unrelated historical gates.
 8. Run `tools/validate_server_family_dispatch_mode_binding.py` against the exact final ZIP and current dispatch-time registry/authority receipts. This gate is required only for next-fresh packages after its activation and is not retroactive.
-9. Rotate storage only after all required gates pass. Do not upload, lease, or run a server unless the user explicitly authorizes it.
+9. Aggregate the required gate results and run `python tools/server_package_pipeline.py admit --profile <profile.json> --gate-results <results.json> --zip <candidate.zip> --output <admission.json>`. Only `PACKAGE_READY_NOT_RUN` may enter pending; record-only failures remain warnings.
+10. Rotate storage only after admission. Do not upload, lease, or run a server unless the user explicitly authorizes it. SHA/bytes are cache/provenance only unless an actual consumer explicitly requires them.
 
 ### Analyze a formal return and design a successor
 
@@ -77,8 +78,8 @@ Use this Skill as a thin workflow over current project rules and machine gates. 
 
 - Do not weaken legal workload provenance, runtime-D absent, DUT natural terminal, formal-D conjunction, E4/E5, actual-input identity, or functional RTL authorization.
 - Do not preflight arbitrary server file/tool/provider existence. Locally validate package-owned bytes; on the server run the production command and return the compile/sim core on failure.
-- Keep observer-only as the fallback only when the current dispatch is silent and current plan/user authority does not select another mode. Use package-local TB causal-cone VCD whenever the current dispatch selects it; the default can never override a bound campaign/package decision. Do not restore VPD, FSDB, UCLI direct-VCD, or vendor query paths.
-- Do not mutate current/tested packages or original returns. Use fresh successor identity and repeat-safe exact-owned runtime reset.
+- Never change the mode of a current ready package. For a future new dynamic successor with no contrary user/plan binding, select package-local TB causal-cone VCD; use observer-only when explicitly dispatched. The default can never override a bound campaign/package decision. Do not restore VPD, FSDB, UCLI direct-VCD, or vendor query paths.
+- Do not mutate tested packages or original returns. Unrun local/pending packages are patch-first; executed packages use a fresh successor. Keep repeat-safe exact-owned runtime reset.
 - Do not modify `.agents/plan.md`, public rules, another family, functional RTL, or server state without explicit scope and authorization.
 
 ## Return a machine-verifiable handoff

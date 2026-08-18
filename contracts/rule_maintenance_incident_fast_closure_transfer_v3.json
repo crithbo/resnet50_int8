@@ -1,0 +1,63 @@
+{
+  "schema_id": "rule-maintenance-incident-adjudication-v1",
+  "incident_id": "server-package-fast-closure-transferability-v3",
+  "classification": "RULE_SEMANTIC_ERROR",
+  "evidence": [
+    {
+      "path": "outputs/rule_fast_closure_v2/report.json",
+      "sha256": "a6966fb01607feb88e4c7e6f30ee334f21d807b25aaa9111364392b4c5390dfa"
+    }
+  ],
+  "current_rule_ids": [
+    "CDA-SERVER-PATCH-FIRST-CHANGED-SURFACE-001",
+    "CDA-SERVER-CONTENT-ADDRESSED-GATE-REUSE-001",
+    "CDA-SERVER-FIRST-FRESH-EXTRA-AUDIT-001",
+    "CDA-SESSION-HANDOFF-CAPSULE-CAS-001"
+  ],
+  "current_rule_audit": {
+    "semantic_coverage": "INCORRECT",
+    "implementation_coverage": "ESCAPED",
+    "summary": "Fast patch/reuse semantics are contradicted by later all-SHA/all-first-fresh prose, the compiled gate registry remains shadow-only, and current-disk takeover can pass synthetic tests with no owner registry. These contradictions slow builds without improving server execution reliability."
+  },
+  "action": {
+    "public_rule_change": "REPLACE_OR_NARROW",
+    "hard_gate_change": "FIX_IMPLEMENTATION",
+    "workflow_change": "SKILL_OR_HANDOFF",
+    "text_delta_policy": "REPLACE_MERGE_DELETE_NOT_APPEND_ONLY",
+    "causal_blocking_classes": [
+      "server_start",
+      "actual_input",
+      "state_safety",
+      "return"
+    ],
+    "affected_consumers": [
+      "server package release admission",
+      "current-session takeover readiness",
+      "family package Skill workflow"
+    ],
+    "preserved_sections": [
+      "natural terminal and formal-D conjunction",
+      "actual workload/config/RTL consumer identity",
+      "repeat-safe runner and durable partial return",
+      "no host tensor replay and no unauthorized RTL change"
+    ],
+    "replaced_or_removed_sections": [
+      "shadow-only compiled gate disposition",
+      "unconditional SHA and byte-identity blocking for local transfer",
+      "full first-fresh replay after an unchanged gate already passed",
+      "append-only accident prose duplicated across active rules"
+    ]
+  },
+  "positive_controls": [
+    "an unrun package patch reuses unaffected PASS receipts and reruns only changed blocking surfaces",
+    "the active release command rejects a failed launch/actual-input/state-safety/return gate",
+    "a fresh session can recover current roles and pending packages from current disk without historical SHA receipts"
+  ],
+  "negative_controls": [
+    "record-only transport digest drift does not block release",
+    "a stale or missing current owner registry fails takeover readiness",
+    "a shadow-only registry cannot satisfy active package release admission",
+    "a run-bound or tested package cannot be silently patched in place"
+  ],
+  "claim_boundary": "This adjudication authorizes only rule, shared gate, Skill and handoff-control-plane maintenance. It does not mutate a family package, config, numeric asset, workload, RTL, storage state or server state."
+}

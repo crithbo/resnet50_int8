@@ -170,6 +170,27 @@ class SessionHandoffTests(unittest.TestCase):
                 registry, json.loads(SCHEMAS[0].read_text(encoding="utf-8"))
             )
 
+    def test_lightweight_current_registry_uses_path_only_receipts(self) -> None:
+        registry = self.registry()
+        registry.pop("active_rule_receipts")
+        for role in registry["roles"]:
+            role["current_task"]["pointer"] = {"path": self.task_path}
+            role["latest_task_record"] = {"path": self.task_path}
+        self.assertEqual(validate_registry(registry, self.root), [])
+        if jsonschema is not None:
+            jsonschema.validate(
+                registry, json.loads(SCHEMAS[0].read_text(encoding="utf-8"))
+            )
+
+    def test_partial_digest_receipt_fails_closed(self) -> None:
+        registry = self.registry()
+        registry["roles"][0]["current_task"]["pointer"] = {
+            "path": self.task_path,
+            "sha256": "0" * 64,
+        }
+        errors = validate_registry(registry, self.root)
+        self.assertTrue(any("receipt fields mismatch" in item for item in errors))
+
     def test_duplicate_active_thread_fails_closed(self) -> None:
         bad = self.registry()
         bad["roles"][1]["thread_id"] = bad["roles"][0]["thread_id"]
@@ -291,4 +312,3 @@ class SessionHandoffTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
-

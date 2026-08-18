@@ -1,0 +1,32 @@
+{
+  "schema_id": "rule-maintenance-incident-adjudication-v1",
+  "incident_id": "shared-final-zip-implementation-escape-example",
+  "classification": "IMPLEMENTATION_ESCAPE",
+  "evidence": [
+    {
+      "path": "fixtures/shared-final-zip-negative.json",
+      "sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+    }
+  ],
+  "current_rule_ids": [
+    "CDA-SERVER-FINAL-ZIP-RULE-SELF-AUDIT-001"
+  ],
+  "current_rule_audit": {
+    "semantic_coverage": "COVERED",
+    "implementation_coverage": "ESCAPED",
+    "summary": "The stable rule already requires exact final-ZIP recomputation; the validator missed one consumer."
+  },
+  "action": {
+    "public_rule_change": "NONE",
+    "hard_gate_change": "FIX_IMPLEMENTATION",
+    "workflow_change": "NONE",
+    "text_delta_policy": "REPLACE_MERGE_DELETE_NOT_APPEND_ONLY",
+    "causal_blocking_classes": ["server_start"],
+    "affected_consumers": ["shared final-ZIP validator"],
+    "preserved_sections": ["CDA-SERVER-FINAL-ZIP-RULE-SELF-AUDIT-001"],
+    "replaced_or_removed_sections": []
+  },
+  "positive_controls": ["exact final ZIP passes after independent recomputation"],
+  "negative_controls": ["mutated final ZIP consumer fails closed"],
+  "claim_boundary": "Example contract only; it does not adjudicate a current package or authorize a server action."
+}

@@ -92,9 +92,9 @@ class ServerRuntimePreflightNativeFlowTests(unittest.TestCase):
         server_rule = (ROOT / ".agents/rules/服务器测试包生成规则.md").read_text(encoding="utf-8")
         index = (ROOT / ".agents/rules/生成前必读索引.md").read_text(encoding="utf-8")
         optimizer = (ROOT / ".agents/rules/整网测试收敛优化专项规则.md").read_text(encoding="utf-8")
-        self.assertIn("不再是 current/next-fresh blocking gate", server_rule)
+        self.assertIn("本地不得因服务器工具、license", server_rule)
         self.assertNotIn("必须读取`contracts/server_compile_environment_gate_dispatch_v1.json`", index)
-        self.assertIn("禁止 `test/stat/find/hash/git/command -v`", optimizer)
+        self.assertIn("SHA/format/style/provenance", optimizer)
 
     def test_native_failure_review_is_post_failure_and_unknown_safe(self) -> None:
         dispatch = json.loads(DISPATCH.read_text(encoding="utf-8"))

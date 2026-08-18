@@ -1,6 +1,6 @@
 # 停用规则统一入口
 
-最后更新：2026-08-11
+最后更新：2026-08-18
 
 本目录保存已停用、被取代、异项目或正交化前的规则原文，仅用于 provenance、审计和解释
 旧 task record。它不是活动规则入口：默认会话不得读取这里来生成 JSON、测试包、RTL
@@ -24,6 +24,10 @@ current source/contract，由唯一活动 owner 提交非同义 rule delta，经
 | `DequantizeLinear原子动态合同规则.md` | `resnet50/DequantizeLinear原子动态合同规则.md` | 版本化动态合同，被族规则/服务器规则取代 | `DequantizeLinear算子配置规则.md` + `服务器测试包生成规则.md` |
 | `GAP_probe_v7_validator_rules.md` | `resnet50/GAP_probe_v7_validator_rules.md` | 版本绑定、重复定义 | `GAP_int32_mac_bypass_rules.md` + `服务器测试包生成规则.md` |
 | `GAP_repair_candidate_rules.md` | `resnet50/GAP_repair_candidate_rules.md` | 一次性 repair 授权历史 | current plan + 本轮用户 RTL 授权 + 公共服务器规则 |
+| `服务器测试包生成规则.md`（压缩前） | `服务器测试包生成规则_20260815压缩前.md` | 事故时间线、已取代实现细节与稳定语义混排 | 压缩后的 `服务器测试包生成规则.md` + current gate registry + task records |
+| `生成前必读索引.md`（精简前） | `生成前必读索引_20260818精简前.md` | router 混入具体诊断实现和旧阻断项 | current router + 唯一语义 owner 规则 |
+| `会话转接与所有权规则.md`（精简前） | `会话转接与所有权规则_20260818精简前.md` | 完整 SHA 收据与日常 current pointer 混排 | current 会话规则 + `session_handoff.py` |
+| `整网测试收敛优化专项规则.md`（精简前） | `整网测试收敛优化专项规则_20260818精简前.md` | 历史机制教程和稳定专项职责混排 | current 优化规则 + shared schema/tool/test |
 
 ## 正交化前快照
 
@@ -38,4 +42,3 @@ current source/contract，由唯一活动 owner 提交非同义 rule delta，经
    但不能作为 next-fresh 发布入口。
 3. 历史文件中出现的 `CDA-*` ID 不参加活动唯一性统计，也不覆盖 current 定义。
 4. 归档不删除证据、不改变 plan 状态、不修改 package、RTL、config 或服务器状态。
-

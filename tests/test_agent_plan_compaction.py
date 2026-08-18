@@ -28,11 +28,10 @@ class AgentPlanCompactionTests(unittest.TestCase):
         plan = _text(".agents/plan.md")
         for required in (
             "正式 E4/E5 闭环：`1/78`",
-            "r5_n71_gap_v33_buffer_ag_idx_pair_diag.zip",
-            "r5_n4_hw_v35_rowlc4_bufag_diag.zip",
-            "r5_qadd_n7_split_c_pairmatrix_v29.zip",
-            "r5_n4_df23e4d_p4.zip",
-            "B_MATMUL_NODE0075_SERVER_SELF_CONTAINED_PRODUCER_BARRIER_UNMATERIALIZED",
+            "GAP node0071",
+            "QLinearAdd node0007",
+            "Conv node0004 serialized",
+            "Conv native four-lane",
         ):
             self.assertIn(required, plan)
         for stale in (
@@ -68,6 +67,8 @@ class AgentPlanCompactionTests(unittest.TestCase):
         for level in range(6):
             self.assertNotIn(f"- E{level}：", agent)
         self.assertNotIn("typed request\n→", agent)
+        self.assertIn("resnet50-server-package-flow", agent)
+        self.assertIn("validate_project_takeover_readiness.py", agent)
 
     def test_historical_snapshots_are_exact(self) -> None:
         expected = {

@@ -1,334 +1,128 @@
 {
-  "active_rule_receipts": [
-    {
-      "bytes": 15503,
-      "path": ".agents/rules/生成前必读索引.md",
-      "sha256": "f17b6ef7e4762ee1bd7b209c4f3a4a0d7b285fafdf1fb2fa5bbca2c6c37bef04"
-    },
-    {
-      "bytes": 37680,
-      "path": ".agents/rules/算子配置规则.md",
-      "sha256": "dc5243226bacde799b368d37fb9eb656e6b7e3d33a0a2932ae72ab35415ae3e1"
-    },
-    {
-      "bytes": 14974,
-      "path": ".agents/rules/NDP硬件字段语义.md",
-      "sha256": "603d57805bc5a5bdfca7406c402bc94db60c06ea6682493d672abb91671b1055"
-    },
-    {
-      "bytes": 203949,
-      "path": ".agents/rules/服务器测试包生成规则.md",
-      "sha256": "7d7dbe6e92f60893d461c615622598740ca09f9a3fca10b01e18d950d0f64ec7"
-    },
-    {
-      "bytes": 8677,
-      "path": ".agents/rules/会话转接与所有权规则.md",
-      "sha256": "9e3859dff32de42f0964ff3038ab7b78c84d142a24016ee552c706ef01e529b9"
-    },
-    {
-      "bytes": 10387,
-      "path": ".agents/rules/INT8_SA点积专项规则.md",
-      "sha256": "41c284d27a6f2176567e1d6495147ca625ea9023a93a7a8832c37999c78df927"
-    },
-    {
-      "bytes": 6934,
-      "path": ".agents/rules/精确UINT8量化尾专项规则.md",
-      "sha256": "fef9ebcb1621e74ddd9aef0f936c5c8ce1fcf34c2be9000b1deeb4b11045ea4f"
-    },
-    {
-      "bytes": 3298,
-      "path": ".agents/rules/最小双Stage生命周期规则.md",
-      "sha256": "821b8b04b0e33d0a93e06a3a1bca8307b417bcb63f109cf12414891e9a0bc171"
-    },
-    {
-      "bytes": 9223,
-      "path": ".agents/rules/DequantizeLinear算子配置规则.md",
-      "sha256": "0b237164e712f6f83004affd45678ee301363c72a21968a4d45ce6fe31b3781b"
-    },
-    {
-      "bytes": 3891,
-      "path": ".agents/rules/Flatten_View算子配置规则.md",
-      "sha256": "c9fe676a9fe79315371da4715f4a67698f8038dfb925f8dab68223b4f805e1ac"
-    },
-    {
-      "bytes": 16337,
-      "path": ".agents/rules/QLinearAdd算子配置规则.md",
-      "sha256": "54de9e9c7354bc461a8c3411481687f56f11f7be8d81a6e712dd6cdc63352f2b"
-    },
-    {
-      "bytes": 7879,
-      "path": ".agents/rules/RequantizeUint8算子配置规则.md",
-      "sha256": "0275425ecee387361ebb3358bb6283e3c28ad8311171ce302f7551738d37f88a"
-    },
-    {
-      "bytes": 8116,
-      "path": ".agents/rules/GAP_int32_mac_bypass_rules.md",
-      "sha256": "4c3a88b8c6967812b0b64a550bb92a45117106f34996102335dc26fa1a211f8b"
-    },
-    {
-      "bytes": 25507,
-      "path": ".agents/rules/整网测试收敛优化专项规则.md",
-      "sha256": "cda10e17da922f2bdd3e809dc8ffdfe54efccf71734cf84995bda81494ae4381"
-    }
-  ],
-  "claim_boundary": "Exclusive local session ownership and task routing only; no server lease/run/upload, RTL/config/numeric change, or E4/E5 claim.",
+  "schema": "session-owner-registry-v1",
+  "registry_epoch": 7,
   "mainline_role_id": "mainline.control",
-  "registry_epoch": 6,
   "roles": [
     {
-      "current_task": {
-        "next_action": "hold exact serialized v106 and QAdd v80 pending; await separate user upload/server-run authorization, GAP equivalent-C-path authorization, or functional-fix authorization",
-        "objective": "preserve the independently audited serialized v106 and QAdd v80 packages, childless-procfs and two-phase return, QAdd source-bound 15000-second selected wall with 86400-second absolute maximum and semantic-v8 compatibility, and validated GAP/native root dispositions",
-        "pointer": {
-          "bytes": 2789,
-          "path": ".agents/task_records/20260818_v106_v80_storage_and_control_plane_sync.md",
-          "sha256": "a95915f242e14629f2d7c4a2b6b538778750c7ad504f72de04695543eb7abbb6"
-        },
-        "status": "ACTIVE"
-      },
-      "forbidden_scope": [
-        "rtl/",
-        "artifacts/operator_config_validation/r5-server-test-packages/pending/"
-      ],
-      "in_flight": {
-        "lease_id": null,
-        "package": null,
-        "return_zip": null,
-        "server_root": null,
-        "state": "NONE"
-      },
-      "latest_task_record": {
-        "bytes": 2789,
-        "path": ".agents/task_records/20260818_v106_v80_storage_and_control_plane_sync.md",
-        "sha256": "a95915f242e14629f2d7c4a2b6b538778750c7ad504f72de04695543eb7abbb6"
-      },
-      "owner_epoch": 2,
       "role_id": "mainline.control",
       "role_kind": "MAINLINE",
-      "scope": "project control plane, plan/rule adjudication and dispatch",
-      "status": "ACTIVE",
+      "scope": "project control plane, current plan, owner routing and release adjudication",
       "thread_id": "019ff027-e7db-72a3-b282-cfad8708da05",
-      "write_scope": [
-        ".agents/plan.md",
-        ".agents/rules/",
-        "contracts/current_session_owner_registry_v1.json",
-        ".agents/task_records/"
-      ]
+      "owner_epoch": 2,
+      "status": "ACTIVE",
+      "write_scope": [".agents/plan.md", "contracts/current_session_owner_registry_v1.json", "artifacts/operator_config_validation/r5-server-test-packages/"],
+      "forbidden_scope": ["functional RTL without user authorization", "server action without user authorization"],
+      "current_task": {
+        "status": "ACTIVE",
+        "objective": "preserve the two exact pending packages and route the shortest next whole-network closure action",
+        "next_action": "await user server-run authorization for serialized v106 and QAdd v80, or explicit authorization for the validated GAP/native fixes",
+        "pointer": {"path": ".agents/task_records/20260818_v106_v80_storage_and_control_plane_sync.md"}
+      },
+      "latest_task_record": {"path": ".agents/task_records/20260818_mainline_package_build_slowness_rule_skill_audit_v1.md"},
+      "in_flight": {"state": "NONE", "server_root": null, "lease_id": null, "package": null, "return_zip": null}
     },
     {
-      "current_task": {
-        "next_action": "await explicit equivalent C-path configuration-extension authorization; do not return to the original MSE0 path or initiate RTL repair without new authorization",
-        "objective": "preserve the validated MSE3/Buffer4 stale-index FIFO root and the finding that the current v72/v73 end-to-end bypass is not functional",
-        "pointer": {
-          "bytes": 3055,
-          "path": ".agents/task_records/20260817_v99_gapv73_qaddv69_returns_guardv2_and_successor_storage_acceptance.md",
-          "sha256": "90b089721da3219102eab7f15da6e60ecf187dbb93401b700b359b7dfb6969c3"
-        },
-        "status": "ACTIVE"
-      },
-      "forbidden_scope": [
-        ".agents/plan.md",
-        ".agents/rules/",
-        "rtl/"
-      ],
-      "in_flight": {
-        "lease_id": null,
-        "package": null,
-        "return_zip": null,
-        "server_root": "/home/panqs/ndp/NDP_copy02",
-        "state": "WAIT_EQUIVALENT_C_PATH_CONFIG_EXTENSION_AUTHORIZATION"
-      },
-      "latest_task_record": {
-        "bytes": 3055,
-        "path": ".agents/task_records/20260817_v99_gapv73_qaddv69_returns_guardv2_and_successor_storage_acceptance.md",
-        "sha256": "90b089721da3219102eab7f15da6e60ecf187dbb93401b700b359b7dfb6969c3"
-      },
-      "owner_epoch": 2,
       "role_id": "family.gap",
       "role_kind": "FAMILY_OWNER",
-      "scope": "GlobalAveragePool node0071 family",
-      "status": "ACTIVE",
+      "scope": "GAP node0071 family diagnosis and successor ownership",
       "thread_id": "019ff02d-8225-7d21-9779-e46ce4130572",
-      "write_scope": [
-        "artifacts/operator_config_validation/",
-        "outputs/"
-      ]
+      "owner_epoch": 2,
+      "status": "ACTIVE",
+      "write_scope": ["GAP family configs, reports and unrun successor assets"],
+      "forbidden_scope": ["other families", ".agents/plan.md", "functional RTL without user authorization", "server action"],
+      "current_task": {
+        "status": "WAIT_USER_DECISION",
+        "objective": "preserve the validated MSE3/Buffer4 stale-index FIFO root",
+        "next_action": "await equivalent C-path configuration-extension authorization",
+        "pointer": {"path": ".agents/task_records/20260817_v99_gapv73_qaddv69_returns_guardv2_and_successor_storage_acceptance.md"}
+      },
+      "latest_task_record": {"path": ".agents/task_records/20260817_v99_gapv73_qaddv69_returns_guardv2_and_successor_storage_acceptance.md"},
+      "in_flight": {"state": "NONE", "server_root": null, "lease_id": null, "package": null, "return_zip": null}
     },
     {
-      "current_task": {
-        "next_action": "hold exact v106 pending and await separate user upload/server-run authorization; consume only its exact formal return",
-        "objective": "dynamically adjudicate the frozen LC9 to LC3 tuple10 and downstream completion target under accept-qualified counters, a single 3660-second authority, canonical childless-procfs PID-plus-start-time guard and two-phase durable return",
-        "pointer": {
-          "bytes": 2789,
-          "path": ".agents/task_records/20260818_v106_v80_storage_and_control_plane_sync.md",
-          "sha256": "a95915f242e14629f2d7c4a2b6b538778750c7ad504f72de04695543eb7abbb6"
-        },
-        "status": "ACTIVE"
-      },
-      "forbidden_scope": [
-        ".agents/plan.md",
-        ".agents/rules/",
-        "rtl/"
-      ],
-      "in_flight": {
-        "lease_id": null,
-        "package": {
-          "bytes": 5991155,
-          "path": "artifacts/operator_config_validation/r5-server-test-packages/pending/r5_n4_hw_v106b_lcdup_return2pflight.zip",
-          "sha256": "200382857c0310fd4599363564f7e08f0f268c88468e09620deaf85ed81eb116"
-        },
-        "return_zip": null,
-        "server_root": "/home/panqs/ndp/NDP_copy01",
-        "state": "PACKAGE_READY_NOT_RUN"
-      },
-      "latest_task_record": {
-        "bytes": 2789,
-        "path": ".agents/task_records/20260818_v106_v80_storage_and_control_plane_sync.md",
-        "sha256": "a95915f242e14629f2d7c4a2b6b538778750c7ad504f72de04695543eb7abbb6"
-      },
-      "owner_epoch": 2,
       "role_id": "family.conv.serialized",
       "role_kind": "FAMILY_OWNER",
-      "scope": "serialized Conv node0004 family",
-      "status": "ACTIVE",
+      "scope": "serialized Conv node0004 diagnosis and successor ownership",
       "thread_id": "019ff02d-901b-7f70-a9da-f54e268b5bbe",
-      "write_scope": [
-        "artifacts/operator_config_validation/",
-        "outputs/conv_node0004_",
-        "tools/",
-        "tests/"
-      ]
+      "owner_epoch": 2,
+      "status": "ACTIVE",
+      "write_scope": ["serialized Conv family configs, reports and unrun successor assets"],
+      "forbidden_scope": ["other families", ".agents/plan.md", "functional RTL without user authorization", "server action"],
+      "current_task": {
+        "status": "PACKAGE_READY_NOT_RUN",
+        "objective": "dynamically test frozen LC9 to LC3 tuple10 with durable two-phase return",
+        "next_action": "await user server-run authorization and consume only the exact v106 formal return",
+        "pointer": {"path": "outputs/conv_node0004_v106b_lcdup_return2pflight_release1/mainline_package_receipt.json"}
+      },
+      "latest_task_record": {"path": "outputs/conv_node0004_v106b_lcdup_return2pflight_release1/mainline_package_receipt.json"},
+      "in_flight": {
+        "state": "PACKAGE_READY_NOT_RUN",
+        "server_root": null,
+        "lease_id": null,
+        "package": {"path": "artifacts/operator_config_validation/r5-server-test-packages/pending/r5_n4_hw_v106b_lcdup_return2pflight.zip"},
+        "return_zip": null
+      }
     },
     {
-      "current_task": {
-        "next_action": "hold the validated input1 upstream tag/epoch undersupply root with no pending diagnostic package; await functional fix authorization",
-        "objective": "preserve the exact one-tuple input1 buffer-tag undersupply root and its excluded internal Memory_AG alternatives",
-        "pointer": {
-          "bytes": 4427,
-          "path": ".agents/task_records/20260815_p52_v97_gapv71_validated_roots_and_storage_acceptance.md",
-          "sha256": "b55ce71f608fe488365401fdf7f2a1aeb72bc4a9b0c3d0e5ff574f8ea1c64c1b"
-        },
-        "status": "ACTIVE"
-      },
-      "forbidden_scope": [
-        ".agents/plan.md",
-        ".agents/rules/",
-        "rtl/"
-      ],
-      "in_flight": {
-        "lease_id": null,
-        "package": null,
-        "return_zip": null,
-        "server_root": "/home/panqs/ndp/NDP_copy01",
-        "state": "VALIDATED_ROOT_CAUSE_WAIT_FUNCTIONAL_FIX_AUTHORIZATION"
-      },
-      "latest_task_record": {
-        "bytes": 4427,
-        "path": ".agents/task_records/20260815_p52_v97_gapv71_validated_roots_and_storage_acceptance.md",
-        "sha256": "b55ce71f608fe488365401fdf7f2a1aeb72bc4a9b0c3d0e5ff574f8ea1c64c1b"
-      },
-      "owner_epoch": 2,
       "role_id": "family.conv.native",
       "role_kind": "FAMILY_OWNER",
-      "scope": "native four-lane Conv node0004 family",
-      "status": "ACTIVE",
+      "scope": "native Conv four-lane diagnosis and successor ownership",
       "thread_id": "019ff02d-974d-7c72-a4d5-de8dbf4ae60c",
-      "write_scope": [
-        "artifacts/operator_config_validation/",
-        "outputs/conv_native_",
-        "tools/",
-        "tests/"
-      ]
+      "owner_epoch": 2,
+      "status": "ACTIVE",
+      "write_scope": ["native Conv family configs, reports and unrun successor assets"],
+      "forbidden_scope": ["other families", ".agents/plan.md", "functional RTL without user authorization", "server action"],
+      "current_task": {
+        "status": "WAIT_RTL_FIX",
+        "objective": "preserve the exact input1 buffer-tag undersupply root",
+        "next_action": "await explicit functional-fix authorization",
+        "pointer": {"path": ".agents/task_records/20260815_p52_v97_gapv71_validated_roots_and_storage_acceptance.md"}
+      },
+      "latest_task_record": {"path": ".agents/task_records/20260815_p52_v97_gapv71_validated_roots_and_storage_acceptance.md"},
+      "in_flight": {"state": "NONE", "server_root": null, "lease_id": null, "package": null, "return_zip": null}
     },
     {
-      "current_task": {
-        "next_action": "hold exact v80 pending and await separate user upload/server-run authorization; then use the source-bound 15000-second selected wall to complete ordered complementary 4/2 requests, output, terminal and formal-D",
-        "objective": "execute the exact 4/2 target under semantic-v8 predecessor compatibility, selected wall 15000 seconds, absolute maximum 86400 seconds, qualified progress and fresh post-KILL reap deadlines",
-        "pointer": {
-          "bytes": 2789,
-          "path": ".agents/task_records/20260818_v106_v80_storage_and_control_plane_sync.md",
-          "sha256": "a95915f242e14629f2d7c4a2b6b538778750c7ad504f72de04695543eb7abbb6"
-        },
-        "status": "ACTIVE"
-      },
-      "forbidden_scope": [
-        ".agents/plan.md",
-        ".agents/rules/",
-        "rtl/"
-      ],
-      "in_flight": {
-        "lease_id": null,
-        "package": {
-          "bytes": 108884698,
-          "path": "artifacts/operator_config_validation/r5-server-test-packages/pending/r5_qadd_n7_tr_v80_w15kqf.zip",
-          "sha256": "2353572204ef16ccf9142e73bcbc3822c62a28d4c8115fcbae2db195a1f029d9"
-        },
-        "return_zip": null,
-        "server_root": "/home/panqs/ndp/NDP_copy04",
-        "state": "PACKAGE_READY_NOT_RUN"
-      },
-      "latest_task_record": {
-        "bytes": 2789,
-        "path": ".agents/task_records/20260818_v106_v80_storage_and_control_plane_sync.md",
-        "sha256": "a95915f242e14629f2d7c4a2b6b538778750c7ad504f72de04695543eb7abbb6"
-      },
-      "owner_epoch": 2,
       "role_id": "family.qlinearadd",
       "role_kind": "FAMILY_OWNER",
-      "scope": "QLinearAdd node0007 family",
-      "status": "ACTIVE",
+      "scope": "QLinearAdd node0007 family diagnosis and successor ownership",
       "thread_id": "019ff02d-9e93-7d61-8c98-c928fdea157c",
-      "write_scope": [
-        "artifacts/operator_config_validation/",
-        "outputs/qlinearadd_",
-        "tools/",
-        "tests/"
-      ]
+      "owner_epoch": 2,
+      "status": "ACTIVE",
+      "write_scope": ["QLinearAdd family configs, reports and unrun successor assets"],
+      "forbidden_scope": ["other families", ".agents/plan.md", "functional RTL without user authorization", "server action"],
+      "current_task": {
+        "status": "PACKAGE_READY_NOT_RUN",
+        "objective": "execute the exact 4/2 target with measured 15000-second admission",
+        "next_action": "await user server-run authorization and consume only the exact v80 formal return",
+        "pointer": {"path": ".agents/task_records/20260818_v106_v80_storage_and_control_plane_sync.md"}
+      },
+      "latest_task_record": {"path": ".agents/task_records/20260818_v106_v80_storage_and_control_plane_sync.md"},
+      "in_flight": {
+        "state": "PACKAGE_READY_NOT_RUN",
+        "server_root": null,
+        "lease_id": null,
+        "package": {"path": "artifacts/operator_config_validation/r5-server-test-packages/pending/r5_qadd_n7_tr_v80_w15kqf.zip"},
+        "return_zip": null
+      }
     },
     {
-      "current_task": {
-        "next_action": "maintain childless-procfs process identity, TB-VCD semantic-v8 predecessor compatibility, source-bound selected/absolute runtime admission, release cross-member consistency and package Python/schema runtime for later next-fresh packages; do not build family packages or perform server action",
-        "objective": "keep PID-plus-start-time ownership, durable two-phase return, strict predecessor identity/evolution, qualified progress, shared exit authority and bounded measured runtime admission active while observer remains default",
-        "pointer": {
-          "bytes": 2584,
-          "path": ".agents/task_records/20260818_mainline_package_build_slowness_rule_skill_audit_v1.md",
-          "sha256": "bf86b3fc9c048333b7ec081d351c2f056f546173fb47657f5e221ca9d399e5f1"
-        },
-        "status": "ACTIVE"
-      },
-      "forbidden_scope": [
-        ".agents/plan.md",
-        "rtl/",
-        "artifacts/operator_config_validation/r5-server-test-packages/pending/"
-      ],
-      "in_flight": {
-        "lease_id": null,
-        "package": null,
-        "return_zip": null,
-        "server_root": null,
-        "state": "NONE"
-      },
-      "latest_task_record": {
-        "bytes": 2584,
-        "path": ".agents/task_records/20260818_mainline_package_build_slowness_rule_skill_audit_v1.md",
-        "sha256": "bf86b3fc9c048333b7ec081d351c2f056f546173fb47657f5e221ca9d399e5f1"
-      },
-      "owner_epoch": 1,
       "role_id": "optimizer.whole-network",
       "role_kind": "SPECIALIST_OWNER",
-      "scope": "whole-network convergence and shared shadow validator",
-      "status": "ACTIVE",
+      "scope": "whole-network convergence, shared package gate and rule maintenance",
       "thread_id": "019fd276-14c5-7800-94db-87ebfb9ce632",
-      "write_scope": [
-        "artifacts/operator_config_validation/r5-whole-network-",
-        "outputs/",
-        "tools/",
-        "schemas/",
-        "contracts/",
-        "tests/",
-        "fixtures/"
-      ]
+      "owner_epoch": 1,
+      "status": "ACTIVE",
+      "write_scope": ["shared tools, schemas, contracts, tests and optimizer reports"],
+      "forbidden_scope": ["family packages", ".agents/plan.md except explicit user authorization", "functional RTL", "server action"],
+      "current_task": {
+        "status": "ACTIVE",
+        "objective": "make patch-first release admission and current-disk takeover executable and compact",
+        "next_action": "finish shared gate, rule and Skill compaction without touching current packages",
+        "pointer": {"path": "contracts/rule_maintenance_incident_fast_closure_transfer_v3.json"}
+      },
+      "latest_task_record": {"path": ".agents/task_records/20260818_server_package_fast_closure_patch_first_rule_gate_skill_v2.md"},
+      "in_flight": {"state": "NONE", "server_root": null, "lease_id": null, "package": null, "return_zip": null}
     }
   ],
-  "schema": "session-owner-registry-v1"
+  "claim_boundary": "Current role and in-flight pointer only. Path existence is checked against the chosen current-state root; transport SHA is not a handoff blocker."
 }
