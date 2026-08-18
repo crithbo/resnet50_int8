@@ -7,6 +7,7 @@
 
 - 这里只保留 current 状态、直接 blocker 和唯一下一步，不记录版本过程。
 - 动态 owner、任务和 package 指针以 `contracts/current_session_owner_registry_v1.json` 为准。
+- current mainline token：`019ff027-e7db-72a3-b282-cfad8708da05`；完成通知仍须先从registry复核。
 - 精确过程在 `.agents/task_records/`、机器报告和 Git 历史；规则入口在 `.agents/agent.md`。
 - 正式 E4/E5 闭环：`1/78`，仅 DequantizeLinear node0077。其余不得提前宣称通过。
 - 当前没有 `SERVER_RUNNING` lease；上传、运行、lease 仍须用户明确授权。
