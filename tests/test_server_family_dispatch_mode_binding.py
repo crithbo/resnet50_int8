@@ -43,7 +43,7 @@ class FamilyDispatchModeBindingTests(unittest.TestCase):
             ],
         }
         write_json(self.registry_path, self.registry)
-        write_json(self.dispatch_path, {"schema": "selector-dispatch", "default_mode": "OBSERVER_ONLY_WIDE_CAUSAL"})
+        write_json(self.dispatch_path, {"schema": "selector-dispatch", "default_mode": "TB_VCD_BOUNDED_CAUSAL_CONE"})
         self.authority_source_path.parent.mkdir(parents=True, exist_ok=True)
         self.authority_source_path.write_text("next fresh mode: TB_VCD_BOUNDED_CAUSAL_CONE\n", encoding="utf-8")
         write_json(self.authority_path, {

@@ -3,9 +3,9 @@
   "classification": "EXISTING_RULE_IMPLEMENTATION_ESCAPE",
   "public_rule_disposition": "RULE_CONFIRMATION_NO_NEW_SYNONYMOUS_RULE",
   "confirmed_rule_ids": [
-    "CDA-SERVER-FINAL-ZIP-RULE-SELF-AUDIT-001",
-    "CDA-SERVER-RUNNER-PREFLIGHT-TO-COMPILE-POSITIVE-CONTROL-001",
-    "CDA-SERVER-COMPILEFAIL-CORE-RETURN-ROOT-CAUSE-001"
+    "CDA-SERVER-CAUSAL-RELEASE-ADMISSION-001",
+    "CDA-SERVER-PACKAGE-LOCAL-HDL-001",
+    "CDA-SERVER-RUNNER-REPEAT-SAFE-001"
   ],
   "shared_gate_id": "package_release_admission_runtime_preflight",
   "activation": "required_next_fresh_after_mainline_sync",
@@ -19,16 +19,20 @@
     "release receipt identity/status/pass/claim boundary bind the exact final ZIP",
     "every package-local .py source discovered from final staging and clean exact-final-ZIP extraction is in one byte-equal exact set and py_compile succeeds without writing bytecode into either package tree",
     "the release-admission contract is validated by jsonschema in the executing runtime; missing jsonschema, a skipped schema check or schema failure is blocking and cannot be reported as pass",
+    "the companion validator uses the dedicated contract schema; the pipeline admission-result schema remains distinct and is never applied to the contract input",
     "positive assertions and observed-negative facts use separate typed polarity",
     "precompile preflight failure retains exact stdout, stderr and exit code in a compile-not-started core receipt"
   ],
   "implementation_assets": {
-    "schema": "schemas/server_package_release_admission_v1.schema.json",
+    "schema": "schemas/server_package_release_admission_contract_v1.schema.json",
+    "contract_schema": "schemas/server_package_release_admission_contract_v1.schema.json",
+    "result_schema": "schemas/server_package_release_admission_v1.schema.json",
     "validator": "tools/validate_server_package_release_admission.py",
     "tests": "tests/test_server_package_release_admission.py",
     "fixture": "fixtures/server_package_release_admission_v1",
     "historical_negative": "fixtures/server_package_release_admission_v1/gap_v62_pending_manifest_escape.json",
-    "python_schema_historical_negative": "fixtures/server_package_release_admission_v1/gap_v67_v68_python_schema_escapes.json"
+    "python_schema_historical_negative": "fixtures/server_package_release_admission_v1/gap_v67_v68_python_schema_escapes.json",
+    "schema_interface_historical_negative": "fixtures/server_package_release_admission_v1/native_p58_contract_result_schema_escape.json"
   },
   "mainline_narrow_merge": {
     "public_rules": "clarify implementation entry points only; do not add a new public rule ID",

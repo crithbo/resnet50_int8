@@ -1,0 +1,130 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "workspace-lifecycle-v1.schema.json",
+  "title": "Workspace lifecycle inventory and dry-run plan",
+  "oneOf": [
+    {"$ref": "#/$defs/inventory"},
+    {"$ref": "#/$defs/protectedSet"},
+    {"$ref": "#/$defs/deletionPlan"},
+    {"$ref": "#/$defs/unknownLegacy"}
+  ],
+  "$defs": {
+    "common": {
+      "type": "object",
+      "required": ["schema", "kind", "state_root", "generated_at_utc", "registry_epoch", "pass", "errors", "warnings", "claim_boundary"],
+      "properties": {
+        "schema": {"const": "workspace-lifecycle-v1"},
+        "kind": {"type": "string", "minLength": 1},
+        "state_root": {"type": "string", "minLength": 1},
+        "generated_at_utc": {"type": "string", "minLength": 1},
+        "registry_epoch": {"type": ["integer", "null"], "minimum": 0},
+        "pass": {"type": "boolean"},
+        "errors": {"type": "array", "items": {"type": "string"}},
+        "warnings": {"type": "array", "items": {"type": "string"}},
+        "claim_boundary": {"type": "string", "minLength": 1}
+      }
+    },
+    "rootSummary": {
+      "type": "object",
+      "required": ["path", "kind", "exists", "files", "directories", "bytes", "symlinks", "access_error_count"],
+      "properties": {
+        "path": {"type": "string"},
+        "kind": {"type": "string"},
+        "exists": {"type": "boolean"},
+        "files": {"type": "integer", "minimum": 0},
+        "directories": {"type": "integer", "minimum": 0},
+        "bytes": {"type": "integer", "minimum": 0},
+        "symlinks": {"type": "integer", "minimum": 0},
+        "access_error_count": {"type": "integer", "minimum": 0}
+      },
+      "additionalProperties": false
+    },
+    "candidate": {
+      "type": "object",
+      "required": ["path", "candidate_kind", "safety_state", "files", "directories", "bytes", "reason", "requirements", "protected_intersections", "overlap_parent"],
+      "properties": {
+        "path": {"type": "string", "minLength": 1},
+        "candidate_kind": {"enum": ["EPHEMERAL", "CACHE", "REBUILDABLE_DERIVED", "DUPLICATE_REPEAT_ZIP", "REGENERABLE_ENVIRONMENT"]},
+        "safety_state": {"enum": ["SAFE_TO_QUARANTINE_AFTER_REVIEW", "DUPLICATE_CONFIRMATION_REQUIRED", "REVIEW_REQUIRED", "PROTECTED", "BLOCKED_ACCESS_OR_SYMLINK"]},
+        "files": {"type": "integer", "minimum": 0},
+        "directories": {"type": "integer", "minimum": 0},
+        "bytes": {"type": "integer", "minimum": 0},
+        "reason": {"type": "string", "minLength": 1},
+        "requirements": {"type": "array", "items": {"type": "string"}},
+        "protected_intersections": {"type": "array", "items": {"type": "string"}},
+        "overlap_parent": {"type": ["string", "null"]},
+        "duplicate_peer": {"type": ["string", "null"]},
+        "same_size": {"type": ["boolean", "null"]}
+      },
+      "additionalProperties": false
+    },
+    "inventory": {
+      "allOf": [
+        {"$ref": "#/$defs/common"},
+        {
+          "properties": {
+            "kind": {"const": "inventory"},
+            "policy": {"type": "string"},
+            "totals": {
+              "type": "object",
+              "required": ["files", "directories", "bytes", "symlinks", "access_error_count"],
+              "properties": {
+                "files": {"type": "integer", "minimum": 0},
+                "directories": {"type": "integer", "minimum": 0},
+                "bytes": {"type": "integer", "minimum": 0},
+                "symlinks": {"type": "integer", "minimum": 0},
+                "access_error_count": {"type": "integer", "minimum": 0}
+              },
+              "additionalProperties": false
+            },
+            "roots": {"type": "array", "items": {"$ref": "#/$defs/rootSummary"}},
+            "access_errors": {"type": "array", "items": {"type": "object", "required": ["path", "error"], "properties": {"path": {"type": "string"}, "error": {"type": "string"}}, "additionalProperties": false}}
+          },
+          "required": ["policy", "totals", "roots", "access_errors"]
+        }
+      ]
+    },
+    "protectedSet": {
+      "allOf": [
+        {"$ref": "#/$defs/common"},
+        {
+          "properties": {
+            "kind": {"const": "protected_set"},
+            "entries": {"type": "array", "items": {"type": "object", "required": ["path", "reasons"], "properties": {"path": {"type": "string"}, "reasons": {"type": "array", "minItems": 1, "items": {"type": "string"}}}, "additionalProperties": false}},
+            "source_counts": {"type": "object"}
+          },
+          "required": ["entries", "source_counts"]
+        }
+      ]
+    },
+    "deletionPlan": {
+      "allOf": [
+        {"$ref": "#/$defs/common"},
+        {
+          "properties": {
+            "kind": {"const": "deletion_plan"},
+            "mode": {"const": "DRY_RUN_ONLY"},
+            "apply_authorized": {"const": false},
+            "candidates": {"type": "array", "items": {"$ref": "#/$defs/candidate"}},
+            "candidate_summary": {"type": "object"},
+            "estimated_nonoverlap_bytes": {"type": "integer", "minimum": 0},
+            "next_checkpoint": {"type": "string", "minLength": 1}
+          },
+          "required": ["mode", "apply_authorized", "candidates", "candidate_summary", "estimated_nonoverlap_bytes", "next_checkpoint"]
+        }
+      ]
+    },
+    "unknownLegacy": {
+      "allOf": [
+        {"$ref": "#/$defs/common"},
+        {
+          "properties": {
+            "kind": {"const": "unknown_legacy"},
+            "entries": {"type": "array", "items": {"type": "object", "required": ["path", "files", "directories", "bytes", "reason"], "properties": {"path": {"type": "string"}, "files": {"type": "integer", "minimum": 0}, "directories": {"type": "integer", "minimum": 0}, "bytes": {"type": "integer", "minimum": 0}, "reason": {"type": "string"}}, "additionalProperties": false}}
+          },
+          "required": ["entries"]
+        }
+      ]
+    }
+  }
+}

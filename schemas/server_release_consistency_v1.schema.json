@@ -132,7 +132,7 @@
             "required": ["path", "location"],
             "properties": {
               "path": {"$ref": "#/$defs/member"},
-              "location": {"const": "EXTERNAL_IMMUTABLE_SIDECAR"}
+              "location": {"const": "INSIDE_RETURN_ZIP"}
             }
           }
         },

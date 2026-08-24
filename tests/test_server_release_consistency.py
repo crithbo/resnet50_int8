@@ -48,6 +48,8 @@ class ServerReleaseConsistencyTests(unittest.TestCase):
             "# package producer\n"
             "write evidence/FINALIZATION_OPERATIONAL_GUARD_RECEIPT.json\n"
             "write evidence/core.json\n"
+            "write evidence/DURABLE_RETURN_RECEIPT.json\n"
+            "write evidence/POST_DURABLE_CLEANUP_RECEIPT.json\n"
         ).encode("utf-8")
         self.progress_source = (
             "always @(posedge owner_clk) begin\n"
@@ -90,13 +92,35 @@ class ServerReleaseConsistencyTests(unittest.TestCase):
                         "archive": "evidence/core.json",
                         "required": True,
                     },
+                    {
+                        "source_root": "attempt",
+                        "source": "evidence/DURABLE_RETURN_RECEIPT.json",
+                        "archive": "evidence/DURABLE_RETURN_RECEIPT.json",
+                        "required": True,
+                    },
+                    {
+                        "source_root": "attempt",
+                        "source": "evidence/POST_DURABLE_CLEANUP_RECEIPT.json",
+                        "archive": "evidence/POST_DURABLE_CLEANUP_RECEIPT.json",
+                        "required": True,
+                    },
                 ]
             }),
             "RETURN_ALLOWLIST.json": json_bytes({
                 "required_members": [
                     "evidence/FINALIZATION_OPERATIONAL_GUARD_RECEIPT.json",
                     "evidence/core.json",
+                    "evidence/DURABLE_RETURN_RECEIPT.json",
+                    "evidence/POST_DURABLE_CLEANUP_RECEIPT.json",
                 ]
+            }),
+            "evidence/DURABLE_RETURN_RECEIPT.json": json_bytes({
+                "schema": "durable-return-receipt-v1",
+                "status": "DURABLE",
+            }),
+            "evidence/POST_DURABLE_CLEANUP_RECEIPT.json": json_bytes({
+                "schema": "post-durable-cleanup-receipt-v1",
+                "status": "CLEANED",
             }),
             "package_tools/producer.py": self.producer,
             "PREPARE_AND_RUN.sh": self.runner,
@@ -175,16 +199,32 @@ class ServerReleaseConsistencyTests(unittest.TestCase):
                         "producer_sha256": sha(self.producer),
                         "producer_output_literal": "write evidence/core.json",
                     },
+                    {
+                        "source_root": "attempt",
+                        "source": "evidence/DURABLE_RETURN_RECEIPT.json",
+                        "archive": "evidence/DURABLE_RETURN_RECEIPT.json",
+                        "producer_member": "package_tools/producer.py",
+                        "producer_sha256": sha(self.producer),
+                        "producer_output_literal": "write evidence/DURABLE_RETURN_RECEIPT.json",
+                    },
+                    {
+                        "source_root": "attempt",
+                        "source": "evidence/POST_DURABLE_CLEANUP_RECEIPT.json",
+                        "archive": "evidence/POST_DURABLE_CLEANUP_RECEIPT.json",
+                        "producer_member": "package_tools/producer.py",
+                        "producer_sha256": sha(self.producer),
+                        "producer_output_literal": "write evidence/POST_DURABLE_CLEANUP_RECEIPT.json",
+                    },
                 ],
                 "finalization_guard_archive": "evidence/FINALIZATION_OPERATIONAL_GUARD_RECEIPT.json",
                 "postpublication_receipts": [
                     {
                         "path": "evidence/DURABLE_RETURN_RECEIPT.json",
-                        "location": "EXTERNAL_IMMUTABLE_SIDECAR",
+                        "location": "INSIDE_RETURN_ZIP",
                     },
                     {
                         "path": "evidence/POST_DURABLE_CLEANUP_RECEIPT.json",
-                        "location": "EXTERNAL_IMMUTABLE_SIDECAR",
+                        "location": "INSIDE_RETURN_ZIP",
                     },
                 ],
                 "runner_member": "PREPARE_AND_RUN.sh",
@@ -290,19 +330,16 @@ class ServerReleaseConsistencyTests(unittest.TestCase):
         self.assertFalse(report["pass"])
         self.assertIn("lacks exactly one producer closure", "\n".join(report["errors"]))
 
-    def test_postpublication_receipt_cannot_be_required_inside_first_return(self) -> None:
-        def mutate(request: dict) -> None:
-            request["core_entries"].append({
-                "source_root": "attempt",
-                "source": "evidence/DURABLE_RETURN_RECEIPT.json",
-                "archive": "evidence/DURABLE_RETURN_RECEIPT.json",
-                "required": True,
-            })
-
-        self.mutate_json("contracts/server_post_sim_return_request.json", mutate)
-        report = self.report()
+    def test_postpublication_receipt_must_be_inside_single_return_zip(self) -> None:
+        item = copy.deepcopy(self.contract)
+        for row in item["return_phase"]["postpublication_receipts"]:
+            row["location"] = "EXTERNAL_IMMUTABLE_SIDECAR"
+        report = self.report(item)
         self.assertFalse(report["pass"])
-        self.assertIn("postpublication receipt is impossible", "\n".join(report["errors"]))
+        self.assertIn(
+            "must be inside the single return ZIP",
+            "\n".join(report["errors"]),
+        )
 
     def test_return_publication_before_guard_completion_fails_closed(self) -> None:
         self.runner = (

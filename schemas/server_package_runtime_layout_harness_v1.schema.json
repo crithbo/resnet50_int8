@@ -67,6 +67,11 @@
       "type": "string",
       "pattern": "^[0-9a-f]{64}$"
     },
+    "safeRelativePath": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))(?!.*\\\\).+$"
+    },
     "rootEntry": {
       "type": "object",
       "additionalProperties": false,
@@ -102,7 +107,8 @@
         "partial_return_published",
         "fixed_result_return_published",
         "return_zip",
-        "return_sidecar",
+        "return_sidecar_absent",
+        "return_digest_member",
         "preexisting_parents_verified",
         "preexisting_install_verified",
         "creatable_parents_initially_absent",
@@ -144,9 +150,11 @@
           "type": "string",
           "pattern": "^/home/panqs/ndp/simresult/[A-Za-z0-9._-]+_return\\.zip$"
         },
-        "return_sidecar": {
-          "type": "string",
-          "pattern": "^/home/panqs/ndp/simresult/[A-Za-z0-9._-]+_return\\.zip\\.sha256$"
+        "return_sidecar_absent": {
+          "const": true
+        },
+        "return_digest_member": {
+          "$ref": "#/$defs/safeRelativePath"
         },
         "preexisting_parents_verified": {
           "type": "boolean"

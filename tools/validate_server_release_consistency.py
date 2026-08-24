@@ -284,17 +284,19 @@ def _return_phase_checks(
 
     post = spec.get("postpublication_receipts")
     if not isinstance(post, list) or not post:
-        errors.append("postpublication external receipt set is absent")
+        errors.append("postpublication receipt set is absent")
         post = []
     for row in post:
         if not isinstance(row, dict):
             errors.append("postpublication receipt row must be an object")
             continue
         path = row.get("path")
-        if row.get("location") != "EXTERNAL_IMMUTABLE_SIDECAR":
-            errors.append(f"postpublication receipt is not external immutable sidecar: {path}")
-        if path in required_archives or path in allowlist_set:
-            errors.append(f"postpublication receipt is impossible inside first return ZIP: {path}")
+        if row.get("location") != "INSIDE_RETURN_ZIP":
+            errors.append(f"postpublication receipt must be inside the single return ZIP: {path}")
+        if path not in required_archives or path not in allowlist_set:
+            errors.append(
+                f"postpublication receipt must be a required in-ZIP return member: {path}"
+            )
 
     try:
         runner_member = _safe_member(spec.get("runner_member"))

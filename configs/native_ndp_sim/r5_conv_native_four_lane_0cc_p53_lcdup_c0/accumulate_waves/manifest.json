@@ -1,0 +1,102 @@
+{
+  "authorized_post_materialization_override": {
+    "dynamic_receipts": [
+      ".agents/task_records/20260815_p52_v97_gapv71_validated_roots_and_storage_acceptance.md",
+      "outputs/conv_node0004_v106b_return_recovery/round2_final_return_analysis.json"
+    ],
+    "formula": "duplicate logical LC9 into dormant LC3 and route PE1.inport2 to LC3; keep GROUP4.ROW_LC on LC9",
+    "new": {
+      "dram_loop_configs.LC3": {
+        "end": 8,
+        "last_index": 3,
+        "outmost_loop": 0,
+        "src_id": "DRAM_LC.LC15",
+        "start": 0,
+        "stride": 1
+      },
+      "lc_pe_configs.PE1.inport2.src_id": "DRAM_LC.LC3"
+    },
+    "old": null,
+    "path": "accumulate_waves/wave-0"
+  },
+  "operator_allocation_bytes": 402496,
+  "records": [
+    {
+      "active_slice_count": 28,
+      "canonical_config_sha256": "d5485650eea4e68f127d7c3c2429f794e413774c0ae65af6769156da09d5e8c0",
+      "op_id": "op_w0",
+      "operator_type": "resnet50_conv_node0004_wave0",
+      "sample_ids": [
+        0,
+        3,
+        6,
+        8,
+        10,
+        12,
+        14
+      ],
+      "stream_base_addresses": {
+        "A": "0x00000000",
+        "B": "0x00000400",
+        "B'": "0x00000400",
+        "C": "0x00031400",
+        "D": "0x00031440"
+      },
+      "wave_index": 0
+    },
+    {
+      "active_slice_count": 28,
+      "canonical_config_sha256": "d5485650eea4e68f127d7c3c2429f794e413774c0ae65af6769156da09d5e8c0",
+      "op_id": "op_w1",
+      "operator_type": "resnet50_conv_node0004_wave1",
+      "sample_ids": [
+        1,
+        4,
+        7,
+        9,
+        11,
+        13,
+        15
+      ],
+      "stream_base_addresses": {
+        "A": "0x00000000",
+        "B": "0x00000400",
+        "B'": "0x00000400",
+        "C": "0x00031400",
+        "D": "0x00031440"
+      },
+      "wave_index": 1
+    },
+    {
+      "active_slice_count": 8,
+      "canonical_config_sha256": "d5485650eea4e68f127d7c3c2429f794e413774c0ae65af6769156da09d5e8c0",
+      "op_id": "op_w2",
+      "operator_type": "resnet50_conv_node0004_wave2",
+      "sample_ids": [
+        2,
+        5
+      ],
+      "stream_base_addresses": {
+        "A": "0x00000000",
+        "B": "0x00000400",
+        "B'": "0x00000400",
+        "C": "0x00031400",
+        "D": "0x00031440"
+      },
+      "wave_index": 2
+    }
+  ],
+  "schema": "resnet50-node0004-conv-three-wave-config-set-v1",
+  "scope": "native LC-branch A/B bypass wave0 only",
+  "source": {
+    "path": "configs/native_ndp_sim/r5_conv_native_four_lane_0cc_p9_tx5_c0/accumulate_base.json",
+    "policy": "strict source with MSE0/SA-inport0 matched A ping-pong; address-only three-wave specialization",
+    "sha256": "b6471445db18bc59998975695599bd75f2051362a6d3c549822f222951524d29"
+  },
+  "successor_of": "r5_conv_native_four_lane_0cc_p18_pekeep3_c0/accumulate_waves/wave-0.json",
+  "unmaterialized_unchanged_waves": [
+    1,
+    2
+  ],
+  "wave_address_policy": "reuse_same_local_allocation"
+}

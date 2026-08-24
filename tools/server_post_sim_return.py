@@ -30,6 +30,9 @@ from typing import Any, Mapping
 SCHEMA = "server-post-sim-return-request-v1"
 CONTRACT_SCHEMA = "server-post-sim-return-contract-v1"
 VALIDATION_SCHEMA = "server-post-sim-return-validation-v1"
+DIGEST_SCHEMA = "server-return-single-zip-digest-v1"
+SINGLE_ZIP_VALIDATION_SCHEMA = "server-return-single-zip-validation-v1"
+RETURN_DIGEST_MEMBER = "RETURN_DIGESTS.json"
 PARTIAL_EXIT_RULE_ID = "CDA-SERVER-DIAGNOSTIC-PARTIAL-EXIT-LIVE-CAUSAL-RECORD-001"
 WAVE_PLAN_SCHEMA = "server-waveform-mandatory-plan-v2"
 WAVE_RECEIPT_SCHEMA = "server-waveform-runtime-receipt-v2"
@@ -654,6 +657,40 @@ def _stage_waveforms(
     return receipts, errors
 
 
+def _write_return_digests(
+    staging: Path,
+    package_id: str,
+    execution_id: str,
+    basename: str,
+) -> None:
+    """Write an internal digest manifest into the single return ZIP.
+
+    The digest file lists every already-staged return member.  It is written
+    before ZIP creation, so it is itself a member of the return ZIP and the
+    single ZIP carries all SHA-256/digest attachments inside itself.
+    """
+    members: list[dict[str, Any]] = []
+    for path in sorted(staging.rglob("*")):
+        if not path.is_file() or path.is_symlink():
+            continue
+        relative = path.relative_to(staging).as_posix()
+        size, digest = _hash_file(path)
+        members.append({"path": relative, "bytes": size, "sha256": digest})
+    value = {
+        "schema": DIGEST_SCHEMA,
+        "package_id": package_id,
+        "execution_id": execution_id,
+        "return_basename": basename,
+        "members": members,
+        "adjacent_sidecar_forbidden": True,
+        "claim_boundary": (
+            "Digests are internal to the single return ZIP; no adjacent "
+            "sidecar is published."
+        ),
+    }
+    _write_json(staging / RETURN_DIGEST_MEMBER, value)
+
+
 def _zip_tree(root: Path, target: Path) -> list[str]:
     members: list[str] = []
     with zipfile.ZipFile(
@@ -743,6 +780,7 @@ def finalize(
         "natural_terminal_observed": runtime["natural_terminal"],
     }
     _write_json(evidence / "SIM_EXIT_RECEIPT.json", sim_receipt)
+    _write_json(attempt_root / "evidence" / "SIM_EXIT_RECEIPT.json", sim_receipt)
     _write_json(state_path, state)
     try:
         state["phase"] = "PLUGINS_RUNNING"
@@ -770,33 +808,17 @@ def finalize(
         )
         _safe_name("return basename stem", basename.removesuffix(".zip"))
         target = result_root / basename
-        sidecar = target.with_name(target.name + ".sha256")
         if target.exists():
             identity = _read_existing_identity(target)
             if identity == (package_id, execution_id):
                 _, existing_sha = _hash_file(target)
-                expected_sidecar = f"{existing_sha}  {basename}\n"
-                if sidecar.exists():
-                    if not sidecar.is_file() or sidecar.read_text(
-                        encoding="utf-8"
-                    ) != expected_sidecar:
-                        raise ReturnCoreError(
-                            f"existing return sidecar differs: {sidecar}"
-                        )
-                else:
-                    sidecar_temporary = result_root / (
-                        f".{sidecar.name}.tmp.{os.getpid()}.{uuid.uuid4().hex}"
-                    )
-                    sidecar_temporary.write_text(
-                        expected_sidecar, encoding="utf-8", newline="\n"
-                    )
-                    _publish_no_overwrite(sidecar_temporary, sidecar)
                 state.update(
                     {
                         "phase": "PUBLISHED_IDEMPOTENT",
                         "published": True,
                         "return_zip": str(target),
                         "return_sha256": existing_sha,
+                        "return_digest_member": f"{package_id}_return/{RETURN_DIGEST_MEMBER}",
                     }
                 )
                 _write_json(state_path, state)
@@ -885,14 +907,12 @@ def finalize(
                 "claim_boundary": request["claim_boundary"],
             }
             _write_json(staging / "RETURN_CORE_MANIFEST.json", manifest)
+            _write_return_digests(staging, package_id, execution_id, basename)
             temporary_zip = result_root / f".{basename}.tmp.{os.getpid()}.{uuid.uuid4().hex}"
             try:
                 members = _zip_tree(staging, temporary_zip)
                 zip_size, zip_sha = _hash_file(temporary_zip)
                 _publish_no_overwrite(temporary_zip, target)
-                sidecar_temporary = result_root / f".{sidecar.name}.tmp.{os.getpid()}.{uuid.uuid4().hex}"
-                sidecar_temporary.write_text(f"{zip_sha}  {basename}\n", encoding="utf-8", newline="\n")
-                _publish_no_overwrite(sidecar_temporary, sidecar)
             finally:
                 if temporary_zip.exists():
                     temporary_zip.unlink()
@@ -904,7 +924,7 @@ def finalize(
                 "return_zip": str(target),
                 "return_bytes": zip_size,
                 "return_sha256": zip_sha,
-                "sidecar": str(sidecar),
+                "return_digest_member": f"{top_name}/{RETURN_DIGEST_MEMBER}",
                 "member_count": len(members),
             }
         )
@@ -1495,6 +1515,90 @@ def validate_final_zip(zip_path: Path) -> dict[str, Any]:
     }
 
 
+def validate_return_zip(zip_path: Path, result_root: Path) -> dict[str, Any]:
+    """Validate a published formal return as a single ZIP with no sidecar."""
+    errors: list[str] = []
+    details: dict[str, Any] = {
+        "zip_path": str(zip_path),
+        "result_root": str(result_root),
+    }
+    if not zip_path.is_file():
+        errors.append("return ZIP is absent")
+        return {
+            "schema": SINGLE_ZIP_VALIDATION_SCHEMA,
+            "zip_path": str(zip_path),
+            "zip_bytes": 0,
+            "zip_sha256": None,
+            "pass": False,
+            "errors": errors,
+            "details": details,
+            "claim_boundary": "Single-ZIP return publication policy only; no DUT, natural-terminal, formal-D, E4 or E5 claim.",
+        }
+    details["zip_bytes"] = zip_path.stat().st_size
+    details["zip_sha256"] = _hash_file(zip_path)[1]
+    adjacent: list[str] = []
+    if result_root.is_dir():
+        prefix = zip_path.name + "."
+        for sibling in sorted(result_root.iterdir()):
+            if sibling.is_file() and sibling.name.startswith(prefix):
+                adjacent.append(sibling.name)
+    details["adjacent_sidecars"] = adjacent
+    if adjacent:
+        errors.append(f"adjacent return sidecar is forbidden: {sorted(adjacent)}")
+    try:
+        with zipfile.ZipFile(zip_path, "r") as archive:
+            if archive.testzip() is not None:
+                raise ReturnCoreError("return ZIP CRC failed")
+            root, names = _safe_zip_members(archive)
+            digest_name = f"{root}/{RETURN_DIGEST_MEMBER}"
+            if digest_name not in names:
+                errors.append("return ZIP lacks internal RETURN_DIGESTS.json")
+            else:
+                digest = json.loads(archive.read(digest_name))
+                if digest.get("schema") != DIGEST_SCHEMA:
+                    errors.append("internal RETURN_DIGESTS.json schema mismatch")
+                if digest.get("adjacent_sidecar_forbidden") is not True:
+                    errors.append("internal digest does not forbid adjacent sidecars")
+                rows = digest.get("members")
+                if not isinstance(rows, list):
+                    errors.append("internal RETURN_DIGESTS.json members must be an array")
+                    rows = []
+                member_errors = 0
+                for row in rows:
+                    if not isinstance(row, dict):
+                        member_errors += 1
+                        continue
+                    relative = row.get("path")
+                    if not isinstance(relative, str) or not relative:
+                        member_errors += 1
+                        continue
+                    full = f"{root}/{relative}"
+                    if full not in names:
+                        errors.append(f"digest member is absent from return ZIP: {relative}")
+                        continue
+                    data = archive.read(full)
+                    expected_bytes = row.get("bytes")
+                    expected_sha = row.get("sha256")
+                    if not isinstance(expected_bytes, int) or len(data) != expected_bytes:
+                        errors.append(f"digest member byte mismatch: {relative}")
+                    if not isinstance(expected_sha, str) or _sha256(data) != expected_sha:
+                        errors.append(f"digest member SHA mismatch: {relative}")
+                details["digest_member_count"] = len(rows) - member_errors
+                details["digest_member"] = digest_name
+    except (OSError, zipfile.BadZipFile, ReturnCoreError, json.JSONDecodeError) as error:
+        errors.append(f"{type(error).__name__}: {error}")
+    return {
+        "schema": SINGLE_ZIP_VALIDATION_SCHEMA,
+        "zip_path": str(zip_path),
+        "zip_bytes": details.get("zip_bytes", 0),
+        "zip_sha256": details.get("zip_sha256"),
+        "pass": not errors,
+        "errors": errors,
+        "details": details,
+        "claim_boundary": "Single-ZIP return publication policy only; no DUT, natural-terminal, formal-D, E4 or E5 claim.",
+    }
+
+
 def _load_json(path: Path) -> Any:
     return json.loads(path.read_text(encoding="utf-8"))
 
@@ -1507,6 +1611,10 @@ def main(argv: list[str] | None = None) -> int:
     validate_parser = subparsers.add_parser("validate-final-zip")
     validate_parser.add_argument("--zip", dest="zip_path", type=Path, required=True)
     validate_parser.add_argument("--output", type=Path, required=True)
+    return_validate_parser = subparsers.add_parser("validate-return-zip")
+    return_validate_parser.add_argument("--zip", dest="zip_path", type=Path, required=True)
+    return_validate_parser.add_argument("--result-root", type=Path, required=True)
+    return_validate_parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args(argv)
     if args.command == "finalize":
         try:
@@ -1516,6 +1624,11 @@ def main(argv: list[str] | None = None) -> int:
         except (OSError, json.JSONDecodeError, ReturnCoreError, subprocess.SubprocessError) as error:
             print(f"RETURN_CORE_ERROR {type(error).__name__}: {error}", file=sys.stderr)
             return 1
+    if args.command == "validate-return-zip":
+        report = validate_return_zip(args.zip_path, args.result_root)
+        _write_json(args.output, report)
+        print(json.dumps({"pass": report["pass"], "errors": len(report["errors"]), "output": str(args.output)}, ensure_ascii=False))
+        return 0 if report["pass"] else 1
     report = validate_final_zip(args.zip_path)
     _write_json(args.output, report)
     print(json.dumps({"pass": report["pass"], "errors": len(report["errors"]), "output": str(args.output)}, ensure_ascii=False))

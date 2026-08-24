@@ -1,0 +1,189 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "server_package_release_admission_contract_v1.schema.json",
+  "title": "Server package release-admission companion contract",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "package",
+    "manifest",
+    "release_receipt",
+    "runtime_preflight",
+    "python_schema_runtime",
+    "build_receipt_semantics",
+    "precompile_failure_core",
+    "claim_boundary"
+  ],
+  "properties": {
+    "schema": {"const": "server-package-release-admission-v1"},
+    "package": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["package_id", "family", "staging_root", "final_zip", "zip_root_member", "runner_member"],
+      "properties": {
+        "package_id": {"type": "string", "minLength": 1},
+        "family": {"type": "string", "minLength": 1},
+        "staging_root": {"type": "string", "minLength": 1},
+        "final_zip": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["path", "bytes", "sha256"],
+          "properties": {
+            "path": {"type": "string", "minLength": 1},
+            "bytes": {"type": "integer", "minimum": 1},
+            "sha256": {"$ref": "#/$defs/sha256"}
+          }
+        },
+        "zip_root_member": {"type": "string", "minLength": 1},
+        "runner_member": {"type": "string", "minLength": 1}
+      }
+    },
+    "manifest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["member", "package_id_pointer", "status_pointer", "ready_status", "nonfinal_status"],
+      "properties": {
+        "member": {"type": "string", "minLength": 1},
+        "package_id_pointer": {"$ref": "#/$defs/json_pointer"},
+        "status_pointer": {"$ref": "#/$defs/json_pointer"},
+        "ready_status": {"const": "PACKAGE_READY_NOT_RUN"},
+        "nonfinal_status": {"const": "PACKAGE_READY_NOT_RUN_LOCAL_BUILD_PENDING_GATES"}
+      }
+    },
+    "release_receipt": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "path",
+        "sha256",
+        "package_id_pointer",
+        "status_pointer",
+        "pass_pointer",
+        "final_zip_sha256_pointer",
+        "claim_boundary_pointer",
+        "expected_claim_boundary"
+      ],
+      "properties": {
+        "path": {"type": "string", "minLength": 1},
+        "sha256": {"$ref": "#/$defs/sha256"},
+        "package_id_pointer": {"$ref": "#/$defs/json_pointer"},
+        "status_pointer": {"$ref": "#/$defs/json_pointer"},
+        "pass_pointer": {"$ref": "#/$defs/json_pointer"},
+        "final_zip_sha256_pointer": {"$ref": "#/$defs/json_pointer"},
+        "claim_boundary_pointer": {"$ref": "#/$defs/json_pointer"},
+        "expected_claim_boundary": {"type": "string", "minLength": 1}
+      }
+    },
+    "runtime_preflight": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "runtime_member",
+        "command_template",
+        "timeout_seconds",
+        "expected_exit",
+        "nonfinal_rejection_marker",
+        "non_mutating"
+      ],
+      "properties": {
+        "runtime_member": {"type": "string", "minLength": 1},
+        "command_template": {
+          "const": ["{python}", "{runtime_member}", "preflight", "--package-root", "{package_root}"]
+        },
+        "timeout_seconds": {"type": "integer", "minimum": 1},
+        "expected_exit": {"const": 0},
+        "nonfinal_rejection_marker": {"const": "package claim boundary differs"},
+        "non_mutating": {"const": true}
+      }
+    },
+    "python_schema_runtime": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "package_python_source_suffixes",
+        "exact_set_compile",
+        "compile_staging_and_clean_exact_zip",
+        "bytecode_destination",
+        "schema_validation_enabled",
+        "schema_dependency",
+        "missing_dependency_disposition",
+        "skip_allowed"
+      ],
+      "properties": {
+        "package_python_source_suffixes": {"const": [".py"]},
+        "exact_set_compile": {"const": true},
+        "compile_staging_and_clean_exact_zip": {"const": true},
+        "bytecode_destination": {"const": "OUTSIDE_PACKAGE_TEMPORARY_DIRECTORY"},
+        "schema_validation_enabled": {"const": true},
+        "schema_dependency": {"const": "jsonschema"},
+        "missing_dependency_disposition": {"const": "FAIL_CLOSED"},
+        "skip_allowed": {"const": false}
+      }
+    },
+    "build_receipt_semantics": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["aggregate_mode", "positive_assertions", "negative_observations", "informational_facts"],
+      "properties": {
+        "aggregate_mode": {"const": "POSITIVE_ASSERTIONS_AND_EXPECTED_POLARITY_MATCH"},
+        "positive_assertions": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/$defs/positive_assertion"}
+        },
+        "negative_observations": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/$defs/negative_observation"}
+        },
+        "informational_facts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["fact_id", "value"],
+            "properties": {
+              "fact_id": {"type": "string", "minLength": 1},
+              "value": {}
+            }
+          }
+        }
+      }
+    },
+    "precompile_failure_core": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256"],
+      "properties": {
+        "path": {"type": "string", "minLength": 1},
+        "sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "claim_boundary": {"type": "string", "minLength": 1}
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "json_pointer": {"type": "string", "pattern": "^/"},
+    "positive_assertion": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["fact_id", "observed", "required"],
+      "properties": {
+        "fact_id": {"type": "string", "minLength": 1},
+        "observed": {"const": true},
+        "required": {"const": true}
+      }
+    },
+    "negative_observation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["fact_id", "observed", "required"],
+      "properties": {
+        "fact_id": {"type": "string", "minLength": 1},
+        "observed": {"const": false},
+        "required": {"const": false}
+      }
+    }
+  }
+}

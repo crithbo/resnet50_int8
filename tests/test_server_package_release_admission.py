@@ -15,11 +15,18 @@ from tools.validate_server_package_release_admission import validate_contract
 
 ROOT = Path(__file__).resolve().parents[1]
 FIXTURE = ROOT / "fixtures/server_package_release_admission_v1/package_template"
-SCHEMA = ROOT / "schemas/server_package_release_admission_v1.schema.json"
+CONTRACT_SCHEMA = (
+    ROOT / "schemas/server_package_release_admission_contract_v1.schema.json"
+)
+RESULT_SCHEMA = ROOT / "schemas/server_package_release_admission_v1.schema.json"
 HISTORICAL = ROOT / "fixtures/server_package_release_admission_v1/gap_v62_pending_manifest_escape.json"
 PYTHON_SCHEMA_HISTORICAL = (
     ROOT
     / "fixtures/server_package_release_admission_v1/gap_v67_v68_python_schema_escapes.json"
+)
+SCHEMA_INTERFACE_HISTORICAL = (
+    ROOT
+    / "fixtures/server_package_release_admission_v1/native_p58_contract_result_schema_escape.json"
 )
 
 
@@ -156,7 +163,44 @@ class PackageReleaseAdmissionTests(unittest.TestCase):
             import jsonschema
         except ImportError:
             self.skipTest("jsonschema unavailable")
-        jsonschema.validate(self.contract, json.loads(SCHEMA.read_text(encoding="utf-8")))
+        jsonschema.validate(
+            self.contract,
+            json.loads(CONTRACT_SCHEMA.read_text(encoding="utf-8")),
+        )
+        self.assertEqual(
+            Path(report["controls"]["schema_runtime"]["schema_path"]).name,
+            CONTRACT_SCHEMA.name,
+        )
+
+    def test_contract_schema_is_not_the_pipeline_result_schema(self) -> None:
+        try:
+            import jsonschema
+        except ImportError:
+            self.skipTest("jsonschema unavailable")
+        contract_schema = json.loads(CONTRACT_SCHEMA.read_text(encoding="utf-8"))
+        result_schema = json.loads(RESULT_SCHEMA.read_text(encoding="utf-8"))
+        jsonschema.validate(self.contract, contract_schema)
+        with self.assertRaises(jsonschema.ValidationError):
+            jsonschema.validate(self.contract, result_schema)
+
+    def test_contract_schema_rejects_result_shaped_input(self) -> None:
+        result = {
+            "schema": "server-package-release-admission-v1",
+            "pass": True,
+            "status": "PACKAGE_READY_NOT_RUN",
+            "package_id": self.package_id,
+            "family": "synthetic",
+            "lifecycle": "PATCH_UNRUN_REVISION",
+            "zip_path": "candidate.zip",
+            "checked_gates": [],
+            "errors": [],
+            "warnings": [],
+            "claim_boundary": "Synthetic result only.",
+        }
+        report = self.report(result)
+        self.assertFalse(report["pass"])
+        self.assertFalse(report["checks"]["contract_schema_valid"])
+        self.assertIn("contract JSON schema violation", "\n".join(report["errors"]))
 
     def test_every_package_python_member_is_compiled_from_exact_zip(self) -> None:
         broken = self.staging / "package_tools" / "late_generated_helper.py"
@@ -246,6 +290,25 @@ class PackageReleaseAdmissionTests(unittest.TestCase):
         )
         self.assertEqual(historical["positive_successor"]["python_member_count"], 19)
         self.assertEqual(historical["positive_successor"]["compiled_count"], 19)
+
+    def test_real_native_p58_contract_result_schema_escape_is_registered(self) -> None:
+        historical = json.loads(
+            SCHEMA_INTERFACE_HISTORICAL.read_text(encoding="utf-8")
+        )
+        self.assertEqual(historical["package_id"], "r5_n4_0cc_p58_compileinterrupt")
+        self.assertEqual(
+            historical["escaped_validator_report"]["schema_error_count"], 10
+        )
+        self.assertEqual(
+            historical["required_fix"]["contract_schema"],
+            "schemas/server_package_release_admission_contract_v1.schema.json",
+        )
+        self.assertEqual(
+            historical["required_fix"]["result_schema"],
+            "schemas/server_package_release_admission_v1.schema.json",
+        )
+        self.assertFalse(historical["required_fix"]["public_rule_change"])
+        self.assertFalse(historical["required_fix"]["ad_hoc_exemption"])
 
     def test_status_negative_must_emit_exact_marker(self) -> None:
         runtime = self.staging / "package_tools/package_runtime.py"

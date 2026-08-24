@@ -31,7 +31,7 @@ MARKER = "package claim boundary differs"
 HEX64 = set("0123456789abcdef")
 CONTRACT_SCHEMA_PATH = (
     Path(__file__).resolve().parents[1]
-    / "schemas/server_package_release_admission_v1.schema.json"
+    / "schemas/server_package_release_admission_contract_v1.schema.json"
 )
 
 

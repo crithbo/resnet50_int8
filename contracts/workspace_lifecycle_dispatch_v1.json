@@ -1,0 +1,56 @@
+{
+  "schema": "workspace-lifecycle-dispatch-v1",
+  "version": 1,
+  "public_rule_owners": [
+    "CDA-SERVER-PATCH-FIRST-CHANGED-SURFACE-001",
+    "CDA-SERVER-CONTINUOUS-CLOSURE-001",
+    "CDA-OPTIMIZER-RULE-ORTHOGONALITY-001"
+  ],
+  "phases": [
+    {
+      "trigger": "SESSION_RECOVERY_OR_TAKEOVER",
+      "action": "scan stale exact-owned ephemeral roots; unknown and active-owner roots remain protected",
+      "blocking": "only ownership conflict or projected insufficient local space"
+    },
+    {
+      "trigger": "PREPARE_BEFORE_MATERIALIZATION",
+      "action": "incremental space/object scan only; no full-workspace delete",
+      "blocking": "only projected peak exceeds available space after all already-approved safe cleanup"
+    },
+    {
+      "trigger": "POST_ADMISSION_AND_STORAGE_ROTATION",
+      "action": "retire rebuildable staging/extract/duplicate local copies after canonical managed package exists",
+      "blocking": "never revoke current admitted package; mark CLEANUP_PENDING before another same-kind build"
+    },
+    {
+      "trigger": "POST_RETURN_FAMILY_AND_MAINLINE_CONSUMPTION",
+      "action": "retain MAX_PROGRESS + LATEST_1 + LATEST_2, core reports and protected blocker anchors; retire other heavy/extracted copies",
+      "blocking": "unconsumed or protected returns cannot be retired"
+    },
+    {
+      "trigger": "OWNER_HANDOFF_OR_TASK_CLOSE",
+      "action": "emit cleanup receipt or explicit CLEANUP_PENDING and exact protected reason",
+      "blocking": "new owner cannot treat unknown cleanup debt as safe-to-delete"
+    }
+  ],
+  "destructive_sequence": [
+    "scan",
+    "exact_plan",
+    "writer_quiescence",
+    "quarantine",
+    "canonical_verify",
+    "purge"
+  ],
+  "classifications": [
+    "PROTECTED",
+    "CORE_KEEP",
+    "REBUILDABLE",
+    "DUPLICATE",
+    "FAILED_SUPERSEDED",
+    "EPHEMERAL",
+    "UNKNOWN_LEGACY"
+  ],
+  "final_zip_gate_change": "NONE",
+  "server_action": false,
+  "claim_boundary": "Local workspace lifecycle only; no package correctness, storage rotation, server, RTL, config, numeric or workload authorization."
+}

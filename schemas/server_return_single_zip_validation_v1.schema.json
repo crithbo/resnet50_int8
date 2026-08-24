@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "server_return_single_zip_validation_v1.schema.json",
+  "title": "Single-ZIP formal return publication validation v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "zip_path",
+    "zip_bytes",
+    "zip_sha256",
+    "pass",
+    "errors",
+    "details",
+    "claim_boundary"
+  ],
+  "properties": {
+    "schema": {"const": "server-return-single-zip-validation-v1"},
+    "zip_path": {"type": "string", "minLength": 1},
+    "zip_bytes": {"type": "integer", "minimum": 0},
+    "zip_sha256": {"type": ["string", "null"], "pattern": "^[0-9a-f]{64}$"},
+    "pass": {"type": "boolean"},
+    "errors": {"type": "array", "items": {"type": "string"}},
+    "details": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["zip_path", "result_root"],
+      "properties": {
+        "zip_path": {"type": "string", "minLength": 1},
+        "result_root": {"type": "string", "minLength": 1},
+        "zip_bytes": {"type": "integer", "minimum": 0},
+        "zip_sha256": {"type": ["string", "null"], "pattern": "^[0-9a-f]{64}$"},
+        "adjacent_sidecars": {"type": "array", "items": {"type": "string"}},
+        "digest_member_count": {"type": "integer", "minimum": 0},
+        "digest_member": {"type": "string", "minLength": 1}
+      }
+    },
+    "claim_boundary": {"type": "string", "minLength": 1}
+  }
+}

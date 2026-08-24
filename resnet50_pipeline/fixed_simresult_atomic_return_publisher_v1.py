@@ -115,6 +115,25 @@ def deterministic_zip(return_dir: Path, output: Path) -> None:
             archive.writestr(info, path.read_bytes())
 
 
+def write_return_digests(return_dir: Path, install_name: str) -> None:
+    """Write an internal digest manifest into the single return ZIP."""
+    members: list[dict[str, Any]] = []
+    for path in sorted(item for item in return_dir.rglob("*") if item.is_file()):
+        members.append({
+            "path": path.relative_to(return_dir).as_posix(),
+            "bytes": path.stat().st_size,
+            "sha256": sha256(path),
+        })
+    write_json(return_dir / "RETURN_DIGESTS.json", {
+        "schema": "server-return-single-zip-digest-v1",
+        "package_id": install_name,
+        "return_basename": f"{install_name}_return.zip",
+        "members": members,
+        "adjacent_sidecar_forbidden": True,
+        "claim_boundary": "Digests are internal to the single return ZIP; no adjacent sidecar is published.",
+    })
+
+
 def collect(
     *, package_root: Path, evidence_root: Path, run_root: Path
 ) -> dict[str, Any]:
@@ -129,15 +148,13 @@ def collect(
     ):
         raise PublishError("fixed result root is not exact/writable")
     final_zip = result_root / f"{install_name}_return.zip"
-    final_sidecar = Path(str(final_zip) + ".sha256")
-    if final_zip.exists() or final_sidecar.exists():
+    if final_zip.exists():
         raise PublishError("fixed result target conflict")
     stage_root = result_root / f".{install_name}.publish.{os.getpid()}"
     if stage_root.exists():
         raise PublishError("fixed result staging conflict")
     return_dir = stage_root / f"{install_name}_return"
     staged_zip = stage_root / final_zip.name
-    staged_sidecar = stage_root / final_sidecar.name
     return_dir.mkdir(parents=True, exist_ok=False)
     roots = {
         "evidence": evidence_root,
@@ -193,8 +210,6 @@ def collect(
     if (
         publication_preflight.get("result_root") != str(result_root)
         or publication_preflight.get("return_zip") != str(final_zip)
-        or publication_preflight.get("return_sidecar")
-        != str(final_sidecar)
         or not all(
             publication_preflight.get(key) is True
             for key in duplicate_keys
@@ -204,7 +219,7 @@ def collect(
     publication = {
         "result_root": str(result_root),
         "return_zip": str(final_zip),
-        "return_sidecar": str(final_sidecar),
+        "return_digest_member": f"{return_dir.name}/RETURN_DIGESTS.json",
         "publication_state": "STAGING_VALIDATED_BEFORE_ATOMIC_RENAME",
         **{key: True for key in duplicate_keys},
     }
@@ -222,7 +237,8 @@ def collect(
             records, key=lambda item: str(item["path"])
         ),
         "return_exact_set_policy": (
-            "records plus RETURN_MANIFEST.json and RETURN_ALLOWLIST.json only"
+            "records plus RETURN_MANIFEST.json, RETURN_ALLOWLIST.json and "
+            "RETURN_DIGESTS.json only"
         ),
         "declared_allowlist": declarations,
     }
@@ -249,6 +265,7 @@ def collect(
             "records": sorted(records, key=lambda item: str(item["path"])),
         },
     )
+    write_return_digests(return_dir, install_name)
     unpacked = sum(
         path.stat().st_size
         for path in return_dir.rglob("*")
@@ -276,29 +293,17 @@ def collect(
         ):
             raise PublishError("staged return ZIP exact-set differs")
     value = sha256(staged_zip)
-    staged_sidecar.write_text(
-        f"{value}  {final_zip.name}\n", encoding="ascii", newline="\n"
-    )
-    tokens = staged_sidecar.read_text(encoding="ascii").split()
-    if tokens != [value, final_zip.name]:
-        raise PublishError("staged return sidecar differs")
-    if final_zip.exists() or final_sidecar.exists():
+    if final_zip.exists():
         raise PublishError("fixed result target conflict before publish")
     os.replace(staged_zip, final_zip)
-    os.replace(staged_sidecar, final_sidecar)
     if sha256(final_zip) != value:
         raise PublishError("published return SHA differs")
-    if final_sidecar.read_text(encoding="ascii").split() != [
-        value,
-        final_zip.name,
-    ]:
-        raise PublishError("published return sidecar differs")
     shutil.rmtree(return_dir)
     stage_root.rmdir()
     return {
         "schema": "fixed-simresult-atomic-publication-v1",
         "return_zip": str(final_zip),
-        "return_sidecar": str(final_sidecar),
+        "return_digest_member": f"{return_dir.name}/RETURN_DIGESTS.json",
         "return_zip_bytes": final_zip.stat().st_size,
         "return_zip_sha256": value,
         "publication_state": "ATOMIC_PUBLISHED_VERIFIED",

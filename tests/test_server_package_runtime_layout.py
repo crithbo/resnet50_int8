@@ -387,9 +387,9 @@ class RuntimeLayoutFixture:
                     "/home/panqs/ndp/simresult/"
                     f"{self.package_id}_r1723000000000000000_123_return.zip"
                 ),
-                "return_sidecar": (
-                    "/home/panqs/ndp/simresult/"
-                    f"{self.package_id}_r1723000000000000000_123_return.zip.sha256"
+                "return_sidecar_absent": True,
+                "return_digest_member": (
+                    f"{self.package_id}_return/RETURN_DIGESTS.json"
                 ),
                 "preexisting_parents_verified": True,
                 "preexisting_install_verified": True,

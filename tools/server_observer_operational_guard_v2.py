@@ -496,7 +496,8 @@ def reap_adopted(known: set[ProcessKey], deadline: float) -> list[int]:
             if pid <= 0:
                 break
             reaped.append(pid)
-            known.difference_update(key for key in known if key[0] == pid)
+            to_remove = [key for key in known if key[0] == pid]
+            known.difference_update(to_remove)
             changed = True
         if not changed:
             time.sleep(0.05)

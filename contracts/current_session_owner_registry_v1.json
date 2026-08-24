@@ -1,128 +1,226 @@
 {
-  "schema": "session-owner-registry-v1",
-  "registry_epoch": 7,
+  "claim_boundary": "Current role and in-flight pointer only. Path existence is checked against the chosen current-state root; transport SHA is not a handoff blocker.",
   "mainline_role_id": "mainline.control",
+  "registry_epoch": 50,
   "roles": [
     {
+      "current_task": {
+        "next_action": "auto-publish each gated fresh successor to its sole managed pending while performing server actions only after explicit user authorization",
+        "objective": "keep GAP v80, serialized v113 and native p58 storage/control-plane coherent while coordinating the QAdd runner-return successor",
+        "pointer": {
+          "path": ".agents/task_records/20260822_next_round_family_dispatch.md"
+        },
+        "status": "ACTIVE"
+      },
+      "forbidden_scope": [
+        "functional RTL without user authorization",
+        "server action without user authorization"
+      ],
+      "in_flight": {
+        "lease_id": null,
+        "package": null,
+        "return_zip": null,
+        "server_root": null,
+        "state": "NONE"
+      },
+      "latest_task_record": {
+        "path": ".agents/task_records/20260822_next_round_family_dispatch.md"
+      },
+      "owner_epoch": 7,
       "role_id": "mainline.control",
       "role_kind": "MAINLINE",
       "scope": "project control plane, current plan, owner routing and release adjudication",
-      "thread_id": "019ff027-e7db-72a3-b282-cfad8708da05",
-      "owner_epoch": 2,
       "status": "ACTIVE",
-      "write_scope": [".agents/plan.md", "contracts/current_session_owner_registry_v1.json", "artifacts/operator_config_validation/r5-server-test-packages/"],
-      "forbidden_scope": ["functional RTL without user authorization", "server action without user authorization"],
-      "current_task": {
-        "status": "ACTIVE",
-        "objective": "preserve the two exact pending packages and route the shortest next whole-network closure action",
-        "next_action": "await user server-run authorization for serialized v106 and QAdd v80, or explicit authorization for the validated GAP/native fixes",
-        "pointer": {"path": ".agents/task_records/20260818_v106_v80_storage_and_control_plane_sync.md"}
-      },
-      "latest_task_record": {"path": ".agents/task_records/20260818_mainline_package_build_slowness_rule_skill_audit_v1.md"},
-      "in_flight": {"state": "NONE", "server_root": null, "lease_id": null, "package": null, "return_zip": null}
+      "thread_id": "019ff027-e7db-72a3-b282-cfad8708da05",
+      "write_scope": [
+        ".agents/plan.md",
+        "contracts/current_session_owner_registry_v1.json",
+        "artifacts/operator_config_validation/r5-server-test-packages/"
+      ]
     },
     {
+      "current_task": {
+        "next_action": "await user server-run authorization and consume only the exact v80 formal return",
+        "objective": "run the signal-safe return-core successor while preserving the private three-file FIFO repair and full causal cone",
+        "pointer": {
+          "path": "outputs/gv80/PACKAGE_READY_NOT_RUN_LOCAL_GATES_COMPLETE.json"
+        },
+        "status": "PACKAGE_READY_NOT_RUN"
+      },
+      "forbidden_scope": [
+        "other families",
+        ".agents/plan.md",
+        "functional RTL without user authorization",
+        "server action"
+      ],
+      "in_flight": {
+        "lease_id": null,
+        "package": {
+          "path": "artifacts/operator_config_validation/r5-server-test-packages/pending/r5_n71_gap_v80_cfifo_returncore_tbvcd.zip"
+        },
+        "return_zip": null,
+        "server_root": null,
+        "state": "PACKAGE_READY_NOT_RUN"
+      },
+      "latest_task_record": {
+        "path": "outputs/gv80/PACKAGE_READY_NOT_RUN_LOCAL_GATES_COMPLETE.json"
+      },
+      "owner_epoch": 7,
       "role_id": "family.gap",
       "role_kind": "FAMILY_OWNER",
       "scope": "GAP node0071 family diagnosis and successor ownership",
-      "thread_id": "019ff02d-8225-7d21-9779-e46ce4130572",
-      "owner_epoch": 2,
       "status": "ACTIVE",
-      "write_scope": ["GAP family configs, reports and unrun successor assets"],
-      "forbidden_scope": ["other families", ".agents/plan.md", "functional RTL without user authorization", "server action"],
-      "current_task": {
-        "status": "WAIT_USER_DECISION",
-        "objective": "preserve the validated MSE3/Buffer4 stale-index FIFO root",
-        "next_action": "await equivalent C-path configuration-extension authorization",
-        "pointer": {"path": ".agents/task_records/20260817_v99_gapv73_qaddv69_returns_guardv2_and_successor_storage_acceptance.md"}
-      },
-      "latest_task_record": {"path": ".agents/task_records/20260817_v99_gapv73_qaddv69_returns_guardv2_and_successor_storage_acceptance.md"},
-      "in_flight": {"state": "NONE", "server_root": null, "lease_id": null, "package": null, "return_zip": null}
+      "thread_id": "019ff02d-8225-7d21-9779-e46ce4130572",
+      "write_scope": [
+        "GAP family configs, reports and unrun successor assets"
+      ]
     },
     {
+      "current_task": {
+        "next_action": "await user server-run authorization and consume only the exact v113 formal return",
+        "objective": "run the compile-signal-core successor while preserving the 153-signal tuple-leaf cone and all functional surfaces",
+        "pointer": {
+          "path": "outputs/conv_node0004_v113_compile_signal_core_20260822/PACKAGE_READY_NOT_RUN_LOCAL_GATES_COMPLETE.json"
+        },
+        "status": "PACKAGE_READY_NOT_RUN"
+      },
+      "forbidden_scope": [
+        "other families",
+        ".agents/plan.md",
+        "functional RTL without user authorization",
+        "server action"
+      ],
+      "in_flight": {
+        "lease_id": null,
+        "package": {
+          "path": "artifacts/operator_config_validation/r5-server-test-packages/pending/r5_n4_hw_v113b_compile_signal_core.zip"
+        },
+        "return_zip": null,
+        "server_root": null,
+        "state": "PACKAGE_READY_NOT_RUN"
+      },
+      "latest_task_record": {
+        "path": "outputs/conv_node0004_v113_compile_signal_core_20260822/PACKAGE_READY_NOT_RUN_LOCAL_GATES_COMPLETE.json"
+      },
+      "owner_epoch": 7,
       "role_id": "family.conv.serialized",
       "role_kind": "FAMILY_OWNER",
       "scope": "serialized Conv node0004 diagnosis and successor ownership",
-      "thread_id": "019ff02d-901b-7f70-a9da-f54e268b5bbe",
-      "owner_epoch": 2,
       "status": "ACTIVE",
-      "write_scope": ["serialized Conv family configs, reports and unrun successor assets"],
-      "forbidden_scope": ["other families", ".agents/plan.md", "functional RTL without user authorization", "server action"],
-      "current_task": {
-        "status": "PACKAGE_READY_NOT_RUN",
-        "objective": "dynamically test frozen LC9 to LC3 tuple10 with durable two-phase return",
-        "next_action": "await user server-run authorization and consume only the exact v106 formal return",
-        "pointer": {"path": "outputs/conv_node0004_v106b_lcdup_return2pflight_release1/mainline_package_receipt.json"}
-      },
-      "latest_task_record": {"path": "outputs/conv_node0004_v106b_lcdup_return2pflight_release1/mainline_package_receipt.json"},
-      "in_flight": {
-        "state": "PACKAGE_READY_NOT_RUN",
-        "server_root": null,
-        "lease_id": null,
-        "package": {"path": "artifacts/operator_config_validation/r5-server-test-packages/pending/r5_n4_hw_v106b_lcdup_return2pflight.zip"},
-        "return_zip": null
-      }
+      "thread_id": "019ff02d-901b-7f70-a9da-f54e268b5bbe",
+      "write_scope": [
+        "serialized Conv family configs, reports and unrun successor assets"
+      ]
     },
     {
+      "current_task": {
+        "next_action": "await user server-run authorization and consume only the exact p58 formal return",
+        "objective": "run the compile-interrupt return-core successor while preserving native functional surfaces and TB-VCD causal cone",
+        "pointer": {
+          "path": "outputs/conv_native_p58_compileinterrupt_20260822/p58_package_ready_epoch49.json"
+        },
+        "status": "PACKAGE_READY_NOT_RUN"
+      },
+      "forbidden_scope": [
+        "other families",
+        ".agents/plan.md",
+        "functional RTL without user authorization",
+        "server action"
+      ],
+      "in_flight": {
+        "lease_id": null,
+        "package": {
+          "path": "artifacts/operator_config_validation/r5-server-test-packages/pending/r5_n4_0cc_p58_compileinterrupt.zip"
+        },
+        "return_zip": null,
+        "server_root": null,
+        "state": "PACKAGE_READY_NOT_RUN"
+      },
+      "latest_task_record": {
+        "path": "outputs/conv_native_p58_compileinterrupt_20260822/p58_package_ready_epoch49.json"
+      },
+      "owner_epoch": 7,
       "role_id": "family.conv.native",
       "role_kind": "FAMILY_OWNER",
       "scope": "native Conv four-lane diagnosis and successor ownership",
-      "thread_id": "019ff02d-974d-7c72-a4d5-de8dbf4ae60c",
-      "owner_epoch": 2,
       "status": "ACTIVE",
-      "write_scope": ["native Conv family configs, reports and unrun successor assets"],
-      "forbidden_scope": ["other families", ".agents/plan.md", "functional RTL without user authorization", "server action"],
-      "current_task": {
-        "status": "WAIT_RTL_FIX",
-        "objective": "preserve the exact input1 buffer-tag undersupply root",
-        "next_action": "await explicit functional-fix authorization",
-        "pointer": {"path": ".agents/task_records/20260815_p52_v97_gapv71_validated_roots_and_storage_acceptance.md"}
-      },
-      "latest_task_record": {"path": ".agents/task_records/20260815_p52_v97_gapv71_validated_roots_and_storage_acceptance.md"},
-      "in_flight": {"state": "NONE", "server_root": null, "lease_id": null, "package": null, "return_zip": null}
+      "thread_id": "019ff02d-974d-7c72-a4d5-de8dbf4ae60c",
+      "write_scope": [
+        "native Conv family configs, reports and unrun successor assets"
+      ]
     },
     {
+      "current_task": {
+        "next_action": "bind the fresh diagnostic mode and build a runner-return-only successor while preserving the exact 4/2 lineage and GA numeric cone",
+        "objective": "repair the compile-interrupt return surface after the v83 license failure without changing the numeric diagnostic target",
+        "pointer": {
+          "path": "outputs/qadd_v83_return_r1787386715598727203_1262262/formal_mainline_receipt.json"
+        },
+        "status": "SUCCESSOR_MODE_BINDING_REQUIRED"
+      },
+      "forbidden_scope": [
+        "other families",
+        ".agents/plan.md",
+        "functional RTL without user authorization",
+        "server action"
+      ],
+      "in_flight": {
+        "lease_id": null,
+        "package": {
+          "path": "artifacts/operator_config_validation/r5-server-test-packages/pending/r5_qadd_n7_tr_v83_ga_numeric.zip"
+        },
+        "return_zip": null,
+        "server_root": null,
+        "state": "FORMAL_RETURN_CONSUMED"
+      },
+      "latest_task_record": {
+        "path": "outputs/qadd_v83_return_r1787386715598727203_1262262/formal_mainline_receipt.json"
+      },
+      "owner_epoch": 8,
       "role_id": "family.qlinearadd",
       "role_kind": "FAMILY_OWNER",
       "scope": "QLinearAdd node0007 family diagnosis and successor ownership",
-      "thread_id": "019ff02d-9e93-7d61-8c98-c928fdea157c",
-      "owner_epoch": 2,
       "status": "ACTIVE",
-      "write_scope": ["QLinearAdd family configs, reports and unrun successor assets"],
-      "forbidden_scope": ["other families", ".agents/plan.md", "functional RTL without user authorization", "server action"],
-      "current_task": {
-        "status": "PACKAGE_READY_NOT_RUN",
-        "objective": "execute the exact 4/2 target with measured 15000-second admission",
-        "next_action": "await user server-run authorization and consume only the exact v80 formal return",
-        "pointer": {"path": ".agents/task_records/20260818_v106_v80_storage_and_control_plane_sync.md"}
-      },
-      "latest_task_record": {"path": ".agents/task_records/20260818_v106_v80_storage_and_control_plane_sync.md"},
-      "in_flight": {
-        "state": "PACKAGE_READY_NOT_RUN",
-        "server_root": null,
-        "lease_id": null,
-        "package": {"path": "artifacts/operator_config_validation/r5-server-test-packages/pending/r5_qadd_n7_tr_v80_w15kqf.zip"},
-        "return_zip": null
-      }
+      "thread_id": "01a02566-8abf-78e0-b7d4-d30d92e9d44d",
+      "write_scope": [
+        "QLinearAdd family configs, reports and unrun successor assets"
+      ]
     },
     {
+      "current_task": {
+        "next_action": "stand by for mainline dispatch on new shared incidents or rule deltas",
+        "objective": "maintain shared release-admission and whole-network closure semantics",
+        "pointer": {
+          "path": ".agents/task_records/20260822_server_package_release_admission_schema_interface_v2.md"
+        },
+        "status": "STANDBY"
+      },
+      "forbidden_scope": [
+        "family packages",
+        ".agents/plan.md except explicit user authorization",
+        "functional RTL",
+        "server action"
+      ],
+      "in_flight": {
+        "lease_id": null,
+        "package": null,
+        "return_zip": null,
+        "server_root": null,
+        "state": "NONE"
+      },
+      "latest_task_record": {
+        "path": "outputs/optimizer_multi_return_rule_incident_20260819/report.md"
+      },
+      "owner_epoch": 5,
       "role_id": "optimizer.whole-network",
       "role_kind": "SPECIALIST_OWNER",
       "scope": "whole-network convergence, shared package gate and rule maintenance",
-      "thread_id": "019fd276-14c5-7800-94db-87ebfb9ce632",
-      "owner_epoch": 1,
       "status": "ACTIVE",
-      "write_scope": ["shared tools, schemas, contracts, tests and optimizer reports"],
-      "forbidden_scope": ["family packages", ".agents/plan.md except explicit user authorization", "functional RTL", "server action"],
-      "current_task": {
-        "status": "ACTIVE",
-        "objective": "make patch-first release admission and current-disk takeover executable and compact",
-        "next_action": "finish shared gate, rule and Skill compaction without touching current packages",
-        "pointer": {"path": "contracts/rule_maintenance_incident_fast_closure_transfer_v3.json"}
-      },
-      "latest_task_record": {"path": ".agents/task_records/20260818_server_package_fast_closure_patch_first_rule_gate_skill_v2.md"},
-      "in_flight": {"state": "NONE", "server_root": null, "lease_id": null, "package": null, "return_zip": null}
+      "thread_id": "019fd276-14c5-7800-94db-87ebfb9ce632",
+      "write_scope": [
+        "shared tools, schemas, contracts, tests and optimizer reports"
+      ]
     }
   ],
-  "claim_boundary": "Current role and in-flight pointer only. Path existence is checked against the chosen current-state root; transport SHA is not a handoff blocker."
+  "schema": "session-owner-registry-v1"
 }

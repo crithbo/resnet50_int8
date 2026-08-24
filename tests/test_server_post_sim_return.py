@@ -20,6 +20,7 @@ from tools.server_post_sim_return import (
     finalize,
     validate_final_zip,
     validate_request,
+    validate_return_zip,
 )
 from tools.server_waveform_mandatory_return import collect_runtime
 
@@ -192,6 +193,14 @@ class PostSimReturnTests(unittest.TestCase):
             dispatch["runtime_contract"]["waveform_dynamic_discovery"]["copy_mode"],
             "STREAM_ALL_MATCHING_NO_SIZE_LIMIT",
         )
+        single_zip = dispatch["runtime_contract"]["single_zip_return"]
+        self.assertTrue(single_zip["enabled"])
+        self.assertEqual(single_zip["digest_member"], "RETURN_DIGESTS.json")
+        self.assertTrue(single_zip["adjacent_sidecar_forbidden"])
+        self.assertEqual(
+            dispatch["runtime_contract"]["return_publish"],
+            "ATOMIC_NO_OVERWRITE_FIXED_SIMRESULT_SINGLE_ZIP_NO_SIDECAR",
+        )
 
     def test_natural_success_publishes_complete_return(self) -> None:
         result = finalize(
@@ -201,7 +210,35 @@ class PostSimReturnTests(unittest.TestCase):
         self.assertEqual(result["disposition"], "COMPLETE_RETURN")
         manifest = self.returned_manifest(result)
         self.assertEqual(manifest["disposition"], "COMPLETE_RETURN")
-        self.assertTrue(Path(result["sidecar"]).is_file())
+        return_zip = Path(result["return_zip"])
+        self.assertTrue(return_zip.is_file())
+        self.assertFalse(Path(f"{return_zip}.sha256").exists())
+        self.assertEqual(
+            result["return_digest_member"],
+            "synthetic_pkg_return/RETURN_DIGESTS.json",
+        )
+        with zipfile.ZipFile(return_zip) as archive:
+            self.assertIn(
+                "synthetic_pkg_return/RETURN_DIGESTS.json",
+                archive.namelist(),
+            )
+        report = validate_return_zip(return_zip, self.result)
+        self.assertTrue(report["pass"], report)
+        self.assertEqual(report["details"]["adjacent_sidecars"], [])
+
+    def test_single_zip_policy_rejects_adjacent_sidecar(self) -> None:
+        result = finalize(
+            self.request(), environment=self.environment(), result_root_override=self.result
+        )
+        return_zip = Path(result["return_zip"])
+        sidecar = Path(f"{return_zip}.sha256")
+        sidecar.write_text("0" * 64 + "  return.zip\n", encoding="ascii")
+        report = validate_return_zip(return_zip, self.result)
+        self.assertFalse(report["pass"])
+        self.assertIn(
+            "adjacent return sidecar is forbidden",
+            "\n".join(report["errors"]),
+        )
 
     def test_required_plugin_failure_still_publishes_core(self) -> None:
         self.plugin.write_text(

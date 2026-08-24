@@ -927,8 +927,17 @@ def _harness_checks(
             or return_pattern.fullmatch(observed_return_zip) is None
         ):
             errors.append(f"harness {name} return ZIP path mismatch")
-        if row.get("return_sidecar") != f"{observed_return_zip}.sha256":
-            errors.append(f"harness {name} return sidecar path mismatch")
+        if row.get("return_sidecar_absent") is not True:
+            errors.append(f"harness {name} must prove adjacent return sidecar is absent")
+        digest_member = row.get("return_digest_member")
+        if (
+            not isinstance(digest_member, str)
+            or not digest_member
+            or not digest_member.endswith("/RETURN_DIGESTS.json")
+        ):
+            errors.append(
+                f"harness {name} return digest member must be an internal ZIP member"
+            )
         if row.get("writes_outside_install") is not False:
             errors.append(f"harness {name} wrote package state outside install")
         if row.get("unknown_items_deleted_or_overwritten") is not False:

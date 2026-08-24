@@ -1,0 +1,62 @@
+{
+  "schema": "workspace-lifecycle-policy-v1",
+  "version": 1,
+  "mode": "DRY_RUN_ONLY",
+  "scan_roots": [
+    {"path": "outputs", "kind": "GENERATED_OUTPUTS"},
+    {"path": "artifacts", "kind": "GENERATED_ARTIFACTS"},
+    {"path": "server_returns", "kind": "RAW_RETURNS"},
+    {"path": ".tmp_tests", "kind": "EPHEMERAL_ROOT"},
+    {"path": ".pytest_cache", "kind": "CACHE_ROOT"},
+    {"path": "__pycache__", "kind": "CACHE_ROOT"},
+    {"path": "coverage", "kind": "CACHE_ROOT"},
+    {"path": ".venv", "kind": "REGENERABLE_ENVIRONMENT"}
+  ],
+  "control_plane_inputs": {
+    "owner_registry": "contracts/current_session_owner_registry_v1.json",
+    "plan": ".agents/plan.md",
+    "task_records": ".agents/task_records",
+    "package_storage_index": "artifacts/operator_config_validation/r5-server-test-packages/PACKAGE_STORAGE_INDEX.json"
+  },
+  "ephemeral_exact_names": [
+    ".pytest_cache",
+    "__pycache__",
+    ".mypy_cache",
+    ".ruff_cache",
+    ".tmp_tests",
+    "tmp_tests",
+    "pip_tmp",
+    "coverage"
+  ],
+  "ephemeral_prefixes": [
+    "partial_exit_live_causal_",
+    "operator-config-evidence-",
+    "probe_",
+    "test-",
+    "tmp"
+  ],
+  "derived_exact_names": [
+    "build",
+    "b",
+    "clean_extract",
+    "source_extract",
+    "final_zip_recheck"
+  ],
+  "derived_prefixes": [
+    "exact_zip_extract",
+    "failed_attempt_",
+    "withdrawn_pre_",
+    "_probe_"
+  ],
+  "repeat_zip_suffix": ".repeat.zip",
+  "first_phase_managed_storage_policy": "PROTECT_ALL",
+  "deletion_requirements": {
+    "unknown_legacy_default": "PROTECTED_PENDING_CLASSIFICATION",
+    "symlink_or_reparse_default": "PROTECTED_PENDING_CLASSIFICATION",
+    "access_error_default": "PROTECTED_PENDING_CLASSIFICATION",
+    "destructive_apply_available": false,
+    "quarantine_required_before_first_delete": true,
+    "hash_large_duplicate_only_at_apply": true
+  },
+  "claim_boundary": "First-phase local workspace inventory and dry-run planning only; no move, delete, package, storage or server action."
+}

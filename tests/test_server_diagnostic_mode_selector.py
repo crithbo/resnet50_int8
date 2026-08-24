@@ -44,6 +44,14 @@ class DiagnosticModeSelectorTests(unittest.TestCase):
         jsonschema.validate(selector("OBSERVER_ONLY_WIDE_CAUSAL"), schema)
         jsonschema.validate(selector("TB_VCD_BOUNDED_CAUSAL_CONE"), schema)
 
+    def test_new_dynamic_successor_defaults_to_tb_vcd(self) -> None:
+        dispatch = json.loads(DISPATCH.read_text(encoding="utf-8"))
+        self.assertEqual(dispatch["default_mode"], "TB_VCD_BOUNDED_CAUSAL_CONE")
+        self.assertTrue(dispatch["one_round_diagnostic_priority"])
+        self.assertTrue(
+            dispatch["candidate_matrix_pairwise_distinguish_all_open_candidates"]
+        )
+
     def test_observer_mode_unchanged_identity(self) -> None:
         dispatch = json.loads(DISPATCH.read_text(encoding="utf-8"))
         for item in dispatch["observer_frozen_assets"]:

@@ -1,0 +1,23 @@
+{
+  "schema": "server-package-release-admission-schema-interface-escape-v1",
+  "package_id": "r5_n4_0cc_p58_compileinterrupt",
+  "source_contract": {
+    "path": "outputs/conv_native_p58_compileinterrupt_20260822/gates/package_release_admission_contract.json",
+    "sha256": "6df8dc7b318f90c9e65de3270492c105ce651a30e4b84786259e7bae72dae732"
+  },
+  "escaped_validator_report": {
+    "path": "outputs/conv_native_p58_compileinterrupt_20260822/gates/package_release_admission.json",
+    "sha256": "a377b24bb225256b86bb5b6e53e1885540f7fc3399d2c0681a2d5dfdaf0e7616",
+    "schema_validation_performed": true,
+    "schema_validation_pass": false,
+    "schema_error_count": 10
+  },
+  "cause": "The companion validator applied the pipeline admission-result schema to its contract input.",
+  "required_fix": {
+    "contract_schema": "schemas/server_package_release_admission_contract_v1.schema.json",
+    "result_schema": "schemas/server_package_release_admission_v1.schema.json",
+    "public_rule_change": false,
+    "ad_hoc_exemption": false
+  },
+  "expected_result": "The unchanged p58 contract passes the dedicated contract schema and all existing runtime admission checks."
+}

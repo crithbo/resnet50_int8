@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "workspace-object-manifest-v1.schema.json",
+  "title": "Workspace generated-object lifecycle manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "object_id",
+    "root",
+    "owner",
+    "kind",
+    "lifecycle",
+    "source",
+    "canonical_anchor",
+    "protected_reasons",
+    "cleanup_trigger",
+    "record_storage",
+    "claim_boundary"
+  ],
+  "properties": {
+    "schema": {"const": "workspace-object-manifest-v1"},
+    "object_id": {"type": "string", "minLength": 1},
+    "root": {"type": "string", "minLength": 1},
+    "owner": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["role_id", "owner_epoch", "registry_epoch", "task_pointer"],
+      "properties": {
+        "role_id": {"type": "string", "minLength": 1},
+        "owner_epoch": {"type": "integer", "minimum": 0},
+        "registry_epoch": {"type": "integer", "minimum": 0},
+        "task_pointer": {"type": "string", "minLength": 1}
+      }
+    },
+    "kind": {"enum": ["EPHEMERAL", "BUILD_STAGING", "EXTRACTION", "FINAL_REPORT", "RAW_RETURN", "MANAGED_PACKAGE_SOURCE", "CACHE", "OTHER"]},
+    "lifecycle": {"enum": ["ACTIVE", "PATCH_BASE", "ADMITTED", "CONSUMED", "SUPERSEDED", "CLEANUP_PENDING", "RETIRED"]},
+    "source": {"type": "array", "items": {"type": "string", "minLength": 1}},
+    "canonical_anchor": {"type": ["string", "null"]},
+    "protected_reasons": {"type": "array", "items": {"type": "string", "minLength": 1}},
+    "cleanup_trigger": {"enum": ["PROCESS_EXIT", "POST_ADMISSION_STORAGE", "POST_RETURN_DOUBLE_CONSUMPTION", "OWNER_HANDOFF", "MANUAL_REVIEW"]},
+    "record_storage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["logical_record_count", "representation", "per_record_files_allowed"],
+      "properties": {
+        "logical_record_count": {"type": "integer", "minimum": 0},
+        "representation": {"enum": ["FILES", "JSONL", "SQLITE", "PARQUET", "ARCHIVE", "NOT_APPLICABLE"]},
+        "per_record_files_allowed": {"type": "boolean"},
+        "actual_consumer_requirement": {"type": ["string", "null"]}
+      }
+    },
+    "claim_boundary": {"type": "string", "minLength": 1}
+  }
+}

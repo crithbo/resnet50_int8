@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "project-migration-v1.schema.json",
+  "oneOf": [
+    {
+      "type": "object",
+      "required": ["schema", "generated_at_utc", "repo_root", "git", "control_plane", "lock_files", "excluded_regenerable_roots", "ready_for_build", "errors", "warnings", "claim_boundary"],
+      "properties": {
+        "schema": {"const": "project-migration-manifest-v1"},
+        "generated_at_utc": {"type": "string"},
+        "repo_root": {"type": "string"},
+        "git": {"type": "object", "required": ["commit", "branch", "clean", "status_count", "tracked_file_count"], "properties": {"commit": {"type": "string"}, "branch": {"type": "string"}, "clean": {"type": "boolean"}, "status_count": {"type": "integer", "minimum": 0}, "tracked_file_count": {"type": "integer", "minimum": 0}}, "additionalProperties": false},
+        "control_plane": {"type": "object", "required": ["registry_epoch", "mainline_role_id", "role_ids", "pending_packages"], "properties": {"registry_epoch": {"type": "integer", "minimum": 0}, "mainline_role_id": {"type": "string"}, "role_ids": {"type": "array", "items": {"type": "string"}}, "pending_packages": {"type": "array", "items": {"type": "string"}}}, "additionalProperties": false},
+        "lock_files": {"type": "array", "items": {"type": "object", "required": ["path", "bytes"], "properties": {"path": {"type": "string"}, "bytes": {"type": "integer", "minimum": 0}}, "additionalProperties": false}},
+        "excluded_regenerable_roots": {"type": "array", "items": {"type": "string"}},
+        "ready_for_build": {"type": "boolean"},
+        "errors": {"type": "array", "items": {"type": "string"}},
+        "warnings": {"type": "array", "items": {"type": "string"}},
+        "claim_boundary": {"type": "string"}
+      },
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "required": ["schema", "generated_at_utc", "repo_commit", "bundle", "source_archive", "bundle_verify_pass", "archive_forbidden_members", "pass", "errors", "claim_boundary"],
+      "properties": {
+        "schema": {"const": "project-migration-build-receipt-v1"},
+        "generated_at_utc": {"type": "string"},
+        "repo_commit": {"type": "string"},
+        "bundle": {"$ref": "#/$defs/file"},
+        "source_archive": {"$ref": "#/$defs/file"},
+        "bundle_verify_pass": {"type": "boolean"},
+        "archive_forbidden_members": {"type": "array", "items": {"type": "string"}},
+        "pass": {"type": "boolean"},
+        "errors": {"type": "array", "items": {"type": "string"}},
+        "claim_boundary": {"type": "string"}
+      },
+      "additionalProperties": false
+    }
+  ],
+  "$defs": {
+    "file": {
+      "type": "object",
+      "required": ["path", "bytes", "sha256"],
+      "properties": {"path": {"type": "string"}, "bytes": {"type": "integer", "minimum": 1}, "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}},
+      "additionalProperties": false
+    }
+  }
+}

@@ -1,9 +1,11 @@
 {
   "schema": "server-diagnostic-mode-selector-dispatch-v1",
   "activation": "optional_next_fresh_after_mainline_activation",
-  "default_mode": "OBSERVER_ONLY_WIDE_CAUSAL",
-  "optional_mode": "TB_VCD_BOUNDED_CAUSAL_CONE",
+  "default_mode": "TB_VCD_BOUNDED_CAUSAL_CONE",
+  "optional_mode": "OBSERVER_ONLY_WIDE_CAUSAL",
   "mode_exclusivity": "EXACTLY_ONE_BULK_EVIDENCE_MODE",
+  "one_round_diagnostic_priority": true,
+  "candidate_matrix_pairwise_distinguish_all_open_candidates": true,
   "observer_frozen_assets": [
     {"path": "contracts/server_observer_only_wide_causal_dispatch_v1.json", "sha256": "1add8cce9f61d5b37f2b68cf96e94e8627071d6476ad14ae47cac64f0a423d44"},
     {"path": "schemas/server_observer_only_wide_causal_contract_v1.schema.json", "sha256": "2811ea3a0a9d643e9c0de43aeb36e8177eb6001d50462e6d7f1dfddf6e550e00"},

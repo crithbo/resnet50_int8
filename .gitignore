@@ -1,4 +1,6 @@
 .venv/
+/.tmp/
+/work/
 # Generated artifacts stay out of Git except the two small, frozen W3 graph
 # metadata files needed by layout queries in a fresh clone and the small,
 # hash-closed R3/R5 evidence bundles. Other tensor payloads, manifests,

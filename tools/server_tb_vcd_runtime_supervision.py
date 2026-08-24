@@ -193,7 +193,8 @@ def evaluate(request: dict[str, Any]) -> dict[str, Any]:
             and isinstance(selected, int) and not isinstance(selected, bool)
             and isinstance(recommended, int) and selected >= recommended
             and WALL <= selected <= 86400
-            and guards == exact_guards
+            and isinstance(guards, dict)
+            and all(guards.get(key) == value for key, value in exact_guards.items())
         ):
             errors.append("runtime wall override lacks a valid bounded measured admission")
         else:

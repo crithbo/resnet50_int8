@@ -35,7 +35,13 @@
       "copy_mode": "STREAM_ALL_MATCHING_NO_SIZE_LIMIT",
       "wave_zip_compression": "STORED"
     },
-    "return_publish": "ATOMIC_NO_OVERWRITE_FIXED_SIMRESULT",
+    "return_publish": "ATOMIC_NO_OVERWRITE_FIXED_SIMRESULT_SINGLE_ZIP_NO_SIDECAR",
+    "single_zip_return": {
+      "enabled": true,
+      "digest_member": "RETURN_DIGESTS.json",
+      "adjacent_sidecar_forbidden": true,
+      "sidecar_policy": "ALL_DIGESTS_INSIDE_ZIP"
+    },
     "failed_publish_recovery": "RERUN_SAME_FINALIZER_REQUEST_WITHOUT_RERUNNING_SIMULATION"
   },
   "required_final_zip_members": [

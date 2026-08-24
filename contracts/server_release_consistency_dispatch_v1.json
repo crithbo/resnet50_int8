@@ -16,7 +16,7 @@
     "selected wall and absolute maximum wall identities are equal across every declared package/runtime/finalizer member and remain semantically distinct",
     "every required in-ZIP return entry has one exact prepublication producer and basename closure",
     "finalization guard completion precedes immutable return publication",
-    "durable-return and cleanup receipts generated after publication are external immutable sidecars and cannot be required inside the first return ZIP",
+    "durable-return and cleanup receipts are staged inside the single return ZIP before publication; no external immutable sidecar may appear next to the return ZIP",
     "progress counters bind exact source spans and count only qualified handshakes or state transitions; held raw levels cannot reset plateau detection"
   ],
   "implementation_assets": {

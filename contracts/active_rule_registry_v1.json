@@ -17,8 +17,8 @@
       "read_profiles": ["all"],
       "semantic_owners": ["routing", "evidence-levels", "regression-classification"],
       "excludes": ["字段公式", "服务器实现清单", "版本结果"],
-      "bytes": 5026,
-      "sha256": "67afbf5eb8d0cc5c9ff855ce2ee4f1e9532605c4b31c554cc38f8146283b7e9d"
+      "bytes": 5424,
+      "sha256": "1afaf49a875325d0a685ca461be3c95c026b22a05b8fcf90e9a6ab127cc9aae5"
     },
     {
       "path": ".agents/rules/算子配置规则.md",
@@ -50,8 +50,8 @@
       "read_profiles": ["server-package", "return-analysis", "infrastructure"],
       "semantic_owners": ["package-layout", "runtime-safety", "diagnostics", "return"],
       "excludes": ["算子数值公式", "当前算子状态", "会话activation"],
-      "bytes": 10506,
-      "sha256": "cff48fa3e32bfcf4202a5ab3bfdc22737e63831c1914d0b2e32d373bee7e215c"
+      "bytes": 12080,
+      "sha256": "ae4cd51a097f7f75f10d212b037fb64023e0ccbcdec0af18551e09988b4b7b06"
     },
     {
       "path": ".agents/rules/会话转接与所有权规则.md",
@@ -160,8 +160,8 @@
       "read_profiles": ["optimizer"],
       "semantic_owners": ["test-convergence-method", "shadow-adjudication"],
       "excludes": ["算子所有权", "current package修改", "plan裁决"],
-      "bytes": 4606,
-      "sha256": "ab87c1e34c0f8fc5c4e13486e49675214ae3919533d1b9a272f245ab0c78dbb8"
+      "bytes": 5703,
+      "sha256": "9088ee0bb4da1ff74dd290e659220f31d10cde88f7aeed7726a13ed65e566804"
     }
   ],
   "history": {

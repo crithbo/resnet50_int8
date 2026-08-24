@@ -1,0 +1,88 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "workspace-quarantine-v1.schema.json",
+  "oneOf": [
+    {
+      "type": "object",
+      "required": ["schema", "registry_epoch", "dry_run_plan_sha256", "approved_paths", "user_authorization", "claim_boundary"],
+      "properties": {
+        "schema": {"const": "workspace-quarantine-approval-v1"},
+        "registry_epoch": {"type": "integer", "minimum": 0},
+        "dry_run_plan_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "approved_paths": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+        "user_authorization": {"type": "string", "minLength": 1},
+        "claim_boundary": {"type": "string", "minLength": 1}
+      },
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "required": ["schema", "pass", "state_root", "registry_epoch", "dry_run_plan", "dry_run_plan_sha256", "approval", "approval_sha256", "quarantine_root", "moved", "generated_at_utc", "claim_boundary"],
+      "properties": {
+        "schema": {"const": "workspace-quarantine-receipt-v1"},
+        "pass": {"const": true},
+        "state_root": {"type": "string"},
+        "registry_epoch": {"type": "integer"},
+        "dry_run_plan": {"type": "string"},
+        "dry_run_plan_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "approval": {"type": "string"},
+        "approval_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "quarantine_root": {"type": "string"},
+        "moved": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/tree"}},
+        "generated_at_utc": {"type": "string"},
+        "claim_boundary": {"type": "string"}
+      },
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "required": ["schema", "pass", "state_root", "registry_epoch", "quarantine_receipt", "quarantine_receipt_sha256", "errors", "generated_at_utc", "claim_boundary"],
+      "properties": {
+        "schema": {"const": "workspace-quarantine-verification-v1"},
+        "pass": {"type": "boolean"},
+        "state_root": {"type": "string"},
+        "registry_epoch": {"type": "integer"},
+        "quarantine_receipt": {"type": "string"},
+        "quarantine_receipt_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "errors": {"type": "array", "items": {"type": "string"}},
+        "generated_at_utc": {"type": "string"},
+        "claim_boundary": {"type": "string"}
+      },
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "required": ["schema", "pass", "quarantine_receipt", "quarantine_receipt_sha256", "verification", "verification_sha256", "deleted", "deleted_bytes", "generated_at_utc", "claim_boundary"],
+      "properties": {
+        "schema": {"const": "workspace-quarantine-purge-receipt-v1"},
+        "pass": {"const": true},
+        "quarantine_receipt": {"type": "string"},
+        "quarantine_receipt_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "verification": {"type": "string"},
+        "verification_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "deleted": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/tree"}},
+        "deleted_bytes": {"type": "integer", "minimum": 0},
+        "generated_at_utc": {"type": "string"},
+        "claim_boundary": {"type": "string"}
+      },
+      "additionalProperties": false
+    }
+  ],
+  "$defs": {
+    "tree": {
+      "type": "object",
+      "required": ["path", "files", "directories", "bytes", "symlinks", "access_error_count"],
+      "properties": {
+        "path": {"type": "string"},
+        "source": {"type": "string"},
+        "destination": {"type": "string"},
+        "files": {"type": "integer", "minimum": 0},
+        "directories": {"type": "integer", "minimum": 0},
+        "bytes": {"type": "integer", "minimum": 0},
+        "symlinks": {"type": "integer", "minimum": 0},
+        "access_error_count": {"type": "integer", "minimum": 0}
+      },
+      "additionalProperties": false
+    }
+  }
+}
