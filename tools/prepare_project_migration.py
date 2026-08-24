@@ -140,7 +140,8 @@ def build(root: Path, output_dir: Path, manifest: dict[str, Any]) -> dict[str, A
     if bundle.exists() or archive.exists():
         raise MigrationError("migration output already exists; refusing overwrite")
     run_git(root, "bundle", "create", str(bundle), "--all")
-    run_git(root, "archive", "--format=zip", "-o", str(archive), "HEAD")
+    archive_paths = [".", *(f":(exclude){prefix.rstrip('/')}" for prefix in EXCLUDED)]
+    run_git(root, "archive", "--format=zip", "-o", str(archive), "HEAD", "--", *archive_paths)
     verify = run_git(root, "bundle", "verify", str(bundle), check=False)
     forbidden: list[str] = []
     with zipfile.ZipFile(archive) as zipped:

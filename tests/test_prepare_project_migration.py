@@ -59,6 +59,20 @@ class PrepareProjectMigrationTests(unittest.TestCase):
                 self.assertIn("source.py", archive.namelist())
                 self.assertNotIn("outputs/ignored.bin", archive.namelist())
 
+    def test_build_excludes_intentionally_tracked_output_receipt(self) -> None:
+        with tempfile.TemporaryDirectory() as raw:
+            base = Path(raw)
+            root = self.make_repo(base)
+            tracked = root / "outputs/tracked_receipt.json"
+            tracked.write_text("{}\n", encoding="utf-8")
+            git(root, "add", "-f", "outputs/tracked_receipt.json")
+            git(root, "commit", "-m", "track historical output receipt")
+            manifest = plan(root)
+            receipt = build(root, base / "handoff", manifest)
+            self.assertTrue(receipt["pass"], receipt)
+            with zipfile.ZipFile(receipt["source_archive"]["path"]) as archive:
+                self.assertNotIn("outputs/tracked_receipt.json", archive.namelist())
+
 
 if __name__ == "__main__":
     unittest.main()
